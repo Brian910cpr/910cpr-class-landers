@@ -7,7 +7,8 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
   <link rel="stylesheet" href="/admin/admin-nav.css?v=20260905-1">
-  <link rel="stylesheet" href="/admin/all-classes.css?v=20260911-1">
+  <link rel="stylesheet" href="/admin/all-classes.css?v=20260914-226">
+  <link rel="stylesheet" href="/admin/all-classes-record.css?v=20260914-226">
   <script src="/assets/site-theme.js"></script>
 <script src="/admin/admin-auth.js?v=20260914-session1"></script>
 <style id="owner-access-gates">#ownerAccess,#auth-gate,#authGate,#accessGate,#adminUnlockPanel,dialog#access{display:none!important}</style>
@@ -58,6 +59,23 @@
           <div id="rosterNotice" class="notice"></div>
           <div id="roster" class="roster"></div>
           <div id="finalizedNotice" class="notice warning" hidden><strong>Finalized class.</strong> Do not add participants. Name or email corrections here do not change a credential already issued by AHA, ARC, or HSI. Customer-facing credential data must also be corrected with the certifying body.</div>
+          <div class="record-grid">
+            <section>
+              <h3>Attached Files</h3>
+              <div id="documents" class="document-list"><div class="empty">Loading attached files…</div></div>
+            </section>
+            <section>
+              <h3>Drop Data Into This Class</h3>
+              <div id="dropZone" class="drop-zone" tabindex="0">
+                <strong>Drop a file here or choose one</strong>
+                <span>CSV, Excel, text, PDF, or image. The original stays attached to this class.</span>
+                <input id="intakeFile" type="file" accept=".csv,.tsv,.txt,.xlsx,.pdf,.jpg,.jpeg,.png,.webp">
+              </div>
+              <label class="paste-label">Or paste roster, eCard, email, or notes data<textarea id="intakePaste" rows="4" placeholder="Paste rows or loose class information here…"></textarea></label>
+              <div class="actionbar"><button id="parseIntake" class="btn primary" type="button">Attach &amp; Parse</button><span id="intakeStatus" class="status"></span></div>
+              <div id="intakeResults" class="intake-results"></div>
+            </section>
+          </div>
         </div>
       </section>
 
@@ -90,6 +108,6 @@
   </main>
   <script src="/admin/admin-nav.js?v=20260914-session1"></script>
   <script src="/admin/canonical-session-model.js?v=20260906-1"></script>
-  <script src="/admin/all-classes.js?v=20260913-auth2"></script>
+  <script src="/admin/all-classes.js?v=20260914-226"></script>
 </body>
 </html>
