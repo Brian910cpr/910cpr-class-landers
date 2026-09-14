@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="page-id" content="archive-rebuild">
+<meta name="build-id" content="issue229-owner-monitor-r4">
+<meta name="deployment-timestamp" content="unverified">
+<title>Archive Rebuild · LanderWare</title>
+<style>
+:root{color-scheme:dark;--bg:#101921;--panel:#192631;--line:#34434e;--muted:#b1c1cc;--ink:#f4f7f9;--accent:#84d8c3;--amber:#ffc577}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}a{color:var(--accent)}button{font:inherit;border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--ink);padding:8px 13px;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid var(--amber);outline-offset:3px}header{max-width:1500px;margin:auto;padding:28px 30px 16px;display:flex;justify-content:space-between;align-items:center;gap:20px}h1{font-size:30px;line-height:1.2;margin:5px 0}h2{font-size:18px;margin:0 0 18px}.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent)}.muted,small{color:var(--muted)}.actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap}main{max-width:1500px;margin:auto;padding:10px 30px 35px}.panel{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:22px;margin-bottom:18px}.notice{border-left:4px solid var(--amber)}#connection{margin:0;font-weight:650}#pollAge{margin:5px 0 0;font-size:13px;color:var(--muted)}.topline{display:flex;justify-content:space-between;gap:15px;align-items:center}.badge{border:1px solid var(--amber);border-radius:6px;padding:6px 10px;color:var(--amber);font-weight:750;font-size:13px}#phase{font-size:23px;margin:12px 0 2px}#blockers{color:var(--amber)}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.metric{border-top:1px solid var(--line);padding:14px 0}.metric span{display:block;font-size:13px;color:var(--muted)}.metric strong{display:block;font-size:30px;font-variant-numeric:tabular-nums;letter-spacing:-.03em}.metric small{display:block;font-size:12px}.columns{display:grid;grid-template-columns:1.25fr 1fr;gap:18px}.row{display:grid;grid-template-columns:1fr auto;gap:12px;border-top:1px solid var(--line);padding:11px 0}progress{width:100%;height:9px;accent-color:var(--accent);grid-column:1/-1}.rail{list-style:none;padding:0;margin:0}.rail li{border-left:2px solid var(--accent);padding:0 0 22px 18px;margin-left:4px}.rail b,.rail time,.rail small{display:block}.rail time{font-size:12px;color:var(--muted)}#provenance{overflow-wrap:anywhere;font-size:13px}#provenance p{margin:5px 0}[hidden]{display:none!important}footer{font-size:12px;color:var(--muted)}@media(max-width:900px){.columns{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}header{align-items:flex-start}header,main{padding-left:18px;padding-right:18px}}@media(max-width:540px){header{flex-direction:column}.topline{align-items:flex-start;flex-direction:column}.panel{padding:16px}.metric strong{font-size:25px}h1{font-size:26px}}
+</style>
+<script src="/admin/admin-auth.js?v=20260914-archive4" defer></script>
+<script src="/admin/archive-rebuild.js?v=20260914-archive4" defer></script>
+</head>
+<body>
+<header><div><div class="eyebrow">LanderWare · Owner workspace</div><h1>Historical archive rebuild</h1><div class="muted">From recovered records to published pages and Google discovery.</div></div><nav class="actions" aria-label="Owner navigation"><a href="/admin/dashboard.html">Operations</a><button id="signOut" type="button">Sign out</button></nav></header>
+<main>
+<section class="panel notice" aria-live="polite"><p id="connection">Checking owner access…</p><p id="pollAge">This page checks for a new checkpoint every 20 seconds.</p><noscript>JavaScript and your private owner session are required to view archive progress.</noscript></section>
+<div id="privateView" hidden>
+<section class="panel"><div class="topline"><h2 style="margin:0">Current checkpoint</h2><span id="jobState" class="badge"></span></div><p id="phase"></p><p id="checkpointAge" class="muted"></p><p id="blockers"></p><div id="provenance"></div></section>
+<section class="panel"><h2>Recovered source</h2><div id="baseline" class="grid"></div><p class="muted">Preliminary candidates still require historical fact and privacy review. They are not the approved publication total.</p></section>
+<div class="columns"><section class="panel"><h2>Full archive progress</h2><p id="eligibility" class="muted"></p><div id="progress"></div></section><section class="panel"><h2>Checkpoint history · newest first</h2><ol id="events" class="rail"></ol></section></div>
+<section class="panel"><h2>Google discovery &amp; search performance</h2><div id="google" class="grid"></div><p id="googleWindow" class="muted"></p></section>
+</div>
+<footer class="actions"><a href="https://github.com/Brian910cpr/910cpr-class-landers/issues/229" target="_blank" rel="noopener noreferrer">Issue #229</a><a href="https://github.com/Brian910cpr/910cpr-class-landers/pull/230" target="_blank" rel="noopener noreferrer">Source recovery PR #230</a><button id="copyDiagnostics" type="button">Copy page diagnostics</button><span id="diagnosticStatus" role="status"></span></footer>
+</main>
+</body></html>
