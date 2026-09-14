@@ -10,6 +10,7 @@ import argparse
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 import hashlib
+from html.parser import HTMLParser
 import io
 import json
 from pathlib import Path
@@ -200,16 +201,163 @@ def summarize(rows, page_ids, current_page_ids, as_of, workbook=None):
     }, records
 
 
+def reconcile_identities(historical_rows, current_rows, orphan_html=None):
+    """Compare source identities without approving an alias or publishing rows.
+
+    Registration links bridge the short-report/long-registration ID namespaces.
+    Matching a link does not prove identical class facts, completion or privacy.
+    """
+    historical = [normalized(row) for row in historical_rows]
+    current = [normalized(row) for row in current_rows]
+    old_ids = Counter(row['id'] for row in historical)
+    new_ids = Counter(row['id'] for row in current)
+    old_links, new_links = defaultdict(list), defaultdict(list)
+    for records, index in ((historical, old_links), (current, new_links)):
+        for record in records:
+            if record['external_id']:
+                index[record['external_id']].append(record)
+    dispositions, changed_fields, statuses = Counter(), Counter(), Counter()
+    pair_flags, difference_sets = Counter(), Counter()
+    status_allowlist = {'past', 'future', 'scheduled', 'completed', 'cancelled', 'canceled', 'active'}
+    for row in current_rows:
+        status = str(row.get('session_status') or '').strip().lower()
+        statuses[status if status in status_allowlist else 'missing' if not status else 'unrecognized'] += 1
+    for record in historical:
+        external = record['external_id']
+        matches = new_links.get(external, [])
+        if not re.fullmatch(r'[0-9]+', record['id']):
+            reason = 'invalid_historical_session_id'
+        elif not external:
+            reason = 'invalid_historical_registration_identity'
+        elif old_ids[record['id']] != 1 or len(old_links[external]) != 1:
+            reason = 'ambiguous_historical_identity'
+        elif not matches:
+            reason = 'registration_identity_absent_from_current'
+        elif len(matches) != 1 or new_ids[matches[0]['id']] != 1:
+            reason = 'ambiguous_current_identity'
+        elif not re.fullmatch(r'[0-9]+', matches[0]['id']):
+            reason = 'invalid_current_session_id'
+        else:
+            match = matches[0]
+            pair_flags['unique_registration_pairs'] += 1
+            differences = [field for field in ('course', 'start', 'end', 'location')
+                           if record[field] != match[field]]
+            changed_fields.update(differences)
+            difference_sets['+'.join(differences) or 'none'] += 1
+            invalid = [not r['start'] or not r['end'] or r['end'] <= r['start'] for r in (record, match)]
+            pair_flags['invalid_historical_timing'] += invalid[0]
+            pair_flags['invalid_current_timing'] += invalid[1]
+            pair_flags['start_or_end_differs'] += 'start' in differences or 'end' in differences
+            if any(invalid):
+                reason = 'shared_identity_invalid_timing'
+            else:
+                reason = 'shared_identity_facts_changed' if differences else 'shared_identity_facts_match'
+        dispositions[reason] += 1
+
+    class RegistrationLinks(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=True)
+            self.ids = set()
+
+        def handle_starttag(self, tag, attrs):
+            if tag == 'a':
+                for name, value in attrs:
+                    if name == 'href':
+                        external = registration_id(value)
+                        if external:
+                            self.ids.add(external)
+
+    orphan_counts, orphan_details = Counter(), {}
+    for path, content in sorted((orphan_html or {}).items()):
+        parser = RegistrationLinks()
+        parser.feed(content)
+        parser.close()
+        old_count = new_count = 0
+        if not parser.ids:
+            reason = 'no_registration_link'
+        elif len(parser.ids) != 1:
+            reason = 'multiple_registration_identities'
+        else:
+            external = next(iter(parser.ids))
+            old_count, new_count = len(old_links.get(external, [])), len(new_links.get(external, []))
+            if (old_count > 1 or new_count > 1
+                    or (old_count == 1 and old_ids[old_links[external][0]['id']] != 1)
+                    or (new_count == 1 and new_ids[new_links[external][0]['id']] != 1)):
+                reason = 'ambiguous_source_registration_identity'
+            elif old_count == 1:
+                reason = 'historical_source_link_match_requires_alias_review'
+            elif new_count == 1:
+                reason = 'current_source_link_match_requires_historical_facts_review'
+            else:
+                reason = 'registration_identity_absent_from_both_sources'
+        orphan_counts[reason] += 1
+        # Reproducible exception keys without publishing a potentially private
+        # session ID, raw title, registration link or source page content.
+        orphan_details[hashlib.sha256(path.encode('utf-8')).hexdigest()] = {
+            'html_sha256': hashlib.sha256(content.encode('utf-8')).hexdigest(),
+            'disposition': reason, 'distinct_registration_links': len(parser.ids),
+            'historical_source_matches': old_count, 'current_source_matches': new_count,
+        }
+    assert sum(dispositions.values()) == len(historical_rows)
+    assert sum(statuses.values()) == len(current_rows)
+    return {
+        'historical_rows': len(historical_rows), 'current_rows': len(current_rows),
+        'exclusive_historical_dispositions': dict(sorted(dispositions.items())),
+        'overlapping_changed_fields_in_unique_pairs': dict(sorted(changed_fields.items())),
+        'overlapping_unique_pair_flags': dict(sorted(pair_flags.items())),
+        'unique_pair_difference_sets': dict(sorted(difference_sets.items())),
+        'current_source_status_labels': dict(sorted(statuses.items())),
+        'current_only_registration_identities': len(set(new_links) - set(old_links)),
+        'orphan_html_count': len(orphan_details),
+        'orphan_dispositions': dict(sorted(orphan_counts.items())),
+        'orphans_by_path_sha256': orphan_details,
+        'publication_authorized_count': None,
+        'limits': [
+            'Identity and fact equality are not canonical registry, completion, cancellation or public-safety approval.',
+            'Current source status labels may be generated from time; they are not independent completion evidence.',
+            'Course differences compare exact source label strings, not semantic Course Master equivalence.',
+            'Historical Client provenance and all R1 privacy/timing/mapping gates remain required.',
+            'No source record, raw label, location, participant, client or registration URL is emitted.',
+            'Orphan link matches require historical fact and alias/content review; no alias is authorized.',
+            'No public generator, live canonical query, current inventory, deployment or GSC action is performed.',
+        ],
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--current-ref', required=True)
     parser.add_argument('--as-of', required=True, help='Explicit ISO timestamp with offset')
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--identity-only', action='store_true',
+                        help='Reconcile historical/current JSON identities and orphan HTML links only')
     args = parser.parse_args()
     as_of = datetime.fromisoformat(args.as_of)
     if as_of.tzinfo is None:
         parser.error('--as-of requires a timezone offset')
     current = git('rev-parse', '--verify', args.current_ref + '^{commit}').decode().strip()
+    if args.identity_only:
+        historical_path, current_path = 'data/schedule.json', 'data/schedule_all.json'
+        historical = json.loads(blob(REMOVAL, historical_path))
+        current_doc = json.loads(blob(current, current_path))
+        historical = historical if isinstance(historical, list) else historical['sessions']
+        current_rows = current_doc if isinstance(current_doc, list) else current_doc['sessions']
+        ids = {normalized(row)['id'] for row in historical}
+        paths = git('ls-tree', '-r', '--name-only', REMOVAL, '--', 'docs/classes').decode().splitlines()
+        orphan_paths = [path for path in paths if re.fullmatch(r'docs/classes/[0-9]+\.html', path)
+                        and Path(path).stem not in ids]
+        orphans = {path: blob(REMOVAL, path).decode('utf-8-sig') for path in orphan_paths}
+        report = reconcile_identities(historical, current_rows, orphans)
+        report.update({'schema_version': 1, 'mode': 'identity_reconciliation', 'as_of': as_of.isoformat(),
+                       'sources': [
+                           {'commit': ref, 'path': path, 'blob': git('rev-parse', f'{ref}:{path}').decode().strip()}
+                           for ref, path in [(REMOVAL, historical_path), (current, current_path)]
+                       ]})
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+        print(json.dumps({'output': args.output.as_posix(), 'historical_rows': len(historical),
+                          'current_rows': len(current_rows), 'orphan_html_count': len(orphans)}))
+        return
     specs = [('original_pattern', PATTERN, 'data/schedule.json', None),
              ('historical_corpus', REMOVAL, 'data/schedule.json', 'raw/Class Report.xlsx'),
              ('seo_core', SEO_CORE, 'docs/data/schedule_future.json', None),
