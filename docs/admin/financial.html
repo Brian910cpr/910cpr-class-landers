@@ -11,7 +11,8 @@
 
 <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
 <script src="/assets/site-theme.js"></script>
-<script src="/admin/admin-auth.js?v=20260913-1"></script>
+<script src="/admin/admin-auth.js?v=20260914-session1"></script>
+<style id="owner-access-gates">#ownerAccess,#auth-gate,#authGate,#accessGate,#adminUnlockPanel,dialog#access{display:none!important}</style>
 </head>
 <body>
 
@@ -25,7 +26,7 @@
 <section class="panel"><h2 style="margin-top:0">How this clears</h2><div class="muted">Electronic payments are reconciled directly from Stripe. For a check, Venmo, Cash App, outside ACH, cash, or another method, use <b>Record Outside Payment</b>. LanderWare stores the date, method, reference, comment and user, then marks the Stripe invoice paid out of band without charging the customer.</div></section>
 </div>
 <dialog id="paymentDialog"><form method="dialog" class="modal" id="paymentForm"><div class="toolbar"><div><h2 style="margin:0">Record Outside Payment</h2><div class="muted" id="paymentInvoice"></div></div><button class="btn" value="cancel">Close</button></div><div class="notice">This marks the invoice paid in Stripe without charging the customer. The receipt details remain in LanderWare’s audit history.</div><div class="form"><div class="field"><label>Payment method</label><select id="method" required><option value="check">Check</option><option value="cash">Cash</option><option value="venmo">Venmo</option><option value="cash_app">Cash App</option><option value="external_ach">External ACH</option><option value="other">Other</option></select></div><div class="field"><label>Received date</label><input id="receivedDate" type="date" required></div><div class="field full"><label>Check / transaction / confirmation number</label><input id="reference" maxlength="160" placeholder="Check #, transaction ID, confirmation number…"></div><div class="field full"><label>Comment</label><textarea id="comment" rows="3" maxlength="2000" placeholder="Received at PO Box, company bill-pay, who confirmed it, etc."></textarea></div></div><div id="formError" class="error"></div><div class="actions" style="justify-content:flex-end;margin-top:12px"><button class="btn" value="cancel">Cancel</button><button id="recordBtn" class="btn success" value="default">Mark Paid in Stripe</button></div></form></dialog>
-<form id="ownerAccess" class="panel"><label for="ownerKey">LanderWare owner key</label> <input id="ownerKey" type="password" autocomplete="current-password" required> <button class="btn primary" type="submit">Unlock Financial</button></form>
+<form id="ownerAccess" class="panel"><label for="ownerKey">LanderWare owner key</label> <input id="ownerKey" type="hidden" autocomplete="current-password" required> <button class="btn primary" type="submit">Unlock Financial</button></form>
 <script>
 const API_BASE='https://schedule.910cpr.com/admin/finance';
 let invoices=[],activeInvoice=null;
@@ -41,5 +42,5 @@ function openPayment(id){activeInvoice=invoices.find(x=>x.id===id);if(!activeInv
 document.getElementById('paymentForm').addEventListener('submit',async e=>{if(e.submitter?.value==='cancel')return;e.preventDefault();const button=document.getElementById('recordBtn'),error=document.getElementById('formError');button.disabled=true;button.textContent='Recording…';error.style.display='none';try{await api(`/invoices/${encodeURIComponent(activeInvoice.id)}/outside-payment`,{method:'POST',headers:headers(true),body:JSON.stringify({method:document.getElementById('method').value,received_date:document.getElementById('receivedDate').value,reference:document.getElementById('reference').value,comment:document.getElementById('comment').value})});document.getElementById('paymentDialog').close();await load()}catch(err){error.textContent=err.message;error.style.display='block'}finally{button.disabled=false;button.textContent='Mark Paid in Stripe'}});
 LanderWareAdminAuth.onLock(()=>{invoices=[];activeInvoice=null;document.getElementById('ownerAccess').hidden=false;document.getElementById('paymentDialog').close();document.getElementById('paymentForm').reset();document.getElementById('paymentInvoice').textContent='';['outstanding','openCount','pastDueCount','oldest'].forEach(id=>document.getElementById(id).textContent='—');document.getElementById('invoiceRows').innerHTML='<tr><td colspan="6">Enter your LanderWare owner key.</td></tr>';setStatus('Authentication required','warn')});document.getElementById('ownerAccess').onsubmit=e=>{e.preventDefault();LanderWareAdminAuth.set(document.getElementById('ownerKey').value);document.getElementById('ownerKey').value='';load()};window.addEventListener('admin-auth-refresh',load);document.getElementById('refreshBtn').onclick=load;load();
 </script>
-<script src="/admin/admin-nav.js?v=20260812-1"></script></body>
+<script src="/admin/admin-nav.js?v=20260914-session1"></script></body>
 </html>

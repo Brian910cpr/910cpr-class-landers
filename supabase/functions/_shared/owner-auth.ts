@@ -1,10 +1,13 @@
-// Every owner endpoint delegates to the deployed HOT_SYNC authority.
+import {lookupOwnerSession,OWNER_SESSION_HEADER} from './owner-session.ts';
+// Private browser sessions are independent of the legacy HOT_SYNC automation key.
 // Corporate access codes and corporate sessions never authorize owner APIs.
 export async function authorizedOwner(req: Request): Promise<boolean> {
   const origin = req.headers.get('origin');
   if (origin && !['https://www.910cpr.com','https://910cpr.com'].includes(origin)) {
     throw Object.assign(new Error('Origin not allowed'), {status:403});
   }
+  const session = req.headers.get(OWNER_SESSION_HEADER);
+  if (session) return Boolean(await lookupOwnerSession(session));
   const key = req.headers.get('x-hot-sync-admin-key');
   if (!key) return false;
   let response;

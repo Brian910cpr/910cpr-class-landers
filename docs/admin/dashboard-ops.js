@@ -190,16 +190,16 @@
     }
     if (unlock) unlock.hidden = unlocked;
     if (forget) forget.hidden = !unlocked;
-    if (help) help.textContent = message || (unlocked ? "Admin tools are unlocked for this tab." : "Enter the LanderWare admin key once. It stays only in this browser tab and is cleared when the tab closes.");
+    if (help) help.textContent = message || (unlocked ? "Owner sign-in is active on this browser." : "Enter the LanderWare admin key once. It stays only in this browser tab and is cleared when the tab closes.");
   }
 
   async function unlockAdmin() {
     if (!requireKey()) return;
     try {
-      await loadHotSyncRecords();
+      await loadHotSyncRecords().catch(() => {});
       await loadInbox().catch(() => {});
       if (typeof root.loadCanonicalParticipantTruth === "function") await root.loadCanonicalParticipantTruth();
-      updateUnlockPanel(true, "Admin tools are unlocked for this tab.");
+      updateUnlockPanel(true, "Owner sign-in is active on this browser.");
       window.dispatchEvent(new Event("admin-auth-unlocked"));
     } catch (error) {
       if (error.status === 401 || error.status === 403) {

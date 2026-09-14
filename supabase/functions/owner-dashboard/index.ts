@@ -6,7 +6,7 @@ let mailboxCache: { at:number; value:any } | null = null;
 let mailboxPending: Promise<any> | null = null;
 function response(req:Request, data:unknown, status=200) {
   const origin=req.headers.get('origin')||'';
-  const headers:Record<string,string>={'content-type':'application/json','cache-control':'private, no-store','vary':'Origin','access-control-allow-headers':'content-type,x-hot-sync-admin-key','access-control-allow-methods':'GET,OPTIONS'};
+  const headers:Record<string,string>={'content-type':'application/json','cache-control':'private, no-store','vary':'Origin','access-control-allow-headers':'content-type,x-hot-sync-admin-key,x-landerware-owner-session','access-control-allow-methods':'GET,OPTIONS'};
   if(ORIGINS.has(origin)) headers['access-control-allow-origin']=origin;
   return new Response(JSON.stringify(data),{status,headers});
 }

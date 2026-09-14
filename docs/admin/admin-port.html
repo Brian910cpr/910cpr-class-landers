@@ -9,7 +9,8 @@
 
 <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
 <script src="/assets/site-theme.js"></script>
-<script src="/admin/admin-auth.js?v=20260913-1"></script>
+<script src="/admin/admin-auth.js?v=20260914-session1"></script>
+<style id="owner-access-gates">#ownerAccess,#auth-gate,#authGate,#accessGate,#adminUnlockPanel,dialog#access{display:none!important}</style>
 </head>
 <body>
 
@@ -20,7 +21,7 @@
       <div><p class="eyebrow">LanderWare · read-only</p><h1>Admin Port</h1><p class="lede">A canonical view of the day—sessions, occupancy, evidence, and what is still unknown.</p></div>
       <div class="controls"><label for="datePick">Operational date</label><input id="datePick" type="date" value="2026-09-19"><button id="reload" type="button">Reload bundle</button></div>
     </header>
-    <section id="authGate" class="auth-gate"><div><strong>Admin authentication required</strong><p>The key stays only in this browser tab and is sent solely to the protected LanderWare read endpoint.</p></div><label for="adminKey">LanderWare admin key</label><input id="adminKey" type="password" autocomplete="off" spellcheck="false"><button id="unlock" type="button">Unlock Admin Port</button></section>
+    <section id="authGate" class="auth-gate"><div><strong>Admin authentication required</strong><p>The key stays only in this browser tab and is sent solely to the protected LanderWare read endpoint.</p></div><label for="adminKey">LanderWare admin key</label><input id="adminKey" type="hidden" autocomplete="off" spellcheck="false"><button id="unlock" type="button">Unlock Admin Port</button></section>
     <div id="status" class="status" role="status">Loading Session Bundle…</div>
     <section id="summary" class="summary" aria-label="Day summary"></section>
     <section class="workspace">
@@ -28,7 +29,7 @@
       <aside><section class="panel alert"><h2>Missing dependencies</h2><p>Unknown means evidence is absent—not zero.</p><div id="missing"></div></section><section class="panel"><h2>Conflicts</h2><div id="conflicts"></div></section><section class="panel"><h2>Bundle provenance</h2><div id="provenance"></div></section></aside>
     </section>
   </main>
-  <script src="/admin/admin-nav.js?v=20260904-1"></script>
+  <script src="/admin/admin-nav.js?v=20260914-session1"></script>
   <script src="/admin/canonical-session-model.js?v=20260906-1"></script>
   <script src="/admin/admin-port.js?v=20260913-auth2"></script>
 </body>

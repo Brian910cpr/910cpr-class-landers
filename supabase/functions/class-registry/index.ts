@@ -4,7 +4,7 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 const ORIGINS=new Set(["https://www.910cpr.com","https://910cpr.com","https://es.910cpr.com"]);
 const env=(name:string)=>Deno.env.get(name)||"";
 const clean=(value:unknown,max=500)=>String(value??"").trim().slice(0,max);
-function cors(req:Request){const origin=req.headers.get("origin")||"";return{"Access-Control-Allow-Origin":ORIGINS.has(origin)?origin:"https://www.910cpr.com","Access-Control-Allow-Headers":"content-type,x-hot-sync-admin-key","Access-Control-Allow-Methods":"GET,OPTIONS","Cache-Control":"no-store","Vary":"Origin"}}
+function cors(req:Request){const origin=req.headers.get("origin")||"";return{"Access-Control-Allow-Origin":ORIGINS.has(origin)?origin:"https://www.910cpr.com","Access-Control-Allow-Headers":"content-type,x-hot-sync-admin-key,x-landerware-owner-session","Access-Control-Allow-Methods":"GET,OPTIONS","Cache-Control":"no-store","Vary":"Origin"}}
 function json(req:Request,body:unknown,status=200){return new Response(JSON.stringify(body),{status,headers:{...cors(req),"Content-Type":"application/json; charset=utf-8"}})}
 async function sha256Text(value:string){const bytes=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value));return[...new Uint8Array(bytes)].map(x=>x.toString(16).padStart(2,"0")).join("")}
 async function rest(path:string){const key=env("SUPABASE_SERVICE_ROLE_KEY"),url=env("SUPABASE_URL");if(!key||!url)throw Error("server_configuration");const r=await fetch(`${url}/rest/v1/${path}`,{headers:{apikey:key,Authorization:`Bearer ${key}`}});const body=await r.json().catch(()=>null);if(!r.ok)throw Error(`database_${r.status}`);return body}

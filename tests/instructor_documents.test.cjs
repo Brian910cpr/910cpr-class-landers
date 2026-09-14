@@ -19,7 +19,8 @@ function runtime({authenticated=true,document=doc,rpc={ok:true,removed_id:docId}
       if(url.endsWith('/rpc/remove_instructor_document'))return Response.json(rpc);
       throw Error('Unexpected fetch: '+url);
     }});
-  let source=fs.readFileSync('supabase/functions/_shared/owner-auth.ts','utf8').replace('export async function authorizedOwner','async function authorized');
+  let source=fs.readFileSync('supabase/functions/_shared/owner-session.ts','utf8').replaceAll('export ','');
+  source+='\n'+fs.readFileSync('supabase/functions/_shared/owner-auth.ts','utf8').replace(/^import .*\n/gm,'').replace('export async function authorizedOwner','async function authorized');
   source+='\n'+fs.readFileSync('supabase/functions/instructor-workbench/documents.ts','utf8').replaceAll('export ','');
   source+='\n'+fs.readFileSync('supabase/functions/instructor-workbench/index.ts','utf8').replace(/^import .*\n/gm,'');
   vm.runInContext(stripTypeScriptTypes(source),context);

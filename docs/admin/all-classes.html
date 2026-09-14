@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="/admin/admin-nav.css?v=20260905-1">
   <link rel="stylesheet" href="/admin/all-classes.css?v=20260911-1">
   <script src="/assets/site-theme.js"></script>
-<script src="/admin/admin-auth.js?v=20260913-1"></script>
+<script src="/admin/admin-auth.js?v=20260914-session1"></script>
+<style id="owner-access-gates">#ownerAccess,#auth-gate,#authGate,#accessGate,#adminUnlockPanel,dialog#access{display:none!important}</style>
 </head>
 <body>
   <div id="adminNav"></div>
@@ -21,7 +22,7 @@
   <main class="shell">
     <section id="authGate" class="auth-gate">
       <div><strong>Unlock the owner workspace</strong><p>The key stays in this browser tab.</p></div>
-      <input id="adminKey" type="password" autocomplete="off" placeholder="LanderWare admin key">
+      <input id="adminKey" type="hidden" autocomplete="off" placeholder="LanderWare admin key">
       <button id="unlock" class="btn primary" type="button">Unlock</button>
     </section>
 
@@ -87,7 +88,7 @@
       <div class="actionbar"><button id="saveClass" class="btn primary" type="button">Save Class to Schedule</button><span id="saveStatus" class="status"></span></div>
     </section>
   </main>
-  <script src="/admin/admin-nav.js?v=20260911-1"></script>
+  <script src="/admin/admin-nav.js?v=20260914-session1"></script>
   <script src="/admin/canonical-session-model.js?v=20260906-1"></script>
   <script src="/admin/all-classes.js?v=20260913-auth2"></script>
 </body>

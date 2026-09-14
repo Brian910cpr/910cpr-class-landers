@@ -7,7 +7,7 @@ const OPERATIONAL_SESSION_STATUSES = "(scheduled,active,completed)";
 
 function headers(origin: string) {
   const value: Record<string, string> = {
-    "access-control-allow-headers": "content-type,x-hot-sync-admin-key",
+    "access-control-allow-headers": "content-type,x-hot-sync-admin-key,x-landerware-owner-session",
     "access-control-allow-methods": "GET,OPTIONS",
     "cache-control": "private, no-store",
     "content-type": "application/json; charset=utf-8",
