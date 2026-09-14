@@ -38,6 +38,16 @@ class GrowthSeoSurfaceTests(unittest.TestCase):
         self.assertIn("Schools and childcare", html)
         self.assertIn("Workplaces and hospitality", html)
         self.assertIn("Wilmington and Coastal North Carolina", html)
+        self.assertIn('id="request-form"', html)
+        self.assertIn('data-group-request', html)
+        self.assertIn('data-sync-program="#program"', html)
+        self.assertIn('href="#request-form"', html)
+
+    def test_group_legacy_alias_consolidates_search_authority(self):
+        html = build_slug_hubs.render_group_legacy_alias()
+        self.assertIn('content="noindex,follow"', html)
+        self.assertIn('rel="canonical" href="https://www.910cpr.com/group-training.html"', html)
+        self.assertIn('/group-training.html#request-form', html)
 
     def test_llms_file_points_to_canonical_course_pages(self):
         text = (ROOT / "docs" / "llms.txt").read_text(encoding="utf-8")

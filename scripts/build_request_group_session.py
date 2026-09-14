@@ -201,6 +201,7 @@ def build():
 </script>
 """
         html = render_page("Request On-Site Group Training | 910CPR", body, "Request on-site BLS, HeartCode BLS, First Aid/CPR/AED, ACLS, PALS, or USCG group training.")
+        html = html.replace('<meta name="robots" content="index,follow">', '<meta name="robots" content="noindex,follow">', 1)
         OUTPUT.write_text(html, encoding='utf-8')
         reporter.done(
             current=1,

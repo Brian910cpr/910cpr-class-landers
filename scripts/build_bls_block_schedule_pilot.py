@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
+from zoneinfo import ZoneInfo
 
 from scripts.block_start_time_selector import (
     ROOT,
@@ -16,6 +17,7 @@ from scripts.block_start_time_selector import (
     load_block_schedule_page_configs,
 )
 from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
+from scripts.static_public_inventory_projection import render_from_schedule
 
 
 REPORT_JSON_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
@@ -23,6 +25,8 @@ REPORT_MD_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot_report.md"
 HTML_PATH = ROOT / "docs" / "bls-schedule.html"
 COURSE_DESCRIPTIONS_PATH = ROOT / "data" / "content" / "course_descriptions.json"
 SELECTOR_AVAILABILITY_DIR = ROOT / "docs" / "data" / "block-selector-availability"
+PUBLIC_SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
+PUBLIC_TZ = ZoneInfo("America/New_York")
 
 
 def load_course_descriptions() -> dict[str, dict[str, Any]]:
@@ -39,6 +43,42 @@ def selector_availability_path(page_key: str) -> Path:
 
 
 def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    compact_dates: list[dict[str, Any]] = []
+    for day in payload.get("dates", []):
+        compact_slots: list[dict[str, Any]] = []
+        for slot in day.get("startTimes", []):
+            compact_courses: list[dict[str, Any]] = []
+            for course in slot.get("courses", []):
+                compact_course = {
+                    "courseId": course.get("courseId"),
+                    "courseName": course.get("courseName"),
+                    "courseFamily": course.get("courseFamily"),
+                    "deliveryMode": course.get("deliveryMode"),
+                    "displayStartTime": course.get("displayStartTime") or slot.get("displayStartTime"),
+                    "durationMinutes": course.get("durationMinutes"),
+                    "schedulerConsumptionMinutes": course.get("schedulerConsumptionMinutes"),
+                    "appointmentDayId": course.get("appointmentDayId"),
+                    "appointmentUrl": course.get("appointmentUrl"),
+                    "location": course.get("location"),
+                    "availabilityBlockId": course.get("availabilityBlockId"),
+                    "offerType": course.get("offerType") or "dynamic_appointment",
+                    "scheduleRole": course.get("scheduleRole") or course.get("schedule_role"),
+                    "date": day.get("date"),
+                    "startTime": slot.get("startTime"),
+                }
+                compact_courses.append({key: value for key, value in compact_course.items() if value not in (None, "")})
+            if compact_courses:
+                compact_slots.append({
+                    "startTime": slot.get("startTime"),
+                    "displayStartTime": slot.get("displayStartTime"),
+                    "courses": compact_courses,
+                })
+        if compact_slots:
+            compact_dates.append({
+                "date": day.get("date"),
+                "displayDate": day.get("displayDate"),
+                "startTimes": compact_slots,
+            })
     return {
         "schemaVersion": "selector-resolved-availability.v1",
         "generatedAt": payload.get("generatedAt"),
@@ -60,7 +100,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
         },
         "counts": payload.get("counts", {}),
         "liveAvailabilityGuard": payload.get("liveAvailabilityGuard", {}),
-        "dates": payload.get("dates", []),
+        "dates": compact_dates,
     }
 
 
@@ -724,6 +764,42 @@ def css() -> str:
       color: var(--muted);
       background: var(--band);
     }
+    .stable-class-projection {
+      margin-top: 22px;
+      padding: 20px;
+      border: 1px solid #cddfec;
+      border-radius: 14px;
+      background: #f7fbfe;
+    }
+    .stable-class-kicker {
+      margin: 0 0 4px;
+      color: var(--accent-dark);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .stable-class-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .stable-class-item a {
+      display: grid;
+      gap: 3px;
+      height: 100%;
+      padding: 12px 14px;
+      border: 1px solid #dbe7ef;
+      border-radius: 10px;
+      background: #fff;
+      color: inherit;
+      text-decoration: none;
+    }
+    .stable-class-item a:hover, .stable-class-item a:focus-visible { border-color: var(--accent); }
+    .stable-class-item span { color: var(--muted); font-size: .9rem; }
     @media (max-width: 820px) {
       .page-heading-row { grid-template-columns: 1fr; gap: 10px; }
       .header-credential {
@@ -739,6 +815,7 @@ def css() -> str:
       .header-credential p { margin-top: 2px; font-size: .72rem; line-height: 1.2; }
       .header-credential-eyebrow { margin-bottom: 1px; font-size: .58rem; }
       .selector-grid { grid-template-columns: 1fr; }
+      .stable-class-list { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
       header, main, .selector-brand-bar { padding: 14px 16px; }
@@ -1005,6 +1082,21 @@ def render_html(payload: dict[str, Any]) -> str:
     ]
     unsupported_options_json = json.dumps(unsupported_options, ensure_ascii=False)
     counts = payload["counts"]
+    projection_course_ids = [
+        str(option.get("course_id") or "").strip()
+        for option in page_config.get("course_options", [])
+        if isinstance(option, dict) and str(option.get("course_id") or "").strip()
+    ]
+    stable_projection_html = (
+        render_from_schedule(
+            PUBLIC_SCHEDULE_PATH,
+            course_ids=projection_course_ids,
+            family=page_family,
+            now=datetime.now(PUBLIC_TZ),
+        )
+        if page_key in {"bls", "acls", "pals", "heartsaver"}
+        else ""
+    )
     configured_default_course = str(page_config.get("default_course_id") or "").strip()
     available_course_ids = {str(option.get("courseId") or "") for option in course_options}
     first_course = (
@@ -1226,6 +1318,7 @@ def render_html(payload: dict[str, Any]) -> str:
         </div>
       </div>
     </section>
+    {stable_projection_html}
   </main>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
