@@ -397,6 +397,18 @@ class PublicSellableOffersTest(unittest.TestCase):
         hidden_reasons = {reason for item in hidden for reason in item["reason_codes"]}
         self.assertNotIn("outside_public_dynamic_hours", hidden_reasons)
 
+    def test_production_policy_allows_midnight_and_late_night_starts(self) -> None:
+        policy, error = filter_public_sellable_offers.read_json(
+            filter_public_sellable_offers.PUBLIC_OFFER_POLICY_PATH
+        )
+        self.assertIsNone(error)
+        self.assertIsInstance(policy, dict)
+        for start_time in ("00:00", "02:15", "23:45"):
+            start = datetime.fromisoformat(f"2026-07-10T{start_time}")
+            self.assertFalse(
+                filter_public_sellable_offers.outside_public_dynamic_hours(start, policy)
+            )
+
     def test_dynamic_public_hours_policy_does_not_filter_ical_schedule_rows(self) -> None:
         schedule_row = {
             "session_id": "real-ical-class",
