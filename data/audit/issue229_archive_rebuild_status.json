@@ -1,0 +1,116 @@
+{
+  "baseline": {
+    "classification": {
+      "client_present_review": 724,
+      "invalid_or_ambiguous_timing": 409,
+      "non_public_location_review": 641,
+      "not_elapsed_at_cutoff": 640,
+      "preliminary_public_candidate_requires_review": 23488,
+      "workbook_provenance_unresolved": 263
+    },
+    "excluded_private_ambiguous_rows": 2037,
+    "html_urls_recovered": 26171,
+    "identity_rows_reconciled": 26165,
+    "non_candidate_rows": 2677,
+    "not_elapsed_rows": 640,
+    "orphan_html_unresolved": 7,
+    "preliminary_candidates": 23488,
+    "source_rows_recovered": 26165
+  },
+  "blockers": [
+    "ELIGIBILITY_REVIEW",
+    "CURRENT_INVENTORY_GATE"
+  ],
+  "events": [
+    {
+      "at": "2026-09-14T12:55:17.821634+00:00",
+      "metrics": {
+        "eligible_pages": null,
+        "pages_failed_validation": 0,
+        "pages_generated": 0,
+        "pages_published": 0,
+        "pages_validated": 0,
+        "sitemap_urls_generated": 0
+      },
+      "phase": "ELIGIBILITY_REVIEW",
+      "revision": 0,
+      "state": "BLOCKED"
+    },
+    {
+      "at": "2026-09-14T12:55:17.821634+00:00",
+      "metrics": {
+        "eligible_pages": null,
+        "pages_failed_validation": 0,
+        "pages_generated": 0,
+        "pages_published": 0,
+        "pages_validated": 0,
+        "sitemap_urls_generated": 0
+      },
+      "phase": "IDENTITY_RECONCILIATION",
+      "revision": 0,
+      "state": "CHECKPOINT_COMPLETE"
+    },
+    {
+      "at": "2026-09-14T12:55:17.821634+00:00",
+      "metrics": {
+        "eligible_pages": null,
+        "pages_failed_validation": 0,
+        "pages_generated": 0,
+        "pages_published": 0,
+        "pages_validated": 0,
+        "sitemap_urls_generated": 0
+      },
+      "phase": "SOURCE_RECOVERY",
+      "revision": 0,
+      "state": "CHECKPOINT_COMPLETE"
+    }
+  ],
+  "evidence": {
+    "deployment": null,
+    "eligibility": null,
+    "gsc": null,
+    "validation": null
+  },
+  "expected_checkpoint_seconds": 300,
+  "gsc": {
+    "class_clicks": null,
+    "class_impressions": null,
+    "discovered": null,
+    "indexed": null,
+    "observed_at": null,
+    "window_end": null,
+    "window_start": null
+  },
+  "issue": 229,
+  "last_checkpoint_at": "2026-09-14T12:55:17.821634+00:00",
+  "metrics": {
+    "eligible_pages": null,
+    "pages_failed_validation": 0,
+    "pages_generated": 0,
+    "pages_published": 0,
+    "pages_validated": 0,
+    "sitemap_urls_generated": 0
+  },
+  "phase": "ELIGIBILITY_REVIEW",
+  "producer_mode": "local_checkpoints",
+  "provenance": {
+    "branch": "codex/issue-229-monitor-feed-r3",
+    "commit": "9e9251f5c9678473bbc1e696584739a33731b4aa",
+    "pr": 232,
+    "repository": "Brian910cpr/910cpr-class-landers",
+    "sources": [
+      {
+        "commit": "af1b2b498fc110357becf2078124cdc6c2091baf",
+        "path": "data/audit/issue229_source_recovery_r1.json"
+      },
+      {
+        "commit": "af1b2b498fc110357becf2078124cdc6c2091baf",
+        "path": "data/audit/issue229_identity_reconciliation_r2.json"
+      }
+    ]
+  },
+  "revision": 0,
+  "run_id": "issue229-r3",
+  "schema_version": 1,
+  "state": "BLOCKED"
+}
