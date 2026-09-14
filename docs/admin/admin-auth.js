@@ -2,7 +2,7 @@
   'use strict';
   const KEY='landerwareOwnerSession',HEADER='X-LanderWare-Owner-Session';
   const EDGE='https://wktwgcnwdvbebcobgyey.supabase.co',ACCESS=EDGE+'/functions/v1/owner-access';
-  const services=new Set(['owner-access','owner-dashboard','canonical-session-workspace','class-registry','instructor-workbench','production-board']);
+  const services=new Set(['owner-access','owner-dashboard','archive-status','canonical-session-workspace','class-registry','instructor-workbench','production-board']);
   const pending=new Set();let generation=0,refreshing=null,leaving=false;
   function read(){let value;try{value=localStorage.getItem(KEY)}catch{}try{return JSON.parse(value||sessionStorage.getItem(KEY)||'null')}catch{return null}}
   function save(session){try{localStorage.setItem(KEY,JSON.stringify(session));sessionStorage.removeItem(KEY)}catch{sessionStorage.setItem(KEY,JSON.stringify(session))}}
