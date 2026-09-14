@@ -27,6 +27,7 @@ The deployed public copies of these files matched the merged local files byte fo
 
 - `docs/admin/all-classes.html`
 - `docs/admin/all-classes.js`
+- `docs/admin/person-record.html`
 - `docs/admin/person-record.js`
 - `docs/admin/all-classes-record.css`
 
