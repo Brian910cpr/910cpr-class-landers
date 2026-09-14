@@ -1,0 +1,54 @@
+# ShiftCommander Astra R39 — release prerequisite assessment
+
+Assignment: [Brian910cpr/910cpr-class-landers#214](https://github.com/Brian910cpr/910cpr-class-landers/issues/214), dispatch `SHIFTCOMMANDER_ASTRA_20260913_R1`.
+Assessment timestamp: 2026-09-14T01:24:13-04:00, America/New_York.
+Work-item state: BLOCKED for release. Persistent-system evidence: BUILT with retained local synthetic validation; complete operational proof, monitoring and health remain unverified.
+
+## Exact state and work performed
+
+- Courier worktree: `E:\GitHub\910cpr-class-landers_codex_issue214_receipt_r39`; branch `codex/issue-214-shiftcommander-receipt-r39`; base commit `bd7db4fe9ab105b52d94487cd248ea772f4623f0`. Only this unique root receipt is intended for commit/push. Its final commit SHA and remote content verification are posted on #214 after push, avoiding a self-referential SHA.
+- Target assessment is read-only in `E:\GitHub\shiftcommander_v2_codex_issue214_r9`, branch `codex/issue-214-release-gate-verification-r9`, commit `16d0ace259b485a7585decbef24c74e94bd69f5c`.
+- Application remains `ba0365a250d18297a262b96ab7f15cf3fe6f1780`, branch `codex/issue-214-private-boundary-r8`, [ShiftCommander draft PR #10](https://github.com/Brian910cpr/shiftcommander_v2/pull/10). Fresh GitHub readback confirms OPEN/draft, its original three files and `statusCheckRollup=[]`. Serving PRs #5–#10 remain draft/open; migration PRs #3/#4 remain open. Target remote main is `67a3f88f1b54fa2ffbd285df7df969cea7837616`. These refs are not hosting-health evidence.
+- [R39 pickup acknowledgement](https://github.com/Brian910cpr/910cpr-class-landers/issues/214#issuecomment-5659411743).
+
+Read the originating issue and its discussion, full pinned `Codex_Mailbox/SHIFTCOMMANDER_ASTRA_20260913_R1.md`, original/current courier AGENTS.md, CODEX_HANDOFF_PROTOCOL.md, LANDERWARE_PROOF_AND_HEALTH_STANDARD.md, docs/CODEX_INSTRUCTIONS.md and #116. The handoff protocol is absent on the dirty original courier branch; the current fetched main version was used. Read target AGENTS.md, docs/PROJECT_BOUNDARIES.md, docs/CONFIRMED_SCHEDULING_RULES.md, RULES.md, DATA_CONTRACT.md, consolidation-lineage docs/SHIFT_OVERLAY_CONTRACT.md and docs/MIGRATION_PROGRESS_LOG.md, plus R8/R9 release evidence. Historical migration status is not current release proof.
+
+Reconciled candidate refs, preserved local state, reviewed the opt-in Flask authentication gate and checked current release/queue evidence. No new clearing prerequisite or reproduced independent application defect was established. The R8 issue review and [R36 acknowledgement](https://github.com/Brian910cpr/910cpr-class-landers/blob/91039997dfe03e4b0f051835535e2e3e14598355/Codex_Read_ShiftCommanderAstra_R36.md) retain the release gates. No speculative implementation, unchanged failing account-auth retry, candidate activation, merge or deployment occurred.
+
+## Exact blockers and continuation
+
+| Blocker | Required evidence / next action |
+|---|---|
+| Cloudflare serving metadata access remains unverified after the prior Pages metadata HTTP 401. | Account operator restores minimum Pages project/deployment, Worker routing and D1 binding metadata reads, or supplies an approved sanitized export. Verify actual serving paths before staging. Bridge access and unrelated LanderWare/Sites deployments do not prove these permissions. |
+| No approved operational persistent real-auth configuration. | Establish the approved persistent filesystem and exact `SC_AUTH_DB_PATH`, schema v2 readiness, privately provisioned real member/named supervisor accounts, signing configuration and inherited/deployed settings. Keep credentials private. Do not activate against schema v1 or recover by resurrecting old sessions. |
+| Current authoritative ADR staffing inputs remain unapproved/unreconciled. | Approve current roster/certifications, unit-specific `qualOp`, explicit availability consent, staffing demand and calendar provenance. Preserve ADR Google Calendar published-staffing authority. The prior observation of 170 shifts ending August 10 is historical, not a fresh live read or current schedule. |
+
+After those gates, retain the full original scope: scoped clients and real authentication; availability -> legal resolver -> supervisor review -> publication; member/mobile/wallboard agreement; approved-data legality/locks/OT/swaps/DST scenarios; hosted recovery and observer proof; secure Windows startup; phone/SMS/email intake and delivery handling. Blank availability must not become consent, required legal shortages must remain visibly OPEN, and no staffing policy or production authority was changed.
+
+The R37 issue comment reports a bridge credential exposed in that earlier session's diagnostic output. No containment/rotation proof has been supplied. Private operator review and coordinated rotation remain outstanding. No credential value was repeated, used or changed in R39.
+
+## Validation and review sources
+
+Fresh local AST parsing/in-memory compilation passed for `server.py`, `engine/auth_store.py`, and `engine/live_state_store.py`; PowerShell parser validation passed for `E:\GitHub\shiftcommander_v2_codex_issue214_r2\scripts\Start-AstraReview.ps1`. No bytecode was written. Target diff against the application commit contains only the existing `docs/RELEASE_VERIFICATION_ISSUE214_R9.md`; target worktree is clean.
+
+Retained local `E:\GitHub\shiftcommander_v2_codex_issue214_r9\debug\verification_r9\combined_final.log` was read: `Ran 160 tests in 189.801s`, `OK`, `FINAL: tests=160 failures=0 errors=0 skips=0`. These prior local synthetic tests were not rerun; unchanged code and no new failure did not justify another suite. No new browser, staging, CI or production proof is claimed.
+
+Exact review sources: [R9 verification and reproduction commands](https://github.com/Brian910cpr/shiftcommander_v2/blob/16d0ace259b485a7585decbef24c74e94bd69f5c/docs/RELEASE_VERIFICATION_ISSUE214_R9.md), [R8 release checklist](https://github.com/Brian910cpr/shiftcommander_v2/blob/ba0365a250d18297a262b96ab7f15cf3fe6f1780/docs/RELEASE_CHECKLIST_ISSUE214_R8.md), `286876e7d506bd127e14c2852f65c827815a8fa7:docs/RELEASE_EVIDENCE_ISSUE214_R2.json` (`read_only_checks`), and `5e81303e8f2cc306251ae61bd8566c3763548b83:docs/RELEASE_CHECKLIST_ISSUE214_R6.md` (schema/recovery). Existing candidate, tests, checklist and recovery guidance remain usable.
+
+## Runtime and preservation
+
+Matching active-thread local `turn_context` reports `model=gpt-6-astra` at `2026-09-14T05:18:40.259Z`; session metadata and `codex --version` report CLI `0.153.4`. These are sanitized local runtime fields, not provider-side attestation. [Official CLI documentation](https://learn.chatgpt.com/docs/developer-commands?surface=cli) was fetched; documentation or configuration alone is not runtime proof.
+
+Existing R2 `scripts/Start-AstraReview.ps1 -RepoPath E:/GitHub/shiftcommander_v2_codex_issue214_r9 -CheckOnly` returned `can_launch=false` at `2026-09-14T01:21:12.7200275-04:00`, dispatcher lock held/inaccessible. This active Astra worker continued. No duplicate launch, lock/lease/default change or new timer. The launcher is a worker entry point, not an operational application launcher; no usable normal application URL is claimed.
+
+The new courier initialized cleanly as a root-only sparse worktree from its pinned base (59 root files, empty staged diff). Original courier `docs/Earl/index.html`, tracked/untracked Python caches, `ops/handoff/codex_heartbeat.json` and `supabase/.temp/` remain untouched. Original ShiftCommander `data/google_calendar_june_2026_mirror.json`, untracked availability backup/slot generator/data/tests, and four unpublished commits on `codex/base44-worker-consolidation` are preserved (`git rev-list --left-right --count` = `0 4`). The unfinished untracked R37 receipt remains in its prior worktree. No unfinished merge/rebase/cherry-pick/revert was found in either original checkout or R9. No cleanup or generator ran.
+
+## Independent backend queue and final disposition
+
+Swept all open CODEX items and read current work ownership/dependencies. No new independently eligible narrow backend repair was established; no second issue was implemented or modified. #226 explicitly has active canonical class/person/document intake work. #227 has an active Sites delivery workstream and requires scheduler lineage before scheduler edits. Preserve both. #215 reports private owner access deployed through PR #225; its legacy Worker/finance connections, instructor identities, static-data privacy and monitoring remain separate. #216 still needs private finance inputs and full operational proof; its old credential prose is superseded by #215's access delivery. #219 needs individual instructor identity/assignment scope. #223's reconciliation is already returned; provisional source end-time correction and owner/API/UI proof remain distinct. #140's latest recorded scheduled occupancy failure is HTTP 401 at run `34796567750`; preserve fail-closed publishing and its account/parity gate. No duplicate import, active implementation takeover or credential workaround.
+
+Expected persistent outcome: real authenticated availability survives restart and produces a legal reviewed publication consistently across all views. Success evidence must link saved revision, readback, resolver explanations, review/publication and rendered views. Last complete operational proof: not established. Expected cadence includes Wednesday 23:59 publication; source freshness windows, independent observer, observer heartbeat and escalation delivery remain unproven. Failures include stale staffing inputs, unavailable/schema-invalid storage, lost saves, unauthorized/illegal assignments, inconsistent views and missed publication. Follow R6/R9 credential-only recovery to a distinct store, reconcile password/audit history and prove staging behavior; do not assume unsetting `SC_AUTH_DB_PATH` is safe rollback. Brian must not be the routine detector.
+
+Exact changed file: `Codex_Reply_ShiftCommanderAstra_R39.md` only. Assessment/syntax checks were local; GitHub issue/ref/receipt operations were remote. Receipt is committed/pushed separately from the unchanged application; final remote readback is recorded on #214. Application release remains BLOCKED, unmerged and not deployed by this dispatch.
+
+Next ChatGPT action: review this receipt, keep #214 and its draft stack open/unmerged, and obtain the three precise metadata/private-configuration/current-input prerequisites through the existing handshake, with private operator handling of the R37 credential incident. Then dispatch coordinated staging/client/recovery work. Account/operator action is required for those prerequisites. This mandatory receipt does not request another identical implementation dispatch; useful continuation requires changed prerequisite evidence or a reproduced independent defect. No dispatcher policy was changed.
