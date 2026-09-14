@@ -2621,7 +2621,7 @@ def render_tab_panel(
         else ""
     )
     if group_mode:
-        request_href = group_request_href(tab["program"])
+        request_href = "#request-form"
         full_schedule_data = escape(
             json.dumps(
                 {
@@ -2750,7 +2750,7 @@ def render_hero_image(page: dict[str, Any]) -> str:
 
 def render_hero_actions(page: dict[str, Any], first_tab: dict[str, Any], *, group_mode: bool) -> str:
     if group_mode:
-        primary_href = f"/request_group_session.html?program={quote(first_tab['program'])}"
+        primary_href = "#request-form"
         primary_label = first_tab["primary_cta_label"]
         return (
             "<div class=\"slug-hero-actions\">"
@@ -2976,6 +2976,63 @@ def render_group_training_authority(page: dict[str, Any]) -> str:
     <details><summary>What should our coordinator provide?</summary><p>Share the exact requirement wording, employee roles, headcount, training address, workday constraints, and preferred dates. That is enough to begin.</p></details>
   </section>
 """.rstrip()
+
+
+def render_group_request_form(page: dict[str, Any]) -> str:
+    if not page.get("group_mode"):
+        return ""
+    return """
+  <section class="request-form-grid">
+    <section class="section-box request-form-card" id="request-form">
+      <div class="request-form-head">
+        <div><div class="eyebrow">Request details</div><h2>Tell us about your group</h2></div>
+        <p class="muted">Share the basics and we will follow up with the best scheduling path for your team.</p>
+      </div>
+      <form data-group-request>
+        <label hidden aria-hidden="true">Website<input name="companyWebsite" tabindex="-1" autocomplete="off"></label>
+        <input id="request_type" type="hidden" name="request_type" value="group">
+        <div class="grid-2">
+          <label class="field"><span>Name</span><input type="text" name="name" autocomplete="name" required></label>
+          <label class="field"><span>Organization</span><input type="text" name="organization" autocomplete="organization"></label>
+          <label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label>
+          <label class="field"><span>Mobile</span><input type="tel" name="mobile" autocomplete="tel"></label>
+          <label class="field"><span>City</span><input type="text" name="city" autocomplete="address-level2"></label>
+          <label class="field"><span>On-site address</span><input type="text" name="address" autocomplete="street-address"></label>
+          <label class="field"><span>Estimated headcount</span><input type="number" min="1" name="headcount"></label>
+          <label class="field"><span>Desired dates / times</span><input type="text" name="preferred_times" placeholder="Any Thursday in May could work"></label>
+        </div>
+        <label class="field"><span>Program</span><input id="program" type="text" name="program" value="BLS On-Site"></label>
+        <label class="field"><span>Comments / special requests</span><textarea name="comments" placeholder="Tell us about course requirements, staff roles, timing constraints, and anything else we should know."></textarea></label>
+        <div class="request-submit-row">
+          <button class="button primary" type="submit" disabled>Send Request</button>
+          <a class="button secondary" href="/#class-finder">Compare individual seat options</a>
+        </div>
+        <p id="group-request-status" role="status" aria-live="polite"></p>
+        <p>Need help? <a href="tel:9103955193">Call 910-395-5193</a> or <a href="mailto:info@910cpr.com">email info@910cpr.com</a>.</p>
+        <noscript>Online requests need JavaScript. Please call or email us.</noscript>
+      </form>
+    </section>
+  </section>
+""".rstrip()
+
+
+def render_group_legacy_alias() -> str:
+    return """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Group CPR Training | 910CPR</title>
+<meta name="description" content="Request on-site CPR, BLS, ACLS, PALS, First Aid, and AED group training from 910CPR.">
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://www.910cpr.com/group-training.html">
+<meta http-equiv="refresh" content="0; url=/group-training.html#request-form">
+</head>
+<body>
+<main><p>This group-training page has moved. <a href="/group-training.html#request-form">Open the current on-site training request page</a>.</p></main>
+</body>
+</html>
+"""
 
 
 def render_group_training_schema(page: dict[str, Any]) -> str:
@@ -3690,7 +3747,7 @@ def render_page(
     else:
         tabs_html = (
             f"""
-  <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs>
+  <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs{' data-sync-program="#program"' if group_mode else ''}>
     <div class="tabs hub-tabs">
       {''.join(buttons)}
     </div>
@@ -3699,7 +3756,7 @@ def render_page(
 """
             if visible_tabs
             else f"""
-  <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs>
+  <section class="section-box slug-tabs-block" id="slug-tabs-{escape(page['slug'], quote=True)}" data-tabs{' data-sync-program="#program"' if group_mode else ''}>
     <div class="slug-empty hub-empty-state">
       <strong>{escape(EMPTY_FALLBACK_TITLE)}</strong>
       <p>{escape(EMPTY_FALLBACK_BODY)}</p>
@@ -3727,6 +3784,7 @@ def render_page(
   {render_heartsaver_course_jumps(page)}
   {tabs_html}
   {render_group_training_authority(page)}
+  {render_group_request_form(page)}
   {render_google_trust_block()}
   {render_group_training_push(page, first_tab, group_mode=group_mode)}
   {render_other_training_options(page)}
@@ -3758,6 +3816,7 @@ def render_page(
 <script src="assets/live-sessions.js"></script>
 <script src="assets/session-expiry.js"></script>
 <script src="assets/hybrid-inventory.js"></script>
+{'<script defer src="/assets/group-request.js?v=20260913-1"></script>' if group_mode else ''}
 </body>
 </html>"""
 
@@ -3822,6 +3881,10 @@ def build() -> None:
             html = clean_generated_html(html)
             last_output = OUTPUT_DIR / f"{page['slug']}.html"
             last_output.write_text(html, encoding="utf-8")
+            if page_slug == "group-training":
+                legacy_group_path = OUTPUT_DIR / "group.html"
+                legacy_group_html = apply_build_metadata(render_group_legacy_alias(), build_meta)
+                legacy_group_path.write_text(clean_generated_html(legacy_group_html), encoding="utf-8")
             all_hub_debug_records.extend(
                 write_hub_runtime_debug(
                     page,

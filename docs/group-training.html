@@ -106,19 +106,19 @@
 <!-- Google Tag Manager -->
 <script>
 (function(w,d,s,l,i,m){
-var internal=/^\/(admin|control-center)(\/|$)/.test(w.location.pathname)||/^\/analytics-preferences(\/|$)/.test(w.location.pathname);
-var excluded=new RegExp('(?:^|;\\s*)lw_analytics_excluded=1(?:;|$)').test(d.cookie);
-if(internal||excluded){w['ga-disable-'+m]=true;return;}
+var internal=/^\/(admin|control-center|internal|drafts|analytics-preferences)(\/|$)/.test(w.location.pathname);
+var excluded=new RegExp('(?:^|;\\s*)(?:lw_analytics_excluded|analytics_excluded)=1(?:;|$)').test(d.cookie);
+if(internal||excluded){m.split(',').forEach(function(id){w['ga-disable-'+id]=true;});return;}
 w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH','G-SL0HBP3RV5');
+})(window,document,'script','dataLayer','GTM-PQS8DCBH','G-45PBWBK7KR,G-SL0HBP3RV5');
 </script>
 <!-- End Google Tag Manager -->
+<script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
 <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
 <script src="/assets/site-theme.js"></script>
-<script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -142,7 +142,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="eyebrow">On-Site Team Training</div>
       <h1>Group CPR Training For Real Requirements</h1>
       <p class="subhead">CPR, BLS, ACLS, PALS, first aid, and AED training for healthcare, dental, school, workplace, and professional teams, built around hands-on practice, scenario refreshers, and clear team communication.</p>
-      <div class="slug-hero-actions"><a class="button primary" href="/request_group_session.html?program=BLS%20On-Site">Request on-site BLS</a></div>
+      <div class="slug-hero-actions"><a class="button primary" href="#request-form">Request on-site BLS</a></div>
     </div>
     <div class="hero-side">
 
@@ -152,7 +152,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 
-  <section class="section-box slug-tabs-block" id="slug-tabs-group-training" data-tabs>
+  <section class="section-box slug-tabs-block" id="slug-tabs-group-training" data-tabs data-sync-program="#program">
     <div class="tabs hub-tabs">
       <button class='tab-btn active' data-program='BLS On-Site' data-tab-target='#group-bls' type='button'><img class="hub-tab-icon" src="images/tab_classroom.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">BLS On-Site</span></span></button><button class='tab-btn' data-program='First Aid / CPR / AED' data-tab-target='#group-heartsaver' type='button'><img class="hub-tab-icon" src="images/tab_classroom.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">First Aid / CPR / AED</span></span></button><button class='tab-btn' data-program='ACLS' data-tab-target='#group-acls' type='button'><img class="hub-tab-icon" src="images/tab_classroom.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">ACLS</span></span></button><button class='tab-btn' data-program='PALS' data-tab-target='#group-pals' type='button'><img class="hub-tab-icon" src="images/tab_classroom.png" alt="" loading="lazy" onerror="this.style.display='none'"><span class="hub-tab-copy"><span class="hub-tab-label">PALS</span></span></button>
     </div>
@@ -172,7 +172,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="slug-pill-subtitle">Private request-based training at your location. Share your preferred date, location, and group size and we’ll confirm availability.</div>
           </div>
           <div class="slug-pill-actions">
-            <a class="button small primary" href="/request_group_session.html?program=BLS%20On-Site">Request This Training</a>
+            <a class="button small primary" href="#request-form">Request This Training</a>
           </div>
         </article>
       </div>
@@ -194,7 +194,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="slug-pill-subtitle">Private request-based training at your location. Share your preferred date, location, and group size and we’ll confirm availability.</div>
           </div>
           <div class="slug-pill-actions">
-            <a class="button small primary" href="/request_group_session.html?program=First%20Aid%20/%20CPR%20/%20AED">Request This Training</a>
+            <a class="button small primary" href="#request-form">Request This Training</a>
           </div>
         </article>
       </div>
@@ -216,7 +216,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="slug-pill-subtitle">Private request-based training at your location. Share your preferred date, location, and group size and we’ll confirm availability.</div>
           </div>
           <div class="slug-pill-actions">
-            <a class="button small primary" href="/request_group_session.html?program=ACLS">Request This Training</a>
+            <a class="button small primary" href="#request-form">Request This Training</a>
           </div>
         </article>
       </div>
@@ -238,7 +238,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="slug-pill-subtitle">Private request-based training at your location. Share your preferred date, location, and group size and we’ll confirm availability.</div>
           </div>
           <div class="slug-pill-actions">
-            <a class="button small primary" href="/request_group_session.html?program=PALS">Request This Training</a>
+            <a class="button small primary" href="#request-form">Request This Training</a>
           </div>
         </article>
       </div>
@@ -246,6 +246,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </section>
   </section>
+
 
 
   <section class="section-box group-training-authority" aria-labelledby="group-training-authority-title">
@@ -267,6 +268,38 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <details><summary>Can training happen at our facility?</summary><p>Yes, after we confirm the address, room, group size, equipment plan, travel, and instructor schedule.</p></details>
     <details><summary>Does every employee need the same course?</summary><p>No. Match each employee to the role and written requirement. Clinical staff may need BLS while nonclinical responders may need First Aid, CPR, and AED.</p></details>
     <details><summary>What should our coordinator provide?</summary><p>Share the exact requirement wording, employee roles, headcount, training address, workday constraints, and preferred dates. That is enough to begin.</p></details>
+  </section>
+
+  <section class="request-form-grid">
+    <section class="section-box request-form-card" id="request-form">
+      <div class="request-form-head">
+        <div><div class="eyebrow">Request details</div><h2>Tell us about your group</h2></div>
+        <p class="muted">Share the basics and we will follow up with the best scheduling path for your team.</p>
+      </div>
+      <form data-group-request>
+        <label hidden aria-hidden="true">Website<input name="companyWebsite" tabindex="-1" autocomplete="off"></label>
+        <input id="request_type" type="hidden" name="request_type" value="group">
+        <div class="grid-2">
+          <label class="field"><span>Name</span><input type="text" name="name" autocomplete="name" required></label>
+          <label class="field"><span>Organization</span><input type="text" name="organization" autocomplete="organization"></label>
+          <label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label>
+          <label class="field"><span>Mobile</span><input type="tel" name="mobile" autocomplete="tel"></label>
+          <label class="field"><span>City</span><input type="text" name="city" autocomplete="address-level2"></label>
+          <label class="field"><span>On-site address</span><input type="text" name="address" autocomplete="street-address"></label>
+          <label class="field"><span>Estimated headcount</span><input type="number" min="1" name="headcount"></label>
+          <label class="field"><span>Desired dates / times</span><input type="text" name="preferred_times" placeholder="Any Thursday in May could work"></label>
+        </div>
+        <label class="field"><span>Program</span><input id="program" type="text" name="program" value="BLS On-Site"></label>
+        <label class="field"><span>Comments / special requests</span><textarea name="comments" placeholder="Tell us about course requirements, staff roles, timing constraints, and anything else we should know."></textarea></label>
+        <div class="request-submit-row">
+          <button class="button primary" type="submit" disabled>Send Request</button>
+          <a class="button secondary" href="/#class-finder">Compare individual seat options</a>
+        </div>
+        <p id="group-request-status" role="status" aria-live="polite"></p>
+        <p>Need help? <a href="tel:9103955193">Call 910-395-5193</a> or <a href="mailto:info@910cpr.com">email info@910cpr.com</a>.</p>
+        <noscript>Online requests need JavaScript. Please call or email us.</noscript>
+      </form>
+    </section>
   </section>
 
   <section class="top-trust below-inventory-trust" aria-label="910CPR trust and reviews">
@@ -301,5 +334,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="assets/live-sessions.js"></script>
 <script src="assets/session-expiry.js"></script>
 <script src="assets/hybrid-inventory.js"></script>
+<script defer src="/assets/group-request.js?v=20260913-1"></script>
 </body>
 </html>

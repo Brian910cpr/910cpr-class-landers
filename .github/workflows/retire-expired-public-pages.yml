@@ -1,0 +1,48 @@
+name: Retire expired public class pages
+
+on:
+  schedule:
+    - cron: "5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: schedule-publish-main
+  cancel-in-progress: false
+
+jobs:
+  retire:
+    name: Remove expired public registration claims
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Retire pages and refresh sitemap
+        run: python -m scripts.retire_expired_public_pages
+
+      - name: Test lifecycle maintenance
+        run: python -m unittest -q tests.test_public_session_landers tests.test_retire_expired_public_pages
+
+      - name: Commit safe lifecycle output
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- docs/classes docs/sitemap.xml
+          if git diff --cached --quiet; then
+            echo "No expired public pages require retirement."
+            exit 0
+          fi
+          git commit -m "Retire expired public class pages"
+          git push origin HEAD:main
