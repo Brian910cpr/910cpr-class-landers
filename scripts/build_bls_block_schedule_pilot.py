@@ -800,6 +800,20 @@ def css() -> str:
     }
     .stable-class-item a:hover, .stable-class-item a:focus-visible { border-color: var(--accent); }
     .stable-class-item span { color: var(--muted); font-size: .9rem; }
+    .service-promise {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0 0 16px;
+    }
+    .service-promise-item {
+      padding: 14px 16px;
+      border: 1px solid #cddfec;
+      border-radius: 12px;
+      background: #f7fbfe;
+    }
+    .service-promise-item strong { display: block; margin-bottom: 3px; color: var(--accent-dark); }
+    .service-promise-item span { color: var(--muted); font-size: .92rem; }
     @media (max-width: 820px) {
       .page-heading-row { grid-template-columns: 1fr; gap: 10px; }
       .header-credential {
@@ -816,6 +830,7 @@ def css() -> str:
       .header-credential-eyebrow { margin-bottom: 1px; font-size: .58rem; }
       .selector-grid { grid-template-columns: 1fr; }
       .stable-class-list { grid-template-columns: 1fr; }
+      .service-promise { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
       header, main, .selector-brand-bar { padding: 14px 16px; }
@@ -1097,6 +1112,15 @@ def render_html(payload: dict[str, Any]) -> str:
         if page_key in {"bls", "acls", "pals", "heartsaver"}
         else ""
     )
+    service_promise_html = (
+        """
+    <section class="service-promise" aria-label="Local scheduling and eCard service">
+      <div class="service-promise-item"><strong>Same-day eCards</strong><span>After successful completion and required course paperwork, 910CPR issues your eCard the same day.</span></div>
+      <div class="service-promise-item"><strong>Flexible Wilmington skills checks</strong><span>Daytime, evening, and overnight appointments may appear whenever the live calendar shows verified availability.</span></div>
+    </section>"""
+        if page_key in {"bls", "acls", "pals", "heartsaver"}
+        else ""
+    )
     configured_default_course = str(page_config.get("default_course_id") or "").strip()
     available_course_ids = {str(option.get("courseId") or "") for option in course_options}
     first_course = (
@@ -1283,6 +1307,7 @@ def render_html(payload: dict[str, Any]) -> str:
   <main>
     {context_html}
     {unsupported_html}
+    {service_promise_html}
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">

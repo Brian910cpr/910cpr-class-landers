@@ -409,12 +409,28 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             self.assertTrue(offer.get("availabilityBlockId"))
             self.assertTrue(offer.get("sourceAvailabilityBlock"))
 
-    def test_public_starts_are_inside_business_hours(self):
+    def test_public_starts_use_allowed_quarter_hour_boundaries(self):
         for offer in self.payload["offers"]:
             hour, minute = [int(part) for part in offer["startTime"].split(":")]
-            self.assertGreaterEqual((hour, minute), (8, 0))
-            self.assertLessEqual((hour, minute), (19, 0))
-            self.assertNotEqual(offer["startTime"], "00:00")
+            self.assertGreaterEqual((hour, minute), (0, 0))
+            self.assertLessEqual((hour, minute), (23, 45))
+            self.assertIn(minute, {0, 15, 30, 45})
+
+    def test_production_policy_allows_overnight_starts_without_bypassing_other_rules(self):
+        policy = json.loads(block_start_time_selector.PUBLIC_OFFER_POLICY_PATH.read_text(encoding="utf-8"))
+        reference = datetime(2026, 7, 1, 12, 0)
+        for start_time in ("00:00", "02:15", "23:45"):
+            start = datetime.fromisoformat(f"2026-07-10T{start_time}")
+            reasons = block_start_time_selector.public_policy_reasons(
+                start,
+                "209806",
+                "BLS",
+                policy,
+                {"209806"},
+                reference_now=reference,
+            )
+            self.assertNotIn("outside_public_dynamic_hours", reasons)
+            self.assertEqual([], reasons)
 
     def test_appointment_urls_include_required_query_params(self):
         for offer in self.payload["offers"][:25]:
@@ -486,6 +502,12 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("12:00 AM\u20136:00 PM", html)
         self.assertNotIn("Calendy", html)
         self.assertNotIn("shotgun", html.lower())
+
+    def test_core_selector_promises_same_day_ecards_and_flexible_hours(self):
+        html = build_bls_block_schedule_pilot.render_html(self.payload)
+        self.assertIn("Same-day eCards", html)
+        self.assertIn("issues your eCard the same day", html)
+        self.assertIn("evening, and overnight appointments", html)
 
     def test_shared_motion_progresses_once_on_mobile_and_respects_reduced_motion(self):
         script = (ROOT / "docs" / "assets" / "interaction-motion.js").read_text(encoding="utf-8")
