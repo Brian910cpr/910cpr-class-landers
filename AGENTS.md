@@ -187,3 +187,19 @@ For every persistent or operational system, read and follow `LANDERWARE_PROOF_AN
 - A monitor that nobody monitors is not sufficient.
 - Brian must not be the routine monitoring layer. If a system still depends on him remembering to check it, carry messages, or discover that it stopped, report that dependency explicitly and do not describe the system as fully healthy.
 - Answer operational health questions from current evidence when practical, not from recollection that the feature was previously built.
+
+## Mandatory Local-First and Credit-Conservation Doctrine
+
+Treat this section as a standing preface to every Codex assignment for this repository.
+
+- Preserve ChatGPT/Codex capacity for business-critical LanderWare operation. Do not spend high-cost reasoning on deterministic work that can be performed locally or by ordinary scripts.
+- When CyberPC or another authorized local workspace is available, prefer it for repository scans, search/replace, code generation from deterministic templates, bulk file processing, builds, test loops, link scans, static analysis, formatting, and other repeatable computation.
+- Use Codex/model reasoning for architecture, diagnosis, ambiguous implementation choices, code review, and the smallest changes that actually require judgment.
+- Prefer one well-scoped implementation pass plus targeted verification over repeated conversational back-and-forth, repeated full-repo inspection, or repeated regeneration.
+- Cache and reuse prior findings, audit artifacts, test results, and source maps when they are still current. Do not re-discover the same repository facts in each round.
+- Batch related read-only checks and tests when safe. Avoid many tiny status-only turns or receipts that consume model effort without changing evidence.
+- Before starting an expensive broad analysis, ask whether a local script, existing debug artifact, repository index, or narrow test can answer the question more cheaply.
+- If the assignment can be completed locally and safely without model reasoning, do that first and return only the result, diff, and proof needed for review.
+- If remaining model/credit headroom cannot be observed directly, do not assume unlimited capacity. Favor short bounded work units and stop nonessential Codex conversation before business-critical ChatGPT/LanderWare use is at risk.
+- Production failures, customer-facing defects, scheduling correctness, registrations, credentials, payments, and owner access outrank exploratory refactors, cosmetic cleanup, and low-value status chatter.
+- Do not continue burning model effort merely because a heartbeat fired. A heartbeat checks state; it does not require new reasoning work when nothing materially changed.
