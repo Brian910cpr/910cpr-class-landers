@@ -113,11 +113,43 @@ process.stdout.write(ecardNumbersForLookup([],notes).join('\n'));
         self.assertIn('id="finalize"', html)
         self.assertIn("Type the complete class number to continue", html)
         self.assertIn("action:'finalize_class'", html)
-        self.assertIn("Print Final AHA Roster", html)
+        self.assertIn("Download Finalized Roster", html)
         self.assertIn('if (action === "finalize_class")', source)
         self.assertIn('existingClass?.status === "finalized"', source)
         self.assertIn('classRow?.status === "finalized"', source)
         self.assertIn("Finalized classes cannot be deleted", source)
+
+    def test_finalization_requires_scores_paperwork_and_issued_ecards(self) -> None:
+        source = EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("missing a score or HeartCode certificate number", source)
+        self.assertIn("missing an issued eCard number", source)
+        self.assertIn("Course-completion paperwork must be uploaded before finalization", source)
+        self.assertIn('score_or_certificate: clean(raw.score_or_certificate', source)
+
+    def test_preclass_roster_and_ecard_import_are_separate_controls(self) -> None:
+        html = PAGE.read_text(encoding="utf-8")
+        self.assertIn('id="preClassRoster"', html)
+        self.assertIn("PRE-CLASS RECONCILIATION COPY", html)
+        self.assertIn('id="ecardImport"', html)
+        self.assertIn("AHA eCard issuance import", html)
+        self.assertIn("Score / HeartCode Cert #", html)
+        self.assertIn("data-fill-down", html)
+        self.assertIn("for(let n=i+1;n<workingRoster.length;n++)", html)
+
+    def test_finalized_identity_corrections_are_warned_and_audited(self) -> None:
+        html = PAGE.read_text(encoding="utf-8")
+        source = EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("do NOT correct credentials already issued by AHA, ARC, or HSI", html)
+        self.assertIn('if (action === "correct_finalized_participant")', source)
+        self.assertIn('rpc("correct_nhcso_finalized_participant"', source)
+        self.assertIn('body.warning_accepted === true', source)
+
+    def test_participant_history_can_never_be_hard_deleted(self) -> None:
+        html = PAGE.read_text(encoding="utf-8")
+        source = EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("Classes with participant history cannot be deleted", html)
+        self.assertIn("participant history is never hard-deleted", source)
+        self.assertNotIn('.eq("status", "Active");\n      if (countError)', source)
 
     def test_server_canonicalizes_existing_identity_and_deduplicates_each_batch(self) -> None:
         source = EDGE_FUNCTION.read_text(encoding="utf-8")
