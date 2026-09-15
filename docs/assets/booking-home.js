@@ -113,11 +113,18 @@
         <section class="home-exact-wording" aria-labelledby="chooser-exact-wording">
           <h4 id="chooser-exact-wording">My employer or school gave me exact wording</h4>
           <label for="course-requirement-text">Paste the exact requirement here.</label>
-          <textarea id="course-requirement-text" rows="3" data-course-requirement-text></textarea>
-          <div class="home-help-secondary-actions">
-            <button class="button secondary" type="button" data-copy-requirement-help>Copy help request</button>
-            <a class="button secondary" data-context-email-link href="mailto:info@910cpr.com?subject=Help%20Choosing%20the%20Right%20CPR%20Class&amp;body=I%20need%20help%20choosing%20the%20correct%20class.%0D%0A%0D%0ARequirement%20from%20my%20employer%2C%20school%2C%20or%20license%3A%0D%0A%5Binsert%20text%5D%0D%0A%0D%0AMy%20deadline%3A%0D%0A%5Binsert%20date%5D">Email with this context</a>
+          <textarea id="course-requirement-text" rows="3" maxlength="5000" data-course-requirement-text></textarea>
+          <div class="home-requirement-contact">
+            <label>Your name (optional)<input type="text" maxlength="120" autocomplete="name" data-requirement-name></label>
+            <label>Email<input type="email" maxlength="254" autocomplete="email" data-requirement-email></label>
+            <label>Phone<input type="tel" maxlength="40" autocomplete="tel" data-requirement-phone></label>
           </div>
+          <p class="home-requirement-note">Enter an email or phone so we can follow up.</p>
+          <div class="home-help-secondary-actions">
+            <button class="button primary" type="button" data-submit-requirement>Send this requirement to 910CPR</button>
+          </div>
+          <div class="home-requirement-status" role="status" aria-live="polite" data-requirement-status></div>
+          <input type="text" class="home-requirement-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" data-requirement-company>
         </section>
       </div>
     </section>
@@ -126,22 +133,142 @@
   const chooserToggle = sectionsRoot.querySelector("[data-course-chooser-toggle]");
   const chooser = sectionsRoot.querySelector("#guided-course-chooser");
   const requirementText = sectionsRoot.querySelector("[data-course-requirement-text]");
-  const copyHelpButton = sectionsRoot.querySelector("[data-copy-requirement-help]");
-  const contextEmailLink = sectionsRoot.querySelector("[data-context-email-link]");
+  const requirementName = sectionsRoot.querySelector("[data-requirement-name]");
+  const requirementEmail = sectionsRoot.querySelector("[data-requirement-email]");
+  const requirementPhone = sectionsRoot.querySelector("[data-requirement-phone]");
+  const requirementCompany = sectionsRoot.querySelector("[data-requirement-company]");
+  const requirementSubmit = sectionsRoot.querySelector("[data-submit-requirement]");
+  const requirementStatus = sectionsRoot.querySelector("[data-requirement-status]");
+  const requirementSessionKey = "910cprRequirementContext";
+  const requirementEndpoint =
+    "https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/requirement-inquiry";
+  const requirementOpenedAt = Date.now();
 
-  function updateContextEmail() {
-    if (!contextEmailLink) return;
-    const requirement = requirementText?.value.trim() || "[insert text]";
-    const body = [
-      "I need help choosing the correct class.",
-      "",
-      "Requirement from my employer, school, or license:",
-      requirement,
-      "",
-      "My deadline:",
-      "[insert date]",
-    ].join("\r\n");
-    contextEmailLink.href = `mailto:info@910cpr.com?subject=${encodeURIComponent("Help Choosing the Right CPR Class")}&body=${encodeURIComponent(body)}`;
+  function readSessionJson(key) {
+    try {
+      return JSON.parse(sessionStorage.getItem(key) || "null");
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function existingCustomerContext() {
+    const candidates = [
+      readSessionJson("910cprCustomer"),
+      readSessionJson("910cprInquiry"),
+      readSessionJson("910cprRegistration"),
+      readSessionJson("registrationDraft"),
+      readSessionJson("inquiryDraft"),
+    ].filter(Boolean);
+    return candidates.reduce((result, value) => ({ ...result, ...value }), {});
+  }
+
+  function selectedCourseContext() {
+    return (
+      readSessionJson("910cprSelectedCourse") || {
+        title: document.querySelector("h1")?.textContent?.trim() || "",
+        href: location.pathname + location.hash,
+      }
+    );
+  }
+
+  function saveRequirementSession(overrides) {
+    const current = readSessionJson(requirementSessionKey) || {};
+    const value = {
+      ...current,
+      requirement: requirementText?.value || "",
+      name: requirementName?.value || "",
+      email: requirementEmail?.value || "",
+      phone: requirementPhone?.value || "",
+      selectedCourse: selectedCourseContext(),
+      updatedAt: new Date().toISOString(),
+      ...overrides,
+    };
+    sessionStorage.setItem(requirementSessionKey, JSON.stringify(value));
+    return value;
+  }
+
+  function restoreRequirementSession() {
+    const saved = readSessionJson(requirementSessionKey);
+    const customer = existingCustomerContext();
+    if (requirementText) requirementText.value = saved?.requirement || "";
+    if (requirementName) requirementName.value = saved?.name || customer.name || customer.customerName || "";
+    if (requirementEmail) requirementEmail.value = saved?.email || customer.email || customer.customerEmail || "";
+    if (requirementPhone) requirementPhone.value = saved?.phone || customer.phone || customer.customerPhone || "";
+  }
+
+  async function submitRequirement() {
+    if (!requirementSubmit || !requirementStatus) return;
+    const requirement = requirementText?.value || "";
+    const email = requirementEmail?.value.trim() || "";
+    const phone = requirementPhone?.value.trim() || "";
+    if (requirement.trim().length < 10) {
+      requirementStatus.textContent = "Please enter the exact requirement before sending.";
+      requirementText?.focus();
+      return;
+    }
+    if (!email && !phone) {
+      requirementStatus.textContent = "Please enter an email or phone so 910CPR can follow up.";
+      (requirementEmail || requirementPhone)?.focus();
+      return;
+    }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      requirementStatus.textContent = "Please enter a valid email address.";
+      requirementEmail?.focus();
+      return;
+    }
+    if (!email && phone.replace(/\D/g, "").length < 7) {
+      requirementStatus.textContent = "Please enter a valid phone number.";
+      requirementPhone?.focus();
+      return;
+    }
+
+    const saved = saveRequirementSession();
+    const customer = existingCustomerContext();
+    const clientInquiryId =
+      saved.clientInquiryId ||
+      (crypto.randomUUID ? crypto.randomUUID() : `inq-${Date.now()}-${Math.random().toString(36).slice(2)}`);
+    saveRequirementSession({ clientInquiryId });
+    requirementSubmit.disabled = true;
+    requirementSubmit.textContent = "Sending…";
+    requirementStatus.textContent = "";
+
+    try {
+      const response = await fetch(requirementEndpoint, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: requirementName?.value.trim() || customer.name || customer.customerName || "",
+          email,
+          phone,
+          requirement,
+          selectedCourse: selectedCourseContext(),
+          pageTitle: document.title,
+          pageUrl: location.href,
+          clientInquiryId,
+          inquiryId: customer.inquiryId || customer.inquiry_id || null,
+          registrationId: customer.registrationId || customer.registration_id || null,
+          companyWebsite: requirementCompany?.value || "",
+          formElapsedMs: Date.now() - requirementOpenedAt,
+        }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.sent || !result.inquiryId) {
+        throw new Error(result.error || "The message could not be delivered.");
+      }
+      saveRequirementSession({
+        serverInquiryId: result.inquiryId,
+        sentAt: result.sentAt || new Date().toISOString(),
+      });
+      requirementStatus.textContent =
+        "Sent to 910CPR. We’ll review the wording and help you determine the correct course.";
+    } catch (error) {
+      requirementStatus.textContent =
+        "We couldn’t send this yet. Your wording is still here—please check your connection and try again.";
+    } finally {
+      requirementSubmit.disabled = false;
+      requirementSubmit.textContent = "Send this requirement to 910CPR";
+    }
   }
 
   chooserToggle?.addEventListener("click", () => {
@@ -155,27 +282,24 @@
     }
   });
 
-  requirementText?.addEventListener("input", updateContextEmail);
-  updateContextEmail();
+  restoreRequirementSession();
+  [requirementText, requirementName, requirementEmail, requirementPhone].forEach((field) =>
+    field?.addEventListener("input", () => saveRequirementSession())
+  );
+  requirementSubmit?.addEventListener("click", submitRequirement);
+  window.get910CPRRequirementContext = () => readSessionJson(requirementSessionKey);
 
-  copyHelpButton?.addEventListener("click", async () => {
-    const requirement = requirementText?.value.trim() || "[insert text]";
-    const text = [
-      "I need help choosing the correct class.",
-      "",
-      "Requirement from my employer, school, or license:",
-      requirement,
-      "",
-      "My deadline:",
-      "[insert date]",
-    ].join("\n");
-    try {
-      await navigator.clipboard.writeText(text);
-      copyHelpButton.textContent = "Copied";
-    } catch (error) {
-      copyHelpButton.textContent = "Copy this text manually";
-      if (requirementText) requirementText.focus();
-    }
+  sectionsRoot.querySelectorAll(".home-choice-links a, .home-course-tile").forEach((link) => {
+    link.addEventListener("click", () => {
+      sessionStorage.setItem(
+        "910cprSelectedCourse",
+        JSON.stringify({
+          title: link.textContent.trim(),
+          href: link.getAttribute("href") || "",
+        })
+      );
+      saveRequirementSession();
+    });
   });
 
   function escapeHtml(value) {
