@@ -3,7 +3,7 @@ name: Refresh admin availability
 on:
   workflow_dispatch:
   schedule:
-    - cron: "7,37 * * * *"
+    - cron: "*/10 * * * *"
   push:
     branches:
       - main
