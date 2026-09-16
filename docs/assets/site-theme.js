@@ -54,6 +54,36 @@
     });
   }
 
+  function installPublicHelpLinks() {
+    if (location.pathname.startsWith("/admin/") || location.pathname.startsWith("/corp/") || location.pathname.startsWith("/control-center/")) return;
+
+    if (!document.querySelector('[data-site-faq-link]')) {
+      const help = document.createElement("a");
+      help.href = "/faq/";
+      help.textContent = "Help & FAQ";
+      help.dataset.siteFaqLink = "1";
+      help.style.cssText = "display:inline-flex;align-items:center;min-height:36px;padding:6px 10px;border:1px solid currentColor;border-radius:999px;color:#074f80;font-weight:800;text-decoration:none;white-space:nowrap";
+
+      const phone = document.querySelector('a[href^="tel:"]');
+      if (phone && phone.parentNode) phone.insertAdjacentElement("beforebegin", help);
+      else {
+        const header = document.querySelector(".site-brand-bar, .selector-brand-bar, header");
+        if (header) header.appendChild(help);
+      }
+    }
+
+    if ((location.pathname === "/bls.html" || location.pathname === "/BLS.html") && !document.querySelector('[data-heartcode-certificate-help]')) {
+      const host = document.querySelector("main");
+      if (!host) return;
+      const box = document.createElement("aside");
+      box.dataset.heartcodeCertificateHelp = "1";
+      box.setAttribute("aria-label", "HeartCode BLS completion certificate help");
+      box.style.cssText = "margin:0 0 18px;padding:14px 16px;border:1px solid #cddfec;border-left:4px solid #0a66a5;border-radius:10px;background:#f7fbfe";
+      box.innerHTML = '<strong style="display:block;margin-bottom:4px;color:#074f80">Already completed HeartCode BLS Online?</strong><span style="display:block;margin-bottom:8px">If you need help finding or downloading your AHA online completion certificate, use our step-by-step guide.</span><a href="/faq/heartcode-bls-completion-certificate.html" style="font-weight:800;color:#074f80">How to download your HeartCode BLS completion certificate →</a>';
+      host.insertAdjacentElement("afterbegin", box);
+    }
+  }
+
   function minutesBetween(startDate, startTime, endDate, endTime) {
     if (!startDate || !startTime || !endDate || !endTime) return null;
     const start = new Date(startDate + "T" + startTime + ":00");
@@ -173,6 +203,7 @@
 
   function installPageBehavior() {
     installToggle();
+    installPublicHelpLinks();
     suppressUnavailablePublicSessions();
     installSessionTimingControls();
     installDurationCues();
