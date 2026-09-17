@@ -1,14 +1,14 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-09-17T01:00:23.947662+00:00",
+  "generated_at": "2026-09-17T01:31:02.477086+00:00",
   "read_only_snapshot": true,
   "calendar_source_id": "brian_primary_calendar",
   "calendar_id": "",
   "source_type": "occupancy_calendar",
   "source_display_name": "Brian Primary Google Calendar",
   "date_range": {
-    "start": "2026-09-17T01:00:23.347993+00:00",
-    "end": "2026-12-16T01:00:23.347993+00:00",
+    "start": "2026-09-17T01:31:01.814238+00:00",
+    "end": "2026-12-16T01:31:01.814238+00:00",
     "days": 90
   },
   "export_status": "failed",
