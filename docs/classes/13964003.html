@@ -23,16 +23,17 @@
 <!-- Google Tag Manager -->
 <script>
 (function(w,d,s,l,i,m){
-var internal=/^\/(admin|control-center)(\/|$)/.test(w.location.pathname)||/^\/analytics-preferences(\/|$)/.test(w.location.pathname);
-var excluded=new RegExp('(?:^|;\\s*)lw_analytics_excluded=1(?:;|$)').test(d.cookie);
-if(internal||excluded){w['ga-disable-'+m]=true;return;}
+var internal=/^\/(admin|control-center|internal|drafts|analytics-preferences)(\/|$)/.test(w.location.pathname);
+var excluded=new RegExp('(?:^|;\\s*)(?:lw_analytics_excluded|analytics_excluded)=1(?:;|$)').test(d.cookie);
+if(internal||excluded){m.split(',').forEach(function(id){w['ga-disable-'+id]=true;});return;}
 w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH','G-SL0HBP3RV5');
+})(window,document,'script','dataLayer','GTM-PQS8DCBH','G-45PBWBK7KR,G-SL0HBP3RV5');
 </script>
 <!-- End Google Tag Manager -->
+<script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -72,11 +73,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     "url": "https://coastalcprtraining.enrollware.com/enroll?id=13964003",
     "availability": "https://schema.org/InStock",
     "priceCurrency": "USD",
-    "validFrom": "2026-09-11T14:47:01-04:00"
+    "validFrom": "2026-09-16T21:01:14-04:00"
   }
 }
 </script>
-<script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
 </head>
 <body class="lander course-aha-pals-heartcode-skills-session-81bc4bba">
 <!-- Google Tag Manager (noscript) -->
@@ -233,26 +233,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <div class="upcoming-grid">
 
-<div class="upcoming-card js-session-item" data-session-id="14083297" data-start="2026-09-15T13:00:00-04:00" data-end="2026-09-15T14:00:00-04:00" data-session-start="2026-09-15T13:00:00-04:00">
-  <div class="upcoming-date">September 15, 2026</div>
-  <div class="upcoming-time">1:00 PM</div>
-  <div class="upcoming-location">Wilmington; Shipyard Blvd - B</div>
-
-  <div class="upcoming-actions">
-    <a class="button small primary" href="/classes/14083297.html">Book This Class</a>
-  </div>
-</div>
-
-<div class="upcoming-card js-session-item" data-session-id="14083307" data-start="2026-09-14T13:00:00-04:00" data-end="2026-09-14T14:00:00-04:00" data-session-start="2026-09-14T13:00:00-04:00">
-  <div class="upcoming-date">September 14, 2026</div>
-  <div class="upcoming-time">1:00 PM</div>
-  <div class="upcoming-location">Wilmington; Shipyard Blvd - B</div>
-
-  <div class="upcoming-actions">
-    <a class="button small primary" href="/classes/14083307.html">Book This Class</a>
-  </div>
-</div>
-
 <div class="upcoming-card js-session-item" data-session-id="14083298" data-start="2026-09-24T13:00:00-04:00" data-end="2026-09-24T14:00:00-04:00" data-session-start="2026-09-24T13:00:00-04:00">
   <div class="upcoming-date">September 24, 2026</div>
   <div class="upcoming-time">1:00 PM</div>
@@ -263,33 +243,83 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </div>
 
-<div class="upcoming-card js-session-item" data-session-id="13964006" data-start="2026-09-14T14:00:00-04:00" data-end="2026-09-14T18:00:00-04:00" data-session-start="2026-09-14T14:00:00-04:00">
-  <div class="upcoming-date">September 14, 2026</div>
+<div class="upcoming-card js-session-item" data-session-id="14130390" data-start="2026-10-13T14:00:00-04:00" data-end="2026-10-13T18:00:00-04:00" data-session-start="2026-10-13T14:00:00-04:00">
+  <div class="upcoming-date">October 13, 2026</div>
   <div class="upcoming-time">2:00 PM</div>
   <div class="upcoming-location">Wilmington; Shipyard Blvd - B</div>
 
   <div class="upcoming-actions">
-    <a class="button small primary" href="/classes/13964006.html">Book This Class</a>
+    <a class="button small primary" href="/classes/14130390.html">Book This Class</a>
   </div>
 </div>
 
-<div class="upcoming-card js-session-item" data-session-id="13964002" data-start="2026-09-28T14:00:00-04:00" data-end="2026-09-28T18:00:00-04:00" data-session-start="2026-09-28T14:00:00-04:00">
-  <div class="upcoming-date">September 28, 2026</div>
+<div class="upcoming-card js-session-item" data-session-id="14130406" data-start="2026-10-13T14:00:00-04:00" data-end="2026-10-13T18:00:00-04:00" data-session-start="2026-10-13T14:00:00-04:00">
+  <div class="upcoming-date">October 13, 2026</div>
   <div class="upcoming-time">2:00 PM</div>
   <div class="upcoming-location">Wilmington; Shipyard Blvd - B</div>
 
   <div class="upcoming-actions">
-    <a class="button small primary" href="/classes/13964002.html">Book This Class</a>
+    <a class="button small primary" href="/classes/14130406.html">Book This Class</a>
   </div>
 </div>
 
-<div class="upcoming-card js-session-item" data-session-id="13964011" data-start="2026-09-28T14:00:00-04:00" data-end="2026-09-28T18:00:00-04:00" data-session-start="2026-09-28T14:00:00-04:00">
-  <div class="upcoming-date">September 28, 2026</div>
+<div class="upcoming-card js-session-item" data-session-id="14130392" data-start="2026-10-27T14:00:00-04:00" data-end="2026-10-27T18:00:00-04:00" data-session-start="2026-10-27T14:00:00-04:00">
+  <div class="upcoming-date">October 27, 2026</div>
   <div class="upcoming-time">2:00 PM</div>
   <div class="upcoming-location">Wilmington; Shipyard Blvd - B</div>
 
   <div class="upcoming-actions">
-    <a class="button small primary" href="/classes/13964011.html">Book This Class</a>
+    <a class="button small primary" href="/classes/14130392.html">Book This Class</a>
+  </div>
+</div>
+
+<div class="upcoming-card js-session-item" data-session-id="14130408" data-start="2026-10-27T14:00:00-04:00" data-end="2026-10-27T18:00:00-04:00" data-session-start="2026-10-27T14:00:00-04:00">
+  <div class="upcoming-date">October 27, 2026</div>
+  <div class="upcoming-time">2:00 PM</div>
+  <div class="upcoming-location">Wilmington; Shipyard Blvd - B</div>
+
+  <div class="upcoming-actions">
+    <a class="button small primary" href="/classes/14130408.html">Book This Class</a>
+  </div>
+</div>
+
+<div class="upcoming-card js-session-item" data-session-id="14130389" data-start="2026-10-08T14:00:00-04:00" data-end="2026-10-08T18:00:00-04:00" data-session-start="2026-10-08T14:00:00-04:00">
+  <div class="upcoming-date">October 08, 2026</div>
+  <div class="upcoming-time">2:00 PM</div>
+  <div class="upcoming-location">Wilmington; Shipyard Blvd - B</div>
+
+  <div class="upcoming-actions">
+    <a class="button small primary" href="/classes/14130389.html">Book This Class</a>
+  </div>
+</div>
+
+<div class="upcoming-card js-session-item" data-session-id="14130395" data-start="2026-10-08T14:00:00-04:00" data-end="2026-10-08T18:00:00-04:00" data-session-start="2026-10-08T14:00:00-04:00">
+  <div class="upcoming-date">October 08, 2026</div>
+  <div class="upcoming-time">2:00 PM</div>
+  <div class="upcoming-location">Wilmington; Shipyard Blvd - B</div>
+
+  <div class="upcoming-actions">
+    <a class="button small primary" href="/classes/14130395.html">Book This Class</a>
+  </div>
+</div>
+
+<div class="upcoming-card js-session-item" data-session-id="14130391" data-start="2026-10-22T14:00:00-04:00" data-end="2026-10-22T18:00:00-04:00" data-session-start="2026-10-22T14:00:00-04:00">
+  <div class="upcoming-date">October 22, 2026</div>
+  <div class="upcoming-time">2:00 PM</div>
+  <div class="upcoming-location">Wilmington; Shipyard Blvd - B</div>
+
+  <div class="upcoming-actions">
+    <a class="button small primary" href="/classes/14130391.html">Book This Class</a>
+  </div>
+</div>
+
+<div class="upcoming-card js-session-item" data-session-id="14130407" data-start="2026-10-22T14:00:00-04:00" data-end="2026-10-22T18:00:00-04:00" data-session-start="2026-10-22T14:00:00-04:00">
+  <div class="upcoming-date">October 22, 2026</div>
+  <div class="upcoming-time">2:00 PM</div>
+  <div class="upcoming-location">Wilmington; Shipyard Blvd - B</div>
+
+  <div class="upcoming-actions">
+    <a class="button small primary" href="/classes/14130407.html">Book This Class</a>
   </div>
 </div>
 
@@ -305,7 +335,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <aside class="current-courses-sidebar" aria-labelledby="current-courses-heading">
   <h2 id="current-courses-heading">Other current courses</h2>
   <p>Explore the next live session for every other course currently offered by 910CPR.</p>
-  <ul><li><a href="/classes/13963992.html"><strong>AHA ACLS Provider</strong><span>Next: Sep 24 at 2:00 PM</span></a></li><li><a href="/classes/13964002.html"><strong>AHA PALS Provider</strong><span>Next: Sep 28 at 2:00 PM</span></a></li><li><a href="/classes/14114232.html"><strong>AHA Heartsaver First Aid CPR AED</strong><span>Next: Dec 8 at 10:15 AM</span></a></li></ul>
+  <ul><li><a href="/classes/14022566.html"><strong>AHA Heartsaver First Aid CPR AED</strong><span>Next: Sep 17 at 12:15 PM</span></a></li><li><a href="/classes/14123642.html"><strong>AHA BLS Provider</strong><span>Next: Sep 17 at 7:00 PM</span></a></li><li><a href="/classes/14168718.html"><strong>AHA BLS HeartCode Skills Session</strong><span>Next: Sep 21 at 1:45 PM</span></a></li><li><a href="/classes/14039891.html"><strong>AHA Heartsaver Pediatric First Aid CPR AED</strong><span>Next: Sep 22 at 6:30 PM</span></a></li><li><a href="/classes/14083302.html"><strong>AHA ACLS HeartCode Skills Session</strong><span>Next: Sep 24 at 1:00 PM</span></a></li><li><a href="/classes/13963992.html"><strong>AHA ACLS Provider</strong><span>Next: Sep 24 at 2:00 PM</span></a></li><li><a href="/classes/14145607.html"><strong>AHA Heartsaver CPR AED</strong><span>Next: Sep 26 at 10:00 AM</span></a></li><li><a href="/classes/14184955.html"><strong>AHA BLS Provider</strong><span>Next: Sep 26 at 5:00 PM</span></a></li><li><a href="/classes/14130361.html"><strong>AHA ACLS Provider</strong><span>Next: Oct 8 at 2:00 PM</span></a></li><li><a href="/classes/14130389.html"><strong>AHA PALS Provider</strong><span>Next: Oct 8 at 2:00 PM</span></a></li><li><a href="/classes/14130395.html"><strong>AHA PALS Provider</strong><span>Next: Oct 8 at 2:00 PM</span></a></li></ul>
   <a class="text-link strong-link" href="/schedule.html">View the complete class schedule</a>
 </aside>
 
