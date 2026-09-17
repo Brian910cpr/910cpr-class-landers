@@ -59,7 +59,12 @@ if ((Test-Path -LiteralPath $identityPath) -and -not $ForceReenroll) {
     # The plaintext value is never written to disk or output. DPAPI protection binds this blob
     # to the current Windows user profile on this machine.
     $randomBytes = New-Object byte[] 32
-    [System.Security.Cryptography.RandomNumberGenerator]::Fill($randomBytes)
+    $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+    try {
+        $rng.GetBytes($randomBytes)
+    } finally {
+        $rng.Dispose()
+    }
     $seed = [Convert]::ToBase64String($randomBytes)
     $secure = ConvertTo-SecureString -String $seed -AsPlainText -Force
     $secure | ConvertFrom-SecureString | Set-Content -LiteralPath $credentialPath -Encoding ascii
