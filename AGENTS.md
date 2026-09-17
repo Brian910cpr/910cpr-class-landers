@@ -1,5 +1,24 @@
 # 910CPR Lander System Rules
 
+## Mandatory LanderWare Design Ethos
+
+Before designing or implementing any significant LanderWare feature, workflow, data model, migration, or replacement of an incumbent training-business capability, read and follow `LANDERWARE_DESIGN_ETHOS.md`.
+
+This is a standing design gate, not optional background reading.
+
+In particular:
+
+* LanderWare is the intended durable operating system for 910CPR. Enrollware is a migration source, incumbent reference architecture, and temporary dependency, not the long-term design center.
+* Before inventing a new training-business workflow, investigate how Enrollware or another mature platform solves the same operational problem and ask why that design evolved that way.
+* Do not copy incumbent behavior blindly, but do not get creative without understanding the hard-earned business/compliance/operational lesson being replaced.
+* Prefer canonical reusable objects and explicit relationships over copied page-local state.
+* Model lifecycle transitions and provenance rather than only the final snapshot.
+* Every relied-upon Enrollware capability must ultimately become a native LanderWare replacement, a deliberately chosen cheaper/better external service, or an explicitly retired capability.
+* Every significant implementation should make clear whether it moves LanderWare toward or away from Enrollware independence.
+* Replacement is proven only at the real operational/customer-facing surface.
+
+When a design materially differs from the mature incumbent pattern, record the specific 910CPR advantage or limitation being addressed. Architectural novelty by itself is not a reason.
+
 ## Authoritative Inputs
 
 Primary schedule source:
