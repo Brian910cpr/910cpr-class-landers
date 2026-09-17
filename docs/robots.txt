@@ -1,17 +1,7 @@
 User-agent: *
-# Admin HTML stays crawlable so search engines can read its noindex tags.
-# These crawl rules are not authentication for the underlying data.
-Disallow: /data/admin_
 Allow: /
 
 User-agent: OAI-SearchBot
-Disallow: /admin/
-Disallow: /data/admin_
-Allow: /
-
-User-agent: GPTBot
-Disallow: /admin/
-Disallow: /data/admin_
 Allow: /
 
 Sitemap: https://www.910cpr.com/sitemap.xml

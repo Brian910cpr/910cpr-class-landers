@@ -575,6 +575,42 @@
       color: var(--muted);
       background: var(--band);
     }
+    .stable-class-projection {
+      margin-top: 22px;
+      padding: 20px;
+      border: 1px solid #cddfec;
+      border-radius: 14px;
+      background: #f7fbfe;
+    }
+    .stable-class-kicker {
+      margin: 0 0 4px;
+      color: var(--accent-dark);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .stable-class-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .stable-class-item a {
+      display: grid;
+      gap: 3px;
+      height: 100%;
+      padding: 12px 14px;
+      border: 1px solid #dbe7ef;
+      border-radius: 10px;
+      background: #fff;
+      color: inherit;
+      text-decoration: none;
+    }
+    .stable-class-item a:hover, .stable-class-item a:focus-visible { border-color: var(--accent); }
+    .stable-class-item span { color: var(--muted); font-size: .9rem; }
     .service-promise {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -604,6 +640,7 @@
       .header-credential p { margin-top: 2px; font-size: .72rem; line-height: 1.2; }
       .header-credential-eyebrow { margin-bottom: 1px; font-size: .58rem; }
       .selector-grid { grid-template-columns: 1fr; }
+      .stable-class-list { grid-template-columns: 1fr; }
       .service-promise { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
@@ -688,19 +725,19 @@
   <!-- Google Tag Manager -->
 <script>
 (function(w,d,s,l,i,m){
-var internal=/^\/(admin|control-center)(\/|$)/.test(w.location.pathname)||/^\/analytics-preferences(\/|$)/.test(w.location.pathname);
-var excluded=new RegExp('(?:^|;\\s*)lw_analytics_excluded=1(?:;|$)').test(d.cookie);
-if(internal||excluded){w['ga-disable-'+m]=true;return;}
+var internal=/^\/(admin|control-center|internal|drafts|analytics-preferences)(\/|$)/.test(w.location.pathname);
+var excluded=new RegExp('(?:^|;\\s*)(?:lw_analytics_excluded|analytics_excluded)=1(?:;|$)').test(d.cookie);
+if(internal||excluded){m.split(',').forEach(function(id){w['ga-disable-'+id]=true;});return;}
 w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH','G-SL0HBP3RV5');
+})(window,document,'script','dataLayer','GTM-PQS8DCBH','G-45PBWBK7KR,G-SL0HBP3RV5');
 </script>
 <!-- End Google Tag Manager -->
+  <script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
 <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
 <script src="/assets/site-theme.js"></script>
-<script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -760,6 +797,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
     </section>
     
+    
     <section class="service-promise" aria-label="Local scheduling and eCard service">
       <div class="service-promise-item"><strong>Same-day eCards</strong><span>After successful completion and required course paperwork, 910CPR issues your eCard the same day.</span></div>
       <div class="service-promise-item"><strong>Flexible Wilmington skills checks</strong><span>Daytime, evening, and overnight appointments may appear whenever the live calendar shows verified availability.</span></div>
@@ -803,12 +841,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
     </section>
+    
   </main>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/bls.json?v=2026-09-11T15%3A12%3A15.176103";
+    const availabilityUrl = "/data/block-selector-availability/bls.json?v=2026-09-17T01%3A31%3A02.883872";
     const courseOptions = [{"courseId": "209806", "courseName": "AHA BLS Provider", "family": "BLS", "variant": "initial", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["initial", "provider", "bls-provider"], "iconLabel": "BLS", "imageUrl": "/images/bls_general.png", "imageFit": "contain", "imageAlt": "AHA BLS Provider course option", "deliveryBadge": "IN-PERSON", "clarification": "Full classroom BLS certification for healthcare providers and clinical students.", "familyGroup": "bls-provider", "familyLabel": "BLS Provider", "optionLabel": "Initial — In Person", "price": 75, "details": {"course_key": "aha_bls_provider", "title": "AHA BLS Provider", "certifying_body": "AHA", "family": "BLS", "short_description": "Healthcare provider BLS for clinical workers, dental teams, EMS students, and healthcare students.", "who_this_is_for": "Students who need an American Heart Association BLS Provider card for patient care, school, licensing, or healthcare employment.", "topics_covered": ["High-quality CPR", "AED use", "Ventilations", "Choking response", "Team-based resuscitation"], "required_materials": ["Current AHA BLS Provider Student Manual or accepted eBook when required."], "certification_issued": "American Heart Association BLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Use Heartsaver instead when your requirement is non-healthcare CPR/AED or first aid."], "full_course_page": "/bls.html"}}, {"courseId": "359474", "courseName": "AHA BLS Provider Renewal", "family": "BLS", "variant": "renewal", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["renewal", "provider-renewal", "bls-renewal"], "iconLabel": "RN", "imageUrl": "/images/bls_general.png", "imageFit": "contain", "imageAlt": "AHA BLS Provider Renewal course option", "deliveryBadge": "IN-PERSON", "clarification": "Renewal path for providers who already hold current or recently expired BLS.", "familyGroup": "bls-provider", "familyLabel": "BLS Provider", "optionLabel": "Renewal — In Person", "price": 75, "details": {"course_key": "aha_bls_provider_renewal", "title": "AHA BLS Provider Renewal", "certifying_body": "AHA", "family": "BLS", "short_description": "Focused BLS renewal for students who already hold or recently held BLS certification.", "who_this_is_for": "Current or recently expired BLS providers renewing an AHA BLS Provider card.", "topics_covered": ["BLS skills review", "CPR and AED practice", "Ventilation practice", "Choking response"], "required_materials": ["Current AHA BLS Provider Student Manual or accepted eBook when required."], "certification_issued": "American Heart Association BLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Choose the full Provider option if your employer or school requires an initial course."], "full_course_page": "/bls.html"}}, {"courseId": "210549", "courseName": "AHA HeartCode BLS", "family": "BLS", "variant": "heartcode", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["heartcode", "heartcode-bls"], "iconLabel": "HC", "imageUrl": "/images/hc_b.png", "imageFit": "contain", "imageAlt": "AHA HeartCode BLS course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "For students who already purchased and completed the AHA online course separately.", "familyGroup": "bls-skills-session", "familyLabel": "BLS Skills Session Only", "optionLabel": "In-person Skills Session", "price": 55, "details": {"course_key": "aha_heartcode_bls", "title": "AHA HeartCode BLS", "certifying_body": "AHA", "family": "BLS", "short_description": "In-person skills session for students who completed the AHA HeartCode BLS online course.", "who_this_is_for": "Healthcare students and providers who already completed the official AHA HeartCode BLS online portion.", "topics_covered": ["BLS skills practice", "CPR and AED skills testing", "Ventilation skills", "Choking response"], "required_materials": ["Completed AHA HeartCode BLS certificate of completion before the skills session."], "certification_issued": "American Heart Association BLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["This is the skills session, not the online course purchase."], "full_course_page": "/courses/heartcode-bls.html"}}];
     const optionGroups = {"BLS": {"family": "BLS", "label": "All AHA BLS options", "courseIds": ["209806", "359474", "210549"]}};
     const asapOptionLabel = "Need BLS ASAP? Show all AHA BLS options";

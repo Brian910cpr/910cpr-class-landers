@@ -575,6 +575,42 @@
       color: var(--muted);
       background: var(--band);
     }
+    .stable-class-projection {
+      margin-top: 22px;
+      padding: 20px;
+      border: 1px solid #cddfec;
+      border-radius: 14px;
+      background: #f7fbfe;
+    }
+    .stable-class-kicker {
+      margin: 0 0 4px;
+      color: var(--accent-dark);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .stable-class-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .stable-class-item a {
+      display: grid;
+      gap: 3px;
+      height: 100%;
+      padding: 12px 14px;
+      border: 1px solid #dbe7ef;
+      border-radius: 10px;
+      background: #fff;
+      color: inherit;
+      text-decoration: none;
+    }
+    .stable-class-item a:hover, .stable-class-item a:focus-visible { border-color: var(--accent); }
+    .stable-class-item span { color: var(--muted); font-size: .9rem; }
     .service-promise {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -604,6 +640,7 @@
       .header-credential p { margin-top: 2px; font-size: .72rem; line-height: 1.2; }
       .header-credential-eyebrow { margin-bottom: 1px; font-size: .58rem; }
       .selector-grid { grid-template-columns: 1fr; }
+      .stable-class-list { grid-template-columns: 1fr; }
       .service-promise { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
@@ -688,19 +725,19 @@
   <!-- Google Tag Manager -->
 <script>
 (function(w,d,s,l,i,m){
-var internal=/^\/(admin|control-center)(\/|$)/.test(w.location.pathname)||/^\/analytics-preferences(\/|$)/.test(w.location.pathname);
-var excluded=new RegExp('(?:^|;\\s*)lw_analytics_excluded=1(?:;|$)').test(d.cookie);
-if(internal||excluded){w['ga-disable-'+m]=true;return;}
+var internal=/^\/(admin|control-center|internal|drafts|analytics-preferences)(\/|$)/.test(w.location.pathname);
+var excluded=new RegExp('(?:^|;\\s*)(?:lw_analytics_excluded|analytics_excluded)=1(?:;|$)').test(d.cookie);
+if(internal||excluded){m.split(',').forEach(function(id){w['ga-disable-'+id]=true;});return;}
 w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH','G-SL0HBP3RV5');
+})(window,document,'script','dataLayer','GTM-PQS8DCBH','G-45PBWBK7KR,G-SL0HBP3RV5');
 </script>
 <!-- End Google Tag Manager -->
+  <script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
 <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
 <script src="/assets/site-theme.js"></script>
-<script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -760,6 +797,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       
     </section>
     
+    
     <section class="service-promise" aria-label="Local scheduling and eCard service">
       <div class="service-promise-item"><strong>Same-day eCards</strong><span>After successful completion and required course paperwork, 910CPR issues your eCard the same day.</span></div>
       <div class="service-promise-item"><strong>Flexible Wilmington skills checks</strong><span>Daytime, evening, and overnight appointments may appear whenever the live calendar shows verified availability.</span></div>
@@ -803,12 +841,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
     </section>
+    
   </main>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/pals.json?v=2026-09-11T15%3A12%3A15.176103";
+    const availabilityUrl = "/data/block-selector-availability/pals.json?v=2026-09-17T01%3A31%3A02.883872";
     const courseOptions = [{"courseId": "209805", "courseName": "AHA PALS Provider", "family": "PALS", "variant": "initial", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["initial", "provider", "pals-provider"], "iconLabel": "PALS", "imageUrl": "/images/pals_general.png", "imageFit": "contain", "imageAlt": "AHA PALS Provider course option", "deliveryBadge": "IN-PERSON", "clarification": "Full classroom PALS Provider certification for pediatric emergency response roles.", "familyGroup": "pals-provider", "familyLabel": "PALS Provider", "optionLabel": "Initial — In Person", "price": 275, "details": {"course_key": "aha_pals_provider", "title": "AHA PALS Provider", "certifying_body": "AHA", "family": "PALS", "short_description": "Pediatric advanced life support for clinicians who care for infants and children in emergencies.", "who_this_is_for": "Healthcare professionals involved in pediatric respiratory, shock, cardiac arrest, or emergency response.", "topics_covered": ["Pediatric assessment", "Respiratory emergencies", "Shock recognition", "Pediatric cardiac arrest algorithms", "Team dynamics"], "required_materials": ["Current AHA PALS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm pediatric advanced life support requirements with your employer or program."], "full_course_page": "/pals.html"}}, {"courseId": "251496", "courseName": "AHA PALS Renewal", "family": "PALS", "variant": "renewal", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["renewal", "provider-renewal", "pals-renewal"], "iconLabel": "RN", "imageUrl": "/images/pals_general.png", "imageFit": "contain", "imageAlt": "AHA PALS Renewal course option", "deliveryBadge": "IN-PERSON", "clarification": "Renewal path for providers with prior PALS training.", "familyGroup": "pals-provider", "familyLabel": "PALS Provider", "optionLabel": "Renewal — In Person", "price": 225, "details": {"course_key": "aha_pals_renewal", "title": "AHA PALS Renewal", "certifying_body": "AHA", "family": "PALS", "short_description": "Focused PALS renewal for current pediatric advanced life support providers.", "who_this_is_for": "Current PALS providers renewing an existing AHA PALS Provider card.", "topics_covered": ["PALS algorithm review", "Respiratory and shock scenarios", "Pediatric team response", "Skills verification"], "required_materials": ["Current AHA PALS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Choose PALS Provider if you need a full initial class."], "full_course_page": "/pals.html"}}, {"courseId": "209812", "courseName": "AHA PALS HeartCode", "family": "PALS", "variant": "heartcode", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["heartcode", "heartcode-pals"], "iconLabel": "HC", "imageUrl": "/images/hc_pals.png", "imageFit": "contain", "imageAlt": "AHA PALS HeartCode course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "For students who already purchased and completed the AHA online course separately.", "familyGroup": "pals-skills-session", "familyLabel": "PALS Skills Session Only", "optionLabel": "In-person Skills Session", "price": 100, "details": {"course_key": "aha_heartcode_pals", "title": "AHA PALS HeartCode", "certifying_body": "AHA", "family": "PALS", "short_description": "PALS skills session for students who completed the official AHA HeartCode PALS online course.", "who_this_is_for": "Clinicians completing the blended HeartCode PALS pathway.", "topics_covered": ["PALS skills verification", "Pediatric respiratory and shock scenarios", "Team response application"], "required_materials": ["Completed AHA HeartCode PALS certificate of completion before the skills session."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["This is the skills portion, not the online HeartCode course purchase."], "full_course_page": "/courses/heartcode-pals.html"}}];
     const optionGroups = {"PALS": {"family": "PALS", "label": "All AHA PALS options", "courseIds": ["209805", "251496", "209812"]}};
     const asapOptionLabel = "Need PALS ASAP? Show all AHA PALS options";
