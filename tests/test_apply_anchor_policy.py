@@ -16,7 +16,8 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
                 "end_at": "2026-08-05T11:30:00-04:00",
                 "location_display": ":: Wilmington; Shipyard Blvd - B",
                 "lead_instructor_name": "B. Ennis",
-                "registered_count": "1 / 20",
+                "active_registration_count": 1,
+                "demand_basis": "canonical_active_registrations",
                 "registration_url": "https://example.test/classes/51275",
             },
             {
@@ -26,7 +27,8 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
                 "start_at": "2026-08-05T13:00:00-04:00",
                 "end_at": "2026-08-05T14:00:00-04:00",
                 "location_display": ":: Wilmington; Shipyard Blvd - B",
-                "registered_count": 1,
+                "active_registration_count": 1,
+                "demand_basis": "canonical_active_registrations",
                 "registration_url": "https://example.test/classes/51239",
             },
             {
@@ -36,7 +38,8 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
                 "start_at": "2026-08-05T14:00:00-04:00",
                 "end_at": "2026-08-05T16:00:00-04:00",
                 "location_display": ":: Wilmington; Shipyard Blvd - B",
-                "registered_count": 1,
+                "active_registration_count": 1,
+                "demand_basis": "canonical_active_registrations",
                 "registration_url": "https://example.test/classes/51231",
             },
         ]
@@ -221,6 +224,8 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
         self.assertNotIn("209806", by_course)
         self.assertEqual({item["startTime"] for item in by_course["210549"]}, {"08:45", "11:30"})
         self.assertTrue(all(item.get("schedule_role") == "barnacle" for item in by_course["210549"]))
+        self.assertTrue(all(item.get("attached_to_session_id") == "51275" for item in by_course["210549"]))
+        self.assertEqual({item.get("barnacle_direction") for item in by_course["210549"]}, {"pre", "post"})
 
 
 if __name__ == "__main__":
