@@ -97,11 +97,22 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
                 for field in ("courseId", "courseName", "startTime", "location"):
                     require(course.get(field) not in (None, ""), f"{page_key}: offer lacks {field}")
                 if course.get("offerType") == "seated_class":
-                    session_id = str((course.get("sourceAvailabilityBlock") or {}).get("sessionId") or "")
+                    # Public selector payloads are intentionally compact: they retain
+                    # the seated identity as availabilityBlockId="seated:<session_id>"
+                    # and expose the registration destination as appointmentUrl.
+                    source_block = course.get("sourceAvailabilityBlock") or {}
+                    session_id = str(source_block.get("sessionId") or "").strip()
+                    block_id = str(course.get("availabilityBlockId") or "").strip()
+                    if not session_id and block_id.startswith("seated:"):
+                        session_id = block_id.removeprefix("seated:").strip()
+                    require(session_id, f"{page_key}: seated offer lacks session identity")
                     require(session_id in public_session_ids, f"{page_key}: stale seated session {session_id}")
-                    require(course.get("registrationUrl"), f"{page_key}: seated session {session_id} lacks registrationUrl")
+                    registration_url = course.get("registrationUrl") or course.get("appointmentUrl")
+                    require(registration_url, f"{page_key}: seated session {session_id} lacks registration URL")
                 else:
-                    for field in ("appointmentDayId", "matchedContainerId", "appointmentUrl", "availabilityBlockId"):
+                    # matchedContainerId is an internal planning field and is omitted
+                    # from the compact public selector contract.
+                    for field in ("appointmentDayId", "appointmentUrl", "availabilityBlockId"):
                         require(course.get(field) not in (None, ""), f"{page_key}: dynamic offer lacks {field}")
 
     counts = payload.get("counts") or {}
