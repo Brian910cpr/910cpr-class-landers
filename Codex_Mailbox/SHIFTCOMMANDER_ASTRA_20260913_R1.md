@@ -7,11 +7,19 @@
 - Target local checkout: E:\GitHub\shiftcommander_v2.
 - Requested model: gpt-6-astra. Verify actual runtime model before claiming an Astra review.
 
+## RESUME FIRST - DO NOT REORIENT FROM ZERO
+
+Before broad repository discovery or repeating earlier release analysis, read `Codex_Mailbox/SHIFTCOMMANDER_BUILD_STATE.md` and the newest ShiftCommander Codex receipt/checkpoint. Resume from its **Last known blocker**, **Last attempted action**, **Observed result**, and **Next exact action**. Treat verified state there as established unless current evidence contradicts it.
+
+For an ongoing failure, do not spend a fresh session rebuilding the entire project map or release checklist merely to arrive at the same blocker. Re-open broad requirements only when the current blocker, changed code/configuration, stale evidence, or a specific release-gate verification requires it.
+
+Every meaningful ShiftCommander attempt must update `Codex_Mailbox/SHIFTCOMMANDER_BUILD_STATE.md` before stopping, yielding, reporting BLOCKED, or dispatching another round. Preserve history by appending an attempt entry and refreshing the current-state fields. A new Codex round uses a new unique receipt; never overwrite a prior round.
+
 ## Dispatch routing and receipts
 
 Use this repository only for the existing dispatch/receipt transport. All ShiftCommander product code, operational data, and implementation PRs belong in the ShiftCommander repository and follow its AGENTS.md and confirmed scheduling rules. Do not implement EMS staffing inside LanderWare or import LanderWare class rules into it.
 
-The worker may initially launch in E:\GitHub\910cpr-class-landers with its default model. Read the full originating issue, this handoff, and the target repository instructions, then continue the assignment in the target checkout with Astra through supported model controls. Verify installed client support and account availability. Do not merely add the word Astra to a prompt or report a configuration change as model-switch proof. Preserve permissions and account controls.
+The worker may initially launch in E:\GitHub\910cpr-class-landers with its default model. Read the full originating issue, this handoff, `Codex_Mailbox/SHIFTCOMMANDER_BUILD_STATE.md`, the newest ShiftCommander receipt, and the target repository instructions, then continue the assignment in the target checkout with Astra through supported model controls. Verify installed client support and account availability. Do not merely add the word Astra to a prompt or report a configuration change as model-switch proof. Preserve permissions and account controls.
 
 Honor the existing single-worker dispatcher lock/lease and any newer owner concurrency rules, including issue #116. Advance this as a coherent assigned workstream; do not create competing launches or change the machine-wide model default for unrelated tasks. Do not stop an active legitimate task without saving its state. If Astra/target access is blocked, complete safe inventory and return the precise blocker through this handshake; do not silently substitute another model for the requested review.
 
@@ -39,9 +47,9 @@ Resume and finish my existing ShiftCommander / Shift Supervisor system for ADR-F
 
 3. Recover the complete requirements and challenge previous conclusions.
 
-   Read `AGENTS.md`, `docs/PROJECT_BOUNDARIES.md`, `docs/CONFIRMED_SCHEDULING_RULES.md`, `RULES.md`, `DATA_CONTRACT.md`, the migration and overlay documents, and existing handoff/audit reports. Examine the actual frontend, Worker, resolver, persistence, tests, and deployment configuration. Verify old claims against current behavior. Preserve proven behavior while investigating defects and unfinished features.
+   Read `AGENTS.md`, `docs/PROJECT_BOUNDARIES.md`, `docs/CONFIRMED_SCHEDULING_RULES.md`, `RULES.md`, `DATA_CONTRACT.md`, the migration and overlay documents, and existing handoff/audit reports as needed by the current checkpoint and blocker. Examine the actual frontend, Worker, resolver, persistence, tests, and deployment configuration where relevant. Verify old claims against current behavior. Preserve proven behavior while investigating defects and unfinished features.
 
-   Build one concise release checklist showing each requirement, its implementation location, evidence, and remaining blocker. Earlier checkpoints reported development authentication and deployment gaps; establish whether those gaps still exist. Identify expired rollout dates and stale configuration, including the August 31, 2026 display transition.
+   Maintain one concise release checklist showing each requirement, its implementation location, evidence, and remaining blocker. Do not rebuild this checklist from scratch on every visit if a current checkpoint already exists. Earlier checkpoints reported development authentication and deployment gaps; establish whether those gaps still exist when relevant to the active blocker. Identify expired rollout dates and stale configuration, including the August 31, 2026 display transition.
 
 4. Establish trustworthy data flow.
 
@@ -83,6 +91,6 @@ Resume and finish my existing ShiftCommander / Shift Supervisor system for ADR-F
 
     Ask focused questions when an answer changes staffing policy, release scope, paid services, production authority, or another genuine owner decision. Complete independent work while awaiting answers. Honor existing authorization for deployment and communications; prepare a concrete release candidate before any remaining approval request.
 
-    Begin with a brief verified status and the first release blocker, then work through the checklist. Finish with the working local URLs and launch commands, code/PR references, test evidence, deployment state, recovery instructions, and any exact decision still needed from me.
+    Begin with a brief verified status drawn from the durable checkpoint and the first active release blocker, then work through only what is necessary. Finish with the working local URLs and launch commands, code/PR references, test evidence, deployment state, recovery instructions, any exact decision still needed from me, and an updated `SHIFTCOMMANDER_BUILD_STATE.md`.
 
 Model-control reference: [Official OpenAI model selection documentation](https://learn.chatgpt.com/docs/models). Model availability depends on the client, sign-in method, account access, and rollout.
