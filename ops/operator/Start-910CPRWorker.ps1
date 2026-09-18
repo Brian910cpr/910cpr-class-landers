@@ -98,8 +98,7 @@ function Invoke-GitHubQueue {
     param([object]$Identity)
     if (-not (Test-GitHubReady)) { return }
 
-    $search = ('"[WORKER] {0}" in:title' -f $Identity.worker_name)
-    $json = & gh issue list --repo $RepoSlug --state open --search $search --limit 20 --json number,title,url 2>&1
+    $json = & gh issue list --repo $RepoSlug --state open --limit 100 --json number,title,url 2>&1
     if ($LASTEXITCODE -ne 0) {
         Write-WorkerLog "GitHub queue read failed: $($json -join ' ')"
         return
