@@ -432,9 +432,8 @@ def apply_selector_policy(payload: dict[str, Any], anchors: list[dict[str, Any]]
         slots = list(day["startTimes"].values())
         slots.sort(key=lambda item: item["startTime"])
         payload["dates"].append({**day, "startTimes": slots})
-    payload.setdefault("counts", {})["publicSelectableDateCount"] = len(payload["dates"])
-    payload["counts"]["publicSelectableStartTimeCount"] = sum(len(day["startTimes"]) for day in payload["dates"])
-    payload["anchor_policy"] = {"version": "anchor-repeat-bubble-v2", "suppressed_offerons": suppressed, "barnacle_positions": len(barnacle_keys)}
+    _refresh_selector_counts(payload)
+    payload["anchor_policy"] = {"version": "anchor-repeat-bubble-v2", "suppressed_offers": suppressed, "barnacle_positions": len(barnacle_keys)}
     return payload
 
 
