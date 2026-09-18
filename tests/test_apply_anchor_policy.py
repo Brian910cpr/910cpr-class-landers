@@ -123,6 +123,9 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
         self.assertIn("04:30", {item["startTime"] for item in rendered})
         self.assertIn("14:00", {item["startTime"] for item in rendered})
         self.assertNotIn("07:30", {item["startTime"] for item in rendered})
+        self.assertEqual(result["counts"]["publicSelectableDateCount"], 1)
+        self.assertEqual(result["counts"]["publicSelectableStartTimeCount"], 5)
+        self.assertEqual(result["counts"]["publicSelectableOfferCount"], len(rendered))
 
     def test_other_occupancy_can_push_first_surviving_start_later(self):
         anchors = promote_seated_sessions([self.sessions[0]])
@@ -221,6 +224,7 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
         self.assertNotIn("209806", by_course)
         self.assertEqual({item["startTime"] for item in by_course["210549"]}, {"08:45", "11:30"})
         self.assertTrue(all(item.get("schedule_role") == "barnacle" for item in by_course["210549"]))
+        self.assertEqual(result["counts"]["publicSelectableOfferCount"], len(rendered))
 
 
 if __name__ == "__main__":
