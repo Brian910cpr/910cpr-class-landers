@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-09-18T05:12:05.480785+00:00",
+  "generated_at": "2026-09-18T09:42:06.972456+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-18T05:12:04.927849+00:00",
+      "generated_at": "2026-09-18T09:42:06.491994+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-18T05:12:05.480785+00:00",
-      "event_count": 186
+      "generated_at": "2026-09-18T09:42:06.972456+00:00",
+      "event_count": 185
     },
     {
       "source_key": "brian_primary_calendar",
       "display_name": "Brian Primary Google Calendar",
       "source_type": "occupancy_calendar",
       "export_status": "failed",
-      "generated_at": "2026-09-18T05:12:05.125510+00:00",
+      "generated_at": "2026-09-18T09:42:06.684186+00:00",
       "event_count": 0
     },
     {
@@ -32,7 +32,7 @@
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-18T05:12:05.125073+00:00",
+      "generated_at": "2026-09-18T09:42:06.683580+00:00",
       "event_count": 0
     }
   ],
@@ -46,17 +46,6 @@
       "start": "2026-09-18T06:30:00-04:00",
       "end": "2026-09-18T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-09-18T09:00:00+00:00",
-      "end": "2026-09-18T10:00:00+00:00",
-      "location": "",
       "status": "CONFIRMED"
     },
     {
