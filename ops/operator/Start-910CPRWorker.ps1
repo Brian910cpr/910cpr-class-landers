@@ -79,6 +79,36 @@ function Invoke-AllowlistedJob {
             Write-WorkerLog "PASS $JobId $JobType"
             return $path
         }
+        'site.healthcheck' {
+            Write-Heartbeat -Identity $Identity -State 'working' -Detail "Checking fixed 910CPR public endpoints for job $JobId"
+            $targets = @(
+                'https://www.910cpr.com/',
+                'https://www.910cpr.com/bls.html',
+                'https://www.910cpr.com/acls.html',
+                'https://www.910cpr.com/pals.html',
+                'https://www.910cpr.com/heartsaver.html'
+            )
+            $rows = @()
+            $allPass = $true
+            foreach ($url in $targets) {
+                try {
+                    $res = Invoke-WebRequest -Uri $url -Method Head -MaximumRedirection 5 -TimeoutSec 20 -UseBasicParsing
+                    $code = [int]$res.StatusCode
+                    $ok = ($code -ge 200 -and $code -lt 400)
+                    if (-not $ok) { $allPass = $false }
+                    $rows += "$code $url"
+                } catch {
+                    $allPass = $false
+                    $status = if ($_.Exception.Response -and $_.Exception.Response.StatusCode) { [int]$_.Exception.Response.StatusCode } else { 'ERR' }
+                    $rows += "$status $url"
+                }
+            }
+            $statusText = if ($allPass) { 'PASS' } else { 'FAIL' }
+            $message = "Fixed 910CPR public endpoint healthcheck: " + ($rows -join '; ')
+            $path = Write-Result -Identity $Identity -JobId $JobId -JobType $JobType -Status $statusText -Message $message -IssueNumber $IssueNumber
+            Write-WorkerLog "$statusText $JobId $JobType"
+            return $path
+        }
         default {
             $path = Write-Result -Identity $Identity -JobId $JobId -JobType $JobType -Status 'REJECTED' -Message 'Job type is not allowlisted by this worker version.' -IssueNumber $IssueNumber
             Write-WorkerLog "REJECTED $JobId $JobType"
