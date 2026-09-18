@@ -127,6 +127,13 @@ jobs:
           python -m scripts.fetch_hot_sync_snapshot
           python -m scripts.publish_admin_schedule
 
+      - name: Reapply canonical Anchor metadata after public rebuild
+        if: steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        shell: pwsh
+        run: |
+          python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy
+          python -m scripts.apply_anchor_policy
+
       - name: Run strict link audit
         if: steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
