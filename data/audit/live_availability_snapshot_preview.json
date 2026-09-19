@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-19T01:42:12.918598+00:00",
+  "generated_at": "2026-09-19T06:41:52.825558+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -27,7 +27,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 378,
+    "blocks_generated": 376,
     "blocks_blocked": 4,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -42,86 +42,14 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 184,
-      "available": 194
+      "blocked": 181,
+      "available": 195
     },
-    "inverse_generated_availability_blocks": 194,
-    "inverse_blocking_event_blocks": 184,
+    "inverse_generated_availability_blocks": 195,
+    "inverse_blocking_event_blocks": 181,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-09-18T23:00:00",
-      "end_datetime": "2026-09-19T00:00:00",
-      "date": "2026-09-18",
-      "end_date": "2026-09-19",
-      "start_time": "23:00",
-      "end_time": "00:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "uf2qscfkp08l5cfafpuighfsos@google.com",
-      "summary": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-09-18T23:30:00",
-      "end_datetime": "2026-09-19T00:30:00",
-      "date": "2026-09-18",
-      "end_date": "2026-09-19",
-      "start_time": "23:30",
-      "end_time": "00:30",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "r5224i5cb07gql0mnka3bbs0rc@google.com",
-      "summary": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-09-19T00:00:00",
-      "end_datetime": "2026-09-19T06:00:00",
-      "date": "2026-09-19",
-      "end_date": "2026-09-19",
-      "start_time": "00:00",
-      "end_time": "06:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "558ei6sqmuc288pev4ig5ji0un@google.com",
-      "summary": "ADR Shift — Brian Unavailable",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -10453,11 +10381,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-12-17T17:30:00",
-      "end_datetime": "2026-12-17T21:45:00",
+      "end_datetime": "2026-12-18T00:00:00",
       "date": "2026-12-17",
-      "end_date": "2026-12-17",
+      "end_date": "2026-12-18",
       "start_time": "17:30",
-      "end_time": "21:45",
+      "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10479,6 +10407,37 @@
         "inverse_blocking_gap_expansion",
         "default_open_minus_blocking_events"
       ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-12-18T00:00:00",
+      "end_datetime": "2026-12-18T02:45:00",
+      "date": "2026-12-18",
+      "end_date": "2026-12-18",
+      "start_time": "00:00",
+      "end_time": "02:45",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "ARC",
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:195",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
     }
   ],
   "blocked_or_placeholder_sources": [
@@ -10487,8 +10446,8 @@
       "source_type": "inverse_google_calendar",
       "reason_code": "inverse_gap_shorter_than_minimum_consumption",
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-09-18T21:45:00",
-      "end_datetime": "2026-09-18T23:00:00"
+      "start_datetime": "2026-09-19T02:45:00",
+      "end_datetime": "2026-09-19T03:00:00"
     },
     {
       "calendar_source_key": "brian_do_not_schedule",
