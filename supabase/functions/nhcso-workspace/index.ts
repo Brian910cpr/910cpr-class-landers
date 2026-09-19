@@ -150,6 +150,7 @@ Deno.serve(async (req) => {
           name: name || email,
           email: email || null,
           status: clean(raw.status) || "Active",
+          score_or_certificate: clean(raw.score_or_certificate || raw.score || raw.heartcode_certificate) || null,
           ecard_number: clean(raw.ecard_number || raw.card) || null,
           updated_at: new Date().toISOString(),
         });
@@ -170,14 +171,38 @@ Deno.serve(async (req) => {
       if (classError || !classRow) return json({ error: "Class not found" }, 404);
       const { data: students, error: studentError } = await admin.from("nhcso_students").select("*").eq("class_number", classNumber).order("created_at");
       if (studentError) throw studentError;
-      if (!(students || []).some((student) => clean(student.status || "Active") === "Active")) return json({ error: "A class cannot be finalized without active students" }, 409);
+      const activeStudents = (students || []).filter((student) => clean(student.status || "Active") === "Active");
+      if (!activeStudents.length) return json({ error: "A class cannot be finalized without active students" }, 409);
+      const missingScore = activeStudents.filter((student) => !clean(student.score_or_certificate));
+      if (missingScore.length) return json({ error: `${missingScore.length} active participant(s) are missing a score or HeartCode certificate number` }, 409);
+      const missingEcard = activeStudents.filter((student) => !clean(student.ecard_number));
+      if (missingEcard.length) return json({ error: `${missingEcard.length} active participant(s) are missing an issued eCard number` }, 409);
+      const { count: paperworkCount, error: paperworkError } = await admin.from("nhcso_documents").select("*", { count: "exact", head: true }).eq("class_number", classNumber).eq("document_type", "course_completion");
+      if (paperworkError) throw paperworkError;
+      if (!(paperworkCount || 0)) return json({ error: "Course-completion paperwork must be uploaded before finalization" }, 409);
       if (classRow.status !== "finalized") {
-        const { error: updateError } = await admin.from("nhcso_classes").update({ status: "finalized", updated_at: new Date().toISOString() }).eq("class_number", classNumber).neq("status", "finalized");
+        const finalizedAt = new Date().toISOString();
+        const { error: updateError } = await admin.from("nhcso_classes").update({ status: "finalized", finalized_at: finalizedAt, updated_at: finalizedAt }).eq("class_number", classNumber).neq("status", "finalized");
         if (updateError) throw updateError;
       }
       const { data: finalizedClass, error: reloadError } = await admin.from("nhcso_classes").select("*").eq("class_number", classNumber).single();
       if (reloadError) throw reloadError;
       return json({ ok: true, class: finalizedClass, students: students || [] });
+    }
+    if (action === "correct_finalized_participant") {
+      const classNumber = clean(body.class_number);
+      const studentKeyValue = clean(body.student_key);
+      const name = clean(body.name);
+      const email = clean(body.email).toLowerCase();
+      const warningAccepted = body.warning_accepted === true;
+      if (!classNumber || !studentKeyValue || !name || !warningAccepted) return json({ error: "class_number, student_key, name, and warning acceptance are required" }, 400);
+      const { data: classRow } = await admin.from("nhcso_classes").select("status").eq("class_number", classNumber).maybeSingle();
+      if (classRow?.status !== "finalized") return json({ error: "This correction route is only for finalized classes" }, 409);
+      const { data: corrected, error: correctionError } = await admin.rpc("correct_nhcso_finalized_participant", {
+        p_class_number: classNumber, p_student_key: studentKeyValue, p_name: name, p_email: email || null, p_warning_accepted: true,
+      });
+      if (correctionError) throw correctionError;
+      return json({ ok: true, student: corrected });
     }
     if (action === "get_class") {
       const classNumber = clean(body.class_number);
@@ -249,9 +274,9 @@ Deno.serve(async (req) => {
       const classNumber = clean(body.class_number);
       const { data: classRow } = await admin.from("nhcso_classes").select("status").eq("class_number", classNumber).maybeSingle();
       if (classRow?.status === "finalized") return json({ error: "Finalized classes cannot be deleted" }, 409);
-      const { count, error: countError } = await admin.from("nhcso_students").select("*", { count: "exact", head: true }).eq("class_number", classNumber).eq("status", "Active");
+      const { count, error: countError } = await admin.from("nhcso_students").select("*", { count: "exact", head: true }).eq("class_number", classNumber);
       if (countError) throw countError;
-      if ((count || 0) > 0) return json({ error: "Clear all active participants before deleting the class" }, 409);
+      if ((count || 0) > 0) return json({ error: "Classes with participant history cannot be deleted; participant history is never hard-deleted" }, 409);
       const { error } = await admin.from("nhcso_classes").delete().eq("class_number", classNumber);
       if (error) throw error;
       return json({ ok: true });
