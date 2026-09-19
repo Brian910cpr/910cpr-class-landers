@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-09-19T14:46:26.726876+00:00",
+  "generated_at": "2026-09-19T17:29:33.053214+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-19T14:46:26.135641+00:00",
+      "generated_at": "2026-09-19T17:29:32.498162+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-19T14:46:26.726876+00:00",
-      "event_count": 179
+      "generated_at": "2026-09-19T17:29:33.053214+00:00",
+      "event_count": 177
     },
     {
       "source_key": "brian_primary_calendar",
       "display_name": "Brian Primary Google Calendar",
       "source_type": "occupancy_calendar",
       "export_status": "failed",
-      "generated_at": "2026-09-19T14:46:26.438223+00:00",
+      "generated_at": "2026-09-19T17:29:32.703401+00:00",
       "event_count": 0
     },
     {
@@ -32,33 +32,11 @@
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-19T14:46:26.394363+00:00",
+      "generated_at": "2026-09-19T17:29:32.703128+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Little Leaps - AHA Pediatric First Aid CPR AED",
-      "start": "2026-09-19T15:00:00+00:00",
-      "end": "2026-09-19T18:00:00+00:00",
-      "location": "5226 S. College Rd\\, Wilmington\\, NC",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Travel",
-      "start": "2026-09-19T15:30:00+00:00",
-      "end": "2026-09-20T03:30:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
