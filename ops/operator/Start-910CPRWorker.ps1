@@ -18,11 +18,28 @@ $resultPath = Join-Path $StateDirectory 'results'
 $disabledPath = Join-Path $StateDirectory 'disabled.flag'
 $lockPath = Join-Path $StateDirectory 'worker.lock'
 $logPath = Join-Path $StateDirectory 'worker.log'
+$diagnosticPath = Join-Path $StateDirectory 'diagnostic.json'
 
 function Write-WorkerLog {
     param([string]$Message)
     $stamp = (Get-Date).ToUniversalTime().ToString('o')
     Add-Content -LiteralPath $logPath -Value "$stamp $Message" -Encoding utf8
+}
+
+function Write-Diagnostic {
+    param([object]$Identity,[string]$Phase,[string]$Detail,[string]$LastError='')
+    [ordered]@{
+        schema_version = 1
+        worker_id = $Identity.worker_id
+        worker_name = $Identity.worker_name
+        machine_name = $env:COMPUTERNAME
+        process_id = $PID
+        worker_version = $Identity.worker_version
+        phase = $Phase
+        detail = $Detail
+        last_error = $LastError
+        observed_at_utc = (Get-Date).ToUniversalTime().ToString('o')
+    } | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $diagnosticPath -Encoding utf8
 }
 
 function Write-Heartbeat {
@@ -200,6 +217,7 @@ try {
 
 try {
     Write-WorkerLog "Worker starting: $($identity.worker_name) / $($identity.worker_id)"
+    Write-Diagnostic -Identity $identity -Phase 'startup' -Detail 'Worker runtime started.'
     while ($true) {
         if (Test-Path -LiteralPath $disabledPath) {
             Write-Heartbeat -Identity $identity -State 'disabled' -Detail 'Local revocation flag present; no jobs will be claimed.'
@@ -207,9 +225,19 @@ try {
             continue
         }
 
-        $githubReady = Test-GitHubReady
+        $githubReady = $false
+        try {
+            $githubReady = Test-GitHubReady
+        } catch {
+            $msg = $_.Exception.Message
+            Write-WorkerLog "GitHub readiness exception; continuing degraded: $msg"
+            Write-Diagnostic -Identity $identity -Phase 'degraded' -Detail 'GitHub readiness check failed; basic local worker remains alive.' -LastError $msg
+        }
         $detail = if ($githubReady) { 'Runtime healthy; GitHub control plane connected; waiting for an allowlisted job.' } else { 'Runtime healthy; GitHub control plane unavailable; local allowlisted jobs only.' }
         Write-Heartbeat -Identity $identity -State 'idle' -Detail $detail
+        if ($githubReady) {
+            Write-Diagnostic -Identity $identity -Phase 'idle' -Detail 'GitHub connected; waiting for allowlisted work.'
+        }
 
         $jobs = @(Get-ChildItem -LiteralPath $inboxPath -Filter '*.json' -File -ErrorAction SilentlyContinue | Sort-Object Name)
         foreach ($jobFile in $jobs) {
@@ -232,10 +260,21 @@ try {
             }
         }
 
-        if ($githubReady) { Invoke-GitHubQueue -Identity $identity }
+        if ($githubReady) {
+            try {
+                Write-Diagnostic -Identity $identity -Phase 'polling' -Detail 'Reading GitHub worker queue.'
+                Invoke-GitHubQueue -Identity $identity
+                Write-Diagnostic -Identity $identity -Phase 'idle' -Detail 'GitHub queue poll completed.'
+            } catch {
+                $msg = $_.Exception.Message
+                Write-WorkerLog "GitHub queue exception; continuing degraded: $msg"
+                Write-Diagnostic -Identity $identity -Phase 'degraded' -Detail 'GitHub queue failed; worker loop remains alive and will retry.' -LastError $msg
+            }
+        }
         Start-Sleep -Seconds $HeartbeatSeconds
     }
 } finally {
     if ($lockStream) { $lockStream.Dispose() }
+    try { Write-Diagnostic -Identity $identity -Phase 'stopped' -Detail 'Worker runtime stopped.' } catch { }
     Write-WorkerLog 'Worker stopped.'
 }
