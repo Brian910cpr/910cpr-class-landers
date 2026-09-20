@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-20T01:21:12.110391+00:00",
+  "generated_at": "2026-09-20T06:30:49.419888+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -28,52 +28,24 @@
       }
     ],
     "blocks_generated": 376,
-    "blocks_blocked": 2,
+    "blocks_blocked": 0,
     "dns_markers_found": 0,
-    "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 2
-    },
-    "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 2
-    },
+    "blocked_reason_counts": {},
+    "blocked_all_reason_counts": {},
     "source_type_counts": {
       "google_calendar": 2,
       "occupancy_calendar": 1,
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 178,
-      "available": 198
+      "blocked": 177,
+      "available": 199
     },
-    "inverse_generated_availability_blocks": 198,
-    "inverse_blocking_event_blocks": 178,
+    "inverse_generated_availability_blocks": 199,
+    "inverse_blocking_event_blocks": 177,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-09-20T00:15:00",
-      "end_datetime": "2026-09-20T22:45:00",
-      "date": "2026-09-20",
-      "end_date": "2026-09-20",
-      "start_time": "00:15",
-      "end_time": "22:45",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "7tclr9suo4tiq6gegsdf1pt9o8@google.com",
-      "summary": "TRAVEL",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -4325,11 +4297,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-09-19T21:30:00",
-      "end_datetime": "2026-09-20T00:00:00",
-      "date": "2026-09-19",
-      "end_date": "2026-09-20",
-      "start_time": "21:30",
+      "start_datetime": "2026-09-20T02:45:00",
+      "end_datetime": "2026-09-21T00:00:00",
+      "date": "2026-09-20",
+      "end_date": "2026-09-21",
+      "start_time": "02:45",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10433,11 +10405,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-12-18T17:30:00",
-      "end_datetime": "2026-12-18T21:30:00",
+      "end_datetime": "2026-12-19T00:00:00",
       "date": "2026-12-18",
-      "end_date": "2026-12-18",
+      "end_date": "2026-12-19",
       "start_time": "17:30",
-      "end_time": "21:30",
+      "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10459,24 +10431,38 @@
         "inverse_blocking_gap_expansion",
         "default_open_minus_blocking_events"
       ]
-    }
-  ],
-  "blocked_or_placeholder_sources": [
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-09-20T00:00:00",
-      "end_datetime": "2026-09-20T00:15:00"
     },
     {
-      "calendar_source_key": "brian_do_not_schedule",
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-12-19T00:00:00",
+      "end_datetime": "2026-12-19T02:45:00",
+      "date": "2026-12-19",
+      "end_date": "2026-12-19",
+      "start_time": "00:00",
+      "end_time": "02:45",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "ARC",
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:199",
       "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-09-20T22:45:00",
-      "end_datetime": "2026-09-21T00:00:00"
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
     }
-  ]
+  ],
+  "blocked_or_placeholder_sources": []
 }
