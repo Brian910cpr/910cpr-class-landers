@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "updated_at": "2026-09-20",
+  "rules": {
+    "max_items": 2,
+    "min_tag_matches": 2,
+    "suppress_on_decision": true,
+    "note": "Editorial content is discovery-only. Hide immediately after a course/date/time/session selection or decision-state deep link."
+  },
+  "items": [
+    {
+      "id": "aed-program-10-steps",
+      "type": "blog",
+      "status": "published",
+      "title": "Building an AED Program: 10 Things to Get Right",
+      "eyebrow": "AED PROGRAM GUIDE",
+      "description": "Buying the AED is only one step. Placement, registration, trained responders, supplies, ownership, inspections, and maintenance make it a working program.",
+      "url": "/blog/aed-program-checklist.html",
+      "published": "2026-09-20",
+      "evergreen": true,
+      "tags": [
+        "aed",
+        "workplace",
+        "cpr",
+        "first-aid",
+        "heartsaver",
+        "hsi",
+        "arc",
+        "employer",
+        "safety"
+      ],
+      "priority": 90,
+      "cta": "Read the guide"
+    }
+  ]
+}
