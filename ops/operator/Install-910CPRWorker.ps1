@@ -51,9 +51,9 @@ if ($existingIdentity -and -not $ForceReenroll) {
         worker_name = $WorkerName
         machine_name = $env:COMPUTERNAME
         enrolled_user = [Environment]::UserName
-        worker_version = '0.2.2'
+        worker_version = '0.2.3'
         enrolled_at_utc = (Get-Date).ToUniversalTime().ToString('o')
-        capabilities = @('heartbeat.local','github.queue','github.receipt','job.selftest.ping','job.site.healthcheck','job.reject-unapproved','duplicate-suppression.local')
+        capabilities = @('heartbeat.local','diagnostic.local','github.queue','github.receipt','job.selftest.ping','job.site.healthcheck','job.reject-unapproved','duplicate-suppression.local')
         control_plane = 'GITHUB_ISSUES_BOUNDED_V1'
         repository = $RepoSlug
     }
@@ -76,8 +76,8 @@ if ($gh) {
     $githubReady = ($LASTEXITCODE -eq 0)
 }
 
-$identity | Add-Member -NotePropertyName worker_version -NotePropertyValue '0.2.2' -Force
-$identity | Add-Member -NotePropertyName capabilities -NotePropertyValue @('heartbeat.local','github.queue','github.receipt','job.selftest.ping','job.site.healthcheck','job.reject-unapproved','duplicate-suppression.local') -Force
+$identity | Add-Member -NotePropertyName worker_version -NotePropertyValue '0.2.3' -Force
+$identity | Add-Member -NotePropertyName capabilities -NotePropertyValue @('heartbeat.local','diagnostic.local','github.queue','github.receipt','job.selftest.ping','job.site.healthcheck','job.reject-unapproved','duplicate-suppression.local') -Force
 $identity | Add-Member -NotePropertyName control_plane -NotePropertyValue $(if ($githubReady) { 'GITHUB_ISSUES_BOUNDED_V1' } else { 'LOCAL_ONLY_GITHUB_AUTH_MISSING' }) -Force
 $identity | Add-Member -NotePropertyName repository -NotePropertyValue $RepoSlug -Force
 $identity | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $identityPath -Encoding utf8
