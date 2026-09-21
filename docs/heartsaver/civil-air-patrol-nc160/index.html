@@ -112,7 +112,7 @@ async function loadSessions(){
       loading.innerHTML='<strong>NC-160 registration is ready.</strong><br>Session dates are being added. Please return to this same link once your unit announces the available dates.';
       return;
     }
-    select.innerHTML='<option value="">Choose a date and time</option>'+p.sessions.map(s=>`<option value="${s.external_session_id||''}" data-start="${s.starts_at||''}" data-location="${(s.location_name||'').replace(/"/g,'&quot;')}">${fmt(s.starts_at)} — ${s.location_name||'Location to be announced'}</option>`).join('');
+    select.innerHTML='<option value="">Choose a date and time</option>'+p.sessions.map(s=>`<option value="${s.external_session_id||''}" data-start="${s.starts_at||''}" data-location="${(s.location_name||'').replace(/"/g,'&quot;')}">${fmt(s.starts_at)} — ${s.location_name||'Location to be announced'}${s.capacity?` — ${s.capacity} seats`:''}</option>`).join('');
     loading.hidden=true;form.hidden=false;
   }catch(e){loading.className='session-empty';loading.textContent='The session list is temporarily unavailable. Please try this link again shortly.'}
 }
