@@ -738,76 +738,241 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
 <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
 <script src="/assets/site-theme.js"></script>
+
+  <style id="bls-p0-hero">
+    /* P0 BLS hero: get the customer to the selector, fast. */
+    .bls-header {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 18px 24px 0;
+      border-bottom: 0;
+    }
+    .bls-topline {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 58px;
+    }
+    .bls-topline .back-link { margin: 8px 0 0; }
+    .bls-brand-cluster {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 14px;
+      margin-left: auto;
+      flex-wrap: wrap;
+    }
+    .bls-brand-cluster .selector-brand-link {
+      font-size: 1.15rem;
+      gap: 8px;
+    }
+    .bls-brand-cluster .selector-brand-link img { height: 34px; }
+    .bls-brand-cluster .selector-header-phone { font-size: 1.15rem; }
+    .bls-credential-mini {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 235px;
+      padding: 7px 10px;
+      border: 1px solid #d71920;
+      border-radius: 10px;
+      background: rgba(255,255,255,.96);
+      color: #8e1117;
+      font-size: .72rem;
+      font-weight: 800;
+      line-height: 1.18;
+    }
+    .bls-credential-mini img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+      flex: 0 0 auto;
+    }
+    .bls-hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(330px, 430px);
+      align-items: end;
+      gap: 18px;
+      min-height: 270px;
+      padding-top: 12px;
+      overflow: visible;
+    }
+    .bls-hero-copy {
+      align-self: center;
+      padding: 20px 0 34px;
+      min-width: 0;
+    }
+    .bls-hero-copy h1 {
+      margin: 0;
+      max-width: 680px;
+      font-size: clamp(2rem, 3.7vw, 3rem);
+      line-height: 1.04;
+    }
+    .bls-location {
+      margin: 8px 0 0;
+      color: var(--accent-dark);
+      font-size: clamp(1.45rem, 3vw, 2rem);
+      font-weight: 850;
+    }
+    .bls-trust-row {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+    .bls-trust-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 160px;
+      font-size: .88rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .bls-trust-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      flex: 0 0 34px;
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 1rem;
+      font-weight: 900;
+    }
+    .bls-nurse-wrap {
+      position: relative;
+      display: flex;
+      align-items: end;
+      justify-content: flex-end;
+      min-height: 250px;
+      margin-bottom: -1px;
+    }
+    .bls-nurse {
+      display: block;
+      width: min(100%, 430px);
+      height: auto;
+      max-height: 335px;
+      object-fit: contain;
+      object-position: right bottom;
+      filter: drop-shadow(0 12px 18px rgba(0,0,0,.15));
+    }
+    main.bls-main {
+      padding-top: 8px;
+    }
+    main.bls-main .selector-shell {
+      gap: 14px;
+    }
+    main.bls-main .course-selector-panel {
+      margin-top: 0;
+    }
+    main.bls-main .course-selector-top h2 {
+      font-size: 1.4rem;
+      margin-bottom: 4px;
+    }
+    @media (max-width: 820px) {
+      .bls-header { padding: 10px 16px 0; }
+      .bls-topline {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .bls-topline .back-link { margin-top: 0; }
+      .bls-brand-cluster {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 9px 12px;
+      }
+      .bls-credential-mini {
+        max-width: 205px;
+        padding: 5px 8px;
+        font-size: .66rem;
+      }
+      .bls-credential-mini img { width: 30px; height: 30px; }
+      .bls-brand-cluster .selector-brand-link img { height: 30px; }
+      .bls-brand-cluster .selector-brand-link,
+      .bls-brand-cluster .selector-header-phone { font-size: 1rem; }
+      .bls-hero {
+        grid-template-columns: minmax(0, 1fr) minmax(145px, 42vw);
+        min-height: 180px;
+        gap: 4px;
+        padding-top: 4px;
+      }
+      .bls-hero-copy { padding: 12px 0 18px; }
+      .bls-hero-copy h1 { font-size: clamp(1.55rem, 6.3vw, 2.1rem); }
+      .bls-location { margin-top: 4px; font-size: 1.2rem; }
+      .bls-trust-row { gap: 9px; margin-top: 14px; }
+      .bls-trust-item {
+        gap: 5px;
+        max-width: 118px;
+        font-size: .72rem;
+      }
+      .bls-trust-icon {
+        width: 26px;
+        height: 26px;
+        flex-basis: 26px;
+        font-size: .78rem;
+      }
+      .bls-nurse-wrap { min-height: 160px; }
+      .bls-nurse { width: min(100%, 210px); max-height: 205px; }
+      main.bls-main { padding-top: 4px; }
+    }
+    @media (max-width: 560px) {
+      .bls-brand-cluster .selector-header-phone { order: 3; width: 100%; }
+      .bls-hero {
+        grid-template-columns: minmax(0, 1fr) 140px;
+        min-height: 170px;
+      }
+      .bls-trust-row { display: none; }
+      .bls-nurse { width: 160px; max-height: 180px; }
+    }
+  </style>
+
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-  <div class="selector-brand-bar">
-    <a class="selector-brand-link" href="/index.html" aria-label="910CPR home">
-      <img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
-      <span>910CPR</span>
-    </a>
-    <a class="selector-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
-  </div>
-  <header>
-    <a class="back-link" href="/index.html">← Back to Find Your Class</a>
-    <div class="page-heading-row">
-      <div>
-        <h1>AHA BLS Certification &amp; Renewal in Wilmington, NC</h1>
-        <p class="page-subtitle">Initial, renewal, and HeartCode BLS at 4018 Shipyard Boulevard</p>
-        <p class="muted">Choose BLS Provider, BLS Renewal, or HeartCode BLS, then select a current Wilmington class date and start time.</p>
-      </div>
-      
-      <aside class="header-credential" aria-label="American Heart Association Training Site">
-        <img src="/images/Logo_circle_AHA-Training-Site.webp" alt="American Heart Association Authorized Training Site" loading="eager">
-        <div>
-          <span class="header-credential-eyebrow">Authorized training</span>
-          <strong>American Heart Association Training Site</strong>
-          <p>AHA BLS, ACLS, PALS, and Heartsaver training at 910CPR.</p>
+  <header class="bls-header">
+    <div class="bls-topline">
+      <a class="back-link" href="/index.html">← Back to Find Your Class</a>
+      <div class="bls-brand-cluster" aria-label="910CPR contact and training-site credentials">
+        <a class="selector-brand-link" href="/index.html" aria-label="910CPR home">
+          <img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
+          <span>910CPR</span>
+        </a>
+        <a class="selector-header-phone" href="tel:+19103955193" aria-label="Call 910CPR at 910-395-5193">910-395-5193</a>
+        <div class="bls-credential-mini">
+          <img src="/images/Logo_circle_AHA-Training-Site.webp" alt="" aria-hidden="true">
+          <span>American Heart Association<br>Authorized Training Site</span>
         </div>
-      </aside>
+      </div>
     </div>
-    
-    <div class="family-help" aria-label="Course format guide">
-      <div class="family-help-title">Course format guide</div>
-      <div class="delivery-help-list">
-          <div class="delivery-help-item">
-            <div class="delivery-help-label">INSTRUCTOR-LED</div>
-            <div class="delivery-help-copy">Instructor-led classes are completed entirely in person.</div>
-          </div>
-          <div class="delivery-help-item">
-            <div class="delivery-help-label">HEARTCODE</div>
-            <div class="delivery-help-copy">HeartCode BLS begins online and is completed with an in-person skills session.</div>
-          </div>
+    <div class="bls-hero">
+      <div class="bls-hero-copy">
+        <h1>AHA BLS Certification &amp; Renewal</h1>
+        <p class="bls-location">Wilmington, NC</p>
+        <div class="bls-trust-row" aria-label="BLS class highlights">
+          <div class="bls-trust-item"><span class="bls-trust-icon" aria-hidden="true">✓</span><span>AHA BLS Training</span></div>
+          <div class="bls-trust-item"><span class="bls-trust-icon" aria-hidden="true">▦</span><span>In-Person Classes</span></div>
+          <div class="bls-trust-item"><span class="bls-trust-icon" aria-hidden="true">+</span><span>For Healthcare Professionals</span></div>
+        </div>
+      </div>
+      <div class="bls-nurse-wrap">
+        <img class="bls-nurse" src="/images/bls-9to1-nurse.webp" alt="Nurse pointing toward the BLS course selector with a reminder to schedule BLS and get back to MedSurg">
       </div>
     </div>
   </header>
-  <main>
-    
-    <section class="page-context" aria-label="Course context">
-      <p>910CPR provides American Heart Association Basic Life Support training for nurses, EMTs, dental professionals, healthcare students, clinical staff, and others whose employer or school requires AHA BLS.</p>
-      
-      <div class="page-note">
-        <h2>Choose the BLS path that matches your requirement</h2>
-        <p>This page shows current availability and registration for all three public AHA BLS paths in Wilmington.</p>
-        <ul><li>BLS Provider is the instructor-led option for new students or anyone returning after expiration.</li><li>BLS Renewal is for currently certified providers who qualify for the focused renewal format.</li><li>HeartCode BLS starts with AHA online coursework and finishes with an in-person skills session.</li></ul>
-      </div>
-      
-    </section>
-    
-    
-    <section class="service-promise" aria-label="Local scheduling and eCard service">
-      <div class="service-promise-item"><strong>Same-day eCards</strong><span>After successful completion and required course paperwork, 910CPR issues your eCard the same day.</span></div>
-      <div class="service-promise-item"><strong>Flexible Wilmington skills checks</strong><span>Daytime, evening, and overnight appointments may appear whenever the live calendar shows verified availability.</span></div>
-    </section>
+  <main class="bls-main">
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">
           <div>
-            <h2>Course</h2>
-            <p class="muted">Choose the course or delivery format first.</p>
+            <h2>Choose Your BLS Course</h2>
+            <p class="muted">Select the course or delivery format that fits your needs.</p>
           </div>
           <div class="option-tools">
             
