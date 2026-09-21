@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-09-21T20:34:07.208300+00:00",
+  "generated_at": "2026-09-21T23:33:53.928134+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-21T20:34:06.596683+00:00",
+      "generated_at": "2026-09-21T23:33:53.394853+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-21T20:34:07.208300+00:00",
-      "event_count": 175
+      "generated_at": "2026-09-21T23:33:53.928134+00:00",
+      "event_count": 173
     },
     {
       "source_key": "brian_primary_calendar",
       "display_name": "Brian Primary Google Calendar",
       "source_type": "occupancy_calendar",
       "export_status": "failed",
-      "generated_at": "2026-09-21T20:34:06.839246+00:00",
+      "generated_at": "2026-09-21T23:33:53.606217+00:00",
       "event_count": 0
     },
     {
@@ -32,33 +32,11 @@
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-21T20:34:06.836132+00:00",
+      "generated_at": "2026-09-21T23:33:53.605946+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-09-21T21:00:00+00:00",
-      "end": "2026-09-21T22:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR Shift — Brian Unavailable",
-      "start": "2026-09-21T22:00:00+00:00",
-      "end": "2026-09-22T12:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
