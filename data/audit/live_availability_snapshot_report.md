@@ -7,9 +7,9 @@ This is a read-only scaffold. It did not call Google Calendar, call Enrollware, 
 - Configured calendar sources found: 4
 - Local snapshot found: /home/runner/work/910cpr-class-landers/910cpr-class-landers/data/runtime/calendar_snapshots
 - Instructors mapped: 3
-- Blocks generated: 371
+- Blocks generated: 370
 - Blocks blocked/placeheld: 0
-- Inverse-generated availability blocks: 199
+- Inverse-generated availability blocks: 198
 - Inverse blocking event blocks: 172
 - DNS markers found: 0
 
