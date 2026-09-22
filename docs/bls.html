@@ -190,6 +190,40 @@
       gap: 16px;
       flex-wrap: wrap;
     }
+    .location-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 54px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+    .location-bar-label {
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .location-choice {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 34px;
+      padding: 6px 12px;
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      background: #eef7fc;
+      color: var(--accent-dark);
+      font-weight: 850;
+    }
+    .location-check {
+      color: var(--accent);
+      font-weight: 900;
+    }
+
     .selector-grid {
       display: grid;
       grid-template-columns: minmax(340px, 1.35fr) minmax(210px, .8fr) minmax(280px, 1fr);
@@ -851,6 +885,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div id="course-option-list" class="choice-list" tabindex="0" aria-label="Course options"></div>
           <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
         </div>
+      </div>
+      <div class="location-bar" aria-label="Training location">
+        <span class="location-bar-label">Location</span>
+        <span class="location-choice" aria-current="true"><span class="location-check" aria-hidden="true">✓</span> Wilmington</span>
       </div>
       <div class="selector-grid">
         <div class="panel">
