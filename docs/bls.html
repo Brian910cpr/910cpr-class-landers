@@ -190,40 +190,6 @@
       gap: 16px;
       flex-wrap: wrap;
     }
-    .location-bar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-height: 54px;
-      padding: 10px 14px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--surface);
-    }
-    .location-bar-label {
-      color: var(--muted);
-      font-size: .82rem;
-      font-weight: 900;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-    }
-    .location-choice {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      min-height: 34px;
-      padding: 6px 12px;
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      background: #eef7fc;
-      color: var(--accent-dark);
-      font-weight: 850;
-    }
-    .location-check {
-      color: var(--accent);
-      font-weight: 900;
-    }
-
     .selector-grid {
       display: grid;
       grid-template-columns: minmax(340px, 1.35fr) minmax(210px, .8fr) minmax(280px, 1fr);
@@ -659,31 +625,7 @@
     }
     .service-promise-item strong { display: block; margin-bottom: 3px; color: var(--accent-dark); }
     .service-promise-item span { color: var(--muted); font-size: .92rem; }
-
-    .anjla-renewal-nudge {
-      display: flex;
-      justify-content: flex-end;
-      align-items: flex-end;
-      margin: 2px 0 -18px;
-      min-height: 0;
-      overflow: visible;
-      pointer-events: none;
-    }
-    .anjla-renewal-nudge img {
-      display: block;
-      width: min(560px, 58vw);
-      height: auto;
-      object-fit: contain;
-      filter: drop-shadow(0 10px 22px rgba(0, 0, 0, .16));
-    }
     @media (max-width: 820px) {
-      .anjla-renewal-nudge {
-        justify-content: center;
-        margin: 0 0 -8px;
-      }
-      .anjla-renewal-nudge img {
-        width: min(520px, 100%);
-      }
       .page-heading-row { grid-template-columns: 1fr; gap: 10px; }
       .header-credential {
         grid-template-columns: 44px minmax(0, 1fr);
@@ -860,9 +802,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="service-promise-item"><strong>Same-day eCards</strong><span>After successful completion and required course paperwork, 910CPR issues your eCard the same day.</span></div>
       <div class="service-promise-item"><strong>Flexible Wilmington skills checks</strong><span>Daytime, evening, and overnight appointments may appear whenever the live calendar shows verified availability.</span></div>
     </section>
-    <aside class="anjla-renewal-nudge" aria-label="BLS renewal scheduling reminder">
-      <img src="/images/bls-9to1-nurse.webp" alt="Nurse pointing toward the BLS calendar with a reminder to schedule renewal and get back to MedSurg." loading="eager">
-    </aside>
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">
@@ -886,10 +825,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
         </div>
       </div>
-      <div class="location-bar" aria-label="Training location">
-        <span class="location-bar-label">Location</span>
-        <span class="location-choice" aria-current="true"><span class="location-check" aria-hidden="true">✓</span> Wilmington</span>
-      </div>
       <div class="selector-grid">
         <div class="panel">
           <h2>Calendar</h2>
@@ -912,7 +847,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/bls.json?v=2026-09-21T20%3A34%3A07.324561";
+    const availabilityUrl = "/data/block-selector-availability/bls.json?v=2026-09-22T12%3A23%3A25.203308";
     const courseOptions = [{"courseId": "209806", "courseName": "AHA BLS Provider", "family": "BLS", "variant": "initial", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["initial", "provider", "bls-provider"], "iconLabel": "BLS", "imageUrl": "/images/bls_general.png", "imageFit": "contain", "imageAlt": "AHA BLS Provider course option", "deliveryBadge": "IN-PERSON", "clarification": "Full classroom BLS certification for healthcare providers and clinical students.", "familyGroup": "bls-provider", "familyLabel": "BLS Provider", "optionLabel": "Initial — In Person", "price": 75, "details": {"course_key": "aha_bls_provider", "title": "AHA BLS Provider", "certifying_body": "AHA", "family": "BLS", "short_description": "Healthcare provider BLS for clinical workers, dental teams, EMS students, and healthcare students.", "who_this_is_for": "Students who need an American Heart Association BLS Provider card for patient care, school, licensing, or healthcare employment.", "topics_covered": ["High-quality CPR", "AED use", "Ventilations", "Choking response", "Team-based resuscitation"], "required_materials": ["Current AHA BLS Provider Student Manual or accepted eBook when required."], "certification_issued": "American Heart Association BLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Use Heartsaver instead when your requirement is non-healthcare CPR/AED or first aid."], "full_course_page": "/bls.html"}}, {"courseId": "359474", "courseName": "AHA BLS Provider Renewal", "family": "BLS", "variant": "renewal", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["renewal", "provider-renewal", "bls-renewal"], "iconLabel": "RN", "imageUrl": "/images/bls_general.png", "imageFit": "contain", "imageAlt": "AHA BLS Provider Renewal course option", "deliveryBadge": "IN-PERSON", "clarification": "Renewal path for providers who already hold current or recently expired BLS.", "familyGroup": "bls-provider", "familyLabel": "BLS Provider", "optionLabel": "Renewal — In Person", "price": 75, "details": {"course_key": "aha_bls_provider_renewal", "title": "AHA BLS Provider Renewal", "certifying_body": "AHA", "family": "BLS", "short_description": "Focused BLS renewal for students who already hold or recently held BLS certification.", "who_this_is_for": "Current or recently expired BLS providers renewing an AHA BLS Provider card.", "topics_covered": ["BLS skills review", "CPR and AED practice", "Ventilation practice", "Choking response"], "required_materials": ["Current AHA BLS Provider Student Manual or accepted eBook when required."], "certification_issued": "American Heart Association BLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Choose the full Provider option if your employer or school requires an initial course."], "full_course_page": "/bls.html"}}, {"courseId": "210549", "courseName": "AHA HeartCode BLS", "family": "BLS", "variant": "heartcode", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["heartcode", "heartcode-bls"], "iconLabel": "HC", "imageUrl": "/images/hc_b.png", "imageFit": "contain", "imageAlt": "AHA HeartCode BLS course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "For students who already purchased and completed the AHA online course separately.", "familyGroup": "bls-skills-session", "familyLabel": "BLS Skills Session Only", "optionLabel": "In-person Skills Session", "price": 55, "details": {"course_key": "aha_heartcode_bls", "title": "AHA HeartCode BLS", "certifying_body": "AHA", "family": "BLS", "short_description": "In-person skills session for students who completed the AHA HeartCode BLS online course.", "who_this_is_for": "Healthcare students and providers who already completed the official AHA HeartCode BLS online portion.", "topics_covered": ["BLS skills practice", "CPR and AED skills testing", "Ventilation skills", "Choking response"], "required_materials": ["Completed AHA HeartCode BLS certificate of completion before the skills session."], "certification_issued": "American Heart Association BLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["This is the skills session, not the online course purchase."], "full_course_page": "/courses/heartcode-bls.html"}}];
     const optionGroups = {"BLS": {"family": "BLS", "label": "All AHA BLS options", "courseIds": ["209806", "359474", "210549"]}};
     const asapOptionLabel = "Need BLS ASAP? Show all AHA BLS options";
