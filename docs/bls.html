@@ -625,7 +625,31 @@
     }
     .service-promise-item strong { display: block; margin-bottom: 3px; color: var(--accent-dark); }
     .service-promise-item span { color: var(--muted); font-size: .92rem; }
+
+    .anjla-renewal-nudge {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      margin: 2px 0 -18px;
+      min-height: 0;
+      overflow: visible;
+      pointer-events: none;
+    }
+    .anjla-renewal-nudge img {
+      display: block;
+      width: min(560px, 58vw);
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 22px rgba(0, 0, 0, .16));
+    }
     @media (max-width: 820px) {
+      .anjla-renewal-nudge {
+        justify-content: center;
+        margin: 0 0 -8px;
+      }
+      .anjla-renewal-nudge img {
+        width: min(520px, 100%);
+      }
       .page-heading-row { grid-template-columns: 1fr; gap: 10px; }
       .header-credential {
         grid-template-columns: 44px minmax(0, 1fr);
@@ -802,6 +826,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="service-promise-item"><strong>Same-day eCards</strong><span>After successful completion and required course paperwork, 910CPR issues your eCard the same day.</span></div>
       <div class="service-promise-item"><strong>Flexible Wilmington skills checks</strong><span>Daytime, evening, and overnight appointments may appear whenever the live calendar shows verified availability.</span></div>
     </section>
+    <aside class="anjla-renewal-nudge" aria-label="BLS renewal scheduling reminder">
+      <img src="/images/bls-9to1-nurse.webp" alt="Nurse pointing toward the BLS calendar with a reminder to schedule renewal and get back to MedSurg." loading="eager">
+    </aside>
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">
