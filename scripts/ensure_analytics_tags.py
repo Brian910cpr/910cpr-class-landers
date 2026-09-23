@@ -34,12 +34,19 @@ GTM_NOSCRIPT_SNIPPET = f"""<!-- Google Tag Manager (noscript) -->
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->"""
 
+# Accept both the current wrapped snippets and older public pages that kept the
+# opening marker/iframe but omitted the matching "End Google Tag Manager"
+# comments.  Failing to recognize those legacy forms causes this normalizer to
+# insert a second GTM block and then correctly fail its own duplicate audit.
 HEAD_BLOCK_RE = re.compile(
-    r"<!-- Google Tag Manager -->.*?<!-- End Google Tag Manager -->",
+    r"<!-- Google Tag Manager -->.*?</script>\s*(?:<!-- End Google Tag Manager -->)?",
     flags=re.IGNORECASE | re.DOTALL,
 )
 NOSCRIPT_BLOCK_RE = re.compile(
-    r"<!-- Google Tag Manager \(noscript\) -->.*?<!-- End Google Tag Manager \(noscript\) -->",
+    r"(?:<!-- Google Tag Manager \(noscript\) -->\s*)?"
+    r"<noscript>\s*<iframe\b[^>]*googletagmanager\.com/ns\.html\?id=GTM-PQS8DCBH[^>]*>"
+    r"\s*</iframe>\s*</noscript>\s*"
+    r"(?:<!-- End Google Tag Manager \(noscript\) -->)?",
     flags=re.IGNORECASE | re.DOTALL,
 )
 ATTRIBUTION_SCRIPT_RE = re.compile(
