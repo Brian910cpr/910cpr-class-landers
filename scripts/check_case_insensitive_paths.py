@@ -18,6 +18,7 @@ ALLOWED_COLLISIONS = {
     frozenset(("docs/BLS.html", "docs/bls.html")),
     frozenset(("docs/Earl/index.html", "docs/earl/index.html")),
     frozenset(("docs/HEARTSAVER.html", "docs/heartsaver.html")),
+    frozenset(("docs/Jackson/index.html", "docs/jackson/index.html")),
     frozenset(("docs/PALS.html", "docs/pals.html")),
 }
 
