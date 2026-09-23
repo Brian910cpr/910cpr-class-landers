@@ -39,11 +39,20 @@ Deno.serve(async(req)=>{
 
   const ids=(sessions||[]).map((s:any)=>s.id);
   const cutoff=new Date(Date.now()-HOLD_MINUTES*60*1000).toISOString();
-  const [{count:registeredCount},{count:holdCount}]=await Promise.all([
-    db.from("registrations").select("id",{count:"exact",head:true}).in("class_session_id",ids).eq("status","registered"),
-    db.from("registrations").select("id",{count:"exact",head:true}).in("class_session_id",ids).eq("status","payment_pending").gte("updated_at",cutoff)
-  ]);
-  const registered=registeredCount||0,checkoutHolds=holdCount||0,occupied=registered+checkoutHolds;
+  const {data:capacityRows,error:capacityError}=await db.from("registrations")
+    .select("customer_id,status,updated_at").in("class_session_id",ids)
+    .in("status",["registered","payment_pending"]);
+  if(capacityError)return json({ok:false,error:"Unable to load event capacity"},500);
+  const registeredCustomers=new Set<string>();
+  const holdCustomers=new Set<string>();
+  for(const row of capacityRows||[]){
+    const customerId=String(row.customer_id||"");
+    if(!customerId)continue;
+    if(row.status==="registered")registeredCustomers.add(customerId);
+    else if(row.status==="payment_pending"&&row.updated_at&&new Date(row.updated_at)>=new Date(cutoff))holdCustomers.add(customerId);
+  }
+  for(const customerId of registeredCustomers)holdCustomers.delete(customerId);
+  const registered=registeredCustomers.size,checkoutHolds=holdCustomers.size,occupied=registered+checkoutHolds;
   const remaining=Math.max(0,HANDS_ON_CAPACITY-occupied);
   if(req.method==="GET")return json({ok:true,event:{...session,registered,checkoutHolds,occupied,remaining,handsOnCapacity:HANDS_ON_CAPACITY,capacityReason:"shared_manikin_pool",holdMinutes:HOLD_MINUTES}});
 
