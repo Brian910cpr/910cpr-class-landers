@@ -1,9 +1,17 @@
 import {authorizedOwner as authorized} from '../_shared/owner-auth.ts';
-import { financeWindow, boardPrompts } from './core.mjs';
+import { financeWindow, boardPrompts, reportDigest } from './core.mjs';
 const ORIGINS = new Set(['https://www.910cpr.com','https://910cpr.com']);
 const REPO = 'Brian910cpr/910cpr-class-landers';
 let mailboxCache: { at:number; value:any } | null = null;
 let mailboxPending: Promise<any> | null = null;
+let reportsCache: { at:number; value:any } | null = null;
+const REPORT_FILES=[
+  {path:'debug/latest_build_health.json',label:'Public build audit',max_age_hours:48},
+  {path:'debug/stale_sessions_audit.json',label:'Stale session audit',max_age_hours:48},
+  {path:'debug/event_schema_audit.json',label:'Event schema audit',max_age_hours:168},
+  {path:'data/state/supervisor_status.json',label:'Local supervisor record',max_age_hours:24},
+  {path:'debug/status/build_schedule_future.json',label:'Future schedule build',max_age_hours:48}
+];
 function response(req:Request, data:unknown, status=200) {
   const origin=req.headers.get('origin')||'';
   const headers:Record<string,string>={'content-type':'application/json','cache-control':'private, no-store','vary':'Origin','access-control-allow-headers':'content-type,x-hot-sync-admin-key,x-landerware-owner-session','access-control-allow-methods':'GET,OPTIONS'};
@@ -70,6 +78,19 @@ async function readMailbox() {
   catch { return mailboxCache?{...mailboxCache.value,state:'stale'}:{state:'unavailable',messages:[],blockers:[],unread:null,checked_at:null}; }
   finally { mailboxPending=null; }
 }
+async function readReports() {
+  if(reportsCache&&Date.now()-reportsCache.at<300000) return reportsCache.value;
+  const headers:Record<string,string>={'User-Agent':'LanderWare-owner-monitor'};
+  const values=await Promise.all(REPORT_FILES.map(async item=>{
+    try {
+      const r=await get(`https://raw.githubusercontent.com/${REPO}/main/${item.path}`,{headers});
+      return {...item,document:await r.json()};
+    } catch { return {...item,error:true}; }
+  }));
+  const value={checked_at:new Date().toISOString(),entries:reportDigest(values)};
+  reportsCache={at:Date.now(),value};
+  return value;
+}
 Deno.serve(async(req:Request)=>{
   const origin=req.headers.get('origin')||'';
   if(origin&&!ORIGINS.has(origin)) return response(req,{error:'Origin not allowed'},403);
@@ -78,11 +99,12 @@ Deno.serve(async(req:Request)=>{
   try {
     if(!await authorized(req)) return response(req,{error:'Admin key not accepted'},401);
   } catch { return response(req,{error:'Admin access check is unavailable. Try again shortly.'},503); }
-  const [db,mailbox]=await Promise.allSettled([snapshot(),readMailbox()]);
+  const [db,mailbox,reports]=await Promise.allSettled([snapshot(),readMailbox(),readReports()]);
   const data=db.status==='fulfilled'?db.value:null;
   const handoffs=mailbox.status==='fulfilled'?mailbox.value:{state:'unavailable',messages:[],blockers:[]};
   const finance=financeWindow(data?.finance);
-  const prompts=[...(data?boardPrompts(data.board):[]),...(handoffs.state==='connected'||handoffs.state==='partial'?handoffs.blockers:[]),...finance.prompts];
+  const prompts=[...(data?boardPrompts(data.board):[]),...finance.prompts];
   return response(req,{generated_at:new Date().toISOString(),operations_state:data?'connected':'unavailable',
-    ecards:data?.ecards||null,products:data?.products||null,upcoming:data?.upcoming||[],board:data?.board||[],finance,mailbox:handoffs,prompts});
+    ecards:data?.ecards||null,products:data?.products||null,upcoming:data?.upcoming||[],board:data?.board||[],finance,mailbox:handoffs,
+    reports:reports.status==='fulfilled'?reports.value:{checked_at:null,entries:REPORT_FILES.map(f=>({path:f.path,label:f.label,state:'unavailable',reason:'Report reader unavailable'}))},prompts});
 });

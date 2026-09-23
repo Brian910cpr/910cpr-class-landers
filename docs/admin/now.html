@@ -5,48 +5,47 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta name="color-scheme" content="dark">
-  <title>NOW · Brian | LanderWare</title>
-  <link rel="stylesheet" href="/admin/now.css?v=20260913-1">
+  <title>NOW | LanderWare</title>
+  <link rel="stylesheet" href="/admin/now.css?v=20260923-1">
+  <script defer src="/admin/admin-auth.js?v=20260914-session1"></script>
   <script defer src="/admin/admin-nav.js?v=20260914-session1"></script>
-  <script defer src="/admin/now.js?v=20260914-session1"></script>
-<script src="/admin/admin-auth.js?v=20260914-session1"></script>
-<style id="owner-access-gates">#ownerAccess,#auth-gate,#authGate,#accessGate,#adminUnlockPanel,dialog#access{display:none!important}</style>
-<link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
-<script src="/assets/site-theme.js"></script>
+  <script defer src="/admin/now.js?v=20260923-1"></script>
+  <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
+  <script defer src="/assets/site-theme.js"></script>
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="/admin/dashboard.html"><span class="brand-mark">LW</span><span>LANDERWARE <b>NOW</b></span></a>
     <div class="today"><span id="date"></span><strong id="clock"></strong><span class="tz">ET</span></div>
-    <div class="controls"><button id="refresh" title="Refresh dashboard">↻ <span>Refresh</span></button><button id="fullscreen">Full screen</button><button id="lock">Lock</button></div>
+    <div class="controls"><button id="refresh" type="button">↻ Refresh</button><button id="fullscreen" type="button">Full screen</button><button id="lock" type="button">Sign out</button></div>
   </header>
-  <div class="statusbar"><span id="connection">Unlock to connect</span><span id="updated">Refreshes every minute</span></div>
-  <main id="dashboard" class="dashboard" inert>
-    <aside class="exchange panel">
-      <div class="section-head"><h2>The exchange</h2><span class="eyebrow">HANDOFFS</span></div>
-      <div class="relay"><span class="codex">Codex</span><span>→</span><span class="chatgpt">ChatGPT</span><span>→</span><span class="codex">Codex</span></div>
-      <div class="feed-status" id="feed-status">Waiting for handoff records</div>
-      <div class="feed scroll" id="feed"></div>
-      <a class="panel-foot" href="https://github.com/Brian910cpr/910cpr-class-landers/issues?q=is%3Aissue+is%3Aopen" target="_blank" rel="noopener">Open the work queue ↗</a>
-    </aside>
-    <section class="action-column">
-      <div class="action-heading"><div class="eyebrow accent">YOUR NEXT MOVES</div><h1>DO THIS, <span>Brian:</span></h1><div class="action-meta"><span id="action-count">Waiting for records</span><button id="show-snoozed" class="text-button">Snoozed <span id="snooze-count">0</span></button></div></div>
-      <div class="filters" role="group" aria-label="Filter prompts"><button data-filter="all" class="selected">All</button><button data-filter="money">Money</button><button data-filter="business">LanderWare</button><button data-filter="decision">Decisions</button></div>
-      <div class="scroll prompts" id="prompts"></div>
-      <div class="on-it panel"><span class="eyebrow">WITH CODEX / CHATGPT</span><div id="agent-work">Waiting for current work</div></div>
+  <div class="statusbar" role="status"><span id="connection">Connecting to LanderWare…</span><span id="updated">No successful read yet</span></div>
+  <main class="dashboard" id="dashboard" inert>
+    <section class="overview" aria-label="At a glance">
+      <button class="metric" data-view="schedule"><span>Next 7 days</span><strong id="class-count">—</strong><small>permanent class records ↗</small></button>
+      <button class="metric" data-queue="ecards"><span>Card check</span><strong id="ecard-count">—</strong><small>classes with missing linked evidence ↗</small></button>
+      <button class="metric" data-queue="products"><span>eProducts</span><strong id="product-count">—</strong><small>people in the recorded queue ↗</small></button>
+      <button class="metric" data-view="handoffs"><span>Handoffs</span><strong id="handoff-count">—</strong><small>unread reply files ↗</small></button>
     </section>
-    <aside class="operations scroll">
-      <section class="panel queues"><div class="section-head"><h2>Close the loop</h2><span class="eyebrow">CLICK A COUNT</span></div><div class="queue-grid">
-        <button class="queue amber" data-queue="ecards"><strong id="ecard-count">—</strong><span>classes need<br>eCard reconciliation</span><i>↗</i></button>
-        <button class="queue mint" data-queue="products"><strong id="product-count">—</strong><span>people awaiting<br>eProducts</span><i>↗</i></button>
-      </div><p class="micro" id="queue-scope">Recorded completion and fulfillment evidence</p></section>
-      <section class="panel cash"><div class="section-head"><h2>Money window</h2><span id="cash-state" class="pill">NOT CONNECTED</span></div><div id="cash"><div class="cash-amount">—</div><p>Available cash + upcoming bills</p><div class="empty-note">Waiting for a verified cash-and-bills snapshot.</div></div></section>
-      <section class="panel schedule"><div class="section-head"><h2>Up next</h2><a href="/admin/class-registry.html">Classes ↗</a></div><div id="next-classes"></div><div class="micro" id="schedule-scope">Permanent class records · next 7 days</div></section>
-      <section class="panel source-panel"><div class="section-head"><h2>Connections</h2><span class="eyebrow">LAST CHECK</span></div><div id="sources"></div></section>
-    </aside>
+    <section class="priority panel">
+      <div class="section-head"><div><span class="eyebrow">ONLY VERIFIED HUMAN STEPS</span><h1>Do this, Brian</h1></div><button id="show-snoozed" class="subtle">Snoozed <span id="snooze-count">0</span></button></div>
+      <div id="prompts" class="prompts"></div>
+    </section>
+    <section class="schedule panel" id="schedule-panel">
+      <div class="section-head"><div><span class="eyebrow">CLASS RECORDS</span><h2>Coming up</h2></div><a href="/admin/class-registry.html">All classes ↗</a></div>
+      <div id="next-classes"></div><p class="micro">Permanent LanderWare records for the next seven days. External calendar coverage is separate.</p>
+    </section>
+    <section class="activity panel" id="handoffs-panel">
+      <div class="section-head"><div><span class="eyebrow">FILE MAILBOX</span><h2>Work in motion</h2></div><a href="/admin/production.html">Board ↗</a></div>
+      <div id="agent-work"></div><div id="feed-status" class="feed-status">Reading handoff files…</div><div id="feed" class="feed"></div>
+    </section>
+    <section class="evidence panel">
+      <div class="section-head"><div><span class="eyebrow">SOURCE EVIDENCE</span><h2>What the files say</h2></div><span id="report-summary" class="pill">Checking</span></div>
+      <div id="sources"></div><details><summary>Inspect report files and freshness</summary><div id="reports" class="reports"></div></details>
+      <details><summary>Money window <span id="cash-state" class="pill">Unverified</span></summary><div id="cash"></div></details>
+    </section>
   </main>
-  <footer><a href="/admin/dashboard.html">Operations ↗</a><a href="/admin/production.html">Production board ↗</a><a href="/admin/financial.html">Financial ↗</a><span id="heartbeat">Monitor waiting</span></footer>
-  <dialog id="access" class="access"><form id="access-form"><div class="brand-mark">LW</div><div class="eyebrow">YOUR MONITOR</div><h2>Let's see what needs you.</h2><label for="admin-key">LanderWare admin key</label><input type="hidden" id="admin-key" autocomplete="off" required><p id="access-error" role="status">Use your existing Operations admin key.</p><button class="primary" id="unlock">Open dashboard →</button></form></dialog>
+  <footer><a href="/admin/dashboard.html">Operations ↗</a><a href="/admin/production.html">Production ↗</a><a href="/admin/financial.html">Financial ↗</a><span id="heartbeat">Waiting for first read</span></footer>
   <dialog id="detail"><div class="detail-head"><h2 id="detail-title"></h2><button id="close-detail" aria-label="Close details">✕</button></div><div id="detail-body"></div></dialog>
   <div id="toast" role="status" hidden></div>
 </body>

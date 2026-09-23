@@ -3,6 +3,16 @@
 Work item: https://github.com/Brian910cpr/910cpr-class-landers/issues/216
 Page: https://www.910cpr.com/admin/now.html
 
+## September 23 repair and report projection
+
+NOW uses the private owner session established at `/admin/access.html`. The obsolete hidden admin-key dialog and its incompatible `set()` call were removed. A signed-out visitor is redirected to the private access-link flow by `admin-auth.js`.
+
+The first screen shows four facts: permanent classes in the next seven days, classes with recorded completions missing linked eCard evidence, people in the recorded eProduct queue, and unread root handoff files. Each count opens its source or a detail view. A missing source renders `—`, never zero. The short "Do this, Brian" list accepts only a structured `context_manifest.owner_action` with action, where, look_for, reply_with, do_not_touch, and why fields. Production Manager can supply that translation; a decision lane or blocked issue alone does not become Brian's task. Identical `root_action_id` values collapse to one card. Verified cash prompts retain their existing strict finance gate.
+
+The endpoint reads a bounded catalog of existing repository reports on its own five-minute cache: public build audit, stale session audit, event schema audit, local supervisor record, and future schedule build. It returns only path, label, time, freshness and source link, not whole files. Older green files remain visibly **stale**. Report files are diagnostics, not end-to-end health proof. Adding a report to the catalog requires a known timestamp field and a review window; arbitrary repository files are not fetched or presented as current truth.
+
+The financial snapshot remains disconnected until a trusted ingester supplies verified balances and complete obligations. The money panel stays collapsed and unverified until then. The monitor still needs an authenticated owner-session browser round trip and an independent observer before it can be classified beyond BUILT/CONNECTED.
+
 ## Behavior and source boundaries
 
 - Read-only owner dashboard: prominent Brian decisions and fulfillment queues; one-hour browser-local snooze, full screen, Eastern time, minute refresh and stale banner.

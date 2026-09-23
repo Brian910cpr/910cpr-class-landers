@@ -37,8 +37,28 @@ export function financeWindow(snapshot, now = Date.now()) {
     bills:due.sort((a,b)=>Date.parse(a.due_at)-Date.parse(b.due_at)),prompts};
 }
 export function boardPrompts(cards) {
-  return cards.filter(c=>!/(?:^|\b)(done|verified|closed|completed)(?:\b|$)/i.test(c.implementation_status||'') &&
-    (c.lane==='decision' || String(c.context_manifest?.next_actor||'').toLowerCase()==='brian'))
-    .map(c=>({id:`board:${c.id}`,category:'decision',title:c.title,tag:c.project==='910CPR Group Training'?'GROUP REQUEST':c.lane==='decision'?'YOUR DECISION':'BRIAN NEEDED',
-      summary:c.summary||'Open the work item for the requested decision.',href:`/admin/production.html?card=${encodeURIComponent(c.id)}`,label:c.project==='910CPR Group Training'?'Open request':'Open decision',observed_at:c.updated_at}));
+  // A decision lane or a technical blocker alone is not an instruction for Brian.
+  // Production Manager may attach a translated, explicit owner action to a card.
+  return cards.filter(c=>!/(?:^|\b)(done|verified|closed|completed)(?:\b|$)/i.test(c.implementation_status||''))
+    .flatMap(c=>{
+      const a=c.context_manifest?.owner_action;
+      if(!a || !['action','where','look_for','reply_with','do_not_touch','why'].every(k=>typeof a[k]==='string'&&a[k].trim())) return [];
+      return [{id:`owner:${a.root_action_id||c.id}`,category:'decision',title:a.action,tag:'BRIAN NEEDED',
+        summary:a.why,steps:a,href:`/admin/production.html?card=${encodeURIComponent(c.id)}`,
+        label:'See the exact step',observed_at:c.updated_at}];
+    }).filter((p,i,all)=>all.findIndex(x=>x.id===p.id)===i);
+}
+
+export function reportDigest(entries, now=Date.now()) {
+  return entries.map(({path,label,max_age_hours,document,error})=>{
+    const url=`https://github.com/Brian910cpr/910cpr-class-landers/blob/main/${path}`;
+    if(error || !document || typeof document!=='object') return {path,label,url,state:'unavailable',reason:'File could not be read',observed_at:null};
+    const raw=document.generated_at||document.timestamp||document.finished_at||document.updated_at||document.last_success_at;
+    const timestamp=Date.parse(raw);
+    const status=String(document.status||document.pipeline_status||document.build_summary?.status||'').toLowerCase();
+    const failure=Boolean(document.error||document.errors?.length||/failed|error|blocked/.test(status));
+    const state=!Number.isFinite(timestamp)?'unknown':timestamp>now+300000?'unknown':now-timestamp>max_age_hours*3600000?'stale':failure?'attention':'recent';
+    return {path,label,url,state,observed_at:Number.isFinite(timestamp)?new Date(timestamp).toISOString():null,
+      reason:failure?'Recorded failure':state==='stale'?'Older than its review window':state==='unknown'?'No reliable report time':'Recent report'};
+  });
 }
