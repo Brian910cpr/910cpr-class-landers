@@ -7,7 +7,7 @@ const emailOk=(v:string)=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 const EARL="nseaswim-earl-jackson-2026-10-04";
 const JACKSON="earl-jackson-family-friends-2026-10-04";
 const EVENT_SLUGS=[EARL,JACKSON];
-const HANDS_ON_CAPACITY=29;
+const HANDS_ON_CAPACITY=30;
 const HOLD_MINUTES=30;
 const BLS_PAYMENT_LINK="https://book.stripe.com/9B6cN4dEz0yUeJecC9dIA10";
 
@@ -103,7 +103,7 @@ Deno.serve(async(req)=>{
     return json({ok:true,confirmed:true,registrationId:primaryReg.id,groupRegistrationIds:newRegistrationIds,event:{remaining:Math.max(0,remaining-requestedCount),handsOnCapacity:HANDS_ON_CAPACITY}},201);
   }
 
-  const ebookQty=Math.max(0,Math.min(29,Number(body.ebookQty??1)));
+  const ebookQty=Math.max(0,Math.min(30,Number(body.ebookQty??1)));
   const courseAmount=12*requestedCount,materialsAmount=20*ebookQty,totalAmount=courseAmount+materialsAmount;
   const {data:order,error:oe}=await db.from("registration_orders").upsert({
     registration_id:primaryReg.id,status:"payment_pending",currency:"usd",
