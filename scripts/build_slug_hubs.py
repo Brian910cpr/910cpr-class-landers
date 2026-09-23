@@ -2982,7 +2982,7 @@ def render_group_request_form(page: dict[str, Any]) -> str:
     if not page.get("group_mode"):
         return ""
     return """
-  <section class="request-form-grid">
+  <section class="request-form-grid group-training-request-grid">
     <section class="section-box request-form-card" id="request-form">
       <div class="request-form-head">
         <div><div class="eyebrow">Request details</div><h2>Tell us about your group</h2></div>
@@ -3803,10 +3803,10 @@ def render_page(
 <link rel="icon" type="image/png" href="images/logo.png">
 <link rel="shortcut icon" href="images/logo.png">
 <link rel="apple-touch-icon" href="images/logo.png">
-<link rel="stylesheet" href="/css/lander.css">
+<link rel="stylesheet" href="/css/lander.css{'?v=20260923-group1' if group_mode else ''}">
 {render_group_training_schema(page)}
 </head>
-<body>
+<body{' class="group-training-page"' if group_mode else ''}>
 <div class="wrap">
   <div class="page-shell">
     {body}
