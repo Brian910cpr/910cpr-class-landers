@@ -1,6 +1,6 @@
 import {groupRequest} from './core.mjs';
 const ORIGINS = new Set(['https://www.910cpr.com', 'https://910cpr.com']);
-const PAGE = 'https://www.910cpr.com/request_group_session.html';
+const PAGE = 'https://www.910cpr.com/group-training.html';
 function reply(origin:string, data:unknown, status=200) {
   return new Response(JSON.stringify(data), {status, headers:{'content-type':'application/json', 'cache-control':'no-store', 'access-control-allow-origin':ORIGINS.has(origin)?origin:'https://www.910cpr.com', 'access-control-allow-headers':'content-type,apikey,authorization', 'access-control-allow-methods':'POST,OPTIONS', vary:'Origin'}});
 }
@@ -45,7 +45,7 @@ Deno.serve(async (req:Request) => {
     const [saved] = await rest(`requirement_inquiries?id=eq.${id}&select=name,email,requirement_text,selected_course`);
     if (!saved) throw Error('receipt_missing');
     // A saved lead must also reach Brian's existing action board. No email delivery is claimed.
-    await rest('production_board_cards?on_conflict=id',{method:'POST',headers:{prefer:'resolution=ignore-duplicates,return=minimal'},body:JSON.stringify({id,title:`Contact ${saved.name} about group training`.slice(0,180),project:'910CPR Group Training',owner:'Brian',lane:'decision',value_score:8,work_score:1,summary:`${saved.selected_course?.title} · ${saved.email}`,details:`Group request ${id}\n\n${saved.requirement_text}`,flags:['CUSTOMER IMPACT','REVENUE'],brian_override:false})});
+    await rest('production_board_cards?on_conflict=id',{method:'POST',headers:{prefer:'resolution=ignore-duplicates,return=minimal'},body:JSON.stringify({id,title:`Contact ${saved.name} about group training`.slice(0,180),project:'910CPR Group Training',owner:'Brian',lane:'decision',value_score:8,work_score:1,summary:`${saved.selected_course?.title} · ${saved.email}`,details:`Group request ${id}\n\n${saved.requirement_text}`,flags:['CUSTOMER IMPACT','REVENUE'],brian_override:false,context_manifest:{owner_action:{root_action_id:`group-request:${id}`,action:`Contact ${saved.name} about group training`,where:'Production Board > 910CPR Group Training',look_for:`Group request ${id} (${saved.selected_course?.title})`,reply_with:'Record the contact outcome on this card',do_not_touch:'Do not mark a class booked until date and price are confirmed',why:'This group requested training and is waiting for a reply'}}})});
     return reply(origin,{received:true,reference:id});
   } catch (error) {
     console.error('group_request_unavailable', error instanceof Error ? error.message : 'unknown');

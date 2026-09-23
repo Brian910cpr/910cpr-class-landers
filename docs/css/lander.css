@@ -4260,3 +4260,23 @@ textarea {
   color: #174f2b;
 }
 .anchor-class-banner strong { font-size: 1.05rem; }
+
+/* Group training uses request cards, not the dated session and sidebar grids. */
+.group-training-page .slug-hero { grid-template-columns: minmax(0, 1fr); }
+.group-training-page .slug-hero .hero-side { display: none; }
+.group-training-page .hub-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.group-training-page .hub-tabs .tab-btn { min-width: 0; width: 100%; }
+.group-training-page .slug-group-request-pill { grid-template-columns: minmax(0, 1fr) auto; }
+.group-training-page .slug-group-request-pill .slug-pill-actions { justify-content: flex-end; }
+.group-training-page .group-training-request-grid { grid-template-columns: minmax(0, 1fr); }
+
+@media (max-width: 850px) {
+  .group-training-page .hub-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .group-training-page .slug-group-request-pill { grid-template-columns: minmax(0, 1fr); }
+  .group-training-page .slug-group-request-pill .slug-pill-actions { justify-content: stretch; }
+}
+@media (max-width: 500px) {
+  .group-training-page .hub-tabs { grid-template-columns: minmax(0, 1fr); }
+}
