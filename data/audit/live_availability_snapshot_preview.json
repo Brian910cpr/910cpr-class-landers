@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-25T15:32:07.578357+00:00",
+  "generated_at": "2026-09-25T19:31:23.180835+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -27,53 +27,25 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 369,
-    "blocks_blocked": 1,
+    "blocks_generated": 380,
+    "blocks_blocked": 0,
     "dns_markers_found": 1,
-    "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 1
-    },
-    "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 1
-    },
+    "blocked_reason_counts": {},
+    "blocked_all_reason_counts": {},
     "source_type_counts": {
       "google_calendar": 2,
       "occupancy_calendar": 1,
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 168,
+      "blocked": 179,
       "available": 201
     },
     "inverse_generated_availability_blocks": 201,
-    "inverse_blocking_event_blocks": 168,
+    "inverse_blocking_event_blocks": 179,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-09-25T15:00:00",
-      "end_datetime": "2026-09-25T17:30:00",
-      "date": "2026-09-25",
-      "end_date": "2026-09-25",
-      "start_time": "15:00",
-      "end_time": "17:30",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20260925T1500000400",
-      "summary": "CFA Pickup",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -211,6 +183,30 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "1fo4n3eb0hgi0n67kgna1d3dp8@google.com",
       "summary": "ADR Shift — Brian Unavailable",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-09-28T18:00:00",
+      "end_datetime": "2026-09-29T06:00:00",
+      "date": "2026-09-28",
+      "end_date": "2026-09-29",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Riegelwood\\, NC 28456",
+      "location_name": "Riegelwood\\, NC 28456",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "6hgjecr4clim2b9j6li6cb9k74sj4b9pckpj2bb46sqj0chlc8s3gp9m70@google.com",
+      "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -557,6 +553,30 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-04T18:00:00",
+      "end_datetime": "2026-10-05T06:00:00",
+      "date": "2026-10-04",
+      "end_date": "2026-10-05",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Riegelwood\\, NC 28456",
+      "location_name": "Riegelwood\\, NC 28456",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "6coj6phm61gjgbb36kpmab9k6li3abb271j3ebb46orj6ohkc5h32cj160@google.com",
+      "summary": "Shift: ADR",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-05T06:30:00",
       "end_datetime": "2026-10-05T07:45:00",
       "date": "2026-10-05",
@@ -667,6 +687,30 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "gmjvomtqeaicte34b9n5ol4000@google.com",
       "summary": "ADR Shift — Brian Unavailable",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-05T18:00:00",
+      "end_datetime": "2026-10-06T06:00:00",
+      "date": "2026-10-05",
+      "end_date": "2026-10-06",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Riegelwood\\, NC 28456",
+      "location_name": "Riegelwood\\, NC 28456",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "74smadhk74o30b9k70p3cb9k74s30bb268r3gb9h6crm8p9m75i38oj2cg@google.com",
+      "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -917,6 +961,30 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-09T06:00:00",
+      "end_datetime": "2026-10-09T18:00:00",
+      "date": "2026-10-09",
+      "end_date": "2026-10-09",
+      "start_time": "06:00",
+      "end_time": "18:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Riegelwood\\, NC 28456",
+      "location_name": "Riegelwood\\, NC 28456",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "clhm4opp64sjeb9i6pi3eb9k6co62bb1cdimcb9i60q66e9icdhj0dr16o@google.com",
+      "summary": "Shift: ADR",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-09T15:00:00",
       "end_datetime": "2026-10-09T17:30:00",
       "date": "2026-10-09",
@@ -931,6 +999,30 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261009T1500000400",
       "summary": "CFA Pickup",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-09T18:00:00",
+      "end_datetime": "2026-10-10T06:00:00",
+      "date": "2026-10-09",
+      "end_date": "2026-10-10",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Riegelwood\\, NC 28456",
+      "location_name": "Riegelwood\\, NC 28456",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "cgrm8e34ckqm6b9i6comcb9k75gm6b9pcpi38b9kckom8ohh6thm2e1mc8@google.com",
+      "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1051,6 +1143,30 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "o7useb0kiv15u240o47i9asr28@google.com",
       "summary": "ADR Shift — Brian Unavailable",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-12T18:00:00",
+      "end_datetime": "2026-10-13T06:00:00",
+      "date": "2026-10-12",
+      "end_date": "2026-10-13",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Riegelwood\\, NC 28456",
+      "location_name": "Riegelwood\\, NC 28456",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "cgsj4cj16spm4b9j6dh62b9kccp3ib9o74qm8b9jcco68p9i6osjap9kco@google.com",
+      "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1253,6 +1369,30 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-15T06:00:00",
+      "end_datetime": "2026-10-15T18:00:00",
+      "date": "2026-10-15",
+      "end_date": "2026-10-15",
+      "start_time": "06:00",
+      "end_time": "18:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Riegelwood\\, NC 28456",
+      "location_name": "Riegelwood\\, NC 28456",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "cpijcoj66cs3cbb4c8o32b9k6pgjabb2corj2bb2coqj0ohmc4sm4dpg6o@google.com",
+      "summary": "Shift: ADR",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-15T15:00:00",
       "end_datetime": "2026-10-15T17:30:00",
       "date": "2026-10-15",
@@ -1397,6 +1537,30 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-16T18:00:00",
+      "end_datetime": "2026-10-17T06:00:00",
+      "date": "2026-10-16",
+      "end_date": "2026-10-17",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Riegelwood\\, NC 28456",
+      "location_name": "Riegelwood\\, NC 28456",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "cdgjecr3c4p38bb56oqjib9k6sojcbb268q3abb4cdh30e1p6gp38c1j6o@google.com",
+      "summary": "Shift: ADR",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-17T07:00:00",
       "end_datetime": "2026-10-17T08:00:00",
       "date": "2026-10-17",
@@ -1459,6 +1623,30 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "ksurludemcc2f1ur2oh4v3u61o@google.com",
       "summary": "ADR Shift — Brian Unavailable",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-18T18:00:00",
+      "end_datetime": "2026-10-19T06:00:00",
+      "date": "2026-10-18",
+      "end_date": "2026-10-19",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Riegelwood\\, NC 28456",
+      "location_name": "Riegelwood\\, NC 28456",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "6sq34e1o68q6ab9l6cpm2b9k68rj2bb170rm6b9i6co3idpi6kqmcc1g6s@google.com",
+      "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -1949,6 +2137,30 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-26T18:00:00",
+      "end_datetime": "2026-10-27T06:00:00",
+      "date": "2026-10-26",
+      "end_date": "2026-10-27",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Riegelwood\\, NC 28456",
+      "location_name": "Riegelwood\\, NC 28456",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "6tgm2c366ksjab9i60rj8b9k60s64b9ocli68b9i69hjipj3cdi36c1j6o@google.com",
+      "summary": "Shift: ADR",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-27T06:30:00",
       "end_datetime": "2026-10-27T07:45:00",
       "date": "2026-10-27",
@@ -2189,6 +2401,30 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-30T06:00:00",
+      "end_datetime": "2026-10-30T18:00:00",
+      "date": "2026-10-30",
+      "end_date": "2026-10-30",
+      "start_time": "06:00",
+      "end_time": "18:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Riegelwood\\, NC 28456",
+      "location_name": "Riegelwood\\, NC 28456",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "c9i3ce1m75ij2b9n6gqm4b9k61gmab9p6timabb364oj4oho75gjeeb16s@google.com",
+      "summary": "Shift: ADR",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-30T15:00:00",
       "end_datetime": "2026-10-30T17:30:00",
       "date": "2026-10-30",
@@ -2203,6 +2439,30 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261030T1500000400",
       "summary": "CFA Pickup",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-30T18:00:00",
+      "end_datetime": "2026-10-31T06:00:00",
+      "date": "2026-10-30",
+      "end_date": "2026-10-31",
+      "start_time": "18:00",
+      "end_time": "06:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Riegelwood\\, NC 28456",
+      "location_name": "Riegelwood\\, NC 28456",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "65h62eb36lim6b9l74p66b9k70sm4b9pcdj30bb2chi6cd366goj6pb46g@google.com",
+      "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -4085,12 +4345,12 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-09-25T11:45:00",
-      "end_datetime": "2026-09-25T15:00:00",
+      "start_datetime": "2026-09-25T15:45:00",
+      "end_datetime": "2026-09-25T18:00:00",
       "date": "2026-09-25",
       "end_date": "2026-09-25",
-      "start_time": "11:45",
-      "end_time": "15:00",
+      "start_time": "15:45",
+      "end_time": "18:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10286,11 +10546,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-12-24T07:45:00",
-      "end_datetime": "2026-12-24T11:45:00",
+      "end_datetime": "2026-12-24T15:45:00",
       "date": "2026-12-24",
       "end_date": "2026-12-24",
       "start_time": "07:45",
-      "end_time": "11:45",
+      "end_time": "15:45",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10314,14 +10574,5 @@
       ]
     }
   ],
-  "blocked_or_placeholder_sources": [
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-09-25T17:30:00",
-      "end_datetime": "2026-09-25T18:00:00"
-    }
-  ]
+  "blocked_or_placeholder_sources": []
 }
