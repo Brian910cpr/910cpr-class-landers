@@ -624,7 +624,7 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin: 0;
+      margin: 14px 0 0;
       padding: 0;
       list-style: none;
     }
@@ -802,20 +802,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="muted">New or expired PALS: choose Provider. Current PALS card: choose Renewal. Prefer online coursework: choose HeartCode PALS plus an in-person skills session.</p>
       </div>
       
-      
-      <div class="family-hero-media is-course-art">
+      <div class="family-hero-media is-course-art" aria-hidden="false">
         <img src="/images/pals_general.png" alt="American Heart Association PALS course artwork." loading="eager">
       </div>
     </div>
-    
-    
   </header>
   <main>
-    
-    
-    
-    
-    
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">
@@ -855,8 +847,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
     </section>
+    
     <section class="supporting-info" aria-label="Course details and credentials">
-<section class="page-context" aria-label="Course context">
+      
+    <section class="page-context" aria-label="Course context">
       <p>910CPR provides American Heart Association Pediatric Advanced Life Support training for clinicians who respond to pediatric respiratory, shock, and cardiac emergencies.</p>
       
       <div class="page-note">
@@ -866,7 +860,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
       
     </section>
-<div class="family-help" aria-label="Course format guide">
+      
+    <div class="family-help" aria-label="Course format guide">
       <div class="family-help-title">Course format guide</div>
       <div class="delivery-help-list">
           <div class="delivery-help-item">
@@ -879,11 +874,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
       </div>
     </div>
-<section class="service-promise" aria-label="Local scheduling and eCard service">
+      
+    <section class="service-promise" aria-label="Local scheduling and eCard service">
       <div class="service-promise-item"><strong>Same-day eCards</strong><span>After successful completion and required course paperwork, 910CPR issues your eCard the same day.</span></div>
       <div class="service-promise-item"><strong>Flexible Wilmington skills checks</strong><span>Daytime, evening, and overnight appointments may appear whenever the live calendar shows verified availability.</span></div>
     </section>
-<aside class="header-credential" aria-label="American Heart Association Training Site">
+      
+      <aside class="header-credential" aria-label="American Heart Association Training Site">
         <img src="/images/Logo_circle_AHA-Training-Site.webp" alt="American Heart Association Authorized Training Site" loading="eager">
         <div>
           <span class="header-credential-eyebrow">Authorized training</span>
@@ -898,7 +895,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/pals.json?v=2026-09-24T19%3A30%3A52.253812";
+    const availabilityUrl = "/data/block-selector-availability/pals.json?v=2026-09-25T00%3A54%3A57.349015";
     const courseOptions = [{"courseId": "209805", "courseName": "AHA PALS Provider", "family": "PALS", "variant": "initial", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["initial", "provider", "pals-provider"], "iconLabel": "PALS", "imageUrl": "/images/pals_general.png", "imageFit": "contain", "imageAlt": "AHA PALS Provider course option", "deliveryBadge": "IN-PERSON", "clarification": "Full classroom PALS Provider certification for pediatric emergency response roles.", "familyGroup": "pals-provider", "familyLabel": "PALS Provider", "optionLabel": "Initial — In Person", "price": 275, "details": {"course_key": "aha_pals_provider", "title": "AHA PALS Provider", "certifying_body": "AHA", "family": "PALS", "short_description": "Pediatric advanced life support for clinicians who care for infants and children in emergencies.", "who_this_is_for": "Healthcare professionals involved in pediatric respiratory, shock, cardiac arrest, or emergency response.", "topics_covered": ["Pediatric assessment", "Respiratory emergencies", "Shock recognition", "Pediatric cardiac arrest algorithms", "Team dynamics"], "required_materials": ["Current AHA PALS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm pediatric advanced life support requirements with your employer or program."], "full_course_page": "/pals.html"}}, {"courseId": "251496", "courseName": "AHA PALS Renewal", "family": "PALS", "variant": "renewal", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["renewal", "provider-renewal", "pals-renewal"], "iconLabel": "RN", "imageUrl": "/images/pals_general.png", "imageFit": "contain", "imageAlt": "AHA PALS Renewal course option", "deliveryBadge": "IN-PERSON", "clarification": "Renewal path for providers with prior PALS training.", "familyGroup": "pals-provider", "familyLabel": "PALS Provider", "optionLabel": "Renewal — In Person", "price": 225, "details": {"course_key": "aha_pals_renewal", "title": "AHA PALS Renewal", "certifying_body": "AHA", "family": "PALS", "short_description": "Focused PALS renewal for current pediatric advanced life support providers.", "who_this_is_for": "Current PALS providers renewing an existing AHA PALS Provider card.", "topics_covered": ["PALS algorithm review", "Respiratory and shock scenarios", "Pediatric team response", "Skills verification"], "required_materials": ["Current AHA PALS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Choose PALS Provider if you need a full initial class."], "full_course_page": "/pals.html"}}, {"courseId": "209812", "courseName": "AHA PALS HeartCode", "family": "PALS", "variant": "heartcode", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["heartcode", "heartcode-pals"], "iconLabel": "HC", "imageUrl": "/images/hc_pals.png", "imageFit": "contain", "imageAlt": "AHA PALS HeartCode course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "For students who already purchased and completed the AHA online course separately.", "familyGroup": "pals-skills-session", "familyLabel": "PALS Skills Session Only", "optionLabel": "In-person Skills Session", "price": 100, "details": {"course_key": "aha_heartcode_pals", "title": "AHA PALS HeartCode", "certifying_body": "AHA", "family": "PALS", "short_description": "PALS skills session for students who completed the official AHA HeartCode PALS online course.", "who_this_is_for": "Clinicians completing the blended HeartCode PALS pathway.", "topics_covered": ["PALS skills verification", "Pediatric respiratory and shock scenarios", "Team response application"], "required_materials": ["Completed AHA HeartCode PALS certificate of completion before the skills session."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["This is the skills portion, not the online HeartCode course purchase."], "full_course_page": "/courses/heartcode-pals.html"}}];
     const optionGroups = {"PALS": {"family": "PALS", "label": "All AHA PALS options", "courseIds": ["209805", "251496", "209812"]}};
     const asapOptionLabel = "Need PALS ASAP? Show all AHA PALS options";
