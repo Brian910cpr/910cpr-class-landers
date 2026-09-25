@@ -74,7 +74,8 @@ class FamilyCprPageTests(unittest.TestCase):
     def test_canonical_family_page_exists(self) -> None:
         html = family_html()
         self.assertIn("<h1>Family &amp; Friends CPR</h1>", html)
-        self.assertIn("Learn practical CPR skills for adults, children, and infants", html)
+        self.assertIn("For parents, grandparents, babysitters, caregivers, and anyone who wants to know what to do", html)
+        self.assertIn("Practice adult, child, and infant CPR, AED use, and choking response.", html)
 
     def test_canonical_tag_points_to_family_cpr(self) -> None:
         self.assertEqual(["https://www.910cpr.com/family-cpr.html"], parsed_family().canonicals)
@@ -108,8 +109,13 @@ class FamilyCprPageTests(unittest.TestCase):
 
     def test_no_certification_card_statement_is_clear(self) -> None:
         html = family_html()
-        self.assertIn("No certification. No test. Just learn what to do.", html)
+        self.assertIn("No certification card and no test.", html)
         self.assertIn("does not include a certification card", html)
+
+    def test_booking_choices_come_before_supporting_copy(self) -> None:
+        html = family_html()
+        self.assertLess(html.index('class="selector-shell"'), html.index('class="supporting-info"'))
+        self.assertLess(html.index("Choose your class"), html.index("Course format guide"))
 
     def test_page_uses_shared_selector_and_attention_cues(self) -> None:
         html = family_html()
