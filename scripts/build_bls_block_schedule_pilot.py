@@ -269,25 +269,31 @@ def css() -> str:
     }
     .page-heading-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
-      gap: 24px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
       align-items: center;
     }
+    .supporting-info {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+    .supporting-info > :last-child { margin-bottom: 0; }
     .header-credential {
       display: grid;
-      grid-template-columns: 92px minmax(0, 1fr);
-      gap: 14px;
+      grid-template-columns: 52px minmax(0, 1fr);
+      gap: 10px;
       align-items: center;
-      padding: 14px 16px;
-      border: 2px solid #d71920;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #fff 0%, #fff7f7 100%);
-      box-shadow: 0 10px 24px rgba(120, 18, 22, .12);
+      padding: 10px 12px;
+      border: 1px solid #e6c7c9;
+      border-radius: 10px;
+      background: #fffafa;
+      box-shadow: none;
     }
     .header-credential img {
       display: block;
-      width: 92px;
-      max-height: 108px;
+      width: 52px;
+      max-height: 58px;
       object-fit: contain;
     }
     .header-credential strong {
@@ -316,7 +322,7 @@ def css() -> str:
       border-radius: 10px;
       background: var(--band);
       padding: 14px;
-      margin: 14px 0 0;
+      margin: 0;
     }
     .family-help-title {
       margin-bottom: 8px;
@@ -347,7 +353,7 @@ def css() -> str:
     .page-context {
       display: grid;
       gap: 12px;
-      margin: 0 0 18px;
+      margin: 0;
     }
     .page-note {
       border: 1px solid var(--line);
@@ -414,7 +420,7 @@ def css() -> str:
     }
     .rail-arrow {
       position: absolute;
-      top: 56px;
+      top: 44px;
       z-index: 2;
       display: inline-flex;
       align-items: center;
@@ -492,11 +498,11 @@ def css() -> str:
     }
     .course-card {
       display: grid;
-      grid-template-rows: 118px auto;
-      gap: 12px;
+      grid-template-rows: 88px auto;
+      gap: 10px;
       width: 100%;
       padding: 0;
-      min-height: 258px;
+      min-height: 220px;
       align-content: start;
       scroll-snap-align: start;
       overflow: hidden;
@@ -506,7 +512,7 @@ def css() -> str:
       align-items: center;
       justify-content: center;
       width: 100%;
-      min-height: 118px;
+      min-height: 88px;
       border-radius: 6px 6px 0 0;
       background: linear-gradient(135deg, #e8f2f8, #f8fbfd);
       overflow: hidden;
@@ -514,7 +520,7 @@ def css() -> str:
     .course-icon img {
       display: block;
       width: 100%;
-      height: 118px;
+      height: 88px;
       object-fit: contain;
       object-position: center;
       padding: 6px;
@@ -804,7 +810,7 @@ def css() -> str:
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin: 0 0 16px;
+      margin: 0;
     }
     .service-promise-item {
       padding: 14px 16px;
@@ -875,10 +881,10 @@ def css() -> str:
       .rail-arrow {
         width: 38px;
         min-height: 48px;
-        top: 58px;
+        top: 46px;
       }
       .course-card {
-        min-height: 252px;
+        min-height: 218px;
       }
       .delivery-help-list {
         grid-template-columns: 1fr;
@@ -1300,20 +1306,15 @@ def render_html(payload: dict[str, Any]) -> str:
         {f'<p class="page-subtitle">{subtitle}</p>' if subtitle else ''}
         <p class="muted">{intro}</p>
       </div>
-      {header_credential_html}
     </div>
-    {delivery_help_html}
   </header>
   <main>
-    {context_html}
-    {unsupported_html}
-    {service_promise_html}
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">
           <div>
-            <h2>Course</h2>
-            <p class="muted">Choose the course or delivery format first.</p>
+            <h2>Choose your class</h2>
+            <p class="muted">Pick the option you need, then choose a date and start time.</p>
           </div>
           <div class="option-tools">
             {show_all_toggle_html}
@@ -1342,6 +1343,13 @@ def render_html(payload: dict[str, Any]) -> str:
           <div id="course-list" class="course-list"></div>
         </div>
       </div>
+    </section>
+    {unsupported_html}
+    <section class="supporting-info" aria-label="Course details and credentials">
+      {context_html}
+      {delivery_help_html}
+      {service_promise_html}
+      {header_credential_html}
     </section>
     {stable_projection_html}
   </main>
