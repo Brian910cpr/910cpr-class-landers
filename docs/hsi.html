@@ -80,7 +80,7 @@
     }
     .page-heading-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(180px, 340px);
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
       gap: 18px;
       align-items: end;
     }
@@ -101,11 +101,12 @@
       object-position: right bottom;
     }
     .family-hero-media.is-character {
-      max-width: 410px;
+      max-width: 420px;
       margin-bottom: -24px;
     }
     .family-hero-media.is-character img {
-      max-height: 220px;
+      height: 380px;
+      max-height: none;
       filter: drop-shadow(0 10px 20px rgba(24, 33, 44, .16));
     }
     .supporting-info {
@@ -360,6 +361,9 @@
       object-position: center;
       padding: 6px;
     }
+    .course-icon.has-agency-logo { gap: 14px; padding: 6px 12px; }
+    .course-icon.has-agency-logo img { width: auto; max-width: 45%; padding: 0; height: 76px; }
+    .course-icon.has-agency-logo .course-agency-logo { width: 76px; background: #fff; border-radius: 4px; padding: 4px; }
     .course-icon img.course-image-cover {
       object-fit: cover;
       padding: 0;
@@ -668,7 +672,7 @@
         max-width: 360px;
         margin-bottom: -14px;
       }
-      .family-hero-media.is-character img { max-height: 190px; }
+      .family-hero-media.is-character img { height: 280px; max-height: none; }
       .header-credential {
         grid-template-columns: 44px minmax(0, 1fr);
         gap: 8px;
@@ -802,8 +806,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="muted">Use HSI when your employer or program accepts HSI certification. Choose the class that matches the exact requirement you were given.</p>
       </div>
       
-      <div class="family-hero-media is-course-art" aria-hidden="false">
-        <img src="/images/0hsi.png" alt="HSI training artwork." loading="eager">
+      <div class="family-hero-media is-course-art">
+        <img src="/images/0hsi.png?v=682026aeabc9" alt="HSI training artwork." loading="eager" fetchpriority="high">
       </div>
     </div>
   </header>
@@ -886,11 +890,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </section>
     
   </main>
+  <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/hsi.json?v=2026-09-25T00%3A54%3A57.349015";
+    const availabilityUrl = "/data/block-selector-availability/hsi.json?v=2026-09-25T05%3A35%3A24.590558";
     const courseOptions = [{"courseId": "463743", "courseName": "HSI BLS Challenge", "family": "HSI", "variant": "challenge", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["challenge", "challenge", "hsi-bls", "bls"], "iconLabel": "HSI", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageFit": "contain", "imageAlt": "HSI BLS Challenge course option", "deliveryBadge": "IN-PERSON", "clarification": "Challenge option for students who meet HSI BLS prerequisite expectations.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 80, "details": {"course_key": "hsi_bls_challenge", "title": "HSI BLS Challenge", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI BLS Challenge option for experienced providers whose requirement accepts HSI Basic Life Support.", "who_this_is_for": "Experienced healthcare or workplace students who specifically need or are eligible for an HSI BLS Challenge format.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Confirm that you are eligible for the HSI BLS Challenge format before registering."], "certification_issued": "HSI certification issued after successful completion.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification and the Challenge course format."], "full_course_page": "/hsi.html"}}, {"courseId": "445670", "courseName": "HSI BLS + Adult First Aid", "family": "HSI", "variant": "bls-first-aid", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["bls-first-aid", "bls-first-aid", "hsi-bls-fa", "hsi-bls-first-aid"], "iconLabel": "FA", "imageUrl": "/images/Health_and_Safety_Institute_Logo.jpg", "imageFit": "contain", "imageAlt": "HSI BLS + Adult First Aid course option", "deliveryBadge": "BLENDED", "clarification": "Complete the assigned online coursework first, then attend the in-person skills session.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 90, "details": {"course_key": "hsi_bls_adult_first_aid", "title": "HSI BLS + Adult First Aid", "certifying_body": "HSI", "family": "HSI", "short_description": "HSI blended option combining Basic Life Support with Adult First Aid/CPR/AED.", "who_this_is_for": "Workplaces, healthcare-adjacent teams, dental offices, ABA providers, and organizations that accept HSI and need both BLS and first aid coverage.", "topics_covered": ["HSI BLS", "Adult first aid", "CPR and AED", "Online coursework", "In-person skills verification"], "required_materials": ["Completed assigned HSI online coursework before the skills session."], "certification_issued": "HSI certification issued after successful completion and valid for two years.", "compliance_acceptance_notes": ["Confirm that your employer or program accepts HSI certification."], "full_course_page": "/hsi.html"}}];
     const optionGroups = {"HSI": {"family": "HSI", "label": "All HSI options", "courseIds": ["463743", "445670"]}};
     const asapOptionLabel = "Need HSI ASAP? Show all HSI options";
@@ -1211,6 +1216,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return days;
     }
 
+    function appendAgencyLogo(icon) {
+      const url = "";
+      if (!url) return;
+      icon.classList.add('has-agency-logo');
+      const logo = document.createElement('img');
+      logo.className = 'course-agency-logo';
+      logo.src = url;
+      logo.alt = 'American Heart Association';
+      logo.loading = 'lazy';
+      logo.width = 76;
+      logo.height = 76;
+      icon.appendChild(logo);
+    }
+
     function renderCourseOptions() {
       const host = byId('course-option-list');
       host.innerHTML = '';
@@ -1232,6 +1251,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           image.alt = courses[0].familyLabel || courses[0].courseName;
           image.loading = 'lazy';
           icon.appendChild(image);
+          appendAgencyLogo(icon);
           const heading = document.createElement('h3');
           heading.textContent = courses[0].familyLabel || courses[0].courseName;
           const choices = document.createElement('div');
@@ -1288,6 +1308,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           fallback.setAttribute('aria-hidden', 'true');
           icon.appendChild(fallback);
         }
+        appendAgencyLogo(icon);
         const copy = document.createElement('span');
         copy.className = 'course-copy';
         const title = document.createElement('span');
