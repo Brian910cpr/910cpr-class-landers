@@ -80,7 +80,7 @@
     }
     .page-heading-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(180px, 340px);
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
       gap: 18px;
       align-items: end;
     }
@@ -101,11 +101,12 @@
       object-position: right bottom;
     }
     .family-hero-media.is-character {
-      max-width: 410px;
+      max-width: 420px;
       margin-bottom: -24px;
     }
     .family-hero-media.is-character img {
-      max-height: 220px;
+      height: 380px;
+      max-height: none;
       filter: drop-shadow(0 10px 20px rgba(24, 33, 44, .16));
     }
     .supporting-info {
@@ -360,6 +361,9 @@
       object-position: center;
       padding: 6px;
     }
+    .course-icon.has-agency-logo { gap: 14px; padding: 6px 12px; }
+    .course-icon.has-agency-logo img { width: auto; max-width: 45%; padding: 0; height: 76px; }
+    .course-icon.has-agency-logo .course-agency-logo { width: 76px; background: #fff; border-radius: 4px; padding: 4px; }
     .course-icon img.course-image-cover {
       object-fit: cover;
       padding: 0;
@@ -668,7 +672,7 @@
         max-width: 360px;
         margin-bottom: -14px;
       }
-      .family-hero-media.is-character img { max-height: 190px; }
+      .family-hero-media.is-character img { height: 280px; max-height: none; }
       .header-credential {
         grid-template-columns: 44px minmax(0, 1fr);
         gap: 8px;
@@ -802,8 +806,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="muted">New or expired card: choose BLS Provider. Current BLS card: choose Renewal. Prefer online coursework: choose HeartCode BLS plus an in-person skills session.</p>
       </div>
       
-      <div class="family-hero-media is-character" aria-hidden="false">
-        <img src="/images/bls-9to1-nurse.webp" alt="Nurse pointing toward the BLS booking calendar with a reminder to schedule renewal." loading="eager">
+      <div class="family-hero-media is-character">
+        <img src="/images/characters/BLS-1.webp?v=a48708e29627" srcset="/images/characters/BLS-1-480.webp?v=0151cb601137 480w, /images/characters/BLS-1.webp?v=a48708e29627 960w" sizes="(max-width: 820px) 300px, 420px" alt="Anjla pointing toward the BLS class choices with her Schedule it reminder." loading="eager" fetchpriority="high">
       </div>
     </div>
   </header>
@@ -890,7 +894,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </aside>
     </section>
     
+    <section class="stable-class-projection" aria-labelledby="stable-class-title">
+      <div><p class="stable-class-kicker">Planning two to three weeks ahead</p>
+      <h2 id="stable-class-title">Confirmed upcoming BLS classes</h2>
+      <p class="muted">These confirmed public classes sit in a steadier planning window. For today and the next two weeks, use the current calendar above.</p></div>
+      <ul class="stable-class-list"><li class="stable-class-item"><a href="/classes/14184954.html"><strong>AHA BLS Provider Renewal</strong><span>Monday, October 12 at 9:00 AM · Wilmington; Shipyard Blvd - B</span></a></li><li class="stable-class-item"><a href="/classes/14135047.html"><strong>AHA BLS Provider</strong><span>Monday, October 12 at 5:00 PM · Wilmington; Shipyard Blvd - B</span></a></li></ul>
+    </section>
   </main>
+  <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
   <script>
@@ -1216,6 +1227,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return days;
     }
 
+    function appendAgencyLogo(icon) {
+      const url = "/images/0aha.png?v=85e7b1aed907";
+      if (!url) return;
+      icon.classList.add('has-agency-logo');
+      const logo = document.createElement('img');
+      logo.className = 'course-agency-logo';
+      logo.src = url;
+      logo.alt = 'American Heart Association';
+      logo.loading = 'lazy';
+      logo.width = 76;
+      logo.height = 76;
+      icon.appendChild(logo);
+    }
+
     function renderCourseOptions() {
       const host = byId('course-option-list');
       host.innerHTML = '';
@@ -1237,6 +1262,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           image.alt = courses[0].familyLabel || courses[0].courseName;
           image.loading = 'lazy';
           icon.appendChild(image);
+          appendAgencyLogo(icon);
           const heading = document.createElement('h3');
           heading.textContent = courses[0].familyLabel || courses[0].courseName;
           const choices = document.createElement('div');
@@ -1293,6 +1319,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           fallback.setAttribute('aria-hidden', 'true');
           icon.appendChild(fallback);
         }
+        appendAgencyLogo(icon);
         const copy = document.createElement('span');
         copy.className = 'course-copy';
         const title = document.createElement('span');

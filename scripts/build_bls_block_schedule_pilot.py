@@ -18,6 +18,7 @@ from scripts.block_start_time_selector import (
 )
 from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
 from scripts.static_public_inventory_projection import render_from_schedule
+from scripts.family_course_art import asset_url, hero_markup
 
 
 REPORT_JSON_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
@@ -269,7 +270,7 @@ def css() -> str:
     }
     .page-heading-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(180px, 340px);
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
       gap: 18px;
       align-items: end;
     }
@@ -290,11 +291,12 @@ def css() -> str:
       object-position: right bottom;
     }
     .family-hero-media.is-character {
-      max-width: 410px;
+      max-width: 420px;
       margin-bottom: -24px;
     }
     .family-hero-media.is-character img {
-      max-height: 220px;
+      height: 380px;
+      max-height: none;
       filter: drop-shadow(0 10px 20px rgba(24, 33, 44, .16));
     }
     .supporting-info {
@@ -549,6 +551,9 @@ def css() -> str:
       object-position: center;
       padding: 6px;
     }
+    .course-icon.has-agency-logo { gap: 14px; padding: 6px 12px; }
+    .course-icon.has-agency-logo img { width: auto; max-width: 45%; padding: 0; height: 76px; }
+    .course-icon.has-agency-logo .course-agency-logo { width: 76px; background: #fff; border-radius: 4px; padding: 4px; }
     .course-icon img.course-image-cover {
       object-fit: cover;
       padding: 0;
@@ -857,7 +862,7 @@ def css() -> str:
         max-width: 360px;
         margin-bottom: -14px;
       }
-      .family-hero-media.is-character img { max-height: 190px; }
+      .family-hero-media.is-character img { height: 280px; max-height: none; }
       .header-credential {
         grid-template-columns: 44px minmax(0, 1fr);
         gap: 8px;
@@ -1234,16 +1239,9 @@ def render_html(payload: dict[str, Any]) -> str:
           {f'<p>{credential_body}</p>' if credential_body else ''}
         </div>
       </aside>"""
-    hero_image = page_config.get("hero_image")
-    hero_image_html = ""
-    if isinstance(hero_image, dict) and hero_image.get("url"):
-        hero_url = html.escape(str(hero_image["url"]), quote=True)
-        hero_alt = html.escape(str(hero_image.get("alt") or title), quote=True)
-        hero_variant = html.escape(str(hero_image.get("variant") or "course-art"), quote=True)
-        hero_image_html = f"""
-      <div class="family-hero-media is-{hero_variant}" aria-hidden="false">
-        <img src="{hero_url}" alt="{hero_alt}" loading="eager">
-      </div>"""
+    hero_image_html = hero_markup(page_config)
+    hero_script_url = asset_url("/assets/family-hero.js")
+    agency_logo_url = asset_url("/images/0aha.png") if page_config.get("certifying_body") == "AHA" else ""
 
     delivery_help_items = page_config.get("delivery_help")
     if not isinstance(delivery_help_items, list) or not delivery_help_items:
@@ -1401,6 +1399,7 @@ def render_html(payload: dict[str, Any]) -> str:
     </section>
     {stable_projection_html}
   </main>
+  <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
   <script>
@@ -1726,6 +1725,20 @@ def render_html(payload: dict[str, Any]) -> str:
       return days;
     }}
 
+    function appendAgencyLogo(icon) {{
+      const url = {json.dumps(agency_logo_url)};
+      if (!url) return;
+      icon.classList.add('has-agency-logo');
+      const logo = document.createElement('img');
+      logo.className = 'course-agency-logo';
+      logo.src = url;
+      logo.alt = 'American Heart Association';
+      logo.loading = 'lazy';
+      logo.width = 76;
+      logo.height = 76;
+      icon.appendChild(logo);
+    }}
+
     function renderCourseOptions() {{
       const host = byId('course-option-list');
       host.innerHTML = '';
@@ -1747,6 +1760,7 @@ def render_html(payload: dict[str, Any]) -> str:
           image.alt = courses[0].familyLabel || courses[0].courseName;
           image.loading = 'lazy';
           icon.appendChild(image);
+          appendAgencyLogo(icon);
           const heading = document.createElement('h3');
           heading.textContent = courses[0].familyLabel || courses[0].courseName;
           const choices = document.createElement('div');
@@ -1803,6 +1817,7 @@ def render_html(payload: dict[str, Any]) -> str:
           fallback.setAttribute('aria-hidden', 'true');
           icon.appendChild(fallback);
         }}
+        appendAgencyLogo(icon);
         const copy = document.createElement('span');
         copy.className = 'course-copy';
         const title = document.createElement('span');
