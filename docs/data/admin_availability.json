@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-09-25T19:31:23.094325+00:00",
+  "generated_at": "2026-09-25T22:46:18.770398+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-25T19:31:22.506427+00:00",
+      "generated_at": "2026-09-25T22:46:18.341813+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-25T19:31:23.094325+00:00",
-      "event_count": 179
+      "generated_at": "2026-09-25T22:46:18.770398+00:00",
+      "event_count": 172
     },
     {
       "source_key": "brian_primary_calendar",
       "display_name": "Brian Primary Google Calendar",
       "source_type": "occupancy_calendar",
       "export_status": "failed",
-      "generated_at": "2026-09-25T19:31:22.711798+00:00",
+      "generated_at": "2026-09-25T22:46:18.513451+00:00",
       "event_count": 0
     },
     {
@@ -32,7 +32,7 @@
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-25T19:31:22.709075+00:00",
+      "generated_at": "2026-09-25T22:46:18.513027+00:00",
       "event_count": 0
     }
   ],
@@ -42,10 +42,10 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-09-25T22:00:00+00:00",
-      "end": "2026-09-25T23:00:00+00:00",
-      "location": "",
+      "title": "EXCEPTION: Teach AHA BLS Provider (Initial) — Brian",
+      "start": "2026-09-26T21:00:00+00:00",
+      "end": "2026-09-26T23:00:00+00:00",
+      "location": "910CPR\\, 4018 Shipyard Blvd\\, Room B\\, Wilmington\\, NC",
       "status": "CONFIRMED"
     },
     {
@@ -101,17 +101,6 @@
       "start": "2026-09-28T22:00:00+00:00",
       "end": "2026-09-29T12:00:00+00:00",
       "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Shift: ADR",
-      "start": "2026-09-28T22:00:00+00:00",
-      "end": "2026-09-29T10:00:00+00:00",
-      "location": "Riegelwood\\, NC 28456",
       "status": "CONFIRMED"
     },
     {
@@ -218,17 +207,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-02T20:00:00+00:00",
-      "end": "2026-10-02T21:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "ADR Shift — Brian Unavailable",
       "start": "2026-10-02T21:00:00+00:00",
       "end": "2026-10-03T11:00:00+00:00",
@@ -240,9 +218,20 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
+      "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
+      "start": "2026-10-02T21:00:00+00:00",
+      "end": "2026-10-02T22:00:00+00:00",
+      "location": "",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
       "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-03T11:00:00+00:00",
-      "end": "2026-10-03T12:00:00+00:00",
+      "start": "2026-10-03T10:00:00+00:00",
+      "end": "2026-10-03T11:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -252,19 +241,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-04T20:00:00+00:00",
-      "end": "2026-10-04T21:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR Shift — Brian Unavailable",
       "start": "2026-10-04T21:00:00+00:00",
-      "end": "2026-10-05T13:00:00+00:00",
+      "end": "2026-10-04T22:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -296,8 +274,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-05T13:00:00+00:00",
-      "end": "2026-10-05T14:00:00+00:00",
+      "start": "2026-10-05T10:00:00+00:00",
+      "end": "2026-10-05T11:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -318,19 +296,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-05T20:00:00+00:00",
-      "end": "2026-10-05T21:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR Shift — Brian Unavailable",
       "start": "2026-10-05T21:00:00+00:00",
-      "end": "2026-10-06T13:00:00+00:00",
+      "end": "2026-10-05T22:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -362,8 +329,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-06T13:00:00+00:00",
-      "end": "2026-10-06T14:00:00+00:00",
+      "start": "2026-10-06T10:00:00+00:00",
+      "end": "2026-10-06T11:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -439,8 +406,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-09T08:00:00+00:00",
-      "end": "2026-10-09T09:00:00+00:00",
+      "start": "2026-10-09T09:00:00+00:00",
+      "end": "2026-10-09T10:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -494,8 +461,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-10T11:00:00+00:00",
-      "end": "2026-10-10T12:00:00+00:00",
+      "start": "2026-10-10T10:00:00+00:00",
+      "end": "2026-10-10T11:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -527,8 +494,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-12T20:00:00+00:00",
-      "end": "2026-10-12T21:00:00+00:00",
+      "start": "2026-10-12T21:00:00+00:00",
+      "end": "2026-10-12T22:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -548,17 +515,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "Shift: ADR",
-      "start": "2026-10-12T22:00:00+00:00",
-      "end": "2026-10-13T10:00:00+00:00",
-      "location": "Riegelwood\\, NC 28456",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-13T06:30:00-04:00",
       "end": "2026-10-13T07:45:00-04:00",
@@ -571,8 +527,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-13T13:00:00+00:00",
-      "end": "2026-10-13T14:00:00+00:00",
+      "start": "2026-10-13T12:00:00+00:00",
+      "end": "2026-10-13T13:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -626,19 +582,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-15T08:00:00+00:00",
-      "end": "2026-10-15T09:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR Shift — Brian Unavailable",
       "start": "2026-10-15T09:00:00+00:00",
-      "end": "2026-10-15T23:00:00+00:00",
+      "end": "2026-10-15T10:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -670,8 +615,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-15T23:00:00+00:00",
-      "end": "2026-10-16T00:00:00+00:00",
+      "start": "2026-10-15T22:00:00+00:00",
+      "end": "2026-10-15T23:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -702,17 +647,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-16T20:00:00+00:00",
-      "end": "2026-10-16T21:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "ADR Shift — Brian Unavailable",
       "start": "2026-10-16T21:00:00+00:00",
       "end": "2026-10-17T11:00:00+00:00",
@@ -724,10 +658,10 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "Shift: ADR",
-      "start": "2026-10-16T22:00:00+00:00",
-      "end": "2026-10-17T10:00:00+00:00",
-      "location": "Riegelwood\\, NC 28456",
+      "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
+      "start": "2026-10-16T21:00:00+00:00",
+      "end": "2026-10-16T22:00:00+00:00",
+      "location": "",
       "status": "CONFIRMED"
     },
     {
@@ -736,8 +670,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-17T11:00:00+00:00",
-      "end": "2026-10-17T12:00:00+00:00",
+      "start": "2026-10-17T10:00:00+00:00",
+      "end": "2026-10-17T11:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -747,8 +681,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-18T20:00:00+00:00",
-      "end": "2026-10-18T21:00:00+00:00",
+      "start": "2026-10-18T21:00:00+00:00",
+      "end": "2026-10-18T22:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -768,17 +702,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "Shift: ADR",
-      "start": "2026-10-18T22:00:00+00:00",
-      "end": "2026-10-19T10:00:00+00:00",
-      "location": "Riegelwood\\, NC 28456",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-19T06:30:00-04:00",
       "end": "2026-10-19T07:45:00-04:00",
@@ -791,8 +714,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-19T13:00:00+00:00",
-      "end": "2026-10-19T14:00:00+00:00",
+      "start": "2026-10-19T12:00:00+00:00",
+      "end": "2026-10-19T13:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -889,9 +812,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-22T08:00:00+00:00",
-      "end": "2026-10-22T09:00:00+00:00",
+      "title": "ADR Shift — Brian Unavailable",
+      "start": "2026-10-22T09:00:00+00:00",
+      "end": "2026-10-22T23:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -900,9 +823,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "ADR Shift — Brian Unavailable",
+      "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
       "start": "2026-10-22T09:00:00+00:00",
-      "end": "2026-10-22T23:00:00+00:00",
+      "end": "2026-10-22T10:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -923,8 +846,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-22T23:00:00+00:00",
-      "end": "2026-10-23T00:00:00+00:00",
+      "start": "2026-10-22T22:00:00+00:00",
+      "end": "2026-10-22T23:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -978,8 +901,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-26T20:00:00+00:00",
-      "end": "2026-10-26T21:00:00+00:00",
+      "start": "2026-10-26T21:00:00+00:00",
+      "end": "2026-10-26T22:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -999,17 +922,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "Shift: ADR",
-      "start": "2026-10-26T22:00:00+00:00",
-      "end": "2026-10-27T10:00:00+00:00",
-      "location": "Riegelwood\\, NC 28456",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-10-27T06:30:00-04:00",
       "end": "2026-10-27T07:45:00-04:00",
@@ -1022,8 +934,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-27T13:00:00+00:00",
-      "end": "2026-10-27T14:00:00+00:00",
+      "start": "2026-10-27T12:00:00+00:00",
+      "end": "2026-10-27T13:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -1099,8 +1011,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-30T08:00:00+00:00",
-      "end": "2026-10-30T09:00:00+00:00",
+      "start": "2026-10-30T09:00:00+00:00",
+      "end": "2026-10-30T10:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -1154,8 +1066,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-31T11:00:00+00:00",
-      "end": "2026-10-31T12:00:00+00:00",
+      "start": "2026-10-31T10:00:00+00:00",
+      "end": "2026-10-31T11:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -2003,6 +1915,17 @@
       "title": "CFA Drop Off",
       "start": "2026-12-24T06:30:00-05:00",
       "end": "2026-12-24T07:45:00-05:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Pickup",
+      "start": "2026-12-24T15:00:00-05:00",
+      "end": "2026-12-24T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     }
