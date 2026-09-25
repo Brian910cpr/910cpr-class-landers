@@ -1,0 +1,40 @@
+{
+  "verified_at": "2026-09-25T02:44:49.050626+00:00",
+  "checks": [
+    {
+      "url": "https://www.910cpr.com/pals.html",
+      "http_status": 200,
+      "sha256": "bcd3d06529feeb5a5e2a09b7beb3246d8c801382f3d34750f34cb5f17a2690f4",
+      "matches_committed": true,
+      "bytes": 72472
+    },
+    {
+      "url": "https://www.910cpr.com/PALS.html",
+      "http_status": 200,
+      "sha256": "bcd3d06529feeb5a5e2a09b7beb3246d8c801382f3d34750f34cb5f17a2690f4",
+      "matches_committed": true,
+      "bytes": 72472
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/PALS-1.webp?v=0eddeeb26fb4",
+      "http_status": 200,
+      "sha256": "0eddeeb26fb4e5fae3ff0d1cb0be620d35f41deda752a9e3fbe87929fb7cadb8",
+      "matches_committed": true,
+      "bytes": 125214
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/PALS-1-480.webp?v=25624ce568b7",
+      "http_status": 200,
+      "sha256": "25624ce568b7d2ce87762045a6a0c5738f101a8328596b583d7fbaded80d944d",
+      "matches_committed": true,
+      "bytes": 52600
+    },
+    {
+      "url": "https://www.910cpr.com/assets/family-hero.js?v=111b7751247b",
+      "http_status": 200,
+      "sha256": "6d88341997f7b0b1c857aec62aefb441b923bd83e0e893630718881866c1e4d7",
+      "matches_committed": true,
+      "bytes": 1232
+    }
+  ]
+}
