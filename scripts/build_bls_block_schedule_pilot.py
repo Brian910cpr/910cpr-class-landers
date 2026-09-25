@@ -269,9 +269,33 @@ def css() -> str:
     }
     .page-heading-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 10px;
-      align-items: center;
+      grid-template-columns: minmax(0, 1fr) minmax(180px, 340px);
+      gap: 18px;
+      align-items: end;
+    }
+    .family-hero-media {
+      justify-self: end;
+      align-self: end;
+      width: 100%;
+      max-width: 340px;
+      min-width: 0;
+      overflow: visible;
+    }
+    .family-hero-media img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 180px;
+      object-fit: contain;
+      object-position: right bottom;
+    }
+    .family-hero-media.is-character {
+      max-width: 410px;
+      margin-bottom: -24px;
+    }
+    .family-hero-media.is-character img {
+      max-height: 220px;
+      filter: drop-shadow(0 10px 20px rgba(24, 33, 44, .16));
     }
     .supporting-info {
       display: grid;
@@ -822,6 +846,18 @@ def css() -> str:
     .service-promise-item span { color: var(--muted); font-size: .92rem; }
     @media (max-width: 820px) {
       .page-heading-row { grid-template-columns: 1fr; gap: 10px; }
+      .family-hero-media {
+        justify-self: center;
+        width: min(100%, 300px);
+        margin-top: -2px;
+      }
+      .family-hero-media img { max-height: 150px; object-position: center bottom; }
+      .family-hero-media.is-character {
+        width: min(76vw, 360px);
+        max-width: 360px;
+        margin-bottom: -14px;
+      }
+      .family-hero-media.is-character img { max-height: 190px; }
       .header-credential {
         grid-template-columns: 44px minmax(0, 1fr);
         gap: 8px;
@@ -1198,6 +1234,17 @@ def render_html(payload: dict[str, Any]) -> str:
           {f'<p>{credential_body}</p>' if credential_body else ''}
         </div>
       </aside>"""
+    hero_image = page_config.get("hero_image")
+    hero_image_html = ""
+    if isinstance(hero_image, dict) and hero_image.get("url"):
+        hero_url = html.escape(str(hero_image["url"]), quote=True)
+        hero_alt = html.escape(str(hero_image.get("alt") or title), quote=True)
+        hero_variant = html.escape(str(hero_image.get("variant") or "course-art"), quote=True)
+        hero_image_html = f"""
+      <div class="family-hero-media is-{hero_variant}" aria-hidden="false">
+        <img src="{hero_url}" alt="{hero_alt}" loading="eager">
+      </div>"""
+
     delivery_help_items = page_config.get("delivery_help")
     if not isinstance(delivery_help_items, list) or not delivery_help_items:
         seen_delivery_modes = []
@@ -1306,6 +1353,7 @@ def render_html(payload: dict[str, Any]) -> str:
         {f'<p class="page-subtitle">{subtitle}</p>' if subtitle else ''}
         <p class="muted">{intro}</p>
       </div>
+      {hero_image_html}
     </div>
   </header>
   <main>
