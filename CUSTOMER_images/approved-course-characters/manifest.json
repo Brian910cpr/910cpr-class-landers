@@ -106,5 +106,37 @@
         ]
       }
     }
+  },
+  "PALS-1": {
+    "source_filename": "PALS-1.png",
+    "source_sha256": "78d48d8189381c9272e6696382ffa3489832bfac57696916cbf2f2506bd804f0",
+    "source_dimensions": [
+      1312,
+      1199
+    ],
+    "alt": "Smiling baby saying You got dis! — Don’t make this weird.",
+    "provenance": "Owner original speech bubble preserved exactly; body from equipment-free edit; deterministic alpha-component cleanup using scripts/prepare_pals_character.cjs. No jumper lettering or mask equipment.",
+    "inputs": [
+      "PALS-owner-original.png",
+      "PALS-baby-edit-source.png"
+    ],
+    "variants": {
+      "960": {
+        "path": "docs/images/characters/PALS-1.webp",
+        "bytes": 125214,
+        "dimensions": [
+          960,
+          877
+        ]
+      },
+      "480": {
+        "path": "docs/images/characters/PALS-1-480.webp",
+        "bytes": 52600,
+        "dimensions": [
+          480,
+          439
+        ]
+      }
+    }
   }
 }
