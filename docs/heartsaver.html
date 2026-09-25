@@ -80,25 +80,31 @@
     }
     .page-heading-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
-      gap: 24px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
       align-items: center;
     }
+    .supporting-info {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+    .supporting-info > :last-child { margin-bottom: 0; }
     .header-credential {
       display: grid;
-      grid-template-columns: 92px minmax(0, 1fr);
-      gap: 14px;
+      grid-template-columns: 52px minmax(0, 1fr);
+      gap: 10px;
       align-items: center;
-      padding: 14px 16px;
-      border: 2px solid #d71920;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #fff 0%, #fff7f7 100%);
-      box-shadow: 0 10px 24px rgba(120, 18, 22, .12);
+      padding: 10px 12px;
+      border: 1px solid #e6c7c9;
+      border-radius: 10px;
+      background: #fffafa;
+      box-shadow: none;
     }
     .header-credential img {
       display: block;
-      width: 92px;
-      max-height: 108px;
+      width: 52px;
+      max-height: 58px;
       object-fit: contain;
     }
     .header-credential strong {
@@ -127,7 +133,7 @@
       border-radius: 10px;
       background: var(--band);
       padding: 14px;
-      margin: 14px 0 0;
+      margin: 0;
     }
     .family-help-title {
       margin-bottom: 8px;
@@ -158,7 +164,7 @@
     .page-context {
       display: grid;
       gap: 12px;
-      margin: 0 0 18px;
+      margin: 0;
     }
     .page-note {
       border: 1px solid var(--line);
@@ -225,7 +231,7 @@
     }
     .rail-arrow {
       position: absolute;
-      top: 56px;
+      top: 44px;
       z-index: 2;
       display: inline-flex;
       align-items: center;
@@ -303,11 +309,11 @@
     }
     .course-card {
       display: grid;
-      grid-template-rows: 118px auto;
-      gap: 12px;
+      grid-template-rows: 88px auto;
+      gap: 10px;
       width: 100%;
       padding: 0;
-      min-height: 258px;
+      min-height: 220px;
       align-content: start;
       scroll-snap-align: start;
       overflow: hidden;
@@ -317,7 +323,7 @@
       align-items: center;
       justify-content: center;
       width: 100%;
-      min-height: 118px;
+      min-height: 88px;
       border-radius: 6px 6px 0 0;
       background: linear-gradient(135deg, #e8f2f8, #f8fbfd);
       overflow: hidden;
@@ -325,7 +331,7 @@
     .course-icon img {
       display: block;
       width: 100%;
-      height: 118px;
+      height: 88px;
       object-fit: contain;
       object-position: center;
       padding: 6px;
@@ -594,7 +600,7 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin: 14px 0 0;
+      margin: 0;
       padding: 0;
       list-style: none;
     }
@@ -615,7 +621,7 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin: 0 0 16px;
+      margin: 0;
     }
     .service-promise-item {
       padding: 14px 16px;
@@ -686,10 +692,10 @@
       .rail-arrow {
         width: 38px;
         min-height: 48px;
-        top: 58px;
+        top: 46px;
       }
       .course-card {
-        min-height: 252px;
+        min-height: 218px;
       }
       .delivery-help-list {
         grid-template-columns: 1fr;
@@ -760,52 +766,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="muted">Choose the Heartsaver course named by your workplace, school, childcare program, or professional requirement, then select a current Wilmington date and time.</p>
       </div>
       
-      <aside class="header-credential" aria-label="American Heart Association Training Site">
-        <img src="/images/Logo_circle_AHA-Training-Site.webp" alt="American Heart Association Authorized Training Site" loading="eager">
-        <div>
-          <span class="header-credential-eyebrow">Authorized training</span>
-          <strong>American Heart Association Training Site</strong>
-          <p>AHA BLS, ACLS, PALS, and Heartsaver training at 910CPR.</p>
-        </div>
-      </aside>
+      
     </div>
     
-    <div class="family-help" aria-label="Course format guide">
-      <div class="family-help-title">Course format guide</div>
-      <div class="delivery-help-list">
-          <div class="delivery-help-item">
-            <div class="delivery-help-label">IN-PERSON</div>
-            <div class="delivery-help-copy">In-person classes are completed entirely at our Wilmington training center.</div>
-          </div>
-          <div class="delivery-help-item">
-            <div class="delivery-help-label">ONLINE + SKILLS</div>
-            <div class="delivery-help-copy">Online + Skills classes begin with an online course, followed by a shorter in-person skills session.</div>
-          </div>
-          <div class="delivery-help-item">
-            <div class="delivery-help-label">BLENDED</div>
-            <div class="delivery-help-copy">Complete assigned online coursework before the scheduled classroom session.</div>
-          </div>
-      </div>
-    </div>
+    
   </header>
   <main>
     
-    <section class="page-context" aria-label="Course context">
-      <p>910CPR provides American Heart Association Heartsaver CPR, AED, First Aid, and Pediatric First Aid training in Wilmington and on-site for groups throughout Coastal North Carolina.</p>
-      
-      <div class="page-note">
-        <h2>Choose the Heartsaver course your requirement actually names</h2>
-        <p>This page separates the common Heartsaver combinations and shows current availability for both classroom and online-plus-skills formats.</p>
-        <ul><li>First Aid plus CPR and AED is the broadest option for many workplace requirements.</li><li>CPR and AED Only is for requirements that do not include a First Aid module.</li><li>Pediatric First Aid CPR AED is designed for childcare, school, camp, and caregiver requirements.</li></ul>
-      </div>
-      
-    </section>
     
     
-    <section class="service-promise" aria-label="Local scheduling and eCard service">
-      <div class="service-promise-item"><strong>Same-day eCards</strong><span>After successful completion and required course paperwork, 910CPR issues your eCard the same day.</span></div>
-      <div class="service-promise-item"><strong>Flexible Wilmington skills checks</strong><span>Daytime, evening, and overnight appointments may appear whenever the live calendar shows verified availability.</span></div>
-    </section>
+    
+    
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">
@@ -840,7 +811,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div id="course-list" class="course-list"></div>
         </div>
       </div>
-    </section>
+    </section>\n    <section class="supporting-info" aria-label="Course details and credentials">\n<section class="page-context" aria-label="Course context">
+      <p>910CPR provides American Heart Association Heartsaver CPR, AED, First Aid, and Pediatric First Aid training in Wilmington and on-site for groups throughout Coastal North Carolina.</p>
+      
+      <div class="page-note">
+        <h2>Choose the Heartsaver course your requirement actually names</h2>
+        <p>This page separates the common Heartsaver combinations and shows current availability for both classroom and online-plus-skills formats.</p>
+        <ul><li>First Aid plus CPR and AED is the broadest option for many workplace requirements.</li><li>CPR and AED Only is for requirements that do not include a First Aid module.</li><li>Pediatric First Aid CPR AED is designed for childcare, school, camp, and caregiver requirements.</li></ul>
+      </div>
+      
+    </section>\n<div class="family-help" aria-label="Course format guide">
+      <div class="family-help-title">Course format guide</div>
+      <div class="delivery-help-list">
+          <div class="delivery-help-item">
+            <div class="delivery-help-label">IN-PERSON</div>
+            <div class="delivery-help-copy">In-person classes are completed entirely at our Wilmington training center.</div>
+          </div>
+          <div class="delivery-help-item">
+            <div class="delivery-help-label">ONLINE + SKILLS</div>
+            <div class="delivery-help-copy">Online + Skills classes begin with an online course, followed by a shorter in-person skills session.</div>
+          </div>
+          <div class="delivery-help-item">
+            <div class="delivery-help-label">BLENDED</div>
+            <div class="delivery-help-copy">Complete assigned online coursework before the scheduled classroom session.</div>
+          </div>
+      </div>
+    </div>\n<section class="service-promise" aria-label="Local scheduling and eCard service">
+      <div class="service-promise-item"><strong>Same-day eCards</strong><span>After successful completion and required course paperwork, 910CPR issues your eCard the same day.</span></div>
+      <div class="service-promise-item"><strong>Flexible Wilmington skills checks</strong><span>Daytime, evening, and overnight appointments may appear whenever the live calendar shows verified availability.</span></div>
+    </section>\n<aside class="header-credential" aria-label="American Heart Association Training Site">
+        <img src="/images/Logo_circle_AHA-Training-Site.webp" alt="American Heart Association Authorized Training Site" loading="eager">
+        <div>
+          <span class="header-credential-eyebrow">Authorized training</span>
+          <strong>American Heart Association Training Site</strong>
+          <p>AHA BLS, ACLS, PALS, and Heartsaver training at 910CPR.</p>
+        </div>
+      </aside>\n    </section>
     
   </main>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
