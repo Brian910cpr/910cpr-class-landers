@@ -387,9 +387,9 @@
         }
       ],
       "hero_image": {
-        "url": "/images/pals_general.png",
-        "alt": "American Heart Association PALS course artwork.",
-        "variant": "course-art"
+        "url": "/images/characters/PALS-1.webp",
+        "alt": "Smiling baby saying You got dis! — Don’t make this weird.",
+        "variant": "character"
       }
     },
     "heartsaver": {
