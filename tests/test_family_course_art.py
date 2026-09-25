@@ -43,7 +43,7 @@ class FamilyCourseArtTests(unittest.TestCase):
 
     def test_published_character_manifest_preserves_full_size_sources(self):
         manifest = json.loads((art.ROOT / "CUSTOMER_images/approved-course-characters/manifest.json").read_text())
-        self.assertEqual(4, len(manifest))
+        self.assertTrue({"BLS-1", "ACLS-1", "ACLS-2", "ACLS-3", "PALS-1"}.issubset(manifest))
         for item in manifest.values():
             self.assertGreaterEqual(item["source_dimensions"][0], 960)
             self.assertLess(item["variants"]["480"]["bytes"], 100_000)
