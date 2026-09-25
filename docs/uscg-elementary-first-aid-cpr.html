@@ -80,7 +80,7 @@
     }
     .page-heading-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(180px, 340px);
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
       gap: 18px;
       align-items: end;
     }
@@ -101,11 +101,12 @@
       object-position: right bottom;
     }
     .family-hero-media.is-character {
-      max-width: 410px;
+      max-width: 420px;
       margin-bottom: -24px;
     }
     .family-hero-media.is-character img {
-      max-height: 220px;
+      height: 380px;
+      max-height: none;
       filter: drop-shadow(0 10px 20px rgba(24, 33, 44, .16));
     }
     .supporting-info {
@@ -360,6 +361,9 @@
       object-position: center;
       padding: 6px;
     }
+    .course-icon.has-agency-logo { gap: 14px; padding: 6px 12px; }
+    .course-icon.has-agency-logo img { width: auto; max-width: 45%; padding: 0; height: 76px; }
+    .course-icon.has-agency-logo .course-agency-logo { width: 76px; background: #fff; border-radius: 4px; padding: 4px; }
     .course-icon img.course-image-cover {
       object-fit: cover;
       padding: 0;
@@ -668,7 +672,7 @@
         max-width: 360px;
         margin-bottom: -14px;
       }
-      .family-hero-media.is-character img { max-height: 190px; }
+      .family-hero-media.is-character img { height: 280px; max-height: none; }
       .header-credential {
         grid-template-columns: 44px minmax(0, 1fr);
         gap: 8px;
@@ -872,11 +876,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </section>
     
   </main>
+  <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/uscg_first_aid_cpr_aed.json?v=2026-09-25T00%3A54%3A57.349015";
+    const availabilityUrl = "/data/block-selector-availability/uscg_first_aid_cpr_aed.json?v=2026-09-25T05%3A35%3A24.590558";
     const courseOptions = [{"courseId": "209809", "courseName": "In-person AHA Heartsaver First Aid CPR AED", "family": "Heartsaver", "variant": "in-person", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["in-person", "classroom", "uscg-in-person", "first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/heartsaver-total-course-images-2.jpg", "imageFit": "contain", "imageAlt": "AHA Heartsaver First Aid CPR AED course training", "deliveryBadge": "IN-PERSON", "clarification": "First Aid, CPR, and AED training completed entirely in person.", "familyGroup": "uscg-first-aid-cpr-aed", "familyLabel": "First Aid CPR AED — USCG Documentation Path", "optionLabel": "In Person", "price": 95, "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed", "title": "AHA Heartsaver First Aid CPR AED", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "First Aid, CPR, and AED training for workplace, school, and professional requirements.", "who_this_is_for": "Students who need a combined first aid, CPR, and AED certification for work, school, licensing, or general preparedness.", "topics_covered": ["First aid basics", "CPR and AED use", "Choking response", "Opioid emergency awareness", "Stroke warning signs", "Seizures", "Asthma support", "Heat illness", "Burns and common injuries"], "required_materials": ["Course materials as assigned for the selected class format."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Use this path when your requirement specifically includes first aid plus CPR/AED."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}, {"courseId": "329495", "courseName": "Online learning + in-person skills session", "family": "Heartsaver", "variant": "online-learning-skills", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["online-learning-skills", "blended", "uscg-blended", "first-aid-cpr-aed-blended"], "iconLabel": "BL", "imageUrl": "/images/Heartsaver-TOTAL-Online.webp", "imageFit": "contain", "imageAlt": "AHA Heartsaver Total online learning course", "deliveryBadge": "BLENDED", "clarification": "Complete assigned online coursework before the scheduled skills/classroom session.", "familyGroup": "uscg-first-aid-cpr-aed", "familyLabel": "First Aid CPR AED — USCG Documentation Path", "optionLabel": "Blended — Online + In-person Skills", "price": 95, "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed_blended", "title": "AHA Heartsaver First Aid CPR AED Online + Skills", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Blended First Aid/CPR/AED option with online coursework and an in-person skills session.", "who_this_is_for": "Students whose requirement accepts blended Heartsaver First Aid CPR AED.", "topics_covered": ["Online first aid, CPR, and AED coursework", "In-person CPR/AED skills", "Selected first aid skills", "Emergency recognition"], "required_materials": ["Completed AHA Heartsaver First Aid CPR AED Online certificate before the skills session."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm blended learning acceptance before registering."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}];
     const optionGroups = {"USCG_AHA_HEARTSAVER_FIRST_AID_CPR_AED": {"family": "USCG_AHA_HEARTSAVER_FIRST_AID_CPR_AED", "label": "AHA Heartsaver First Aid CPR AED Total options", "courseIds": ["209809", "329495"]}};
     const asapOptionLabel = "Show all options";
@@ -1197,6 +1202,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return days;
     }
 
+    function appendAgencyLogo(icon) {
+      const url = "/images/0aha.png?v=85e7b1aed907";
+      if (!url) return;
+      icon.classList.add('has-agency-logo');
+      const logo = document.createElement('img');
+      logo.className = 'course-agency-logo';
+      logo.src = url;
+      logo.alt = 'American Heart Association';
+      logo.loading = 'lazy';
+      logo.width = 76;
+      logo.height = 76;
+      icon.appendChild(logo);
+    }
+
     function renderCourseOptions() {
       const host = byId('course-option-list');
       host.innerHTML = '';
@@ -1218,6 +1237,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           image.alt = courses[0].familyLabel || courses[0].courseName;
           image.loading = 'lazy';
           icon.appendChild(image);
+          appendAgencyLogo(icon);
           const heading = document.createElement('h3');
           heading.textContent = courses[0].familyLabel || courses[0].courseName;
           const choices = document.createElement('div');
@@ -1274,6 +1294,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           fallback.setAttribute('aria-hidden', 'true');
           icon.appendChild(fallback);
         }
+        appendAgencyLogo(icon);
         const copy = document.createElement('span');
         copy.className = 'course-copy';
         const title = document.createElement('span');
