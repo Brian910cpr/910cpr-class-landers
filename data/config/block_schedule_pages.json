@@ -125,7 +125,12 @@
           "label": "HEARTCODE",
           "text": "HeartCode BLS begins online and is completed with an in-person skills session."
         }
-      ]
+      ],
+      "hero_image": {
+        "url": "/images/bls-9to1-nurse.webp",
+        "alt": "Nurse pointing toward the BLS booking calendar with a reminder to schedule renewal.",
+        "variant": "character"
+      }
     },
     "acls": {
       "page_key": "acls",
@@ -247,7 +252,12 @@
           "label": "HEARTCODE",
           "text": "HeartCode ACLS begins online and is completed with an in-person skills session."
         }
-      ]
+      ],
+      "hero_image": {
+        "url": "/images/acls_general.png",
+        "alt": "American Heart Association ACLS course artwork.",
+        "variant": "course-art"
+      }
     },
     "pals": {
       "page_key": "pals",
@@ -369,7 +379,12 @@
           "label": "HEARTCODE",
           "text": "HeartCode PALS begins online and is completed with an in-person skills session."
         }
-      ]
+      ],
+      "hero_image": {
+        "url": "/images/pals_general.png",
+        "alt": "American Heart Association PALS course artwork.",
+        "variant": "course-art"
+      }
     },
     "heartsaver": {
       "page_key": "heartsaver",
@@ -553,7 +568,12 @@
           "label": "BLENDED",
           "text": "Complete assigned online coursework before the scheduled classroom session."
         }
-      ]
+      ],
+      "hero_image": {
+        "url": "/images/heartsaver_general.png",
+        "alt": "American Heart Association Heartsaver CPR and First Aid course artwork.",
+        "variant": "course-art"
+      }
     },
     "uscg-first-aid-cpr-aed": {
       "page_key": "uscg-first-aid-cpr-aed",
@@ -739,7 +759,12 @@
           "text": "Complete the assigned online coursework first, then attend the in-person skills session."
         }
       ],
-      "subtitle": "HSI BLS, CPR, AED, and First Aid options"
+      "subtitle": "HSI BLS, CPR, AED, and First Aid options",
+      "hero_image": {
+        "url": "/images/0hsi.png",
+        "alt": "HSI training artwork.",
+        "variant": "course-art"
+      }
     },
     "arc": {
       "page_key": "arc",
@@ -820,7 +845,12 @@
       "back_link_label": "Back to Find Your Class",
       "back_link_href": "/index.html",
       "delivery_help_title": "Course format guide",
-      "subtitle": "American Red Cross BLS, CPR/AED, and First Aid options"
+      "subtitle": "American Red Cross BLS, CPR/AED, and First Aid options",
+      "hero_image": {
+        "url": "/images/0arc.png",
+        "alt": "American Red Cross training artwork.",
+        "variant": "course-art"
+      }
     },
     "family_cpr": {
       "page_key": "family_cpr",
@@ -876,7 +906,12 @@
         }
       ],
       "fallback_note": "Barnacle-without-anchor suppression is not active in the current selector path; Family & Friends CPR uses normal validated public offer rotation and may temporarily produce standalone offers.",
-      "subtitle": "For parents, grandparents, babysitters, caregivers, and anyone who wants to know what to do"
+      "subtitle": "For parents, grandparents, babysitters, caregivers, and anyone who wants to know what to do",
+      "hero_image": {
+        "url": "/images/FF-CPR-2.jpg",
+        "alt": "Family and Friends CPR practice with an infant CPR manikin.",
+        "variant": "course-art"
+      }
     }
   }
 }
