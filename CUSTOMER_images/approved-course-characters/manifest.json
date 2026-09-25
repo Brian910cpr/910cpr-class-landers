@@ -1,0 +1,110 @@
+{
+  "BLS-1": {
+    "source_filename": "9to1Anjla(5).png",
+    "source_sha256": "73d9e049c67e26f5a43cc3fdcfba47217f0bee831a4f630d0c9f7efceee25c70",
+    "source_dimensions": [
+      1312,
+      1199
+    ],
+    "alt": "Anjla pointing toward the BLS class choices with her Schedule it reminder.",
+    "variants": {
+      "960": {
+        "path": "docs/images/characters/BLS-1.webp",
+        "bytes": 165834,
+        "dimensions": [
+          960,
+          877
+        ]
+      },
+      "480": {
+        "path": "docs/images/characters/BLS-1-480.webp",
+        "bytes": 56292,
+        "dimensions": [
+          480,
+          439
+        ]
+      }
+    }
+  },
+  "ACLS-1": {
+    "source_filename": "ACLS_Nurse(2).png",
+    "source_sha256": "ca5ab96fda745f6659ebc387b136c9bc32ea9239037f8ebc24d907875f547ff9",
+    "source_dimensions": [
+      1049,
+      1499
+    ],
+    "alt": "Approved ACLS nurse character with RN badge and a reminder to be ready when the room turns to you.",
+    "variants": {
+      "960": {
+        "path": "docs/images/characters/ACLS-1.webp",
+        "bytes": 263278,
+        "dimensions": [
+          960,
+          1372
+        ]
+      },
+      "480": {
+        "path": "docs/images/characters/ACLS-1-480.webp",
+        "bytes": 92348,
+        "dimensions": [
+          480,
+          686
+        ]
+      }
+    }
+  },
+  "ACLS-2": {
+    "source_filename": "ACLS_Medic(2).png",
+    "source_sha256": "a7c528a213f7f851d58f6a3465d2cc84421be9cb7a30e39bed18125c2ad3af44",
+    "source_dimensions": [
+      1049,
+      1499
+    ],
+    "alt": "Approved ACLS paramedic character: I am the designated adult? Yikes.",
+    "variants": {
+      "960": {
+        "path": "docs/images/characters/ACLS-2.webp",
+        "bytes": 276754,
+        "dimensions": [
+          960,
+          1372
+        ]
+      },
+      "480": {
+        "path": "docs/images/characters/ACLS-2-480.webp",
+        "bytes": 94508,
+        "dimensions": [
+          480,
+          686
+        ]
+      }
+    }
+  },
+  "ACLS-3": {
+    "source_filename": "ACLS_Pharm(1).png",
+    "source_sha256": "f1a865f1e4e202230d57e8e06988b93af1e7b6d6f2c90485fbc8861b3c9e1986",
+    "source_dimensions": [
+      1536,
+      1024
+    ],
+    "alt": "Approved ACLS emergency department pharmacist character with an imposter-syndrome reminder.",
+    "variants": {
+      "960": {
+        "path": "docs/images/characters/ACLS-3.webp",
+        "bytes": 125358,
+        "dimensions": [
+          960,
+          640
+        ]
+      },
+      "480": {
+        "path": "docs/images/characters/ACLS-3-480.webp",
+        "bytes": 46468,
+        "dimensions": [
+          480,
+          320
+        ]
+      }
+    }
+  }
+}

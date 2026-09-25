@@ -127,8 +127,8 @@
         }
       ],
       "hero_image": {
-        "url": "/images/bls-9to1-nurse.webp",
-        "alt": "Nurse pointing toward the BLS booking calendar with a reminder to schedule renewal.",
+        "url": "/images/characters/BLS-1.webp",
+        "alt": "Anjla pointing toward the BLS class choices with her Schedule it reminder.",
         "variant": "character"
       }
     },
@@ -254,9 +254,15 @@
         }
       ],
       "hero_image": {
-        "url": "/images/acls_general.png",
-        "alt": "American Heart Association ACLS course artwork.",
-        "variant": "course-art"
+        "url": "/images/characters/ACLS-1.webp",
+        "alt": "Approved ACLS nurse character with RN badge and a reminder to be ready when the room turns to you.",
+        "variant": "character",
+        "rotation_prefix": "ACLS",
+        "rotation_alts": {
+          "ACLS-1": "Approved ACLS nurse character with RN badge and a reminder to be ready when the room turns to you.",
+          "ACLS-2": "Approved ACLS paramedic character: I am the designated adult? Yikes.",
+          "ACLS-3": "Approved ACLS emergency department pharmacist character with an imposter-syndrome reminder."
+        }
       }
     },
     "pals": {
