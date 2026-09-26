@@ -2749,15 +2749,6 @@ def render_hero_image(page: dict[str, Any]) -> str:
 
 
 def render_hero_actions(page: dict[str, Any], first_tab: dict[str, Any], *, group_mode: bool) -> str:
-    if group_mode:
-        primary_href = "#request-form"
-        primary_label = first_tab["primary_cta_label"]
-        return (
-            "<div class=\"slug-hero-actions\">"
-            f"<a class=\"button primary\" href=\"{escape(primary_href, quote=True)}\">{escape(primary_label)}</a>"
-            "</div>"
-        )
-
     return ""
 
 
@@ -3783,8 +3774,8 @@ def render_page(
   {render_guidance_banners(page, banner_library)}
   {render_heartsaver_course_jumps(page)}
   {tabs_html}
-  {render_group_training_authority(page)}
   {render_group_request_form(page)}
+  {render_group_training_authority(page)}
   {render_google_trust_block()}
   {render_group_training_push(page, first_tab, group_mode=group_mode)}
   {render_other_training_options(page)}
