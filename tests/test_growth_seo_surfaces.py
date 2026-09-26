@@ -14,7 +14,7 @@ class GrowthSeoSurfaceTests(unittest.TestCase):
         html = build_index_and_sitemap.render_homepage()
         self.assertIn("CPR, BLS, ACLS &amp; First Aid Classes in Wilmington, NC | 910CPR", html)
         self.assertIn("Find your CPR class", html)
-        self.assertIn('href="#class-finder">Choose a class and see dates', html)
+        self.assertNotIn('class="button primary home-hero-cta"', html)
         self.assertIn('id="class-finder"', html)
         self.assertIn('"@type": "LocalBusiness"', html)
         self.assertIn('"@type": "FAQPage"', html)
