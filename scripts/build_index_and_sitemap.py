@@ -1740,7 +1740,7 @@ def render_homepage() -> str:
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="shortcut icon" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
-<link rel="stylesheet" href="/css/lander.css?v=20260926-home-mobile-finder">
+<link rel="stylesheet" href="/css/lander.css?v=20260926-home-mobile-tiles">
 {render_gtm_head()}
 <script type="application/ld+json">
 {json.dumps({
@@ -1812,8 +1812,7 @@ def render_homepage() -> str:
         <div class="hero-main">
           <div class="eyebrow home-hero-links" aria-label="Local service area">Wilmington · Jacksonville · Holly Ridge · Leland · Coastal North Carolina</div>
           <h1>Find your CPR class</h1>
-          <p class="subhead">Choose the course your employer or school requires. See class options and available dates.</p>
-          <a class="button primary home-hero-cta" href="#class-finder">Choose a class and see dates ↓</a>
+          <p class="subhead">Select the course your employer or school requires.</p>
         </div>
       </section>
 
