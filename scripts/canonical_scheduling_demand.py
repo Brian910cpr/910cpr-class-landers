@@ -2,11 +2,45 @@ from __future__ import annotations
 
 from copy import deepcopy
 from datetime import datetime
+import json
+from pathlib import Path
 import re
 from typing import Any, Iterable
 
 
 ACTIVE_REGISTRATION_STATUSES = frozenset({"registered", "confirmed", "completed"})
+
+
+def load_publication_demand(root: Path) -> dict[str, Any]:
+    from scripts.fetch_canonical_scheduling_demand import validate_payload
+    path = root / "data/runtime/canonical_scheduling_demand.json"
+    if not path.exists():
+        raise ValueError("Fresh canonical scheduling demand is required before publication")
+    payload = validate_payload(json.loads(path.read_text(encoding="utf-8")))
+    if "non_session_sources" not in payload:
+        raise ValueError("Canonical non-session classification is required before publication")
+    return payload
+
+
+def exclude_non_session_sources(occurrences: Iterable[dict[str, Any]], payload: dict[str, Any]) -> tuple[list[dict[str, Any]], list[str]]:
+    """Use only reviewed canonical classifications, never infer from zero demand.
+
+    The endpoint checks the complete reviewed source identity. A different start
+    in the current projection must stop publication for reconciliation.
+    """
+    excluded = {str(row["external_class_id"]): row for row in payload.get("non_session_sources", [])}
+    kept, removed = [], []
+    for row in occurrences:
+        external_id = _text(row.get("external_session_id")) or _external_class_id(row)
+        decision = excluded.get(external_id)
+        if decision is None:
+            kept.append(row)
+            continue
+        start = _start(row) or _start(row.get("timing", {}))
+        if start is None or start != _start(decision):
+            raise ValueError(f"Non-session source identity changed: {external_id}; reconciliation required")
+        removed.append(external_id)
+    return kept, removed
 
 
 def _text(value: Any) -> str:

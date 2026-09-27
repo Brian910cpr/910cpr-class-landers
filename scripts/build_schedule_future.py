@@ -8,6 +8,7 @@ from pathlib import Path
 from scripts.build_status import BuildStatusReporter
 from scripts.local_data_paths import missing_live_input_message, print_resolved_path, resolve_live_input_path
 from scripts.public_class_eligibility import is_public_class_location
+from scripts.canonical_scheduling_demand import exclude_non_session_sources, load_publication_demand
 from supervisor.status_snapshot import write_status_snapshot
 from typing import Any, Optional
 from zoneinfo import ZoneInfo
@@ -399,6 +400,7 @@ def main() -> int:
         public_location_aliases = load_public_location_aliases(repo_root / LOCATION_RESOURCE_MAP_PATH)
         raw = json.loads(input_path.read_text(encoding="utf-8"))
         sessions = raw.get("sessions", [])
+        sessions, non_session_ids = exclude_non_session_sources(sessions, load_publication_demand(repo_root))
         source_mode = str(raw.get("build", {}).get("source_mode") or "").strip()
         ical_authoritative = source_mode == "enrollware_ical_authoritative"
         if ical_authoritative:
@@ -547,6 +549,7 @@ def main() -> int:
                 "source_file": repo_relative(input_path, repo_root),
                 "counts": {
                     "sessions_input": len(sessions),
+                    "skipped_canonical_non_sessions": len(non_session_ids),
                     "sessions_output": len(future_sessions),
                     "skipped_missing_start": skipped_missing_start,
                     "skipped_past": skipped_past,
@@ -573,6 +576,13 @@ def main() -> int:
         stale_tbd_class_pages_deleted = 0
         stale_non_public_class_pages_deleted = 0
         classes_dir = repo_root / "docs" / "classes"
+        for session_id in non_session_ids:
+            # Same targeted cleanup as non-public/TBD sources below. A reviewed
+            # non-instructional deadline must not retain a class booking page.
+            stale_page = classes_dir / f"{session_id}.html"
+            if stale_page.exists():
+                stale_page.unlink()
+                print(f"Deleted classified non-session page: {stale_page}")
         for session_id in skipped_non_public_session_ids:
             stale_page = classes_dir / f"{session_id}.html"
             if stale_page.exists():

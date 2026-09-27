@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - 'scripts/anchor_state.py'
+      - 'scripts/build_schedule_future.py'
+      - 'scripts/publish_admin_schedule.py'
+      - 'scripts/validate_public_refresh_output.py'
       - 'scripts/apply_anchor_seat_overrides.py'
       - 'scripts/apply_anchor_policy.py'
       - 'scripts/block_start_time_selector.py'

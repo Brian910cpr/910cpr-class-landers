@@ -53,6 +53,7 @@ test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields'
   const calls = [];
   const endpoint = loadEndpoint(async url => {
     if (String(url).includes('/admin/hot-sync')) return new Response('{}');
+    if (String(url).includes('/rpc/')) return Response.json({sessions:[]});
     const query = new URL(url).searchParams;
     calls.push(query);
     const count = query.get('offset') === '0' ? 500 : 1;
@@ -66,4 +67,13 @@ test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields'
   assert.equal(calls[1].get('offset'),'500');
   assert.doesNotMatch(calls[0].get('select'),/customers|email|phone/);
   assert.equal(body.sessions[0].external_course_id,'359474');
+});
+
+test('classification source failure or canonical conflict blocks the whole publication snapshot', async () => {
+  for (const health of [{error:'unavailable'}, {sessions:[{status:'non_session_conflicting_canonical_session'}]}]) {
+    const endpoint = loadEndpoint(async url => Response.json(String(url).includes('/admin/hot-sync') ? {} : String(url).includes('/rpc/') ? health : []));
+    const response = await endpoint.handleRequest(new Request('https://endpoint.test/?from=2026-09-27',{headers:{'x-hot-sync-admin-key':'fixture'}}));
+    assert.equal(response.status,500);
+    assert.equal((await response.json()).sessions,undefined);
+  }
 });

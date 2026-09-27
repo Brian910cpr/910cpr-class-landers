@@ -154,6 +154,9 @@ jobs:
         run: |
           python -m scripts.fetch_hot_sync_snapshot
           python -m scripts.publish_admin_schedule
+          if ($LASTEXITCODE -ne 0) { throw 'Canonical admin schedule projection failed.' }
+          python -m scripts.publish_landerware_ical
+          if ($LASTEXITCODE -ne 0) { throw 'Canonical calendar projection failed.' }
 
       - name: Reapply canonical Anchor metadata after public rebuild
         if: steps.ical.outputs.changed == 'true' || steps.canonical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)

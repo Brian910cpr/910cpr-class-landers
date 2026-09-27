@@ -9,6 +9,7 @@ from copy import deepcopy
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+import shutil
 from pathlib import Path
 import subprocess
 import tempfile
@@ -19,6 +20,11 @@ from unittest.mock import patch
 from scripts import apply_anchor_policy as anchor
 from scripts import fetch_canonical_scheduling_demand as fetcher
 from scripts.canonical_scheduling_demand import resolve_canonical_demand
+from scripts.canonical_scheduling_demand import exclude_non_session_sources
+from scripts import build_schedule_future as future
+from scripts.publish_admin_schedule import build_admin_schedule
+from scripts.publish_landerware_ical import build_ical
+from scripts.validate_public_refresh_output import validate_non_session_publication
 
 ROOT = Path(__file__).resolve().parents[1]
 POLICY = json.loads((ROOT / "data/config/anchor_schedule_policy.json").read_text(encoding="utf-8"))
@@ -121,6 +127,67 @@ def publish_fixture(directory, day, count, *, commitment=None):
 
 
 class DemandPublicationTests(unittest.TestCase):
+    def test_reviewed_deadline_flows_from_endpoint_to_public_schedule_calendar_and_anchor(self):
+        occurrence, _ = fixture("2030-09-08")
+        deadline = {**occurrence, "session_id":"11341058", "start_at":"2030-09-08T00:00:00-04:00",
+                    "end_at":"2030-09-08T02:00:00-04:00", "course_name":"BLS Renewal", "mapping_status":"mapped"}
+        health = {"external_class_id":"11341058", "start_at":deadline["start_at"],
+                  "status":"classified_non_session", "non_session_classification":"renewal_deadline",
+                  "reason":"owner_confirmed_renewal_deadline", "source_observed_at":datetime.now(timezone.utc).isoformat(),
+                  "registrations":[{"email":"must-not-publish@example.test"}]}
+        payload = endpoint_payload(occurrence, 1)
+        output = subprocess.run(["node",str(ROOT/"tests/helpers/canonical_demand_endpoint.cjs")],
+                                input=json.dumps({"sessions":[], "health":{"sessions":[health]}}),
+                                capture_output=True,text=True,check=True)
+        payload["non_session_sources"] = json.loads(output.stdout)["non_session_sources"]
+        self.assertNotIn("email",json.dumps(payload))
+        payload = fetcher.validate_payload(payload)
+        public, _ = anchor.apply_demand_projection([deadline,occurrence],payload)
+        self.assertEqual([r["session_id"] for r in public],[occurrence["session_id"]])
+        self.assertEqual(anchor.promote_seated_sessions(public)[0]["promotion_reason"],"canonical_active_registration")
+        admin = build_admin_schedule({"sessions":[deadline,occurrence]},canonical_demand=payload)
+        self.assertEqual(admin["counts"]["excluded_canonical_non_sessions"],1)
+        self.assertNotIn("11341058",build_ical(admin))
+        self.assertIn(occurrence["session_id"],build_ical(admin))
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root/"data/config").mkdir(parents=True)
+            for path in ("data/config/course_map.json", "data/config/location_resource_map.json", "data/course_aliases.json"):
+                shutil.copyfile(ROOT/path,root/path)
+            (root/"data/runtime").mkdir()
+            (root/"data/runtime/canonical_scheduling_demand.json").write_text(json.dumps(payload))
+            raw = {"build":{"source_mode":"enrollware_ical_authoritative"},"sessions":[deadline,{**occurrence,"mapping_status":"mapped"}]}
+            (root/"data/sessions_current.json").write_text(json.dumps(raw))
+            page = root/"docs/classes/11341058.html"
+            page.parent.mkdir(parents=True)
+            page.write_text("stale booking page")
+            for _ in range(2):
+                with patch("sys.argv",["build_schedule_future","--repo-root",str(root)]), patch.object(future,"BuildStatusReporter"), patch.object(future,"write_status_snapshot"):
+                    self.assertEqual(future.main(),0)
+                published = json.loads((root/"docs/data/schedule_future.json").read_text())
+                self.assertEqual([r["session_id"] for r in published["sessions"]],[occurrence["session_id"]])
+                self.assertEqual(published["build"]["counts"]["skipped_canonical_non_sessions"],1)
+                self.assertFalse(page.exists())
+            self.assertEqual(json.loads((root/"data/sessions_current.json").read_text()),raw)
+            (root/"docs/data/admin_schedule.json").write_text(json.dumps(admin))
+            (root/"docs/data/landerware.ics").write_text(build_ical(admin))
+            validate_non_session_publication(root,payload)
+            page.write_text("regressed booking page")
+            with self.assertRaisesRegex(ValueError,"non-session page remains"):
+                validate_non_session_publication(root,payload)
+
+        for invalid in ({**deadline,"start_at":"2030-09-09T00:00:00-04:00"}, {**deadline,"start_at":None}):
+            with self.assertRaisesRegex(ValueError,"identity changed"):
+                exclude_non_session_sources([invalid],payload)
+        for classification in ("unknown","inactive_location"):
+            wrong = deepcopy(payload)
+            wrong["non_session_sources"][0]["classification"] = classification
+            with self.assertRaisesRegex(ValueError,"Unproven"):
+                fetcher.validate_payload(wrong)
+        # An unclassified zero-demand/unknown row is never silently discarded.
+        self.assertEqual(exclude_non_session_sources([deadline],{"non_session_sources":[]})[0],[deadline])
+
     def test_0_1_0_refresh_on_weekday_saturday_and_sunday(self):
         for day in ("2030-09-02","2030-09-07","2030-09-08"):
             with self.subTest(day=day), tempfile.TemporaryDirectory() as directory:
@@ -184,6 +251,8 @@ class DemandPublicationTests(unittest.TestCase):
         source = (ROOT/".github/workflows/refresh-public-site.yml").read_text(encoding="utf-8")
         condition = source.split("- name: Reapply canonical Anchor metadata after public rebuild",1)[1].split("shell:",1)[0]
         self.assertIn("steps.canonical.outputs.changed == 'true'",condition)
+        admin = (ROOT/".github/workflows/refresh-admin-availability.yml").read_text(encoding="utf-8")
+        self.assertLess(admin.index("python -m scripts.fetch_canonical_scheduling_demand"),admin.index("python -m scripts.build_schedule_future"))
 
 
 if __name__ == "__main__":

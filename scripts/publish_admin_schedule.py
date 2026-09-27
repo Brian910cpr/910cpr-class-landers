@@ -6,6 +6,7 @@ import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from scripts.canonical_scheduling_demand import exclude_non_session_sources, load_publication_demand
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -169,13 +170,14 @@ def merge_hot_sync(enrollware_rows: list[dict[str, Any]], hot_sync_rows: list[di
     return merged, added
 
 
-def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_snapshot: Any = None, hot_sync_snapshot: Any = None) -> dict[str, Any]:
+def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_snapshot: Any = None, hot_sync_snapshot: Any = None, canonical_demand: dict[str, Any] | None = None) -> dict[str, Any]:
     rows = payload.get("sessions", []) if isinstance(payload, dict) else []
     normalized = [row for session in rows if isinstance(session, dict) for row in [normalize_session(session)] if row]
 
     raw_hot_sync, hot_sync_available, hot_sync_error = hot_sync_records(hot_sync_snapshot)
     normalized_hot_sync = [row for record in raw_hot_sync for row in [normalize_hot_sync(record)] if row]
     normalized, hot_sync_added = merge_hot_sync(normalized, normalized_hot_sync)
+    normalized, non_session_ids = exclude_non_session_sources(normalized, canonical_demand or {})
 
     reference = now or datetime.now().astimezone()
     today = reference.date()
@@ -194,6 +196,7 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
         "purpose": "Sanitized complete LanderWare occupancy for the admin planner; combines Enrollware iCal with committed HOT_SYNC classes.",
         "counts": {
             "sessions": len(normalized),
+            "excluded_canonical_non_sessions": len(non_session_ids),
             "enrollware_sessions": len([row for row in normalized if not row.get("hot_sync")]),
             "hot_sync_records_fetched": len(raw_hot_sync),
             "hot_sync_committed_normalized": len(normalized_hot_sync),
@@ -211,7 +214,7 @@ def build_admin_schedule(payload: Any, *, now: datetime | None = None, student_s
 
 def main() -> int:
     hot_sync_snapshot = read_json(HOT_SYNC_SNAPSHOT) if HOT_SYNC_SNAPSHOT.exists() else None
-    payload = build_admin_schedule(read_json(SESSIONS_CURRENT), hot_sync_snapshot=hot_sync_snapshot)
+    payload = build_admin_schedule(read_json(SESSIONS_CURRENT), hot_sync_snapshot=hot_sync_snapshot, canonical_demand=load_publication_demand(ROOT))
     if not payload["sources"]["hot_sync"]["available"]:
         raise RuntimeError(
             "Refusing to publish an incomplete admin schedule without the authoritative "

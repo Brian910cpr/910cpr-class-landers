@@ -86,6 +86,26 @@ export async function loadDemand(start: string, stop: string) {
   }
 }
 
+export async function loadNonSessionSources(start: string, stop: string) {
+  const { url, key } = serviceConfig();
+  const result = await fetch(`${url}/rest/v1/rpc/enrollware_reconciliation_health`, {
+    method: "POST", headers: { apikey: key, authorization: `Bearer ${key}`, "content-type": "application/json" },
+    body: JSON.stringify({ p_from: start, p_to: stop }), signal: AbortSignal.timeout(20000),
+  });
+  const body = await result.json();
+  if (!result.ok || !Array.isArray(body?.sessions)) throw new Error(`Classification request failed (${result.status})`);
+  if (body.sessions.some((row: any) => row.status === "non_session_conflicting_canonical_session")) {
+    throw new Error("Non-session classification conflicts with a canonical session");
+  }
+  // The existing health RPC revalidates the owner's decision against the exact
+  // latest source identity. Never export private ingest facts or registrations.
+  return body.sessions.filter((row: any) => row.status === "classified_non_session").map((row: any) => ({
+    external_class_id: row.external_class_id, start_at: row.start_at,
+    classification: row.non_session_classification, reason: row.reason,
+    source_observed_at: row.source_observed_at,
+  }));
+}
+
 export async function handleRequest(req: Request) {
   const origin = req.headers.get("origin") || "";
   if (origin && !ALLOWED_ORIGINS.has(origin)) return response(origin, { error: "Origin is not allowed" }, 403);
@@ -99,6 +119,7 @@ export async function handleRequest(req: Request) {
       generated_at: new Date().toISOString(),
       active_registration_statuses: [...ACTIVE],
       sessions: await loadDemand(range.start, range.stop),
+      non_session_sources: await loadNonSessionSources(range.start, range.stop),
     });
   } catch (error) {
     if (error instanceof RangeError) return response(origin, { error: error.message }, 400);
