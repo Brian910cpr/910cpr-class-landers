@@ -6,12 +6,33 @@ on:
       - 'scripts/anchor_state.py'
       - 'scripts/apply_anchor_seat_overrides.py'
       - 'scripts/apply_anchor_policy.py'
+      - 'scripts/block_start_time_selector.py'
+      - 'tests/test_selector_clock.py'
+      - 'tests/test_block_start_time_selector.py'
+      - 'tests/helpers/canonical_demand_endpoint.cjs'
+      - 'scripts/*canonical_scheduling_demand.py'
+      - 'tests/*canonical*demand*'
+      - 'tests/test_demand_publication.py'
+      - 'supabase/functions/canonical-scheduling-demand/**'
+      - 'supabase/functions/canonical-session-workspace/**'
+      - 'supabase/functions/_shared/*proof*'
+      - 'supabase/functions/_shared/scheduling-clock.ts'
+      - 'supabase/migrations/*reconcile_operational_enrollware_rosters.sql'
+      - 'scripts/*enrollware*reconciliation*'
+      - 'tests/reconciliation/**'
+      - 'tests/enrollware_roster_proof.test.cjs'
+      - 'tests/test_enrollware_roster_reconciliation.py'
+      - 'supabase/migrations/*roster_proof.sql'
+      - 'supabase/migrations/*enrollware_legacy_sources.sql'
+      - '.github/workflows/refresh-public-site.yml'
+      - '.github/workflows/refresh-admin-availability.yml'
       - 'tests/test_anchor_state.py'
       - 'tests/test_apply_anchor_policy.py'
       - '.github/workflows/anchor-policy-ci.yml'
   push:
     branches:
       - 'codex/anchor-promotion-pipeline'
+      - 'codex/issue-157-runtime-projection'
     paths:
       - 'scripts/anchor_state.py'
       - 'scripts/apply_anchor_seat_overrides.py'
@@ -31,7 +52,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.20.0'
+      - name: Install selector import dependencies
+        run: python -m pip install openpyxl python-dateutil tzdata
       - name: Compile anchor modules
-        run: python -m py_compile scripts/anchor_state.py scripts/apply_anchor_seat_overrides.py scripts/apply_anchor_policy.py
+        run: python -m py_compile scripts/anchor_state.py scripts/apply_anchor_policy.py scripts/canonical_scheduling_demand.py scripts/fetch_canonical_scheduling_demand.py scripts/block_start_time_selector.py
       - name: Run anchor regressions
-        run: python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy
+        run: python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy tests.test_canonical_scheduling_demand tests.test_fetch_canonical_scheduling_demand tests.test_demand_publication tests.test_selector_clock tests.test_enrollware_roster_reconciliation
+      - name: Test deployed endpoint code with isolated database and auth fixtures
+        run: node --test tests/canonical_demand_endpoint.test.cjs tests/enrollware_roster_proof.test.cjs
+      - name: Test canonical reconciliation in isolated PostgreSQL
+        run: |
+          npm ci --prefix tests/reconciliation
+          node --test tests/reconciliation/reconcile.test.mjs

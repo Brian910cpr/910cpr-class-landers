@@ -13,31 +13,42 @@ def session(**overrides):
         "end_at": "2026-08-05T11:30:00-04:00",
         "location_name": ":: Wilmington; Shipyard Blvd - B",
         "lead_instructor_name": "Brian Ennis",
-        "registered_count": 1,
+        "active_registration_count": 1,
+        "demand_basis": "canonical_active_registrations",
     }
     value.update(overrides)
     return value
 
 
 class AnchorStateTests(unittest.TestCase):
-    def test_existing_public_class_promotes_to_anchor(self):
+    def test_canonical_active_registration_promotes_to_anchor(self):
         anchors = promote_seated_sessions([session()])
         self.assertEqual(len(anchors), 1)
         anchor = anchors[0]
         self.assertEqual(anchor["schedule_role"], "anchor")
         self.assertEqual(anchor["schedule_symbol"], ANCHOR_SYMBOL)
-        self.assertEqual(anchor["promotion_reason"], "existing_public_class")
+        self.assertEqual(anchor["promotion_reason"], "canonical_active_registration")
         self.assertIs(anchor["landing_page_required"], True)
         self.assertIs(anchor["external_publication_eligible"], True)
 
-    def test_enrollware_class_without_a_reported_count_is_still_seated(self):
-        anchors = promote_seated_sessions([session(registered_count=0)])
-        self.assertEqual(1, len(anchors))
-        self.assertEqual(0, anchors[0]["registered_count"])
+    def test_zero_demand_appointment_inventory_is_not_anchor(self):
+        self.assertEqual([], promote_seated_sessions([session(active_registration_count=0)]))
 
-    def test_closed_or_nonpublic_class_is_not_promoted(self):
-        self.assertEqual(promote_seated_sessions([session(registration_status="closed")]), [])
+    def test_legacy_counts_and_snapshots_cannot_promote(self):
+        candidate = session(active_registration_count=None, registered_count=4, source_seats=4,
+                            historical_student_count=4, confirmed_seated=True)
+        self.assertEqual([], promote_seated_sessions([candidate]))
+
+    def test_explicit_committed_public_session_can_promote_without_registration(self):
+        anchors = promote_seated_sessions([session(active_registration_count=0, anchor_basis="committed_public_session")])
+        self.assertEqual("committed_public_session", anchors[0]["promotion_reason"])
+
+    def test_cancelled_or_nonpublic_class_is_not_promoted(self):
+        self.assertEqual(promote_seated_sessions([session(session_status="cancelled")]), [])
         self.assertEqual(promote_seated_sessions([session(public_direct_booking=False)]), [])
+
+    def test_full_public_class_with_active_demand_remains_anchor(self):
+        self.assertEqual(1, len(promote_seated_sessions([session(registration_status="full")])))
 
     def test_barnacle_with_first_seat_promotes_on_next_refresh(self):
         prior_offer = annotate_offer(
@@ -55,7 +66,7 @@ class AnchorStateTests(unittest.TestCase):
             course_id="210549",
             start_at="2026-08-05T11:30:00-04:00",
             end_at="2026-08-05T12:30:00-04:00",
-            registered_count=1,
+            active_registration_count=1,
         )
         promoted = promote_seated_sessions([newly_seated])[0]
         self.assertEqual(promoted["schedule_role"], "anchor")

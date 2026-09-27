@@ -9,15 +9,19 @@ from collections import Counter, defaultdict
 from datetime import date, datetime, time, timedelta
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 import urllib.error
 import urllib.parse
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
+PUBLIC_TZ = ZoneInfo("America/New_York")
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts import generate_dynamic_offers
+from scripts.anchor_state import anchor_promotion_reason
+from scripts.apply_anchor_policy import sessions_with_canonical_demand
 from scripts.build_seed_appointment_url_preview import (
     active_containers,
     build_registration_url,
@@ -75,13 +79,14 @@ def parse_dt(value: Any) -> datetime | None:
     if not value:
         return None
     try:
-        return datetime.fromisoformat(str(value).replace("Z", "+00:00")).replace(tzinfo=None)
+        parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        return (parsed.astimezone(PUBLIC_TZ) if parsed.tzinfo else parsed).replace(tzinfo=None)
     except ValueError:
         return None
 
 
-def selector_reference_datetime() -> datetime:
-    return datetime.now().astimezone().replace(tzinfo=None)
+def selector_reference_datetime(now: datetime | None = None) -> datetime:
+    return (now or datetime.now(PUBLIC_TZ)).astimezone(PUBLIC_TZ).replace(tzinfo=None)
 
 
 def display_time(value: datetime) -> str:
@@ -723,16 +728,12 @@ def public_direct_bookable_session(session: dict[str, Any]) -> bool:
     )
 
 
-def session_enrollment_count(session: dict[str, Any]) -> int:
-    for key in ("enrolled_count", "registered_count", "enrolled", "registered"):
-        value = session.get(key)
-        if value is None or isinstance(value, bool):
-            continue
-        try:
-            return max(0, int(value))
-        except (TypeError, ValueError):
-            continue
-    return 0
+def session_enrollment_count(session: dict[str, Any]) -> int | None:
+    value = session.get("active_registration_count")
+    if session.get("demand_basis") == "canonical_active_registrations" and session.get("count_available") is not False:
+        if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+            return value
+    return None
 
 
 def seated_family_anchors(
@@ -751,7 +752,9 @@ def seated_family_anchors(
             continue
         if selected_course_ids and clean_text(session.get("course_id")) not in selected_course_ids:
             continue
-        if session_enrollment_count(session) < minimum_enrollment:
+        basis = anchor_promotion_reason(session)
+        count = session_enrollment_count(session)
+        if not basis or (basis == "canonical_active_registration" and (count is None or count < max(1, minimum_enrollment))):
             continue
         start = parse_dt(session.get("start_at"))
         if not start:
@@ -1053,6 +1056,11 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         "sessions_current": read_required_json(SESSIONS_CURRENT_PATH),
         "schedule_future": read_required_json(SCHEDULE_FUTURE_PATH),
     }
+    # Candidate consolidation and final daily_anchor_stack_v1 must read the same
+    # canonical demand snapshot. Legacy seat snapshots cannot create anchors here.
+    loaded["schedule_future"]["sessions"], _demand_audit = sessions_with_canonical_demand(
+        loaded["schedule_future"].get("sessions", [])
+    )
     course_rules = course_rules_by_id(read_required_json(COURSE_RULES_PATH))
     course_catalog = courses_by_id(loaded["course_catalog"])
     people = people_lookup(loaded["people_catalog"])

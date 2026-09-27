@@ -155,7 +155,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                 "start_at": "2026-07-18T08:00:00-04:00",
                 "lead_instructor_name": "Brian Ennis",
                 "location_name": ":: Wilmington; Shipyard Blvd - B",
-                "enrolled_count": 1,
+                "active_registration_count": 1, "demand_basis": "canonical_active_registrations",
             },
             {
                 "session_id": "empty-class",
@@ -163,7 +163,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                 "start_at": "2026-07-18T14:30:00-04:00",
                 "lead_instructor_name": "Brian Ennis",
                 "location_name": ":: Wilmington; Shipyard Blvd - B",
-                "enrolled_count": 0,
+                "active_registration_count": 0, "demand_basis": "canonical_active_registrations",
             },
         ]}
         anchors = block_start_time_selector.seated_family_anchors(
@@ -190,7 +190,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIs(config["include_seated_classes"], True)
         self.assertEqual(0, config["seated_class_minimum_enrollment"])
 
-    def test_zero_enrollment_scheduled_class_creates_an_anchor(self):
+    def test_zero_enrollment_scheduled_class_does_not_create_an_anchor(self):
         schedule = {"sessions": [{
             "session_id": "open-zero-seat-class",
             "course_id": "209809",
@@ -207,7 +207,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             minimum_enrollment=0,
             location_resource_map={},
         )
-        self.assertEqual(["open-zero-seat-class"], [anchor["sessionId"] for anchor in anchors])
+        self.assertEqual([], anchors)
 
     def test_paid_heartsaver_seat_suppresses_same_group_but_keeps_other_barnacles_and_class(self):
         schedule = {"sessions": [{
@@ -218,7 +218,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             "end_at": "2026-08-29T16:30:00-04:00",
             "lead_instructor_name": "Brian Ennis",
             "location_name": ":: Wilmington; Shipyard Blvd - B",
-            "registered_count": 1,
+            "active_registration_count": 1, "demand_basis": "canonical_active_registrations",
             "registration_status": "open",
             "public_direct_booking": True,
             "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=heartsaver-pediatric-aug-29",
@@ -318,7 +318,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             schedule_future_payload={"sessions": [{
                 "session_id": "seated", "course_id": "351632",
                 "start_at": "2026-09-21T14:00:00-04:00", "lead_instructor_name": "Brian Ennis",
-                "location_name": ":: Wilmington; Shipyard Blvd - B", "registered_count": 1,
+                "location_name": ":: Wilmington; Shipyard Blvd - B",
+                "active_registration_count": 1, "demand_basis": "canonical_active_registrations",
             }]},
             selected_course_ids=set(), minimum_enrollment=0, location_resource_map={},
         )

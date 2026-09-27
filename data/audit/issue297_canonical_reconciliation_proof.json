@@ -1,0 +1,395 @@
+{
+  "observed_at": "2026-09-27T04:09:49Z",
+  "source": "Authenticated Enrollware class list and complete class rosters; each registration status inspected. No mail-derived counts.",
+  "source_window": [
+    "2026-09-27T03:46:19.284Z",
+    "2026-09-27T03:47:32.214Z"
+  ],
+  "source_sha256": "b6b3e508ea163323c4c091733158dd9bd581f1ca3722f8a1e2e147626782cfa4",
+  "sessions_observed": 38,
+  "future_sessions_observed": 35,
+  "canonical_reconciled": 34,
+  "future_canonical_reconciled": 31,
+  "quarantined_external_ids": [
+    "13895152",
+    "13895154",
+    "13895155",
+    "11341058"
+  ],
+  "quarantine_reason": "unresolved_active_location",
+  "incident": [
+    {
+      "external_class_id": "14186375",
+      "canonical_session_id": "9df5fada-cd99-454a-8c16-4899bf6942bc",
+      "start_at": "2026-09-26 13:00:00+00",
+      "end_at": "2026-09-26 15:30:00+00",
+      "source_observed_at": "2026-09-27T03:46:21.665+00:00",
+      "source_sha256": "b6b3e508ea163323c4c091733158dd9bd581f1ca3722f8a1e2e147626782cfa4",
+      "active_count": 3
+    },
+    {
+      "external_class_id": "14145607",
+      "canonical_session_id": "49ad2432-8e78-4e40-8749-2816070e93bd",
+      "start_at": "2026-09-26 14:00:00+00",
+      "end_at": "2026-09-26 16:00:00+00",
+      "source_observed_at": "2026-09-27T03:46:20.333+00:00",
+      "source_sha256": "b6b3e508ea163323c4c091733158dd9bd581f1ca3722f8a1e2e147626782cfa4",
+      "active_count": 0
+    },
+    {
+      "external_class_id": "14184955",
+      "canonical_session_id": "750a7036-31f4-492c-8b86-4d32cd5b6fc8",
+      "start_at": "2026-09-26 21:00:00+00",
+      "end_at": "2026-09-26 23:00:00+00",
+      "source_observed_at": "2026-09-27T03:46:19.284+00:00",
+      "source_sha256": "b6b3e508ea163323c4c091733158dd9bd581f1ca3722f8a1e2e147626782cfa4",
+      "active_count": 2
+    },
+    {
+      "external_class_id": "14361098",
+      "canonical_session_id": "a9fd9bf2-43c8-46b7-a289-176d7989be8b",
+      "start_at": "2026-09-27 17:00:00+00",
+      "end_at": "2026-09-27 19:00:00+00",
+      "source_observed_at": "2026-09-27T03:46:22.864+00:00",
+      "source_sha256": "b6b3e508ea163323c4c091733158dd9bd581f1ca3722f8a1e2e147626782cfa4",
+      "active_count": 1
+    },
+    {
+      "external_class_id": "14421081",
+      "canonical_session_id": "913abd99-b8aa-48d9-a9f2-549387fb9c4f",
+      "start_at": "2026-09-27 22:30:00+00",
+      "end_at": "2026-09-27 23:30:00+00",
+      "source_observed_at": "2026-09-27T03:46:24.046+00:00",
+      "source_sha256": "b6b3e508ea163323c4c091733158dd9bd581f1ca3722f8a1e2e147626782cfa4",
+      "active_count": 1
+    }
+  ],
+  "identity_comparison": [
+    {
+      "external_class_id": "11341058",
+      "source_members": 2,
+      "canonical_members": 0,
+      "exact_relationships": null,
+      "exact_customer_identities": null
+    },
+    {
+      "external_class_id": "13963994",
+      "source_members": 2,
+      "canonical_members": 2,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14114232",
+      "source_members": 1,
+      "canonical_members": 1,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14170366",
+      "source_members": 1,
+      "canonical_members": 1,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14184954",
+      "source_members": 1,
+      "canonical_members": 1,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14184955",
+      "source_members": 2,
+      "canonical_members": 2,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14186226",
+      "source_members": 1,
+      "canonical_members": 1,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14186375",
+      "source_members": 3,
+      "canonical_members": 3,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14288234",
+      "source_members": 1,
+      "canonical_members": 1,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14354087",
+      "source_members": 1,
+      "canonical_members": 1,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14361098",
+      "source_members": 1,
+      "canonical_members": 1,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14377157",
+      "source_members": 1,
+      "canonical_members": 1,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14382096",
+      "source_members": 1,
+      "canonical_members": 1,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14400433",
+      "source_members": 1,
+      "canonical_members": 1,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    },
+    {
+      "external_class_id": "14421081",
+      "source_members": 1,
+      "canonical_members": 1,
+      "exact_relationships": true,
+      "exact_customer_identities": true
+    }
+  ],
+  "initial_reconciliation": {
+    "sessions": [
+      {
+        "status": "reconciled",
+        "session_id": "750a7036-31f4-492c-8b86-4d32cd5b6fc8",
+        "external_class_id": "14184955"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "49ad2432-8e78-4e40-8749-2816070e93bd",
+        "external_class_id": "14145607"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "9df5fada-cd99-454a-8c16-4899bf6942bc",
+        "external_class_id": "14186375"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "a9fd9bf2-43c8-46b7-a289-176d7989be8b",
+        "external_class_id": "14361098"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "913abd99-b8aa-48d9-a9f2-549387fb9c4f",
+        "external_class_id": "14421081"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "ac7353ad-df75-4c6a-99bf-06bdfcff20e3",
+        "external_class_id": "13964012"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "be8b9190-ee08-479d-8810-1ed98c1ecaa5",
+        "external_class_id": "13964003"
+      },
+      {
+        "reason": "conflicting_registration_authority",
+        "status": "quarantined",
+        "external_class_id": "13963994"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "8b8ed457-4cf8-4fa8-aa0a-ca66be898614",
+        "external_class_id": "14288234"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "72c509d7-2268-4e04-8f88-be9681baac6a",
+        "external_class_id": "14170366"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "762f1c10-51d7-4d83-886c-91a3c75e226f",
+        "external_class_id": "14400433"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "f224796e-6df0-4bf5-890b-c5398593c110",
+        "external_class_id": "14382096"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "1eaeb0cc-2191-49c4-89dc-76333685a5e4",
+        "external_class_id": "14186226"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "a6a6387f-34db-45a8-90b3-fb1ea92f6b6c",
+        "external_class_id": "14354087"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "7c1078c2-680d-477b-b991-bfc54b656c34",
+        "external_class_id": "14130361"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "b05602fb-d34a-4f0e-9d77-65858661cf30",
+        "external_class_id": "14130379"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "c32233cf-ba32-4377-aae1-199b801210d5",
+        "external_class_id": "14130389"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "aa017ae8-9707-4ff0-9273-f3763ef1b113",
+        "external_class_id": "14130395"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "ce30e7e4-2d3d-4fd1-b63c-190c41fbdae8",
+        "external_class_id": "14184954"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "de9f64fd-c65c-4213-ae93-f923254b588b",
+        "external_class_id": "14135047"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "7fa8b8e6-befb-40c7-b600-cacab31aeb21",
+        "external_class_id": "14130362"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "c126b1b5-a79a-4baa-8cfc-d210549dee28",
+        "external_class_id": "14130381"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "e39056c4-b58e-4aab-80c5-9bdf69dbfed2",
+        "external_class_id": "14130390"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "d58efc90-9b7b-4aa4-a1bf-87e599af36f3",
+        "external_class_id": "14130406"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "3b2731a3-19bb-4d10-9757-08a8e81e336f",
+        "external_class_id": "14377157"
+      },
+      {
+        "reason": "unresolved_active_location",
+        "status": "quarantined",
+        "external_class_id": "13895152"
+      },
+      {
+        "reason": "unresolved_active_location",
+        "status": "quarantined",
+        "external_class_id": "13895154"
+      },
+      {
+        "reason": "unresolved_active_location",
+        "status": "quarantined",
+        "external_class_id": "13895155"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "157fd6ff-650f-4130-8022-3c0351ad15f1",
+        "external_class_id": "14130363"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "d7c224ba-13f1-47bb-a34b-a9a0c15a1586",
+        "external_class_id": "14130382"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "65a7a490-cac6-47b0-9246-98b3335ea9ec",
+        "external_class_id": "14130391"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "1945d954-bb90-4208-859a-c3513df5c78a",
+        "external_class_id": "14130407"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "f1010efc-1344-4ef0-ad9c-27c6727b4714",
+        "external_class_id": "14130364"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "e5fc4132-5939-42bd-bfd2-1d8e683fb8e0",
+        "external_class_id": "14130383"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "fca2d593-df4c-4b7e-af0c-b291fe632cd5",
+        "external_class_id": "14130392"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "f5fb71f2-a6af-4891-843b-3eb3935d2fb4",
+        "external_class_id": "14130408"
+      },
+      {
+        "reason": "unresolved_active_location",
+        "status": "quarantined",
+        "external_class_id": "11341058"
+      },
+      {
+        "status": "reconciled",
+        "session_id": "d94ccbc0-de0c-4088-862d-a5d50759c338",
+        "external_class_id": "14114232"
+      }
+    ],
+    "reconciled": 33,
+    "quarantined": 5,
+    "ingest_job_id": "30eefb0c-2e72-4337-a7ef-dafbdd2bb886"
+  },
+  "legacy_reconciliation": {
+    "sessions": [
+      {
+        "status": "reconciled",
+        "session_id": "4013b051-0758-4fd8-9696-0e0d6fb88f13",
+        "external_class_id": "13963994"
+      }
+    ],
+    "reconciled": 1,
+    "quarantined": 0,
+    "ingest_job_id": "4b18c868-8375-4de8-bc19-088c53447df2"
+  },
+  "source_bookings_modified": false,
+  "deployed": {
+    "demand": {
+      "version": 2,
+      "bundle": "bde7a1956e9186b6cdd86fd1e11b74140525fd2c16f83a0bbf946907690247b0"
+    },
+    "owner_workspace": {
+      "version": 7,
+      "bundle": "c3f50e641fc8f422850892eb6f278db2a2e3558f3a43447d6b87f389e3c1ab0e"
+    }
+  },
+  "public_deployment": false
+}

@@ -1,7 +1,18 @@
 name: Verify canonical participant workspace
 
 on:
+  schedule:
+    - cron: '7,37 * * * *'
   workflow_dispatch:
+    inputs:
+      projection:
+        description: Read-only production projection to verify
+        type: choice
+        default: workspace
+        options:
+          - workspace
+          - canonical-demand
+          - reconciliation-health
   push:
     branches:
       - codex/canonical-participant-rosters
@@ -16,6 +27,7 @@ permissions:
 
 jobs:
   verify-production:
+    if: github.event_name != 'schedule' && github.event.inputs.projection != 'canonical-demand' && github.event.inputs.projection != 'reconciliation-health'
     runs-on: ubuntu-latest
     steps:
       - name: Query protected canonical workspace
@@ -38,15 +50,113 @@ jobs:
           sessions = payload.get("sessions", [])
           assert payload.get("schema_version") == "2.0.0"
           assert sessions, "no future operational Sessions returned"
-          assert all(row.get("count_available") is True for row in sessions)
-          assert all(row.get("roster_available") is True for row in sessions)
-          assert all(row.get("participant_count") == len(row.get("participants", [])) for row in sessions)
-          assert all(row.get("count_source") == "canonical_active_registrations" for row in sessions)
+          assert all(row.get("participant_count") == len(row.get("participants", [])) if row.get("count_available") else row.get("participant_count") is None and not row.get("participants") for row in sessions)
+          assert all(row.get("roster_available") == row.get("count_available") for row in sessions)
           assert not any("person_id" in participant for row in sessions for participant in row.get("participants", []))
           print(json.dumps({
               "verified_sessions": len(sessions),
-              "sessions_with_participants": sum(row["participant_count"] > 0 for row in sessions),
-              "active_registration_relationships": sum(row["participant_count"] for row in sessions),
+              "sessions_with_participants": sum((row["participant_count"] or 0) > 0 for row in sessions),
+              "active_registration_relationships": sum(row["participant_count"] or 0 for row in sessions),
               "unknown_counts": sum(row["participant_count"] is None for row in sessions),
           }, sort_keys=True))
           PY
+
+  verify-demand:
+    if: github.event.inputs.projection == 'canonical-demand'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify protected PII-free demand projection and repeated fetch
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.error, urllib.request
+          from pathlib import Path
+          from scripts import fetch_canonical_scheduling_demand as demand
+
+          endpoint = 'https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/canonical-scheduling-demand'
+          origin = 'https://www.910cpr.com'
+          request = urllib.request.Request(endpoint, method='OPTIONS', headers={'Origin':origin, 'Access-Control-Request-Headers':'x-hot-sync-admin-key'})
+          with urllib.request.urlopen(request, timeout=30) as response:
+              assert response.status == 204
+              assert response.headers['access-control-allow-origin'] == origin
+              assert 'x-hot-sync-admin-key' in response.headers['access-control-allow-headers']
+              assert response.read() == b''
+          try:
+              urllib.request.urlopen(endpoint, timeout=30)
+              raise AssertionError('Unauthenticated request unexpectedly succeeded')
+          except urllib.error.HTTPError as error:
+              assert error.code == 401, error.code
+
+          directory = Path(os.environ['RUNNER_TEMP']) / 'canonical-demand-proof'
+          directory.mkdir()
+          demand.OUTPUT = directory / 'runtime.json'
+          demand.STATUS_OUTPUT = directory / 'fetch-status.json'
+          assert demand.run() == 0
+          first = json.loads(demand.OUTPUT.read_text())
+          assert demand.run() == 0
+          second = json.loads(demand.OUTPUT.read_text())
+          summary = {
+              'revision':os.environ['GITHUB_SHA'], 'schema_version':second['schema_version'],
+              'generated_at':second['generated_at'], 'sessions':len(second['sessions']),
+              'known_counts':sum(row['count_available'] is True for row in second['sessions']),
+              'unknown_counts':sum(row['count_available'] is False for row in second['sessions']),
+              'repeat_content_equal':demand.stable_hash(first) == demand.stable_hash(second),
+              'preflight_status':204, 'unauthenticated_status':401,
+          }
+          (directory / 'proof.json').write_text(json.dumps(summary, indent=2))
+          print(json.dumps(summary, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical-demand-production-proof
+          path: ${{ runner.temp }}/canonical-demand-proof/
+
+  reconciliation-health:
+    if: github.event_name == 'schedule' || github.event.inputs.projection == 'reconciliation-health'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compare current canonical reconciliation with committed public discovery
+        id: audit
+        continue-on-error: true
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+          RECONCILIATION_AUDIT_PATH: ${{ runner.temp }}/reconciliation-health.json
+        run: python scripts/audit_enrollware_reconciliation.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reconciliation-health
+          path: ${{ runner.temp }}/reconciliation-health.json
+      - name: Notify existing issue 297 only when the condition changes
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const file = process.env.RUNNER_TEMP + '/reconciliation-health.json';
+            const report = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,'utf8')) : {healthy:false,signature:'observer-query-failed',gaps:[]};
+            const marker = '<!-- enrollware-reconciliation-health -->';
+            const comments = await github.paginate(github.rest.issues.listComments,{...context.repo,issue_number:297,per_page:100});
+            const previous = comments.filter(c=>c.user.login==='github-actions[bot]' && c.body.includes(marker)).at(-1);
+            if (!previous?.body.includes('signature: '+report.signature)) {
+              const lines = report.gaps.map(g=>'- '+g.external_class_id+': '+g.status);
+              const body = marker+'\n#297 reconciliation observer: '+(report.healthy?'current':'ACTION REQUIRED')+'\n\n'+
+                (report.checked_at ? 'Checked '+report.checked_at+'. Complete roster freshness window: 60 minutes.\n\n' : 'Protected source query failed; current state is unknown.\n\n')+
+                lines.join('\n')+'\n\nRecovery: re-run the existing complete-roster import from an authenticated current source; resolve listed canonical identity gaps. No customer booking changes.\n\n'+
+                '[Observer run]('+context.serverUrl+'/'+context.repo.owner+'/'+context.repo.repo+'/actions/runs/'+context.runId+')\n\nsignature: '+report.signature;
+              await github.rest.issues.createComment({...context.repo,issue_number:297,body});
+            }
+            if (!report.healthy) core.setFailed('Canonical reconciliation is unknown, stale, or incomplete; see existing issue #297.');
