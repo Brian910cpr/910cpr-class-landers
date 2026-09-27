@@ -25,6 +25,7 @@ on:
       - 'supabase/migrations/*roster_proof.sql'
       - 'supabase/migrations/*enrollware_legacy_sources.sql'
       - 'supabase/migrations/*confirmed_enrollware_deadlines.sql'
+      - 'supabase/migrations/*changed_deadline_sources.sql'
       - 'scripts/audit_enrollware_reconciliation.py'
       - '.github/workflows/refresh-public-site.yml'
       - '.github/workflows/refresh-admin-availability.yml'

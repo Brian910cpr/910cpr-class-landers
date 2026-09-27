@@ -13,6 +13,7 @@ test('real PostgreSQL canonical reconciliation lifecycle, replay, quarantine and
     await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927041952_preserve_committed_external_location_identity.sql',import.meta.url),'utf8'));
     await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927042118_retain_existing_operational_location_gate.sql',import.meta.url),'utf8'));
     await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927050745_classify_confirmed_enrollware_deadlines.sql',import.meta.url),'utf8'));
+    await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927051624_retain_review_for_changed_deadline_sources.sql',import.meta.url),'utf8'));
     await db.exec(`insert into courses(course_key,name) values('fixture-course','Fixture');
       insert into people(person_key,display_name) values('fixture-instructor','Fixture');
       insert into locations(location_key,name,scheduling_status) values('fixture-room','Fixture','active');`);
@@ -71,7 +72,9 @@ test('real PostgreSQL canonical reconciliation lifecycle, replay, quarantine and
     assert.equal((await health()).sessions.find(s=>s.external_class_id==='80006').status,'classified_non_session');
     assert.ok(!JSON.stringify(await health()).includes('fixture@example.test'),'no participant PII in health projection');
     assert.equal((await reconcile([deadline])).classified_non_sessions,1,'classification survives replay');
-    assert.equal((await reconcile([{...deadline,start_at:'2030-09-28T13:00:00-04:00'}])).quarantined,1,'source identity change reopens review');
+    const changedDeadline=await reconcile([{...deadline,location_key:'fixture-room',external_location_id:'new-active-location'}]);
+    assert.equal(changedDeadline.quarantined,1,'source identity change reopens review even when its new location is active');
+    assert.equal(changedDeadline.sessions[0].reason,'non_session_source_changed_requires_review');
     assert.equal((await health()).sessions.find(s=>s.external_class_id==='80006').status,'missing_canonical_session');
     assert.equal((await db.query("select has_function_privilege('anon','enrollware_non_session_decision(jsonb)','execute') allowed")).rows[0].allowed,false);
     assert.equal((await reconcile([{...one,source_observed_at:'2020-01-01T00:00:00Z'}])).quarantined,1);
