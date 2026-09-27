@@ -130,7 +130,11 @@ def rewrite_offer_to_anchor(item: dict[str, Any], anchor: dict[str, Any]) -> dic
     parsed = dt(start)
     if parsed:
         formatted = parsed.strftime("%I:%M %p").lstrip("0")
-        for key in ("start_time", "startTime", "display_time", "timeLabel", "startTimeLabel"):
+        # Selector sorting and AM/PM grouping consume a 24-hour machine clock.
+        # Keep presentation labels separate when an offer reuses an Anchor.
+        if "startTime" in result:
+            result["startTime"] = parsed.strftime("%H:%M")
+        for key in ("start_time", "displayStartTime", "display_time", "timeLabel", "startTimeLabel"):
             if key in result:
                 result[key] = formatted
     url = text(anchor.get("registration_url"))
