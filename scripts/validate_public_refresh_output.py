@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any
+from scripts.canonical_scheduling_demand import load_publication_demand
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -123,6 +124,18 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
     return {"dates": date_count, "starts": start_count, "offers": offer_count}
 
 
+def validate_non_session_publication(root: Path, demand: dict[str, Any]) -> None:
+    ids = {str(row["external_class_id"]) for row in demand.get("non_session_sources", [])}
+    for name in ("schedule_future.json", "admin_schedule.json"):
+        rows = session_rows(load_json(root / "docs/data" / name))
+        leaked = ids & {str(row.get("external_session_id") or row.get("session_id")) for row in rows}
+        require(not leaked, f"{name}: classified non-sessions were published: {sorted(leaked)}")
+    calendar = (root / "docs/data/landerware.ics").read_text(encoding="utf-8")
+    for external_id in ids:
+        require(not (root / "docs/classes" / f"{external_id}.html").exists(), f"Classified non-session page remains: {external_id}")
+        require(f"-{external_id}@" not in calendar, f"Classified non-session calendar block remains: {external_id}")
+
+
 def main() -> int:
     schedule = load_json(SCHEDULE_PATH)
     rows = session_rows(schedule)
@@ -134,6 +147,7 @@ def main() -> int:
     }
 
     admin_ids = validate_admin_reconciliation(load_json(CURRENT_SESSIONS_PATH), load_json(ADMIN_SCHEDULE_PATH))
+    validate_non_session_publication(ROOT, load_publication_demand(ROOT))
 
     results = {page_key: validate_selector(page_key, public_session_ids) for page_key in REQUIRED_SELECTORS}
     print(f"Validated public sessions: {len(public_session_ids)}")

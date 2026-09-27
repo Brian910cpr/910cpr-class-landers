@@ -19,8 +19,10 @@ function loadEndpoint(fetch) {
 module.exports = {loadEndpoint};
 
 if (require.main === module) {
-  const rows = JSON.parse(fs.readFileSync(0, 'utf8'));
-  const api = loadEndpoint(async url => new Response(JSON.stringify(String(url).includes('/admin/hot-sync') ? {} : rows)));
+  const input = JSON.parse(fs.readFileSync(0, 'utf8'));
+  const rows = Array.isArray(input) ? input : input.sessions;
+  const health = Array.isArray(input) ? {sessions:[]} : input.health;
+  const api = loadEndpoint(async url => new Response(JSON.stringify(String(url).includes('/admin/hot-sync') ? {} : String(url).includes('/rpc/') ? health : rows)));
   api.handleRequest(new Request('https://endpoint.test/?from=2030-09-01&to=2030-10-01', {headers:{'x-hot-sync-admin-key':'fixture-only'}}))
     .then(response => response.text()).then(body => process.stdout.write(body));
 }

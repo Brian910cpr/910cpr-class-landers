@@ -78,6 +78,21 @@ def validate_payload(payload: Any, *, now: datetime | None = None) -> dict[str, 
         raise ValueError("sessions must be a list of objects")
     if forbidden := _forbidden_key_path(payload):
         raise ValueError(f"PII-like field is forbidden in canonical demand payload: {forbidden}")
+    classifications = payload.get("non_session_sources", [])
+    if not isinstance(classifications, list):
+        raise ValueError("non_session_sources must be a list")
+    seen = set()
+    canonical_external_ids = {str(row.get("external_class_id")) for row in sessions}
+    for row in classifications:
+        if (not isinstance(row, dict) or not str(row.get("external_class_id") or "").isdigit()
+                or row.get("classification") != "renewal_deadline"
+                or row.get("reason") != "owner_confirmed_renewal_deadline"):
+            raise ValueError("Unproven non-session classification")
+        _parse_instant(row.get("start_at"))
+        external_id = str(row["external_class_id"])
+        if external_id in seen or external_id in canonical_external_ids:
+            raise ValueError("Conflicting non-session classification")
+        seen.add(external_id)
     # Recheck external source time at consumption as well as endpoint fetch.
     # A fresh database response must not extend an almost-expired roster proof
     # through a long build or a later pass over the same runtime snapshot.

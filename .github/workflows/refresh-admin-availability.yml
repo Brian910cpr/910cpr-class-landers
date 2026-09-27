@@ -67,13 +67,13 @@ jobs:
           HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
         run: python -m scripts.fetch_hot_sync_snapshot
 
-      - name: Rebuild future seated schedule
-        run: python -m scripts.build_schedule_future
-
       - name: Fetch current canonical registration demand
         env:
           HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
         run: python -m scripts.fetch_canonical_scheduling_demand
+
+      - name: Rebuild future seated schedule
+        run: python -m scripts.build_schedule_future
 
       - name: Upload canonical demand fetch status
         if: always()
@@ -157,6 +157,9 @@ jobs:
           if not hot.get('available'):
               print(f"::warning title=HOT_SYNC not merged::{hot.get('error') or 'HOT_SYNC snapshot unavailable'}")
           PY
+
+      - name: Validate reconciled public inventory before publication
+        run: python -m scripts.validate_public_refresh_output
 
       - name: Commit changed dashboard data
         run: |

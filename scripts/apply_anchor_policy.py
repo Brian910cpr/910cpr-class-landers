@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.anchor_state import ANCHOR_SYMBOL, in_repeat_bubble, promote_seated_sessions, repeat_scope_key, same_course_anchor
-from scripts.canonical_scheduling_demand import resolve_canonical_demand
+from scripts.canonical_scheduling_demand import resolve_canonical_demand, exclude_non_session_sources
 from scripts.fetch_canonical_scheduling_demand import validate_payload
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -31,6 +31,7 @@ def write(path: Path, payload: Any) -> None:
 
 def apply_demand_projection(sessions: list[dict[str, Any]], payload: Any) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     rows = payload.get("sessions", []) if isinstance(payload, dict) else []
+    sessions, _excluded = exclude_non_session_sources(sessions, payload)
     return resolve_canonical_demand(sessions, rows if isinstance(rows, list) else [])
 
 
