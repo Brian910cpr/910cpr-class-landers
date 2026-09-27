@@ -33,5 +33,15 @@ class CompleteRosterContract(unittest.TestCase):
         self.assertFalse(result['healthy'])
         self.assertEqual([g['status'] for g in result['gaps']],['stale_reconciliation','committed_projection_without_canonical_session'])
         self.assertNotIn('participant_count',str(result))
+    def test_reviewed_deadline_is_explicit_not_an_unknown_class_or_zero_count(self):
+        deadline={'external_class_id':'900','canonical_session_id':None,'status':'classified_non_session',
+                  'non_session_classification':'renewal_deadline','approved_location_key':'fixture-room'}
+        result=audit({'sessions':[deadline]},{'sessions':[{'session_id':'900'}]})
+        self.assertTrue(result['healthy'])
+        self.assertEqual(result['canonical_external_sessions'],0)
+        self.assertEqual(result['non_session_sources'][0]['external_class_id'],'900')
+        self.assertNotIn('participant_count',str(result))
+        conflict={**deadline,'canonical_session_id':'unexpected-session','status':'non_session_conflicting_canonical_session'}
+        self.assertFalse(audit({'sessions':[conflict]},{})['healthy'])
 
 if __name__=='__main__':unittest.main()
