@@ -1,0 +1,1713 @@
+{
+  "assignment": "Continuation requested after historic four-gap health alert",
+  "evidence_scope": "Read-only current database and protected production projections; no customer booking mutation",
+  "dispositions": [
+    {
+      "external_class_id": "13895152",
+      "classification": "valid_committed_future_class",
+      "resolution": "canonical_session_reconciled_at_owner_approved_Brunswick_private_location"
+    },
+    {
+      "external_class_id": "13895154",
+      "classification": "valid_committed_future_class",
+      "resolution": "canonical_session_reconciled_at_owner_approved_Brunswick_private_location"
+    },
+    {
+      "external_class_id": "13895155",
+      "classification": "valid_committed_future_class",
+      "resolution": "canonical_session_reconciled_at_owner_approved_Brunswick_private_location"
+    },
+    {
+      "external_class_id": "11341058",
+      "classification": "owner_confirmed_renewal_deadline_not_instructional_class",
+      "resolution": "explicit_private_ingest_classification_preserves_source_and_two_registration_records; no fabricated operational session"
+    }
+  ],
+  "database_proof": {
+    "health": {
+      "sessions": [
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-30T21:30:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14400433",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "762f1c10-51d7-4d83-886c-91a3c75e226f",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-29T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "13963994",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "4013b051-0758-4fd8-9696-0e0d6fb88f13",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-12T21:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14135047",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "de9f64fd-c65c-4213-ae93-f923254b588b",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-13T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130381",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "c126b1b5-a79a-4baa-8cfc-d210549dee28",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-13T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130390",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "e39056c4-b58e-4aab-80c5-9bdf69dbfed2",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-17T14:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14377157",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "3b2731a3-19bb-4d10-9757-08a8e81e336f",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-22T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130363",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "157fd6ff-650f-4130-8022-3c0351ad15f1",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-22T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130391",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "65a7a490-cac6-47b0-9246-98b3335ea9ec",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-27T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130392",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "fca2d593-df4c-4b7e-af0c-b291fe632cd5",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-26T21:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14184955",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "750a7036-31f4-492c-8b86-4d32cd5b6fc8",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-26T14:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14145607",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "49ad2432-8e78-4e40-8749-2816070e93bd",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-27T17:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14361098",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "a9fd9bf2-43c8-46b7-a289-176d7989be8b",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-27T22:30:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14421081",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "913abd99-b8aa-48d9-a9f2-549387fb9c4f",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-29T22:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14288234",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "8b8ed457-4cf8-4fa8-aa0a-ca66be898614",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-30T16:30:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14170366",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "72c509d7-2268-4e04-8f88-be9681baac6a",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-02T14:45:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14382096",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "f224796e-6df0-4bf5-890b-c5398593c110",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-03T14:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14186226",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "1eaeb0cc-2191-49c4-89dc-76333685a5e4",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-08T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130361",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "7c1078c2-680d-477b-b991-bfc54b656c34",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-08T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130379",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "b05602fb-d34a-4f0e-9d77-65858661cf30",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-08T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130395",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "aa017ae8-9707-4ff0-9273-f3763ef1b113",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-12T13:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14184954",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "ce30e7e4-2d3d-4fd1-b63c-190c41fbdae8",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-13T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130362",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "7fa8b8e6-befb-40c7-b600-cacab31aeb21",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-22T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130382",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "d7c224ba-13f1-47bb-a34b-a9a0c15a1586",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-27T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130364",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "f1010efc-1344-4ef0-ad9c-27c6727b4714",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-27T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130383",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "e5fc4132-5939-42bd-bfd2-1d8e683fb8e0",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-27T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130408",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "f5fb71f2-a6af-4891-843b-3eb3935d2fb4",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-12-08T15:15:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14114232",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "d94ccbc0-de0c-4088-862d-a5d50759c338",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-26T13:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14186375",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "9df5fada-cd99-454a-8c16-4899bf6942bc",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-29T17:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "13964003",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "be8b9190-ee08-479d-8810-1ed98c1ecaa5",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-07T21:30:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14354087",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "a6a6387f-34db-45a8-90b3-fb1ea92f6b6c",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-22T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130407",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "1945d954-bb90-4208-859a-c3513df5c78a",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-21T13:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "13895152",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "24f35176-69c1-4b1e-8a72-a69b4e5f9576",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-21T17:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "13895155",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "f407c43b-985c-4f84-a92f-6174590ad3ba",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-29T17:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "13964012",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "ac7353ad-df75-4c6a-99bf-06bdfcff20e3",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-08T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130389",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "c32233cf-ba32-4377-aae1-199b801210d5",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-13T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "14130406",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "d58efc90-9b7b-4aa4-a1bf-87e599af36f3",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-21T15:15:00+00:00",
+          "reconciled_at": "2026-09-27T05:18:59.365397+00:00",
+          "source_sha256": "60221a2674d5b1eb6da5ee35ef69189ef138435b57eb7393193acfc6ebdc6fd6",
+          "external_class_id": "13895154",
+          "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+          "canonical_session_id": "e2658350-29b9-4e16-b5d6-3cbfb229dc14",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "owner_confirmed_renewal_deadline",
+          "status": "classified_non_session",
+          "start_at": "2026-12-01T05:00:00+00:00",
+          "reconciled_at": null,
+          "source_sha256": null,
+          "external_class_id": "11341058",
+          "source_observed_at": "2026-09-27T05:14:50.570Z",
+          "canonical_session_id": null,
+          "approved_location_key": "910cpr-office-shipyard",
+          "non_session_classification": "renewal_deadline"
+        }
+      ],
+      "checked_at": "2026-09-27T05:28:43.345984+00:00",
+      "total_sessions": 37,
+      "unknown_sessions": 0,
+      "freshness_minutes": 60,
+      "classified_non_sessions": 1
+    },
+    "checked_at": "2026-09-27T05:28:43.345984+00:00",
+    "queue_sessions": [
+      {
+        "end_at": "2026-10-21T15:00:00+00:00",
+        "status": "scheduled",
+        "start_at": "2026-10-21T13:00:00+00:00",
+        "location_key": "hist_location_bfcd7cded3e37289fed07186",
+        "record_scope": "operational",
+        "location_status": "active",
+        "external_class_id": "13895152",
+        "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+        "canonical_session_id": "24f35176-69c1-4b1e-8a72-a69b4e5f9576",
+        "active_registration_count": 0
+      },
+      {
+        "end_at": "2026-10-21T16:30:00+00:00",
+        "status": "scheduled",
+        "start_at": "2026-10-21T15:15:00+00:00",
+        "location_key": "hist_location_bfcd7cded3e37289fed07186",
+        "record_scope": "operational",
+        "location_status": "active",
+        "external_class_id": "13895154",
+        "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+        "canonical_session_id": "e2658350-29b9-4e16-b5d6-3cbfb229dc14",
+        "active_registration_count": 0
+      },
+      {
+        "end_at": "2026-10-21T19:00:00+00:00",
+        "status": "scheduled",
+        "start_at": "2026-10-21T17:00:00+00:00",
+        "location_key": "hist_location_bfcd7cded3e37289fed07186",
+        "record_scope": "operational",
+        "location_status": "active",
+        "external_class_id": "13895155",
+        "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+        "canonical_session_id": "f407c43b-985c-4f84-a92f-6174590ad3ba",
+        "active_registration_count": 0
+      },
+      {
+        "end_at": "2026-09-27T19:00:00+00:00",
+        "status": "scheduled",
+        "start_at": "2026-09-27T17:00:00+00:00",
+        "location_key": "910cpr-office-shipyard",
+        "record_scope": "operational",
+        "location_status": "active",
+        "external_class_id": "14361098",
+        "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+        "canonical_session_id": "a9fd9bf2-43c8-46b7-a289-176d7989be8b",
+        "active_registration_count": 1
+      },
+      {
+        "end_at": "2026-09-27T23:30:00+00:00",
+        "status": "scheduled",
+        "start_at": "2026-09-27T22:30:00+00:00",
+        "location_key": "910cpr-office-shipyard",
+        "record_scope": "operational",
+        "location_status": "active",
+        "external_class_id": "14421081",
+        "source_observed_at": "2026-09-27T05:14:50.57+00:00",
+        "canonical_session_id": "913abd99-b8aa-48d9-a9f2-549387fb9c4f",
+        "active_registration_count": 1
+      }
+    ]
+  },
+  "health_workflow_run": 36297295653,
+  "demand_workflow_run": 36297296897,
+  "publication_workflow_run": 36297345824,
+  "publication_event": "workflow_dispatch",
+  "r3_review_gate": "Brian explicitly accepted R3 and approved normal publication; prior receipt/history preserved",
+  "pr197_merge": "b9297d128143b99b62d273770e0a7304a4d17b98",
+  "publication_regression": {
+    "run": 36297345824,
+    "revision": "645fcd4b0e5b3b9b8832dfa59ba8536ba7829058",
+    "anchors": 12,
+    "unknown_public_occurrences": 1,
+    "incorrect_page": "docs/classes/11341058.html",
+    "cause": "Existing canonical owner decision was not connected to publication; active source location allowed a non-instructional deadline into public inventory."
+  },
+  "repair": {
+    "substantive_commit": "80fe6430cc6e802ff41dbef79012c118eef3ed4d",
+    "pr": 303,
+    "merge_commit": "32d2380893cbe4723d650b6968e5bbd9b46ab4b5",
+    "endpoint_version": 3,
+    "endpoint_bundle_sha256": "078c63bda88930b6e6ae411fbc162f38dc7cbd14dc8a8010f0fd22ec5802c2b5",
+    "r3_receipt_git_blob": "eecc7ad144a4e53997792cdbb6a3019678a7831a",
+    "r3_receipt_unchanged": true,
+    "stage6_gated": true,
+    "ranking_unchanged": true
+  },
+  "validation": {
+    "focused_python": 54,
+    "endpoint_typescript": 18,
+    "isolated_postgresql": 1,
+    "additional_publication_admin_suite": 17,
+    "source_syntax_modules": 6,
+    "ci_run": 36298076487,
+    "known_broader_eligibility_failures": [
+      "historical fixture expects 28 Amy sessions in current live September inventory",
+      "Windows temporary-path manifest assertion expects absolute path instead of relative path"
+    ],
+    "no_related_test_failures": true
+  },
+  "source_refresh": {
+    "source": "authenticated Enrollware class forms and complete displayed rosters",
+    "started_at": "2026-09-27T05:56:16.932Z",
+    "finished_at": "2026-09-27T05:56:54.340Z",
+    "classes_read": 38,
+    "changed_class_fields_or_roster_rows": [],
+    "registration_statuses_read": 20,
+    "statuses_checked_at": "2026-09-27T05:57:36.244Z",
+    "statuses_unchanged": true,
+    "source_watermark": "2026-09-27T05:56:16.932Z",
+    "conservative_freshness_expires_at": "2026-09-27T06:56:16.932Z",
+    "external_booking_mutations": 0,
+    "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+    "ingest_job_id": "6e280661-e39b-420b-94d9-1879ce752f83"
+  },
+  "latest_identity_and_health_proof": {
+    "checked_at": "2026-09-27 05:59:31.651706+00",
+    "expected_registration_relationships": 18,
+    "matched_relationships": 18,
+    "all_exact_class_joins": true,
+    "all_source_identities_match": true,
+    "health": {
+      "sessions": [
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-17T14:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14377157",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "3b2731a3-19bb-4d10-9757-08a8e81e336f",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-21T17:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "13895155",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "f407c43b-985c-4f84-a92f-6174590ad3ba",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-22T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130363",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "157fd6ff-650f-4130-8022-3c0351ad15f1",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-29T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "13963994",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "4013b051-0758-4fd8-9696-0e0d6fb88f13",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-26T21:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14184955",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "750a7036-31f4-492c-8b86-4d32cd5b6fc8",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-29T17:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "13964012",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "ac7353ad-df75-4c6a-99bf-06bdfcff20e3",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-26T14:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14145607",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "49ad2432-8e78-4e40-8749-2816070e93bd",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-27T17:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14361098",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "a9fd9bf2-43c8-46b7-a289-176d7989be8b",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-27T22:30:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14421081",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "913abd99-b8aa-48d9-a9f2-549387fb9c4f",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-29T22:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14288234",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "8b8ed457-4cf8-4fa8-aa0a-ca66be898614",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-30T16:30:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14170366",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "72c509d7-2268-4e04-8f88-be9681baac6a",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-02T14:45:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14382096",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "f224796e-6df0-4bf5-890b-c5398593c110",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-03T14:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14186226",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "1eaeb0cc-2191-49c4-89dc-76333685a5e4",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-08T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130361",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "7c1078c2-680d-477b-b991-bfc54b656c34",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-08T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130379",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "b05602fb-d34a-4f0e-9d77-65858661cf30",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-08T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130395",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "aa017ae8-9707-4ff0-9273-f3763ef1b113",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-12T13:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14184954",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "ce30e7e4-2d3d-4fd1-b63c-190c41fbdae8",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-13T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130362",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "7fa8b8e6-befb-40c7-b600-cacab31aeb21",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-22T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130382",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "d7c224ba-13f1-47bb-a34b-a9a0c15a1586",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-27T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130364",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "f1010efc-1344-4ef0-ad9c-27c6727b4714",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-27T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130383",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "e5fc4132-5939-42bd-bfd2-1d8e683fb8e0",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-27T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130408",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "f5fb71f2-a6af-4891-843b-3eb3935d2fb4",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-30T21:30:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14400433",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "762f1c10-51d7-4d83-886c-91a3c75e226f",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-26T13:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14186375",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "9df5fada-cd99-454a-8c16-4899bf6942bc",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-09-29T17:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "13964003",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "be8b9190-ee08-479d-8810-1ed98c1ecaa5",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-07T21:30:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14354087",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "a6a6387f-34db-45a8-90b3-fb1ea92f6b6c",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-22T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130407",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "1945d954-bb90-4208-859a-c3513df5c78a",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-12T21:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14135047",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "de9f64fd-c65c-4213-ae93-f923254b588b",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-21T13:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "13895152",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "24f35176-69c1-4b1e-8a72-a69b4e5f9576",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-13T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130381",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "c126b1b5-a79a-4baa-8cfc-d210549dee28",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-13T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130390",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "e39056c4-b58e-4aab-80c5-9bdf69dbfed2",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-08T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130389",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "c32233cf-ba32-4377-aae1-199b801210d5",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-13T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130406",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "d58efc90-9b7b-4aa4-a1bf-87e599af36f3",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-21T15:15:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "13895154",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "e2658350-29b9-4e16-b5d6-3cbfb229dc14",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-22T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130391",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "65a7a490-cac6-47b0-9246-98b3335ea9ec",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-10-27T18:00:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14130392",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "fca2d593-df4c-4b7e-af0c-b291fe632cd5",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "complete current source roster reconciled",
+          "status": "current",
+          "start_at": "2026-12-08T15:15:00+00:00",
+          "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+          "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+          "external_class_id": "14114232",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "canonical_session_id": "d94ccbc0-de0c-4088-862d-a5d50759c338",
+          "approved_location_key": null,
+          "non_session_classification": null
+        },
+        {
+          "reason": "owner_confirmed_renewal_deadline",
+          "status": "classified_non_session",
+          "start_at": "2026-12-01T05:00:00+00:00",
+          "reconciled_at": null,
+          "source_sha256": null,
+          "external_class_id": "11341058",
+          "source_observed_at": "2026-09-27T05:56:16.932Z",
+          "canonical_session_id": null,
+          "approved_location_key": "910cpr-office-shipyard",
+          "non_session_classification": "renewal_deadline"
+        }
+      ],
+      "checked_at": "2026-09-27T05:59:31.651706+00:00",
+      "total_sessions": 37,
+      "unknown_sessions": 0,
+      "freshness_minutes": 60,
+      "classified_non_sessions": 1
+    }
+  },
+  "latest_demand_endpoint_proof": {
+    "revision": "e2b0fbadf317da1cdf29a5bb411e7d09f224396f",
+    "schema_version": "910cpr-canonical-scheduling-demand.v1",
+    "generated_at": "2026-09-27T05:59:54.070Z",
+    "sessions": 38,
+    "known_counts": 38,
+    "unknown_counts": 0,
+    "repeat_content_equal": true,
+    "preflight_status": 204,
+    "unauthenticated_status": 401
+  },
+  "latest_health_workflow_proof": {
+    "checked_at": "2026-09-27T05:59:55.695962+00:00",
+    "freshness_minutes": 60,
+    "healthy": true,
+    "canonical_external_sessions": 37,
+    "non_session_sources": [
+      {
+        "external_class_id": "11341058",
+        "non_session_classification": "renewal_deadline",
+        "approved_location_key": "910cpr-office-shipyard"
+      }
+    ],
+    "gaps": [],
+    "signature": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+  },
+  "latest_proof_runs": {
+    "demand": 36298776585,
+    "health": 36298777478
+  },
+  "latest_projection_repeat_proof": {
+    "scope": "isolated projection of deployed public files with newly refreshed protected production demand; not a scheduled publisher event",
+    "first_stats": {
+      "anchors_promoted": 12,
+      "schedule_sessions_annotated": 12,
+      "admin_sessions_annotated": 12,
+      "selector_files_processed": 8,
+      "anchor_offers_annotated": 0,
+      "scattered_offers_consolidated": 0,
+      "duplicate_anchor_offers_removed": 0,
+      "canonical_demand_rows_matched": 31,
+      "canonical_demand_rows_failed_closed": 7,
+      "occurrences_with_unknown_demand": 0
+    },
+    "repeat_stats": {
+      "anchors_promoted": 12,
+      "schedule_sessions_annotated": 12,
+      "admin_sessions_annotated": 12,
+      "selector_files_processed": 8,
+      "anchor_offers_annotated": 0,
+      "scattered_offers_consolidated": 0,
+      "duplicate_anchor_offers_removed": 0,
+      "canonical_demand_rows_matched": 31,
+      "canonical_demand_rows_failed_closed": 7,
+      "occurrences_with_unknown_demand": 0
+    },
+    "anchors_identical_to_deployed": true,
+    "repeat_content_equal": true,
+    "incident_anchors": [
+      {
+        "session_id": "14361098",
+        "course_id": "359474",
+        "start_at": "2026-09-27T13:00:00-04:00",
+        "end_at": "2026-09-27T15:00:00-04:00",
+        "location": ":: Wilmington; Shipyard Blvd - B",
+        "instructor": "Brian Ennis",
+        "registered_count": 1,
+        "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+        "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+        "schedule_role": "anchor",
+        "schedule_symbol": "⚓",
+        "promotion_reason": "canonical_active_registration",
+        "landing_page_required": true,
+        "external_publication_eligible": true
+      },
+      {
+        "session_id": "14421081",
+        "course_id": "210549",
+        "start_at": "2026-09-27T18:30:00-04:00",
+        "end_at": "2026-09-27T19:30:00-04:00",
+        "location": ":: Wilmington; Shipyard Blvd - B",
+        "instructor": "Brian Ennis",
+        "registered_count": 1,
+        "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1830",
+        "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+        "schedule_role": "anchor",
+        "schedule_symbol": "⚓",
+        "promotion_reason": "canonical_active_registration",
+        "landing_page_required": true,
+        "external_publication_eligible": true
+      }
+    ]
+  },
+  "live_resource_proofs": [
+    {
+      "checked_at": "2026-09-27T05:51:43.316323+00:00",
+      "phase": "non-session-first",
+      "deployed_revision": "d95ec8ab468444c095214490f7ee9943bc64099c",
+      "resources": [
+        {
+          "url": "https://www.910cpr.com/bls.html?proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-1170e\"",
+          "sha256": "418cc5b95889a14b133a2eb0cd1dfcb77d4642af34c0a2454fc79c8c6aa85f37",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/analytics-attribution.js?v=20260912-1&proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-18b0\"",
+          "sha256": "f4b0b914d6a80cacad1a3124dd6c405ac22e1a045feb8d03ec87162d4cd21385",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/family-hero.js?v=6d88341997f7&proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-4d0\"",
+          "sha256": "6d88341997f7b0b1c857aec62aefb441b923bd83e0e893630718881866c1e4d7",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/interaction-motion.css?proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-220\"",
+          "sha256": "59363bcbef8408647168b134db2b4afb638e3f0a781b1494f32bfab7bc60fd9b",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/interaction-motion.js?v=20260809.1&proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-d2e\"",
+          "sha256": "8a1ddc8e70f70bd747ab8361f07d48832fa6e8ebf0af43021136b46e21a14b5d",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/resolved-selector-availability.js?v=20260907.1&proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-1219\"",
+          "sha256": "622a073c9f65c01ff217395645fb54460c023bf360763d957f4b24f8187e64ae",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/site-theme.css?v=20260818.5&proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-30d8\"",
+          "sha256": "cdca1533d0c3807ef59a8d609b6f1c7de30d0d3296ead879a16e0ab8d7416558",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/site-theme.js?proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-1fee\"",
+          "sha256": "6c32d61d0e464fe20b8c39ca55f9a7c0f95e5dce21fb68984d9a0023bc1c6bd3",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/data/anchor_state.json?proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-1b27\"",
+          "sha256": "c76d7ed22893300d6c82f70130a774ddd235cb143d94690e355a5a3be2573ec4",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/data/schedule_future.json?proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-11cbe\"",
+          "sha256": "c9a9fa75cde64ce80a697887801d1415a5c1f15c3117c9779cbd87df60bb5d70",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/data/block-selector-availability/bls.json?proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-44a61a\"",
+          "sha256": "29310d955b17d50a3dc58dbe2e45f2e079ce462e71ee6b81922ff35fff81b504",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/data/admin_schedule.json?proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-5ef5\"",
+          "sha256": "5e66993c9be4136f5886225712f0a1f6bf0f7d73b2f266686e67a0f76807c637",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/data/landerware.ics?proof=d95ec8ab4684",
+          "status": 200,
+          "etag": "\"6ab8aece-330b\"",
+          "sha256": "325ce553a92db5d0943924d437e6b95928502a3cbd6f2913651c1315fa49c49a",
+          "matches_deployed_git_blob": true
+        }
+      ],
+      "anchor_counts": {
+        "anchors_promoted": 12,
+        "schedule_sessions_annotated": 12,
+        "admin_sessions_annotated": 12,
+        "selector_files_processed": 8,
+        "anchor_offers_annotated": 0,
+        "scattered_offers_consolidated": 0,
+        "duplicate_anchor_offers_removed": 0,
+        "canonical_demand_rows_matched": 31,
+        "canonical_demand_rows_failed_closed": 7,
+        "occurrences_with_unknown_demand": 0
+      },
+      "incident_anchors": [
+        {
+          "session_id": "14361098",
+          "course_id": "359474",
+          "start_at": "2026-09-27T13:00:00-04:00",
+          "end_at": "2026-09-27T15:00:00-04:00",
+          "location": ":: Wilmington; Shipyard Blvd - B",
+          "instructor": "Brian Ennis",
+          "registered_count": 1,
+          "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+          "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+          "schedule_role": "anchor",
+          "schedule_symbol": "⚓",
+          "promotion_reason": "canonical_active_registration",
+          "landing_page_required": true,
+          "external_publication_eligible": true
+        },
+        {
+          "session_id": "14421081",
+          "course_id": "210549",
+          "start_at": "2026-09-27T18:30:00-04:00",
+          "end_at": "2026-09-27T19:30:00-04:00",
+          "location": ":: Wilmington; Shipyard Blvd - B",
+          "instructor": "Brian Ennis",
+          "registered_count": 1,
+          "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1830",
+          "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+          "schedule_role": "anchor",
+          "schedule_symbol": "⚓",
+          "promotion_reason": "canonical_active_registration",
+          "landing_page_required": true,
+          "external_publication_eligible": true
+        }
+      ],
+      "incident_selector": {
+        "date": "2026-09-27",
+        "displayDate": "2026-09-27",
+        "startTimes": [
+          {
+            "startTime": "13:00",
+            "displayStartTime": "1:00 PM",
+            "courses": [
+              {
+                "courseId": "359474",
+                "courseName": "AHA BLS Provider (Renewal)",
+                "courseFamily": "BLS",
+                "deliveryMode": "classroom",
+                "displayStartTime": "1:00 PM",
+                "durationMinutes": 120,
+                "schedulerConsumptionMinutes": 120,
+                "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+                "location": ":: Wilmington; Shipyard Blvd - B",
+                "availabilityBlockId": "seated:14361098",
+                "offerType": "seated_class",
+                "date": "2026-09-27",
+                "startTime": "13:00",
+                "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+                "session_id": "14361098",
+                "schedule_role": "anchor",
+                "schedule_symbol": "⚓",
+                "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+                "promotion_reason": "same_course_anchor_reuse",
+                "landing_page_required": true,
+                "external_publication_eligible": true,
+                "offer_source": "existing_seated_anchor"
+              }
+            ]
+          },
+          {
+            "startTime": "18:30",
+            "displayStartTime": "6:30 PM",
+            "courses": [
+              {
+                "courseId": "210549",
+                "courseName": "AHA BLS HeartCode®",
+                "courseFamily": "BLS",
+                "deliveryMode": "blended",
+                "displayStartTime": "6:30 PM",
+                "durationMinutes": 60,
+                "schedulerConsumptionMinutes": 60,
+                "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+                "location": ":: Wilmington; Shipyard Blvd - B",
+                "availabilityBlockId": "seated:14421081",
+                "offerType": "seated_class",
+                "date": "2026-09-27",
+                "startTime": "18:30",
+                "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+                "session_id": "14421081",
+                "schedule_role": "anchor",
+                "schedule_symbol": "⚓",
+                "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1830",
+                "promotion_reason": "same_course_anchor_reuse",
+                "landing_page_required": true,
+                "external_publication_eligible": true,
+                "offer_source": "existing_seated_anchor"
+              }
+            ]
+          }
+        ]
+      },
+      "bls_counts": {
+        "availabilityBlocksFound": 203,
+        "availabilityBlocksEvaluated": 203,
+        "publicLocationBlocksEvaluated": 203,
+        "publicSelectableOfferCount": 8110,
+        "publicSelectableDateCount": 91,
+        "publicSelectableStartTimeCount": 2964,
+        "rejectedOfferCount": 1918,
+        "suppressedStaleOrOrphanedOfferCount": 0,
+        "wholeBlockPresentedAsClass": false
+      },
+      "non_session_publication": {
+        "external_class_id": "11341058",
+        "schedule_excluded": true,
+        "admin_calendar_excluded": true,
+        "class_page_status": 404
+      }
+    },
+    {
+      "checked_at": "2026-09-27T05:59:03.328536+00:00",
+      "phase": "non-session-full",
+      "deployed_revision": "e2b0fbadf317da1cdf29a5bb411e7d09f224396f",
+      "resources": [
+        {
+          "url": "https://www.910cpr.com/bls.html?proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-1170e\"",
+          "sha256": "70be1c556bc9a57ce250870dba1fe0f60e4c0d0fa0fe78dd948a607c7afa7b17",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/analytics-attribution.js?v=20260912-1&proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-18b0\"",
+          "sha256": "f4b0b914d6a80cacad1a3124dd6c405ac22e1a045feb8d03ec87162d4cd21385",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/family-hero.js?v=6d88341997f7&proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-4d0\"",
+          "sha256": "6d88341997f7b0b1c857aec62aefb441b923bd83e0e893630718881866c1e4d7",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/interaction-motion.css?proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-220\"",
+          "sha256": "59363bcbef8408647168b134db2b4afb638e3f0a781b1494f32bfab7bc60fd9b",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/interaction-motion.js?v=20260809.1&proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-d2e\"",
+          "sha256": "8a1ddc8e70f70bd747ab8361f07d48832fa6e8ebf0af43021136b46e21a14b5d",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/resolved-selector-availability.js?v=20260907.1&proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-1219\"",
+          "sha256": "622a073c9f65c01ff217395645fb54460c023bf360763d957f4b24f8187e64ae",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/site-theme.css?v=20260818.5&proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-30d8\"",
+          "sha256": "cdca1533d0c3807ef59a8d609b6f1c7de30d0d3296ead879a16e0ab8d7416558",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/assets/site-theme.js?proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-1fee\"",
+          "sha256": "6c32d61d0e464fe20b8c39ca55f9a7c0f95e5dce21fb68984d9a0023bc1c6bd3",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/data/anchor_state.json?proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-1b27\"",
+          "sha256": "07ba991ca318341c75c0a137581999b894091c69aad632448cc4c75760d4cf4a",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/data/schedule_future.json?proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-11cbe\"",
+          "sha256": "68ed12805fe783272ddae908effec5523da7c6b9de543f213c75c40aa6407e0a",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/data/block-selector-availability/bls.json?proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-44a61a\"",
+          "sha256": "29310d955b17d50a3dc58dbe2e45f2e079ce462e71ee6b81922ff35fff81b504",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/data/admin_schedule.json?proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-5ef5\"",
+          "sha256": "ba410582894f80027fd491da588044d4fec5cb949c412935efe95de4ecd34085",
+          "matches_deployed_git_blob": true
+        },
+        {
+          "url": "https://www.910cpr.com/data/landerware.ics?proof=e2b0fbadf317",
+          "status": 200,
+          "etag": "\"6ab8afe0-330b\"",
+          "sha256": "571a1c9c0856641034389d8344112c6b69714b199b51c902c390ef94d6aa9347",
+          "matches_deployed_git_blob": true
+        }
+      ],
+      "anchor_counts": {
+        "anchors_promoted": 12,
+        "schedule_sessions_annotated": 12,
+        "admin_sessions_annotated": 12,
+        "selector_files_processed": 8,
+        "anchor_offers_annotated": 0,
+        "scattered_offers_consolidated": 0,
+        "duplicate_anchor_offers_removed": 0,
+        "canonical_demand_rows_matched": 31,
+        "canonical_demand_rows_failed_closed": 7,
+        "occurrences_with_unknown_demand": 0
+      },
+      "incident_anchors": [
+        {
+          "session_id": "14361098",
+          "course_id": "359474",
+          "start_at": "2026-09-27T13:00:00-04:00",
+          "end_at": "2026-09-27T15:00:00-04:00",
+          "location": ":: Wilmington; Shipyard Blvd - B",
+          "instructor": "Brian Ennis",
+          "registered_count": 1,
+          "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+          "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+          "schedule_role": "anchor",
+          "schedule_symbol": "⚓",
+          "promotion_reason": "canonical_active_registration",
+          "landing_page_required": true,
+          "external_publication_eligible": true
+        },
+        {
+          "session_id": "14421081",
+          "course_id": "210549",
+          "start_at": "2026-09-27T18:30:00-04:00",
+          "end_at": "2026-09-27T19:30:00-04:00",
+          "location": ":: Wilmington; Shipyard Blvd - B",
+          "instructor": "Brian Ennis",
+          "registered_count": 1,
+          "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1830",
+          "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+          "schedule_role": "anchor",
+          "schedule_symbol": "⚓",
+          "promotion_reason": "canonical_active_registration",
+          "landing_page_required": true,
+          "external_publication_eligible": true
+        }
+      ],
+      "incident_selector": {
+        "date": "2026-09-27",
+        "displayDate": "2026-09-27",
+        "startTimes": [
+          {
+            "startTime": "13:00",
+            "displayStartTime": "1:00 PM",
+            "courses": [
+              {
+                "courseId": "359474",
+                "courseName": "AHA BLS Provider (Renewal)",
+                "courseFamily": "BLS",
+                "deliveryMode": "classroom",
+                "displayStartTime": "1:00 PM",
+                "durationMinutes": 120,
+                "schedulerConsumptionMinutes": 120,
+                "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+                "location": ":: Wilmington; Shipyard Blvd - B",
+                "availabilityBlockId": "seated:14361098",
+                "offerType": "seated_class",
+                "date": "2026-09-27",
+                "startTime": "13:00",
+                "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+                "session_id": "14361098",
+                "schedule_role": "anchor",
+                "schedule_symbol": "⚓",
+                "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+                "promotion_reason": "same_course_anchor_reuse",
+                "landing_page_required": true,
+                "external_publication_eligible": true,
+                "offer_source": "existing_seated_anchor"
+              }
+            ]
+          },
+          {
+            "startTime": "18:30",
+            "displayStartTime": "6:30 PM",
+            "courses": [
+              {
+                "courseId": "210549",
+                "courseName": "AHA BLS HeartCode®",
+                "courseFamily": "BLS",
+                "deliveryMode": "blended",
+                "displayStartTime": "6:30 PM",
+                "durationMinutes": 60,
+                "schedulerConsumptionMinutes": 60,
+                "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+                "location": ":: Wilmington; Shipyard Blvd - B",
+                "availabilityBlockId": "seated:14421081",
+                "offerType": "seated_class",
+                "date": "2026-09-27",
+                "startTime": "18:30",
+                "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+                "session_id": "14421081",
+                "schedule_role": "anchor",
+                "schedule_symbol": "⚓",
+                "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1830",
+                "promotion_reason": "same_course_anchor_reuse",
+                "landing_page_required": true,
+                "external_publication_eligible": true,
+                "offer_source": "existing_seated_anchor"
+              }
+            ]
+          }
+        ]
+      },
+      "bls_counts": {
+        "availabilityBlocksFound": 203,
+        "availabilityBlocksEvaluated": 203,
+        "publicLocationBlocksEvaluated": 203,
+        "publicSelectableOfferCount": 8110,
+        "publicSelectableDateCount": 91,
+        "publicSelectableStartTimeCount": 2964,
+        "rejectedOfferCount": 1918,
+        "suppressedStaleOrOrphanedOfferCount": 0,
+        "wholeBlockPresentedAsClass": false
+      },
+      "non_session_publication": {
+        "external_class_id": "11341058",
+        "schedule_excluded": true,
+        "admin_calendar_excluded": true,
+        "class_page_status": 404
+      }
+    }
+  ],
+  "actual_browser_proofs": [
+    {
+      "checked_at": "2026-09-27T05:52:05.341Z",
+      "revision": "d95ec8ab468444c095214490f7ee9943bc64099c",
+      "renewal": {
+        "times": "PM★ 1:00 PM",
+        "register": [
+          "https://coastalcprtraining.enrollware.com/enroll?id=14361098&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-14361098"
+        ]
+      },
+      "heartcode": {
+        "times": "PM★ 6:30 PM",
+        "register": [
+          "https://coastalcprtraining.enrollware.com/enroll?id=14421081&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-14421081"
+        ]
+      },
+      "errors": [],
+      "booking_mutations": 0
+    },
+    {
+      "checked_at": "2026-09-27T06:00:27.036Z",
+      "revision": "e2b0fbadf317da1cdf29a5bb411e7d09f224396f",
+      "weekday": {
+        "date": "2026-09-29",
+        "times": "AM11:00 AMPM8:30 PM",
+        "attached_to_session_id": "13963994",
+        "register": [
+          "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260770&startTime=11%3A00+AM&courseId=209806&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-209806"
+        ]
+      },
+      "saturday": {
+        "date": "2026-10-03",
+        "times": "AM8:00 AM11:00 AM",
+        "attached_to_session_id": "14186226",
+        "register": [
+          "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260774&startTime=8%3A00+AM&courseId=209806&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-209806"
+        ]
+      },
+      "renewal": {
+        "times": "PM★ 1:00 PM",
+        "register": [
+          "https://coastalcprtraining.enrollware.com/enroll?id=14361098&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-14361098"
+        ]
+      },
+      "heartcode": {
+        "times": "PM★ 6:30 PM",
+        "register": [
+          "https://coastalcprtraining.enrollware.com/enroll?id=14421081&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-14421081"
+        ]
+      },
+      "errors": [],
+      "booking_mutations": 0
+    }
+  ],
+  "publications": [
+    {
+      "run": 36298164032,
+      "event": "push",
+      "revision": "d95ec8ab468444c095214490f7ee9943bc64099c",
+      "pages_run": 36298350496,
+      "changed_files": 59
+    },
+    {
+      "run": 36298284915,
+      "event": "workflow_dispatch",
+      "revision": "e2b0fbadf317da1cdf29a5bb411e7d09f224396f",
+      "pages_run": 36298563453,
+      "changed_files": 53,
+      "broken_public_links": 0
+    }
+  ],
+  "subsequent_refresh": {
+    "normal_full_publisher_after_admin_publisher": "passed; identical 12 Anchors and same incident 1/1 counts",
+    "actual_post_repair_schedule_event": "not observed",
+    "latest_actual_scheduled_admin_run": 36286383604,
+    "latest_actual_scheduled_public_run": 36286577970,
+    "observer": "verify-157-scheduled-refresh heartbeat active every 30 minutes"
+  },
+  "limitations": [
+    "No authorized unattended complete-roster source is connected; latest real source proof expires 2026-09-27T06:56:16.932Z. Subsequent stale counts must be null/unknown, never zero.",
+    "No post-repair actual schedule event for either repaired publisher has been observed. Push and workflow_dispatch are not claimed as scheduled proof.",
+    "Direct/native/admin/bookmarked Enrollware booking remains outside LanderWare selector controls; incident navigation/referral channels remain unknown."
+  ]
+}
