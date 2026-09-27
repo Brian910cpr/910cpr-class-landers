@@ -1,0 +1,30 @@
+name: Verify session-workspace live baseline
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/functions/session-workspace/**'
+      - 'scripts/deploy_session_workspace.ps1'
+      - 'tests/session_workspace_live_baseline.test.cjs'
+      - '.github/workflows/verify-session-workspace-live-baseline.yml'
+  push:
+    paths:
+      - 'supabase/functions/session-workspace/**'
+      - 'scripts/deploy_session_workspace.ps1'
+      - 'tests/session_workspace_live_baseline.test.cjs'
+
+permissions:
+  contents: read
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify byte parity and runtime contracts
+        run: |
+          node --test tests/session_workspace_live_baseline.test.cjs
+          deno check supabase/functions/session-workspace/index.ts

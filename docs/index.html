@@ -17,16 +17,21 @@
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="shortcut icon" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
-<link rel="stylesheet" href="/css/lander.css?v=20260719-home-authority">
+<link rel="stylesheet" href="/css/lander.css?v=20260926-home-mobile-tiles">
 <!-- Google Tag Manager -->
 <script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+(function(w,d,s,l,i,m){
+var internal=/^\/(admin|control-center|internal|drafts|analytics-preferences)(\/|$)/.test(w.location.pathname);
+var excluded=new RegExp('(?:^|;\\s*)(?:lw_analytics_excluded|analytics_excluded)=1(?:;|$)').test(d.cookie);
+if(internal||excluded){m.split(',').forEach(function(id){w['ga-disable-'+id]=true;});return;}
+w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH');
+})(window,document,'script','dataLayer','GTM-PQS8DCBH','G-45PBWBK7KR,G-SL0HBP3RV5');
 </script>
 <!-- End Google Tag Manager -->
+<script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -110,8 +115,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <section class="hero home-hero">
         <div class="hero-main">
           <div class="eyebrow home-hero-links" aria-label="Local service area">Wilmington · Jacksonville · Holly Ridge · Leland · Coastal North Carolina</div>
-          <h1>Find the right CPR class—without guessing</h1>
-          <p class="subhead">New to certification? Start with the wording from your employer or school. Already know exactly what you need? Go straight to BLS, ACLS, PALS, First Aid, CPR/AED, Red Cross, HSI, or maritime options below.</p>
+          <h1>Find your CPR class</h1>
+          <p class="subhead">Select the course your employer or school requires.</p>
         </div>
       </section>
 
@@ -120,7 +125,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div>
             <h2>Choose your class to see dates</h2>
           </div>
-          <p class="section-copy">Choose the credential name you were given. You’ll see the appropriate classroom, renewal, or online-plus-skills options before selecting a date.</p>
+          <p class="section-copy">Select your course to view class options and dates.</p>
         </div>
 
         <div class="finder-grid" data-home-sections>

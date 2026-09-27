@@ -4,7 +4,7 @@
   const esc = value => String(value ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
   const API = 'https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/canonical-session-workspace';
   const bundleUrl = date => { const to=new Date(`${date}T12:00:00Z`);to.setUTCDate(to.getUTCDate()+1);return `${API}?from=${encodeURIComponent(date)}&to=${to.toISOString().slice(0,10)}`; };
-  const adminKey = () => sessionStorage.getItem('hotSyncAdminKey') || '';
+  const adminKey = () => LanderWareAdminAuth.get() || '';
   const time = value => new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit'}).format(new Date(value));
   const day = value => new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'long',month:'long',day:'numeric',year:'numeric'}).format(new Date(`${value}T12:00:00-04:00`));
 
@@ -38,13 +38,14 @@
     const url = bundleUrl(date);
     if (!adminKey()) { $('authGate').classList.remove('hidden'); $('status').className='status error'; $('status').textContent='Authentication required. Enter the LanderWare admin key to retrieve canonical data.'; return; }
     $('status').className='status'; $('status').textContent='Loading Session Bundle…';
-    try { const response=await fetch(url,{cache:'no-store',headers:{'X-Hot-Sync-Admin-Key':adminKey()}}); if(response.status===401){sessionStorage.removeItem('hotSyncAdminKey');throw new Error('Authentication failed')} if(!response.ok) throw new Error(`HTTP ${response.status}`); const bundle=await response.json(); if(bundle.scope?.from!==date) throw new Error('Workspace scope does not match the selected date'); $('authGate').classList.add('hidden'); render(bundle); }
+    try { const response=await LanderWareAdminAuth.fetch(url,{cache:'no-store',headers:{'X-Hot-Sync-Admin-Key':adminKey()}}); if(response.status===401){LanderWareAdminAuth.clear();throw new Error('Authentication failed')} if(!response.ok) throw new Error(`HTTP ${response.status}`); const bundle=await response.json(); if(bundle.scope?.from!==date) throw new Error('Workspace scope does not match the selected date'); $('authGate').classList.add('hidden'); render(bundle); }
     catch(error){ $('status').className='status error'; $('status').textContent=`Could not load ${date}: ${error.message}`; $('summary').innerHTML=''; $('sessions').innerHTML='<div class="error-card">Canonical data was not retrieved.</div>'; ['missing','conflicts','provenance'].forEach(id=>$(id).innerHTML='<p class="empty">Unavailable</p>'); if(!adminKey())$('authGate').classList.remove('hidden'); }
   }
-  $('unlock').addEventListener('click',()=>{const key=$('adminKey').value.trim();if(key){sessionStorage.setItem('hotSyncAdminKey',key);$('adminKey').value='';load();}});
+  $('unlock').addEventListener('click',()=>{const key=$('adminKey').value.trim();if(key){LanderWareAdminAuth.set(key);$('adminKey').value='';load();}});
   $('adminKey').addEventListener('keydown',event=>{if(event.key==='Enter')$('unlock').click()});
-  $('lock').addEventListener('click',()=>{sessionStorage.removeItem('hotSyncAdminKey');$('authGate').classList.remove('hidden');$('summary').innerHTML='';$('sessions').innerHTML='';$('status').className='status error';$('status').textContent='Admin Port is locked.'});
+  $('lock').addEventListener('click',()=>{LanderWareAdminAuth.clear();$('authGate').classList.remove('hidden');$('summary').innerHTML='';$('sessions').innerHTML='';$('status').className='status error';$('status').textContent='Admin Port is locked.'});
   const requestedDate = new URLSearchParams(location.search).get('date');
   if (/^\d{4}-\d{2}-\d{2}$/.test(requestedDate || '')) $('datePick').value = requestedDate;
   $('reload').addEventListener('click',load); $('datePick').addEventListener('change',load); load();
+LanderWareAdminAuth.onLock(()=>{ $('authGate').classList.remove('hidden');['summary','sessions','missing','conflicts','provenance'].forEach(id=>$(id).replaceChildren());$('dayTitle').textContent='Admin Port';$('status').textContent='Enter your LanderWare owner key.'; });window.addEventListener('admin-auth-refresh',load);
 })();

@@ -1,0 +1,38 @@
+name: Verify remembered owner access
+on:
+  pull_request:
+    paths:
+      - 'docs/admin/**'
+      - 'supabase/functions/_shared/owner-*'
+      - 'supabase/functions/owner-access/**'
+      - 'supabase/migrations/*_owner_access_sessions.sql'
+      - 'tests/admin_auth.test.mjs'
+      - 'tests/owner_access*'
+      - '.github/workflows/verify-owner-access.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/admin/**'
+      - 'supabase/functions/_shared/owner-*'
+      - 'supabase/functions/owner-access/**'
+      - 'tests/admin_auth.test.mjs'
+      - 'tests/owner_access*'
+      - '.github/workflows/verify-owner-access.yml'
+permissions:
+  contents: read
+jobs:
+  owner-access:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: |
+          node --check docs/admin/admin-auth.js
+          node --check docs/admin/owner-access.js
+          deno check supabase/functions/owner-access/index.ts
+          node --test tests/admin_auth.test.mjs tests/owner_access*.test.mjs

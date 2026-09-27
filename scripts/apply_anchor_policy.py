@@ -246,6 +246,18 @@ def _offer_end(offer: dict[str, Any], start: datetime) -> datetime:
     return start + timedelta(minutes=max(0, minutes))
 
 
+def _refresh_selector_counts(payload: dict[str, Any]) -> None:
+    dates = payload.get("dates", [])
+    counts = payload.setdefault("counts", {})
+    counts["publicSelectableDateCount"] = len(dates)
+    counts["publicSelectableStartTimeCount"] = sum(len(day.get("startTimes", [])) for day in dates)
+    counts["publicSelectableOfferCount"] = sum(
+        len(slot.get("courses", []))
+        for day in dates
+        for slot in day.get("startTimes", [])
+    )
+
+
 def _rebuild_dates(payload: dict[str, Any], offers: list[dict[str, Any]]) -> dict[str, Any]:
     grouped: dict[str, dict[str, Any]] = {}
     for offer in offers:
@@ -259,8 +271,7 @@ def _rebuild_dates(payload: dict[str, Any], offers: list[dict[str, Any]]) -> dic
     for day in sorted(grouped.values(), key=lambda item: item["date"]):
         slots = sorted(day["startTimes"].values(), key=lambda item: item["startTime"])
         payload["dates"].append({**day, "startTimes": slots})
-    payload.setdefault("counts", {})["publicSelectableDateCount"] = len(payload["dates"])
-    payload["counts"]["publicSelectableStartTimeCount"] = sum(len(day["startTimes"]) for day in payload["dates"])
+    _refresh_selector_counts(payload)
     return payload
 
 
@@ -436,9 +447,8 @@ def apply_selector_policy(payload: dict[str, Any], anchors: list[dict[str, Any]]
         slots = list(day["startTimes"].values())
         slots.sort(key=lambda item: item["startTime"])
         payload["dates"].append({**day, "startTimes": slots})
-    payload.setdefault("counts", {})["publicSelectableDateCount"] = len(payload["dates"])
-    payload["counts"]["publicSelectableStartTimeCount"] = sum(len(day["startTimes"]) for day in payload["dates"])
-    payload["anchor_policy"] = {"version": "anchor-repeat-bubble-v2", "suppressed_offerons": suppressed, "barnacle_positions": len(barnacle_keys)}
+    _refresh_selector_counts(payload)
+    payload["anchor_policy"] = {"version": "anchor-repeat-bubble-v2", "suppressed_offers": suppressed, "barnacle_positions": len(barnacle_keys)}
     return payload
 
 

@@ -1,0 +1,42 @@
+/* The upcoming class rows and selected roster share the compact NOW panel. */
+.schedule .class-row {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+  padding: 13px 21px;
+}
+.schedule .class-row:hover,
+.schedule .class-row.selected { background: var(--raised); }
+.schedule .class-row.selected { box-shadow: inset 3px 0 var(--mint); }
+.class-row-action { color: var(--mint); font-size: 11px; white-space: nowrap; }
+.class-focus {
+  margin: 14px 18px 0;
+  padding: 16px;
+  border: 1px solid var(--mint);
+  border-radius: 10px;
+  background: var(--raised);
+}
+.class-focus[hidden] { display: none; }
+.class-focus-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.class-focus h3 { font: 600 19px/1.25 'Space Grotesk', sans-serif; margin: 5px 0 12px; }
+.class-focus .subtle { flex: none; padding: 3px 0; }
+.class-facts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 15px; }
+.class-facts span { border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; font-size: 12px; }
+.class-roster { border-top: 1px solid var(--line); padding-top: 12px; font-size: 13px; }
+.class-roster > strong { display: block; margin-bottom: 7px; }
+.class-roster p { color: var(--muted); margin: 6px 0 12px; }
+.class-roster .class-error { color: var(--amber); }
+.class-roster ul { list-style: none; padding: 0; margin: 0 0 12px; }
+.class-roster li { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 1px solid var(--line); }
+.class-roster li:first-child { border-top: 0; }
+.class-roster a, .class-record-link { color: var(--mint); }
+.class-roster small { color: var(--muted); text-transform: capitalize; }
+.class-record-link { display: inline-block; font-size: 13px; font-weight: 700; margin-top: 3px; }
+@media (max-width: 560px) {
+  .schedule .class-row { grid-template-columns: 78px 1fr; padding: 12px; }
+  .class-row-action { grid-column: 2; }
+  .class-focus { margin: 10px 12px 0; padding: 12px; }
+}

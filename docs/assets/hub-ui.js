@@ -727,6 +727,8 @@
 
     scope.querySelectorAll(".tab-panel .slug-pill-list").forEach((list) => {
       if (list.dataset.groupedByDay === "true") return;
+      // A private group request is not a dated session; preserve its live CTA.
+      if (list.querySelector(":scope > .slug-group-request-pill")) return;
 
       const pills = Array.from(list.querySelectorAll(":scope > .slug-pill"));
       if (!pills.length) {

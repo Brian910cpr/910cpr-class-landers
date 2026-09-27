@@ -1,0 +1,36 @@
+name: Verify instructor document controls
+on:
+  pull_request:
+    paths:
+      - 'docs/admin/instructor-workbench.html'
+      - 'docs/assets/instructor-workbench.js'
+      - 'supabase/functions/instructor-workbench/**'
+      - 'supabase/migrations/*_instructor_document_controls.sql'
+      - 'tests/instructor_documents*'
+      - '.github/workflows/verify-instructor-documents.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'docs/admin/instructor-workbench.html'
+      - 'docs/assets/instructor-workbench.js'
+      - 'supabase/functions/instructor-workbench/**'
+      - 'tests/instructor_documents*'
+      - '.github/workflows/verify-instructor-documents.yml'
+permissions:
+  contents: read
+jobs:
+  documents:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: npm install --prefix "$RUNNER_TEMP/document-qa" --no-save --ignore-scripts jsdom@26.1.0
+      - run: |
+          node --check docs/assets/instructor-workbench.js
+          deno check supabase/functions/instructor-workbench/index.ts
+          NODE_PATH="$RUNNER_TEMP/document-qa/node_modules" node --test tests/instructor_documents*.test.cjs

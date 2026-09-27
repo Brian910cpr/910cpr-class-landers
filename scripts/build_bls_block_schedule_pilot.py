@@ -7,6 +7,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
+from zoneinfo import ZoneInfo
 
 from scripts.block_start_time_selector import (
     ROOT,
@@ -15,6 +16,9 @@ from scripts.block_start_time_selector import (
     build_bls_pilot_schedule,
     load_block_schedule_page_configs,
 )
+from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
+from scripts.static_public_inventory_projection import render_from_schedule
+from scripts.family_course_art import asset_url, hero_markup
 
 
 REPORT_JSON_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
@@ -22,6 +26,8 @@ REPORT_MD_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot_report.md"
 HTML_PATH = ROOT / "docs" / "bls-schedule.html"
 COURSE_DESCRIPTIONS_PATH = ROOT / "data" / "content" / "course_descriptions.json"
 SELECTOR_AVAILABILITY_DIR = ROOT / "docs" / "data" / "block-selector-availability"
+PUBLIC_SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
+PUBLIC_TZ = ZoneInfo("America/New_York")
 
 
 def load_course_descriptions() -> dict[str, dict[str, Any]]:
@@ -38,6 +44,42 @@ def selector_availability_path(page_key: str) -> Path:
 
 
 def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    compact_dates: list[dict[str, Any]] = []
+    for day in payload.get("dates", []):
+        compact_slots: list[dict[str, Any]] = []
+        for slot in day.get("startTimes", []):
+            compact_courses: list[dict[str, Any]] = []
+            for course in slot.get("courses", []):
+                compact_course = {
+                    "courseId": course.get("courseId"),
+                    "courseName": course.get("courseName"),
+                    "courseFamily": course.get("courseFamily"),
+                    "deliveryMode": course.get("deliveryMode"),
+                    "displayStartTime": course.get("displayStartTime") or slot.get("displayStartTime"),
+                    "durationMinutes": course.get("durationMinutes"),
+                    "schedulerConsumptionMinutes": course.get("schedulerConsumptionMinutes"),
+                    "appointmentDayId": course.get("appointmentDayId"),
+                    "appointmentUrl": course.get("appointmentUrl"),
+                    "location": course.get("location"),
+                    "availabilityBlockId": course.get("availabilityBlockId"),
+                    "offerType": course.get("offerType") or "dynamic_appointment",
+                    "scheduleRole": course.get("scheduleRole") or course.get("schedule_role"),
+                    "date": day.get("date"),
+                    "startTime": slot.get("startTime"),
+                }
+                compact_courses.append({key: value for key, value in compact_course.items() if value not in (None, "")})
+            if compact_courses:
+                compact_slots.append({
+                    "startTime": slot.get("startTime"),
+                    "displayStartTime": slot.get("displayStartTime"),
+                    "courses": compact_courses,
+                })
+        if compact_slots:
+            compact_dates.append({
+                "date": day.get("date"),
+                "displayDate": day.get("displayDate"),
+                "startTimes": compact_slots,
+            })
     return {
         "schemaVersion": "selector-resolved-availability.v1",
         "generatedAt": payload.get("generatedAt"),
@@ -59,7 +101,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
         },
         "counts": payload.get("counts", {}),
         "liveAvailabilityGuard": payload.get("liveAvailabilityGuard", {}),
-        "dates": payload.get("dates", []),
+        "dates": compact_dates,
     }
 
 
@@ -228,25 +270,56 @@ def css() -> str:
     }
     .page-heading-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
-      gap: 24px;
-      align-items: center;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+      gap: 18px;
+      align-items: end;
     }
+    .family-hero-media {
+      justify-self: end;
+      align-self: end;
+      width: 100%;
+      max-width: 340px;
+      min-width: 0;
+      overflow: visible;
+    }
+    .family-hero-media img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 180px;
+      object-fit: contain;
+      object-position: right bottom;
+    }
+    .family-hero-media.is-character {
+      max-width: 420px;
+      margin-bottom: -24px;
+    }
+    .family-hero-media.is-character img {
+      height: 380px;
+      max-height: none;
+      filter: drop-shadow(0 10px 20px rgba(24, 33, 44, .16));
+    }
+    .supporting-info {
+      display: grid;
+      gap: 14px;
+      margin-top: 22px;
+    }
+    .supporting-info > :last-child { margin-bottom: 0; }
     .header-credential {
       display: grid;
-      grid-template-columns: 92px minmax(0, 1fr);
-      gap: 14px;
+      grid-template-columns: 52px minmax(0, 1fr);
+      gap: 10px;
       align-items: center;
-      padding: 14px 16px;
-      border: 2px solid #d71920;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #fff 0%, #fff7f7 100%);
-      box-shadow: 0 10px 24px rgba(120, 18, 22, .12);
+      padding: 10px 12px;
+      border: 1px solid #e6c7c9;
+      border-radius: 10px;
+      background: #fffafa;
+      box-shadow: none;
     }
     .header-credential img {
       display: block;
-      width: 92px;
-      max-height: 108px;
+      width: 52px;
+      max-height: 58px;
       object-fit: contain;
     }
     .header-credential strong {
@@ -275,7 +348,7 @@ def css() -> str:
       border-radius: 10px;
       background: var(--band);
       padding: 14px;
-      margin: 14px 0 0;
+      margin: 0;
     }
     .family-help-title {
       margin-bottom: 8px;
@@ -306,7 +379,7 @@ def css() -> str:
     .page-context {
       display: grid;
       gap: 12px;
-      margin: 0 0 18px;
+      margin: 0;
     }
     .page-note {
       border: 1px solid var(--line);
@@ -373,7 +446,7 @@ def css() -> str:
     }
     .rail-arrow {
       position: absolute;
-      top: 56px;
+      top: 44px;
       z-index: 2;
       display: inline-flex;
       align-items: center;
@@ -451,11 +524,11 @@ def css() -> str:
     }
     .course-card {
       display: grid;
-      grid-template-rows: 118px auto;
-      gap: 12px;
+      grid-template-rows: 88px auto;
+      gap: 10px;
       width: 100%;
       padding: 0;
-      min-height: 258px;
+      min-height: 220px;
       align-content: start;
       scroll-snap-align: start;
       overflow: hidden;
@@ -465,7 +538,7 @@ def css() -> str:
       align-items: center;
       justify-content: center;
       width: 100%;
-      min-height: 118px;
+      min-height: 88px;
       border-radius: 6px 6px 0 0;
       background: linear-gradient(135deg, #e8f2f8, #f8fbfd);
       overflow: hidden;
@@ -473,11 +546,14 @@ def css() -> str:
     .course-icon img {
       display: block;
       width: 100%;
-      height: 118px;
+      height: 88px;
       object-fit: contain;
       object-position: center;
       padding: 6px;
     }
+    .course-icon.has-agency-logo { gap: 14px; padding: 6px 12px; }
+    .course-icon.has-agency-logo img { width: auto; max-width: 45%; padding: 0; height: 76px; }
+    .course-icon.has-agency-logo .course-agency-logo { width: 76px; background: #fff; border-radius: 4px; padding: 4px; }
     .course-icon img.course-image-cover {
       object-fit: cover;
       padding: 0;
@@ -723,8 +799,70 @@ def css() -> str:
       color: var(--muted);
       background: var(--band);
     }
+    .stable-class-projection {
+      margin-top: 22px;
+      padding: 20px;
+      border: 1px solid #cddfec;
+      border-radius: 14px;
+      background: #f7fbfe;
+    }
+    .stable-class-kicker {
+      margin: 0 0 4px;
+      color: var(--accent-dark);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .stable-class-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .stable-class-item a {
+      display: grid;
+      gap: 3px;
+      height: 100%;
+      padding: 12px 14px;
+      border: 1px solid #dbe7ef;
+      border-radius: 10px;
+      background: #fff;
+      color: inherit;
+      text-decoration: none;
+    }
+    .stable-class-item a:hover, .stable-class-item a:focus-visible { border-color: var(--accent); }
+    .stable-class-item span { color: var(--muted); font-size: .9rem; }
+    .service-promise {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0;
+    }
+    .service-promise-item {
+      padding: 14px 16px;
+      border: 1px solid #cddfec;
+      border-radius: 12px;
+      background: #f7fbfe;
+    }
+    .service-promise-item strong { display: block; margin-bottom: 3px; color: var(--accent-dark); }
+    .service-promise-item span { color: var(--muted); font-size: .92rem; }
     @media (max-width: 820px) {
       .page-heading-row { grid-template-columns: 1fr; gap: 10px; }
+      .family-hero-media {
+        justify-self: center;
+        width: min(100%, 300px);
+        margin-top: -2px;
+      }
+      .family-hero-media img { max-height: 150px; object-position: center bottom; }
+      .family-hero-media.is-character {
+        width: min(76vw, 360px);
+        max-width: 360px;
+        margin-bottom: -14px;
+      }
+      .family-hero-media.is-character img { height: 280px; max-height: none; }
       .header-credential {
         grid-template-columns: 44px minmax(0, 1fr);
         gap: 8px;
@@ -738,6 +876,8 @@ def css() -> str:
       .header-credential p { margin-top: 2px; font-size: .72rem; line-height: 1.2; }
       .header-credential-eyebrow { margin-bottom: 1px; font-size: .58rem; }
       .selector-grid { grid-template-columns: 1fr; }
+      .stable-class-list { grid-template-columns: 1fr; }
+      .service-promise { grid-template-columns: 1fr; }
       .selector-grid > *,
       .selector-shell > * { min-width: 0; }
       header, main, .selector-brand-bar { padding: 14px 16px; }
@@ -782,10 +922,10 @@ def css() -> str:
       .rail-arrow {
         width: 38px;
         min-height: 48px;
-        top: 58px;
+        top: 46px;
       }
       .course-card {
-        min-height: 252px;
+        min-height: 218px;
       }
       .delivery-help-list {
         grid-template-columns: 1fr;
@@ -1004,6 +1144,30 @@ def render_html(payload: dict[str, Any]) -> str:
     ]
     unsupported_options_json = json.dumps(unsupported_options, ensure_ascii=False)
     counts = payload["counts"]
+    projection_course_ids = [
+        str(option.get("course_id") or "").strip()
+        for option in page_config.get("course_options", [])
+        if isinstance(option, dict) and str(option.get("course_id") or "").strip()
+    ]
+    stable_projection_html = (
+        render_from_schedule(
+            PUBLIC_SCHEDULE_PATH,
+            course_ids=projection_course_ids,
+            family=page_family,
+            now=datetime.now(PUBLIC_TZ),
+        )
+        if page_key in {"bls", "acls", "pals", "heartsaver"}
+        else ""
+    )
+    service_promise_html = (
+        """
+    <section class="service-promise" aria-label="Local scheduling and eCard service">
+      <div class="service-promise-item"><strong>Same-day eCards</strong><span>After successful completion and required course paperwork, 910CPR issues your eCard the same day.</span></div>
+      <div class="service-promise-item"><strong>Flexible Wilmington skills checks</strong><span>Daytime, evening, and overnight appointments may appear whenever the live calendar shows verified availability.</span></div>
+    </section>"""
+        if page_key in {"bls", "acls", "pals", "heartsaver"}
+        else ""
+    )
     configured_default_course = str(page_config.get("default_course_id") or "").strip()
     available_course_ids = {str(option.get("courseId") or "") for option in course_options}
     first_course = (
@@ -1075,6 +1239,10 @@ def render_html(payload: dict[str, Any]) -> str:
           {f'<p>{credential_body}</p>' if credential_body else ''}
         </div>
       </aside>"""
+    hero_image_html = hero_markup(page_config)
+    hero_script_url = asset_url("/assets/family-hero.js")
+    agency_logo_url = asset_url("/images/0aha.png") if page_config.get("certifying_body") == "AHA" else ""
+
     delivery_help_items = page_config.get("delivery_help")
     if not isinstance(delivery_help_items, list) or not delivery_help_items:
         seen_delivery_modes = []
@@ -1163,14 +1331,11 @@ def render_html(payload: dict[str, Any]) -> str:
   <link rel="stylesheet" href="/assets/interaction-motion.css">
   <style>{css()}</style>
   {commerce_schema_html}
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);}})(window,document,'script','dataLayer','GTM-PQS8DCBH');</script>
-  <!-- End Google Tag Manager -->
+  {GTM_HEAD_SNIPPET}
+  {ATTRIBUTION_SCRIPT_SNIPPET}
 </head>
 <body>
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
+  {GTM_NOSCRIPT_SNIPPET}
   <div class="selector-brand-bar">
     <a class="selector-brand-link" href="/index.html" aria-label="910CPR home">
       <img src="/images/logo.png" alt="910CPR logo" onerror="this.src='/images/910CPR_wave.jpg';this.onerror=null;">
@@ -1186,19 +1351,16 @@ def render_html(payload: dict[str, Any]) -> str:
         {f'<p class="page-subtitle">{subtitle}</p>' if subtitle else ''}
         <p class="muted">{intro}</p>
       </div>
-      {header_credential_html}
+      {hero_image_html}
     </div>
-    {delivery_help_html}
   </header>
   <main>
-    {context_html}
-    {unsupported_html}
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">
           <div>
-            <h2>Course</h2>
-            <p class="muted">Choose the course or delivery format first.</p>
+            <h2>Choose your class</h2>
+            <p class="muted">Pick the option you need, then choose a date and start time.</p>
           </div>
           <div class="option-tools">
             {show_all_toggle_html}
@@ -1228,7 +1390,16 @@ def render_html(payload: dict[str, Any]) -> str:
         </div>
       </div>
     </section>
+    {unsupported_html}
+    <section class="supporting-info" aria-label="Course details and credentials">
+      {context_html}
+      {delivery_help_html}
+      {service_promise_html}
+      {header_credential_html}
+    </section>
+    {stable_projection_html}
   </main>
+  <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
   <script>
@@ -1554,6 +1725,20 @@ def render_html(payload: dict[str, Any]) -> str:
       return days;
     }}
 
+    function appendAgencyLogo(icon) {{
+      const url = {json.dumps(agency_logo_url)};
+      if (!url) return;
+      icon.classList.add('has-agency-logo');
+      const logo = document.createElement('img');
+      logo.className = 'course-agency-logo';
+      logo.src = url;
+      logo.alt = 'American Heart Association';
+      logo.loading = 'lazy';
+      logo.width = 76;
+      logo.height = 76;
+      icon.appendChild(logo);
+    }}
+
     function renderCourseOptions() {{
       const host = byId('course-option-list');
       host.innerHTML = '';
@@ -1575,6 +1760,7 @@ def render_html(payload: dict[str, Any]) -> str:
           image.alt = courses[0].familyLabel || courses[0].courseName;
           image.loading = 'lazy';
           icon.appendChild(image);
+          appendAgencyLogo(icon);
           const heading = document.createElement('h3');
           heading.textContent = courses[0].familyLabel || courses[0].courseName;
           const choices = document.createElement('div');
@@ -1631,6 +1817,7 @@ def render_html(payload: dict[str, Any]) -> str:
           fallback.setAttribute('aria-hidden', 'true');
           icon.appendChild(fallback);
         }}
+        appendAgencyLogo(icon);
         const copy = document.createElement('span');
         copy.className = 'course-copy';
         const title = document.createElement('span');

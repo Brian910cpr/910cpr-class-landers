@@ -5,18 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Request On-Site Group Training | 910CPR</title>
 <meta name="description" content="Request on-site BLS, HeartCode BLS, First Aid/CPR/AED, ACLS, PALS, or USCG group training.">
-<meta name="robots" content="index,follow">
+<meta name="robots" content="noindex,follow">
 
 <link rel="stylesheet" href="/css/lander.css">
 <!-- Google Tag Manager -->
 <script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+(function(w,d,s,l,i,m){
+var internal=/^\/(admin|control-center|internal|drafts|analytics-preferences)(\/|$)/.test(w.location.pathname);
+var excluded=new RegExp('(?:^|;\\s*)(?:lw_analytics_excluded|analytics_excluded)=1(?:;|$)').test(d.cookie);
+if(internal||excluded){m.split(',').forEach(function(id){w['ga-disable-'+id]=true;});return;}
+w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-PQS8DCBH');
+})(window,document,'script','dataLayer','GTM-PQS8DCBH','G-45PBWBK7KR,G-SL0HBP3RV5');
 </script>
 <!-- End Google Tag Manager -->
+<script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
 <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
 <script src="/assets/site-theme.js"></script>
 </head>
@@ -62,7 +67,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class='tabs hub-tabs request-tabs'>
       <button class='tab-btn request-tab-btn active' data-program='BLS On-Site' data-tab-target='#bls' type='button'><img class='request-tab-image' src='/images/25-bls-new.png' alt='BLS on-site training' loading='lazy' onerror="this.style.display='none'"><span class='request-tab-label'>BLS On-Site</span></button><button class='tab-btn request-tab-btn' data-program='HeartCode BLS Group Skills' data-tab-target='#heartcode' type='button'><img class='request-tab-image' src='/images/hc_b.png' alt='HeartCode BLS skills testing' loading='lazy' onerror="this.style.display='none'"><span class='request-tab-label'>HeartCode BLS Group Skills</span></button><button class='tab-btn request-tab-btn' data-program='First Aid / CPR / AED' data-tab-target='#fa_cpr_aed' type='button'><img class='request-tab-image' src='/images/heartsaver_general.png' alt='Heartsaver on-site training' loading='lazy' onerror="this.style.display='none'"><span class='request-tab-label'>First Aid / CPR / AED</span></button><button class='tab-btn request-tab-btn' data-program='ACLS' data-tab-target='#acls' type='button'><img class='request-tab-image' src='/images/25-acls-new.png' alt='ACLS on-site training' loading='lazy' onerror="this.style.display='none'"><span class='request-tab-label'>ACLS</span></button><button class='tab-btn request-tab-btn' data-program='PALS' data-tab-target='#pals' type='button'><img class='request-tab-image' src='/images/25-pals-new.png' alt='PALS on-site training' loading='lazy' onerror="this.style.display='none'"><span class='request-tab-label'>PALS</span></button><button class='tab-btn request-tab-btn' data-program='USCG Elementary First Aid | CPR' data-tab-target='#uscg' type='button'><img class='request-tab-image' src='/images/stripes.png' alt='USCG maritime training' loading='lazy' onerror="this.style.display='none'"><span class='request-tab-label'>USCG Elementary First Aid | CPR</span></button>
     </div>
-    <section class='tab-panel active' id='bls'><div class='request-program-card'><h2>BLS On-Site</h2><p>American Heart Association BLS Provider training delivered at your location. Ideal for healthcare offices, dental teams, clinics, and medical groups.</p><ul><li><strong>$700 for up to 12 participants</strong></li><li>We come to your location</li><li>Flexible scheduling</li><li>Approximately 2.5 hours</li></ul></div></section><section class='tab-panel' id='heartcode'><div class='request-program-card'><h2>HeartCode BLS Group Skills</h2><p>Blended package for offices that want online coursework plus a private on-site skills session.</p><ul><li><strong>$999 for up to 12 participants</strong></li><li>Includes HeartCode access and group skills testing</li><li>Completion certificates must be completed before the in-person session</li></ul></div></section><section class='tab-panel' id='fa_cpr_aed'><div class='request-program-card'><h2>First Aid / CPR / AED</h2><p>Workplace-friendly group training for offices, schools, churches, and general workplace responders.</p><ul><li><strong>$400 + $35 per participant</strong> (up to 20)</li><li>Delivered at your location</li><li>Approximately 2.25 hours depending on program body</li></ul></div></section><section class='tab-panel' id='acls'><div class='request-program-card'><h2>ACLS</h2><p>Advanced Cardiac Life Support group options for clinical teams. Best handled as a custom quote based on provider count, experience level, and desired format.</p></div></section><section class='tab-panel' id='pals'><div class='request-program-card'><h2>PALS</h2><p>Pediatric Advanced Life Support group options for teams caring for infants and children. Custom scheduling available for appropriate groups.</p></div></section><section class='tab-panel' id='uscg'><div class='request-program-card'><h2>USCG Elementary First Aid | CPR</h2><p>Maritime-focused training options for teams needing USCG-aligned certification. Request details and preferred scheduling window below.</p></div></section>
+    <section data-keep-empty-tab='true' class='tab-panel active' id='bls'><div class='request-program-card'><h2>BLS On-Site</h2><p>American Heart Association BLS Provider training delivered at your location. Ideal for healthcare offices, dental teams, clinics, and medical groups.</p><ul><li><strong>$700 for up to 12 participants</strong></li><li>We come to your location</li><li>Flexible scheduling</li><li>Approximately 2.5 hours</li></ul></div></section><section data-keep-empty-tab='true' class='tab-panel' id='heartcode'><div class='request-program-card'><h2>HeartCode BLS Group Skills</h2><p>Blended package for offices that want online coursework plus a private on-site skills session.</p><ul><li><strong>$999 for up to 12 participants</strong></li><li>Includes HeartCode access and group skills testing</li><li>Completion certificates must be completed before the in-person session</li></ul></div></section><section data-keep-empty-tab='true' class='tab-panel' id='fa_cpr_aed'><div class='request-program-card'><h2>First Aid / CPR / AED</h2><p>Workplace-friendly group training for offices, schools, churches, and general workplace responders.</p><ul><li><strong>$400 + $35 per participant</strong> (up to 20)</li><li>Delivered at your location</li><li>Approximately 2.25 hours depending on program body</li></ul></div></section><section data-keep-empty-tab='true' class='tab-panel' id='acls'><div class='request-program-card'><h2>ACLS</h2><p>Advanced Cardiac Life Support group options for clinical teams. Best handled as a custom quote based on provider count, experience level, and desired format.</p></div></section><section data-keep-empty-tab='true' class='tab-panel' id='pals'><div class='request-program-card'><h2>PALS</h2><p>Pediatric Advanced Life Support group options for teams caring for infants and children. Custom scheduling available for appropriate groups.</p></div></section><section data-keep-empty-tab='true' class='tab-panel' id='uscg'><div class='request-program-card'><h2>USCG Elementary First Aid | CPR</h2><p>Maritime-focused training options for teams needing USCG-aligned certification. Request details and preferred scheduling window below.</p></div></section>
   </section>
 
   <section class='request-form-grid'>
@@ -74,7 +79,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <p class='muted'>Share the basics below and we’ll follow up with the best scheduling path for your team.</p>
       </div>
-      <form method='post' action='#'>
+      <form data-group-request>
+        <label hidden aria-hidden='true'>Website<input name='companyWebsite' tabindex='-1' autocomplete='off'></label>
         <input id='request_type' type='hidden' name='request_type' value='group'>
         <div class='grid-2'>
           <label class='field'><span>Name</span><input type='text' name='name' autocomplete='name' required></label>
@@ -91,9 +97,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <textarea name='comments' placeholder='We have 12 for BLS, and 4 who need ACLS too.&#10;Any Thursday in May could work.&#10;Morning is better than afternoon.&#10;We may need training at our office in Morehead City.&#10;Some staff need Heartsaver, others need BLS.&#10;We already have AHA online completed, just need skills testing.'></textarea>
         </label>
         <div class='request-submit-row'>
-          <button class='button primary' type='submit'>Send Request</button>
+          <button class='button primary' type='submit' disabled>Send Request</button>
           <a class='button secondary' href='/index.html'>Compare individual seat options</a>
         </div>
+        <p id='group-request-status' role='status' aria-live='polite'></p>
+        <p>Need help? <a href='tel:9103955193'>Call 910-395-5193</a> or <a href='mailto:info@910cpr.com'>email info@910cpr.com</a>.</p>
+        <noscript>Online requests need JavaScript. Please call or email us.</noscript>
       </form>
     </section>
 
@@ -112,6 +121,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </aside>
   </section>
 </div>
+<script defer src='/assets/group-request.js?v=20260913-1'></script>
 <script>
 (function () {
   var params = new URLSearchParams(window.location.search);

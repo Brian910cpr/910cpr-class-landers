@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="color-scheme" content="dark">
+  <title>NOW | LanderWare</title>
+  <link rel="stylesheet" href="/admin/now.css?v=20260923-2">
+  <script defer src="/admin/admin-auth.js?v=20260914-session1"></script>
+  <script defer src="/admin/admin-nav.js?v=20260914-session1"></script>
+  <script defer src="/admin/now.js?v=20260923-2"></script>
+  <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
+  <script defer src="/assets/site-theme.js"></script>
+<link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
+<script src="/assets/site-theme.js"></script>
+<link rel="stylesheet" href="/admin/now-class-focus.css?v=20260923-1">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/admin/dashboard.html"><span class="brand-mark">LW</span><span>LANDERWARE <b>NOW</b></span></a>
+    <div class="today"><span id="date"></span><strong id="clock"></strong><span class="tz">ET</span></div>
+    <div class="controls"><button id="refresh" type="button">↻ Refresh</button><button id="fullscreen" type="button">Full screen</button><button id="lock" type="button">Sign out</button></div>
+  </header>
+  <div class="statusbar" role="status"><span id="connection">Connecting to LanderWare…</span><span id="updated">No successful read yet</span></div>
+  <main class="dashboard" id="dashboard" inert>
+    <section class="overview" aria-label="At a glance">
+      <button class="metric" data-view="schedule"><span>Next 7 days</span><strong id="class-count">—</strong><small>See upcoming classes ↓</small></button>
+      <button class="metric" data-queue="ecards"><span>Card check</span><strong id="ecard-count">—</strong><small>classes with missing linked evidence ↗</small></button>
+      <button class="metric" data-queue="products"><span>eProducts</span><strong id="product-count">—</strong><small>people in the recorded queue ↗</small></button>
+      <button class="metric" data-view="handoffs"><span>Handoffs</span><strong id="handoff-count">—</strong><small>unread reply files ↗</small></button>
+    </section>
+    <section class="priority panel">
+      <div class="section-head"><div><span class="eyebrow">ONLY VERIFIED HUMAN STEPS</span><h1>Do this, Brian</h1></div><button id="show-snoozed" class="subtle">Snoozed <span id="snooze-count">0</span></button></div>
+      <div id="prompts" class="prompts"></div>
+    </section>
+    <section class="schedule panel" id="schedule-panel">
+      <div class="section-head"><div><span class="eyebrow">CLASS RECORDS</span><h2>Coming up</h2></div><a href="/admin/all-classes.html">Full calendar ↗</a></div>
+      <div id="next-classes"></div><div id="class-focus" class="class-focus" hidden aria-live="polite"></div><p class="micro">Select a class for names and details here. Permanent records for the next seven days; external calendar coverage is separate.</p>
+    </section>
+    <section class="activity panel" id="handoffs-panel">
+      <div class="section-head"><div><span class="eyebrow">FILE MAILBOX</span><h2>Work in motion</h2></div><a href="/admin/production.html">Board ↗</a></div>
+      <div id="agent-work"></div><div id="feed-status" class="feed-status">Reading handoff files…</div><div id="feed" class="feed"></div>
+    </section>
+    <section class="evidence panel">
+      <div class="section-head"><div><span class="eyebrow">SOURCE EVIDENCE</span><h2>What the files say</h2></div><span id="report-summary" class="pill">Checking</span></div>
+      <div id="sources"></div><details><summary>Inspect report files and freshness</summary><div id="reports" class="reports"></div></details>
+      <details><summary>Money window <span id="cash-state" class="pill">Unverified</span></summary><div id="cash"></div></details>
+    </section>
+  </main>
+  <footer><a href="/admin/dashboard.html">Operations ↗</a><a href="/admin/production.html">Production ↗</a><a href="/admin/financial.html">Financial ↗</a><span id="heartbeat">Waiting for first read</span></footer>
+  <dialog id="detail"><div class="detail-head"><h2 id="detail-title"></h2><button id="close-detail" aria-label="Close details">✕</button></div><div id="detail-body"></div></dialog>
+  <div id="toast" role="status" hidden></div>
+</body>
+</html>

@@ -15,6 +15,7 @@ from scripts.build_course_landers import COURSE_SESSION_ALIASES, TITLE_OVERRIDES
 from scripts.stale_class_link_fallbacks import infer_current_public_destination
 from scripts.public_class_eligibility import session_has_public_class_location
 from supervisor.status_snapshot import write_status_snapshot
+from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -74,17 +75,7 @@ STALE_CLASS_INDEX_FALLBACK_DESTINATIONS = {
 # ---------------------------------------------------------------------
 
 def render_gtm_head() -> str:
-    if not GTM_ID:
-        return ""
-    return f"""<!-- Google Tag Manager -->
-<script>
-(function(w,d,s,l,i){{w[l]=w[l]||[];w[l].push({{'gtm.start':
-new Date().getTime(),event:'gtm.js'}});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-}})(window,document,'script','dataLayer','{GTM_ID}');
-</script>
-<!-- End Google Tag Manager -->"""
+    return GTM_HEAD_SNIPPET + "\n" + ATTRIBUTION_SCRIPT_SNIPPET
 
 
 def strip_html(value: str) -> str:
@@ -149,12 +140,7 @@ def contain_stale_class_index_links() -> dict[str, int]:
 
 
 def render_gtm_body() -> str:
-    if not GTM_ID:
-        return ""
-    return f"""<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id={GTM_ID}"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->"""
+    return GTM_NOSCRIPT_SNIPPET
 
 
 def telemetry_script(page_type: str, page_name: str) -> str:
@@ -1754,7 +1740,7 @@ def render_homepage() -> str:
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="shortcut icon" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
-<link rel="stylesheet" href="/css/lander.css?v=20260719-home-authority">
+<link rel="stylesheet" href="/css/lander.css?v=20260926-home-mobile-tiles">
 {render_gtm_head()}
 <script type="application/ld+json">
 {json.dumps({
@@ -1825,8 +1811,8 @@ def render_homepage() -> str:
       <section class="hero home-hero">
         <div class="hero-main">
           <div class="eyebrow home-hero-links" aria-label="Local service area">Wilmington · Jacksonville · Holly Ridge · Leland · Coastal North Carolina</div>
-          <h1>Find the right CPR class—without guessing</h1>
-          <p class="subhead">New to certification? Start with the wording from your employer or school. Already know exactly what you need? Go straight to BLS, ACLS, PALS, First Aid, CPR/AED, Red Cross, HSI, or maritime options below.</p>
+          <h1>Find your CPR class</h1>
+          <p class="subhead">Select the course your employer or school requires.</p>
         </div>
       </section>
 
@@ -1835,7 +1821,7 @@ def render_homepage() -> str:
           <div>
             <h2>Choose your class to see dates</h2>
           </div>
-          <p class="section-copy">Choose the credential name you were given. You’ll see the appropriate classroom, renewal, or online-plus-skills options before selecting a date.</p>
+          <p class="section-copy">Select your course to view class options and dates.</p>
         </div>
 
         <div class="finder-grid" data-home-sections>

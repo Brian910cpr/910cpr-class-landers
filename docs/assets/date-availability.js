@@ -20,7 +20,7 @@
       registration_type: registration ? (link.dataset.anchor === "true" ? "seated_class" : "appointment") : "",
       destination_host: link.href ? new URL(link.href, location.href).host : ""
     });
-    if (registration) push("begin_registration", {
+    if (registration && link.dataset.attributionBeginRegistration !== "1") push("begin_registration", {
       is_anchor: link.dataset.anchor === "true",
       registration_type: link.dataset.anchor === "true" ? "seated_class" : "appointment"
     });

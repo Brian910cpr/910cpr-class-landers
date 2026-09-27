@@ -63,8 +63,8 @@ test("admin authentication uses an on-page unlock control instead of a password 
   assert.match(html, /id="adminForgetBtn"/);
   assert.doesNotMatch(html, /prompt\(['"]HOT_SYNC admin key/);
   assert.doesNotMatch(operations, /prompt\(['"]LanderWare admin key/);
-  assert.match(operations, /sessionStorage\.setItem\("hotSyncAdminKey", key\)/);
-  assert.match(operations, /sessionStorage\.removeItem\("hotSyncAdminKey"\)/);
+  assert.match(operations, /LanderWareAdminAuth\.set\( key\)/);
+  assert.match(operations, /LanderWareAdminAuth\.clear\(\)/);
 });
 
 test("new HOT_SYNC records POST even after a client ID is generated", () => {

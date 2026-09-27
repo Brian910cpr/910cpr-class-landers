@@ -1714,6 +1714,7 @@ a {
 
 .home-finder {
   padding: 26px 28px 28px;
+  scroll-margin-top: 12px;
 }
 
 .section-heading {
@@ -4194,27 +4195,44 @@ textarea {
 
 @media (max-width: 700px) {
   .home-authority {
-    order: 1;
+    order: 3;
     margin: 6px 14px 0;
     padding: 12px;
   }
 
   .home-hero {
     display: block;
-    order: 2;
-    padding: 18px 18px 4px;
+    order: 1;
+    padding: 12px 18px 0;
   }
 
   .home-finder {
-    order: 3;
+    order: 2;
+    padding-top: 12px;
+  }
+
+  .home-finder .section-heading {
+    display: none;
   }
 
   .top-trust {
     order: 4;
   }
 
-  .home-locality {
+  .home-faq {
     order: 5;
+  }
+
+  .home-locality {
+    order: 6;
+  }
+
+  .home-hero .home-hero-links {
+    display: none;
+  }
+
+  .home-hero .subhead {
+    margin-bottom: 0;
   }
 }
 
@@ -4260,3 +4278,23 @@ textarea {
   color: #174f2b;
 }
 .anchor-class-banner strong { font-size: 1.05rem; }
+
+/* Group training uses request cards, not the dated session and sidebar grids. */
+.group-training-page .slug-hero { grid-template-columns: minmax(0, 1fr); }
+.group-training-page .slug-hero .hero-side { display: none; }
+.group-training-page .hub-tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.group-training-page .hub-tabs .tab-btn { min-width: 0; width: 100%; }
+.group-training-page .slug-group-request-pill { grid-template-columns: minmax(0, 1fr) auto; }
+.group-training-page .slug-group-request-pill .slug-pill-actions { justify-content: flex-end; }
+.group-training-page .group-training-request-grid { grid-template-columns: minmax(0, 1fr); }
+
+@media (max-width: 850px) {
+  .group-training-page .hub-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .group-training-page .slug-group-request-pill { grid-template-columns: minmax(0, 1fr); }
+  .group-training-page .slug-group-request-pill .slug-pill-actions { justify-content: stretch; }
+}
+@media (max-width: 500px) {
+  .group-training-page .hub-tabs { grid-template-columns: minmax(0, 1fr); }
+}

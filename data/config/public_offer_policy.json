@@ -39,8 +39,8 @@
   ],
   "dynamic_public_start_time_window": {
     "enabled": true,
-    "earliest_start": "08:00",
-    "latest_start": "19:00",
+    "earliest_start": "00:00",
+    "latest_start": "23:45",
     "timezone": "America/New_York"
   },
   "minimum_lead_hours": 24,
@@ -58,5 +58,5 @@
   "hide_manual_only": true,
   "hide_low_capacity_offers": false,
   "require_confirmed_appointment_container": true,
-  "notes": "ARC dynamic offers are approved only for course IDs 248288, 372258, and 369209 on the shared ARC selector board. HSI and USCG remain disabled unless Brian explicitly approves them."
+  "notes": "Public starts may use any quarter-hour across the full day. Overnight starts do not bypass availability, class occupancy, school, ADR/travel buffers, personal calendar blocks, lead time, duration fit, or fail-closed safeguards. ARC dynamic offers are approved only for course IDs 248288, 372258, and 369209 on the shared ARC selector board. HSI and USCG remain disabled unless Brian explicitly approves them."
 }

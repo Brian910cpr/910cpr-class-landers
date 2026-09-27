@@ -1,0 +1,159 @@
+{
+  "verified_at": "2026-09-25T02:10:38.608298+00:00",
+  "base_url": "https://www.910cpr.com",
+  "checks": [
+    {
+      "path": "docs/bls.html",
+      "url": "https://www.910cpr.com/bls.html",
+      "status": 200,
+      "bytes": 72261,
+      "sha256": "9e39c52518dbf059764aa1c4abd94baa678798ed8e75cbbc364be3f1aa2cc3da",
+      "matches_local": true
+    },
+    {
+      "path": "docs/BLS.html",
+      "url": "https://www.910cpr.com/BLS.html",
+      "status": 200,
+      "bytes": 72261,
+      "sha256": "9e39c52518dbf059764aa1c4abd94baa678798ed8e75cbbc364be3f1aa2cc3da",
+      "matches_local": true
+    },
+    {
+      "path": "docs/acls.html",
+      "url": "https://www.910cpr.com/acls.html",
+      "status": 200,
+      "bytes": 73692,
+      "sha256": "8fdc7e981bb9cef19beb83fc9e33ac8ff29b9fd894dd22b558b894006d92c47c",
+      "matches_local": true
+    },
+    {
+      "path": "docs/ACLS.html",
+      "url": "https://www.910cpr.com/ACLS.html",
+      "status": 200,
+      "bytes": 73692,
+      "sha256": "8fdc7e981bb9cef19beb83fc9e33ac8ff29b9fd894dd22b558b894006d92c47c",
+      "matches_local": true
+    },
+    {
+      "path": "docs/pals.html",
+      "url": "https://www.910cpr.com/pals.html",
+      "status": 200,
+      "bytes": 72297,
+      "sha256": "4591f859809bbae5683dcbb99bf566e86efe9155da311ba2c8692ff7746a1d4d",
+      "matches_local": true
+    },
+    {
+      "path": "docs/PALS.html",
+      "url": "https://www.910cpr.com/PALS.html",
+      "status": 200,
+      "bytes": 72297,
+      "sha256": "4591f859809bbae5683dcbb99bf566e86efe9155da311ba2c8692ff7746a1d4d",
+      "matches_local": true
+    },
+    {
+      "path": "docs/heartsaver.html",
+      "url": "https://www.910cpr.com/heartsaver.html",
+      "status": 200,
+      "bytes": 78562,
+      "sha256": "92ce60f53ead20c778d8ef82dbcb67aed014e7030ec5bb39f704d1a6796226a2",
+      "matches_local": true
+    },
+    {
+      "path": "docs/HEARTSAVER.html",
+      "url": "https://www.910cpr.com/HEARTSAVER.html",
+      "status": 200,
+      "bytes": 78562,
+      "sha256": "92ce60f53ead20c778d8ef82dbcb67aed014e7030ec5bb39f704d1a6796226a2",
+      "matches_local": true
+    },
+    {
+      "path": "docs/family-cpr.html",
+      "url": "https://www.910cpr.com/family-cpr.html",
+      "status": 200,
+      "bytes": 64435,
+      "sha256": "2c4db6f403a7d5b81131778466e820e1b811592e0191e93151518a4e8140a0c4",
+      "matches_local": true
+    },
+    {
+      "path": "docs/assets/family-hero.js",
+      "url": "https://www.910cpr.com/assets/family-hero.js?v=6d88341997f7",
+      "status": 200,
+      "bytes": 1232,
+      "sha256": "6d88341997f7b0b1c857aec62aefb441b923bd83e0e893630718881866c1e4d7",
+      "matches_local": true
+    },
+    {
+      "path": "docs/images/0aha.png",
+      "url": "https://www.910cpr.com/images/0aha.png?v=85e7b1aed907",
+      "status": 200,
+      "bytes": 11782,
+      "sha256": "85e7b1aed9072cde9d784bc9d450d4d85c8e34582b0660c0d94a0eb7c3be3b12",
+      "matches_local": true
+    },
+    {
+      "path": "docs/images/characters/ACLS-1-480.webp",
+      "url": "https://www.910cpr.com/images/characters/ACLS-1-480.webp?v=73a72e4cd8c4",
+      "status": 200,
+      "bytes": 92348,
+      "sha256": "73a72e4cd8c4f84d229773227c650666536ef1cdfb4edfd3cd1d38d3231f4a59",
+      "matches_local": true
+    },
+    {
+      "path": "docs/images/characters/ACLS-1.webp",
+      "url": "https://www.910cpr.com/images/characters/ACLS-1.webp?v=316d0b3a38fd",
+      "status": 200,
+      "bytes": 263278,
+      "sha256": "316d0b3a38fddd7591e8928aeb51eaf3dea91ec13b290a8ba510b6e6d5c23fc5",
+      "matches_local": true
+    },
+    {
+      "path": "docs/images/characters/ACLS-2-480.webp",
+      "url": "https://www.910cpr.com/images/characters/ACLS-2-480.webp?v=a0a2f2f60913",
+      "status": 200,
+      "bytes": 94508,
+      "sha256": "a0a2f2f6091398ed8a7ad14c30cc99f56c4aff2606f0a59717a015fd160c0de4",
+      "matches_local": true
+    },
+    {
+      "path": "docs/images/characters/ACLS-2.webp",
+      "url": "https://www.910cpr.com/images/characters/ACLS-2.webp?v=c50647615ba2",
+      "status": 200,
+      "bytes": 276754,
+      "sha256": "c50647615ba25e683a041f1104b9313b2c74f04e2081fbe8df8a36af5ef98dfd",
+      "matches_local": true
+    },
+    {
+      "path": "docs/images/characters/ACLS-3-480.webp",
+      "url": "https://www.910cpr.com/images/characters/ACLS-3-480.webp?v=a03e9bebb375",
+      "status": 200,
+      "bytes": 46468,
+      "sha256": "a03e9bebb375c1bed82f4c6c79684ccb28203e811da407cb5373f728843e8d0d",
+      "matches_local": true
+    },
+    {
+      "path": "docs/images/characters/ACLS-3.webp",
+      "url": "https://www.910cpr.com/images/characters/ACLS-3.webp?v=d6fd96bf5b35",
+      "status": 200,
+      "bytes": 125358,
+      "sha256": "d6fd96bf5b35d4ca50250f9ebf3c6b1409ea3530e7a9999f00ae3b7beb8bfe3c",
+      "matches_local": true
+    },
+    {
+      "path": "docs/images/characters/BLS-1-480.webp",
+      "url": "https://www.910cpr.com/images/characters/BLS-1-480.webp?v=0151cb601137",
+      "status": 200,
+      "bytes": 56292,
+      "sha256": "0151cb6011371b762c1d52d2ee5576a5f76a5a33722d204c1659ab6fe05c2e44",
+      "matches_local": true
+    },
+    {
+      "path": "docs/images/characters/BLS-1.webp",
+      "url": "https://www.910cpr.com/images/characters/BLS-1.webp?v=a48708e29627",
+      "status": 200,
+      "bytes": 165834,
+      "sha256": "a48708e29627ef7be1ac2fa5da2ce9bbe34cc8c79f7c75c1d9c26ad86921d60c",
+      "matches_local": true
+    }
+  ],
+  "all_match": true
+}

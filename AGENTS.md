@@ -1,5 +1,24 @@
 # 910CPR Lander System Rules
 
+## Mandatory LanderWare Design Ethos
+
+Before designing or implementing any significant LanderWare feature, workflow, data model, migration, or replacement of an incumbent training-business capability, read and follow `LANDERWARE_DESIGN_ETHOS.md`.
+
+This is a standing design gate, not optional background reading.
+
+In particular:
+
+* LanderWare is the intended durable operating system for 910CPR. Enrollware is a migration source, incumbent reference architecture, and temporary dependency, not the long-term design center.
+* Before inventing a new training-business workflow, investigate how Enrollware or another mature platform solves the same operational problem and ask why that design evolved that way.
+* Do not copy incumbent behavior blindly, but do not get creative without understanding the hard-earned business/compliance/operational lesson being replaced.
+* Prefer canonical reusable objects and explicit relationships over copied page-local state.
+* Model lifecycle transitions and provenance rather than only the final snapshot.
+* Every relied-upon Enrollware capability must ultimately become a native LanderWare replacement, a deliberately chosen cheaper/better external service, or an explicitly retired capability.
+* Every significant implementation should make clear whether it moves LanderWare toward or away from Enrollware independence.
+* Replacement is proven only at the real operational/customer-facing surface.
+
+When a design materially differs from the mature incumbent pattern, record the specific 910CPR advantage or limitation being addressed. Architectural novelty by itself is not a reason.
+
 ## Authoritative Inputs
 
 Primary schedule source:
@@ -187,3 +206,19 @@ For every persistent or operational system, read and follow `LANDERWARE_PROOF_AN
 - A monitor that nobody monitors is not sufficient.
 - Brian must not be the routine monitoring layer. If a system still depends on him remembering to check it, carry messages, or discover that it stopped, report that dependency explicitly and do not describe the system as fully healthy.
 - Answer operational health questions from current evidence when practical, not from recollection that the feature was previously built.
+
+## Mandatory Local-First and Credit-Conservation Doctrine
+
+Treat this section as a standing preface to every Codex assignment for this repository.
+
+- Preserve ChatGPT/Codex capacity for business-critical LanderWare operation. Do not spend high-cost reasoning on deterministic work that can be performed locally or by ordinary scripts.
+- When CyberPC or another authorized local workspace is available, prefer it for repository scans, search/replace, code generation from deterministic templates, bulk file processing, builds, test loops, link scans, static analysis, formatting, and other repeatable computation.
+- Use Codex/model reasoning for architecture, diagnosis, ambiguous implementation choices, code review, and the smallest changes that actually require judgment.
+- Prefer one well-scoped implementation pass plus targeted verification over repeated conversational back-and-forth, repeated full-repo inspection, or repeated regeneration.
+- Cache and reuse prior findings, audit artifacts, test results, and source maps when they are still current. Do not re-discover the same repository facts in each round.
+- Batch related read-only checks and tests when safe. Avoid many tiny status-only turns or receipts that consume model effort without changing evidence.
+- Before starting an expensive broad analysis, ask whether a local script, existing debug artifact, repository index, or narrow test can answer the question more cheaply.
+- If the assignment can be completed locally and safely without model reasoning, do that first and return only the result, diff, and proof needed for review.
+- If remaining model/credit headroom cannot be observed directly, do not assume unlimited capacity. Favor short bounded work units and stop nonessential Codex conversation before business-critical ChatGPT/LanderWare use is at risk.
+- Production failures, customer-facing defects, scheduling correctness, registrations, credentials, payments, and owner access outrank exploratory refactors, cosmetic cleanup, and low-value status chatter.
+- Do not continue burning model effort merely because a heartbeat fired. A heartbeat checks state; it does not require new reasoning work when nothing materially changed.

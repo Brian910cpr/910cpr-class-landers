@@ -13,7 +13,8 @@ class GrowthSeoSurfaceTests(unittest.TestCase):
     def test_homepage_keeps_direct_course_finder_and_adds_local_search_context(self):
         html = build_index_and_sitemap.render_homepage()
         self.assertIn("CPR, BLS, ACLS &amp; First Aid Classes in Wilmington, NC | 910CPR", html)
-        self.assertIn("Find the right CPR class—without guessing", html)
+        self.assertIn("Find your CPR class", html)
+        self.assertNotIn('class="button primary home-hero-cta"', html)
         self.assertIn('id="class-finder"', html)
         self.assertIn('"@type": "LocalBusiness"', html)
         self.assertIn('"@type": "FAQPage"', html)
@@ -38,6 +39,16 @@ class GrowthSeoSurfaceTests(unittest.TestCase):
         self.assertIn("Schools and childcare", html)
         self.assertIn("Workplaces and hospitality", html)
         self.assertIn("Wilmington and Coastal North Carolina", html)
+        self.assertIn('id="request-form"', html)
+        self.assertIn('data-group-request', html)
+        self.assertIn('data-sync-program="#program"', html)
+        self.assertIn('href="#request-form"', html)
+
+    def test_group_legacy_alias_consolidates_search_authority(self):
+        html = build_slug_hubs.render_group_legacy_alias()
+        self.assertIn('content="noindex,follow"', html)
+        self.assertIn('rel="canonical" href="https://www.910cpr.com/group-training.html"', html)
+        self.assertIn('/group-training.html#request-form', html)
 
     def test_llms_file_points_to_canonical_course_pages(self):
         text = (ROOT / "docs" / "llms.txt").read_text(encoding="utf-8")
