@@ -100,6 +100,22 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
         self.assertEqual(result["session_id"], "51239")
         self.assertEqual(result["start_at"], "2026-08-05T13:00:00-04:00")
 
+    def test_pm_anchor_keeps_selector_machine_clock_and_display_label(self):
+        anchors = promote_seated_sessions([self.sessions[1]])
+        offer = {"courseId":"210549", "date":"2026-08-05", "startTime":"13:00",
+                 "displayStartTime":"1:00 PM", "courseName":"HeartCode",
+                 "location":":: Wilmington; Shipyard Blvd - B", "appointmentUrl":"https://example.test/classes/51239"}
+        payload = {"dates":[{"date":"2026-08-05", "startTimes":[{"startTime":"13:00",
+                   "displayStartTime":"1:00 PM", "courses":[offer]}]}], "counts":{}}
+        result = apply_selector_policy(payload, anchors, {})
+        slot = result["dates"][0]["startTimes"][0]
+        self.assertEqual(slot["startTime"], "13:00")
+        self.assertEqual(slot["displayStartTime"], "1:00 PM")
+        self.assertEqual(slot["courses"][0]["startTime"], "13:00")
+        self.assertEqual(slot["courses"][0]["appointmentUrl"], "https://example.test/classes/51239")
+        repeated = apply_selector_policy(result, anchors, {})
+        self.assertEqual(repeated["dates"], result["dates"])
+
     def test_one_barnacle_each_direction_no_recursion_and_outside_returns(self):
         anchors = promote_seated_sessions([self.sessions[0]])
         starts = ["04:30", "05:30", "07:30", "09:00", "09:30", "10:00", "11:30", "13:30", "14:00"]
@@ -182,7 +198,7 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
         result = apply_selector_policy(payload, anchors, policy)
         rendered = [course for day in result["dates"] for slot in day["startTimes"] for course in slot["courses"]]
         starts = {item["startTime"] for item in rendered}
-        self.assertEqual(starts, {"01:00", "10:45 AM", "13:15", "19:00"})
+        self.assertEqual(starts, {"01:00", "10:45", "13:15", "19:00"})
         self.assertEqual(sum(item.get("schedule_role") == "anchor" for item in rendered), 1)
         self.assertNotIn("barnacle", {item.get("schedule_role") for item in rendered})
 
