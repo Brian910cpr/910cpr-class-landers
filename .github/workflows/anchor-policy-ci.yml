@@ -16,6 +16,7 @@ on:
       - 'scripts/*canonical_scheduling_demand.py'
       - 'tests/*canonical*demand*'
       - 'tests/test_demand_publication.py'
+      - 'tests/test_validate_public_refresh_output.py'
       - 'supabase/functions/canonical-scheduling-demand/**'
       - 'supabase/functions/canonical-session-workspace/**'
       - 'supabase/functions/_shared/*proof*'
@@ -66,7 +67,7 @@ jobs:
       - name: Compile anchor modules
         run: python -m py_compile scripts/anchor_state.py scripts/apply_anchor_policy.py scripts/canonical_scheduling_demand.py scripts/fetch_canonical_scheduling_demand.py scripts/block_start_time_selector.py
       - name: Run anchor regressions
-        run: python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy tests.test_canonical_scheduling_demand tests.test_fetch_canonical_scheduling_demand tests.test_demand_publication tests.test_selector_clock tests.test_enrollware_roster_reconciliation
+        run: python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy tests.test_canonical_scheduling_demand tests.test_fetch_canonical_scheduling_demand tests.test_demand_publication tests.test_selector_clock tests.test_enrollware_roster_reconciliation tests.test_validate_public_refresh_output
       - name: Test deployed endpoint code with isolated database and auth fixtures
         run: node --test tests/canonical_demand_endpoint.test.cjs tests/enrollware_roster_proof.test.cjs
       - name: Test canonical reconciliation in isolated PostgreSQL
