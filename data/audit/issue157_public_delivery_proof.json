@@ -1,0 +1,321 @@
+{
+  "checked_at": "2026-09-27T04:47:43.738335+00:00",
+  "phase": "corrected",
+  "deployed_revision": "08faa58dc23da6bd7c7b99650d3d69c144b3443e",
+  "resources": [
+    {
+      "url": "https://www.910cpr.com/bls.html?proof=08faa58dc23d",
+      "status": 200,
+      "etag": "\"6ab89fd8-1170e\"",
+      "sha256": "418cc5b95889a14b133a2eb0cd1dfcb77d4642af34c0a2454fc79c8c6aa85f37",
+      "matches_deployed_git_blob": true
+    },
+    {
+      "url": "https://www.910cpr.com/assets/analytics-attribution.js?v=20260912-1&proof=08faa58dc23d",
+      "status": 200,
+      "etag": "\"6ab89fd8-18b0\"",
+      "sha256": "f4b0b914d6a80cacad1a3124dd6c405ac22e1a045feb8d03ec87162d4cd21385",
+      "matches_deployed_git_blob": true
+    },
+    {
+      "url": "https://www.910cpr.com/assets/family-hero.js?v=6d88341997f7&proof=08faa58dc23d",
+      "status": 200,
+      "etag": "\"6ab89fd8-4d0\"",
+      "sha256": "6d88341997f7b0b1c857aec62aefb441b923bd83e0e893630718881866c1e4d7",
+      "matches_deployed_git_blob": true
+    },
+    {
+      "url": "https://www.910cpr.com/assets/interaction-motion.css?proof=08faa58dc23d",
+      "status": 200,
+      "etag": "\"6ab89fd8-220\"",
+      "sha256": "59363bcbef8408647168b134db2b4afb638e3f0a781b1494f32bfab7bc60fd9b",
+      "matches_deployed_git_blob": true
+    },
+    {
+      "url": "https://www.910cpr.com/assets/interaction-motion.js?v=20260809.1&proof=08faa58dc23d",
+      "status": 200,
+      "etag": "\"6ab89fd8-d2e\"",
+      "sha256": "8a1ddc8e70f70bd747ab8361f07d48832fa6e8ebf0af43021136b46e21a14b5d",
+      "matches_deployed_git_blob": true
+    },
+    {
+      "url": "https://www.910cpr.com/assets/resolved-selector-availability.js?v=20260907.1&proof=08faa58dc23d",
+      "status": 200,
+      "etag": "\"6ab89fd8-1219\"",
+      "sha256": "622a073c9f65c01ff217395645fb54460c023bf360763d957f4b24f8187e64ae",
+      "matches_deployed_git_blob": true
+    },
+    {
+      "url": "https://www.910cpr.com/assets/site-theme.css?v=20260818.5&proof=08faa58dc23d",
+      "status": 200,
+      "etag": "\"6ab89fd8-30d8\"",
+      "sha256": "cdca1533d0c3807ef59a8d609b6f1c7de30d0d3296ead879a16e0ab8d7416558",
+      "matches_deployed_git_blob": true
+    },
+    {
+      "url": "https://www.910cpr.com/assets/site-theme.js?proof=08faa58dc23d",
+      "status": 200,
+      "etag": "\"6ab89fd8-1fee\"",
+      "sha256": "6c32d61d0e464fe20b8c39ca55f9a7c0f95e5dce21fb68984d9a0023bc1c6bd3",
+      "matches_deployed_git_blob": true
+    },
+    {
+      "url": "https://www.910cpr.com/data/anchor_state.json?proof=08faa58dc23d",
+      "status": 200,
+      "etag": "\"6ab89fd8-1b27\"",
+      "sha256": "82407d029eb19b4864ee260ca8f91b8c22cf44bdceb1f5aa686d65f1b869793f",
+      "matches_deployed_git_blob": true
+    },
+    {
+      "url": "https://www.910cpr.com/data/schedule_future.json?proof=08faa58dc23d",
+      "status": 200,
+      "etag": "\"6ab89fd8-11c9b\"",
+      "sha256": "e2d6d1a8b824633e2269d4b2d8517bdcad8db05ac110b9e2c453dc27550e9ccd",
+      "matches_deployed_git_blob": true
+    },
+    {
+      "url": "https://www.910cpr.com/data/block-selector-availability/bls.json?proof=08faa58dc23d",
+      "status": 200,
+      "etag": "\"6ab89fd8-44a67f\"",
+      "sha256": "3f3269a81d5bb6cf43c80a68b52ec200553c42fcb5e30bfcfd686bdf10a37fa1",
+      "matches_deployed_git_blob": true
+    }
+  ],
+  "anchor_counts": {
+    "anchors_promoted": 12,
+    "schedule_sessions_annotated": 12,
+    "admin_sessions_annotated": 12,
+    "selector_files_processed": 8,
+    "anchor_offers_annotated": 0,
+    "scattered_offers_consolidated": 0,
+    "duplicate_anchor_offers_removed": 0,
+    "canonical_demand_rows_matched": 31,
+    "canonical_demand_rows_failed_closed": 4,
+    "occurrences_with_unknown_demand": 0
+  },
+  "incident_anchors": [
+    {
+      "session_id": "14361098",
+      "course_id": "359474",
+      "start_at": "2026-09-27T13:00:00-04:00",
+      "end_at": "2026-09-27T15:00:00-04:00",
+      "location": ":: Wilmington; Shipyard Blvd - B",
+      "instructor": "Brian Ennis",
+      "registered_count": 1,
+      "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+      "schedule_role": "anchor",
+      "schedule_symbol": "⚓",
+      "promotion_reason": "canonical_active_registration",
+      "landing_page_required": true,
+      "external_publication_eligible": true
+    },
+    {
+      "session_id": "14421081",
+      "course_id": "210549",
+      "start_at": "2026-09-27T18:30:00-04:00",
+      "end_at": "2026-09-27T19:30:00-04:00",
+      "location": ":: Wilmington; Shipyard Blvd - B",
+      "instructor": "Brian Ennis",
+      "registered_count": 1,
+      "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1830",
+      "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+      "schedule_role": "anchor",
+      "schedule_symbol": "⚓",
+      "promotion_reason": "canonical_active_registration",
+      "landing_page_required": true,
+      "external_publication_eligible": true
+    }
+  ],
+  "incident_selector": {
+    "date": "2026-09-27",
+    "displayDate": "2026-09-27",
+    "startTimes": [
+      {
+        "startTime": "13:00",
+        "displayStartTime": "1:00 PM",
+        "courses": [
+          {
+            "courseId": "359474",
+            "courseName": "AHA BLS Provider (Renewal)",
+            "courseFamily": "BLS",
+            "deliveryMode": "classroom",
+            "displayStartTime": "1:00 PM",
+            "durationMinutes": 120,
+            "schedulerConsumptionMinutes": 120,
+            "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+            "location": ":: Wilmington; Shipyard Blvd - B",
+            "availabilityBlockId": "seated:14361098",
+            "offerType": "seated_class",
+            "date": "2026-09-27",
+            "startTime": "13:00",
+            "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+            "session_id": "14361098",
+            "schedule_role": "anchor",
+            "schedule_symbol": "⚓",
+            "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+            "promotion_reason": "same_course_anchor_reuse",
+            "landing_page_required": true,
+            "external_publication_eligible": true,
+            "offer_source": "existing_seated_anchor"
+          }
+        ]
+      },
+      {
+        "startTime": "18:30",
+        "displayStartTime": "6:30 PM",
+        "courses": [
+          {
+            "courseId": "210549",
+            "courseName": "AHA BLS HeartCode®",
+            "courseFamily": "BLS",
+            "deliveryMode": "blended",
+            "displayStartTime": "6:30 PM",
+            "durationMinutes": 60,
+            "schedulerConsumptionMinutes": 60,
+            "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+            "location": ":: Wilmington; Shipyard Blvd - B",
+            "availabilityBlockId": "seated:14421081",
+            "offerType": "seated_class",
+            "date": "2026-09-27",
+            "startTime": "18:30",
+            "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+            "session_id": "14421081",
+            "schedule_role": "anchor",
+            "schedule_symbol": "⚓",
+            "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1830",
+            "promotion_reason": "same_course_anchor_reuse",
+            "landing_page_required": true,
+            "external_publication_eligible": true,
+            "offer_source": "existing_seated_anchor"
+          }
+        ]
+      }
+    ]
+  },
+  "bls_counts": {
+    "availabilityBlocksFound": 202,
+    "availabilityBlocksEvaluated": 202,
+    "publicLocationBlocksEvaluated": 202,
+    "publicSelectableOfferCount": 8111,
+    "publicSelectableDateCount": 90,
+    "publicSelectableStartTimeCount": 2963,
+    "rejectedOfferCount": 1914,
+    "suppressedStaleOrOrphanedOfferCount": 0,
+    "wholeBlockPresentedAsClass": false
+  },
+  "actual_browser": {
+    "checked_at": "2026-09-27T04:48:15.734Z",
+    "page": "https://www.910cpr.com/bls.html",
+    "errors": [],
+    "cases": [
+      {
+        "date": "2026-09-27",
+        "course": "BLS Renewal",
+        "start_times": "PM\n★ 1:00 PM",
+        "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-14361098"
+      },
+      {
+        "date": "2026-09-27",
+        "course": "HeartCode BLS skills",
+        "start_times": "PM\n★ 6:30 PM",
+        "register_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-14421081"
+      },
+      {
+        "date": "2026-09-29",
+        "course": "BLS Initial",
+        "start_times": "AM\n11:00 AM\nPM\n8:30 PM",
+        "register_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260770&startTime=11%3A00+AM&courseId=209806&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-209806",
+        "published_anchor_session_id": "13963994"
+      },
+      {
+        "date": "2026-10-03",
+        "course": "BLS Initial",
+        "start_times": "AM\n8:00 AM\n11:00 AM",
+        "register_url": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260774&startTime=8%3A00+AM&courseId=209806&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-209806",
+        "published_anchor_session_id": "14186226"
+      }
+    ],
+    "real_customer_actions": "Read-only; Register targets inspected without creating or modifying bookings."
+  },
+  "delivery": {
+    "pr197_merge": "b9297d128143b99b62d273770e0a7304a4d17b98",
+    "pr299_substantive": "b3114af62da97823d3cb5487fedbec32b2885b12",
+    "pr299_merge": "781ed158d758b218eb2aadb58ceb8dce9e48755e",
+    "initial_publication": {
+      "run": 36294558652,
+      "event": "push",
+      "result": "success",
+      "revision": "3830fd61cbfa595925dba3de6535c5de2b998227",
+      "files_changed": 59
+    },
+    "admin_conflict": {
+      "run": 36294558713,
+      "event": "push",
+      "result": "failure",
+      "reason": "main advanced during build; generated JSON rebase conflict; no overwrite or force push"
+    },
+    "corrected_publication": {
+      "run": 36295093741,
+      "event": "push",
+      "result": "success",
+      "revision": "08faa58dc23da6bd7c7b99650d3d69c144b3443e",
+      "files_changed": 59
+    },
+    "pages": {
+      "run": 36295279074,
+      "result": "success",
+      "built_at": "2026-09-27T04:47:21Z"
+    },
+    "ci": {
+      "run": 36295036810,
+      "result": "success",
+      "python_tests": 52,
+      "typescript_tests": 17,
+      "postgresql_lifecycle_tests": 1
+    },
+    "repeat_publication_anchor_count": 12,
+    "scheduled_refresh": {
+      "status": "NOT_YET_OBSERVED",
+      "checked_at": "2026-09-27T04:57:24Z",
+      "last_public_schedule_run": 36286577970,
+      "last_public_schedule_created_at": "2026-09-27T01:47:03Z",
+      "last_admin_schedule_run": 36286383604,
+      "last_admin_schedule_created_at": "2026-09-27T01:43:10Z",
+      "workflows": "active",
+      "caveat": "Push publications do not prove a subsequent schedule event."
+    }
+  },
+  "reconciliation_health": {
+    "run": 36295752896,
+    "event": "workflow_dispatch",
+    "conclusion": "failure_expected_due_to_one_quarantine",
+    "report": {
+      "checked_at": "2026-09-27T04:56:39.866529+00:00",
+      "freshness_minutes": 60,
+      "healthy": false,
+      "canonical_external_sessions": 37,
+      "gaps": [
+        {
+          "external_class_id": "11341058",
+          "status": "missing_canonical_session",
+          "source_observed_at": null,
+          "reason": "unresolved_active_location"
+        }
+      ],
+      "signature": "69ffe135750ed0a560626b546781d878dcfb92526ccbc4dabc84155383b1134d"
+    },
+    "previous_repeated_condition_run": 36295474368,
+    "repeated_condition_dedup_verified": true
+  },
+  "source_freshness": {
+    "observed_at": "2026-09-27T04:25:29.547Z",
+    "expires_at": "2026-09-27T05:25:29.547Z",
+    "future_source_sessions": 35,
+    "canonical_future_sessions": 34,
+    "total_source_sessions": 38,
+    "canonical_sessions": 37,
+    "unattended_complete_roster_source": "not_connected",
+    "stale_behavior": "unknown/null, never zero; database fetch cannot renew external source watermark"
+  }
+}

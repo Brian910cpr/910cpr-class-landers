@@ -1,0 +1,101 @@
+{
+  "owner_approval": "Brunswick Oral & Maxillofacial Surgery; 90 Medical Cntr SW #100, Supply, NC",
+  "data_change_sql": "begin; select set_config('app.location_status_reason','Issue #297: Brian explicitly approved Brunswick Oral & Maxillofacial Surgery; 90 Medical Cntr SW #100, Supply, NC for committed October 21 classes 13895152/13895154/13895155 in Codex on 2026-09-27. Preserve private visibility and exact existing location identity.',true); update public.locations set scheduling_status='active',enrollware_location_id='202662',address_line1='90 Medical Cntr SW #100',city='Supply',state='NC',updated_at=now() where location_key='hist_location_bfcd7cded3e37289fed07186' and scheduling_status='inactive' and public=false and enrollware_location_id is null returning id,location_key,name,address_line1,city,state,scheduling_status,public,enrollware_location_id; commit;",
+  "location": {
+    "id": "e8500810-42f5-4cb8-872e-27e059ae2a06",
+    "city": "Supply",
+    "name": "Brunswick Oral & Maxillofacial Surgery; 90 Medical Cntr SW #100, Supply",
+    "state": "NC",
+    "public": false,
+    "created_at": "2026-09-06T01:27:47.245958+00:00",
+    "updated_at": "2026-09-27T04:55:36.466563+00:00",
+    "postal_code": null,
+    "location_key": "hist_location_bfcd7cded3e37289fed07186",
+    "address_line1": "90 Medical Cntr SW #100",
+    "address_line2": null,
+    "scheduling_status": "active",
+    "enrollware_location_id": "202662"
+  },
+  "sessions": [
+    {
+      "id": "24f35176-69c1-4b1e-8a72-a69b4e5f9576",
+      "end_at": "2026-10-21T15:00:00+00:00",
+      "start_at": "2026-10-21T13:00:00+00:00",
+      "course_id": "30a198e6-e6e9-4a1a-85ec-875f0b4a2b7b",
+      "location_id": "e8500810-42f5-4cb8-872e-27e059ae2a06",
+      "record_scope": "operational",
+      "reconciliation": {
+        "complete": true,
+        "ingest_job_id": "df4c3f85-cd02-4e2c-a425-2708d439a2aa",
+        "reconciled_at": "2026-09-27T04:55:46.930366+00:00",
+        "source_sha256": "22f7abab31d51343a7e6f84f936c10cf47b055f620d41ac9ced88520b7eb76cb",
+        "freshness_minutes": 60,
+        "source_observed_at": "2026-09-27T04:25:29.547+00:00",
+        "active_registration_count": 0,
+        "active_external_registration_ids": []
+      },
+      "external_class_id": "13895152"
+    },
+    {
+      "id": "e2658350-29b9-4e16-b5d6-3cbfb229dc14",
+      "end_at": "2026-10-21T16:30:00+00:00",
+      "start_at": "2026-10-21T15:15:00+00:00",
+      "course_id": "daae1055-c46c-4e75-8432-084261559fc1",
+      "location_id": "e8500810-42f5-4cb8-872e-27e059ae2a06",
+      "record_scope": "operational",
+      "reconciliation": {
+        "complete": true,
+        "ingest_job_id": "df4c3f85-cd02-4e2c-a425-2708d439a2aa",
+        "reconciled_at": "2026-09-27T04:55:46.930366+00:00",
+        "source_sha256": "22f7abab31d51343a7e6f84f936c10cf47b055f620d41ac9ced88520b7eb76cb",
+        "freshness_minutes": 60,
+        "source_observed_at": "2026-09-27T04:25:29.547+00:00",
+        "active_registration_count": 0,
+        "active_external_registration_ids": []
+      },
+      "external_class_id": "13895154"
+    },
+    {
+      "id": "f407c43b-985c-4f84-a92f-6174590ad3ba",
+      "end_at": "2026-10-21T19:00:00+00:00",
+      "start_at": "2026-10-21T17:00:00+00:00",
+      "course_id": "53f66f39-aa5d-48d4-9d64-baae0bb285e2",
+      "location_id": "e8500810-42f5-4cb8-872e-27e059ae2a06",
+      "record_scope": "operational",
+      "reconciliation": {
+        "complete": true,
+        "ingest_job_id": "df4c3f85-cd02-4e2c-a425-2708d439a2aa",
+        "reconciled_at": "2026-09-27T04:55:46.930366+00:00",
+        "source_sha256": "22f7abab31d51343a7e6f84f936c10cf47b055f620d41ac9ced88520b7eb76cb",
+        "freshness_minutes": 60,
+        "source_observed_at": "2026-09-27T04:25:29.547+00:00",
+        "active_registration_count": 0,
+        "active_external_registration_ids": []
+      },
+      "external_class_id": "13895155"
+    }
+  ],
+  "checked_at": "2026-09-27T04:57:54.339128+00:00",
+  "status_events": [
+    {
+      "id": "f247281c-bbfc-498d-93a7-f9e684f64713",
+      "reason": "Issue #297: Brian explicitly approved Brunswick Oral & Maxillofacial Surgery; 90 Medical Cntr SW #100, Supply, NC for committed October 21 classes 13895152/13895154/13895155 in Codex on 2026-09-27. Preserve private visibility and exact existing location identity.",
+      "changed_at": "2026-09-27T04:55:36.466563+00:00",
+      "changed_by": "postgres",
+      "new_status": "active",
+      "provenance": {},
+      "location_id": "e8500810-42f5-4cb8-872e-27e059ae2a06",
+      "previous_status": "inactive"
+    },
+    {
+      "id": "da7151f7-339d-4ec8-b82d-2644e664bfd8",
+      "reason": "created_inactive",
+      "changed_at": "2026-09-06T01:27:47.245958+00:00",
+      "changed_by": "postgres",
+      "new_status": "inactive",
+      "provenance": {},
+      "location_id": "e8500810-42f5-4cb8-872e-27e059ae2a06",
+      "previous_status": null
+    }
+  ]
+}
