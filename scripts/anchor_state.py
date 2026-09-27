@@ -22,19 +22,23 @@ def _dt(value: Any) -> datetime | None:
         return None
 
 
-def _count(session: dict[str, Any]) -> int:
+def _count(session: dict[str, Any]) -> int | None:
     value = session.get("active_registration_count")
-    match = re.match(r"\s*(\d+)", str(value), re.I) if value is not None else None
-    return max(0, int(match.group(1))) if match else 0
+    return value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else None
 
 
-def _promotion_reason(session: dict[str, Any], count: int) -> str:
-    if count > 0 and _text(session.get("demand_basis")) == "canonical_active_registrations":
+def _promotion_reason(session: dict[str, Any], count: int | None) -> str:
+    if count is not None and count > 0 and _text(session.get("demand_basis")) == "canonical_active_registrations":
         return "canonical_active_registration"
     explicit = _text(session.get("anchor_basis") or session.get("promotion_reason")).lower()
     if explicit in {"committed_public_session", "manual_override"}:
         return explicit
     return ""
+
+
+def anchor_promotion_reason(session: dict[str, Any]) -> str:
+    """Shared demand/commitment gate for both candidate generation and ranking."""
+    return _promotion_reason(session, _count(session))
 
 
 def _course_id(session: dict[str, Any]) -> str:
@@ -70,7 +74,7 @@ class Anchor:
     end_at: str
     location: str
     instructor: str
-    registered_count: int
+    registered_count: int | None
     cluster_id: str
     registration_url: str = ""
     schedule_role: str = "anchor"
@@ -90,7 +94,7 @@ def promote_seated_sessions(sessions: Iterable[dict[str, Any]]) -> list[dict[str
         end = _dt(session.get("end_at") or session.get("end"))
         count = _count(session)
         session_status = _text(session.get("session_status") or session.get("status")).lower()
-        promotion_reason = _promotion_reason(session, count)
+        promotion_reason = anchor_promotion_reason(session)
         if (
             not session_id
             or not start

@@ -24,6 +24,8 @@ on:
       - 'scripts/anchor_state.py'
       - 'scripts/apply_anchor_seat_overrides.py'
       - 'scripts/apply_anchor_policy.py'
+      - 'scripts/fetch_canonical_scheduling_demand.py'
+      - 'scripts/canonical_scheduling_demand.py'
       - 'scripts/ensure_dashboard_refresh_controls.py'
       - 'data/runtime/anchor_seat_overrides.json'
       - 'data/config/people_catalog.json'
@@ -67,6 +69,20 @@ jobs:
 
       - name: Rebuild future seated schedule
         run: python -m scripts.build_schedule_future
+
+      - name: Fetch current canonical registration demand
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: python -m scripts.fetch_canonical_scheduling_demand
+
+      - name: Upload canonical demand fetch status
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-demand-fetch-${{ github.run_id }}-${{ github.run_attempt }}
+          path: debug/status/canonical_scheduling_demand_fetch.json
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Apply confirmed seat counts
         run: python -m scripts.apply_anchor_seat_overrides

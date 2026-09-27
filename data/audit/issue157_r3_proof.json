@@ -1,0 +1,657 @@
+{
+  "schema_version": "issue157-r3-proof.v1",
+  "observed_at": "2026-09-27T03:00:54.792757+00:00",
+  "baseline_main": "616832dec7cef34b0e4928d90fe74a7d480259ab",
+  "baseline_pages_run": 36286584307,
+  "runtime_observed": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "xhigh",
+    "source": "local Codex configuration; not changed"
+  },
+  "incident": {
+    "date": "2026-09-27",
+    "timezone": "America/New_York",
+    "booking_order": [
+      {
+        "external_class_id": "14361098",
+        "appointment_class_id": "51485",
+        "external_course_id": "359474",
+        "start": "13:00",
+        "registered_at": "2026-09-24T19:26:00-04:00",
+        "current_roster_count": 1,
+        "booking_backend": "Enrollware",
+        "navigation_channel": "unknown"
+      },
+      {
+        "external_class_id": "14421081",
+        "appointment_class_id": "51495",
+        "external_course_id": "210549",
+        "start": "18:30",
+        "registered_at": "2026-09-26T15:59:00-04:00",
+        "current_roster_count": 1,
+        "booking_backend": "Enrollware",
+        "navigation_channel": "unknown"
+      }
+    ]
+  },
+  "canonical_coverage": {
+    "query": "select id from public.class_sessions where start_at >= '2026-09-26T00:00:00-04:00' and start_at < '2026-09-28T00:00:00-04:00'",
+    "row_count": 0,
+    "source": "production Supabase, read-only",
+    "external_reconciliation_proven_current": false
+  },
+  "historical_publication": [
+    {
+      "label": "before_renewal",
+      "revision": "71a15fd71ce3656873e655fc1da71f8a244840c8",
+      "selector_generated_at": "2026-09-24T22:44:25.092182",
+      "offer_count": 137,
+      "heartcode_starts": [
+        "00:00",
+        "00:30",
+        "01:00",
+        "01:30",
+        "02:00",
+        "02:30",
+        "03:00",
+        "03:30",
+        "04:00",
+        "04:30",
+        "05:00",
+        "05:30",
+        "06:00",
+        "06:30",
+        "07:00",
+        "07:30",
+        "08:00",
+        "08:30",
+        "09:00",
+        "09:30",
+        "10:00",
+        "10:30",
+        "11:00",
+        "11:30",
+        "12:00",
+        "12:30",
+        "13:00",
+        "13:30",
+        "14:00",
+        "14:30",
+        "15:00",
+        "15:30",
+        "16:00",
+        "16:30",
+        "17:00",
+        "17:30",
+        "18:00",
+        "18:30",
+        "19:00",
+        "19:30",
+        "20:00",
+        "20:30",
+        "21:00",
+        "21:30",
+        "22:00",
+        "22:30",
+        "23:00"
+      ],
+      "renewal_sessions": [],
+      "anchors": [],
+      "incident_offers": []
+    },
+    {
+      "label": "before_heartcode",
+      "revision": "af4befbd61699b65fc5603ff60292558665a40dd",
+      "selector_generated_at": "2026-09-26T18:02:15.568540",
+      "offer_count": 2,
+      "heartcode_starts": [
+        "18:30"
+      ],
+      "renewal_sessions": [
+        {
+          "session_id": "14361098",
+          "course_id": "359474",
+          "start_at": "2026-09-27T13:00:00-04:00",
+          "end_at": "2026-09-27T15:00:00-04:00",
+          "registered_count": null,
+          "promotion_reason": "existing_public_class"
+        }
+      ],
+      "anchors": [
+        {
+          "session_id": "14361098",
+          "course_id": "359474",
+          "start_at": "2026-09-27T13:00:00-04:00",
+          "registered_count": 0,
+          "promotion_reason": "existing_public_class"
+        }
+      ],
+      "incident_offers": [
+        {
+          "courseId": "210549",
+          "courseName": "AHA HeartCode BLS",
+          "courseFamily": "BLS",
+          "deliveryMode": "blended",
+          "displayStartTime": "6:30 PM",
+          "durationMinutes": 60,
+          "schedulerConsumptionMinutes": 60,
+          "appointmentDayId": 260768,
+          "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260768&startTime=6%3A30%20PM&courseId=210549",
+          "location": ":: Wilmington; Shipyard Blvd",
+          "availabilityBlockId": "brian_do_not_schedule:inverse_gap:3",
+          "offerType": "dynamic_appointment",
+          "date": "2026-09-27",
+          "startTime": "18:30",
+          "schedule_role": "barnacle",
+          "schedule_symbol": "",
+          "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+          "attached_to_session_id": "14361098",
+          "barnacle_direction": "post",
+          "landing_page_required": false,
+          "external_publication_eligible": false
+        },
+        {
+          "courseId": "359474",
+          "courseName": "AHA BLS Provider (Renewal)",
+          "courseFamily": "BLS",
+          "deliveryMode": "classroom",
+          "displayStartTime": "1:00 PM",
+          "durationMinutes": 120,
+          "schedulerConsumptionMinutes": 120,
+          "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+          "location": ":: Wilmington; Shipyard Blvd - B",
+          "availabilityBlockId": "seated:14361098",
+          "offerType": "seated_class",
+          "date": "2026-09-27",
+          "startTime": "1:00 PM",
+          "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+          "session_id": "14361098",
+          "schedule_role": "anchor",
+          "schedule_symbol": "⚓",
+          "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+          "promotion_reason": "same_course_anchor_reuse",
+          "landing_page_required": true,
+          "external_publication_eligible": true,
+          "offer_source": "existing_seated_anchor"
+        }
+      ]
+    },
+    {
+      "label": "current",
+      "revision": "616832dec7cef34b0e4928d90fe74a7d480259ab",
+      "selector_generated_at": "2026-09-27T01:45:44.257636",
+      "offer_count": 2,
+      "heartcode_starts": [
+        "6:30 PM"
+      ],
+      "renewal_sessions": [
+        {
+          "session_id": "14361098",
+          "course_id": "359474",
+          "start_at": "2026-09-27T13:00:00-04:00",
+          "end_at": "2026-09-27T15:00:00-04:00",
+          "registered_count": null,
+          "promotion_reason": "existing_public_class"
+        },
+        {
+          "session_id": "14421081",
+          "course_id": "210549",
+          "start_at": "2026-09-27T18:30:00-04:00",
+          "end_at": "2026-09-27T19:30:00-04:00",
+          "registered_count": null,
+          "promotion_reason": "existing_public_class"
+        }
+      ],
+      "anchors": [
+        {
+          "session_id": "14361098",
+          "course_id": "359474",
+          "start_at": "2026-09-27T13:00:00-04:00",
+          "registered_count": 0,
+          "promotion_reason": "existing_public_class"
+        },
+        {
+          "session_id": "14421081",
+          "course_id": "210549",
+          "start_at": "2026-09-27T18:30:00-04:00",
+          "registered_count": 0,
+          "promotion_reason": "existing_public_class"
+        }
+      ],
+      "incident_offers": []
+    }
+  ],
+  "live_public_before_repair": {
+    "schedule": {
+      "sha256": "ee73a45957ec26c7dc66d491f6b9d95ad7f0b44c92eb66f21558e65f8b2e9932",
+      "generated_at": null,
+      "rows": [
+        {
+          "session_id": "14361098",
+          "course_id": "359474",
+          "course_key": "aha_bls_provider_renewal",
+          "official_course_name": "AHA BLS Provider Renewal",
+          "raw_course_name": "AHA BLS Provider (Renewal)",
+          "course_match_method": "course_id",
+          "course_match_confidence": "high",
+          "course_needs_review": false,
+          "included_by_mapping_method": "legacy_mapping",
+          "course_name": "AHA BLS Provider (Renewal)",
+          "course_subtitle": null,
+          "course_number": "359474",
+          "course_code": "AHA_BLS_IP_RENEWAL",
+          "certifying_body": "AHA",
+          "delivery_mode": "IP",
+          "start_at": "2026-09-27T13:00:00-04:00",
+          "end_at": "2026-09-27T15:00:00-04:00",
+          "timezone": "America/New_York",
+          "location_name": ":: Wilmington; Shipyard Blvd - B",
+          "location_display": ":: Wilmington; Shipyard Blvd - B",
+          "client": null,
+          "lead_instructor_name": "Brian Ennis",
+          "price": null,
+          "max_students": null,
+          "registered_count": null,
+          "enrolled_count": null,
+          "available_seats": null,
+          "is_full": null,
+          "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+          "session_status": "active",
+          "registration_status": "open",
+          "public_direct_booking": true,
+          "registration_status_source": null,
+          "registration_status_reason": null,
+          "mapped_family": "BLS",
+          "mapped_subtype": "Renewal",
+          "mapped_certifying_body": "AHA",
+          "mapped_delivery_mode": "IP",
+          "mapped_logo_key": "aha",
+          "mapped_price": null,
+          "mapped_clean_title": "AHA BLS Provider Renewal",
+          "mapped_short_description": "Healthcare provider BLS with high-quality CPR, AED use, ventilations, choking response, and team communication.",
+          "mapped_long_description": null,
+          "mapped_who_class_for": "Current BLS providers",
+          "mapped_prerequisites": null,
+          "mapped_what_to_expect": "Hands-on CPR and AED practice, ventilation skills, choking response, and scenario-based team communication aligned with current CPR/ECC guidance.",
+          "mapped_certification_card": null,
+          "mapped_renewal_info": null,
+          "mapped_official_description_source": "course_map",
+          "mapped_description_status": "needs_review",
+          "mapping_status": "mapped",
+          "mapping_notes": [
+            "course_map_title_alias"
+          ],
+          "build_classification": "future",
+          "schedule_role": "anchor",
+          "schedule_symbol": "⚓",
+          "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+          "promotion_reason": "existing_public_class",
+          "landing_page_required": true,
+          "external_publication_eligible": true
+        },
+        {
+          "session_id": "14421081",
+          "course_id": "210549",
+          "course_key": "aha_heartcode_bls",
+          "official_course_name": "AHA HeartCode BLS",
+          "raw_course_name": "AHA BLS HeartCode®",
+          "course_match_method": "course_id",
+          "course_match_confidence": "high",
+          "course_needs_review": false,
+          "included_by_mapping_method": "legacy_mapping",
+          "course_name": "AHA BLS HeartCode®",
+          "course_subtitle": null,
+          "course_number": "210549",
+          "course_code": "AHA_BLS_BL_SKILLS",
+          "certifying_body": "AHA",
+          "delivery_mode": "BL",
+          "start_at": "2026-09-27T18:30:00-04:00",
+          "end_at": "2026-09-27T19:30:00-04:00",
+          "timezone": "America/New_York",
+          "location_name": ":: Wilmington; Shipyard Blvd - B",
+          "location_display": ":: Wilmington; Shipyard Blvd - B",
+          "client": null,
+          "lead_instructor_name": "Brian Ennis",
+          "price": null,
+          "max_students": null,
+          "registered_count": null,
+          "enrolled_count": null,
+          "available_seats": null,
+          "is_full": null,
+          "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+          "session_status": "active",
+          "registration_status": "open",
+          "public_direct_booking": true,
+          "registration_status_source": null,
+          "registration_status_reason": null,
+          "mapped_family": "BLS",
+          "mapped_subtype": "HeartCode",
+          "mapped_certifying_body": "AHA",
+          "mapped_delivery_mode": "BL",
+          "mapped_logo_key": "aha",
+          "mapped_price": null,
+          "mapped_clean_title": "AHA HeartCode BLS",
+          "mapped_short_description": "Healthcare provider BLS with high-quality CPR, AED use, ventilations, choking response, and team communication.",
+          "mapped_long_description": null,
+          "mapped_who_class_for": "Healthcare workers and clinical teams",
+          "mapped_prerequisites": null,
+          "mapped_what_to_expect": "Hands-on CPR and AED practice, ventilation skills, choking response, and scenario-based team communication aligned with current CPR/ECC guidance.",
+          "mapped_certification_card": null,
+          "mapped_renewal_info": null,
+          "mapped_official_description_source": "course_map",
+          "mapped_description_status": "needs_review",
+          "mapping_status": "mapped",
+          "mapping_notes": [
+            "course_map_title_alias"
+          ],
+          "build_classification": "future",
+          "schedule_role": "anchor",
+          "schedule_symbol": "⚓",
+          "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1830",
+          "promotion_reason": "existing_public_class",
+          "landing_page_required": true,
+          "external_publication_eligible": true
+        }
+      ],
+      "counts": null
+    },
+    "anchors": {
+      "sha256": "5f3c2cd18ec7b0c7b7aa779f366dcc4585b4e96acfde4b8e2c30c187e469beab",
+      "generated_at": "2026-09-27T01:47:01.716098+00:00",
+      "rows": [
+        {
+          "session_id": "14361098",
+          "course_id": "359474",
+          "start_at": "2026-09-27T13:00:00-04:00",
+          "end_at": "2026-09-27T15:00:00-04:00",
+          "location": ":: Wilmington; Shipyard Blvd - B",
+          "instructor": "Brian Ennis",
+          "registered_count": 0,
+          "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+          "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+          "schedule_role": "anchor",
+          "schedule_symbol": "⚓",
+          "promotion_reason": "existing_public_class",
+          "landing_page_required": true,
+          "external_publication_eligible": true
+        },
+        {
+          "session_id": "14421081",
+          "course_id": "210549",
+          "start_at": "2026-09-27T18:30:00-04:00",
+          "end_at": "2026-09-27T19:30:00-04:00",
+          "location": ":: Wilmington; Shipyard Blvd - B",
+          "instructor": "Brian Ennis",
+          "registered_count": 0,
+          "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1830",
+          "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+          "schedule_role": "anchor",
+          "schedule_symbol": "⚓",
+          "promotion_reason": "existing_public_class",
+          "landing_page_required": true,
+          "external_publication_eligible": true
+        }
+      ],
+      "counts": {
+        "anchors_promoted": 31,
+        "schedule_sessions_annotated": 31,
+        "admin_sessions_annotated": 31,
+        "selector_files_processed": 8,
+        "anchor_offers_annotated": 0,
+        "scattered_offers_consolidated": 0,
+        "duplicate_anchor_offers_removed": 0
+      }
+    },
+    "selector": {
+      "sha256": "e4da00efa1f19912fbf514e87c99860b0d9fc7d21de60b54e0518d30f76b7a89",
+      "generated_at": "2026-09-27T01:45:44.257636",
+      "rows": [
+        {
+          "date": "2026-09-27",
+          "displayDate": "2026-09-27",
+          "startTimes": [
+            {
+              "startTime": "1:00 PM",
+              "displayStartTime": "1:00 PM",
+              "courses": [
+                {
+                  "courseId": "359474",
+                  "courseName": "AHA BLS Provider (Renewal)",
+                  "courseFamily": "BLS",
+                  "deliveryMode": "classroom",
+                  "displayStartTime": "1:00 PM",
+                  "durationMinutes": 120,
+                  "schedulerConsumptionMinutes": 120,
+                  "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+                  "location": ":: Wilmington; Shipyard Blvd - B",
+                  "availabilityBlockId": "seated:14361098",
+                  "offerType": "seated_class",
+                  "date": "2026-09-27",
+                  "startTime": "1:00 PM",
+                  "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+                  "session_id": "14361098",
+                  "schedule_role": "anchor",
+                  "schedule_symbol": "⚓",
+                  "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+                  "promotion_reason": "same_course_anchor_reuse",
+                  "landing_page_required": true,
+                  "external_publication_eligible": true,
+                  "offer_source": "existing_seated_anchor"
+                }
+              ]
+            },
+            {
+              "startTime": "6:30 PM",
+              "displayStartTime": "6:30 PM",
+              "courses": [
+                {
+                  "courseId": "210549",
+                  "courseName": "AHA BLS HeartCode®",
+                  "courseFamily": "BLS",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "6:30 PM",
+                  "durationMinutes": 60,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+                  "location": ":: Wilmington; Shipyard Blvd - B",
+                  "availabilityBlockId": "seated:14421081",
+                  "offerType": "seated_class",
+                  "date": "2026-09-27",
+                  "startTime": "6:30 PM",
+                  "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+                  "session_id": "14421081",
+                  "schedule_role": "anchor",
+                  "schedule_symbol": "⚓",
+                  "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1830",
+                  "promotion_reason": "same_course_anchor_reuse",
+                  "landing_page_required": true,
+                  "external_publication_eligible": true,
+                  "offer_source": "existing_seated_anchor"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "counts": {
+        "availabilityBlocksFound": 203,
+        "availabilityBlocksEvaluated": 203,
+        "publicLocationBlocksEvaluated": 203,
+        "publicSelectableOfferCount": 7879,
+        "publicSelectableDateCount": 90,
+        "publicSelectableStartTimeCount": 2879,
+        "rejectedOfferCount": 1935,
+        "suppressedStaleOrOrphanedOfferCount": 0,
+        "wholeBlockPresentedAsClass": false
+      }
+    },
+    "html": {
+      "url": "https://www.910cpr.com/bls.html",
+      "status": 200,
+      "sha256": "1c76181aaccf1872a704c6668eef48a2494d2ee75b3d139571c96203ddcb2609",
+      "assets": [
+        {
+          "url": "/assets/analytics-attribution.js?v=20260912-1",
+          "status": 200,
+          "sha256": "f4b0b914d6a80cacad1a3124dd6c405ac22e1a045feb8d03ec87162d4cd21385"
+        },
+        {
+          "url": "/assets/family-hero.js?v=6d88341997f7",
+          "status": 200,
+          "sha256": "6d88341997f7b0b1c857aec62aefb441b923bd83e0e893630718881866c1e4d7"
+        },
+        {
+          "url": "/assets/interaction-motion.css",
+          "status": 200,
+          "sha256": "59363bcbef8408647168b134db2b4afb638e3f0a781b1494f32bfab7bc60fd9b"
+        },
+        {
+          "url": "/assets/interaction-motion.js?v=20260809.1",
+          "status": 200,
+          "sha256": "8a1ddc8e70f70bd747ab8361f07d48832fa6e8ebf0af43021136b46e21a14b5d"
+        },
+        {
+          "url": "/assets/resolved-selector-availability.js?v=20260907.1",
+          "status": 200,
+          "sha256": "622a073c9f65c01ff217395645fb54460c023bf360763d957f4b24f8187e64ae"
+        },
+        {
+          "url": "/assets/site-theme.css?v=20260818.5",
+          "status": 200,
+          "sha256": "cdca1533d0c3807ef59a8d609b6f1c7de30d0d3296ead879a16e0ab8d7416558"
+        },
+        {
+          "url": "/assets/site-theme.js",
+          "status": 200,
+          "sha256": "6c32d61d0e464fe20b8c39ca55f9a7c0f95e5dce21fb68984d9a0023bc1c6bd3"
+        }
+      ]
+    }
+  },
+  "isolated_browser": {
+    "html": "repository docs/bls.html",
+    "assets": "unmodified actual repository assets",
+    "url": "http://127.0.0.1:8157/bls.html?course=210549",
+    "fixture_date": "2030-09-08",
+    "count_1": {
+      "anchor": "fixture-occurrence",
+      "heartcode_barnacles": [
+        "12:00",
+        "15:00"
+      ],
+      "register_href": "https://example.test/fixture/12:00",
+      "reload_preserved": true
+    },
+    "count_0": {
+      "anchors": [],
+      "heartcode_available": [
+        "08:00",
+        "12:00",
+        "15:00",
+        "18:30"
+      ],
+      "barnacle_classes_remaining": 0
+    },
+    "real_bookings_modified": false
+  },
+  "ranking_unchanged": {
+    "function": "scripts/apply_anchor_policy.py:apply_daily_anchor_stack",
+    "ast_equal_to_main": true,
+    "policy_file_changed": false
+  },
+  "endpoint_deployment": {
+    "project": "wktwgcnwdvbebcobgyey",
+    "slug": "canonical-scheduling-demand",
+    "version": 1,
+    "id": "d4fe35dc-9ccb-4043-9593-172cf629ef9f",
+    "bundle_sha256": "58c3c86cb628430745016aa93176e6d2aa2eb3b2d3dca16e9a07ce1ef2bc8d6a",
+    "options_status": 204,
+    "missing_key_status": 401,
+    "invalid_key_status": 401,
+    "untrusted_origin_status": 403,
+    "authentication": "existing HOT_SYNC key checked against existing owner endpoint"
+  },
+  "selector_regression_comparison": {
+    "baseline": {
+      "tests": 60,
+      "failures": [
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_august_29_30_31_real_feeds_keep_only_fitting_cross_group_barnacles",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_canonical_family_pages_use_customer_facing_selector_template (slug='bls')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_canonical_family_pages_use_customer_facing_selector_template (slug='acls')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_canonical_family_pages_use_customer_facing_selector_template (slug='pals')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_canonical_family_pages_use_customer_facing_selector_template (slug='hsi')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_canonical_family_pages_use_customer_facing_selector_template (slug='heartsaver')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_course_rail_controls_have_accessible_labels_and_overflow_logic",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_promoted_family_pages_and_legacy_schedule_redirects (slug='bls')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_promoted_family_pages_and_legacy_schedule_redirects (slug='acls')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_promoted_family_pages_and_legacy_schedule_redirects (slug='pals')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_promoted_family_pages_and_legacy_schedule_redirects (slug='hsi')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_promoted_family_pages_and_legacy_schedule_redirects (slug='heartsaver')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_promoted_family_pages_and_legacy_schedule_redirects (slug='arc')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_rendered_html_loads_shell_without_actionable_static_times"
+      ],
+      "errors": [
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_acls_selector_shell_and_artifact_support_all_variants_without_static_times",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_closed_full_classes_remain_occupancy_but_not_direct_selector_offers",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_config_driven_heartsaver_page_generates_valid_schedule",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_family_cpr_enters_normal_public_offer_generation",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_family_cpr_offers_are_unique_and_non_overlapping",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_heartsaver_artifact_excludes_newly_conflicting_pediatric_offer",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_heartsaver_cpr_aed_public_ids_exclude_fire_department_partner_course",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_hsi_selector_shell_uses_resolved_authority_without_static_times",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_pals_selector_shell_and_artifact_support_all_variants_without_static_times",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='bls')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='heartsaver')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='acls')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='pals')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='uscg_first_aid_cpr_aed')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='hsi')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='family_cpr')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_stacked_provider_pages_keep_prices_and_online_choice",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_uscg_cover_page_uses_only_aha_heartsaver_first_aid_cpr_aed_inventory"
+      ]
+    },
+    "current": {
+      "tests": 60,
+      "failures": [
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_august_29_30_31_real_feeds_keep_only_fitting_cross_group_barnacles",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_canonical_family_pages_use_customer_facing_selector_template (slug='bls')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_canonical_family_pages_use_customer_facing_selector_template (slug='acls')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_canonical_family_pages_use_customer_facing_selector_template (slug='pals')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_canonical_family_pages_use_customer_facing_selector_template (slug='hsi')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_canonical_family_pages_use_customer_facing_selector_template (slug='heartsaver')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_course_rail_controls_have_accessible_labels_and_overflow_logic",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_promoted_family_pages_and_legacy_schedule_redirects (slug='bls')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_promoted_family_pages_and_legacy_schedule_redirects (slug='acls')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_promoted_family_pages_and_legacy_schedule_redirects (slug='pals')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_promoted_family_pages_and_legacy_schedule_redirects (slug='hsi')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_promoted_family_pages_and_legacy_schedule_redirects (slug='heartsaver')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_promoted_family_pages_and_legacy_schedule_redirects (slug='arc')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_rendered_html_loads_shell_without_actionable_static_times"
+      ],
+      "errors": [
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_acls_selector_shell_and_artifact_support_all_variants_without_static_times",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_closed_full_classes_remain_occupancy_but_not_direct_selector_offers",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_config_driven_heartsaver_page_generates_valid_schedule",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_family_cpr_enters_normal_public_offer_generation",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_family_cpr_offers_are_unique_and_non_overlapping",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_heartsaver_artifact_excludes_newly_conflicting_pediatric_offer",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_heartsaver_cpr_aed_public_ids_exclude_fire_department_partner_course",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_hsi_selector_shell_uses_resolved_authority_without_static_times",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_pals_selector_shell_and_artifact_support_all_variants_without_static_times",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='bls')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='heartsaver')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='acls')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='pals')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='uscg_first_aid_cpr_aed')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='hsi')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_public_artifact_uses_only_public_double_colon_locations (page_key='family_cpr')",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_stacked_provider_pages_keep_prices_and_online_choice",
+        "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_uscg_cover_page_uses_only_aha_heartsaver_first_aid_cpr_aed_inventory"
+      ]
+    },
+    "new_failures": []
+  },
+  "stage6": "gated",
+  "public_repair_live_verified": false
+}

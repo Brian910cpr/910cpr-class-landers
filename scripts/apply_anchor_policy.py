@@ -36,7 +36,7 @@ def apply_demand_projection(sessions: list[dict[str, Any]], payload: Any) -> tup
 
 def sessions_with_canonical_demand(sessions: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     if not CANONICAL_DEMAND_PATH.exists():
-        return sessions, []
+        raise ValueError("Fresh canonical scheduling demand is required before publishing Anchor policy")
     return apply_demand_projection(sessions, validate_payload(load(CANONICAL_DEMAND_PATH)))
 
 
@@ -104,8 +104,13 @@ def annotate_schedule(payload: dict[str, Any], anchors: list[dict[str, Any]]) ->
         sid = text(session.get("session_id") or session.get("id") or session.get("class_id"))
         anchor = by_id.get(sid)
         if anchor:
+            if session.get("promotion_reason") in {"committed_public_session", "manual_override"}:
+                session.setdefault("anchor_basis", session["promotion_reason"])
             apply_anchor_to_session(session, anchor)
             changed += 1
+        elif session.get("schedule_role") == "anchor":
+            for key in ("schedule_role", "schedule_symbol", "cluster_id", "promotion_reason", "landing_page_required", "external_publication_eligible"):
+                session.pop(key, None)
     payload["anchor_count"] = len(anchors)
     return changed
 
@@ -130,7 +135,7 @@ def rewrite_offer_to_anchor(item: dict[str, Any], anchor: dict[str, Any]) -> dic
                 result[key] = formatted
     url = text(anchor.get("registration_url"))
     if url:
-        for key in ("registration_url", "registrationUrl", "enrollment_url", "href"):
+        for key in ("registration_url", "registrationUrl", "appointmentUrl", "enrollment_url", "href"):
             if key in result:
                 result[key] = url
         if not any(key in result for key in ("registration_url", "registrationUrl", "enrollment_url", "href")):
@@ -465,9 +470,8 @@ def run() -> dict[str, int]:
     schedule = load(SCHEDULE_PATH)
     sessions = schedule.get("sessions", []) if isinstance(schedule, dict) else []
     demand_audit: list[dict[str, Any]] = []
-    if CANONICAL_DEMAND_PATH.exists():
-        sessions, demand_audit = sessions_with_canonical_demand(sessions)
-        schedule["sessions"] = sessions
+    sessions, demand_audit = sessions_with_canonical_demand(sessions)
+    schedule["sessions"] = sessions
     anchors = promote_seated_sessions(sessions)
     stats = {
         "anchors_promoted": len(anchors),
@@ -479,6 +483,7 @@ def run() -> dict[str, int]:
         "duplicate_anchor_offers_removed": 0,
         "canonical_demand_rows_matched": sum(row.get("result") == "matched" for row in demand_audit),
         "canonical_demand_rows_failed_closed": sum(row.get("result") != "matched" for row in demand_audit),
+        "occurrences_with_unknown_demand": sum(row.get("count_available") is False for row in sessions),
     }
     write(SCHEDULE_PATH, schedule)
 
@@ -504,12 +509,19 @@ def run() -> dict[str, int]:
         "anchors": anchors,
         "counts": stats,
     })
-    if demand_audit:
-        write(DEMAND_MATCH_AUDIT_PATH, {
+    write(DEMAND_MATCH_AUDIT_PATH, {
             "schema_version": "910cpr-canonical-demand-match-audit.v1",
             "generated_at": datetime.now().astimezone().isoformat(),
             "matches": demand_audit,
-        })
+            "occurrences": [{
+                "external_class_id": text(row.get("session_id") or row.get("id") or row.get("class_id")),
+                "canonical_session_id": row.get("canonical_session_id"),
+                "start_at": row.get("start_at"),
+                "count_available": row.get("count_available"),
+                "active_registration_count": row.get("active_registration_count"),
+                "demand_status": row.get("demand_status"),
+            } for row in sessions],
+    })
     return stats
 
 

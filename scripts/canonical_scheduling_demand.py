@@ -55,7 +55,7 @@ def _strict_occurrence_match(demand: dict[str, Any], occurrence: dict[str, Any])
     occurrence_courses = _course_identities(occurrence)
     if not demand_courses or not occurrence_courses or demand_courses.isdisjoint(occurrence_courses):
         return False
-    if _start(demand) != _start(occurrence):
+    if _start(demand) is None or _start(demand) != _start(occurrence):
         return False
     if not _location(demand) or _location(demand) != _location(occurrence):
         return False
@@ -75,11 +75,16 @@ def resolve_canonical_demand(
     resolved = [deepcopy(row) for row in occurrences]
     exact: dict[str, list[int]] = {}
     for index, occurrence in enumerate(resolved):
+        # Published projections are inputs to later refreshes, never demand truth.
+        for key in ("canonical_session_id", "demand_match_basis", "demand_status"):
+            occurrence.pop(key, None)
+        occurrence.update(active_registration_count=None, count_available=False, demand_basis="unknown", demand_status="missing_canonical_session")
         if external_id := _external_class_id(occurrence):
             exact.setdefault(external_id, []).append(index)
 
     audits: list[dict[str, Any]] = []
     claimed: dict[int, str] = {}
+    conflicted: set[int] = set()
     for demand in demand_rows:
         canonical_id = _text(demand.get("canonical_session_id") or demand.get("session_id") or demand.get("id"))
         external_id = _text(demand.get("external_class_id"))
@@ -100,7 +105,15 @@ def resolve_canonical_demand(
             continue
 
         index = candidates[0]
-        if index in claimed and claimed[index] != canonical_id:
+        if index in claimed:
+            conflicted.add(index)
+            resolved[index].update(active_registration_count=None, count_available=False, demand_basis="unknown")
+            resolved[index].pop("canonical_session_id", None)
+            resolved[index].pop("demand_match_basis", None)
+            resolved[index]["demand_status"] = "ambiguous"
+            for prior in audits:
+                if prior.get("canonical_session_id") == claimed[index]:
+                    prior["result"] = "ambiguous"
             audits.append({
                 "canonical_session_id": canonical_id,
                 "external_class_id": external_id or None,
@@ -112,17 +125,22 @@ def resolve_canonical_demand(
             continue
 
         claimed[index] = canonical_id
-        count = max(0, int(demand.get("active_registration_count") or 0))
+        count = demand.get("active_registration_count")
+        known = isinstance(count, int) and not isinstance(count, bool) and count >= 0 and demand.get("count_available") is not False
+        if index in conflicted:
+            continue
         resolved[index].update({
             "canonical_session_id": canonical_id,
-            "active_registration_count": count,
-            "demand_basis": _text(demand.get("demand_basis")) or "canonical_active_registrations",
+            "active_registration_count": count if known else None,
+            "count_available": known,
+            "demand_basis": "canonical_active_registrations" if known else "unknown",
+            "demand_status": "current" if known else _text(demand.get("demand_status")) or "unknown",
             "demand_match_basis": match_basis,
         })
         audits.append({
             "canonical_session_id": canonical_id,
             "external_class_id": external_id or None,
-            "result": "matched",
+            "result": "matched" if known else "unknown",
             "match_basis": match_basis,
             "candidate_count": 1,
         })

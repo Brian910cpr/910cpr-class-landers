@@ -114,11 +114,9 @@ jobs:
           HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
         run: |
           python -m scripts.fetch_canonical_scheduling_demand
-          $payload = Get-Content -Raw data/runtime/canonical_scheduling_demand.json | ConvertFrom-Json
-          $payload.PSObject.Properties.Remove('generated_at')
-          $stableJson = $payload | ConvertTo-Json -Depth 20 -Compress
-          $bytes = [Text.Encoding]::UTF8.GetBytes($stableJson)
-          $currentHash = [Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant()
+          if ($LASTEXITCODE -ne 0) { throw 'Canonical demand fetch failed; preserving published inventory.' }
+          $status = Get-Content -Raw debug/status/canonical_scheduling_demand_fetch.json | ConvertFrom-Json
+          $currentHash = $status.stable_hash
           $hashPath = 'data/state_public/canonical_scheduling_demand_hash.txt'
           $previousHash = if (Test-Path $hashPath) { (Get-Content -Raw $hashPath).Trim() } else { '' }
           "current_hash=$currentHash" >> $env:GITHUB_OUTPUT
@@ -158,7 +156,7 @@ jobs:
           python -m scripts.publish_admin_schedule
 
       - name: Reapply canonical Anchor metadata after public rebuild
-        if: steps.ical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        if: steps.ical.outputs.changed == 'true' || steps.canonical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: pwsh
         run: |
           python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy

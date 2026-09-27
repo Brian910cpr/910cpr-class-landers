@@ -1,0 +1,24 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+const {stripTypeScriptTypes} = require('node:module');
+
+function loadEndpoint(fetch) {
+  const filename = path.resolve(__dirname, '../../supabase/functions/canonical-scheduling-demand/index.ts');
+  const source = fs.readFileSync(filename, 'utf8').replace(/^import .*edge-runtime.*;\r?\n/m, '').replace(/export /g, '');
+  const context = vm.createContext({
+    Date, Intl, URL, URLSearchParams, Request, Response, AbortSignal, console, fetch,
+    Deno: {serve() {}, env: {get: name => ({SUPABASE_URL:'https://database.test', SUPABASE_SERVICE_ROLE_KEY:'fixture-only'})[name]}},
+  });
+  vm.runInContext(stripTypeScriptTypes(source) + '\nthis.api = {localDate, localMidnight, demandRange, projectDemand, loadDemand, handleRequest};', context, {filename});
+  return context.api;
+}
+
+module.exports = {loadEndpoint};
+
+if (require.main === module) {
+  const rows = JSON.parse(fs.readFileSync(0, 'utf8'));
+  const api = loadEndpoint(async url => new Response(JSON.stringify(String(url).includes('/admin/hot-sync') ? {} : rows)));
+  api.handleRequest(new Request('https://endpoint.test/?from=2030-09-01&to=2030-10-01', {headers:{'x-hot-sync-admin-key':'fixture-only'}}))
+    .then(response => response.text()).then(body => process.stdout.write(body));
+}

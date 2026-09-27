@@ -11,6 +11,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -80,7 +81,9 @@ def validate_payload(payload: Any, *, now: datetime | None = None) -> dict[str, 
         if not str(row.get("canonical_session_id") or "").strip():
             raise ValueError(f"sessions[{index}] is missing canonical_session_id")
         count = row.get("active_registration_count")
-        if not isinstance(count, int) or isinstance(count, bool) or count < 0:
+        if count is None and row.get("count_available") is False and row.get("demand_basis") == "unknown":
+            continue
+        if not isinstance(count, int) or isinstance(count, bool) or count < 0 or row.get("count_available") is False:
             raise ValueError(f"sessions[{index}].active_registration_count must be a non-negative integer")
     return payload
 
@@ -92,7 +95,7 @@ def stable_hash(payload: dict[str, Any]) -> str:
 
 
 def fetch(*, url: str, key: str, timeout: float = 30) -> dict[str, Any]:
-    query = urllib.parse.urlencode({"from": datetime.now(timezone.utc).date().isoformat()})
+    query = urllib.parse.urlencode({"from": datetime.now(ZoneInfo("America/New_York")).date().isoformat()})
     request = urllib.request.Request(
         f"{url}?{query}",
         headers={
