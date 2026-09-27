@@ -1,3 +1,5 @@
+import {registrationProof} from '../_shared/external-roster-proof.ts';
+import {localDate, localMidnight} from '../_shared/scheduling-clock.ts';
 import {authorizedOwner as authorized} from '../_shared/owner-auth.ts';
 import {storeIntake, validId, viewDocument} from './class-record.ts';
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
@@ -54,7 +56,8 @@ async function rest(path: string, init: RequestInit = {}) {
 }
 
 export function summarizeSession(row: any) {
-  const registrations = Array.isArray(row.registrations) ? row.registrations : [];
+  const proof = registrationProof(row);
+  const registrations = proof.count_available && Array.isArray(row.registrations) ? row.registrations : [];
   const active = registrations.filter((registration: any) => ACTIVE_REGISTRATION_STATUSES.has(registration.status));
   const participants = active.map((registration: any) => {
     const customer = registration.customers || {};
@@ -80,11 +83,11 @@ export function summarizeSession(row: any) {
     course_key: row.courses?.course_key || null,
     location_name: row.locations?.name || "Location unknown",
     organization_name: row.organizations?.name || null,
-    participant_count: participants.length,
-    registered_count: participants.length,
-    count_available: true,
-    roster_available: true,
-    count_source: "canonical_active_registrations",
+    participant_count: proof.active_registration_count,
+    registered_count: proof.active_registration_count,
+    ...proof,
+    roster_available: proof.count_available,
+    count_source: proof.count_available ? "canonical_active_registrations" : proof.demand_status,
     active_registration_statuses: [...ACTIVE_REGISTRATION_STATUSES],
     registration_ids: participants.map((participant: any) => participant.registration_id),
     participants,
@@ -94,26 +97,31 @@ export function summarizeSession(row: any) {
 async function canonicalSessions(from: string, to: string) {
   const { url, key } = config();
   const select = [
-    "id", "external_class_id", "source", "status", "start_at", "end_at",
+    "id", "external_class_id", "registration_backend", "external_reconciliation", "source", "status", "start_at", "end_at",
     "courses!class_sessions_course_id_fkey(name,course_key)",
     "locations!class_sessions_location_id_fkey(name)",
     "organizations!class_sessions_organization_id_fkey(name)",
-    "registrations!registrations_class_session_id_fkey(id,customer_id,status,customers!registrations_customer_id_fkey(id,first_name,last_name,email))",
+    "registrations!registrations_class_session_id_fkey(id,customer_id,status,external_registration_id,customers!registrations_customer_id_fkey(id,first_name,last_name,email))",
   ].join(",");
-  const params = new URLSearchParams({ select, record_scope: "eq.operational", status: `in.${OPERATIONAL_SESSION_STATUSES}`, order: "start_at.asc" });
-  params.append("start_at", `gte.${from}T00:00:00-04:00`);
-  params.append("start_at", `lt.${to}T00:00:00-04:00`);
-  const response = await fetch(`${url}/rest/v1/class_sessions?${params}`, {
-    headers: { apikey: key, authorization: `Bearer ${key}` },
-  });
-  const body = await response.json();
-  if (!response.ok) throw new Error(body?.message || `Database request failed (${response.status})`);
-  return body.map(summarizeSession);
+  const params = new URLSearchParams({ select, record_scope: "eq.operational", status: `in.${OPERATIONAL_SESSION_STATUSES}`, order: "start_at.asc,id.asc", limit: "500" });
+  params.append("start_at", `gte.${localMidnight(from)}`);
+  params.append("start_at", `lt.${localMidnight(to)}`);
+  const sessions = [];
+  for (let offset = 0; ; offset += 500) {
+    params.set('offset', String(offset));
+    const response = await fetch(`${url}/rest/v1/class_sessions?${params}`, {
+      headers: { apikey: key, authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(20000),
+    });
+    const body = await response.json();
+    if (!response.ok || !Array.isArray(body)) throw new Error(`Database request failed (${response.status})`);
+    sessions.push(...body.map(summarizeSession));
+    if (body.length < 500) return sessions;
+  }
 }
 
 async function sessionDetail(id: string) {
   validId(id);
-  const sessions = await rest(`class_sessions?id=eq.${id}&record_scope=eq.operational&select=id,external_class_id,source,status,start_at,end_at,courses!class_sessions_course_id_fkey(name,course_key),locations!class_sessions_location_id_fkey(name),organizations!class_sessions_organization_id_fkey(name),registrations!registrations_class_session_id_fkey(id,customer_id,status,historical_ecard_code,customers!registrations_customer_id_fkey(id,first_name,last_name,email,phone))&limit=1`);
+  const sessions = await rest(`class_sessions?id=eq.${id}&record_scope=eq.operational&select=id,external_class_id,registration_backend,external_reconciliation,source,status,start_at,end_at,courses!class_sessions_course_id_fkey(name,course_key),locations!class_sessions_location_id_fkey(name),organizations!class_sessions_organization_id_fkey(name),registrations!registrations_class_session_id_fkey(id,customer_id,status,external_registration_id,historical_ecard_code,customers!registrations_customer_id_fkey(id,first_name,last_name,email,phone))&limit=1`);
   if (!sessions?.length) throw Error("session_not_found");
   const session = summarizeSession(sessions[0]);
   const [credentials, documents] = await Promise.all([
@@ -157,23 +165,31 @@ Deno.serve(async (req) => {
       return reply(origin, {intake: await storeIntake(req, sessionId, detail.session.participants, rest, env)}, 201);
     }
     if (req.method !== "GET") return reply(origin, { error: "Method not allowed" }, 405);
-    const today = new Date().toISOString().slice(0, 10);
+    const today = localDate();
     const from = dateParam(requestUrl.searchParams.get("from"), today);
     const defaultTo = new Date(`${from}T00:00:00Z`);
     defaultTo.setUTCDate(defaultTo.getUTCDate() + 366);
     const to = dateParam(requestUrl.searchParams.get("to"), defaultTo.toISOString().slice(0, 10));
     const span = (Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86400000;
     if (span <= 0 || span > 366) return reply(origin, { error: "Date range must be 1 through 366 days" }, 400);
+    const reconciliation = await rest('rpc/enrollware_reconciliation_health', {method:'POST', body:JSON.stringify({p_from:localMidnight(from),p_to:localMidnight(to)})});
+    if (action === 'reconciliation-health') return reply(origin, reconciliation);
     const sessions = await canonicalSessions(from, to);
+    for (const gap of reconciliation.sessions || []) {
+      if (gap.status === 'missing_canonical_session') sessions.push({session_id:null,external_class_id:gap.external_class_id,
+        start_at:gap.start_at,count_available:false,roster_available:false,participant_count:null,registered_count:null,
+        participants:[],registration_ids:[],count_source:gap.status,demand_status:gap.status});
+    }
     return reply(origin, {
       schema_version: "2.0.0",
       generated_at: new Date().toISOString(),
+      reconciliation,
       scope: { from, to, statuses: ["scheduled", "active", "completed"], record_scope: "operational" },
       summary: {
         sessions: sessions.length,
         sessions_with_participants: sessions.filter((row: any) => row.participant_count > 0).length,
         participants: sessions.reduce((sum: number, row: any) => sum + row.participant_count, 0),
-        unknown_counts: 0,
+        unknown_counts: sessions.filter((row: any) => !row.count_available).length,
       },
       sessions,
     });

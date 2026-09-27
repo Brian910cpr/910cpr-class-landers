@@ -5,7 +5,9 @@ const {stripTypeScriptTypes} = require('node:module');
 
 function loadEndpoint(fetch) {
   const filename = path.resolve(__dirname, '../../supabase/functions/canonical-scheduling-demand/index.ts');
-  const source = fs.readFileSync(filename, 'utf8').replace(/^import .*edge-runtime.*;\r?\n/m, '').replace(/export /g, '');
+  const shared = fs.readFileSync(path.resolve(__dirname, '../../supabase/functions/_shared/external-roster-proof.ts'), 'utf8');
+  const clock = fs.readFileSync(path.resolve(__dirname, '../../supabase/functions/_shared/scheduling-clock.ts'), 'utf8');
+  const source = (clock + '\n' + shared + '\n' + fs.readFileSync(filename, 'utf8').replace(/^(?:import|export \{).*;\r?\n/gm, '')).replace(/export /g, '');
   const context = vm.createContext({
     Date, Intl, URL, URLSearchParams, Request, Response, AbortSignal, console, fetch,
     Deno: {serve() {}, env: {get: name => ({SUPABASE_URL:'https://database.test', SUPABASE_SERVICE_ROLE_KEY:'fixture-only'})[name]}},

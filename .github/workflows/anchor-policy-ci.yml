@@ -14,6 +14,16 @@ on:
       - 'tests/*canonical*demand*'
       - 'tests/test_demand_publication.py'
       - 'supabase/functions/canonical-scheduling-demand/**'
+      - 'supabase/functions/canonical-session-workspace/**'
+      - 'supabase/functions/_shared/*proof*'
+      - 'supabase/functions/_shared/scheduling-clock.ts'
+      - 'supabase/migrations/*reconcile_operational_enrollware_rosters.sql'
+      - 'scripts/*enrollware*reconciliation*'
+      - 'tests/reconciliation/**'
+      - 'tests/enrollware_roster_proof.test.cjs'
+      - 'tests/test_enrollware_roster_reconciliation.py'
+      - 'supabase/migrations/*roster_proof.sql'
+      - 'supabase/migrations/*enrollware_legacy_sources.sql'
       - '.github/workflows/refresh-public-site.yml'
       - '.github/workflows/refresh-admin-availability.yml'
       - 'tests/test_anchor_state.py'
@@ -50,6 +60,10 @@ jobs:
       - name: Compile anchor modules
         run: python -m py_compile scripts/anchor_state.py scripts/apply_anchor_policy.py scripts/canonical_scheduling_demand.py scripts/fetch_canonical_scheduling_demand.py scripts/block_start_time_selector.py
       - name: Run anchor regressions
-        run: python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy tests.test_canonical_scheduling_demand tests.test_fetch_canonical_scheduling_demand tests.test_demand_publication tests.test_selector_clock
+        run: python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy tests.test_canonical_scheduling_demand tests.test_fetch_canonical_scheduling_demand tests.test_demand_publication tests.test_selector_clock tests.test_enrollware_roster_reconciliation
       - name: Test deployed endpoint code with isolated database and auth fixtures
-        run: node --test tests/canonical_demand_endpoint.test.cjs
+        run: node --test tests/canonical_demand_endpoint.test.cjs tests/enrollware_roster_proof.test.cjs
+      - name: Test canonical reconciliation in isolated PostgreSQL
+        run: |
+          npm ci --prefix tests/reconciliation
+          node --test tests/reconciliation/reconcile.test.mjs

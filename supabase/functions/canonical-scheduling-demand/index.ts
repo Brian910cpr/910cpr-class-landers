@@ -1,4 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import {localDate, localMidnight, demandRange} from '../_shared/scheduling-clock.ts';
+export {localDate, localMidnight, demandRange} from '../_shared/scheduling-clock.ts';
+import {registrationProof} from '../_shared/external-roster-proof.ts';
 
 const ACTIVE = new Set(["registered", "confirmed", "completed"]);
 const ALLOWED_ORIGINS = new Set(["https://www.910cpr.com", "https://910cpr.com"]);
@@ -13,44 +16,6 @@ function response(origin: string, body: unknown, status = 200) {
   };
   if (ALLOWED_ORIGINS.has(origin)) headers["access-control-allow-origin"] = origin;
   return new Response(status === 204 ? null : JSON.stringify(body), { status, headers });
-}
-
-const TIMEZONE = "America/New_York";
-
-export function localDate(now = new Date()): string {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: TIMEZONE, year: "numeric", month: "2-digit", day: "2-digit" }).format(now);
-}
-
-export function localMidnight(day: string): string {
-  const stamp = Date.parse(`${day}T00:00:00Z`);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(day) || !Number.isFinite(stamp) || new Date(stamp).toISOString().slice(0, 10) !== day) {
-    throw new RangeError("Dates must be real calendar dates in YYYY-MM-DD format");
-  }
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    timeZone: TIMEZONE, year: "numeric", month: "2-digit", day: "2-digit",
-    hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23",
-  });
-  let instant = stamp;
-  // Resolve the zone at the boundary itself, including 23/25-hour DST days.
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const parts = Object.fromEntries(formatter.formatToParts(new Date(instant)).map(part => [part.type, part.value]));
-    const wall = Date.UTC(+parts.year, +parts.month - 1, +parts.day, +parts.hour, +parts.minute, +parts.second);
-    const correction = stamp - wall;
-    if (correction === 0) return new Date(instant).toISOString();
-    instant += correction;
-  }
-  throw new RangeError("Could not resolve local midnight");
-}
-
-export function demandRange(query: URLSearchParams, now = new Date()) {
-  const from = query.get("from") || localDate(now);
-  const start = localMidnight(from);
-  const end = new Date(`${from}T00:00:00Z`);
-  end.setUTCDate(end.getUTCDate() + 366);
-  const to = query.get("to") || end.toISOString().slice(0, 10);
-  const stop = localMidnight(to);
-  if (stop <= start || Date.parse(stop) - Date.parse(start) > 367 * 86400000) throw new RangeError("Invalid date range");
-  return { from, to, start, stop };
 }
 
 function serviceConfig() {
@@ -72,9 +37,8 @@ async function authorized(req: Request) {
 }
 
 export function projectDemand(row: any) {
-  // A live DB read does not make an incomplete Enrollware bridge current (#297).
-  // No session-level complete-roster reconciliation proof exists for that bridge.
-  const countAvailable = Array.isArray(row.registrations) && ["landerware", "manual"].includes(row.registration_backend);
+  const proof = registrationProof(row);
+  const countAvailable = proof.count_available;
   const registrations = countAvailable ? row.registrations : [];
   return {
     canonical_session_id: row.id,
@@ -91,7 +55,7 @@ export function projectDemand(row: any) {
     session_status: row.status,
     active_registration_count: countAvailable ? registrations.filter((item: any) => ACTIVE.has(item.status)).length : null,
     count_available: countAvailable,
-    demand_status: countAvailable ? "current" : "external_reconciliation_required",
+    ...proof,
     demand_basis: countAvailable ? "canonical_active_registrations" : "unknown",
   };
 }
@@ -99,10 +63,10 @@ export function projectDemand(row: any) {
 export async function loadDemand(start: string, stop: string) {
   const { url, key } = serviceConfig();
   const select = [
-    "id", "external_class_id", "external_course_id", "registration_backend", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
+    "id", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
     "courses!class_sessions_course_id_fkey(course_key)",
     "locations!class_sessions_location_id_fkey(name)",
-    "registrations!registrations_class_session_id_fkey(status)",
+    "registrations!registrations_class_session_id_fkey(status,external_registration_id)",
   ].join(",");
   const params = new URLSearchParams({
     select, record_scope: "eq.operational", status: "in.(scheduled,active,completed)", order: "start_at.asc,id.asc", limit: "500",

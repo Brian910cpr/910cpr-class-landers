@@ -629,7 +629,19 @@ def main() -> int:
     parser.add_argument("--input", required=True, help="Path to Google Sheet CSV export or Zapier registration CSV.")
     parser.add_argument("--seeds", default=str(DEFAULT_SEEDS_PATH), help="Path to schedule_seeds_preview.json.")
     parser.add_argument("--report-only", action="store_true", help="Document intent: this command writes audit outputs only.")
+    parser.add_argument("--complete-roster", action="store_true", help="Validate a current complete-roster JSON snapshot for canonical reconciliation.")
+    parser.add_argument("--rpc-output", help="Optional private RPC payload path outside the repository.")
+    parser.add_argument("--apply", action="store_true", help="Reconcile verified current rosters into canonical LanderWare only.")
     args = parser.parse_args()
+    if args.complete_roster:
+        from enrollware_roster_reconciliation import reconcile_snapshot
+        if args.report_only and args.apply:
+            parser.error("--report-only cannot be combined with --apply")
+        result = reconcile_snapshot(Path(args.input), Path(args.rpc_output) if args.rpc_output else None, args.apply)
+        print(json.dumps(result, sort_keys=True))
+        return 1 if result.get("quarantined") else 0
+    if args.apply or args.rpc_output:
+        parser.error("canonical reconciliation requires --complete-roster")
     result = run(Path(args.input), Path(args.seeds))
     summary = result["summary"]
     print("Enrollware registration event import complete (REPORT ONLY).")
