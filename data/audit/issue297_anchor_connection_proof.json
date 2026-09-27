@@ -1,0 +1,75 @@
+{
+  "revision": "3d5f4e0f95ca961f9f90b2331dcaf47f8c78b745",
+  "schema_version": "910cpr-canonical-scheduling-demand.v1",
+  "generated_at": "2026-09-27T04:13:46.093Z",
+  "sessions": 35,
+  "known_counts": 35,
+  "unknown_counts": 0,
+  "repeat_content_equal": true,
+  "preflight_status": 204,
+  "unauthenticated_status": 401,
+  "workflow_run": 36293682090,
+  "endpoint_version": 2,
+  "publication_dryrun": {
+    "stats": {
+      "anchors_promoted": 12,
+      "schedule_sessions_annotated": 12,
+      "admin_sessions_annotated": 12,
+      "selector_files_processed": 8,
+      "anchor_offers_annotated": 0,
+      "scattered_offers_consolidated": 0,
+      "duplicate_anchor_offers_removed": 0,
+      "canonical_demand_rows_matched": 31,
+      "canonical_demand_rows_failed_closed": 4,
+      "occurrences_with_unknown_demand": 0
+    },
+    "repeat_stats": {
+      "anchors_promoted": 12,
+      "schedule_sessions_annotated": 12,
+      "admin_sessions_annotated": 12,
+      "selector_files_processed": 8,
+      "anchor_offers_annotated": 0,
+      "scattered_offers_consolidated": 0,
+      "duplicate_anchor_offers_removed": 0,
+      "canonical_demand_rows_matched": 31,
+      "canonical_demand_rows_failed_closed": 4,
+      "occurrences_with_unknown_demand": 0
+    },
+    "repeat_anchor_content_equal": true,
+    "scope": "all existing main selectors/schedule/admin copies plus live canonical projection; no candidate regeneration or production publication",
+    "incident_anchors": [
+      {
+        "session_id": "14361098",
+        "course_id": "359474",
+        "start_at": "2026-09-27T13:00:00-04:00",
+        "end_at": "2026-09-27T15:00:00-04:00",
+        "location": ":: Wilmington; Shipyard Blvd - B",
+        "instructor": "Brian Ennis",
+        "registered_count": 1,
+        "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+        "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+        "schedule_role": "anchor",
+        "schedule_symbol": "\u2693",
+        "promotion_reason": "canonical_active_registration",
+        "landing_page_required": true,
+        "external_publication_eligible": true
+      },
+      {
+        "session_id": "14421081",
+        "course_id": "210549",
+        "start_at": "2026-09-27T18:30:00-04:00",
+        "end_at": "2026-09-27T19:30:00-04:00",
+        "location": ":: Wilmington; Shipyard Blvd - B",
+        "instructor": "Brian Ennis",
+        "registered_count": 1,
+        "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1830",
+        "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+        "schedule_role": "anchor",
+        "schedule_symbol": "\u2693",
+        "promotion_reason": "canonical_active_registration",
+        "landing_page_required": true,
+        "external_publication_eligible": true
+      }
+    ]
+  }
+}

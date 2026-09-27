@@ -10,6 +10,8 @@ test('real PostgreSQL canonical reconciliation lifecycle, replay, quarantine and
     await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927034822_reconcile_operational_enrollware_rosters.sql',import.meta.url),'utf8'));
     await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927040638_reconcile_verified_enrollware_legacy_sources.sql',import.meta.url),'utf8'));
     await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927040949_invalidate_incomplete_roster_proof.sql',import.meta.url),'utf8'));
+    await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927041952_preserve_committed_external_location_identity.sql',import.meta.url),'utf8'));
+    await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927042118_retain_existing_operational_location_gate.sql',import.meta.url),'utf8'));
     await db.exec(`insert into courses(course_key,name) values('fixture-course','Fixture');
       insert into people(person_key,display_name) values('fixture-instructor','Fixture');
       insert into locations(location_key,name,scheduling_status) values('fixture-room','Fixture','active');`);
@@ -48,6 +50,11 @@ test('real PostgreSQL canonical reconciliation lifecycle, replay, quarantine and
     assert.equal((await health()).unknown_sessions,0);
     assert.equal((await reconcile([{...one,external_class_id:'80003',complete_roster:false}])).quarantined,1);
     assert.equal((await health()).sessions.find(s=>s.external_class_id==='80003').status,'missing_canonical_session');
+    assert.equal((await reconcile([{...row,external_class_id:'80004',location_key:'missing-location'}])).quarantined,1,'unknown identity still fails closed');
+    await db.exec("update locations set scheduling_status='inactive'");
+    assert.equal((await reconcile([{...row,external_class_id:'80005'}])).quarantined,1,'inactive locations preserve the existing authority gate');
+    assert.equal((await db.query('select scheduling_status from locations')).rows[0].scheduling_status,'inactive','reconciliation never enables new scheduling');
+    await db.exec("update locations set scheduling_status='active'");
     assert.equal((await reconcile([{...one,source_observed_at:'2020-01-01T00:00:00Z'}])).quarantined,1);
     assert.equal((await reconcile([{...one,registrations:[{...member,status:'mystery'}]}])).quarantined,1);
     assert.equal((await db.query("select count(*)::int n from registrations where status='registered'")).rows[0].n,0);

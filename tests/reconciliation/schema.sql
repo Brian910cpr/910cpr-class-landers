@@ -1,3 +1,5 @@
+-- Production column/index shape and the location-authority trigger relevant to
+-- operational reconciliation; other application side effects are not simulated.
 create role anon; create role authenticated; create role service_role;
 create table public.class_sessions (
 id uuid not null default gen_random_uuid(),
@@ -217,3 +219,32 @@ CREATE UNIQUE INDEX registrations_nhcso_student_unique ON public.registrations U
 CREATE UNIQUE INDEX registrations_historical_import_key_uidx ON public.registrations USING btree (historical_import_key) WHERE (historical_import_key IS NOT NULL);
 CREATE UNIQUE INDEX registrations_idempotency_key_unique ON public.registrations USING btree (idempotency_key) WHERE (idempotency_key IS NOT NULL);
 CREATE UNIQUE INDEX registrations_handoff_intent_unique ON public.registrations USING btree (handoff_intent_id) WHERE (handoff_intent_id IS NOT NULL);
+CREATE OR REPLACE FUNCTION public.enforce_session_location_authority()
+ RETURNS trigger
+ LANGUAGE plpgsql
+ SET search_path TO 'public', 'pg_temp'
+AS $function$
+declare
+  v_location_status text;
+begin
+  select scheduling_status into v_location_status
+  from public.locations
+  where id = new.location_id;
+
+  if v_location_status is null then
+    raise exception 'canonical location not found';
+  end if;
+
+  if new.record_scope = 'operational' and v_location_status <> 'active' then
+    raise exception 'operational sessions require an active/schedulable location';
+  end if;
+
+  if new.visibility = 'public'
+     and (new.record_scope <> 'operational' or v_location_status <> 'active') then
+    raise exception 'public sessions require operational scope and an active/schedulable location';
+  end if;
+
+  return new;
+end;
+$function$;
+CREATE TRIGGER class_sessions_enforce_location_authority_trg BEFORE INSERT OR UPDATE OF record_scope,location_id,visibility ON public.class_sessions FOR EACH ROW EXECUTE FUNCTION public.enforce_session_location_authority();

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 import hashlib
 import json
 import os
@@ -77,7 +78,11 @@ def validate_payload(payload: Any, *, now: datetime | None = None) -> dict[str, 
         raise ValueError("sessions must be a list of objects")
     if forbidden := _forbidden_key_path(payload):
         raise ValueError(f"PII-like field is forbidden in canonical demand payload: {forbidden}")
-    for index, row in enumerate(sessions):
+    # Recheck external source time at consumption as well as endpoint fetch.
+    # A fresh database response must not extend an almost-expired roster proof
+    # through a long build or a later pass over the same runtime snapshot.
+    payload = deepcopy(payload)
+    for index, row in enumerate(payload["sessions"]):
         if not str(row.get("canonical_session_id") or "").strip():
             raise ValueError(f"sessions[{index}] is missing canonical_session_id")
         count = row.get("active_registration_count")
@@ -85,6 +90,18 @@ def validate_payload(payload: Any, *, now: datetime | None = None) -> dict[str, 
             continue
         if not isinstance(count, int) or isinstance(count, bool) or count < 0 or row.get("count_available") is False:
             raise ValueError(f"sessions[{index}].active_registration_count must be a non-negative integer")
+        if row.get("freshness_minutes") is not None:
+            try:
+                minutes = row["freshness_minutes"]
+                source_age = current - _parse_instant(row.get("source_observed_at"))
+                current_source = (isinstance(minutes, int) and not isinstance(minutes, bool)
+                                  and 0 < minutes <= 60
+                                  and -timedelta(minutes=5) <= source_age <= timedelta(minutes=minutes))
+            except (ValueError, TypeError):
+                current_source = False
+            if not current_source:
+                row.update(active_registration_count=None, count_available=False,
+                           demand_basis="unknown", demand_status="stale_reconciliation")
     return payload
 
 

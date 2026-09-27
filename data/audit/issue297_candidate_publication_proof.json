@@ -1,0 +1,112 @@
+{
+  "scope": "actual iCal importer, real BLS candidate generator, final live availability guard, final Anchor policy; scratch only",
+  "as_of_date": "2026-09-27",
+  "eastern_reference": "2026-09-27T00:24:28.002189",
+  "input_counts": {
+    "ical_events_read": 269,
+    "sessions_written": 269,
+    "skipped_events": 0,
+    "registration_unavailable_sessions_marked_not_direct_bookable": 234,
+    "unmapped_sessions": 10,
+    "prior_sessions_read": 0,
+    "sessions_added_compared_with_prior_source": 269,
+    "classes_removed_compared_with_prior_source": 0,
+    "stale_sheet_or_class_report_sessions_excluded": 0,
+    "participant_truth": "canonical_registrations_only"
+  },
+  "candidate_counts": {
+    "availabilityBlocksFound": 203,
+    "availabilityBlocksEvaluated": 203,
+    "publicLocationBlocksEvaluated": 203,
+    "publicSelectableOfferCount": 8588,
+    "publicSelectableDateCount": 90,
+    "publicSelectableStartTimeCount": 3142,
+    "rejectedOfferCount": 1926,
+    "suppressedStaleOrOrphanedOfferCount": 0,
+    "wholeBlockPresentedAsClass": false
+  },
+  "rejection_reason_counts": {
+    "INSUFFICIENT_CONTIGUOUS_TIME": 1589,
+    "REAL_CALENDAR_BLOCK": 984,
+    "REAL_CLASS_COLLISION": 262,
+    "inside_minimum_lead_time": 144,
+    "starts_before_current_time": 15
+  },
+  "resolved_counts": {
+    "availabilityBlocksFound": 203,
+    "availabilityBlocksEvaluated": 203,
+    "publicLocationBlocksEvaluated": 203,
+    "publicSelectableOfferCount": 8102,
+    "publicSelectableDateCount": 90,
+    "publicSelectableStartTimeCount": 2960,
+    "rejectedOfferCount": 1926,
+    "suppressedStaleOrOrphanedOfferCount": 0,
+    "wholeBlockPresentedAsClass": false
+  },
+  "september27": {
+    "date": "2026-09-27",
+    "displayDate": "2026-09-27",
+    "startTimes": [
+      {
+        "startTime": "1:00 PM",
+        "displayStartTime": "1:00 PM",
+        "courses": [
+          {
+            "courseId": "359474",
+            "courseName": "AHA BLS Provider (Renewal)",
+            "courseFamily": "BLS",
+            "deliveryMode": "classroom",
+            "displayStartTime": "1:00 PM",
+            "durationMinutes": 120,
+            "schedulerConsumptionMinutes": 120,
+            "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+            "location": ":: Wilmington; Shipyard Blvd - B",
+            "availabilityBlockId": "seated:14361098",
+            "offerType": "seated_class",
+            "date": "2026-09-27",
+            "startTime": "1:00 PM",
+            "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14361098",
+            "session_id": "14361098",
+            "schedule_role": "anchor",
+            "schedule_symbol": "\u2693",
+            "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1300",
+            "promotion_reason": "same_course_anchor_reuse",
+            "landing_page_required": true,
+            "external_publication_eligible": true,
+            "offer_source": "existing_seated_anchor"
+          }
+        ]
+      },
+      {
+        "startTime": "6:30 PM",
+        "displayStartTime": "6:30 PM",
+        "courses": [
+          {
+            "courseId": "210549",
+            "courseName": "AHA BLS HeartCode\u00ae",
+            "courseFamily": "BLS",
+            "deliveryMode": "blended",
+            "displayStartTime": "6:30 PM",
+            "durationMinutes": 60,
+            "schedulerConsumptionMinutes": 60,
+            "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+            "location": ":: Wilmington; Shipyard Blvd - B",
+            "availabilityBlockId": "seated:14421081",
+            "offerType": "seated_class",
+            "date": "2026-09-27",
+            "startTime": "6:30 PM",
+            "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14421081",
+            "session_id": "14421081",
+            "schedule_role": "anchor",
+            "schedule_symbol": "\u2693",
+            "cluster_id": "2026-09-27-::-wilmington;-shipyard-blvd---b-brian-ennis-1830",
+            "promotion_reason": "same_course_anchor_reuse",
+            "landing_page_required": true,
+            "external_publication_eligible": true,
+            "offer_source": "existing_seated_anchor"
+          }
+        ]
+      }
+    ]
+  }
+}

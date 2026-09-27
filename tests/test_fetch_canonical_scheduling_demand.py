@@ -43,6 +43,24 @@ class FetchCanonicalSchedulingDemandTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "PII-like field"):
             subject.validate_payload(payload(email="student@example.com"), now=NOW)
 
+    def test_fresh_response_does_not_extend_external_roster_watermark(self):
+        original = payload(freshness_minutes=60, source_observed_at="2026-09-11T21:59:00Z")
+        row = subject.validate_payload(original, now=NOW)["sessions"][0]
+        self.assertIsNone(row["active_registration_count"])
+        self.assertFalse(row["count_available"])
+        self.assertEqual(row["demand_status"], "stale_reconciliation")
+        self.assertEqual(original["sessions"][0]["active_registration_count"], 2)
+
+    def test_current_external_roster_and_native_counts_remain_known(self):
+        for fields in ({"freshness_minutes":60,"source_observed_at":"2026-09-11T22:01:00Z"},
+                       {"freshness_minutes":None,"source_observed_at":None}):
+            self.assertEqual(subject.validate_payload(payload(**fields), now=NOW)["sessions"][0]["active_registration_count"],2)
+
+    def test_missing_external_source_watermark_stays_unknown(self):
+        row=subject.validate_payload(payload(freshness_minutes=60),now=NOW)["sessions"][0]
+        self.assertIsNone(row["active_registration_count"])
+        self.assertEqual(row["demand_basis"],"unknown")
+
     def test_stable_hash_ignores_generated_at(self):
         first = payload()
         second = payload()
