@@ -12,6 +12,8 @@ test('real PostgreSQL canonical reconciliation lifecycle, replay, quarantine and
     await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927040949_invalidate_incomplete_roster_proof.sql',import.meta.url),'utf8'));
     await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927041952_preserve_committed_external_location_identity.sql',import.meta.url),'utf8'));
     await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927042118_retain_existing_operational_location_gate.sql',import.meta.url),'utf8'));
+    await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927050745_classify_confirmed_enrollware_deadlines.sql',import.meta.url),'utf8'));
+    await db.exec(fs.readFileSync(new URL('../../supabase/migrations/20260927051624_retain_review_for_changed_deadline_sources.sql',import.meta.url),'utf8'));
     await db.exec(`insert into courses(course_key,name) values('fixture-course','Fixture');
       insert into people(person_key,display_name) values('fixture-instructor','Fixture');
       insert into locations(location_key,name,scheduling_status) values('fixture-room','Fixture','active');`);
@@ -55,6 +57,26 @@ test('real PostgreSQL canonical reconciliation lifecycle, replay, quarantine and
     assert.equal((await reconcile([{...row,external_class_id:'80005'}])).quarantined,1,'inactive locations preserve the existing authority gate');
     assert.equal((await db.query('select scheduling_status from locations')).rows[0].scheduling_status,'inactive','reconciliation never enables new scheduling');
     await db.exec("update locations set scheduling_status='active'");
+    const deadline={...one,external_class_id:'80006',location_key:'unapproved',external_course_id:'410205',
+      external_location_id:'109182',source_end_time:'',source_hours:'2'};
+    assert.equal((await reconcile([deadline])).quarantined,1);
+    const sourceIdentity=Object.fromEntries(['external_class_id','external_course_id','external_location_id','start_at','source_end_time','source_hours'].map(k=>[k,deadline[k]]));
+    const decision={owner_confirmed:true,classification:'renewal_deadline',approved_location_key:'fixture-room',source_identity:sourceIdentity};
+    await db.query(`update ingest_review_queue set status='resolved',decided_at=now(),decision=$1::jsonb
+      where ingest_fact_id in (select id from ingest_facts where source_locator->>'external_class_id'='80006')`,[JSON.stringify(decision)]);
+    const classified=await reconcile([deadline]);
+    assert.equal(classified.classified_non_sessions,1);
+    assert.equal(classified.reconciled,0);
+    assert.equal((await db.query("select count(*)::int n from class_sessions where external_class_id='80006'")).rows[0].n,0);
+    assert.equal((await db.query("select proposed_value->'registrations' members from ingest_facts where resolution='classified_non_session'")).rows[0].members.length,1,'private source evidence retained');
+    assert.equal((await health()).sessions.find(s=>s.external_class_id==='80006').status,'classified_non_session');
+    assert.ok(!JSON.stringify(await health()).includes('fixture@example.test'),'no participant PII in health projection');
+    assert.equal((await reconcile([deadline])).classified_non_sessions,1,'classification survives replay');
+    const changedDeadline=await reconcile([{...deadline,location_key:'fixture-room',external_location_id:'new-active-location'}]);
+    assert.equal(changedDeadline.quarantined,1,'source identity change reopens review even when its new location is active');
+    assert.equal(changedDeadline.sessions[0].reason,'non_session_source_changed_requires_review');
+    assert.equal((await health()).sessions.find(s=>s.external_class_id==='80006').status,'missing_canonical_session');
+    assert.equal((await db.query("select has_function_privilege('anon','enrollware_non_session_decision(jsonb)','execute') allowed")).rows[0].allowed,false);
     assert.equal((await reconcile([{...one,source_observed_at:'2020-01-01T00:00:00Z'}])).quarantined,1);
     assert.equal((await reconcile([{...one,registrations:[{...member,status:'mystery'}]}])).quarantined,1);
     assert.equal((await db.query("select count(*)::int n from registrations where status='registered'")).rows[0].n,0);

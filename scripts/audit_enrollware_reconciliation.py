@@ -11,16 +11,19 @@ from zoneinfo import ZoneInfo
 def audit(health, projection):
     sessions=health.get('sessions',[])
     known={str(s['external_class_id']) for s in sessions if s.get('canonical_session_id')}
+    non_sessions=[{k:s.get(k) for k in ('external_class_id','non_session_classification','approved_location_key')}
+                  for s in sessions if s.get('status')=='classified_non_session' and not s.get('canonical_session_id')]
+    non_session_ids={str(s['external_class_id']) for s in non_sessions}
     gaps=[{k:s.get(k) for k in ('external_class_id','status','source_observed_at','reason')}
-          for s in sessions if s.get('status')!='current']
+          for s in sessions if s.get('status')!='current' and str(s.get('external_class_id')) not in non_session_ids]
     for s in projection.get('sessions',[]):
         identity=str(s.get('external_class_id') or s.get('session_id') or '')
-        if identity.isdigit() and identity not in known and not any(x['external_class_id']==identity for x in gaps):
+        if identity.isdigit() and identity not in known and identity not in non_session_ids and not any(x['external_class_id']==identity for x in gaps):
             gaps.append({'external_class_id':identity,'status':'committed_projection_without_canonical_session'})
     gaps.sort(key=lambda x:(x['external_class_id'],x['status']))
     signature=hashlib.sha256(json.dumps([(x['external_class_id'],x['status']) for x in gaps]).encode()).hexdigest()
     return {'checked_at':health.get('checked_at'),'freshness_minutes':60,'healthy':not gaps,
-            'canonical_external_sessions':len(known),'gaps':gaps,'signature':signature}
+            'canonical_external_sessions':len(known),'non_session_sources':non_sessions,'gaps':gaps,'signature':signature}
 
 
 def main():
