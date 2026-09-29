@@ -1,12 +1,12 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-09-29T03:05:09.993239-04:00`
+- Generated at: `2026-09-29T08:25:29.522975-04:00`
 - Source: `enrollware_ical`
 - iCal events read: `262`
 - Public sessions created: `262`
 - Skipped events: `0`
 - Registration unavailable sessions marked not direct-bookable: `230`
-- Unmapped sessions: `10`
+- Unmapped sessions: `7`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
 - Stale manual/Class Report sessions excluded: `0`
@@ -76,8 +76,6 @@ They remain separate registration-signal/audit inputs only.
 
 ## Unmapped Examples
 
-- `12775788`: AHA - Family & Friends® CPR (2026-07-20T18:00:00-04:00)
-- `13859298`: AHA - Family & Friends® CPR (2026-08-04T19:00:00-04:00)
 - `13880764`: ARC Adult CPR AED - Blended (2026-08-10T09:30:00-04:00)
 - `13901730`: BLS Provider (NHCSO) (2026-08-12T13:00:00-04:00)
 - `13929405`: AHA Heartsaver K-12 - In-person ?? (2026-08-14T08:00:00-04:00)
@@ -85,4 +83,3 @@ They remain separate registration-signal/audit inputs only.
 - `11341058`: AHA - BLS Instructor Renewal (2026-12-01T00:00:00-05:00)
 - `13415738`: HSI Adult/Child/Infant CPR AED | Blended Learning (2026-09-01T05:30:00-04:00)
 - `14344219`: AHA Heartsaver First Aid CPR AED In-person training for workplace, OSHA, and general public certification (2026-09-23T17:00:00-04:00)
-- `14495100`: AHA - Family & Friends® CPR (2026-10-02T08:45:00-04:00)
