@@ -33,6 +33,11 @@ on:
       - 'data/config/travel_time_rules.json'
       - 'data/config/block_schedule_pages.json'
       - 'data/config/anchor_schedule_policy.json'
+      - 'data/config/course_catalog.json'
+      - 'data/config/course_map.json'
+      - 'data/inventory/course_consumption_rules.json'
+      - 'tests/test_zero_duration_pipeline.py'
+      - 'tests/fixtures/enrollware_zero_duration_20260929.json'
 
 permissions:
   contents: write
@@ -59,7 +64,11 @@ jobs:
       - name: Install dependencies
         run: pip install python-dateutil openpyxl
 
+      - name: Test zero-duration occupancy pipeline
+        run: python -m unittest tests.test_zero_duration_pipeline tests.test_enrollware_ical_import
+
       - name: Refresh Enrollware seated and committed class source
+        # Resolve occupied windows before canonical schedule, selectors or anchors.
         run: python -m scripts.build_sessions_current --source enrollware_ical
 
       - name: Fetch committed HOT_SYNC classes

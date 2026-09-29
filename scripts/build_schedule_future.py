@@ -277,6 +277,8 @@ def build_public_future_session(session: dict[str, Any], course_identity: dict[s
         "delivery_mode": identity.get("delivery_mode") or course.get("delivery_mode_hint"),
         "start_at": start_raw,
         "end_at": end_raw,
+        "end_inference_reason": timing.get("end_inference_reason"),
+        "inferred_scheduler_consumption_minutes": timing.get("inferred_scheduler_consumption_minutes"),
         "timezone": timing.get("timezone"),
         "location_name": location.get("location_name"),
         "location_display": location.get("location_display"),
