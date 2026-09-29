@@ -1329,6 +1329,7 @@ def render_html(payload: dict[str, Any]) -> str:
   <meta name="description" content="{meta_description}">
   <link rel="canonical" href="{canonical_url}">
   <link rel="stylesheet" href="/assets/interaction-motion.css">
+  <link rel="stylesheet" href="/assets/calendar-time-filters.css?v=20260929.1">
   <style>{css()}</style>
   {commerce_schema_html}
   {GTM_HEAD_SNIPPET}
@@ -1374,6 +1375,7 @@ def render_html(payload: dict[str, Any]) -> str:
           <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
         </div>
       </div>
+      <div id="calendar-time-filters"></div>
       <div class="selector-grid">
         <div class="panel">
           <h2>Calendar</h2>
@@ -1402,6 +1404,7 @@ def render_html(payload: dict[str, Any]) -> str:
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
+  <script src="/assets/calendar-time-filters.js?v=20260929.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
     const availabilityUrl = {availability_url_json};
@@ -1661,11 +1664,14 @@ def render_html(payload: dict[str, Any]) -> str:
       if (!availabilityReady()) {{
         return [];
       }}
-      return ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds());
+      return CalendarTimeFilters.filterDates(
+        ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds()),
+        timingPreferences.constraints
+      );
     }}
 
     function asapAlternativeDates(now = businessNow()) {{
-      if (compareMode) return [];
+      if (compareMode || timingPreferences.constraints.active) return [];
       const selected = courseOptions.find(course => course.courseId === selectedCourseId);
       const group = selected ? Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId)) : null;
       const alternativeIds = new Set((group?.courseIds || []).filter(courseId => courseId !== selectedCourseId));
@@ -2209,6 +2215,14 @@ def render_html(payload: dict[str, Any]) -> str:
         renderStarts();
       }}
       updateCourseRailControls();
+    }});
+
+    const timingPreferences = CalendarTimeFilters.mount(byId('calendar-time-filters'), {{
+      today: () => businessNow().dateKey,
+      onChange: () => {{
+        mobileMonthIndex = 0;
+        renderAll();
+      }}
     }});
 
     showAllOptions = showAllFromDeepLink();

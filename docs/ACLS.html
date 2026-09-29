@@ -7,6 +7,7 @@
   <meta name="description" content="Choose AHA ACLS initial, renewal, or HeartCode skills training in Wilmington, NC. Compare formats, view current 910CPR dates, and register online.">
   <link rel="canonical" href="https://www.910cpr.com/acls.html">
   <link rel="stylesheet" href="/assets/interaction-motion.css">
+  <link rel="stylesheet" href="/assets/calendar-time-filters.css?v=20260929.1">
   <style>
     :root {
       color-scheme: light;
@@ -835,6 +836,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
         </div>
       </div>
+      <div id="calendar-time-filters"></div>
       <div class="selector-grid">
         <div class="panel">
           <h2>Calendar</h2>
@@ -898,6 +900,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
+  <script src="/assets/calendar-time-filters.js?v=20260929.1"></script>
   <script>
     const embeddedScheduleDates = [];
     const availabilityUrl = "/data/block-selector-availability/acls.json?v=2026-09-29T08%3A26%3A22.363198";
@@ -1157,11 +1160,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (!availabilityReady()) {
         return [];
       }
-      return ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds());
+      return CalendarTimeFilters.filterDates(
+        ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds()),
+        timingPreferences.constraints
+      );
     }
 
     function asapAlternativeDates(now = businessNow()) {
-      if (compareMode) return [];
+      if (compareMode || timingPreferences.constraints.active) return [];
       const selected = courseOptions.find(course => course.courseId === selectedCourseId);
       const group = selected ? Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId)) : null;
       const alternativeIds = new Set((group?.courseIds || []).filter(courseId => courseId !== selectedCourseId));
@@ -1705,6 +1711,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         renderStarts();
       }
       updateCourseRailControls();
+    });
+
+    const timingPreferences = CalendarTimeFilters.mount(byId('calendar-time-filters'), {
+      today: () => businessNow().dateKey,
+      onChange: () => {
+        mobileMonthIndex = 0;
+        renderAll();
+      }
     });
 
     showAllOptions = showAllFromDeepLink();
