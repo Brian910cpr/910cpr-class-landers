@@ -34,7 +34,7 @@ const requestIp = (req: Request) =>
   clean(req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown");
 const departmentEmail = (value: unknown) => {
   const email = clean(value).toLowerCase();
-  return /^[^@\\s]+@nhcgov\\.com$/.test(email) ? email : "";
+  return /^[^@\s]+@nhcgov\.com$/.test(email) ? email : "";
 };
 const maskEmail = (email: string) => {
   const [local, domain] = email.split("@");
