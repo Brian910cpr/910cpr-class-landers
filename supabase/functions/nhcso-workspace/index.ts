@@ -333,6 +333,18 @@ async function dispatchNotifications(classSessionId: string) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsFor(req) });
   if (req.method !== "POST") return json(req, { error: "POST required" }, 405);
+  const authContentType = req.headers.get("content-type") || "";
+  if (!authContentType.includes("multipart/form-data")) {
+    const publicBody = await req.clone().json().catch(() => ({}));
+    const publicAction = clean(publicBody.action);
+    try {
+      if (publicAction === "request_code") return await requestLoginCode(req, publicBody);
+      if (publicAction === "verify_code") return await verifyLoginCode(req, publicBody);
+    } catch (error) {
+      console.error("nhcso_public_auth_error", error);
+      return json(req, { error: "The login service is temporarily unavailable." }, 500);
+    }
+  }
   const access = await authorizeWorkspaceRequest(req);
   if (!access.ok) {
     console.warn("nhcso workspace access denied", { reason: access.reason });
@@ -372,6 +384,18 @@ Deno.serve(async (req) => {
 
     const body = await req.json();
     const action = clean(body.action);
+    if (action === "session_status") {
+      return json(req, {
+        ok: true,
+        email: access.email,
+        auth_type: access.auth_type,
+        expires_at: access.session_expires_at || null,
+      });
+    }
+    if (action === "logout") {
+      await revokeWorkspaceSession(req);
+      return json(req, { ok: true });
+    }
     if (action === "save_class") {
       const c = body.class || {};
       const course = clean(c.course);
