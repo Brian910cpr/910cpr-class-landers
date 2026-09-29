@@ -16,6 +16,33 @@ const json = (body: unknown, status = 200) => new Response(JSON.stringify(body),
 });
 const clean = (value: unknown) => String(value ?? "").trim();
 
+async function authorizeWorkspaceRequest(req: Request) {
+  const authHeader = req.headers.get("authorization") || "";
+  const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+  if (!token) return { ok: false, reason: "missing_bearer" };
+
+  let role = "";
+  try {
+    const payloadPart = token.split(".")[1] || "";
+    const normalized = payloadPart.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = normalized.padEnd(normalized.length + ((4 - normalized.length % 4) % 4), "=");
+    const claims = JSON.parse(atob(padded));
+    role = clean(claims.role);
+  } catch {
+    return { ok: false, reason: "invalid_token_shape" };
+  }
+  if (role !== "authenticated") return { ok: false, reason: "anonymous_not_allowed" };
+
+  const { data, error } = await admin.auth.getUser(token);
+  const user = data?.user;
+  const email = clean(user?.email).toLowerCase();
+  if (error || !user || !user.email_confirmed_at) return { ok: false, reason: "unverified_user" };
+  if (!(email.endsWith("@nhcgov.com") || email.endsWith("@910cpr.com"))) {
+    return { ok: false, reason: "email_not_allowed" };
+  }
+  return { ok: true, email, user_id: user.id };
+}
+
 async function studentKey(name: string, email: string) {
   const bytes = new TextEncoder().encode((email || name).trim().toLowerCase());
   const digest = await crypto.subtle.digest("SHA-256", bytes);
@@ -68,6 +95,11 @@ async function dispatchNotifications(classSessionId: string) {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "POST required" }, 405);
+  const access = await authorizeWorkspaceRequest(req);
+  if (!access.ok) {
+    console.warn("nhcso workspace access denied", { reason: access.reason });
+    return json({ error: "Authorized agency access is required" }, 403);
+  }
   try {
     const contentType = req.headers.get("content-type") || "";
     if (contentType.includes("multipart/form-data")) {
@@ -150,6 +182,7 @@ Deno.serve(async (req) => {
           name: name || email,
           email: email || null,
           status: clean(raw.status) || "Active",
+          score_or_certificate: clean(raw.score_or_certificate || raw.score || raw.certificate_number) || null,
           ecard_number: clean(raw.ecard_number || raw.card) || null,
           updated_at: new Date().toISOString(),
         });
@@ -163,6 +196,20 @@ Deno.serve(async (req) => {
       if (error) throw error;
       return json({ ok: true, class_number: classNumber, student_records: savedStudents || [] });
     }
+    if (action === "correct_finalized_student") {
+      const classNumber = clean(body.class_number);
+      const studentKeyValue = clean(body.student_key);
+      const name = clean(body.name);
+      const email = clean(body.email).toLowerCase();
+      if (!classNumber || !studentKeyValue || (!name && !email) || body.certifying_body_warning_accepted !== true) return json({ error: "Class, participant, corrected identity, and warning acceptance are required" }, 400);
+      const { data: classRow } = await admin.from("nhcso_classes").select("status").eq("class_number", classNumber).maybeSingle();
+      if (classRow?.status !== "finalized") return json({ error: "This correction route is only for finalized classes" }, 409);
+      const { data: existingStudent, error: lookupError } = await admin.from("nhcso_students").select("student_key").eq("class_number", classNumber).eq("student_key", studentKeyValue).single();
+      if (lookupError || !existingStudent) return json({ error: "Participant not found" }, 404);
+      const { data: corrected, error: correctionError } = await admin.from("nhcso_students").update({ name: name || email, email: email || null, updated_at: new Date().toISOString() }).eq("class_number", classNumber).eq("student_key", studentKeyValue).select().single();
+      if (correctionError) throw correctionError;
+      return json({ ok: true, student: corrected, warning: "Certifying-body credential records are unchanged" });
+    }
     if (action === "finalize_class") {
       const classNumber = clean(body.class_number);
       if (!classNumber || clean(body.confirm_class_number) !== classNumber) return json({ error: "Exact class-number confirmation is required" }, 400);
@@ -171,6 +218,12 @@ Deno.serve(async (req) => {
       const { data: students, error: studentError } = await admin.from("nhcso_students").select("*").eq("class_number", classNumber).order("created_at");
       if (studentError) throw studentError;
       if (!(students || []).some((student) => clean(student.status || "Active") === "Active")) return json({ error: "A class cannot be finalized without active students" }, 409);
+      const activeStudents = (students || []).filter((student) => clean(student.status || "Active") === "Active");
+      if (activeStudents.some((student) => !clean(student.score_or_certificate))) return json({ error: "Record a score or HeartCode certificate number for every active participant before finalizing" }, 409);
+      if (activeStudents.some((student) => !clean(student.ecard_number))) return json({ error: "Record an issued eCard number for every active participant before finalizing" }, 409);
+      const { count: paperworkCount, error: paperworkError } = await admin.from("nhcso_documents").select("*", { count: "exact", head: true }).eq("class_number", classNumber);
+      if (paperworkError) throw paperworkError;
+      if (!(paperworkCount || 0)) return json({ error: "Upload class paperwork before finalizing" }, 409);
       if (classRow.status !== "finalized") {
         const { error: updateError } = await admin.from("nhcso_classes").update({ status: "finalized", updated_at: new Date().toISOString() }).eq("class_number", classNumber).neq("status", "finalized");
         if (updateError) throw updateError;
@@ -262,4 +315,3 @@ Deno.serve(async (req) => {
     return json({ error: error instanceof Error ? error.message : String(error) }, 500);
   }
 });
-
