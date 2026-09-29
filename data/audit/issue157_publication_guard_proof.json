@@ -1,0 +1,1259 @@
+{
+  "schema_version": "910cpr-publication-guard-proof.v1",
+  "recorded_at": "2026-09-29T15:15:27.166518+00:00",
+  "overall_result": "BLOCKED_SOURCE_ACCESS_PUBLIC_SELECTOR_NOT_RECOVERED",
+  "code_commit": "9cf670c9a00f6a345c44eea02058e2a66a3c3915",
+  "merge_commit": "e0bb74e8225f29055412c2e9635b857b3821340a",
+  "pull_request": 307,
+  "local_tests": {
+    "python": 61,
+    "syntax": "passed",
+    "diff_check": "passed"
+  },
+  "ci": {
+    "run_id": 36587901009,
+    "python_tests": 61,
+    "typescript_tests": 18,
+    "postgresql_tests": 1,
+    "conclusion": "success"
+  },
+  "production_guard": {
+    "conclusion": "failure",
+    "createdAt": "2026-09-29T15:09:56Z",
+    "event": "workflow_dispatch",
+    "headSha": "e0bb74e8225f29055412c2e9635b857b3821340a",
+    "jobs": [
+      {
+        "completedAt": "2026-09-29T15:14:05Z",
+        "conclusion": "failure",
+        "databaseId": 109473704506,
+        "name": "refresh",
+        "startedAt": "2026-09-29T15:10:01Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-29T15:10:03Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-29T15:10:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:11:42Z",
+            "conclusion": "success",
+            "name": "Check out repository",
+            "number": 2,
+            "startedAt": "2026-09-29T15:10:03Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:11:43Z",
+            "conclusion": "success",
+            "name": "Set up Python",
+            "number": 3,
+            "startedAt": "2026-09-29T15:11:42Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:11:47Z",
+            "conclusion": "success",
+            "name": "Install dependencies",
+            "number": 4,
+            "startedAt": "2026-09-29T15:11:43Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:11:48Z",
+            "conclusion": "success",
+            "name": "Test zero-duration occupancy pipeline",
+            "number": 5,
+            "startedAt": "2026-09-29T15:11:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:12:49Z",
+            "conclusion": "success",
+            "name": "Refresh Enrollware seated and committed class source",
+            "number": 6,
+            "startedAt": "2026-09-29T15:11:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:12:49Z",
+            "conclusion": "success",
+            "name": "Fetch committed HOT_SYNC classes",
+            "number": 7,
+            "startedAt": "2026-09-29T15:12:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:12:50Z",
+            "conclusion": "success",
+            "name": "Fetch current canonical registration demand",
+            "number": 8,
+            "startedAt": "2026-09-29T15:12:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:12:51Z",
+            "conclusion": "success",
+            "name": "Rebuild future seated schedule",
+            "number": 9,
+            "startedAt": "2026-09-29T15:12:50Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:12:52Z",
+            "conclusion": "success",
+            "name": "Upload canonical demand fetch status",
+            "number": 10,
+            "startedAt": "2026-09-29T15:12:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:12:52Z",
+            "conclusion": "success",
+            "name": "Apply confirmed seat counts",
+            "number": 11,
+            "startedAt": "2026-09-29T15:12:52Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:12:52Z",
+            "conclusion": "success",
+            "name": "Publish schedule projection without participant truth",
+            "number": 12,
+            "startedAt": "2026-09-29T15:12:52Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:12:52Z",
+            "conclusion": "success",
+            "name": "Publish combined LanderWare iCal feed",
+            "number": 13,
+            "startedAt": "2026-09-29T15:12:52Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:12:53Z",
+            "conclusion": "success",
+            "name": "Refresh read-only calendar snapshots",
+            "number": 14,
+            "startedAt": "2026-09-29T15:12:52Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:12:53Z",
+            "conclusion": "success",
+            "name": "Build current live availability from calendar snapshots",
+            "number": 15,
+            "startedAt": "2026-09-29T15:12:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:12:53Z",
+            "conclusion": "success",
+            "name": "Publish sanitized dashboard availability feed",
+            "number": 16,
+            "startedAt": "2026-09-29T15:12:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:13:26Z",
+            "conclusion": "success",
+            "name": "Rebuild selector availability feeds without rewriting public pages",
+            "number": 17,
+            "startedAt": "2026-09-29T15:12:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:13:58Z",
+            "conclusion": "success",
+            "name": "Publish Scheduling Landscape diagnostic feed",
+            "number": 18,
+            "startedAt": "2026-09-29T15:13:26Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:14:00Z",
+            "conclusion": "success",
+            "name": "Promote seated sessions and apply Anchor repeat policy",
+            "number": 19,
+            "startedAt": "2026-09-29T15:13:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:14:02Z",
+            "conclusion": "success",
+            "name": "Build durable seated Anchor session pages",
+            "number": 20,
+            "startedAt": "2026-09-29T15:14:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:14:02Z",
+            "conclusion": "success",
+            "name": "Publish instructor and location reference feeds",
+            "number": 21,
+            "startedAt": "2026-09-29T15:14:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:14:02Z",
+            "conclusion": "success",
+            "name": "Ensure dashboard refresh controls are present",
+            "number": 22,
+            "startedAt": "2026-09-29T15:14:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:14:02Z",
+            "conclusion": "success",
+            "name": "Report canonical source health",
+            "number": 23,
+            "startedAt": "2026-09-29T15:14:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:14:02Z",
+            "conclusion": "failure",
+            "name": "Validate reconciled public inventory before publication",
+            "number": 24,
+            "startedAt": "2026-09-29T15:14:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:14:02Z",
+            "conclusion": "skipped",
+            "name": "Commit changed dashboard data",
+            "number": 25,
+            "startedAt": "2026-09-29T15:14:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:14:02Z",
+            "conclusion": "skipped",
+            "name": "Post Set up Python",
+            "number": 49,
+            "startedAt": "2026-09-29T15:14:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:14:02Z",
+            "conclusion": "success",
+            "name": "Post Check out repository",
+            "number": 50,
+            "startedAt": "2026-09-29T15:14:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:14:02Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 51,
+            "startedAt": "2026-09-29T15:14:02Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/36588090830/job/109473704506"
+      }
+    ],
+    "status": "completed",
+    "updatedAt": "2026-09-29T15:14:06Z",
+    "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/36588090830"
+  },
+  "pages": {
+    "conclusion": "success",
+    "createdAt": "2026-09-29T15:09:54Z",
+    "event": "dynamic",
+    "headSha": "e0bb74e8225f29055412c2e9635b857b3821340a",
+    "jobs": [
+      {
+        "completedAt": "2026-09-29T15:10:41Z",
+        "conclusion": "success",
+        "databaseId": 109473680598,
+        "name": "build",
+        "startedAt": "2026-09-29T15:09:58Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-29T15:10:01Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-29T15:09:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:10:13Z",
+            "conclusion": "success",
+            "name": "Pull ghcr.io/actions/jekyll-build-pages:v1.0.13",
+            "number": 2,
+            "startedAt": "2026-09-29T15:10:01Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:10:28Z",
+            "conclusion": "success",
+            "name": "Checkout",
+            "number": 3,
+            "startedAt": "2026-09-29T15:10:13Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:10:35Z",
+            "conclusion": "success",
+            "name": "Build with Jekyll",
+            "number": 4,
+            "startedAt": "2026-09-29T15:10:28Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:10:39Z",
+            "conclusion": "success",
+            "name": "Upload artifact",
+            "number": 5,
+            "startedAt": "2026-09-29T15:10:35Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:10:39Z",
+            "conclusion": "success",
+            "name": "Post Checkout",
+            "number": 10,
+            "startedAt": "2026-09-29T15:10:39Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:10:39Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-09-29T15:10:39Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/36588087068/job/109473680598"
+      },
+      {
+        "completedAt": "2026-09-29T15:11:00Z",
+        "conclusion": "success",
+        "databaseId": 109474023057,
+        "name": "deploy",
+        "startedAt": "2026-09-29T15:10:46Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-29T15:10:47Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-29T15:10:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:10:59Z",
+            "conclusion": "success",
+            "name": "Deploy to GitHub Pages",
+            "number": 2,
+            "startedAt": "2026-09-29T15:10:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:10:59Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 3,
+            "startedAt": "2026-09-29T15:10:59Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/36588087068/job/109474023057"
+      },
+      {
+        "completedAt": "2026-09-29T15:10:49Z",
+        "conclusion": "success",
+        "databaseId": 109474023150,
+        "name": "report-build-status",
+        "startedAt": "2026-09-29T15:10:45Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-29T15:10:45Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-29T15:10:45Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:10:47Z",
+            "conclusion": "success",
+            "name": "Report Build Status",
+            "number": 2,
+            "startedAt": "2026-09-29T15:10:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-29T15:10:47Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 3,
+            "startedAt": "2026-09-29T15:10:47Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/36588087068/job/109474023150"
+      }
+    ],
+    "status": "completed",
+    "updatedAt": "2026-09-29T15:11:01Z",
+    "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/36588087068"
+  },
+  "health_observer": {
+    "run_id": 36587963026,
+    "report": {
+      "checked_at": "2026-09-29T15:09:56.520649+00:00",
+      "freshness_minutes": 60,
+      "healthy": false,
+      "canonical_external_sessions": 32,
+      "non_session_sources": [
+        {
+          "external_class_id": "11341058",
+          "non_session_classification": "renewal_deadline",
+          "approved_location_key": "910cpr-office-shipyard"
+        }
+      ],
+      "gaps": [
+        {
+          "external_class_id": "13895152",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "13895154",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "13895155",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "13963994",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "13964003",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "13964012",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14114232",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130361",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130362",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130363",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130364",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130379",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130381",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130382",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130383",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130389",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130390",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130391",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130392",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130395",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130406",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130407",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14130408",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14135047",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14170366",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14184954",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14186226",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14288234",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14354087",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14377157",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14382096",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14400433",
+          "status": "stale_reconciliation",
+          "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+          "reason": "complete current source roster reconciled"
+        },
+        {
+          "external_class_id": "14495100",
+          "status": "committed_projection_without_canonical_session"
+        },
+        {
+          "external_class_id": "14501248",
+          "status": "committed_projection_without_canonical_session"
+        }
+      ],
+      "signature": "5a9c13fa87f382d0117212fdbf032fba51b682aecb6c1e0153efa5ce1726c496"
+    }
+  },
+  "sql_health_sep26_forward": {
+    "sessions": [
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-17T14:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14377157",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "3b2731a3-19bb-4d10-9757-08a8e81e336f",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-21T17:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "13895155",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "f407c43b-985c-4f84-a92f-6174590ad3ba",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-22T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130363",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "157fd6ff-650f-4130-8022-3c0351ad15f1",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-09-29T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "13963994",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "4013b051-0758-4fd8-9696-0e0d6fb88f13",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-09-26T21:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14184955",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "750a7036-31f4-492c-8b86-4d32cd5b6fc8",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-09-29T17:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "13964012",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "ac7353ad-df75-4c6a-99bf-06bdfcff20e3",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-09-26T14:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14145607",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "49ad2432-8e78-4e40-8749-2816070e93bd",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-09-27T17:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14361098",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "a9fd9bf2-43c8-46b7-a289-176d7989be8b",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-09-27T22:30:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14421081",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "913abd99-b8aa-48d9-a9f2-549387fb9c4f",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-09-29T22:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14288234",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "8b8ed457-4cf8-4fa8-aa0a-ca66be898614",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-09-30T16:30:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14170366",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "72c509d7-2268-4e04-8f88-be9681baac6a",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-02T14:45:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14382096",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "f224796e-6df0-4bf5-890b-c5398593c110",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-03T14:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14186226",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "1eaeb0cc-2191-49c4-89dc-76333685a5e4",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-08T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130361",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "7c1078c2-680d-477b-b991-bfc54b656c34",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-08T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130379",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "b05602fb-d34a-4f0e-9d77-65858661cf30",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-08T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130395",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "aa017ae8-9707-4ff0-9273-f3763ef1b113",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-12T13:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14184954",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "ce30e7e4-2d3d-4fd1-b63c-190c41fbdae8",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-13T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130362",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "7fa8b8e6-befb-40c7-b600-cacab31aeb21",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-22T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130382",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "d7c224ba-13f1-47bb-a34b-a9a0c15a1586",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-27T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130364",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "f1010efc-1344-4ef0-ad9c-27c6727b4714",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-27T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130383",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "e5fc4132-5939-42bd-bfd2-1d8e683fb8e0",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-27T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130408",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "f5fb71f2-a6af-4891-843b-3eb3935d2fb4",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-09-30T21:30:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14400433",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "762f1c10-51d7-4d83-886c-91a3c75e226f",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-09-26T13:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14186375",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "9df5fada-cd99-454a-8c16-4899bf6942bc",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-09-29T17:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "13964003",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "be8b9190-ee08-479d-8810-1ed98c1ecaa5",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-07T21:30:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14354087",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "a6a6387f-34db-45a8-90b3-fb1ea92f6b6c",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-22T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130407",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "1945d954-bb90-4208-859a-c3513df5c78a",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-12T21:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14135047",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "de9f64fd-c65c-4213-ae93-f923254b588b",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-21T13:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "13895152",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "24f35176-69c1-4b1e-8a72-a69b4e5f9576",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-13T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130381",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "c126b1b5-a79a-4baa-8cfc-d210549dee28",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-13T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130390",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "e39056c4-b58e-4aab-80c5-9bdf69dbfed2",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-08T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130389",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "c32233cf-ba32-4377-aae1-199b801210d5",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-13T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130406",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "d58efc90-9b7b-4aa4-a1bf-87e599af36f3",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-21T15:15:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "13895154",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "e2658350-29b9-4e16-b5d6-3cbfb229dc14",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-22T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130391",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "65a7a490-cac6-47b0-9246-98b3335ea9ec",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-10-27T18:00:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14130392",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "fca2d593-df4c-4b7e-af0c-b291fe632cd5",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "complete current source roster reconciled",
+        "status": "stale_reconciliation",
+        "start_at": "2026-12-08T15:15:00+00:00",
+        "reconciled_at": "2026-09-27T05:58:43.960317+00:00",
+        "source_sha256": "75cd96dd9d6d9b4baa3bdfcb06065406887c8c9d7f0820f07dedf1d937b593d9",
+        "external_class_id": "14114232",
+        "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+        "canonical_session_id": "d94ccbc0-de0c-4088-862d-a5d50759c338",
+        "approved_location_key": null,
+        "non_session_classification": null
+      },
+      {
+        "reason": "owner_confirmed_renewal_deadline",
+        "status": "classified_non_session",
+        "start_at": "2026-12-01T05:00:00+00:00",
+        "reconciled_at": null,
+        "source_sha256": null,
+        "external_class_id": "11341058",
+        "source_observed_at": "2026-09-27T05:56:16.932Z",
+        "canonical_session_id": null,
+        "approved_location_key": "910cpr-office-shipyard",
+        "non_session_classification": "renewal_deadline"
+      }
+    ],
+    "checked_at": "2026-09-29T15:10:15.161084+00:00",
+    "total_sessions": 37,
+    "unknown_sessions": 37,
+    "freshness_minutes": 60,
+    "classified_non_sessions": 1
+  },
+  "live_http_baseline": {
+    "checked_at": "2026-09-29T15:12:16.338641+00:00",
+    "phase": "sep29-baseline",
+    "deployed_revision": "e0bb74e8225f29055412c2e9635b857b3821340a",
+    "resources": [
+      {
+        "url": "https://www.910cpr.com/bls.html?proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-1170e\"",
+        "sha256": "3e40d490052979a17eb984e9773d6923b740450403592dbb7b090ff4903eaf94",
+        "matches_deployed_git_blob": true
+      },
+      {
+        "url": "https://www.910cpr.com/assets/analytics-attribution.js?v=20260912-1&proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-18b0\"",
+        "sha256": "f4b0b914d6a80cacad1a3124dd6c405ac22e1a045feb8d03ec87162d4cd21385",
+        "matches_deployed_git_blob": true
+      },
+      {
+        "url": "https://www.910cpr.com/assets/family-hero.js?v=6d88341997f7&proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-4d0\"",
+        "sha256": "6d88341997f7b0b1c857aec62aefb441b923bd83e0e893630718881866c1e4d7",
+        "matches_deployed_git_blob": true
+      },
+      {
+        "url": "https://www.910cpr.com/assets/interaction-motion.css?proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-220\"",
+        "sha256": "59363bcbef8408647168b134db2b4afb638e3f0a781b1494f32bfab7bc60fd9b",
+        "matches_deployed_git_blob": true
+      },
+      {
+        "url": "https://www.910cpr.com/assets/interaction-motion.js?v=20260809.1&proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-d2e\"",
+        "sha256": "8a1ddc8e70f70bd747ab8361f07d48832fa6e8ebf0af43021136b46e21a14b5d",
+        "matches_deployed_git_blob": true
+      },
+      {
+        "url": "https://www.910cpr.com/assets/resolved-selector-availability.js?v=20260907.1&proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-1219\"",
+        "sha256": "622a073c9f65c01ff217395645fb54460c023bf360763d957f4b24f8187e64ae",
+        "matches_deployed_git_blob": true
+      },
+      {
+        "url": "https://www.910cpr.com/assets/site-theme.css?v=20260818.5&proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-30d8\"",
+        "sha256": "cdca1533d0c3807ef59a8d609b6f1c7de30d0d3296ead879a16e0ab8d7416558",
+        "matches_deployed_git_blob": true
+      },
+      {
+        "url": "https://www.910cpr.com/assets/site-theme.js?proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-1fee\"",
+        "sha256": "6c32d61d0e464fe20b8c39ca55f9a7c0f95e5dce21fb68984d9a0023bc1c6bd3",
+        "matches_deployed_git_blob": true
+      },
+      {
+        "url": "https://www.910cpr.com/data/anchor_state.json?proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-1c6\"",
+        "sha256": "9d848ff29e2ce0898e38a3dbe8ed8d147b8b5dba465348969d30a2c339524429",
+        "matches_deployed_git_blob": true
+      },
+      {
+        "url": "https://www.910cpr.com/data/schedule_future.json?proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-11199\"",
+        "sha256": "23b76d02cab7d48c0a1cbda81555dc4c48c12fdcf07197100be062ba3f7b0580",
+        "matches_deployed_git_blob": true
+      },
+      {
+        "url": "https://www.910cpr.com/data/block-selector-availability/bls.json?proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-489bc3\"",
+        "sha256": "4e64660263c6a04c7bea7def5383088ce3c6802b69f3dfd3e156b488f4e3892c",
+        "matches_deployed_git_blob": true
+      },
+      {
+        "url": "https://www.910cpr.com/data/admin_schedule.json?proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-5cf7\"",
+        "sha256": "f09988f71e3b0c51f974642c0f0e89aed60c9cc0e28c3f0d4fdd69611d64e498",
+        "matches_deployed_git_blob": true
+      },
+      {
+        "url": "https://www.910cpr.com/data/landerware.ics?proof=e0bb74e8225f",
+        "status": 200,
+        "etag": "\"6abbd4fb-3192\"",
+        "sha256": "47639efd9ddcbbfd98d020ed06bf74127d492adc32078673fd71bd0532735f39",
+        "matches_deployed_git_blob": true
+      }
+    ],
+    "result": "BASELINE_ONLY_NOT_RECOVERED",
+    "anchor_counts": {
+      "anchors_promoted": 0,
+      "schedule_sessions_annotated": 0,
+      "admin_sessions_annotated": 0,
+      "selector_files_processed": 8,
+      "anchor_offers_annotated": 0,
+      "scattered_offers_consolidated": 0,
+      "duplicate_anchor_offers_removed": 0,
+      "canonical_demand_rows_matched": 0,
+      "canonical_demand_rows_failed_closed": 35,
+      "occurrences_with_unknown_demand": 30
+    },
+    "bls_counts": {
+      "availabilityBlocksFound": 201,
+      "availabilityBlocksEvaluated": 201,
+      "publicLocationBlocksEvaluated": 201,
+      "publicSelectableOfferCount": 8608,
+      "publicSelectableDateCount": 90,
+      "publicSelectableStartTimeCount": 3142,
+      "rejectedOfferCount": 1833,
+      "suppressedStaleOrOrphanedOfferCount": 0,
+      "wholeBlockPresentedAsClass": false
+    },
+    "public_unknown_count": 30,
+    "incident_in_current_inventory": []
+  },
+  "source_capture": {
+    "date": "2026-09-27",
+    "complete_class_forms_read": 38,
+    "displayed_registration_rows": 20,
+    "incident_displayed_counts": [
+      1,
+      1
+    ],
+    "incident_observed_at": [
+      "2026-09-27T14:56:41.367Z",
+      "2026-09-27T14:56:42.548Z"
+    ],
+    "registration_lifecycle_pass_completed": false,
+    "reconciled": false,
+    "reason": "Browser target closed during per-registration lifecycle verification; environment later resumed on September 29; capture was not promoted and source timestamps were not renewed."
+  },
+  "browser_access_failures": [
+    "Existing source tab selection timed out and reset browser-control session.",
+    "Fresh source tab failed waiting for browser webview attachment.",
+    "Documented visibility recovery failed on Emulation.setFocusEmulationEnabled for source tab."
+  ],
+  "owner_action": "Reopen Enrollware admin in Codex browser / restart browser panel so a fresh authenticated complete roster and lifecycle read can finish.",
+  "source_constraint": "Owner instructed no Zapier use; no Zapier setting, payload, or credential was used or changed.",
+  "remaining_source_gap": "An unattended authorized complete-current-roster input remains unconnected; no available API/export credential was identified in the repository or environment configuration inspected.",
+  "additional_missing_sessions": [
+    {
+      "external_class_id": "14495100",
+      "start_at": "2026-10-02T08:45:00-04:00",
+      "course_id": "252737"
+    },
+    {
+      "external_class_id": "14501248",
+      "start_at": "2026-10-02T12:45:00-04:00",
+      "course_id": "209806"
+    }
+  ],
+  "next_action": "Restore source browser access, read current authoritative rosters including newly discovered October 2 classes, reconcile through existing RPC, rerun health/demand and normal publication, verify actual selector and a later actual scheduled refresh. Keep Stage 6 gated."
+}
