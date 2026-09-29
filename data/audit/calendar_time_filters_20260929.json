@@ -1,0 +1,165 @@
+{
+  "baseCommit": "e0bb74e8225f29055412c2e9635b857b3821340a",
+  "scheduleGeneratedAt": "2026-09-29T10:01:42.561381",
+  "businessReferenceDate": "2026-09-29",
+  "counts": {
+    "bls": {
+      "courseId": "209806",
+      "baselineStartSlots": 2735,
+      "filters": {
+        "Early AM": {
+          "matches": 816,
+          "rejected": 1919
+        },
+        "AM": {
+          "matches": 767,
+          "rejected": 1968
+        },
+        "Afternoon": {
+          "matches": 362,
+          "rejected": 2373
+        },
+        "Evening": {
+          "matches": 554,
+          "rejected": 2181
+        },
+        "Late PM": {
+          "matches": 236,
+          "rejected": 2499
+        },
+        "after 6pm": {
+          "matches": 619,
+          "rejected": 2116
+        },
+        "Tuesday or Wednesday evening": {
+          "matches": 157,
+          "rejected": 2578
+        },
+        "before noon": {
+          "matches": 1583,
+          "rejected": 1152
+        },
+        "Saturday morning": {
+          "matches": 136,
+          "rejected": 2599
+        },
+        "after work next week": {
+          "matches": 32,
+          "rejected": 2703
+        },
+        "anything after 7pm": {
+          "matches": 469,
+          "rejected": 2266
+        },
+        "weekdays before 10am": {
+          "matches": 812,
+          "rejected": 1923
+        },
+        "can't Tuesday evening": {
+          "matches": 2658,
+          "rejected": 77
+        },
+        "2099-01-01 after 7pm": {
+          "matches": 0,
+          "rejected": 2735
+        }
+      }
+    },
+    "acls": {
+      "courseId": "241108",
+      "baselineStartSlots": 4,
+      "filters": {
+        "Early AM": {
+          "matches": 0,
+          "rejected": 4
+        },
+        "AM": {
+          "matches": 0,
+          "rejected": 4
+        },
+        "Afternoon": {
+          "matches": 4,
+          "rejected": 0
+        },
+        "Evening": {
+          "matches": 0,
+          "rejected": 4
+        },
+        "Late PM": {
+          "matches": 0,
+          "rejected": 4
+        },
+        "after 6pm": {
+          "matches": 0,
+          "rejected": 4
+        },
+        "Tuesday or Wednesday evening": {
+          "matches": 0,
+          "rejected": 4
+        },
+        "before noon": {
+          "matches": 0,
+          "rejected": 4
+        },
+        "Saturday morning": {
+          "matches": 0,
+          "rejected": 4
+        },
+        "after work next week": {
+          "matches": 0,
+          "rejected": 4
+        },
+        "anything after 7pm": {
+          "matches": 0,
+          "rejected": 4
+        },
+        "weekdays before 10am": {
+          "matches": 0,
+          "rejected": 4
+        },
+        "can't Tuesday evening": {
+          "matches": 4,
+          "rejected": 0
+        },
+        "2099-01-01 after 7pm": {
+          "matches": 0,
+          "rejected": 4
+        }
+      }
+    }
+  },
+  "baselineTests": {
+    "untouched_main_mobile_tests": {
+      "tests": 2,
+      "failures": 9,
+      "errors": 0,
+      "cases": [
+        "test_all_selector_pages_advance_to_the_next_required_action (baseline_mobile_tests.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/acls.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (baseline_mobile_tests.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/arc.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (baseline_mobile_tests.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/bls.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (baseline_mobile_tests.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/courses/uscg-first-aid-cpr-aed.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (baseline_mobile_tests.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/heartsaver.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (baseline_mobile_tests.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/hsi.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (baseline_mobile_tests.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/pals.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (baseline_mobile_tests.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/uscg-elementary-first-aid-cpr.html')",
+        "test_authoritative_builder_contains_the_same_progression (baseline_mobile_tests.SelectorMobileProgressionTests.test_authoritative_builder_contains_the_same_progression)"
+      ]
+    },
+    "changed_branch_mobile_and_clock_tests": {
+      "tests": 7,
+      "failures": 9,
+      "errors": 0,
+      "cases": [
+        "test_all_selector_pages_advance_to_the_next_required_action (tests.test_selector_mobile_progression.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/acls.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (tests.test_selector_mobile_progression.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/arc.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (tests.test_selector_mobile_progression.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/bls.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (tests.test_selector_mobile_progression.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/courses/uscg-first-aid-cpr-aed.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (tests.test_selector_mobile_progression.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/heartsaver.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (tests.test_selector_mobile_progression.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/hsi.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (tests.test_selector_mobile_progression.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/pals.html')",
+        "test_all_selector_pages_advance_to_the_next_required_action (tests.test_selector_mobile_progression.SelectorMobileProgressionTests.test_all_selector_pages_advance_to_the_next_required_action) (page='docs/uscg-elementary-first-aid-cpr.html')",
+        "test_authoritative_builder_contains_the_same_progression (tests.test_selector_mobile_progression.SelectorMobileProgressionTests.test_authoritative_builder_contains_the_same_progression)"
+      ]
+    }
+  }
+}
