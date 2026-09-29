@@ -57,7 +57,6 @@ CLASSES_CSV_LEGACY_PATHS = ["data/raw/classes_raw_live.csv"]
 STUDENTS_CSV_LEGACY_PATHS = ["data/raw/students_raw_live.csv"]
 DEFAULT_ENROLLWARE_ICAL_URL = "https://www.enrollware.com/calendar/ical.ashx?Bsd2bwNowUkB4RQAmjnCBA=="
 ENROLLWARE_ICAL_USER_AGENT = "910CPR-Lander-Build/1.0 (+https://www.910cpr.com)"
-_COURSE_CONSUMPTION_RULES_CACHE: dict[str, int] | None = None
 
 
 def clean_string(value: Any) -> Optional[str]:
@@ -331,11 +330,11 @@ def registration_status_from_unavailable_reason(reason: Optional[str]) -> str:
 
 
 def course_consumption_minutes(course_map: dict[str, Any], course_id: Optional[str]) -> Optional[int]:
-    global _COURSE_CONSUMPTION_RULES_CACHE
     clean_course_id = clean_string(course_id)
     if not clean_course_id:
         return None
-    if _COURSE_CONSUMPTION_RULES_CACHE is None:
+    # Cache with this input snapshot, never globally across different course maps.
+    if "_consumption_minutes" not in course_map:
         rules: dict[str, int] = {}
         course_map_path = clean_string(course_map.get("_path"))
         if course_map_path:
@@ -357,8 +356,8 @@ def course_consumption_minutes(course_map: dict[str, Any], course_id: Optional[s
                     minutes = max(duration + setup + cleanup, minimum)
                     if minutes > 0:
                         rules[rule_course_id] = minutes
-        _COURSE_CONSUMPTION_RULES_CACHE = rules
-    return _COURSE_CONSUMPTION_RULES_CACHE.get(clean_course_id)
+        course_map["_consumption_minutes"] = rules
+    return course_map["_consumption_minutes"].get(clean_course_id)
 
 
 def inferred_ical_end(
@@ -372,12 +371,15 @@ def inferred_ical_end(
         return end_at, None, None
     start_iso = parse_datetime_flexible(start_at)
     end_iso = parse_datetime_flexible(end_at)
-    if start_iso and end_iso and end_iso > start_iso:
+    if not start_iso:
+        raise ValueError(f"Unparseable class start: {start_at}")
+    start = datetime.fromisoformat(start_iso)
+    end = datetime.fromisoformat(end_iso) if end_iso else None
+    if end and end > start:
         return end_at, None, None
     minutes = course_consumption_minutes(course_map, course_id)
     if not minutes:
         return end_at, "missing_course_consumption_rule_for_zero_duration_ical_event", None
-    start = datetime.fromisoformat(start_iso)
     return (start + timedelta(minutes=minutes)).isoformat(), "inferred_from_course_consumption_rule_for_zero_duration_ical_event", minutes
 
 
@@ -607,6 +609,7 @@ def build_sessions_from_enrollware_ical(
     skipped: list[dict[str, Any]] = []
     unmapped_rows: list[dict[str, Any]] = []
     unavailable_rows: list[dict[str, Any]] = []
+    inferred_windows: list[dict[str, Any]] = []
 
     for event in events:
         session_id = stable_ical_session_id(event)
@@ -625,6 +628,22 @@ def build_sessions_from_enrollware_ical(
                 }
             )
             continue
+        timing = session["timing"]
+        if timing.get("end_inference_reason") == "missing_course_consumption_rule_for_zero_duration_ical_event":
+            # Historical source defects must not stop today's schedule. An
+            # unresolved current/future class must never become free time.
+            if datetime.fromisoformat(timing["start_at"]).date() >= datetime.fromisoformat(now_iso).date():
+                raise ValueError(f"Unresolved occupied duration for session {session_id} ({event.get('summary')}) at {timing['start_at']}; publication blocked")
+        if timing.get("inferred_scheduler_consumption_minutes"):
+            inferred_windows.append({
+                "session_id": session_id,
+                "course_id": session["course"]["course_id"],
+                "start_at": timing["start_at"],
+                "source_end": event.get("dtend"),
+                "end_at": timing["end_at"],
+                "occupied_minutes": timing["inferred_scheduler_consumption_minutes"],
+                "rule_source": "data/inventory/course_consumption_rules.json",
+            })
         registration_unavailable_reason = enrollment_url_unavailable_reason(session.get("commerce", {}).get("registration_url"))
         registration_status = registration_status_from_unavailable_reason(registration_unavailable_reason)
         if registration_status in {"closed", "full"}:
@@ -725,6 +744,7 @@ def build_sessions_from_enrollware_ical(
         "stale_manual_class_report_sessions_excluded": len(removed_ids),
         **enrollment_counts,
         "removed_examples": removed_examples,
+        "inferred_occupied_windows": inferred_windows,
     }
     (audit_dir / "enrollware_ical_import_summary.json").write_text(
         json.dumps(summary, indent=2, ensure_ascii=False),
@@ -962,6 +982,9 @@ def load_course_map(repo_root: Path, relative_path: str) -> dict[str, Any]:
     payload["_path"] = str(path)
     payload.setdefault("courses_by_id", {})
     payload.setdefault("courses_by_number", {})
+    catalog_path = path.parent / "course_catalog.json"
+    if catalog_path.exists():
+        payload["_catalog_courses"] = json.loads(catalog_path.read_text(encoding="utf-8")).get("courses", [])
     return payload
 
 
@@ -1004,6 +1027,27 @@ def resolve_course_mapping(
             if any(normalize_title(value) == title_key for value in title_values if value):
                 notes.append("course_map_title_alias")
                 return entry, "mapped", notes
+    # The canonical catalog includes courses (for example Family & Friends)
+    # absent from the legacy map. Match exact normalized identities only.
+    matches = []
+    for entry in course_map.get("_catalog_courses", []):
+        if not isinstance(entry, dict) or entry.get("active") is False:
+            continue
+        entry_id = clean_string(entry.get("course_id"))
+        titles = [entry.get("official_title"), entry.get("short_title"), *(entry.get("title_aliases") or [])]
+        if ((id_key or num_key) and entry_id in {id_key, num_key}) or (
+            not id_key and not num_key and title_key
+            and any(normalize_title(title) == title_key for title in titles if title)
+        ):
+            matches.append(entry)
+    if len(matches) == 1:
+        entry = matches[0]
+        return {
+            **entry,
+            "clean_title": entry.get("official_title"),
+            "certifying_body": entry.get("provider"),
+            "delivery_mode": entry.get("delivery_type"),
+        }, "mapped", ["canonical_course_catalog_identity"]
     return None, "unmapped", notes
 
 

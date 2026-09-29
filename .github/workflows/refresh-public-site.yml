@@ -21,6 +21,12 @@ on:
       - 'scripts/validate_sitewide_links_strict.py'
       - 'tests/test_validate_sitewide_links_strict.py'
       - 'docs/contact.html'
+      - 'scripts/build_sessions_current.py'
+      - 'data/config/course_catalog.json'
+      - 'data/config/course_map.json'
+      - 'data/inventory/course_consumption_rules.json'
+      - 'tests/test_zero_duration_pipeline.py'
+      - 'tests/fixtures/enrollware_zero_duration_20260929.json'
 
 permissions:
   contents: write
@@ -53,6 +59,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt openpyxl beautifulsoup4 tqdm pandas
+
+      - name: Test zero-duration occupancy pipeline
+        run: python -m unittest tests.test_zero_duration_pipeline tests.test_enrollware_ical_import
 
       - name: Test strict link audit fail-closed guard
         shell: pwsh
