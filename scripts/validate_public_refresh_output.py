@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any
-from scripts.canonical_scheduling_demand import load_publication_demand
+from scripts.canonical_scheduling_demand import load_publication_demand, resolve_canonical_demand
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -136,6 +136,24 @@ def validate_non_session_publication(root: Path, demand: dict[str, Any]) -> None
         require(f"-{external_id}@" not in calendar, f"Classified non-session calendar block remains: {external_id}")
 
 
+def validate_public_demand(rows: list[dict[str, Any]], demand: dict[str, Any]) -> None:
+    """Unknown demand cannot authorize replacement of the published inventory.
+
+    Re-resolve against the snapshot validated at publication time: counts in the
+    generated schedule may have been valid earlier in a long build. Zero is a
+    valid current count; missing, ambiguous and expired evidence are not zero.
+    This does not promote a session or change the ranking policy.
+    """
+    resolved, _ = resolve_canonical_demand(rows, demand["sessions"])
+    unknown = [
+        f"{row.get('session_id')}: {row.get('demand_status')}"
+        for row in resolved if row.get("count_available") is not True
+    ]
+    require(not unknown, "Refusing publication with unknown canonical demand; "
+            "preserving published inventory. Reconcile current complete rosters: "
+            + "; ".join(unknown))
+
+
 def main() -> int:
     schedule = load_json(SCHEDULE_PATH)
     rows = session_rows(schedule)
@@ -147,7 +165,9 @@ def main() -> int:
     }
 
     admin_ids = validate_admin_reconciliation(load_json(CURRENT_SESSIONS_PATH), load_json(ADMIN_SCHEDULE_PATH))
-    validate_non_session_publication(ROOT, load_publication_demand(ROOT))
+    demand = load_publication_demand(ROOT)
+    validate_public_demand(rows, demand)
+    validate_non_session_publication(ROOT, demand)
 
     results = {page_key: validate_selector(page_key, public_session_ids) for page_key in REQUIRED_SELECTORS}
     print(f"Validated public sessions: {len(public_session_ids)}")
