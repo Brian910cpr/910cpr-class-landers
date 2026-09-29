@@ -101,6 +101,16 @@ test("multiple checkbox selections form a union and Smart Filter further narrows
   assert.deepEqual(applyTiming(boundaryDay, "before noon", ["evening"]), []);
 });
 
+test("corporate Billing Code suggestions start at three characters and exclude general codes", () => {
+  assert.deepEqual(timing.CORPORATE_BILLING_CODES.map(item => item.code), ["assistedcare", "Breakthrough", "Maxim", "MaximBH", "MaximDSP"]);
+  assert.deepEqual(timing.matchingCorporateBillingCodes("ma").map(item => item.code), []);
+  assert.deepEqual(timing.matchingCorporateBillingCodes("max").map(item => item.code), ["Maxim", "MaximBH", "MaximDSP"]);
+  assert.deepEqual(timing.matchingCorporateBillingCodes("assisted").map(item => item.code), ["assistedcare"]);
+  assert.deepEqual(timing.matchingCorporateBillingCodes("wait").map(item => item.code), []);
+  assert.equal(JSON.stringify(timing.CORPORATE_BILLING_CODES).includes("RETURN10"), false);
+  assert.equal(JSON.stringify(timing.CORPORATE_BILLING_CODES).includes("6OUT"), false);
+});
+
 const week = ["2026-09-29", "2026-09-30", "2026-10-03", "2026-10-04", "2026-10-05", "2026-10-06", "2026-10-11", "2026-10-12"]
   .map(date => ({ date, startTimes: ["08:00", "09:59", "10:00", "12:00", "17:00", "18:00", "18:01", "19:00", "19:01", "21:00"].map(startTime => ({ startTime, courses: [{ courseId: "209806" }] })) }));
 const phraseCases = [

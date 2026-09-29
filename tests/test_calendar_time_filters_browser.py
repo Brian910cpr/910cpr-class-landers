@@ -106,6 +106,17 @@ class CalendarTimeFilterBrowserTests(unittest.TestCase):
         self.assertTrue(baseline)
         self.assertEqual(self.result(page), baseline)
         self.assertEqual(page.locator(".calendar-time-bullet").all_text_contents(), ["•"] * 4)
+        billing = page.get_by_role("combobox", name="Billing Code", exact=True)
+        billing.fill("Ma")
+        self.assertTrue(page.locator(".calendar-billing-suggestions").is_hidden())
+        billing.fill("Max")
+        self.assertEqual(page.get_by_role("option").all_text_contents(), ["Maxim Homecare", "Maxim Behavioral Health", "Maxim Direct Support Professionals"])
+        page.get_by_role("option", name="Maxim Behavioral Health", exact=True).click()
+        self.assertEqual(billing.input_value(), "MaximBH")
+        self.assertIn("Enter this code in Enrollware registration", page.locator(".calendar-billing-status").inner_text())
+        self.assertEqual(self.result(page), baseline)
+        billing.fill("WAI")
+        self.assertTrue(page.locator(".calendar-billing-suggestions").is_hidden())
         for bucket, lower, upper in BUCKETS:
             with self.subTest(family=family, bucket=bucket):
                 page.locator(f'#calendar-time-filters input[value="{bucket}"]').check()
@@ -182,10 +193,10 @@ class CalendarTimeFilterBrowserTests(unittest.TestCase):
                     page, _, _, errors = self.load(family, width)
                     panel = page.locator("#calendar-time-filters")
                     dimensions = panel.bounding_box()
-                    self.assertLess(dimensions["height"], 190 if width < 600 else 100)
+                    self.assertLess(dimensions["height"], 225 if width < 600 else 135)
                     self.assertGreaterEqual(dimensions["x"], 0)
                     self.assertLessEqual(dimensions["x"] + dimensions["width"], width)
-                    for selector in [".calendar-time-item", ".calendar-time-smart input", ".calendar-time-smart button"]:
+                    for selector in [".calendar-time-item", ".calendar-time-smart input", ".calendar-time-smart button", ".calendar-billing-code > input"]:
                         for item in page.locator(selector).all():
                             box = item.bounding_box()
                             self.assertGreaterEqual(box["x"], dimensions["x"])
