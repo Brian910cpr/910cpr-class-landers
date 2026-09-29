@@ -54,6 +54,32 @@ async function authorizeWorkspaceRequest(req: Request) {
   const token = authHeader.replace(/^Bearer\s+/i, "").trim();
   if (!token) return { ok: false, reason: "missing_bearer" };
 
+  if (/^[a-f0-9]{64}$/i.test(token)) {
+    const tokenSha = await sha256(token);
+    const now = new Date().toISOString();
+    const { data: session, error } = await admin.from("nhcso_portal_sessions")
+      .select("id,email,expires_at,last_seen_at")
+      .eq("token_sha256", tokenSha)
+      .is("revoked_at", null)
+      .gt("expires_at", now)
+      .maybeSingle();
+    if (error || !session) return { ok: false, reason: "invalid_portal_session" };
+    if (!departmentEmail(session.email)) return { ok: false, reason: "session_email_not_allowed" };
+    const lastSeen = Date.parse(session.last_seen_at || "1970-01-01");
+    if (Date.now() - lastSeen > 60 * 60 * 1000) {
+      await admin.from("nhcso_portal_sessions").update({ last_seen_at: now }).eq("id", session.id);
+    }
+    return {
+      ok: true,
+      email: session.email,
+      user_id: null,
+      session_id: session.id,
+      session_expires_at: session.expires_at,
+      auth_type: "department_code",
+      token_sha256: tokenSha,
+    };
+  }
+
   let role = "";
   try {
     const payloadPart = token.split(".")[1] || "";
@@ -73,7 +99,186 @@ async function authorizeWorkspaceRequest(req: Request) {
   if (!(email.endsWith("@nhcgov.com") || email.endsWith("@910cpr.com"))) {
     return { ok: false, reason: "email_not_allowed" };
   }
-  return { ok: true, email, user_id: user.id };
+  return { ok: true, email, user_id: user.id, auth_type: "supabase_jwt", session_expires_at: null };
+}
+
+async function deliverLoginCode(email: string, code: string) {
+  const resendKey = Deno.env.get("RESEND_API_KEY") || "";
+  const from = Deno.env.get("NHSCO_FROM_EMAIL") || Deno.env.get("REQUIREMENT_FROM_EMAIL") || "910CPR <brian@910cpr.com>";
+  if (resendKey) {
+    const result = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      signal: AbortSignal.timeout(12000),
+      headers: {
+        authorization: `Bearer ${resendKey}`,
+        "content-type": "application/json",
+        "Idempotency-Key": `nhcso-login/${email}/${Date.now()}`,
+      },
+      body: JSON.stringify({
+        from,
+        to: [email],
+        subject: "Your NHCSO training portal code",
+        text: `Your 910CPR NHCSO training portal code is ${code}.\n\nIt expires in 15 minutes and can be used only for the NHCSO training workspace. If you did not request this code, you can ignore this message. No new code is sent automatically after a failed login attempt.`,
+      }),
+    });
+    const payload = await result.json().catch(() => ({}));
+    if (!result.ok || !payload.id) throw new Error(payload.message || `Resend returned ${result.status}`);
+    return String(payload.id);
+  }
+
+  const workerUrl = Deno.env.get("TRANSACTIONAL_EMAIL_WORKER_URL") || "";
+  const workerSecret = Deno.env.get("TRANSACTIONAL_EMAIL_WORKER_SECRET") || "";
+  if (workerUrl && workerSecret) {
+    const result = await fetch(workerUrl, {
+      method: "POST",
+      signal: AbortSignal.timeout(12000),
+      headers: { authorization: `Bearer ${workerSecret}`, "content-type": "application/json" },
+      body: JSON.stringify({
+        to: email,
+        notificationType: "nhcso_login_code",
+        subject: "Your NHCSO training portal code",
+        code,
+        expiresInMinutes: 15,
+        text: `Your 910CPR NHCSO training portal code is ${code}. It expires in 15 minutes.`,
+      }),
+    });
+    const payload = await result.json().catch(() => ({}));
+    if (!result.ok) throw new Error(payload.error || `Email worker returned ${result.status}`);
+    return clean(payload.messageId) || "transactional-worker";
+  }
+  throw new Error("Login email delivery is not configured");
+}
+
+async function requestLoginCode(req: Request, body: any) {
+  const email = departmentEmail(body.email);
+  if (!email) return json(req, { error: "Use your @nhcgov.com department email address." }, 400);
+  const now = new Date();
+  const nowIso = now.toISOString();
+  const minuteAgo = new Date(now.getTime() - 60 * 1000).toISOString();
+  const hourAgo = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
+  const ipSha = await sha256(requestIp(req));
+  const emailSha = await sha256(email);
+
+  const [{ count: recentEmail }, { count: hourlyEmail }, { count: hourlyIp }, { count: failedEmail }] = await Promise.all([
+    admin.from("nhcso_login_codes").select("id", { count: "exact", head: true }).eq("email", email).gt("created_at", minuteAgo),
+    admin.from("nhcso_login_codes").select("id", { count: "exact", head: true }).eq("email", email).gt("created_at", hourAgo),
+    admin.from("nhcso_login_codes").select("id", { count: "exact", head: true }).eq("request_ip_sha256", ipSha).gt("created_at", hourAgo),
+    admin.from("nhcso_login_attempts").select("id", { count: "exact", head: true }).eq("email_sha256", emailSha).eq("succeeded", false).gt("attempted_at", hourAgo),
+  ]);
+  if ((recentEmail || 0) >= 1) return json(req, { error: "A code was already requested. Please wait 60 seconds before requesting another." }, 429);
+  if ((hourlyEmail || 0) >= 5) return json(req, { error: "Too many codes were requested for this address. Try again later." }, 429);
+  if ((hourlyIp || 0) >= 20) return json(req, { error: "Too many code requests came from this network. Try again later." }, 429);
+  if ((failedEmail || 0) >= 10) return json(req, { error: "Too many unsuccessful attempts. Try again later or contact 910CPR." }, 429);
+
+  await admin.from("nhcso_login_codes").update({ consumed_at: nowIso })
+    .eq("email", email).is("consumed_at", null);
+
+  const code = randomFourDigitCode();
+  const expiresAt = new Date(now.getTime() + 15 * 60 * 1000).toISOString();
+  const { data: created, error: insertError } = await admin.from("nhcso_login_codes").insert({
+    email,
+    code_sha256: await otpHash(email, code),
+    request_ip_sha256: ipSha,
+    expires_at: expiresAt,
+  }).select("id").single();
+  if (insertError || !created) throw insertError || new Error("Could not create login code");
+
+  try {
+    const messageId = await deliverLoginCode(email, code);
+    await admin.from("nhcso_login_codes").update({ delivery_message_id: messageId }).eq("id", created.id);
+    console.info("nhcso_login_code_sent", { email_sha256: emailSha.slice(0, 16), ip_sha256: ipSha.slice(0, 16) });
+    return json(req, {
+      ok: true,
+      email: maskEmail(email),
+      expires_in_seconds: 900,
+      resend_after_seconds: 60,
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    await admin.from("nhcso_login_codes").update({
+      consumed_at: new Date().toISOString(),
+      delivery_error: message.slice(0, 500),
+    }).eq("id", created.id);
+    console.error("nhcso_login_code_delivery_failed", { error: message });
+    return json(req, { error: "Email delivery is temporarily unavailable. Please try again shortly." }, 503);
+  }
+}
+
+async function verifyLoginCode(req: Request, body: any) {
+  const email = departmentEmail(body.email);
+  const code = clean(body.code);
+  if (!email || !/^\d{4}$/.test(code)) return json(req, { error: "Enter the four-digit code sent to your department email." }, 400);
+
+  const now = new Date();
+  const nowIso = now.toISOString();
+  const hourAgo = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
+  const ipSha = await sha256(requestIp(req));
+  const emailSha = await sha256(email);
+  const [{ count: emailFailures }, { count: ipFailures }] = await Promise.all([
+    admin.from("nhcso_login_attempts").select("id", { count: "exact", head: true }).eq("email_sha256", emailSha).eq("succeeded", false).gt("attempted_at", hourAgo),
+    admin.from("nhcso_login_attempts").select("id", { count: "exact", head: true }).eq("ip_sha256", ipSha).eq("succeeded", false).gt("attempted_at", hourAgo),
+  ]);
+  if ((emailFailures || 0) >= 10 || (ipFailures || 0) >= 20) {
+    return json(req, { error: "Too many unsuccessful attempts. Try again later or request help from 910CPR." }, 429);
+  }
+
+  const { data: codeRow, error: lookupError } = await admin.from("nhcso_login_codes")
+    .select("id,code_sha256,attempt_count,expires_at")
+    .eq("email", email)
+    .is("consumed_at", null)
+    .gt("expires_at", nowIso)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (lookupError) throw lookupError;
+  if (!codeRow) return json(req, { error: "That code is expired or no longer active. Request a new code." }, 400);
+  if (Number(codeRow.attempt_count || 0) >= 5) {
+    await admin.from("nhcso_login_codes").update({ consumed_at: nowIso }).eq("id", codeRow.id).is("consumed_at", null);
+    return json(req, { error: "That code has been locked. Request a new code." }, 429);
+  }
+
+  const matches = (await otpHash(email, code)) === codeRow.code_sha256;
+  if (!matches) {
+    const nextAttempt = Number(codeRow.attempt_count || 0) + 1;
+    const update: Record<string, unknown> = { attempt_count: nextAttempt };
+    if (nextAttempt >= 5) update.consumed_at = nowIso;
+    await admin.from("nhcso_login_codes").update(update)
+      .eq("id", codeRow.id).eq("attempt_count", codeRow.attempt_count).is("consumed_at", null);
+    await admin.from("nhcso_login_attempts").insert({ email_sha256: emailSha, ip_sha256: ipSha, succeeded: false });
+    return json(req, {
+      error: nextAttempt >= 5
+        ? "That code has been locked after too many attempts. Request a new code."
+        : "That code did not match. No new email was sent.",
+      attempts_remaining: Math.max(0, 5 - nextAttempt),
+    }, 401);
+  }
+
+  const { data: consumed } = await admin.from("nhcso_login_codes").update({ consumed_at: nowIso })
+    .eq("id", codeRow.id).eq("attempt_count", codeRow.attempt_count).is("consumed_at", null)
+    .select("id").maybeSingle();
+  if (!consumed) return json(req, { error: "That code was already used. Request a new code." }, 409);
+
+  await admin.from("nhcso_login_attempts").insert({ email_sha256: emailSha, ip_sha256: ipSha, succeeded: true });
+  const token = randomToken();
+  const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString();
+  const userAgent = clean(req.headers.get("user-agent"));
+  const { error: sessionError } = await admin.from("nhcso_portal_sessions").insert({
+    token_sha256: await sha256(token),
+    email,
+    expires_at: expiresAt,
+    created_ip_sha256: ipSha,
+    user_agent_sha256: userAgent ? await sha256(userAgent) : null,
+  });
+  if (sessionError) throw sessionError;
+  console.info("nhcso_login_verified", { email_sha256: emailSha.slice(0, 16), ip_sha256: ipSha.slice(0, 16) });
+  return json(req, { ok: true, token, email, expires_at: expiresAt, expires_in_seconds: 2592000 });
+}
+
+async function revokeWorkspaceSession(req: Request) {
+  const token = (req.headers.get("authorization") || "").replace(/^Bearer\s+/i, "").trim();
+  if (!/^[a-f0-9]{64}$/i.test(token)) return;
+  await admin.from("nhcso_portal_sessions").update({ revoked_at: new Date().toISOString() })
+    .eq("token_sha256", await sha256(token)).is("revoked_at", null);
 }
 
 async function studentKey(name: string, email: string) {
