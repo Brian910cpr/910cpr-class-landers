@@ -305,7 +305,10 @@
     billingPill.setAttribute("aria-label", "Corporate billing code");
     billingPill.append(billing);
     pillRow.append(timingPill, billingPill);
-    host.append(pillRow);
+    const heading = doc.createElement("h2");
+    heading.className = "calendar-availability-heading";
+    heading.textContent = "When are YOU available?";
+    host.append(heading, pillRow);
     let constraints = compile([], "", today());
     let billingCode = "";
     let timer;
