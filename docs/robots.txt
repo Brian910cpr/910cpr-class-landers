@@ -1,19 +1,7 @@
 User-agent: *
-Disallow: /admin/
-Disallow: /control-center/
-Disallow: /internal/
-Disallow: /drafts/
-Disallow: /corp/nhcso/
-Disallow: /corp/nhco/
 Allow: /
 
 User-agent: OAI-SearchBot
-Disallow: /admin/
-Disallow: /control-center/
-Disallow: /internal/
-Disallow: /drafts/
-Disallow: /corp/nhcso/
-Disallow: /corp/nhco/
 Allow: /
 
 Sitemap: https://www.910cpr.com/sitemap.xml

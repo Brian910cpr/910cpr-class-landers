@@ -14,8 +14,29 @@
 .auth-gate{position:fixed;inset:0;z-index:1000;background:#08101d;display:grid;place-items:center;padding:20px}.auth-gate[hidden]{display:none}.auth-card{width:min(460px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:0 24px 70px rgba(0,0,0,.45)}.auth-card h1{margin:0 0 5px;font-size:23px}.auth-card p{color:var(--muted);line-height:1.5}.auth-card input{font-size:16px}.auth-actions{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}.auth-status{min-height:20px;margin-top:12px;font-size:13px;color:var(--muted)}.auth-status.bad{color:#fca5a5}.auth-status.good{color:#86efac}.auth-note{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px;margin-top:16px}.code-input{font-size:24px!important;letter-spacing:.35em;text-align:center;font-weight:700}.top-session{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.top-session .btn{padding:6px 9px;font-size:12px}
 </style>
 
+<!-- Google Tag Manager -->
+<script>
+(function(w,d,s,l,i,m){
+var internal=/^\/(admin|control-center|internal|drafts|analytics-preferences)(\/|$)/.test(w.location.pathname);
+var excluded=new RegExp('(?:^|;\\s*)(?:lw_analytics_excluded|analytics_excluded)=1(?:;|$)').test(d.cookie);
+if(internal||excluded){m.split(',').forEach(function(id){w['ga-disable-'+id]=true;});return;}
+w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-PQS8DCBH','G-45PBWBK7KR,G-SL0HBP3RV5');
+</script>
+<!-- End Google Tag Manager -->
+<script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
+<link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
+<script src="/assets/site-theme.js"></script>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PQS8DCBH"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 <div id="authGate" class="auth-gate">
   <section class="auth-card" aria-labelledby="authTitle">
     <div class="pill" style="display:inline-block;margin-bottom:12px">NHCSO · Department access</div>
