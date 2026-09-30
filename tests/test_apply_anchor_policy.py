@@ -255,8 +255,10 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
             "start_at": "2026-10-02T10:45:00-04:00",
             "end_at": "2026-10-02T12:45:00-04:00",
             "registration_url": "https://example.test/paid-renewal",
+            "active_registration_count": 1,
+            "demand_basis": "canonical_active_registrations",
         }
-        anchors = [anchor_session]
+        anchors = promote_seated_sessions([anchor_session])
         rows = [
             ("08:00", "209806", "https://example.test/initial-0800"),
             ("10:45", "359474", anchor_session["registration_url"]),
