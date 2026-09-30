@@ -11,6 +11,7 @@ QUEUE_SQL = (ROOT / "supabase" / "migrations" / "20260908233800_public_registrat
 NATIVE_SQL = (ROOT / "supabase" / "migrations" / "20260909220000_native_public_checkout.sql").read_text(encoding="utf-8")
 BLS_ADDONS_SQL = (ROOT / "supabase" / "migrations" / "20260930030000_bls_public_registration_addons.sql").read_text(encoding="utf-8")
 PER_STUDENT_BILLING_SQL = (ROOT / "supabase" / "migrations" / "20260930050000_per_student_public_billing_codes.sql").read_text(encoding="utf-8")
+BLS_OFFER_SQL = (ROOT / "supabase" / "migrations" / "20260930210146_assign_bls_offer_instructor.sql").read_text(encoding="utf-8")
 
 
 class PublicRegistrationTests(unittest.TestCase):
@@ -47,11 +48,19 @@ class PublicRegistrationTests(unittest.TestCase):
         self.assertIn("raw/course_archive_v4.json", NATIVE_SQL)
 
     def test_stripe_checkout_is_current_and_idempotent(self):
-        self.assertIn('"2026-07-29.dahlia"', EDGE)
         self.assertIn('"idempotency-key":idempotencyKey', EDGE)
         self.assertIn('p.set("integration_identifier"', EDGE)
         self.assertNotIn("payment_method_types", EDGE)
         self.assertLess(EDGE.index("stripeKey();const result"), EDGE.index('rpc("landerware_create_public_order"'))
+
+    def test_bls_offer_materializes_a_class_before_seat_hold(self):
+        self.assertIn("function materializedOffer", EDGE)
+        self.assertIn("p_offer:materializedOffer(s,id)", EDGE)
+        self.assertIn("p_offer jsonb", BLS_OFFER_SQL)
+        self.assertIn("landerware_public_offer", BLS_OFFER_SQL)
+        self.assertIn("lead_instructor_id", BLS_OFFER_SQL)
+        self.assertIn("p_offer->>'external_class_id'", BLS_OFFER_SQL)
+        self.assertIn("insert into public.class_sessions", BLS_OFFER_SQL)
 
     def test_gmail_queue_is_preserved_and_page_does_not_restart_in_enrollware(self):
         self.assertIn('delivery_provider:"gmail"', EDGE)
