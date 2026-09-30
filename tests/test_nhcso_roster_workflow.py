@@ -126,5 +126,14 @@ process.stdout.write(ecardNumbersForLookup([],notes).join('\n'));
         self.assertIn('const rows = [...stagedRows.values()]', source)
 
 
+    def test_portal_code_login_allows_department_and_910cpr_addresses(self) -> None:
+        html = PAGE.read_text(encoding="utf-8")
+        source = EDGE_FUNCTION.read_text(encoding="utf-8")
+        self.assertIn("@(nhcgov\\.com|910cpr\\.com)", html)
+        self.assertIn("@(nhcgov\\.com|910cpr\\.com)", source)
+        self.assertIn("authorized @nhcgov.com or @910cpr.com", html)
+        self.assertIn("authorized @nhcgov.com or @910cpr.com", source)
+
+
 if __name__ == "__main__":
     unittest.main()
