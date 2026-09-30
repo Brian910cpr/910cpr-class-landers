@@ -4,6 +4,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = (ROOT / "docs" / "register" / "index.html").read_text(encoding="utf-8")
+BLS_PAGE = (ROOT / "docs" / "bls.html").read_text(encoding="utf-8")
 EDGE = (ROOT / "supabase" / "functions" / "public-registration" / "index.ts").read_text(encoding="utf-8")
 SQL = (ROOT / "supabase" / "migrations" / "20260908233000_public_registration_intents.sql").read_text(encoding="utf-8")
 QUEUE_SQL = (ROOT / "supabase" / "migrations" / "20260908233800_public_registration_intent_queue.sql").read_text(encoding="utf-8")
@@ -61,8 +62,11 @@ class PublicRegistrationTests(unittest.TestCase):
     def test_bls_initial_addons_and_company_picker_are_present(self):
         self.assertIn("BLS Provider Manual eBook", BLS_ADDONS_SQL)
         self.assertIn("1749", BLS_ADDONS_SQL)
-        self.assertIn("AHA Heartsaver First Aid", BLS_ADDONS_SQL)
+        self.assertIn("AHA Heartsaver First Aid in person", BLS_ADDONS_SQL)
+        self.assertIn("AHA Heartsaver First Aid online", BLS_ADDONS_SQL)
         self.assertIn("5000", BLS_ADDONS_SQL)
+        self.assertIn("6000", BLS_ADDONS_SQL)
+        self.assertIn("payer_mode','corporate_invoice", BLS_ADDONS_SQL)
         self.assertIn("query.length<3", PAGE)
         self.assertIn("COMPANY_BILLING_CODES", PAGE)
         self.assertIn("order-total", PAGE)
@@ -70,15 +74,30 @@ class PublicRegistrationTests(unittest.TestCase):
         self.assertIn("billingCode:card.querySelector", PAGE)
         self.assertIn("data-same-for-all", PAGE)
         self.assertIn("copyFirstToAll", PAGE)
-        self.assertIn("billingCode:card.querySelector", PAGE)
+        self.assertIn("data-manual-choice", PAGE)
+        self.assertIn("data-first-aid-choice", PAGE)
+        self.assertIn("data-product-image", PAGE)
+        self.assertIn('target="_blank"', PAGE)
+        self.assertIn("Buy Direct from AHA", PAGE)
+        self.assertIn("manualChoice", PAGE)
+        self.assertIn("firstAidChoice", PAGE)
         self.assertIn("add column if not exists billing_code", PER_STUDENT_BILLING_SQL)
+        self.assertIn("selected_options jsonb", PER_STUDENT_BILLING_SQL)
         self.assertIn("v_student->>'billingCode'", PER_STUDENT_BILLING_SQL)
         self.assertIn("v_discount:=v_discount+v_student_discount", PER_STUDENT_BILLING_SQL)
+        self.assertIn("landerware_corporate_invoice_lines", PER_STUDENT_BILLING_SQL)
+        self.assertIn("This confirmation records that we provided the official purchase link", EDGE)
 
     def test_privileged_rpc_is_not_publicly_executable(self):
         self.assertIn("from public, anon, authenticated", SQL)
         self.assertIn("to service_role", SQL)
         self.assertIn("from public, anon, authenticated", QUEUE_SQL)
+
+    def test_only_real_bls_initial_sessions_route_to_native_registration(self):
+        self.assertIn("String(course.courseId) === '209806'", BLS_PAGE)
+        self.assertIn("course.offerType === 'seated_class'", BLS_PAGE)
+        self.assertIn("/register/?session=${encodeURIComponent(nativeSessionId)}", BLS_PAGE)
+        self.assertIn(": course.appointmentUrl", BLS_PAGE)
 
 
 if __name__ == "__main__":

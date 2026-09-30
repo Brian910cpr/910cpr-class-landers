@@ -2,7 +2,8 @@ begin;
 
 alter table public.landerware_public_order_students
   add column if not exists billing_code text,
-  add column if not exists discount integer not null default 0 check (discount >= 0);
+  add column if not exists discount integer not null default 0 check (discount >= 0),
+  add column if not exists selected_options jsonb not null default '{}'::jsonb;
 
 create or replace function public.landerware_create_public_order(
   p_idempotency_key text,p_external_class_id text,p_course_id text,p_payer_email text,
@@ -43,12 +44,21 @@ begin
       select case when value->>'type'='percent' then round(v_student_total*coalesce((value->>'amount')::numeric,0)/100)::integer when value->>'type'='amount' then least(v_student_total,coalesce((value->>'amount')::integer,0)) else 0 end into v_student_discount from jsonb_array_elements(v_catalog.billing_codes) where lower(value->>'code')=lower(v_student_code) and coalesce((value->>'active')::boolean,true) limit 1;
       if v_student_discount is null then raise exception 'invalid_billing_code'; end if;
     end if;
-    insert into public.landerware_public_order_students(order_id,first_name,last_name,email,phone,unit_amount,selected_addons,billing_code,discount)
-      values(v_order.id,trim(v_student->>'firstName'),trim(v_student->>'lastName'),lower(trim(v_student->>'email')),trim(v_student->>'phone'),v_student_total,coalesce(v_student->'addons','[]'::jsonb),v_student_code,v_student_discount);
+    insert into public.landerware_public_order_students(order_id,first_name,last_name,email,phone,unit_amount,selected_addons,billing_code,discount,selected_options)
+      values(v_order.id,trim(v_student->>'firstName'),trim(v_student->>'lastName'),lower(trim(v_student->>'email')),trim(v_student->>'phone'),v_student_total,coalesce(v_student->'addons','[]'::jsonb),v_student_code,v_student_discount,jsonb_build_object('manualChoice',coalesce(v_student->>'manualChoice','own-copy'),'firstAidChoice',coalesce(v_student->>'firstAidChoice','none')));
     v_subtotal:=v_subtotal+v_student_total; v_discount:=v_discount+v_student_discount;
   end loop;
   update public.landerware_public_orders set subtotal=v_subtotal,discount=v_discount,total=greatest(v_subtotal-v_discount,0),updated_at=now() where id=v_order.id returning * into v_order;
   return jsonb_build_object('orderId',v_order.id,'recoveryToken',v_order.recovery_token,'holdExpiresAt',v_order.hold_expires_at,'subtotal',v_order.subtotal,'discount',v_order.discount,'total',v_order.total,'idempotentReplay',false);
 end $$;
+
+create or replace view public.landerware_corporate_invoice_lines as
+select o.id as order_id,o.created_at,o.external_class_id,o.course_id,
+  s.first_name,s.last_name,s.email,s.billing_code,s.unit_amount as company_amount_cents,
+  s.selected_addons,s.selected_options
+from public.landerware_public_orders o
+join public.landerware_public_order_students s on s.order_id=o.id
+where nullif(trim(s.billing_code),'') is not null
+  and o.status in ('held','checkout_open','paid');
 
 commit;
