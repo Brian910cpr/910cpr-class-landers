@@ -1655,10 +1655,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         badge.textContent = deliveryLabel(course.deliveryMode);
         const link = document.createElement('a');
         link.className = 'register-link';
-        const nativeSessionId = String(course.courseId) === '209806' && course.offerType === 'seated_class'
-          ? new URL(course.appointmentUrl, window.location.origin).searchParams.get('id')
-          : null;
-        link.href = nativeSessionId ? `/register/?session=${encodeURIComponent(nativeSessionId)}` : course.appointmentUrl;
+        link.href = course.appointmentUrl;
         link.textContent = 'Register';
         item.append(summary, badge, link);
         host.appendChild(item);
