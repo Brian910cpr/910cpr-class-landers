@@ -107,6 +107,8 @@ class CalendarTimeFilterBrowserTests(unittest.TestCase):
         self.assertEqual(self.result(page), baseline)
         self.assertEqual(page.locator(".calendar-time-bullet").all_text_contents(), ["•"] * 4)
         self.assertEqual(page.get_by_role("heading", name="When are YOU available?", exact=True).count(), 1)
+        self.assertEqual(page.locator(".calendar-timing-pill .calendar-availability-heading").count(), 1)
+        self.assertEqual(page.locator(".calendar-billing-pill .calendar-availability-heading").count(), 0)
         self.assertEqual(page.locator(".calendar-filter-pill").count(), 2)
         self.assertEqual(page.locator(".calendar-timing-pill .calendar-time-smart").count(), 1)
         self.assertEqual(page.locator(".calendar-billing-pill .calendar-billing-code").count(), 1)
