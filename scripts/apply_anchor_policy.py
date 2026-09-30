@@ -310,6 +310,22 @@ def apply_daily_anchor_stack(payload: dict[str, Any], anchors: list[dict[str, An
                     retained.append(offer)
             continue
 
+        if policy.get("compact_paid_days", True) is False:
+            # A seated Enrollware class is hard occupancy, not a reason to hide
+            # otherwise legal starts elsewhere in the day. Conflict, duration,
+            # travel, lead-time, and calendar rules have already run upstream.
+            for offer in day_offers:
+                if seated := _anchor_for_offer(offer, day_anchors):
+                    retained.append(rewrite_offer_to_anchor(offer, seated))
+                    continue
+                family = text(offer.get("courseFamily")).upper()
+                is_real = text(offer.get("offerType")) == "seated_class"
+                if family in excluded and not is_real:
+                    suppressed += 1
+                    continue
+                retained.append(offer)
+            continue
+
         anchored_courses = {text(anchor.get("course_id")) for anchor in day_anchors}
         for offer in day_offers:
             if seated := _anchor_for_offer(offer, day_anchors):

@@ -248,5 +248,60 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
         self.assertEqual(result["counts"]["publicSelectableOfferCount"], len(rendered))
 
 
+    def test_daily_stack_can_keep_all_legal_starts_on_paid_days(self):
+        anchor_session = {
+            "session_id": "paid-renewal",
+            "course_id": "359474",
+            "start_at": "2026-10-02T10:45:00-04:00",
+            "end_at": "2026-10-02T12:45:00-04:00",
+            "registration_url": "https://example.test/paid-renewal",
+        }
+        anchors = [anchor_session]
+        rows = [
+            ("08:00", "209806", "https://example.test/initial-0800"),
+            ("10:45", "359474", anchor_session["registration_url"]),
+            ("13:00", "209806", "https://example.test/initial-1300"),
+            ("15:00", "210549", "https://example.test/heartcode-1500"),
+        ]
+        slots = []
+        for clock, cid, url in rows:
+            slots.append({
+                "startTime": clock,
+                "displayStartTime": clock,
+                "courses": [{
+                    "date": "2026-10-02",
+                    "displayDate": "Friday",
+                    "startTime": clock,
+                    "displayStartTime": clock,
+                    "courseId": cid,
+                    "courseName": cid,
+                    "courseFamily": "BLS",
+                    "durationMinutes": 120 if cid != "210549" else 45,
+                    "appointmentUrl": url,
+                }],
+            })
+        payload = {"dates": [{"date": "2026-10-02", "displayDate": "Friday", "startTimes": slots}], "counts": {}}
+        policy = {
+            "mode": "daily_anchor_stack_v1",
+            "compact_paid_days": False,
+            "open_day_excluded_families": ["ACLS", "PALS"],
+        }
+
+        result = apply_selector_policy(payload, anchors, policy)
+        rendered = [
+            course
+            for day in result["dates"]
+            for slot in day["startTimes"]
+            for course in slot["courses"]
+        ]
+
+        self.assertEqual({("08:00", "209806"), ("10:45", "359474"), ("13:00", "209806"), ("15:00", "210549")},
+                         {(item["startTime"], item["courseId"]) for item in rendered})
+        paid = next(item for item in rendered if item["courseId"] == "359474")
+        self.assertEqual("anchor", paid.get("schedule_role"))
+        self.assertTrue(all(item.get("schedule_role") != "barnacle" for item in rendered if item is not paid))
+
+
+
 if __name__ == "__main__":
     unittest.main()
