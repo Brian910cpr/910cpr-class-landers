@@ -21,8 +21,8 @@ class SelectorMobileProgressionTests(unittest.TestCase):
             html = (ROOT / relative_path).read_text(encoding="utf-8")
             with self.subTest(page=relative_path):
                 self.assertIn('id="calendar-time-filters"', html)
-                self.assertIn('/assets/calendar-time-filters.js?v=20260929.2', html)
-                self.assertIn('/assets/calendar-time-filters.css?v=20260929.2', html)
+                self.assertIn('/assets/calendar-time-filters.js?v=20260929.3', html)
+                self.assertIn('/assets/calendar-time-filters.css?v=20260929.3', html)
                 self.assertIn('CalendarTimeFilters.filterDates(', html)
                 self.assertIn('ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds())', html)
                 self.assertIn('if (compareMode || timingPreferences.constraints.active) return [];', html)
@@ -33,7 +33,7 @@ class SelectorMobileProgressionTests(unittest.TestCase):
         self.assertIn('id="calendar-time-filters"', builder)
         self.assertIn('CalendarTimeFilters.mount(', builder)
         self.assertIn('CalendarTimeFilters.filterDates(', builder)
-        self.assertIn('/assets/calendar-time-filters.css?v=20260929.2', builder)
+        self.assertIn('/assets/calendar-time-filters.css?v=20260929.3', builder)
 
     def test_all_selector_pages_advance_to_the_next_required_action(self):
         for relative_path in SELECTOR_PAGES:

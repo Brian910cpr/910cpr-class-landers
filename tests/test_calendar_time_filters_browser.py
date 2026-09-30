@@ -106,6 +106,9 @@ class CalendarTimeFilterBrowserTests(unittest.TestCase):
         self.assertTrue(baseline)
         self.assertEqual(self.result(page), baseline)
         self.assertEqual(page.locator(".calendar-time-bullet").all_text_contents(), ["•"] * 4)
+        self.assertEqual(page.locator(".calendar-filter-pill").count(), 2)
+        self.assertEqual(page.locator(".calendar-timing-pill .calendar-time-smart").count(), 1)
+        self.assertEqual(page.locator(".calendar-billing-pill .calendar-billing-code").count(), 1)
         billing = page.get_by_role("combobox", name="Billing Code", exact=True)
         billing.fill("Ma")
         self.assertTrue(page.locator(".calendar-billing-suggestions").is_hidden())
@@ -193,9 +196,16 @@ class CalendarTimeFilterBrowserTests(unittest.TestCase):
                     page, _, _, errors = self.load(family, width)
                     panel = page.locator("#calendar-time-filters")
                     dimensions = panel.bounding_box()
-                    self.assertLess(dimensions["height"], 225 if width < 600 else 135)
+                    self.assertLess(dimensions["height"], 240 if width < 600 else 125)
                     self.assertGreaterEqual(dimensions["x"], 0)
                     self.assertLessEqual(dimensions["x"] + dimensions["width"], width)
+                    timing_pill = page.locator(".calendar-timing-pill").bounding_box()
+                    billing_pill = page.locator(".calendar-billing-pill").bounding_box()
+                    if width >= 600:
+                        self.assertLess(timing_pill["x"], billing_pill["x"])
+                        self.assertAlmostEqual(timing_pill["y"], billing_pill["y"], delta=1)
+                    else:
+                        self.assertLess(timing_pill["y"], billing_pill["y"])
                     for selector in [".calendar-time-item", ".calendar-time-smart input", ".calendar-time-smart button", ".calendar-billing-code > input"]:
                         for item in page.locator(selector).all():
                             box = item.bounding_box()
