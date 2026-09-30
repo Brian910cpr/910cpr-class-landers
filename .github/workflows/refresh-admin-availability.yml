@@ -27,6 +27,7 @@ on:
       - 'scripts/fetch_canonical_scheduling_demand.py'
       - 'scripts/canonical_scheduling_demand.py'
       - 'scripts/ensure_dashboard_refresh_controls.py'
+      - 'scripts/validate_public_refresh_output.py'
       - 'data/runtime/anchor_seat_overrides.json'
       - 'data/config/people_catalog.json'
       - 'data/config/location_resource_map.json'
