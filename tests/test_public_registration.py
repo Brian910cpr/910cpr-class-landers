@@ -9,6 +9,7 @@ SQL = (ROOT / "supabase" / "migrations" / "20260908233000_public_registration_in
 QUEUE_SQL = (ROOT / "supabase" / "migrations" / "20260908233800_public_registration_intent_queue.sql").read_text(encoding="utf-8")
 NATIVE_SQL = (ROOT / "supabase" / "migrations" / "20260909220000_native_public_checkout.sql").read_text(encoding="utf-8")
 BLS_ADDONS_SQL = (ROOT / "supabase" / "migrations" / "20260930030000_bls_public_registration_addons.sql").read_text(encoding="utf-8")
+PER_STUDENT_BILLING_SQL = (ROOT / "supabase" / "migrations" / "20260930050000_per_student_public_billing_codes.sql").read_text(encoding="utf-8")
 
 
 class PublicRegistrationTests(unittest.TestCase):
@@ -69,6 +70,10 @@ class PublicRegistrationTests(unittest.TestCase):
         self.assertIn("billingCode:card.querySelector", PAGE)
         self.assertIn("data-same-for-all", PAGE)
         self.assertIn("copyFirstToAll", PAGE)
+        self.assertIn("billingCode:card.querySelector", PAGE)
+        self.assertIn("add column if not exists billing_code", PER_STUDENT_BILLING_SQL)
+        self.assertIn("v_student->>'billingCode'", PER_STUDENT_BILLING_SQL)
+        self.assertIn("v_discount:=v_discount+v_student_discount", PER_STUDENT_BILLING_SQL)
 
     def test_privileged_rpc_is_not_publicly_executable(self):
         self.assertIn("from public, anon, authenticated", SQL)
