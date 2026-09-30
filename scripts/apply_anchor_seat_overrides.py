@@ -32,15 +32,35 @@ def apply(payload: dict[str, Any], overrides: dict[str, Any]) -> int:
         override = overrides.get(session_id)
         if not isinstance(override, dict):
             continue
-        count = int(override.get("registered_count", 0))
-        if count < 1:
-            continue
-        session["registered_count"] = count
-        session["confirmed_seated"] = True
-        session["seat_count_source"] = "anchor_seat_override"
-        if override.get("appointment_class_id"):
-            session["appointment_class_id"] = str(override["appointment_class_id"])
-        changed += 1
+
+        touched = False
+
+        if "registered_count" in override:
+            count = int(override.get("registered_count", 0))
+            if count >= 1:
+                session["registered_count"] = count
+                session["confirmed_seated"] = True
+                session["seat_count_source"] = "anchor_seat_override"
+                if override.get("appointment_class_id"):
+                    session["appointment_class_id"] = str(override["appointment_class_id"])
+                touched = True
+
+        if "public_direct_booking" in override:
+            session["public_direct_booking"] = bool(override["public_direct_booking"])
+            touched = True
+
+        for key in (
+            "registration_status",
+            "registration_status_source",
+            "registration_status_reason",
+        ):
+            value = override.get(key)
+            if value not in (None, ""):
+                session[key] = str(value)
+                touched = True
+
+        if touched:
+            changed += 1
     return changed
 
 

@@ -1,10 +1,16 @@
 {
-  "schema_version": "910cpr-anchor-seat-overrides.v1",
-  "source": "Owner-confirmed Enrollware class list, 2026-08-02",
-  "notes": "Temporary authoritative seat overrides until the Enrollware student snapshot matches appointment-created sessions reliably.",
+  "schema_version": "910cpr-anchor-seat-overrides.v2",
+  "source": "Owner-confirmed operational overrides",
+  "notes": "Temporary authoritative seat-count and public-booking overrides applied after schedule rebuild so urgent owner-confirmed exceptions survive source refreshes.",
   "sessions": {
     "13833211": {"registered_count": 1, "appointment_class_id": "51275"},
     "13818252": {"registered_count": 1, "appointment_class_id": "51239"},
-    "13787687": {"registered_count": 1, "appointment_class_id": "51231"}
+    "13787687": {"registered_count": 1, "appointment_class_id": "51231"},
+    "14186226": {
+      "public_direct_booking": false,
+      "registration_status": "closed",
+      "registration_status_source": "owner_override",
+      "registration_status_reason": "existing_registrant_reschedule_pending_offsite_conflict_2026-10-03"
+    }
   }
 }
