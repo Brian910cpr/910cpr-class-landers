@@ -65,6 +65,10 @@ class PublicRegistrationTests(unittest.TestCase):
         self.assertIn("query.length<3", PAGE)
         self.assertIn("COMPANY_BILLING_CODES", PAGE)
         self.assertIn("order-total", PAGE)
+        self.assertIn("data-billing-code", PAGE)
+        self.assertIn("billingCode:card.querySelector", PAGE)
+        self.assertIn("data-same-for-all", PAGE)
+        self.assertIn("copyFirstToAll", PAGE)
 
     def test_privileged_rpc_is_not_publicly_executable(self):
         self.assertIn("from public, anon, authenticated", SQL)
