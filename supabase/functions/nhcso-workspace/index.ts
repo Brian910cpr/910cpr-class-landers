@@ -34,7 +34,7 @@ const requestIp = (req: Request) =>
   clean(req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for")?.split(",")[0] || "unknown");
 const departmentEmail = (value: unknown) => {
   const email = clean(value).toLowerCase();
-  return /^[^@\s]+@nhcgov\.com$/.test(email) ? email : "";
+  return /^[^@\s]+@(nhcgov\.com|910cpr\.com)$/.test(email) ? email : "";
 };
 const maskEmail = (email: string) => {
   const [local, domain] = email.split("@");
@@ -151,7 +151,7 @@ async function deliverLoginCode(email: string, code: string) {
 
 async function requestLoginCode(req: Request, body: any) {
   const email = departmentEmail(body.email);
-  if (!email) return json(req, { error: "Use your @nhcgov.com department email address." }, 400);
+  if (!email) return json(req, { error: "Use your authorized @nhcgov.com or @910cpr.com email address." }, 400);
   const now = new Date();
   const nowIso = now.toISOString();
   const minuteAgo = new Date(now.getTime() - 60 * 1000).toISOString();
