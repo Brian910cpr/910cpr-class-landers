@@ -97,7 +97,7 @@ function startResendCooldown(seconds=60){
 }
 async function requestCode(emailValue){
   const email=String(emailValue||'').trim().toLowerCase();
-  if(!/^[^@\s]+@nhcgov\.com$/.test(email)){setAuthStatus('Use your @nhcgov.com department email address.','bad');return}
+  if(!/^[^@\s]+@(nhcgov\.com|910cpr\.com)$/.test(email)){setAuthStatus('Use your authorized @nhcgov.com or @910cpr.com email address.','bad');return}
   $('sendCode').disabled=true;$('resendCode').disabled=true;setAuthStatus('Sending a code…');
   try{
     const j=await api({action:'request_code',email},false,false);
