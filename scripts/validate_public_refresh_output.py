@@ -137,21 +137,56 @@ def validate_non_session_publication(root: Path, demand: dict[str, Any]) -> None
 
 
 def validate_public_demand(rows: list[dict[str, Any]], demand: dict[str, Any]) -> None:
-    """Unknown demand cannot authorize replacement of the published inventory.
+    """Fail closed on roster *counts* without freezing fresh occupancy.
 
-    Re-resolve against the snapshot validated at publication time: counts in the
-    generated schedule may have been valid earlier in a long build. Zero is a
-    valid current count; missing, ambiguous and expired evidence are not zero.
-    This does not promote a session or change the ranking policy.
+    The public schedule and selector blockers must stay current even when the
+    canonical participant projection is temporarily stale or incomplete. Unknown
+    demand may therefore publish only as unknown: it must not carry an
+    authoritative registration count or promote an Anchor. Enrollware remains the
+    registration destination for these seated classes and enforces its own seat
+    availability.
     """
     resolved, _ = resolve_canonical_demand(rows, demand["sessions"])
-    unknown = [
-        f"{row.get('session_id')}: {row.get('demand_status')}"
-        for row in resolved if row.get("count_available") is not True
-    ]
-    require(not unknown, "Refusing publication with unknown canonical demand; "
-            "preserving published inventory. Reconcile current complete rosters: "
-            + "; ".join(unknown))
+    unknown: list[str] = []
+    unsafe_counts: list[str] = []
+
+    for published, current in zip(rows, resolved):
+        if current.get("count_available") is True:
+            continue
+
+        session_id = str(
+            current.get("session_id")
+            or published.get("session_id")
+            or published.get("external_session_id")
+            or "unknown"
+        )
+        status = str(current.get("demand_status") or "unknown")
+        unknown.append(f"{session_id}: {status}")
+
+        published_count = published.get("active_registration_count")
+        published_basis = str(published.get("demand_basis") or "").strip()
+        published_available = published.get("count_available")
+        if (
+            published_count is not None
+            or published_available is True
+            or published_basis == "canonical_active_registrations"
+        ):
+            unsafe_counts.append(session_id)
+
+    require(
+        not unsafe_counts,
+        "Refusing publication because unknown canonical demand is still exposed "
+        "as an authoritative registration count for: "
+        + "; ".join(unsafe_counts),
+    )
+
+    if unknown:
+        print(
+            "::warning title=Canonical demand unavailable::"
+            "Publishing fresh occupied-session timing with participant counts "
+            "failed closed for: "
+            + "; ".join(unknown)
+        )
 
 
 def main() -> int:
