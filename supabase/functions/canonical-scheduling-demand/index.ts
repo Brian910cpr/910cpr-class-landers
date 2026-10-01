@@ -40,6 +40,11 @@ export function projectDemand(row: any) {
   const proof = registrationProof(row);
   const countAvailable = proof.count_available;
   const registrations = countAvailable ? row.registrations : [];
+  const workspaces = row.landerware_sessions || [];
+  const workspace = workspaces.length === 1 ? workspaces[0] : null;
+  const workspaceStatus = !workspaces.length ? "missing" : !workspace
+    || Date.parse(workspace.starts_at) !== Date.parse(row.start_at)
+    || Date.parse(workspace.ends_at) !== Date.parse(row.end_at) ? "stale" : "current";
   return {
     canonical_session_id: row.id,
     external_class_id: row.external_class_id || null,
@@ -47,10 +52,20 @@ export function projectDemand(row: any) {
     course_key: row.courses?.course_key || null,
     start_at: row.start_at,
     end_at: row.end_at,
+    consumption_start_at: row.consumption_start_at,
+    consumption_end_at: row.consumption_end_at,
     location_id: row.location_id,
-    location_name: row.locations?.name || null,
+    location_name: row.source_location_label || row.locations?.name || null,
     lead_instructor_id: row.lead_instructor_id,
-    lead_instructor_name: null,
+    lead_instructor_name: row.source_instructor_label || row.people?.display_name || null,
+    course_name: row.courses?.name || null,
+    visibility: row.visibility,
+    registration_backend: row.registration_backend,
+    registration_status: row.registration_status,
+    workspace_projection_status: workspaceStatus,
+    workspace_session_id: workspace?.id || null,
+    canonical_recorded_registration_count: Array.isArray(row.registrations)
+      ? row.registrations.filter((item: any) => ACTIVE.has(item.status)).length : null,
     source: row.source,
     session_status: row.status,
     active_registration_count: countAvailable ? registrations.filter((item: any) => ACTIVE.has(item.status)).length : null,
@@ -64,9 +79,12 @@ export async function loadDemand(start: string, stop: string) {
   const { url, key } = serviceConfig();
   const select = [
     "id", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
-    "courses!class_sessions_course_id_fkey(course_key)",
+    "consumption_start_at", "consumption_end_at", "source_location_label", "source_instructor_label", "visibility", "registration_status",
+    "courses!class_sessions_course_id_fkey(course_key,name)",
     "locations!class_sessions_location_id_fkey(name)",
-    "registrations!registrations_class_session_id_fkey(status,external_registration_id)",
+    "people!class_sessions_lead_instructor_id_fkey(display_name)",
+    "landerware_sessions!landerware_sessions_class_session_id_fkey(id,starts_at,ends_at)",
+    "registrations!registrations_class_session_id_fkey(status,external_registration_id,registration_source)",
   ].join(",");
   const params = new URLSearchParams({
     select, record_scope: "eq.operational", status: "in.(scheduled,active,completed)", order: "start_at.asc,id.asc", limit: "500",

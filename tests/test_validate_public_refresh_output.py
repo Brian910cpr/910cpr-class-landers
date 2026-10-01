@@ -35,14 +35,15 @@ class ValidatePublicRefreshOutputTests(unittest.TestCase):
         self.assertIsNone(expired["sessions"][0]["active_registration_count"])
         self.assertEqual(generated[0]["active_registration_count"], 1)
 
-    def test_missing_and_ambiguous_relationships_refuse_publication(self):
+    def test_unknown_relationships_preserve_occupancy_but_refuse_fabricated_counts(self):
         now, demand = self.demand()
+        validate_public_demand([{"session_id": "14421081"}], validate_payload(demand, now=now))
         with self.assertRaisesRegex(ValueError, "14421081: missing_canonical_session"):
-            validate_public_demand([{"session_id": "14421081"}], validate_payload(demand, now=now))
+            validate_public_demand([{"session_id": "14421081", "active_registration_count":0}], validate_payload(demand, now=now))
         duplicate = dict(demand["sessions"][0], canonical_session_id="another-canonical")
         demand["sessions"].append(duplicate)
         with self.assertRaisesRegex(ValueError, "14361098: ambiguous"):
-            validate_public_demand([{"session_id": "14361098"}], validate_payload(demand, now=now))
+            validate_public_demand([{"session_id": "14361098", "count_available":True}], validate_payload(demand, now=now))
 
     def test_private_or_quarantined_sources_do_not_block_unrelated_public_rows(self):
         now, demand = self.demand()

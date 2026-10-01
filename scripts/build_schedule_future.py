@@ -8,7 +8,7 @@ from pathlib import Path
 from scripts.build_status import BuildStatusReporter
 from scripts.local_data_paths import missing_live_input_message, print_resolved_path, resolve_live_input_path
 from scripts.public_class_eligibility import is_public_class_location
-from scripts.canonical_scheduling_demand import exclude_non_session_sources, load_publication_demand
+from scripts.canonical_scheduling_demand import exclude_non_session_sources, load_publication_demand, resolve_canonical_demand
 from supervisor.status_snapshot import write_status_snapshot
 from typing import Any, Optional
 from zoneinfo import ZoneInfo
@@ -402,7 +402,8 @@ def main() -> int:
         public_location_aliases = load_public_location_aliases(repo_root / LOCATION_RESOURCE_MAP_PATH)
         raw = json.loads(input_path.read_text(encoding="utf-8"))
         sessions = raw.get("sessions", [])
-        sessions, non_session_ids = exclude_non_session_sources(sessions, load_publication_demand(repo_root))
+        canonical_demand = load_publication_demand(repo_root)
+        sessions, non_session_ids = exclude_non_session_sources(sessions, canonical_demand)
         source_mode = str(raw.get("build", {}).get("source_mode") or "").strip()
         ical_authoritative = source_mode == "enrollware_ical_authoritative"
         if ical_authoritative:
@@ -545,6 +546,7 @@ def main() -> int:
             row["build_classification"] = s.get("_build_classification", "future")
             future_sessions.append(row)
 
+        future_sessions, _demand_audit = resolve_canonical_demand(future_sessions, canonical_demand["sessions"])
         output = {
             "build": {
                 "generated_at": now_iso,

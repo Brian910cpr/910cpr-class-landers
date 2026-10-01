@@ -899,7 +899,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </main>
   <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261001-reconciliation-1"></script>
   <script src="/assets/calendar-time-filters.js?v=20260930.2"></script>
   <script>
     const embeddedScheduleDates = [];
@@ -1657,6 +1657,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         link.className = 'register-link';
         link.href = course.appointmentUrl;
         link.textContent = 'Register';
+        link.addEventListener('click', event => {
+          if (isPastStart(day, slot)) {
+            event.preventDefault();
+            loadResolvedAvailability();
+          }
+        });
         item.append(summary, badge, link);
         host.appendChild(item);
       });
@@ -1749,6 +1755,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           throw new Error('availability payload has an unexpected shape');
         }
         resolvedAvailability = payload;
+        if (!Number.isFinite(Date.parse(payload.validUntil)) || Date.parse(payload.validUntil) <= Date.now()) {
+          throw new Error('availability publication expired');
+        }
         scheduleDates = payload.dates;
         availabilityState = 'ready';
         setAvailabilityMessage('');
@@ -1764,6 +1773,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     loadResolvedAvailability();
+    setInterval(loadResolvedAvailability, 5 * 60 * 1000);
   </script>
 </body>
 </html>

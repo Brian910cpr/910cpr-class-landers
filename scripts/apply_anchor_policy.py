@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import json
 from copy import deepcopy
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 from scripts.anchor_state import ANCHOR_SYMBOL, in_repeat_bubble, promote_seated_sessions, repeat_scope_key, same_course_anchor
-from scripts.canonical_scheduling_demand import resolve_canonical_demand, exclude_non_session_sources
+from scripts.canonical_scheduling_demand import resolve_canonical_demand, exclude_non_session_sources, reconciliation_issues, load_publication_demand
 from scripts.fetch_canonical_scheduling_demand import validate_payload
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -49,7 +50,8 @@ def dt(value: Any) -> datetime | None:
     if not value:
         return None
     try:
-        return datetime.fromisoformat(text(value).replace("Z", "+00:00"))
+        parsed = datetime.fromisoformat(text(value).replace("Z", "+00:00"))
+        return parsed.astimezone(ZoneInfo("America/New_York")) if parsed.tzinfo else parsed
     except ValueError:
         return None
 
@@ -215,8 +217,6 @@ def _anchor_for_offer(offer: dict[str, Any], anchors: list[dict[str, Any]]) -> d
     for anchor in anchors:
         if cid != text(anchor.get("course_id")):
             continue
-        if url and url == text(anchor.get("registration_url")):
-            return anchor
         anchor_start = dt(anchor.get("start_at"))
         if offer_start and anchor_start:
             comparable_offer = offer_start
@@ -224,7 +224,9 @@ def _anchor_for_offer(offer: dict[str, Any], anchors: list[dict[str, Any]]) -> d
             if (comparable_offer.tzinfo is None) != (comparable_anchor.tzinfo is None):
                 comparable_offer = comparable_offer.replace(tzinfo=None)
                 comparable_anchor = comparable_anchor.replace(tzinfo=None)
-            if comparable_offer == comparable_anchor:
+            same_identity = bool(url and url == text(anchor.get("registration_url")))
+            same_resource = location(offer) == text(anchor.get("location")) and bool(location(offer))
+            if comparable_offer == comparable_anchor and (same_identity or same_resource):
                 return anchor
     return None
 
@@ -269,6 +271,9 @@ def _refresh_selector_counts(payload: dict[str, Any]) -> None:
 
 
 def _rebuild_dates(payload: dict[str, Any], offers: list[dict[str, Any]]) -> dict[str, Any]:
+    # The diagnostic publisher and renderer must see exactly the same decisions.
+    if "offers" in payload:
+        payload["offers"] = offers
     grouped: dict[str, dict[str, Any]] = {}
     for offer in offers:
         date = text(offer.get("date")) or item_date(offer)
@@ -330,9 +335,13 @@ def apply_daily_anchor_stack(payload: dict[str, Any], anchors: list[dict[str, An
         for offer in day_offers:
             if seated := _anchor_for_offer(offer, day_anchors):
                 retained.append(rewrite_offer_to_anchor(offer, seated))
+            elif offer.get("offerType") == "seated_class":
+                # A real occurrence remains real even when its roster needs
+                # reconciliation. Do not relabel it as an invented barnacle.
+                retained.append(offer)
 
         for cid in sorted({course_id(offer) for offer in day_offers} - anchored_courses):
-            candidates = [offer for offer in day_offers if course_id(offer) == cid and not _anchor_for_offer(offer, day_anchors)]
+            candidates = [offer for offer in day_offers if course_id(offer) == cid and offer.get("offerType") != "seated_class" and not _anchor_for_offer(offer, day_anchors)]
             chosen: dict[tuple[str, str], tuple[float, str, dict[str, Any]]] = {}
             candidate_scope, _candidate_delay = repeat_scope_key(cid, policy)
             for anchor in day_anchors:
@@ -349,6 +358,8 @@ def apply_daily_anchor_stack(payload: dict[str, Any], anchors: list[dict[str, An
                 astart = astart.replace(tzinfo=None)
                 aend = aend.replace(tzinfo=None)
                 for offer in candidates:
+                    if not barnacle_compatible(offer, anchor, policy):
+                        continue
                     start = _offer_start(offer)
                     if not start:
                         continue
@@ -377,6 +388,30 @@ def apply_daily_anchor_stack(payload: dict[str, Any], anchors: list[dict[str, An
     _rebuild_dates(payload, retained)
     payload["anchor_policy"] = {"version": "daily-anchor-stack-v1", "suppressed_offers": suppressed, "barnacle_positions": barnacle_count, "one_course_type_per_calendar_day": True}
     return payload
+
+
+def barnacle_compatible(offer: dict[str, Any], anchor: dict[str, Any], policy: dict[str, Any]) -> bool:
+    """Compatibility must be explicit; proximity alone is not permission."""
+    allowed = policy.get("barnacle_course_pairs")
+    if allowed is None:
+        # Retain the legacy policy contract for older callers. Production
+        # declares this field and therefore always uses the strict gate.
+        return True
+    if [text(anchor.get("course_id")), course_id(offer)] not in allowed:
+        return False
+    normalize = lambda value: " ".join(text(value).lower().split())
+    if not location(offer) or normalize(location(offer)) != normalize(anchor.get("location")):
+        return False
+    if not offer.get("instructor") or normalize(offer.get("instructor")) != normalize(anchor.get("instructor")):
+        return False
+    start, astart, aend = _offer_start(offer), dt(anchor.get("start_at")), dt(anchor.get("end_at"))
+    if not all((start, astart, aend)):
+        return False
+    start, astart, aend = (value.replace(tzinfo=None) for value in (start, astart, aend))
+    end = _offer_end(offer, start).replace(tzinfo=None)
+    # Existing sequential stack semantics: attach directly to an occupied
+    # boundary. Overlap remains subject to the existing hard conflict engine.
+    return end == astart or start == aend
 
 
 def apply_selector_policy(payload: dict[str, Any], anchors: list[dict[str, Any]], policy: dict[str, Any]) -> dict[str, Any]:
@@ -478,13 +513,87 @@ def apply_selector_policy(payload: dict[str, Any], anchors: list[dict[str, Any]]
     return payload
 
 
+def production_anchor_policy() -> dict[str, Any]:
+    policy = load(POLICY_PATH)
+    rules = load(ROOT / "data/inventory/course_consumption_rules.json")["rules"]
+    # Reuse the reviewed course-consumption compatibility map; do not invent a
+    # second course catalog or treat physical proximity as compatibility.
+    policy["barnacle_course_pairs"] = [
+        [text(anchor["course_id"]), text(candidate["course_id"])]
+        for anchor in rules for candidate in rules
+        if candidate.get("can_ride_existing_momentum") is True
+        and anchor.get("occupancy_pool") in candidate.get("compatible_with", [])
+        and candidate.get("occupancy_pool") in anchor.get("compatible_with", [])
+    ]
+    return policy
+
+
+def finalize_selector_payload(payload: dict[str, Any], sessions: list[dict[str, Any]],
+                              demand: dict[str, Any], policy: dict[str, Any]) -> dict[str, Any]:
+    """One final decision path for public selectors and the diagnostic feed."""
+    sessions, _ = exclude_non_session_sources(sessions, demand)
+    rows = demand.get("sessions", [])
+    issues = [*payload.get("reconciliationIssues", []), *reconciliation_issues(sessions, rows)]
+    resolved, _ = resolve_canonical_demand(sessions, rows)
+    anchors = promote_seated_sessions(resolved)
+    original = [item for day in payload.get("dates", []) for slot in day.get("startTimes", []) for item in slot.get("courses", [])]
+    payload = apply_selector_policy(deepcopy(payload), anchors, policy)
+    blocked_dates = {item["date"] for item in issues if item["blocksSynthesis"]}
+    occupied_dates = {item_date(a) for a in anchors}
+    occupied_dates.update(item_date(row) for row in rows
+        if row.get("session_status") in ("scheduled", "active")
+        and (row.get("active_registration_count", 0) or 0) > 0)
+    occupied_dates.update(item_date(row) for row in rows
+        if row.get("session_status") in ("scheduled", "active")
+        and (not row.get("external_class_id") or row.get("source") == "landerware_event"))
+    retained = []
+    for day in payload.get("dates", []):
+        for slot in day.get("startTimes", []):
+            for item in slot.get("courses", []):
+                real = item.get("offerType") == "seated_class"
+                date = item_date(item)
+                if not real and (date in blocked_dates
+                    or (date in occupied_dates and item.get("schedule_role") != "barnacle")):
+                    continue
+                retained.append(item)
+    key = lambda item: (item_date(item), text(item.get("startTime")), course_id(item), registration_url(item))
+    retained_keys = {key(item) for item in retained}
+    rejected = payload.setdefault("rejectedCourseStartTimes", [])
+    for item in original:
+        if key(item) not in retained_keys:
+            reason = "RECONCILIATION_REQUIRED" if item_date(item) in blocked_dates else "ORPHAN_SYNTHETIC_OFFER"
+            rejected.append({**item, "reasons": [reason]})
+    payload["reconciliationIssues"] = issues
+    valid_until = datetime.now(timezone.utc) + timedelta(minutes=20)
+    for item in retained:
+        expiry = valid_until
+        if item.get("offerType") != "seated_class":
+            for row in rows:
+                if item_date(row) == item_date(item) and row.get("count_available") and row.get("freshness_minutes"):
+                    observed = dt(row.get("source_observed_at"))
+                    if observed and observed.tzinfo:
+                        expiry = min(expiry, observed + timedelta(minutes=row["freshness_minutes"]))
+        item["validUntil"] = expiry.isoformat()
+    payload["validUntil"] = valid_until.isoformat()
+    payload["synthesisBlockedDates"] = sorted(blocked_dates)
+    payload["occupiedDates"] = sorted(occupied_dates)
+    payload["anchor_policy"]["finalized"] = True
+    payload["anchor_policy"]["anchors_promoted"] = len(anchors)
+    payload["anchor_policy"]["suppressed_offers"] = len(original) - len(retained)
+    payload["rejectionReasonCounts"] = {}
+    for item in rejected:
+        for reason in item.get("reasons", []):
+            payload["rejectionReasonCounts"][reason] = payload["rejectionReasonCounts"].get(reason, 0) + 1
+    _rebuild_dates(payload, retained)
+    payload["counts"]["rejectedOfferCount"] = len(rejected)
+    return payload
+
+
 def resolve_selector_payload(payload: dict[str, Any]) -> dict[str, Any]:
     """Apply the authoritative anchor policy to a freshly built selector payload."""
     schedule = load(SCHEDULE_PATH)
     sessions = schedule.get("sessions", []) if isinstance(schedule, dict) else []
-    sessions, _audit = sessions_with_canonical_demand(sessions)
-    anchors = promote_seated_sessions(sessions)
-    return apply_selector_policy(deepcopy(payload), anchors, load(POLICY_PATH))
+    return finalize_selector_payload(payload, sessions, load_publication_demand(ROOT), production_anchor_policy())
 
 
 def run() -> dict[str, int]:
@@ -518,7 +627,8 @@ def run() -> dict[str, int]:
             if not path.read_text(encoding="utf-8").strip():
                 continue
             payload = load(path)
-            payload = apply_selector_policy(payload, anchors, load(POLICY_PATH))
+            if payload.get("anchor_policy", {}).get("finalized") is not True:
+                raise ValueError(f"Selector must be finalized by the shared decision path: {path}")
             payload["anchor_policy"]["anchors_promoted"] = len(anchors)
             write(path, payload)
             stats["selector_files_processed"] += 1

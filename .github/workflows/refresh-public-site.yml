@@ -148,6 +148,12 @@ jobs:
         run: |
           Write-Host "Enrollware iCal and canonical scheduling demand are unchanged. Skipping public build and commit."
 
+      - name: Refresh live availability before public selectors
+        if: steps.ical.outputs.changed == 'true' || steps.canonical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
+        run: |
+          python -m scripts.export_calendar_snapshots
+          python -m scripts.build_live_availability_snapshot
+
       - name: Run full validated public build
         if: steps.ical.outputs.changed == 'true' || steps.canonical.outputs.changed == 'true' || github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.force_rebuild == true)
         shell: bash

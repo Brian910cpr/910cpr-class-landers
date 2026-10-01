@@ -3,6 +3,16 @@ const assert = require('node:assert/strict');
 const {loadEndpoint} = require('./helpers/canonical_demand_endpoint.cjs');
 
 const api = loadEndpoint(() => { throw Error('Unexpected network call'); });
+test('projection reports missing or stale workspace and carries explicit occupied window',()=>{
+  const row={id:'canonical',start_at:'2030-10-03T16:30:00Z',end_at:'2030-10-03T17:00:00Z',
+    consumption_end_at:'2030-10-03T17:30:00Z',people:{display_name:'Instructor'},registrations:[],registration_backend:'landerware'};
+  assert.equal(api.projectDemand(row).workspace_projection_status,'missing');
+  assert.equal(api.projectDemand({...row,landerware_sessions:[{id:'workspace',starts_at:'2030-10-03T14:00:00Z',ends_at:row.end_at}]}).workspace_projection_status,'stale');
+  const current=api.projectDemand({...row,landerware_sessions:[{id:'workspace',starts_at:row.start_at,ends_at:row.end_at}]});
+  assert.equal(current.workspace_projection_status,'current');
+  assert.equal(current.lead_instructor_name,'Instructor');
+  assert.equal(current.consumption_end_at,'2030-10-03T17:30:00Z');
+});
 for (const [day, expected] of [
   ['2026-01-15','2026-01-15T05:00:00.000Z'],
   ['2026-07-15','2026-07-15T04:00:00.000Z'],

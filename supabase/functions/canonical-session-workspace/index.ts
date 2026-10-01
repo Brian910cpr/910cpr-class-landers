@@ -101,7 +101,7 @@ async function canonicalSessions(from: string, to: string) {
     "courses!class_sessions_course_id_fkey(name,course_key)",
     "locations!class_sessions_location_id_fkey(name)",
     "organizations!class_sessions_organization_id_fkey(name)",
-    "registrations!registrations_class_session_id_fkey(id,customer_id,status,external_registration_id,customers!registrations_customer_id_fkey(id,first_name,last_name,email))",
+    "registrations!registrations_class_session_id_fkey(id,customer_id,status,external_registration_id,registration_source,customers!registrations_customer_id_fkey(id,first_name,last_name,email))",
   ].join(",");
   const params = new URLSearchParams({ select, record_scope: "eq.operational", status: `in.${OPERATIONAL_SESSION_STATUSES}`, order: "start_at.asc,id.asc", limit: "500" });
   params.append("start_at", `gte.${localMidnight(from)}`);
@@ -121,7 +121,7 @@ async function canonicalSessions(from: string, to: string) {
 
 async function sessionDetail(id: string) {
   validId(id);
-  const sessions = await rest(`class_sessions?id=eq.${id}&record_scope=eq.operational&select=id,external_class_id,registration_backend,external_reconciliation,source,status,start_at,end_at,courses!class_sessions_course_id_fkey(name,course_key),locations!class_sessions_location_id_fkey(name),organizations!class_sessions_organization_id_fkey(name),registrations!registrations_class_session_id_fkey(id,customer_id,status,external_registration_id,historical_ecard_code,customers!registrations_customer_id_fkey(id,first_name,last_name,email,phone))&limit=1`);
+  const sessions = await rest(`class_sessions?id=eq.${id}&record_scope=eq.operational&select=id,external_class_id,registration_backend,external_reconciliation,source,status,start_at,end_at,courses!class_sessions_course_id_fkey(name,course_key),locations!class_sessions_location_id_fkey(name),organizations!class_sessions_organization_id_fkey(name),registrations!registrations_class_session_id_fkey(id,customer_id,status,external_registration_id,registration_source,historical_ecard_code,customers!registrations_customer_id_fkey(id,first_name,last_name,email,phone))&limit=1`);
   if (!sessions?.length) throw Error("session_not_found");
   const session = summarizeSession(sessions[0]);
   const [credentials, documents] = await Promise.all([

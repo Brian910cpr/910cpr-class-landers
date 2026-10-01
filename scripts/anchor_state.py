@@ -28,6 +28,8 @@ def _count(session: dict[str, Any]) -> int | None:
 
 
 def _promotion_reason(session: dict[str, Any], count: int | None) -> str:
+    if session.get("demand_status") in {"stale_anchor", "ambiguous"}:
+        return ""
     if count is not None and count > 0 and _text(session.get("demand_basis")) == "canonical_active_registrations":
         return "canonical_active_registration"
     explicit = _text(session.get("anchor_basis") or session.get("promotion_reason")).lower()

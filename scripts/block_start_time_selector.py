@@ -21,7 +21,8 @@ if str(ROOT) not in sys.path:
 
 from scripts import generate_dynamic_offers
 from scripts.anchor_state import anchor_promotion_reason
-from scripts.apply_anchor_policy import sessions_with_canonical_demand
+from scripts.apply_anchor_policy import sessions_with_canonical_demand, resolve_selector_payload
+from scripts.canonical_scheduling_demand import load_publication_demand
 from scripts.build_seed_appointment_url_preview import (
     active_containers,
     build_registration_url,
@@ -606,10 +607,13 @@ def occupancy_duration_overrides(payload: Any, course_rules: dict[str, dict[str,
         rule = course_rules.get(course_id)
         if not start or not rule:
             continue
-        if end and end > start:
+        canonical_end = parse_dt(session.get("consumption_end_at"))
+        minimum_end = start + timedelta(minutes=int(rule["scheduler_consumption_minutes"]))
+        required_end = max(value for value in (end, canonical_end, minimum_end) if value is not None)
+        if end and end >= required_end:
             continue
         overrides[(start.isoformat(), course_id)] = {
-            "end": start + timedelta(minutes=int(rule["scheduler_consumption_minutes"])),
+            "end": required_end,
             "course_id": course_id,
             "duration_rule_key": course_id,
             "duration_rule_source": str(COURSE_RULES_PATH),
@@ -646,7 +650,7 @@ def apply_occupancy_duration_rules(
             # let the original session course id supply the rule when available.
             matching = [item for (start_key, _course_id), item in overrides.items() if start_key == start.isoformat()]
             override = matching[0] if len(matching) == 1 else None
-        if override and (not block.get("end") or block["end"] <= start):
+        if override and (not block.get("end") or block["end"] < override["end"]):
             block["end"] = override["end"]
             block["course_id"] = override["course_id"]
             block["duration_rule_key"] = override["duration_rule_key"]
@@ -702,7 +706,23 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
         course_rules,
     )
     calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"))
-    occupancy = sessions_current + schedule_future + calendar_blocks
+    canonical = []
+    for session in loaded.get("canonical_demand", {}).get("sessions", []):
+        if session.get("session_status") not in ("scheduled", "active", "completed"):
+            continue
+        start = parse_dt(session.get("consumption_start_at") or session.get("start_at"))
+        end = parse_dt(session.get("consumption_end_at") or session.get("end_at"))
+        if not start or not end or end <= start:
+            raise BlockSelectorInputError("Canonical session has an invalid occupied window")
+        canonical.append({
+            "start": start, "end": end,
+            "location": session.get("location_name") or UNKNOWN,
+            "instructor": session.get("lead_instructor_name") or UNKNOWN,
+            "course_title": session.get("course_name") or "Canonical class",
+            "source_file": "canonical_class_sessions",
+            "source_event_id": session.get("canonical_session_id"),
+        })
+    occupancy = sessions_current + schedule_future + calendar_blocks + canonical
     for block in occupancy:
         canonical, resource, normalized = generate_dynamic_offers.normalize_location_resource(
             block.get("location"),
@@ -942,7 +962,9 @@ def seated_class_selector_offers(
         course = courses_by_id.get(course_id, {})
         rule = course_rules.get(course_id, {})
         scheduler_minutes = int(rule.get("scheduler_consumption_minutes") or max(1, int((end - start).total_seconds() // 60)))
-        consumption_end = start + timedelta(minutes=scheduler_minutes)
+        consumption_end = max(end, start + timedelta(minutes=scheduler_minutes),
+                              parse_dt(session.get("consumption_end_at")) or end)
+        scheduler_minutes = int((consumption_end - start).total_seconds() // 60)
         registration_url = clean_text(session.get("registration_url"))
         if not registration_url:
             continue
@@ -979,6 +1001,25 @@ def seated_class_selector_offers(
             "publicSelectable": True,
         })
     return offers
+
+
+def veto_calendar_collisions(offers: list[dict[str, Any]], live_payload: Any) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    """Keep source classes intact, but do not sell a start against a hard block."""
+    blocks = normalize_live_calendar_block_occupancy(live_payload)
+    kept, rejected, issues = [], [], []
+    for offer in offers:
+        start = parse_dt(f"{offer['date']}T{offer['startTime']}")
+        end = start + timedelta(minutes=int(offer.get("schedulerConsumptionMinutes") or offer.get("durationMinutes") or 0))
+        conflict, reason = generate_dynamic_offers.has_conflict(
+            start, end, blocks, clean_text(offer.get("location")),
+            {"display_name": clean_text(offer.get("instructor"))})
+        if conflict:
+            rejected.append({**offer, "reasons": ["HARD_BLOCK_COLLISION"], "conflictReason": reason})
+            issues.append({"date": offer["date"], "code": "HARD_BLOCK_COLLISION", "blocksSynthesis": True,
+                           "reason": f"{offer['startTime']} {offer['courseName']}: public booking suppressed by an authoritative busy block"})
+        else:
+            kept.append(offer)
+    return kept, rejected, issues
 
 
 def find_url(
@@ -1055,6 +1096,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         "appointment_containers": read_required_json(APPOINTMENT_CONTAINERS_PATH),
         "sessions_current": read_required_json(SESSIONS_CURRENT_PATH),
         "schedule_future": read_required_json(SCHEDULE_FUTURE_PATH),
+        "canonical_demand": load_publication_demand(ROOT),
     }
     # Candidate consolidation and final daily_anchor_stack_v1 must read the same
     # canonical demand snapshot. Legacy seat snapshots cannot create anchors here.
@@ -1272,6 +1314,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             )
         )
 
+    offers, hard_rejections, hard_issues = veto_calendar_collisions(offers, live_availability_snapshot)
+    rejections.extend(hard_rejections)
     grouped_dates: dict[str, dict[str, Any]] = {}
     for offer in offers:
         date_group = grouped_dates.setdefault(
@@ -1365,6 +1409,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         "dates": dates,
         "offers": offers,
         "rejectedCourseStartTimes": rejections,
+        "reconciliationIssues": hard_issues,
         "rejectionReasonCounts": dict(rejected_counts.most_common()),
     }
-    return payload
+    return resolve_selector_payload(payload)

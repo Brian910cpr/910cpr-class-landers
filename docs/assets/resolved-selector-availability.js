@@ -21,6 +21,7 @@
     const hour = Number(parts.hour === "24" ? "0" : parts.hour);
     return {
       dateKey: `${parts.year}-${parts.month}-${parts.day}`,
+      instant: now.getTime(),
       minutes: (hour * 60) + Number(parts.minute),
     };
   }
@@ -41,6 +42,8 @@
 
   function isPastStart(day, slot, now) {
     if (!day || !slot) return true;
+    if (slot.courses?.length && slot.courses.some(course => course.validUntil
+      && (!Number.isFinite(Date.parse(course.validUntil)) || Date.parse(course.validUntil) <= (now.instant ?? Date.now())))) return true;
     if (day.date < now.dateKey) return true;
     if (day.date > now.dateKey) return false;
     const minutes = startMinutes(slot.startTime);

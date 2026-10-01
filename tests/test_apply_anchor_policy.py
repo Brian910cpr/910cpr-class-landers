@@ -251,6 +251,7 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
     def test_daily_stack_can_keep_all_legal_starts_on_paid_days(self):
         anchor_session = {
             "session_id": "paid-renewal",
+            "cluster_id": "paid-renewal-cluster",
             "course_id": "359474",
             "start_at": "2026-10-02T10:45:00-04:00",
             "end_at": "2026-10-02T12:45:00-04:00",

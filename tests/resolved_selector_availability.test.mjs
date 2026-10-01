@@ -15,6 +15,14 @@ function payload(key) {
     "utf8",
   ));
 }
+test("expired published offers cannot remain selectable after a stalled refresh", () => {
+  const now={dateKey:"2026-10-01",minutes:0,instant:Date.parse("2026-10-01T12:00:00Z")};
+  const day={date:"2026-10-02"};
+  const slot={startTime:"00:00",courses:[{validUntil:"2026-10-01T11:59:59Z"}]};
+  assert.equal(shared.isPastStart(day,slot,now),true);
+  slot.courses[0].validUntil="2026-10-01T12:20:00Z";
+  assert.equal(shared.isPastStart(day,slot,now),false);
+});
 
 function selectableSet(data, courseId, now) {
   const dates = shared.filterDatesByCourse(data.dates, courseId);

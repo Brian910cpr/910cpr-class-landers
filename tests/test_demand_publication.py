@@ -43,7 +43,7 @@ def fixture(day):
             "courseId":cid,"courseName":"BLS Renewal" if cid == "359474" else "HeartCode BLS Skills",
             "courseFamily":"BLS","deliveryMode":"in-person" if cid == "359474" else "skills-session",
             "date":day,"startTime":clock,"displayStartTime":clock,"durationMinutes":duration,
-            "location":occurrence["location_name"],"offerType":"dynamic_appointment",
+            "location":occurrence["location_name"],"offerType":"seated_class" if cid == "359474" else "dynamic_appointment",
             "appointmentUrl":occurrence["registration_url"] if cid == "359474" else f"https://example.test/fixture/{clock}",
         }
         slots.append({"startTime":clock,"displayStartTime":clock,"courses":[offer]})
@@ -59,7 +59,10 @@ def endpoint_payload(occurrence, count):
         "id":"fixture-canonical","external_class_id":occurrence["session_id"],
         "external_course_id":occurrence["course_id"], "start_at":occurrence["start_at"], "end_at":occurrence["end_at"],
         "source":"fixture","status":"scheduled","registration_backend":"landerware",
-        "registrations":[{"status":"registered"} for _ in range(count)] + [{"status":"canceled"}],
+        "external_reconciliation": {"complete":True, "source_observed_at":datetime.now(timezone.utc).isoformat(),
+            "active_registration_count":count,"active_external_registration_ids":[f"fixture-{i}" for i in range(count)]},
+        "landerware_sessions":[{"id":"fixture-workspace","starts_at":occurrence["start_at"],"ends_at":occurrence["end_at"]}],
+        "registrations":[{"status":"registered","external_registration_id":f"fixture-{i}","registration_source":"enrollware"} for i in range(count)] + [{"status":"canceled"}],
     }
     completed = subprocess.run(
         ["node", str(ROOT / "tests/helpers/canonical_demand_endpoint.cjs")],
@@ -115,6 +118,9 @@ def publish_fixture(directory, day, count, *, commitment=None):
             }))
             if fetcher.run() != 0:
                 raise AssertionError("Fixture fetch failed")
+            finalized = anchor.finalize_selector_payload(legal, json.loads(schedule.read_text())["sessions"], payload,
+                                                        anchor.production_anchor_policy())
+            selector.write_text(json.dumps(finalized))
             stats = anchor.run()
             first = json.loads(selector.read_text(encoding="utf-8"))
             anchor.run()  # the final public-build reapply must be idempotent
@@ -197,11 +203,15 @@ class DemandPublicationTests(unittest.TestCase):
                 self.assertEqual(active["anchors"][0]["promotion_reason"],"canonical_active_registration")
                 offers = [o for d in selector["dates"] for s in d["startTimes"] for o in s["courses"]]
                 barnacles = [o for o in offers if o.get("schedule_role") == "barnacle"]
-                self.assertEqual({o["startTime"] for o in barnacles},{"12:00","15:00"})
-                self.assertEqual({o["attached_to_session_id"] for o in barnacles},{"fixture-occurrence"})
-                self.assertEqual({o["barnacle_direction"] for o in barnacles},{"pre","post"})
+                self.assertEqual(barnacles,[])  # Full BLS and HeartCode are not an approved compatibility pair.
+                self.assertEqual({o["startTime"] for o in offers},{"13:00"})
                 _, refreshed, again = publish_fixture(directory, day, 1)
                 self.assertEqual(active["anchors"],refreshed["anchors"])
+                for result in (selector, again):
+                    for day_row in result["dates"]:
+                        for slot in day_row["startTimes"]:
+                            for offer in slot["courses"]:
+                                offer.pop("validUntil", None)
                 self.assertEqual(selector["dates"],again["dates"])
                 _, cancelled, _ = publish_fixture(directory, day, 0)
                 self.assertEqual(cancelled["anchors"],[])

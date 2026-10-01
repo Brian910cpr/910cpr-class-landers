@@ -31,6 +31,8 @@ def main() -> int:
         payload = read_json(path)
         source_key = str(payload.get("calendar_source_id") or path.stem)
         cfg = source_cfg.get(source_key, {})
+        if cfg.get("active") is not True:
+            continue
         generated_at = str(payload.get("generated_at") or "")
         if generated_at > newest_generated:
             newest_generated = generated_at

@@ -2,7 +2,10 @@
 export function registrationProof(row: any, now = new Date()) {
   const active = Array.isArray(row.registrations)
     ? row.registrations.filter((r: any) => ['registered','confirmed','completed'].includes(r.status)) : [];
-  const native = ['landerware','manual'].includes(row.registration_backend);
+  // Native events use a local slug in this legacy column; the Enrollware
+  // reconciliation contract accepts numeric external class IDs only.
+  const localEvent = row.source === 'landerware_event' && !/^\d+$/.test(String(row.external_class_id || ''));
+  const native = ['landerware','manual'].includes(row.registration_backend) && (!row.external_class_id || localEvent);
   const proof = row.external_reconciliation || {};
   const observed = Date.parse(proof.source_observed_at || '');
   let status = 'external_reconciliation_required';
@@ -10,7 +13,10 @@ export function registrationProof(row: any, now = new Date()) {
   else if (native) status = 'current';
   else if (proof.complete === true && Number.isFinite(observed)) {
     const expected = proof.active_external_registration_ids;
-    const actual = active.map((r: any) => r.external_registration_id).sort();
+    const sourceOwned = new Set(['enrollware','enrollware_history','enrollware_reconciled','gmail_enrollware','enrollware_owner_reconciliation']);
+    const external = active.filter((r: any) => row.registration_backend === 'enrollware'
+      || r.external_registration_id || sourceOwned.has(r.registration_source));
+    const actual = external.map((r: any) => r.external_registration_id).sort();
     if (observed > now.getTime() + 300000 || now.getTime() - observed > 3600000) status = 'stale_reconciliation';
     else if (!Array.isArray(expected) || expected.length !== proof.active_registration_count
       || new Set(expected).size !== expected.length || actual.some((id: any) => !id)

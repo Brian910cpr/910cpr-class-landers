@@ -64,6 +64,11 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "offerType": course.get("offerType") or "dynamic_appointment",
                     "scheduleRole": course.get("scheduleRole") or course.get("schedule_role"),
+                    "attached_to_session_id": course.get("attached_to_session_id"),
+                    "session_id": course.get("session_id"),
+                    "instructor": course.get("instructor"),
+                    "schedulerConsumptionEnd": course.get("schedulerConsumptionEnd"),
+                    "validUntil": course.get("validUntil"),
                     "date": day.get("date"),
                     "startTime": slot.get("startTime"),
                 }
@@ -83,6 +88,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
     return {
         "schemaVersion": "selector-resolved-availability.v1",
         "generatedAt": payload.get("generatedAt"),
+        "validUntil": payload.get("validUntil"),
         "pageKey": payload.get("pageKey"),
         "publicPage": payload.get("publicPage"),
         "sourceArtifacts": {
@@ -101,6 +107,10 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
         },
         "counts": payload.get("counts", {}),
         "liveAvailabilityGuard": payload.get("liveAvailabilityGuard", {}),
+        "anchor_policy": payload.get("anchor_policy", {}),
+        "synthesisBlockedDates": payload.get("synthesisBlockedDates", []),
+        "occupiedDates": payload.get("occupiedDates", []),
+        "reconciliationIssues": payload.get("reconciliationIssues", []),
         "dates": compact_dates,
     }
 
@@ -1403,7 +1413,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20260907.1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261001-reconciliation-1"></script>
   <script src="/assets/calendar-time-filters.js?v=20260930.2"></script>
   <script>
     const embeddedScheduleDates = {data_json};
@@ -2161,6 +2171,12 @@ def render_html(payload: dict[str, Any]) -> str:
         link.className = 'register-link';
         link.href = course.appointmentUrl;
         link.textContent = 'Register';
+        link.addEventListener('click', event => {{
+          if (isPastStart(day, slot)) {{
+            event.preventDefault();
+            loadResolvedAvailability();
+          }}
+        }});
         item.append(summary, badge, link);
         host.appendChild(item);
       }});
@@ -2253,6 +2269,9 @@ def render_html(payload: dict[str, Any]) -> str:
           throw new Error('availability payload has an unexpected shape');
         }}
         resolvedAvailability = payload;
+        if (!Number.isFinite(Date.parse(payload.validUntil)) || Date.parse(payload.validUntil) <= Date.now()) {{
+          throw new Error('availability publication expired');
+        }}
         scheduleDates = payload.dates;
         availabilityState = 'ready';
         setAvailabilityMessage('');
@@ -2268,6 +2287,7 @@ def render_html(payload: dict[str, Any]) -> str:
     }}
 
     loadResolvedAvailability();
+    setInterval(loadResolvedAvailability, 5 * 60 * 1000);
   </script>
 </body>
 </html>

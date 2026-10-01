@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from scripts.canonical_scheduling_demand import load_publication_demand, resolve_canonical_demand
@@ -78,6 +79,11 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
     path = SELECTOR_DIR / f"{page_key}.json"
     payload = load_json(path)
     require(payload.get("schemaVersion") == "selector-resolved-availability.v1", f"{page_key}: invalid schema")
+    require((payload.get("anchor_policy") or {}).get("finalized") is True, f"{page_key}: selector has not passed final policy")
+    expiry = datetime.fromisoformat(str(payload.get("validUntil") or "").replace("Z", "+00:00"))
+    require(expiry.tzinfo is not None and expiry > datetime.now(timezone.utc), f"{page_key}: expired publication")
+    blocked = set(payload.get("synthesisBlockedDates", []))
+    occupied = set(payload.get("occupiedDates", []))
     dates = payload.get("dates")
     require(isinstance(dates, list), f"{page_key}: dates must be a list")
 
@@ -111,6 +117,10 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
                     registration_url = course.get("registrationUrl") or course.get("appointmentUrl")
                     require(registration_url, f"{page_key}: seated session {session_id} lacks registration URL")
                 else:
+                    require(day["date"] not in blocked, f"{page_key}: synthetic offer on unreconciled date {day['date']}")
+                    require(day["date"] not in occupied or (
+                        (course.get("schedule_role") or course.get("scheduleRole")) == "barnacle" and course.get("attached_to_session_id")
+                    ), f"{page_key}: orphan synthetic offer on occupied date {day['date']}")
                     # matchedContainerId is an internal planning field and is omitted
                     # from the compact public selector contract.
                     for field in ("appointmentDayId", "appointmentUrl", "availabilityBlockId"):
@@ -120,7 +130,7 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
     require(counts.get("publicSelectableDateCount") == date_count, f"{page_key}: date count mismatch")
     require(counts.get("publicSelectableStartTimeCount") == start_count, f"{page_key}: start count mismatch")
     require(counts.get("publicSelectableOfferCount") == offer_count, f"{page_key}: offer count mismatch")
-    require(offer_count > 0, f"{page_key}: public calendar is empty")
+    # A correctly closed feed must replace stale inventory even when it has no offers.
     return {"dates": date_count, "starts": start_count, "offers": offer_count}
 
 
@@ -171,7 +181,7 @@ def validate_public_demand(rows: list[dict[str, Any]], demand: dict[str, Any]) -
             or published_available is True
             or published_basis == "canonical_active_registrations"
         ):
-            unsafe_counts.append(session_id)
+            unsafe_counts.append(f"{session_id}: {status}")
 
     require(
         not unsafe_counts,
