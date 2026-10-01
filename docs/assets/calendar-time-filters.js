@@ -13,15 +13,6 @@
     { id: "late-pm", label: "Late PM", min: 1260, max: 1440, range: "9:00 PM–12:00 AM" },
   ];
   const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  // Only named corporate accounts belong in this public picker. General-purpose,
-  // promotional, and invoice-only codes stay out of browser-loaded source.
-  const CORPORATE_BILLING_CODES = [
-    { code: "assistedcare", company: "AssistedCare", aliases: ["assisted care"] },
-    { code: "Breakthrough", company: "Breakthrough Autism", aliases: ["breakthrough"] },
-    { code: "Maxim", company: "Maxim Homecare", aliases: ["maxim home care", "homecare"] },
-    { code: "MaximBH", company: "Maxim Behavioral Health", aliases: ["maxim bh", "behavioral health", "aba"] },
-    { code: "MaximDSP", company: "Maxim Direct Support Professionals", aliases: ["maxim dsp", "direct support", "idd"] },
-  ];
   const DAY_TOKEN = "(?:sunday|monday|tuesday|wednesday|thursday|friday|saturday)s?";
   const TIME_TOKEN = "(?:noon|midnight|\\d{1,2}(?::\\d{2})?\\s*(?:am|pm)|\\d{1,2}:\\d{2})";
   const HELP = "Try “after 6pm”, “Tuesday or Wednesday evening”, or “can't Saturday morning”. Use AM/PM for times.";
@@ -201,18 +192,12 @@
     })).filter(day => day.startTimes.length);
   }
 
-  function matchingCorporateBillingCodes(text) {
-    const query = String(text || "").trim().toLowerCase();
-    if (query.length < 3) return [];
-    return CORPORATE_BILLING_CODES.filter(item => [item.code, item.company, ...item.aliases]
-      .some(value => value.toLowerCase().includes(query)));
-  }
 
   function mount(host, { today, onChange }) {
     const doc = host.ownerDocument;
     host.className = "calendar-time-filters";
     host.setAttribute("aria-label", "Calendar timing preferences");
-    host.dataset.version = "20260929.1";
+    host.dataset.version = "20261001.1";
     const quick = doc.createElement("div");
     quick.className = "calendar-time-quick";
     quick.setAttribute("role", "group");
@@ -258,32 +243,6 @@
     clear.textContent = "Clear";
     clear.setAttribute("aria-label", "Clear timing filters");
     row.append(label, input, clear);
-    const billing = doc.createElement("div");
-    billing.className = "calendar-billing-code";
-    const billingLabel = doc.createElement("label");
-    billingLabel.htmlFor = `${host.id}-billing-code`;
-    billingLabel.textContent = "Billing Code";
-    const billingInput = doc.createElement("input");
-    billingInput.id = billingLabel.htmlFor;
-    billingInput.type = "text";
-    billingInput.autocomplete = "off";
-    billingInput.maxLength = 80;
-    billingInput.placeholder = "Company name or billing code";
-    billingInput.setAttribute("role", "combobox");
-    billingInput.setAttribute("aria-autocomplete", "list");
-    billingInput.setAttribute("aria-expanded", "false");
-    const suggestions = doc.createElement("div");
-    suggestions.id = `${host.id}-billing-suggestions`;
-    suggestions.className = "calendar-billing-suggestions";
-    suggestions.setAttribute("role", "listbox");
-    suggestions.hidden = true;
-    billingInput.setAttribute("aria-controls", suggestions.id);
-    const billingStatus = doc.createElement("p");
-    billingStatus.className = "calendar-billing-status";
-    billingStatus.setAttribute("role", "status");
-    billingStatus.setAttribute("aria-live", "polite");
-    billingStatus.hidden = true;
-    billing.append(billingLabel, billingInput, suggestions, billingStatus);
     const hint = doc.createElement("p");
     hint.id = `${host.id}-hint`;
     hint.className = "calendar-time-hint";
@@ -303,14 +262,9 @@
     heading.className = "calendar-availability-heading";
     heading.textContent = "When are YOU available?";
     timingPill.append(heading, quick, row, hint, status);
-    const billingPill = doc.createElement("section");
-    billingPill.className = "calendar-filter-pill calendar-billing-pill";
-    billingPill.setAttribute("aria-label", "Corporate billing code");
-    billingPill.append(billing);
-    pillRow.append(timingPill, billingPill);
+    pillRow.append(timingPill);
     host.append(pillRow);
     let constraints = compile([], "", today());
-    let billingCode = "";
     let timer;
     function update() {
       clearTimeout(timer);
@@ -334,48 +288,10 @@
     });
     clear.disabled = true;
     status.hidden = true;
-    function closeBillingSuggestions() {
-      suggestions.hidden = true;
-      suggestions.replaceChildren();
-      billingInput.setAttribute("aria-expanded", "false");
-    }
-    function selectBillingCode(item) {
-      billingCode = item.code;
-      billingInput.value = item.code;
-      billingStatus.textContent = `${item.company} selected. Enter this code in Enrollware registration.`;
-      billingStatus.hidden = false;
-      closeBillingSuggestions();
-    }
-    function updateBillingSuggestions() {
-      billingCode = "";
-      billingStatus.hidden = true;
-      const matches = matchingCorporateBillingCodes(billingInput.value);
-      if (!matches.length) return closeBillingSuggestions();
-      suggestions.replaceChildren(...matches.map(item => {
-        const option = doc.createElement("button");
-        option.type = "button";
-        option.setAttribute("role", "option");
-        option.textContent = item.company;
-        option.addEventListener("click", () => selectBillingCode(item));
-        return option;
-      }));
-      suggestions.hidden = false;
-      billingInput.setAttribute("aria-expanded", "true");
-    }
-    billingInput.addEventListener("input", updateBillingSuggestions);
-    billingInput.addEventListener("keydown", event => {
-      if (event.key === "Escape") closeBillingSuggestions();
-      if (event.key === "Enter" && !suggestions.hidden && suggestions.firstElementChild) {
-        event.preventDefault();
-        suggestions.firstElementChild.click();
-      }
-    });
-    billingInput.addEventListener("blur", () => setTimeout(closeBillingSuggestions, 120));
     return {
       get constraints() { return constraints; },
-      get billingCode() { return billingCode; },
     };
   }
 
-  return { BUCKETS, CORPORATE_BILLING_CODES, compile, parseSmart, filterDates, matchingCorporateBillingCodes, mount };
+  return { BUCKETS, compile, parseSmart, filterDates, mount };
 });
