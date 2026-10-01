@@ -330,6 +330,82 @@ async function dispatchNotifications(classSessionId: string) {
   return results;
 }
 
+
+function structuredCardRows(notes: string) {
+  const rows: Array<{ card: string; first: string; last: string; email: string }> = [];
+  for (const rawLine of String(notes || "").split(/\r?\n/)) {
+    const line = rawLine.trim();
+    if (!line) continue;
+    const parts = rawLine.split("\t").map((part) => clean(part));
+    const card = parts[0] || "";
+    const email = parts.find((part) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(part))?.toLowerCase() || "";
+    if (!/^\d{10,14}$/.test(card) || !email) continue;
+    rows.push({ card, first: parts[2] || "", last: parts[3] || "", email });
+  }
+  return rows;
+}
+
+async function ensureCustomerFact(row: { card: string; first: string; last: string; email: string }, classNumber: string) {
+  let { data: customer, error: customerLookupError } = await admin.from("customers")
+    .select("id,first_name,last_name,email").ilike("email", row.email).limit(1).maybeSingle();
+  if (customerLookupError) throw customerLookupError;
+  if (!customer) {
+    const { data: created, error: createError } = await admin.from("customers").insert({
+      first_name: row.first || row.email.split("@")[0],
+      last_name: row.last || "",
+      email: row.email,
+    }).select("id,first_name,last_name,email").single();
+    if (createError) throw createError;
+    customer = created;
+  }
+  const nowIso = new Date().toISOString();
+  const { error: factError } = await admin.from("customer_profile_facts").upsert({
+    customer_id: customer.id,
+    fact_type: "aha_ecard_number",
+    fact_value: row.card,
+    normalized_value: row.card,
+    source_type: "nhcso_class_note",
+    source_ref: classNumber,
+    confidence: 1,
+    observed_at: nowIso,
+    updated_at: nowIso,
+  }, { onConflict: "customer_id,fact_type,normalized_value" });
+  if (factError) throw factError;
+  return customer.id;
+}
+
+async function processStructuredClassNotes(classNumber: string) {
+  const { data: classRow, error: classError } = await admin.from("nhcso_classes")
+    .select("class_number,notes,class_session_id").eq("class_number", classNumber).maybeSingle();
+  if (classError) throw classError;
+  if (!classRow) return { processed: 0, matched: 0, person_facts: 0 };
+  const rows = structuredCardRows(clean(classRow.notes));
+  if (!rows.length) return { processed: 0, matched: 0, person_facts: 0 };
+
+  let matched = 0;
+  let personFacts = 0;
+  for (const row of rows) {
+    const { data: student, error: studentError } = await admin.from("nhcso_students")
+      .select("id,name,email,ecard_number").eq("class_number", classNumber)
+      .ilike("email", row.email).limit(1).maybeSingle();
+    if (studentError) throw studentError;
+    if (!student) continue;
+
+    if (clean(student.ecard_number) !== row.card) {
+      const { error: updateError } = await admin.from("nhcso_students")
+        .update({ ecard_number: row.card, updated_at: new Date().toISOString() }).eq("id", student.id);
+      if (updateError) throw updateError;
+    }
+    matched++;
+    await ensureCustomerFact(row, classNumber);
+    personFacts++;
+  }
+  if (matched) {
+    console.info("nhcso_structured_notes_processed", { class_number: classNumber, rows: rows.length, matched, person_facts: personFacts });
+  }
+  return { processed: rows.length, matched, person_facts: personFacts };
+}
+
 function easternDateString() {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
@@ -516,6 +592,7 @@ Deno.serve(async (req) => {
         const { error } = await admin.from("nhcso_students").upsert(rows, { onConflict: "class_number,student_key" });
         if (error) throw error;
       }
+      await processStructuredClassNotes(classNumber);
       const { data: savedStudents, error } = await admin.from("nhcso_students").select("*").eq("class_number", classNumber).order("created_at");
       if (error) throw error;
       if (finalizedLocalOverride && existingClass?.class_session_id) {
@@ -585,6 +662,7 @@ Deno.serve(async (req) => {
     }
     if (action === "get_class") {
       const classNumber = clean(body.class_number);
+      await processStructuredClassNotes(classNumber);
       await settleClassIfComplete(classNumber);
       const [{ data: classRow, error: classError }, { data: students, error: studentError }, { data: documents, error: docError }] = await Promise.all([
         admin.from("nhcso_classes").select("*").eq("class_number", classNumber).single(),
