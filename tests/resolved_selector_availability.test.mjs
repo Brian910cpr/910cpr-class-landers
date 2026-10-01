@@ -58,7 +58,7 @@ function selectableSet(data, courseId, now) {
 }
 
 test("shared projection returns exactly the canonical artifact slots for each Maxim course", () => {
-  const now = { dateKey: "2026-07-23", minutes: 0 };
+  const now = { dateKey: "2026-07-23", minutes: 0, instant: Date.parse("2026-07-23T04:00:00Z") };
   for (const [key, courseIds] of Object.entries({
     bls: ["209806", "359474", "210549"],
     heartsaver: ["209809", "329495"],
