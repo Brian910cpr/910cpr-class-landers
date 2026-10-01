@@ -330,6 +330,64 @@ async function dispatchNotifications(classSessionId: string) {
   return results;
 }
 
+function easternDateString() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit",
+  }).formatToParts(new Date());
+  const get = (type: string) => parts.find((part) => part.type === type)?.value || "";
+  return `${get("year")}-${get("month")}-${get("day")}`;
+}
+
+async function settleClassIfComplete(classNumber: string) {
+  const { data: classRow, error: classError } = await admin.from("nhcso_classes")
+    .select("class_number,class_date,status,class_session_id").eq("class_number", classNumber).maybeSingle();
+  if (classError) throw classError;
+  if (!classRow || classRow.status === "finalized" || !classRow.class_date || classRow.class_date >= easternDateString()) return classRow;
+
+  const [{ data: activeStudents, error: studentError }, { count: paperworkCount, error: paperworkError }] = await Promise.all([
+    admin.from("nhcso_students").select("id,ecard_number").eq("class_number", classNumber).eq("status", "Active"),
+    admin.from("nhcso_documents").select("*", { count: "exact", head: true }).eq("class_number", classNumber),
+  ]);
+  if (studentError) throw studentError;
+  if (paperworkError) throw paperworkError;
+  const students = activeStudents || [];
+  const cardsIssued = students.length > 0 && students.every((student) => !!clean(student.ecard_number));
+  if (!cardsIssued || !(paperworkCount || 0)) return classRow;
+
+  const nowIso = new Date().toISOString();
+  const { data: finalized, error: updateError } = await admin.from("nhcso_classes")
+    .update({ status: "finalized", updated_at: nowIso })
+    .eq("class_number", classNumber).neq("status", "finalized")
+    .select("class_number,class_date,status,class_session_id").maybeSingle();
+  if (updateError) throw updateError;
+
+  const settled = finalized || { ...classRow, status: "finalized" };
+  if (settled.class_session_id) {
+    await admin.from("class_sessions").update({ status: "completed", updated_at: nowIso })
+      .eq("id", settled.class_session_id).in("status", ["scheduled", "active"]);
+    await admin.from("class_session_audit").insert({
+      class_session_id: settled.class_session_id,
+      event_key: `nhcso:auto-finalized:${classNumber}`,
+      event_type: "auto_finalized",
+      actor_label: "NHCSO workspace",
+      occurred_at: nowIso,
+      details: {
+        reason: "past_class_with_paperwork_and_all_active_cards_issued",
+        class_number: classNumber,
+      },
+    }).catch(() => null);
+  }
+  return settled;
+}
+
+async function settleEligibleClasses() {
+  const today = easternDateString();
+  const { data: candidates, error } = await admin.from("nhcso_classes")
+    .select("class_number").neq("status", "finalized").lt("class_date", today).limit(250);
+  if (error) throw error;
+  for (const row of candidates || []) await settleClassIfComplete(row.class_number);
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsFor(req) });
   if (req.method !== "POST") return json(req, { error: "POST required" }, 405);
@@ -405,8 +463,12 @@ Deno.serve(async (req) => {
       if (!course || !classDate || !startTime) return json(req, { error: "course, class_date, and start_time are required" }, 400);
       let classNumber = clean(c.class_number);
       if (!classNumber) classNumber = `NHSO-${classDate.replaceAll("-", "")}-${startTime.replace(":", "")}-${crypto.randomUUID().slice(0, 6).toUpperCase()}`;
-      const { data: existingClass } = await admin.from("nhcso_classes").select("status").eq("class_number", classNumber).maybeSingle();
-      if (existingClass?.status === "finalized") return json(req, { error: "This class is finalized and locked. Contact an administrator for a documented correction." }, 409);
+      const { data: existingClass } = await admin.from("nhcso_classes").select("status,class_session_id").eq("class_number", classNumber).maybeSingle();
+      const finalizedLocalOverride = existingClass?.status === "finalized" &&
+        body.finalized_local_override === true && body.finalized_warning_accepted === true;
+      if (existingClass?.status === "finalized" && !finalizedLocalOverride) {
+        return json(req, { error: "This class is FINALIZED and locked. Official corrections must be directed to the Training Site at Brian@910cpr.com. Use the explicit local-record edit control only for a documented LanderWare correction." }, 409);
+      }
       const classRow = {
         class_number: classNumber,
         course,
@@ -416,7 +478,7 @@ Deno.serve(async (req) => {
         lead_instructor: clean(c.lead_instructor || c.lead) || null,
         assistant_instructors: clean(c.assistant_instructors || c.assistants) || null,
         notes: clean(c.notes) || null,
-        status: clean(c.status) || "scheduled",
+        status: existingClass?.status === "finalized" ? "finalized" : (clean(c.status) || "scheduled"),
         updated_at: new Date().toISOString(),
       };
       const { error: classError } = await admin.from("nhcso_classes").upsert(classRow, { onConflict: "class_number" });
@@ -456,7 +518,31 @@ Deno.serve(async (req) => {
       }
       const { data: savedStudents, error } = await admin.from("nhcso_students").select("*").eq("class_number", classNumber).order("created_at");
       if (error) throw error;
-      return json(req, { ok: true, class_number: classNumber, student_records: savedStudents || [] });
+      if (finalizedLocalOverride && existingClass?.class_session_id) {
+        const nowIso = new Date().toISOString();
+        await admin.from("class_session_audit").insert({
+          class_session_id: existingClass.class_session_id,
+          event_key: `nhcso:local-finalized-correction:${classNumber}:${Date.now()}`,
+          event_type: "local_finalized_correction",
+          actor_label: access.email || "NHCSO workspace user",
+          occurred_at: nowIso,
+          details: {
+            class_number: classNumber,
+            warning_acknowledged: true,
+            official_record_unchanged: true,
+            training_site_contact: "Brian@910cpr.com",
+          },
+        }).catch(() => null);
+      }
+      return json(req, {
+        ok: true,
+        class_number: classNumber,
+        student_records: savedStudents || [],
+        finalized_local_override: finalizedLocalOverride,
+        warning: finalizedLocalOverride
+          ? "Local LanderWare record updated. Issued cards and official Training Site records were not changed."
+          : null,
+      });
     }
     if (action === "correct_finalized_student") {
       const classNumber = clean(body.class_number);
@@ -481,7 +567,6 @@ Deno.serve(async (req) => {
       if (studentError) throw studentError;
       if (!(students || []).some((student) => clean(student.status || "Active") === "Active")) return json(req, { error: "A class cannot be finalized without active students" }, 409);
       const activeStudents = (students || []).filter((student) => clean(student.status || "Active") === "Active");
-      if (activeStudents.some((student) => !clean(student.score_or_certificate))) return json(req, { error: "Record a score or HeartCode certificate number for every active participant before finalizing" }, 409);
       if (activeStudents.some((student) => !clean(student.ecard_number))) return json(req, { error: "Record an issued eCard number for every active participant before finalizing" }, 409);
       const { count: paperworkCount, error: paperworkError } = await admin.from("nhcso_documents").select("*", { count: "exact", head: true }).eq("class_number", classNumber);
       if (paperworkError) throw paperworkError;
@@ -492,10 +577,15 @@ Deno.serve(async (req) => {
       }
       const { data: finalizedClass, error: reloadError } = await admin.from("nhcso_classes").select("*").eq("class_number", classNumber).single();
       if (reloadError) throw reloadError;
+      if (finalizedClass.class_session_id) {
+        await admin.from("class_sessions").update({ status: "completed", updated_at: new Date().toISOString() })
+          .eq("id", finalizedClass.class_session_id).in("status", ["scheduled", "active"]);
+      }
       return json(req, { ok: true, class: finalizedClass, students: students || [] });
     }
     if (action === "get_class") {
       const classNumber = clean(body.class_number);
+      await settleClassIfComplete(classNumber);
       const [{ data: classRow, error: classError }, { data: students, error: studentError }, { data: documents, error: docError }] = await Promise.all([
         admin.from("nhcso_classes").select("*").eq("class_number", classNumber).single(),
         admin.from("nhcso_students").select("*").eq("class_number", classNumber).order("created_at"),
@@ -556,6 +646,7 @@ Deno.serve(async (req) => {
       return json(req, { ok: true, document_id: document.id, file_name: document.file_name });
     }
     if (action === "list_classes") {
+      await settleEligibleClasses();
       const { data, error } = await admin.from("nhcso_classes").select("class_number,course,class_date,start_time,location,lead_instructor,status,updated_at").order("class_date", { ascending: false }).order("start_time", { ascending: false }).limit(250);
       if (error) throw error;
       return json(req, { ok: true, classes: data || [] });
