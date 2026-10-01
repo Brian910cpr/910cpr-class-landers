@@ -107,7 +107,36 @@ def resolve_canonical_demand(
     Exact external class identity wins. Fallback identity is deliberately strict and
     is accepted only when exactly one occurrence matches a durable Session.
     """
-    resolved = [deepcopy(row) for row in occurrences]
+    demand_rows = list(demand_rows)
+    source_rows = [deepcopy(row) for row in occurrences]
+    for demand in demand_rows:
+        external_id = _text(demand.get("external_class_id"))
+        native_id = re.fullmatch(r"lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}", external_id)
+        if not (native_id and demand.get("source") == "landerware_event"
+                and demand.get("registration_backend") == "landerware"
+                and demand.get("session_status") in ("scheduled", "active")
+                and demand.get("visibility") == "public"
+                and demand.get("registration_status") == "open"
+                and demand.get("workspace_projection_status") == "current"
+                and demand.get("count_available") is True):
+            continue
+        if any(_external_class_id(row) == external_id for row in source_rows):
+            continue
+        start, end = _start(demand), _instant(demand.get("end_at"))
+        if not start or not end or end <= start or not demand.get("external_course_id"):
+            raise ValueError("Native public occurrence has invalid timing or course")
+        source_rows.append({
+            "session_id": external_id, "external_class_id": external_id,
+            "course_id": demand["external_course_id"], "course_name": demand.get("course_name"),
+            "start_at": demand["start_at"], "end_at": demand["end_at"],
+            "location_name": demand.get("location_name"),
+            "lead_instructor_name": demand.get("lead_instructor_name"),
+            "source": "landerware_event", "session_status": demand["session_status"],
+            "registration_status": "open", "public_direct_booking": True,
+            "registration_backend": "landerware",
+            "registration_url": "https://www.910cpr.com/register/?session=" + external_id,
+        })
+    resolved = source_rows
     exact: dict[str, list[int]] = {}
     for index, occurrence in enumerate(resolved):
         # Published projections are inputs to later refreshes, never demand truth.
