@@ -28,3 +28,14 @@ class NativeAnchorTests(unittest.TestCase):
         self.assertFalse(is_session_lander_candidate({**sessions[0],"registration_url":"https://example.invalid/register"}))
         with self.assertRaises(ValueError):
             validate_admin_reconciliation({"sessions":[]}, {"sources":{"hot_sync":{"available":True}},"sessions":[{**sessions[0],"count_available":False}]})
+
+    def test_explicit_compatible_skills_survive_same_family_group(self):
+        from scripts.apply_anchor_policy import apply_selector_policy, production_anchor_policy
+        sessions,_=resolve_canonical_demand([], [self.row()])
+        base=dict(date="2026-10-10",courseId="329495",courseName="Heartsaver Blended",location=":: Wilmington; Shipyard Blvd",instructor="Brian Ennis",durationMinutes=120,schedulerConsumptionMinutes=120,appointmentUrl="https://example.test")
+        offers=[{**base,"startTime":t,"schedulerConsumptionEnd":e} for t,e in [("12:00","14:00"),("16:30","18:30"),("09:00","11:00"),("14:30","16:30")]]
+        payload={"dates":[{"date":"2026-10-10","startTimes":[{"startTime":o["startTime"],"courses":[o]} for o in offers]}],"counts":{}}
+        result=apply_selector_policy(payload,promote_seated_sessions(sessions),production_anchor_policy())
+        kept=[o for d in result["dates"] for slot in d["startTimes"] for o in slot["courses"]]
+        self.assertEqual({o["startTime"] for o in kept}, {"12:00","16:30"})
+        self.assertTrue(all(o["schedule_role"]=="barnacle" for o in kept))
