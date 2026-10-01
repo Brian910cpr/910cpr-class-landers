@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-09-30T15:49:38.070901+00:00",
+  "generated_at": "2026-10-01T11:43:33.762151+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-30T15:49:37.188752+00:00",
+      "generated_at": "2026-10-01T11:43:33.109615+00:00",
       "event_count": 0
     },
     {
@@ -16,60 +16,19 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-30T15:49:38.070901+00:00",
-      "event_count": 175
-    },
-    {
-      "source_key": "brian_primary_calendar",
-      "display_name": "Brian Primary Google Calendar",
-      "source_type": "occupancy_calendar",
-      "export_status": "failed",
-      "generated_at": "2026-09-30T15:49:37.682143+00:00",
-      "event_count": 0
+      "generated_at": "2026-10-01T11:43:33.762151+00:00",
+      "event_count": 174
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-09-30T15:49:37.681634+00:00",
+      "generated_at": "2026-10-01T11:43:33.323514+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-09-30T15:00:00-04:00",
-      "end": "2026-09-30T17:30:00-04:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "First Call",
-      "start": "2026-10-01T05:00:00+00:00",
-      "end": "2026-10-02T03:15:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Drop Off",
-      "start": "2026-10-01T06:30:00-04:00",
-      "end": "2026-10-01T07:45:00-04:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
@@ -145,6 +104,17 @@
       "start": "2026-10-03T13:00:00+00:00",
       "end": "2026-10-03T15:30:00+00:00",
       "location": "Christ Community Church\\, 4555 Fairview Dr\\, Wilmington\\, NC 28412",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "BLS Class — NSeaSwim / Earl Jackson Pool",
+      "start": "2026-10-04T15:00:00+00:00",
+      "end": "2026-10-04T18:00:00+00:00",
+      "location": "Earl Jackson Pool\\, 750 Bess Street\\, Wilmington\\, NC 28401",
       "status": "CONFIRMED"
     },
     {
@@ -416,6 +386,17 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
+      "title": "AHA BLS Provider (Renewal) — M. Kabay",
+      "start": "2026-10-12T13:00:00+00:00",
+      "end": "2026-10-12T15:00:00+00:00",
+      "location": "4018 Shipyard Blvd\\, Room B\\, Wilmington\\, NC",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
       "title": "CFA Pickup",
       "start": "2026-10-12T15:00:00-04:00",
       "end": "2026-10-12T17:30:00-04:00",
@@ -430,17 +411,6 @@
       "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
       "start": "2026-10-12T21:00:00+00:00",
       "end": "2026-10-12T22:00:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR Shift — Brian Unavailable",
-      "start": "2026-10-12T21:00:00+00:00",
-      "end": "2026-10-13T13:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -472,8 +442,8 @@
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
       "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-13T12:00:00+00:00",
-      "end": "2026-10-13T13:00:00+00:00",
+      "start": "2026-10-13T10:00:00+00:00",
+      "end": "2026-10-13T11:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -585,17 +555,6 @@
       "start": "2026-10-16T15:00:00-04:00",
       "end": "2026-10-16T17:30:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR Shift — Brian Unavailable",
-      "start": "2026-10-16T21:00:00+00:00",
-      "end": "2026-10-17T11:00:00+00:00",
-      "location": "",
       "status": "CONFIRMED"
     },
     {
@@ -735,7 +694,7 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "DO NOT SCHEDULE — Dunes Dental Onsite",
+      "title": "Dunes Dental Onsite",
       "start": "2026-10-20T18:15:00+00:00",
       "end": "2026-10-21T00:00:00+00:00",
       "location": "Dunes Dental Services\\, 100 Sutter Drive\\, Suite 106\\, Surfside Beach\\, SC 29575",
@@ -1959,6 +1918,28 @@
       "title": "CFA Drop Off",
       "start": "2026-12-29T06:30:00-05:00",
       "end": "2026-12-29T07:45:00-05:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Pickup",
+      "start": "2026-12-29T15:00:00-05:00",
+      "end": "2026-12-29T17:30:00-05:00",
+      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "CFA Drop Off",
+      "start": "2026-12-30T06:30:00-05:00",
+      "end": "2026-12-30T07:45:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     }
