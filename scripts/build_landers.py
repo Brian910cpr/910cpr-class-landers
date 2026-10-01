@@ -250,6 +250,10 @@ def is_session_lander_candidate(session: dict) -> bool:
         and register_url == f"https://www.910cpr.com/register/?session={sid}")
     if not native and not verified_enrollware_url(register_url):
         return False
+    if native:
+        return (session.get("public_direct_booking") is True
+            and session.get("registration_status") == "open"
+            and (session.get("active_registration_count") or 0) > 0)
     return session_enrolled_count(session) >= 1 or is_public_direct_bookable_session(session)
 
 
