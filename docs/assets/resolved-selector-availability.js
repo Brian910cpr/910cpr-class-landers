@@ -40,10 +40,41 @@
     return (hour * 60) + minute;
   }
 
+  function isSeatedCourse(course) {
+    return String(course?.offerType || "").trim().toLowerCase() === "seated_class";
+  }
+
+  function publicationExpired(validUntil, nowInstant = Date.now()) {
+    if (!validUntil) return true;
+    const expires = Date.parse(validUntil);
+    return !Number.isFinite(expires) || expires <= nowInstant;
+  }
+
+  function courseLeaseExpired(course, nowInstant = Date.now()) {
+    if (!course?.validUntil) return false;
+    const expires = Date.parse(course.validUntil);
+    return !Number.isFinite(expires) || expires <= nowInstant;
+  }
+
+  function datesForPublication(dates, validUntil, nowInstant = Date.now()) {
+    const stalePublication = publicationExpired(validUntil, nowInstant);
+    return (Array.isArray(dates) ? dates : []).map((day) => {
+      const startTimes = (day.startTimes || []).map((slot) => {
+        const courses = (slot.courses || []).filter((course) => (
+          isSeatedCourse(course)
+          || (!stalePublication && !courseLeaseExpired(course, nowInstant))
+        ));
+        return { ...slot, courses };
+      }).filter((slot) => slot.courses.length);
+      return { ...day, startTimes };
+    }).filter((day) => day.startTimes.length);
+  }
+
   function isPastStart(day, slot, now) {
     if (!day || !slot) return true;
-    if (slot.courses?.length && slot.courses.some(course => course.validUntil
-      && (!Number.isFinite(Date.parse(course.validUntil)) || Date.parse(course.validUntil) <= (now.instant ?? Date.now())))) return true;
+    if (slot.courses?.length && slot.courses.every(course => (
+      !isSeatedCourse(course) && courseLeaseExpired(course, now.instant ?? Date.now())
+    ))) return true;
     if (day.date < now.dateKey) return true;
     if (day.date > now.dateKey) return false;
     const minutes = startMinutes(slot.startTime);
@@ -85,6 +116,10 @@
     schemaVersion: "selector-resolved-availability.v1",
     businessNow,
     startMinutes,
+    isSeatedCourse,
+    publicationExpired,
+    courseLeaseExpired,
+    datesForPublication,
     isPastStart,
     selectableStartTimes,
     isSelectableDate,

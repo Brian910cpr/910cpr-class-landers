@@ -2269,12 +2269,13 @@ def render_html(payload: dict[str, Any]) -> str:
           throw new Error('availability payload has an unexpected shape');
         }}
         resolvedAvailability = payload;
-        if (!Number.isFinite(Date.parse(payload.validUntil)) || Date.parse(payload.validUntil) <= Date.now()) {{
-          throw new Error('availability publication expired');
-        }}
-        scheduleDates = payload.dates;
+        const nowInstant = Date.now();
+        const stalePublication = ResolvedSelectorAvailability.publicationExpired(payload.validUntil, nowInstant);
+        scheduleDates = ResolvedSelectorAvailability.datesForPublication(payload.dates, payload.validUntil, nowInstant);
         availabilityState = 'ready';
-        setAvailabilityMessage('');
+        setAvailabilityMessage(stalePublication
+          ? 'Additional appointment times are refreshing. Scheduled classes remain available.'
+          : '');
         renderAll();
       }} catch (error) {{
         console.error(error);

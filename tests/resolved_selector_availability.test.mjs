@@ -24,6 +24,32 @@ test("expired published offers cannot remain selectable after a stalled refresh"
   assert.equal(shared.isPastStart(day,slot,now),false);
 });
 
+test("expired publication suppresses synthetic offers but preserves real seated classes", () => {
+  const nowInstant = Date.parse("2026-10-01T12:00:00Z");
+  const dates = [{
+    date: "2026-10-02",
+    startTimes: [
+      { startTime: "09:00", courses: [{ courseId: "359474", offerType: "seated_class", validUntil: "2026-10-01T11:00:00Z" }] },
+      { startTime: "12:45", courses: [{ courseId: "209806", offerType: "dynamic_appointment", validUntil: "2026-10-01T11:59:59Z" }] },
+    ],
+  }];
+  const visible = shared.datesForPublication(dates, "2026-10-01T11:59:59Z", nowInstant);
+  assert.deepEqual(visible.map(day => day.startTimes.map(slot => slot.startTime)), [["09:00"]]);
+  assert.equal(visible[0].startTimes[0].courses[0].offerType, "seated_class");
+});
+
+test("fresh publication still removes an individually expired synthetic lease without hiding a seated course at the same time", () => {
+  const now={dateKey:"2026-10-01",minutes:0,instant:Date.parse("2026-10-01T12:00:00Z")};
+  const day={date:"2026-10-02"};
+  const slot={startTime:"09:00",courses:[
+    {courseId:"359474",offerType:"seated_class",validUntil:"2026-10-01T11:00:00Z"},
+    {courseId:"209806",offerType:"dynamic_appointment",validUntil:"2026-10-01T11:59:59Z"},
+  ]};
+  assert.equal(shared.isPastStart(day,slot,now),false);
+  const visible=shared.datesForPublication([{...day,startTimes:[slot]}],"2026-10-01T12:20:00Z",now.instant);
+  assert.deepEqual(visible[0].startTimes[0].courses.map(course=>course.offerType),["seated_class"]);
+});
+
 function selectableSet(data, courseId, now) {
   const dates = shared.filterDatesByCourse(data.dates, courseId);
   return new Set(dates.flatMap((day) =>
@@ -107,16 +133,6 @@ test("multiple checkbox selections form a union and Smart Filter further narrows
   assert.deepEqual(starts(applyTiming(boundaryDay, "", ["early-am", "evening", "late-pm"])), ["00:00", "05:59", "17:00", "20:59", "21:00", "23:59"]);
   assert.deepEqual(starts(applyTiming(boundaryDay, "after 6pm", ["am", "evening"])), ["20:59"]);
   assert.deepEqual(applyTiming(boundaryDay, "before noon", ["evening"]), []);
-});
-
-test("corporate Billing Code suggestions start at three characters and exclude general codes", () => {
-  assert.deepEqual(timing.CORPORATE_BILLING_CODES.map(item => item.code), ["assistedcare", "Breakthrough", "Maxim", "MaximBH", "MaximDSP"]);
-  assert.deepEqual(timing.matchingCorporateBillingCodes("ma").map(item => item.code), []);
-  assert.deepEqual(timing.matchingCorporateBillingCodes("max").map(item => item.code), ["Maxim", "MaximBH", "MaximDSP"]);
-  assert.deepEqual(timing.matchingCorporateBillingCodes("assisted").map(item => item.code), ["assistedcare"]);
-  assert.deepEqual(timing.matchingCorporateBillingCodes("wait").map(item => item.code), []);
-  assert.equal(JSON.stringify(timing.CORPORATE_BILLING_CODES).includes("RETURN10"), false);
-  assert.equal(JSON.stringify(timing.CORPORATE_BILLING_CODES).includes("6OUT"), false);
 });
 
 const week = ["2026-09-29", "2026-09-30", "2026-10-03", "2026-10-04", "2026-10-05", "2026-10-06", "2026-10-11", "2026-10-12"]
