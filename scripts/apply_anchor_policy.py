@@ -518,13 +518,26 @@ def production_anchor_policy() -> dict[str, Any]:
     rules = load(ROOT / "data/inventory/course_consumption_rules.json")["rules"]
     # Reuse the reviewed course-consumption compatibility map; do not invent a
     # second course catalog or treat physical proximity as compatibility.
-    policy["barnacle_course_pairs"] = [
+    derived_pairs = [
         [text(anchor["course_id"]), text(candidate["course_id"])]
         for anchor in rules for candidate in rules
         if candidate.get("can_ride_existing_momentum") is True
         and anchor.get("occupancy_pool") in candidate.get("compatible_with", [])
         and candidate.get("occupancy_pool") in anchor.get("compatible_with", [])
     ]
+    configured_pairs = [
+        [text(pair[0]), text(pair[1])]
+        for pair in policy.get("barnacle_course_pairs", [])
+        if isinstance(pair, list) and len(pair) == 2
+    ]
+    seen = set()
+    policy["barnacle_course_pairs"] = []
+    for pair in [*configured_pairs, *derived_pairs]:
+        key = tuple(pair)
+        if key in seen:
+            continue
+        seen.add(key)
+        policy["barnacle_course_pairs"].append(pair)
     return policy
 
 
