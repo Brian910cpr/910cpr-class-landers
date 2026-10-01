@@ -85,6 +85,25 @@ class SchedulingReconciliationTests(unittest.TestCase):
         self.assertEqual("MISSING_ROSTER",result["reconciliationIssues"][0]["code"])
         self.assertEqual(["12:45"],[r["startTime"] for r in result["offers"]])
 
+    def test_oct12_renewal_anchor_removes_orphans_from_initial_selector(self):
+        renewal=occurrence("oct12-renewal","359474","09:00","2026-10-12")
+        initial=occurrence("oct12-initial","209806","17:00","2026-10-12")
+        orphan_times=[f"{hour:02}:{minute:02}" for hour in range(5) for minute in (0,30)]+["12:45"]
+        candidates=[offer(occurrence("dynamic","209806",clock,"2026-10-12")) for clock in orphan_times]
+        # The Initial selector must honor a Renewal anchor even when Renewal
+        # is not among its displayed course offers. Initial seats are not known
+        # from the owner's report, so cover both verified zero and unknown.
+        for initial_count in (0,None):
+            with self.subTest(initial_count=initial_count):
+                result=finalize_selector_payload(payload(candidates+[offer(initial,True)]),
+                    [renewal,initial],{"sessions":[demand(renewal,1),demand(initial,initial_count)]},POLICY)
+                self.assertEqual(["17:00"],[item["startTime"] for item in result["offers"]])
+                self.assertEqual(["2026-10-12"],result["occupiedDates"])
+                flattened=[item for day in result["dates"] for slot in day["startTimes"] for item in slot["courses"]]
+                self.assertEqual(result["offers"],flattened)
+                rejected={item["startTime"] for item in result["rejectedCourseStartTimes"]}
+                self.assertEqual(set(orphan_times),rejected)
+
     def test_reschedule_closes_old_and_new_dates_and_never_promotes_stale_time(self):
         source=occurrence("heartcode","210549","12:30","2026-10-03",60)
         old={**demand(source,1),"start_at":"2026-10-02T10:00:00-04:00"}

@@ -77,6 +77,16 @@ Latest bounded preview: `2026-10-01T03:31:03.376132+00:00`; all eight selector f
 
 ## Remaining release and operational work
 
+### Mandatory October 12 release gate (owner addition, October 1)
+
+Owner-reported live facts: October 12 has a 09:00 BLS Renewal with one registration and a 17:00 BLS Initial session. The current Initial selector displays the 17:00 real class alongside unrelated synthetic starts at 00:00, 00:30, 01:00, 01:30, 02:00, 02:30, 03:00, 03:30, 04:00, 04:30, and 12:45. The Initial registration count was not supplied and must not be inferred as zero.
+
+After PR #322 is merged and the refreshed output reaches production, inspect the actual public BLS page with Initial selected and October 12 selected, including both the calendar and Start Times panel. All eleven named synthetic starts must be absent. Also inspect Renewal and the October 12 Landscape summary to verify the 09:00 and 17:00 real occurrences, roster freshness status, and the final publication trace. Record the deployed build, source observation times, JSON decisions, rendered start labels, and screenshot. A star on 17:00 is not proof that the rest of the day obeys the policy.
+
+**Stop condition:** if any of these unrelated offers remain, stop the release-verification procedure and do not mark the release verified. Investigate the deployed occupied-date/barnacle decision path, input freshness, and matching HTML/assets/feed versions; a green unit test or a correct local preview cannot override a failing live browser result. Resume completion only after the deployed behavior is corrected and rechecked.
+
+Regression: `tests/test_scheduling_reconciliation.py::SchedulingReconciliationTests.test_oct12_renewal_anchor_removes_orphans_from_initial_selector`. It verifies that the Initial-only selector honors the separate Renewal anchor, removes all eleven orphan starts, preserves the 17:00 real offer, and publishes identical flat/nested decisions with either known-zero or unknown Initial demand. This supplements, rather than replaces, mandatory post-deploy browser verification.
+
 1. Commit/push this branch and obtain final approval for the existing production refresh. User-provided AGENTS explicitly requires approval before a sitewide generator. Merging changed workflow/test paths triggers `scripts.run_validated_public_build`, which can inspect all 1,075 tracked HTML pages; the last successful equivalent run built 28 class pages and changed 47 files. Expected scope: public class/course/location/selector pages, index/sitemap, public JSON/ICS feeds and build metadata, plus the bounded admin refresh and calendar snapshots. Inspect unexpected changes; do not blindly stage the tree.
 2. Run required CI, merge, let the existing production host deploy, and verify live HTML + versioned JavaScript + JSON + actual rendered Oct 2–3 behavior. At this checkpoint the local preview is not a deployed frontend fix.
 3. Connect a complete authenticated roster collector, or explicitly operate the existing complete-roster importer. No unattended export/API is configured. No credentials were copied from the browser. The system is intentionally fail-closed as evidence ages; it is not `HEALTHY` unattended synchronization.
