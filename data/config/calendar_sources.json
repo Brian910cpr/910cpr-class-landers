@@ -61,26 +61,6 @@
       "active": true
     },
     {
-      "calendar_source_key": "brian_primary_calendar",
-      "instructor_key": "brian",
-      "owner_instructor_key": "brian",
-      "display_name": "Brian Primary Google Calendar",
-      "calendar_mode": "occupancy",
-      "mode": "occupancy",
-      "url_env_var": "BRIAN_PRIMARY_CALENDAR_ICS_URL",
-      "local_secret_key": "brian_primary_calendar.ics_url",
-      "event_title_vocabulary": [],
-      "confirmed_training_class_title_prefixes": [
-        "CONFIRMED CLASS -"
-      ],
-      "default_location_key": "shipyard",
-      "availability_location_mode": "instructor_time_only",
-      "all_day_means_available": false,
-      "allow_non_standard_time_increment": true,
-      "missing_access_policy": "warn_and_do_not_invent_training_anchors",
-      "active": true
-    },
-    {
       "calendar_source_key": "brian_do_not_schedule",
       "instructor_key": "brian",
       "owner_instructor_key": "brian",
