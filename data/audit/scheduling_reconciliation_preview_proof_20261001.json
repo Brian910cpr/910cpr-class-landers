@@ -1,0 +1,300 @@
+{
+  "schema_version": "scheduling-publication-preview-proof.v1",
+  "built_at": "2026-10-01T03:31:03.376132+00:00",
+  "status": "locally_validated_not_deployed",
+  "source_files": [
+    "current Enrollware iCal",
+    "fresh Google calendar snapshots",
+    "deployed canonical-scheduling-demand v7"
+  ],
+  "dates": {
+    "2026-10-02": {
+      "issues": [],
+      "classes": [
+        {
+          "externalClassId": "14495100",
+          "canonicalSessionId": "28f3b98b-7bba-47ec-9602-4ee2df34259f",
+          "courseName": "AHA - Family & Friends\u00ae CPR",
+          "start": "2026-10-02T08:45:00-04:00",
+          "end": "2026-10-02T10:45:00-04:00",
+          "registeredCount": 2,
+          "demandStatus": "current",
+          "source": "Current Enrollware class",
+          "workspaceStatus": "current"
+        },
+        {
+          "externalClassId": "14382096",
+          "canonicalSessionId": "f224796e-6df0-4bf5-890b-c5398593c110",
+          "courseName": "AHA BLS Provider (Renewal)",
+          "start": "2026-10-02T10:45:00-04:00",
+          "end": "2026-10-02T12:45:00-04:00",
+          "registeredCount": 1,
+          "demandStatus": "current",
+          "source": "Current Enrollware class",
+          "workspaceStatus": "current"
+        },
+        {
+          "externalClassId": "14501248",
+          "canonicalSessionId": "b879707d-6181-43fd-b281-647778b045b2",
+          "courseName": "AHA BLS Provider (Initial)",
+          "start": "2026-10-02T12:45:00-04:00",
+          "end": "2026-10-02T14:45:00-04:00",
+          "registeredCount": 2,
+          "demandStatus": "current",
+          "source": "Current Enrollware class",
+          "workspaceStatus": "current"
+        }
+      ],
+      "offers": [
+        {
+          "time": "08:45",
+          "course": "AHA - Family & Friends\u00ae CPR",
+          "result": "seated"
+        },
+        {
+          "time": "10:45",
+          "course": "AHA BLS Provider (Renewal)",
+          "result": "seated"
+        },
+        {
+          "time": "12:45",
+          "course": "AHA BLS Provider (Initial)",
+          "result": "seated"
+        }
+      ]
+    },
+    "2026-10-03": {
+      "issues": [],
+      "classes": [
+        {
+          "externalClassId": null,
+          "canonicalSessionId": "43c02b61-f6cd-457d-83f4-edbeae5ebcde",
+          "courseName": "AHA Heartsaver First Aid CPR AED",
+          "start": "2026-10-03T09:00:00-04:00",
+          "end": "2026-10-03T11:30:00-04:00",
+          "registeredCount": 0,
+          "demandStatus": "current",
+          "source": "Canonical commitment",
+          "workspaceStatus": "current"
+        },
+        {
+          "externalClassId": "14186226",
+          "canonicalSessionId": "1eaeb0cc-2191-49c4-89dc-76333685a5e4",
+          "courseName": "AHA BLS HeartCode\u00ae",
+          "start": "2026-10-03T12:30:00-04:00",
+          "end": "2026-10-03T13:30:00-04:00",
+          "registeredCount": 1,
+          "demandStatus": "current",
+          "source": "Current Enrollware class",
+          "workspaceStatus": "current"
+        }
+      ],
+      "offers": []
+    },
+    "2026-10-07": {
+      "issues": [
+        {
+          "date": "2026-10-07",
+          "code": "STALE_ROSTER",
+          "externalClassId": "14354087",
+          "sourceStart": "2026-10-07T17:30:00-04:00",
+          "canonicalStart": null,
+          "reason": "stale_reconciliation",
+          "blocksSynthesis": true
+        },
+        {
+          "date": "2026-10-07",
+          "code": "HARD_BLOCK_COLLISION",
+          "blocksSynthesis": true,
+          "reason": "17:30 AHA Heartsaver\u00ae First Aid CPR AED: public booking suppressed by an authoritative busy block"
+        }
+      ],
+      "classes": [
+        {
+          "externalClassId": "14354087",
+          "canonicalSessionId": "a6a6387f-34db-45a8-90b3-fb1ea92f6b6c",
+          "courseName": "AHA Heartsaver\u00ae First Aid CPR AED",
+          "start": "2026-10-07T17:30:00-04:00",
+          "end": "2026-10-07T20:00:00-04:00",
+          "registeredCount": null,
+          "demandStatus": "stale_reconciliation",
+          "source": "Current Enrollware class",
+          "workspaceStatus": "current"
+        }
+      ],
+      "offers": []
+    }
+  },
+  "selectors": {
+    "bls": {
+      "counts": {
+        "availabilityBlocksFound": 202,
+        "availabilityBlocksEvaluated": 202,
+        "publicLocationBlocksEvaluated": 202,
+        "publicSelectableOfferCount": 7852,
+        "publicSelectableDateCount": 80,
+        "publicSelectableStartTimeCount": 2850,
+        "rejectedOfferCount": 2541,
+        "suppressedStaleOrOrphanedOfferCount": 0,
+        "wholeBlockPresentedAsClass": false
+      },
+      "rejection_reason_counts": {
+        "inside_minimum_lead_time": 120,
+        "INSUFFICIENT_CONTIGUOUS_TIME": 1591,
+        "REAL_CALENDAR_BLOCK": 984,
+        "REAL_CLASS_COLLISION": 191,
+        "ORPHAN_SYNTHETIC_OFFER": 95,
+        "RECONCILIATION_REQUIRED": 617
+      }
+    },
+    "acls": {
+      "counts": {
+        "availabilityBlocksFound": 202,
+        "availabilityBlocksEvaluated": 202,
+        "publicLocationBlocksEvaluated": 202,
+        "publicSelectableOfferCount": 8,
+        "publicSelectableDateCount": 4,
+        "publicSelectableStartTimeCount": 4,
+        "rejectedOfferCount": 10386,
+        "suppressedStaleOrOrphanedOfferCount": 0,
+        "wholeBlockPresentedAsClass": false
+      },
+      "rejection_reason_counts": {
+        "course_family_not_allowed_by_availability": 10386,
+        "instructor_lacks_required_certification": 10386,
+        "inside_minimum_lead_time": 120,
+        "INSUFFICIENT_CONTIGUOUS_TIME": 4377,
+        "REAL_CALENDAR_BLOCK": 2553,
+        "REAL_CLASS_COLLISION": 294
+      }
+    },
+    "pals": {
+      "counts": {
+        "availabilityBlocksFound": 202,
+        "availabilityBlocksEvaluated": 202,
+        "publicLocationBlocksEvaluated": 202,
+        "publicSelectableOfferCount": 8,
+        "publicSelectableDateCount": 4,
+        "publicSelectableStartTimeCount": 4,
+        "rejectedOfferCount": 10386,
+        "suppressedStaleOrOrphanedOfferCount": 0,
+        "wholeBlockPresentedAsClass": false
+      },
+      "rejection_reason_counts": {
+        "course_family_not_allowed_by_availability": 10386,
+        "instructor_lacks_required_certification": 10386,
+        "inside_minimum_lead_time": 120,
+        "INSUFFICIENT_CONTIGUOUS_TIME": 4377,
+        "REAL_CALENDAR_BLOCK": 2553,
+        "REAL_CLASS_COLLISION": 294
+      }
+    },
+    "heartsaver": {
+      "counts": {
+        "availabilityBlocksFound": 202,
+        "availabilityBlocksEvaluated": 202,
+        "publicLocationBlocksEvaluated": 202,
+        "publicSelectableOfferCount": 14666,
+        "publicSelectableDateCount": 78,
+        "publicSelectableStartTimeCount": 2503,
+        "rejectedOfferCount": 6109,
+        "suppressedStaleOrOrphanedOfferCount": 0,
+        "wholeBlockPresentedAsClass": false
+      },
+      "rejection_reason_counts": {
+        "inside_minimum_lead_time": 240,
+        "INSUFFICIENT_CONTIGUOUS_TIME": 4394,
+        "REAL_CALENDAR_BLOCK": 2670,
+        "REAL_CLASS_COLLISION": 418,
+        "HARD_BLOCK_COLLISION": 1,
+        "ORPHAN_SYNTHETIC_OFFER": 168,
+        "RECONCILIATION_REQUIRED": 1076
+      }
+    },
+    "uscg_first_aid_cpr_aed": {
+      "counts": {
+        "availabilityBlocksFound": 202,
+        "availabilityBlocksEvaluated": 202,
+        "publicLocationBlocksEvaluated": 202,
+        "publicSelectableOfferCount": 4833,
+        "publicSelectableDateCount": 78,
+        "publicSelectableStartTimeCount": 2503,
+        "rejectedOfferCount": 2094,
+        "suppressedStaleOrOrphanedOfferCount": 0,
+        "wholeBlockPresentedAsClass": false
+      },
+      "rejection_reason_counts": {
+        "inside_minimum_lead_time": 82,
+        "INSUFFICIENT_CONTIGUOUS_TIME": 1532,
+        "REAL_CALENDAR_BLOCK": 929,
+        "REAL_CLASS_COLLISION": 141,
+        "HARD_BLOCK_COLLISION": 1,
+        "ORPHAN_SYNTHETIC_OFFER": 55,
+        "RECONCILIATION_REQUIRED": 350
+      }
+    },
+    "hsi": {
+      "counts": {
+        "availabilityBlocksFound": 202,
+        "availabilityBlocksEvaluated": 202,
+        "publicLocationBlocksEvaluated": 202,
+        "publicSelectableOfferCount": 5735,
+        "publicSelectableDateCount": 76,
+        "publicSelectableStartTimeCount": 2892,
+        "rejectedOfferCount": 1189,
+        "suppressedStaleOrOrphanedOfferCount": 0,
+        "wholeBlockPresentedAsClass": false
+      },
+      "rejection_reason_counts": {
+        "inside_minimum_lead_time": 82,
+        "INSUFFICIENT_CONTIGUOUS_TIME": 463,
+        "REAL_CALENDAR_BLOCK": 290,
+        "REAL_CLASS_COLLISION": 109,
+        "ORPHAN_SYNTHETIC_OFFER": 74,
+        "RECONCILIATION_REQUIRED": 490
+      }
+    },
+    "arc": {
+      "counts": {
+        "availabilityBlocksFound": 202,
+        "availabilityBlocksEvaluated": 202,
+        "publicLocationBlocksEvaluated": 202,
+        "publicSelectableOfferCount": 7723,
+        "publicSelectableDateCount": 76,
+        "publicSelectableStartTimeCount": 2892,
+        "rejectedOfferCount": 2663,
+        "suppressedStaleOrOrphanedOfferCount": 0,
+        "wholeBlockPresentedAsClass": false
+      },
+      "rejection_reason_counts": {
+        "inside_minimum_lead_time": 123,
+        "INSUFFICIENT_CONTIGUOUS_TIME": 1734,
+        "REAL_CALENDAR_BLOCK": 1047,
+        "REAL_CLASS_COLLISION": 195,
+        "ORPHAN_SYNTHETIC_OFFER": 92,
+        "RECONCILIATION_REQUIRED": 599
+      }
+    },
+    "family_cpr": {
+      "counts": {
+        "availabilityBlocksFound": 202,
+        "availabilityBlocksEvaluated": 202,
+        "publicLocationBlocksEvaluated": 202,
+        "publicSelectableOfferCount": 2502,
+        "publicSelectableDateCount": 77,
+        "publicSelectableStartTimeCount": 2502,
+        "rejectedOfferCount": 961,
+        "suppressedStaleOrOrphanedOfferCount": 0,
+        "wholeBlockPresentedAsClass": false
+      },
+      "rejection_reason_counts": {
+        "inside_minimum_lead_time": 41,
+        "INSUFFICIENT_CONTIGUOUS_TIME": 665,
+        "REAL_CALENDAR_BLOCK": 406,
+        "REAL_CLASS_COLLISION": 68,
+        "ORPHAN_SYNTHETIC_OFFER": 29,
+        "RECONCILIATION_REQUIRED": 188
+      }
+    }
+  }
+}

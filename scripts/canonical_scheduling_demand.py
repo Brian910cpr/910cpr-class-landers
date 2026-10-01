@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import re
 from typing import Any, Iterable
+from zoneinfo import ZoneInfo
 
 
 ACTIVE_REGISTRATION_STATUSES = frozenset({"registered", "confirmed", "completed"})
@@ -159,6 +160,24 @@ def resolve_canonical_demand(
             continue
 
         claimed[index] = canonical_id
+        if demand.get("visibility") == "private" or demand.get("registration_status") == "closed":
+            resolved[index]["public_direct_booking"] = False
+            resolved[index]["registration_status"] = "closed"
+            resolved[index]["registration_status_source"] = "canonical_class_sessions"
+        # External identity survives a reschedule; it does not prove that the
+        # canonical occurrence still has the current source's start time.
+        if _start(demand) != _start(resolved[index]):
+            resolved[index].update(
+                canonical_session_id=canonical_id, demand_status="stale_anchor",
+                canonical_start_at=demand.get("start_at"),
+            )
+            audits.append({
+                "canonical_session_id": canonical_id, "external_class_id": external_id,
+                "result": "stale_anchor", "match_basis": match_basis,
+                "source_start_at": resolved[index].get("start_at"),
+                "canonical_start_at": demand.get("start_at"),
+            })
+            continue
         count = demand.get("active_registration_count")
         known = isinstance(count, int) and not isinstance(count, bool) and count >= 0 and demand.get("count_available") is not False
         if index in conflicted:
@@ -170,6 +189,10 @@ def resolve_canonical_demand(
             "demand_basis": "canonical_active_registrations" if known else "unknown",
             "demand_status": "current" if known else _text(demand.get("demand_status")) or "unknown",
             "demand_match_basis": match_basis,
+            "consumption_start_at": demand.get("consumption_start_at"),
+            "consumption_end_at": demand.get("consumption_end_at"),
+            "workspace_projection_status": demand.get("workspace_projection_status"),
+            "source_observed_at": demand.get("source_observed_at"),
         })
         audits.append({
             "canonical_session_id": canonical_id,
@@ -179,3 +202,44 @@ def resolve_canonical_demand(
             "candidate_count": 1,
         })
     return resolved, audits
+
+
+def reconciliation_issues(occurrences: list[dict[str, Any]], demand_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Publish safe diagnostics and close synthesis on BOTH sides of a move."""
+    resolved, _ = resolve_canonical_demand(occurrences, demand_rows)
+    issues = []
+    for row in resolved:
+        status = row.get("demand_status")
+        if status == "current":
+            continue
+        code = {"stale_anchor": "STALE_ANCHOR", "missing_canonical_session": "MISSING_CANONICAL_SESSION",
+                "external_reconciliation_required": "MISSING_ROSTER",
+                "stale_reconciliation": "STALE_ROSTER"}.get(status, "RECONCILIATION_REQUIRED")
+        dates = set()
+        for value in (row.get("start_at"), row.get("canonical_start_at")):
+            if instant := _instant(value):
+                dates.add(instant.astimezone(ZoneInfo("America/New_York")).date().isoformat())
+        for day in sorted(dates):
+            issues.append({"date": day, "code": code, "externalClassId": _external_class_id(row),
+                           "sourceStart": row.get("start_at"), "canonicalStart": row.get("canonical_start_at"),
+                           "reason": status, "blocksSynthesis": True})
+    for row in demand_rows:
+        if (row.get("external_class_id") and row.get("count_available") is False
+                and row.get("session_status") in ("scheduled", "active")
+                and not any(_external_class_id(item) == row["external_class_id"] for item in resolved)):
+            start = _start(row)
+            if start:
+                issues.append({"date": start.astimezone(ZoneInfo("America/New_York")).date().isoformat(),
+                               "code": "STALE_ROSTER" if row.get("demand_status") == "stale_reconciliation" else "MISSING_ROSTER",
+                               "externalClassId": row["external_class_id"],
+                               "canonicalSessionId": row.get("canonical_session_id"),
+                               "reason": row.get("demand_status") or "unknown", "blocksSynthesis": True})
+        if row.get("workspace_projection_status") not in (None, "current"):
+            start = _start(row)
+            if start:
+                issues.append({"date": start.astimezone(ZoneInfo("America/New_York")).date().isoformat(),
+                               "code": "MISSING_SESSION_PROJECTION" if row["workspace_projection_status"] == "missing" else "STALE_SESSION_PROJECTION",
+                               "externalClassId": row.get("external_class_id"),
+                               "canonicalSessionId": row.get("canonical_session_id"),
+                               "reason": row["workspace_projection_status"], "blocksSynthesis": True})
+    return issues

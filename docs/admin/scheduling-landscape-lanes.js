@@ -79,11 +79,53 @@
     drawer.setAttribute("aria-hidden", "false");
   }
 
+
+  function showDayTruth() {
+    const date = document.getElementById("datePick").value;
+    const host = document.getElementById("dayTruth");
+    if (!host) return;
+    const facts = model.dailyTruth?.[date] || {hardBlocks: [], classes: []};
+    const issues = (model.reconciliationIssues || []).filter(item => item.date === date);
+    const cells = (model.cells || []).filter(item => item.date === date);
+    const offers = cells.filter(item => ["seated", "offered", "joinable"].includes(item.result));
+    const excluded = cells.filter(item => item.result === "suppressed" && item.reasons?.some(r => ["ORPHAN_SYNTHETIC_OFFER","RECONCILIATION_REQUIRED"].includes(r)));
+    const clock = value => value ? new Date(value).toLocaleTimeString("en-US", {timeZone: "America/New_York",hour:"numeric",minute:"2-digit"}) : "unknown";
+    const startClock = value => { const [h,m] = value.split(":").map(Number); return `${h % 12 || 12}:${String(m).padStart(2,"0")} ${h >= 12 ? "PM" : "AM"}`; };
+    const localDate = value => new Date(value).toLocaleDateString("en-CA", {timeZone:"America/New_York"});
+    const span = item => clock(item.start) + (localDate(item.start) < date ? " (previous day)" : "") +
+      "–" + clock(item.end) + (localDate(item.end) > date ? " (next day)" : "");
+    const list = items => items.length ? "<ul>" + items.map(item => "<li>" + item + "</li>").join("") + "</ul>" : '<p class="quiet">None recorded.</p>';
+    const errors = issues.map(item => "<strong>" + escapeHtml(item.code.replaceAll("_"," ")) + "</strong>" +
+      (item.externalClassId ? " · class " + escapeHtml(item.externalClassId) : "") +
+      (item.code === "STALE_ANCHOR" ? "<br>Enrollware " + clock(item.sourceStart) + " / LanderWare " + clock(item.canonicalStart) : "") +
+      "<br>" + escapeHtml(item.reason || "") + " · New synthetic offers blocked.");
+    const age = (Date.now()-Date.parse(model.builtAt || model.generatedAt))/60000;
+    if (!Number.isFinite(age) || age > 30) errors.unshift("<strong>STALE PUBLICATION</strong><br>This diagnostic feed is more than 30 minutes old. Refresh pipeline needs attention.");
+    host.innerHTML =
+      '<section class="truth-errors ' + (errors.length ? 'has-errors' : '') + '" aria-label="Reconciliation errors"><h2>Reconciliation errors · ' + errors.length + "</h2>" +
+      (errors.length ? list(errors) : "<p>No reconciliation contradiction reported for this date.</p>") + "</section>" +
+      '<div class="truth-grid"><section class="truth-blocks"><h2>Hard blocks · ' + facts.hardBlocks.length + "</h2>" +
+      list(facts.hardBlocks.map(item => "<strong>" + escapeHtml(span(item)) + "</strong> · " + escapeHtml(item.label) + (item.location ? "<br>" + escapeHtml(item.location) : ""))) + "</section>" +
+      '<section class="truth-classes"><h2>Real / seated classes · ' + facts.classes.length + "</h2>" +
+      list(facts.classes.map(item => "<strong>" + escapeHtml(span(item)) + "</strong> · " + escapeHtml(item.courseName || "Class") +
+        "<br>" + (item.registeredCount === null ? "Roster unknown — reconciliation required" : escapeHtml(item.registeredCount) + " active registrations") +
+        " · " + escapeHtml(item.source) + (item.externalClassId ? " #" + escapeHtml(item.externalClassId) : "") +
+        (item.workspaceStatus && item.workspaceStatus !== "current" ? "<br><strong>Workspace " + escapeHtml(item.workspaceStatus) + "</strong>" : ""))) + "</section>" +
+      '<section class="truth-offers"><h2>Public offers · ' + offers.length + "</h2>" +
+      list(offers.map(item => "<strong>" + escapeHtml(startClock(item.startTime)) + "</strong> · " + escapeHtml(item.courseName) +
+        " · " + escapeHtml(item.result === "seated" ? "Existing class" : item.scheduleRole || "Synthetic") +
+        (item.attachedToSessionId ? " → " + escapeHtml(item.attachedToSessionId) : ""))) +
+      "<p>" + excluded.length + " unrelated or unreconciled candidates suppressed.</p></section></div>" +
+      '<p class="truth-build">Eastern time · Build ' + escapeHtml(model.buildId || "unknown") + " · Published " +
+      escapeHtml(model.builtAt || model.generatedAt || "unknown") + "</p>";
+  }
+
   function addLanes() {
     if (!model) return;
     const matrix = document.getElementById("matrix");
     const header = matrix.querySelector("thead tr");
     if (!header || header.querySelector(".lane-head")) return;
+    showDayTruth();
     const lanes = model.lanes || [];
     const date = document.getElementById("datePick").value;
     let insertionPoint = header.querySelector(".time-head");

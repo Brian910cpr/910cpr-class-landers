@@ -64,7 +64,7 @@ class ZeroDurationPipelineTests(unittest.TestCase):
                         self.assertTrue(offers.has_conflict(candidate, candidate + timedelta(minutes=1), candidates, event["location"], {"display_name": "Brian Ennis"})[0])
                     self.assertFalse(offers.has_conflict(end, end + timedelta(minutes=15), blocks, event["location"], {"display_name": "Brian Ennis"})[0])
 
-    def test_legitimate_nonzero_durations_are_preserved_for_all_six_courses(self):
+    def test_nonzero_source_end_is_preserved_but_cannot_shorten_occupied_duration(self):
         for event in FIXTURES:
             for minutes in (30, 90, 180):
                 with self.subTest(session_id=event["uid"], minutes=minutes):
@@ -75,7 +75,8 @@ class ZeroDurationPipelineTests(unittest.TestCase):
                     public = build_public_future_session(session)
                     self.assertEqual(end, public["end_at"])
                     blocks = build_occupancy({"schedule_future": {"sessions": [public]}}, self.rules)
-                    self.assertEqual(datetime.fromisoformat(end).replace(tzinfo=None), blocks[0]["end"])
+                    minimum_end = datetime.fromisoformat(event["dtstart"]) + timedelta(minutes=event["expected_minutes"])
+                    self.assertEqual(max(datetime.fromisoformat(end), minimum_end).replace(tzinfo=None), blocks[0]["end"])
 
     def test_offer_generation_filters_occupied_windows_before_returning_candidates(self):
         catalog = json.loads((ROOT / "data/config/course_catalog.json").read_text())

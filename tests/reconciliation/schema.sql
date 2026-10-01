@@ -1,5 +1,6 @@
 -- Production column/index shape and the location-authority trigger relevant to
 -- operational reconciliation; other application side effects are not simulated.
+-- Workspace structure matches production scheduling fields and durable identity.
 create role anon; create role authenticated; create role service_role;
 create table public.class_sessions (
 id uuid not null default gen_random_uuid(),
@@ -248,3 +249,16 @@ begin
 end;
 $function$;
 CREATE TRIGGER class_sessions_enforce_location_authority_trg BEFORE INSERT OR UPDATE OF record_scope,location_id,visibility ON public.class_sessions FOR EACH ROW EXECUTE FUNCTION public.enforce_session_location_authority();
+create table public.landerware_sessions(
+  id uuid primary key default gen_random_uuid(), external_session_id text,
+  course_id text not null, course_name text not null, starts_at timestamptz not null,
+  ends_at timestamptz, location_name text, instructor_name text, instructor_id uuid,
+  lifecycle_state text not null default 'create', provenance text not null,
+  requirements_manifest jsonb not null, document_ids jsonb not null default '[]',
+  created_at timestamptz not null default now(), updated_at timestamptz not null default now(),
+  unique(external_session_id,course_id,starts_at)
+);
+create function public.sync_enrollware_class_session_to_landerware() returns trigger language plpgsql as $$
+begin return new; end $$;
+create trigger trg_sync_enrollware_class_session_to_landerware after insert or update or delete
+on public.class_sessions for each row execute function public.sync_enrollware_class_session_to_landerware();
