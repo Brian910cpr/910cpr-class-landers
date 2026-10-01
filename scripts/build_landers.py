@@ -241,7 +241,14 @@ def is_public_direct_bookable_session(session: dict) -> bool:
 def is_session_lander_candidate(session: dict) -> bool:
     """A seated class or an open public Enrollware session deserves a durable page."""
     register_url = enrollware_url_for_session(session)
-    if not verified_enrollware_url(register_url):
+    sid = str(session.get("session_id") or "")
+    native = (session.get("source") == "landerware_event"
+        and session.get("registration_backend") == "landerware"
+        and session.get("count_available") is True
+        and session.get("workspace_projection_status") == "current"
+        and re.fullmatch(r"lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}", sid)
+        and register_url == f"https://www.910cpr.com/register/?session={sid}")
+    if not native and not verified_enrollware_url(register_url):
         return False
     return session_enrolled_count(session) >= 1 or is_public_direct_bookable_session(session)
 
