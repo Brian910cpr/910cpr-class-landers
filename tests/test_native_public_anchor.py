@@ -18,3 +18,13 @@ class NativeAnchorTests(unittest.TestCase):
             row={**self.row(),key:value}
             sessions,_=resolve_canonical_demand([], [row])
             self.assertEqual(sessions, [], key)
+
+    def test_native_projection_is_accepted_by_admin_and_lander_gates(self):
+        from scripts.validate_public_refresh_output import validate_admin_reconciliation
+        from scripts.build_landers import is_session_lander_candidate
+        sessions,_=resolve_canonical_demand([], [self.row()])
+        self.assertEqual(validate_admin_reconciliation({"sessions":[]}, {"sources":{"hot_sync":{"available":True}},"sessions":sessions}), {sessions[0]["session_id"]})
+        self.assertTrue(is_session_lander_candidate(sessions[0]))
+        self.assertFalse(is_session_lander_candidate({**sessions[0],"registration_url":"https://example.invalid/register"}))
+        with self.assertRaises(ValueError):
+            validate_admin_reconciliation({"sessions":[]}, {"sources":{"hot_sync":{"available":True}},"sessions":[{**sessions[0],"count_available":False}]})
