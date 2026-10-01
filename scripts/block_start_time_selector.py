@@ -895,8 +895,6 @@ def anchor_rejection_reasons(
     select the nearest pre/post barnacles around that seated class.
     """
     reasons: list[str] = []
-    if same_day_anchor:
-        reasons.append("same_day_family_anchor_already_seated")
     if shared_cooldown_anchor:
         reasons.append("shared_board_course_booked_within_cooldown")
     return reasons
