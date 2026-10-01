@@ -130,8 +130,20 @@ jobs:
           $previousHash = if (Test-Path $hashPath) { (Get-Content -Raw $hashPath).Trim() } else { '' }
           "current_hash=$currentHash" >> $env:GITHUB_OUTPUT
           "previous_hash=$previousHash" >> $env:GITHUB_OUTPUT
-          "changed=$(if ($currentHash -ne $previousHash) { 'true' } else { 'false' })" >> $env:GITHUB_OUTPUT
-          Write-Host "Canonical demand changed: $($currentHash -ne $previousHash)"
+          # Publication leases expire even when source inventory is unchanged.
+          # Missing/invalid/near-expiry selectors require fresh source validation.
+          $renewBefore = [DateTimeOffset]::UtcNow.AddMinutes(10)
+          $renewPublication = $false
+          foreach ($pageKey in @('bls', 'heartsaver', 'acls', 'pals')) {
+            try {
+              $publication = Get-Content -Raw "docs/data/block-selector-availability/$pageKey.json" | ConvertFrom-Json
+              $expires = [DateTimeOffset]::Parse($publication.validUntil)
+              if ($expires -le $renewBefore) { $renewPublication = $true }
+            } catch { $renewPublication = $true }
+          }
+          $rebuildRequired = ($currentHash -ne $previousHash) -or $renewPublication
+          "changed=$(if ($rebuildRequired) { 'true' } else { 'false' })" >> $env:GITHUB_OUTPUT
+          Write-Host "Canonical demand changed: $($currentHash -ne $previousHash); publication renewal required: $renewPublication"
 
       - name: Upload canonical demand fetch status
         if: always()
