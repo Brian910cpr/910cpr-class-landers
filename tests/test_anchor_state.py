@@ -135,8 +135,8 @@ class AnchorStateTests(unittest.TestCase):
         self.assertNotIn(("209806", "359474"), pairs, "BLS Initial and Renewal are explicit alternatives, not mutual barnacles")
         self.assertNotIn(("359474", "209806"), pairs, "BLS Initial and Renewal are explicit alternatives, not mutual barnacles")
         self.assertTrue(
-            all(course["retain_barnacle_offers"] for course in policy["exact_courses"].values()),
-            "Every exact-course repeat rule must retain barnacle offers",
+            all("retain_barnacle_offers" not in course for course in policy["exact_courses"].values()),
+            "Barnacle retention is an invariant, not an exact-course configuration switch",
         )
 
 
