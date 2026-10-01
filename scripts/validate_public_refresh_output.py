@@ -37,7 +37,12 @@ def session_rows(payload: Any) -> list[dict[str, Any]]:
 
 def is_durable_admin_session(row: dict[str, Any]) -> bool:
     source = str(row.get("source") or "").strip().lower()
-    return bool(row.get("hot_sync")) and source.startswith("hot_sync")
+    native = (source == "landerware_event"
+        and row.get("registration_backend") == "landerware"
+        and str(row.get("session_id") or "").startswith("lw-")
+        and row.get("count_available") is True
+        and row.get("workspace_projection_status") == "current")
+    return native or (bool(row.get("hot_sync")) and source.startswith("hot_sync"))
 
 
 def validate_admin_reconciliation(current_payload: Any, admin_payload: Any) -> set[str]:
