@@ -389,7 +389,15 @@
       "hero_image": {
         "url": "/images/characters/PALS-1.webp",
         "alt": "Smiling baby saying You got dis! — Don’t make this weird.",
-        "variant": "character"
+        "variant": "character",
+        "rotation_prefix": "PALS",
+        "rotation_alts": {
+          "PALS-1": "Smiling baby saying You got dis! — Don’t make this weird.",
+          "PALS-2": "Respiratory therapist holding a bag-mask device with a Circulation, Airway, Breathing speech bubble.",
+          "PALS-3": "Respiratory therapist in blue scrubs holding a bag-mask device in a critical-care setting.",
+          "PALS-4": "Respiratory therapy team in blue scrubs at a critical-care bedside.",
+          "PALS-5": "Respiratory therapy team together in a critical-care setting."
+        }
       }
     },
     "heartsaver": {
