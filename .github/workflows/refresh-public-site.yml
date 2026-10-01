@@ -21,6 +21,8 @@ on:
       - 'scripts/validate_sitewide_links_strict.py'
       - 'tests/test_validate_sitewide_links_strict.py'
       - 'docs/contact.html'
+      - 'docs/corp/nhcso/index.html'
+      - 'docs/_headers'
       - 'scripts/build_sessions_current.py'
       - 'data/config/course_catalog.json'
       - 'data/config/course_map.json'
