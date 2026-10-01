@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-10-01T11:43:33.762151+00:00",
+  "generated_at": "2026-10-01T14:25:45.429607+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-01T11:43:33.109615+00:00",
+      "generated_at": "2026-10-01T14:25:44.851463+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-01T11:43:33.762151+00:00",
-      "event_count": 174
+      "generated_at": "2026-10-01T14:25:45.429607+00:00",
+      "event_count": 175
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-01T11:43:33.323514+00:00",
+      "generated_at": "2026-10-01T14:25:45.047673+00:00",
       "event_count": 0
     }
   ],
@@ -170,6 +170,17 @@
       "start": "2026-10-05T15:00:00-04:00",
       "end": "2026-10-05T17:30:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Amanda Benson - ProTraining",
+      "start": "2026-10-05T16:30:00+00:00",
+      "end": "2026-10-05T18:30:00+00:00",
+      "location": "",
       "status": "CONFIRMED"
     },
     {
