@@ -334,7 +334,8 @@ def apply_daily_anchor_stack(payload: dict[str, Any], anchors: list[dict[str, An
             candidate_scope, _candidate_delay = repeat_scope_key(cid, policy)
             for anchor in day_anchors:
                 anchor_scope, _anchor_delay = repeat_scope_key(text(anchor.get("course_id")), policy)
-                if candidate_scope == anchor_scope:
+                if (candidate_scope == anchor_scope
+                    and [text(anchor.get("course_id")), cid] not in policy.get("barnacle_course_pairs", [])):
                     # Initial/Renewal variants in the same classroom family are
                     # alternatives the customer chooses explicitly, not barnacles
                     # to place before or after one another.
