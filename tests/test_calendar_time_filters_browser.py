@@ -108,21 +108,11 @@ class CalendarTimeFilterBrowserTests(unittest.TestCase):
         self.assertEqual(page.locator(".calendar-time-bullet").all_text_contents(), ["•"] * 4)
         self.assertEqual(page.get_by_role("heading", name="When are YOU available?", exact=True).count(), 1)
         self.assertEqual(page.locator(".calendar-timing-pill .calendar-availability-heading").count(), 1)
-        self.assertEqual(page.locator(".calendar-billing-pill .calendar-availability-heading").count(), 0)
-        self.assertEqual(page.locator(".calendar-filter-pill").count(), 2)
+        self.assertEqual(page.locator(".calendar-filter-pill").count(), 1)
         self.assertEqual(page.locator(".calendar-timing-pill .calendar-time-smart").count(), 1)
-        self.assertEqual(page.locator(".calendar-billing-pill .calendar-billing-code").count(), 1)
-        billing = page.get_by_role("combobox", name="Billing Code", exact=True)
-        billing.fill("Ma")
-        self.assertTrue(page.locator(".calendar-billing-suggestions").is_hidden())
-        billing.fill("Max")
-        self.assertEqual(page.get_by_role("option").all_text_contents(), ["Maxim Homecare", "Maxim Behavioral Health", "Maxim Direct Support Professionals"])
-        page.get_by_role("option", name="Maxim Behavioral Health", exact=True).click()
-        self.assertEqual(billing.input_value(), "MaximBH")
-        self.assertIn("Enter this code in Enrollware registration", page.locator(".calendar-billing-status").inner_text())
-        self.assertEqual(self.result(page), baseline)
-        billing.fill("WAI")
-        self.assertTrue(page.locator(".calendar-billing-suggestions").is_hidden())
+        self.assertEqual(page.locator(".calendar-billing-pill").count(), 0)
+        self.assertEqual(page.locator(".calendar-billing-code").count(), 0)
+        self.assertEqual(page.get_by_role("combobox", name="Billing Code", exact=True).count(), 0)
         for bucket, lower, upper in BUCKETS:
             with self.subTest(family=family, bucket=bucket):
                 page.locator(f'#calendar-time-filters input[value="{bucket}"]').check()
@@ -203,13 +193,8 @@ class CalendarTimeFilterBrowserTests(unittest.TestCase):
                     self.assertGreaterEqual(dimensions["x"], 0)
                     self.assertLessEqual(dimensions["x"] + dimensions["width"], width)
                     timing_pill = page.locator(".calendar-timing-pill").bounding_box()
-                    billing_pill = page.locator(".calendar-billing-pill").bounding_box()
-                    if width >= 600:
-                        self.assertLess(timing_pill["x"], billing_pill["x"])
-                        self.assertAlmostEqual(timing_pill["y"], billing_pill["y"], delta=1)
-                    else:
-                        self.assertLess(timing_pill["y"], billing_pill["y"])
-                    for selector in [".calendar-time-item", ".calendar-time-smart input", ".calendar-time-smart button", ".calendar-billing-code > input"]:
+                    self.assertIsNotNone(timing_pill)
+                    for selector in [".calendar-time-item", ".calendar-time-smart input", ".calendar-time-smart button"]:
                         for item in page.locator(selector).all():
                             box = item.bounding_box()
                             self.assertGreaterEqual(box["x"], dimensions["x"])
