@@ -69,7 +69,7 @@ jobs:
         run: pip install python-dateutil openpyxl
 
       - name: Test scheduling reconciliation before generating output
-        run: python -B -m unittest tests.test_zero_duration_pipeline tests.test_enrollware_ical_import tests.test_scheduling_reconciliation tests.test_canonical_scheduling_demand tests.test_apply_anchor_policy tests.test_anchor_state tests.test_publish_scheduling_landscape
+        run: python -B -m unittest tests.test_zero_duration_pipeline tests.test_enrollware_ical_import tests.test_scheduling_reconciliation tests.test_canonical_scheduling_demand tests.test_apply_anchor_policy tests.test_anchor_state tests.test_publish_scheduling_landscape tests.test_native_public_anchor
 
       - name: Refresh Enrollware seated and committed class source
         # Resolve occupied windows before canonical schedule, selectors or anchors.
@@ -150,7 +150,7 @@ jobs:
           python -m scripts.apply_anchor_policy
 
       - name: Build durable seated Anchor session pages
-        run: python -m scripts.build_landers --anchors-only
+        run: python -m scripts.build_landers --anchors-only --data-file docs/data/schedule_future.json
 
       - name: Publish instructor and location reference feeds
         run: python -m scripts.publish_admin_reference_data
