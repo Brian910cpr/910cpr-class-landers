@@ -3,36 +3,67 @@
   "mode": "daily_anchor_stack_v1",
   "one_course_type_per_calendar_day": false,
   "compact_paid_days": true,
-  "open_day_excluded_families": ["ACLS", "PALS"],
+  "open_day_excluded_families": [
+    "ACLS",
+    "PALS"
+  ],
   "default_repeat_delay_minutes": 0,
-  "retain_barnacle_offers": true,
   "families": {
     "aha-bls-in-person": {
-      "course_ids": ["209806", "359474"],
-      "repeat_delay_minutes": 1440,
-      "retain_barnacle_offers": false
+      "course_ids": [
+        "209806",
+        "359474"
+      ],
+      "repeat_delay_minutes": 1440
     },
     "heartsaver-cpr-aed": {
-      "course_ids": ["344085", "209808"],
-      "repeat_delay_minutes": 1440,
-      "retain_barnacle_offers": true
+      "course_ids": [
+        "344085",
+        "209808"
+      ],
+      "repeat_delay_minutes": 1440
     },
     "heartsaver-first-aid-cpr-aed": {
-      "course_ids": ["209809", "329495"],
-      "repeat_delay_minutes": 1440,
-      "retain_barnacle_offers": true
+      "course_ids": [
+        "209809",
+        "329495"
+      ],
+      "repeat_delay_minutes": 1440
     },
     "heartsaver-pediatric-first-aid-cpr-aed": {
-      "course_ids": ["351632", "251545"],
-      "repeat_delay_minutes": 1440,
-      "retain_barnacle_offers": true
+      "course_ids": [
+        "351632",
+        "251545"
+      ],
+      "repeat_delay_minutes": 1440
     }
   },
   "exact_courses": {
     "463743": {
       "label": "HSI Adult-only CPR",
-      "repeat_delay_minutes": 1440,
-      "retain_barnacle_offers": true
+      "repeat_delay_minutes": 1440
     }
-  }
+  },
+  "barnacle_course_pairs": [
+    [
+      "209806",
+      "210549"
+    ],
+    [
+      "359474",
+      "210549"
+    ],
+    [
+      "344085",
+      "209808"
+    ],
+    [
+      "209809",
+      "329495"
+    ],
+    [
+      "351632",
+      "251545"
+    ]
+  ]
 }

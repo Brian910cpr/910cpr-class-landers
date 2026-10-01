@@ -1,7 +1,7 @@
 import unittest
 
 from scripts.anchor_state import promote_seated_sessions
-from scripts.apply_anchor_policy import apply_selector_policy, consolidate_node
+from scripts.apply_anchor_policy import apply_selector_policy, consolidate_node, production_anchor_policy
 from scripts.apply_anchor_seat_overrides import apply as apply_overrides
 
 
@@ -156,51 +156,12 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
         starts = [slot["startTime"] for day in result["dates"] for slot in day["startTimes"]]
         self.assertEqual(starts, ["15:30"])
 
-    def test_bls_family_suppresses_initial_and_renewal_for_eight_hours_without_barnacles(self):
-        anchor_session = {
-            **self.sessions[0],
-            "start_at": "2026-08-05T10:45:00-04:00",
-            "end_at": "2026-08-05T12:45:00-04:00",
-        }
-        anchors = promote_seated_sessions([anchor_session])
-        candidates = (
-            ("01:00", "209806", "BLS Initial"),
-            ("08:45", "209806", "BLS Initial"),
-            ("10:45", "359474", "BLS Renewal"),
-            ("12:45", "359474", "BLS Renewal"),
-            ("13:15", "210549", "HeartCode BLS"),
-            ("19:00", "209806", "BLS Initial"),
-        )
-        slots = []
-        for clock, cid, name in candidates:
-            url = anchor_session["registration_url"] if clock == "10:45" else f"https://example.test/{clock}"
-            offer = {
-                "date": "2026-08-05",
-                "displayDate": "Wednesday",
-                "startTime": clock,
-                "displayStartTime": clock,
-                "courseId": cid,
-                "courseName": name,
-                "appointmentUrl": url,
-            }
-            slots.append({"startTime": clock, "displayStartTime": clock, "courses": [offer]})
-        payload = {"dates": [{"date": "2026-08-05", "displayDate": "Wednesday", "startTimes": slots}], "counts": {}}
-        policy = {
-            "families": {
-                "aha-bls-in-person": {
-                    "course_ids": ["209806", "359474"],
-                    "repeat_delay_minutes": 480,
-                    "retain_barnacle_offers": False,
-                }
-            }
-        }
+    def test_barnacle_retention_is_not_configurable(self):
+        policy = production_anchor_policy()
+        self.assertNotIn("retain_barnacle_offers", policy)
+        self.assertTrue(all("retain_barnacle_offers" not in family for family in policy.get("families", {}).values()))
+        self.assertTrue(all("retain_barnacle_offers" not in exact for exact in policy.get("exact_courses", {}).values()))
 
-        result = apply_selector_policy(payload, anchors, policy)
-        rendered = [course for day in result["dates"] for slot in day["startTimes"] for course in slot["courses"]]
-        starts = {item["startTime"] for item in rendered}
-        self.assertEqual(starts, {"01:00", "10:45", "13:15", "19:00"})
-        self.assertEqual(sum(item.get("schedule_role") == "anchor" for item in rendered), 1)
-        self.assertNotIn("barnacle", {item.get("schedule_role") for item in rendered})
 
     def test_daily_stack_keeps_each_unpaid_course_only_directly_before_and_after_anchor(self):
         anchor_session = self.sessions[0]
@@ -301,6 +262,51 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
         paid = next(item for item in rendered if item["courseId"] == "359474")
         self.assertEqual("anchor", paid.get("schedule_role"))
         self.assertTrue(all(item.get("schedule_role") != "barnacle" for item in rendered if item is not paid))
+
+
+    def test_production_policy_includes_approved_aha_barnacle_pairs(self):
+        policy = production_anchor_policy()
+        pairs = {tuple(pair) for pair in policy.get("barnacle_course_pairs", [])}
+        self.assertIn(("209806", "210549"), pairs)
+        self.assertIn(("359474", "210549"), pairs)
+        self.assertIn(("344085", "209808"), pairs)
+        self.assertIn(("209809", "329495"), pairs)
+        self.assertIn(("351632", "251545"), pairs)
+
+    def test_bls_heartcode_barnacles_only_touch_anchor_boundaries(self):
+        anchor_session = {
+            **self.sessions[0],
+            "course_id": "359474",
+            "start_at": "2026-08-05T09:30:00-04:00",
+            "end_at": "2026-08-05T11:30:00-04:00",
+            "location_display": ":: Wilmington; Shipyard Blvd - B",
+            "lead_instructor_name": "B. Ennis",
+        }
+        anchors = promote_seated_sessions([anchor_session])
+        slots = []
+        for clock, end_clock in (("08:30","09:30"),("09:30","10:30"),("11:30","12:30"),("12:30","13:30")):
+            offer = {
+                "date":"2026-08-05","displayDate":"Wednesday","startTime":clock,
+                "displayStartTime":clock,"courseId":"210549","courseName":"HeartCode BLS",
+                "durationMinutes":60,"schedulerConsumptionEnd":end_clock,
+                "location":":: Wilmington; Shipyard Blvd - B","instructor":"B. Ennis",
+                "appointmentUrl":f"https://example.test/{clock}",
+            }
+            slots.append({"startTime":clock,"displayStartTime":clock,"courses":[offer]})
+        paid = {
+            "date":"2026-08-05","displayDate":"Wednesday","startTime":"09:30",
+            "displayStartTime":"09:30","courseId":"359474","courseName":"BLS Renewal",
+            "location":":: Wilmington; Shipyard Blvd - B","instructor":"B. Ennis",
+            "appointmentUrl":anchor_session["registration_url"],"offerType":"seated_class",
+        }
+        slots.append({"startTime":"09:30","displayStartTime":"09:30","courses":[paid]})
+        payload={"dates":[{"date":"2026-08-05","displayDate":"Wednesday","startTimes":slots}],"counts":{}}
+        result=apply_selector_policy(payload,anchors,production_anchor_policy())
+        rendered=[c for d in result["dates"] for s in d["startTimes"] for c in s["courses"]]
+        barnacles=[c for c in rendered if c.get("schedule_role")=="barnacle"]
+        self.assertEqual({c["startTime"] for c in barnacles},{"08:30","11:30"})
+        self.assertEqual({c["barnacle_direction"] for c in barnacles},{"pre","post"})
+        self.assertTrue(all(c["attached_to_session_id"]==anchor_session["session_id"] for c in barnacles))
 
 
 

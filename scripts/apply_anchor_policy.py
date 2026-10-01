@@ -231,18 +231,6 @@ def _anchor_for_offer(offer: dict[str, Any], anchors: list[dict[str, Any]]) -> d
     return None
 
 
-def retain_barnacle_offers(course_id_value: str, policy: dict[str, Any]) -> bool:
-    """Return whether a repeat scope may expose its nearest suppressed offers."""
-    cid = text(course_id_value)
-    exact = policy.get("exact_courses", {}).get(cid, {})
-    if "retain_barnacle_offers" in exact:
-        return bool(exact["retain_barnacle_offers"])
-    for family in policy.get("families", {}).values():
-        if cid in {text(item) for item in family.get("course_ids", [])}:
-            return bool(family.get("retain_barnacle_offers", True))
-    return bool(policy.get("retain_barnacle_offers", True))
-
-
 def _offer_end(offer: dict[str, Any], start: datetime) -> datetime:
     explicit = text(offer.get("end_at") or offer.get("end") or offer.get("endsAt"))
     if explicit and (parsed := dt(explicit)):
@@ -451,8 +439,6 @@ def apply_selector_policy(payload: dict[str, Any], anchors: list[dict[str, Any]]
                 retained.append(offer)
                 continue
             suppressed += 1
-            if not retain_barnacle_offers(cid, policy):
-                continue
             for anchor in containing:
                 astart = dt(anchor.get("start_at"))
                 if not astart or start == astart:
@@ -518,13 +504,26 @@ def production_anchor_policy() -> dict[str, Any]:
     rules = load(ROOT / "data/inventory/course_consumption_rules.json")["rules"]
     # Reuse the reviewed course-consumption compatibility map; do not invent a
     # second course catalog or treat physical proximity as compatibility.
-    policy["barnacle_course_pairs"] = [
+    derived_pairs = [
         [text(anchor["course_id"]), text(candidate["course_id"])]
         for anchor in rules for candidate in rules
         if candidate.get("can_ride_existing_momentum") is True
         and anchor.get("occupancy_pool") in candidate.get("compatible_with", [])
         and candidate.get("occupancy_pool") in anchor.get("compatible_with", [])
     ]
+    configured_pairs = [
+        [text(pair[0]), text(pair[1])]
+        for pair in policy.get("barnacle_course_pairs", [])
+        if isinstance(pair, list) and len(pair) == 2
+    ]
+    seen = set()
+    policy["barnacle_course_pairs"] = []
+    for pair in [*configured_pairs, *derived_pairs]:
+        key = tuple(pair)
+        if key in seen:
+            continue
+        seen.add(key)
+        policy["barnacle_course_pairs"].append(pair)
     return policy
 
 
