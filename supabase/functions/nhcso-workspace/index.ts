@@ -725,9 +725,43 @@ Deno.serve(async (req) => {
     }
     if (action === "list_classes") {
       await settleEligibleClasses();
-      const { data, error } = await admin.from("nhcso_classes").select("class_number,course,class_date,start_time,location,lead_instructor,status,updated_at").order("class_date", { ascending: false }).order("start_time", { ascending: false }).limit(250);
+      const { data, error } = await admin.from("nhcso_classes")
+        .select("class_number,course,class_date,start_time,location,lead_instructor,status,updated_at")
+        .order("class_date", { ascending: false }).order("start_time", { ascending: false }).limit(250);
       if (error) throw error;
-      return json(req, { ok: true, classes: data || [] });
+      const classes = data || [];
+      const classNumbers = classes.map((row) => clean(row.class_number)).filter(Boolean);
+      if (!classNumbers.length) return json(req, { ok: true, classes });
+
+      const [{ data: students, error: studentError }, { data: documents, error: documentError }] = await Promise.all([
+        admin.from("nhcso_students").select("class_number,status,ecard_number").in("class_number", classNumbers).limit(10000),
+        admin.from("nhcso_documents").select("class_number").in("class_number", classNumbers).limit(10000),
+      ]);
+      if (studentError) throw studentError;
+      if (documentError) throw documentError;
+
+      const summary = new Map<string, { active_count: number; inactive_count: number; ecard_count: number; document_count: number }>();
+      for (const classNumber of classNumbers) summary.set(classNumber, { active_count: 0, inactive_count: 0, ecard_count: 0, document_count: 0 });
+      for (const student of students || []) {
+        const classNumber = clean(student.class_number);
+        const bucket = summary.get(classNumber);
+        if (!bucket) continue;
+        if (clean(student.status || "Active") === "Active") {
+          bucket.active_count++;
+          if (clean(student.ecard_number)) bucket.ecard_count++;
+        } else {
+          bucket.inactive_count++;
+        }
+      }
+      for (const document of documents || []) {
+        const bucket = summary.get(clean(document.class_number));
+        if (bucket) bucket.document_count++;
+      }
+
+      return json(req, {
+        ok: true,
+        classes: classes.map((row) => ({ ...row, ...(summary.get(clean(row.class_number)) || { active_count: 0, inactive_count: 0, ecard_count: 0, document_count: 0 }) })),
+      });
     }
     if (action === "delete_class") {
       const classNumber = clean(body.class_number);
