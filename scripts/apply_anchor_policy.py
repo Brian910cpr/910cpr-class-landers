@@ -231,18 +231,6 @@ def _anchor_for_offer(offer: dict[str, Any], anchors: list[dict[str, Any]]) -> d
     return None
 
 
-def retain_barnacle_offers(course_id_value: str, policy: dict[str, Any]) -> bool:
-    """Return whether a repeat scope may expose its nearest suppressed offers."""
-    cid = text(course_id_value)
-    exact = policy.get("exact_courses", {}).get(cid, {})
-    if "retain_barnacle_offers" in exact:
-        return bool(exact["retain_barnacle_offers"])
-    for family in policy.get("families", {}).values():
-        if cid in {text(item) for item in family.get("course_ids", [])}:
-            return bool(family.get("retain_barnacle_offers", True))
-    return bool(policy.get("retain_barnacle_offers", True))
-
-
 def _offer_end(offer: dict[str, Any], start: datetime) -> datetime:
     explicit = text(offer.get("end_at") or offer.get("end") or offer.get("endsAt"))
     if explicit and (parsed := dt(explicit)):
@@ -451,8 +439,6 @@ def apply_selector_policy(payload: dict[str, Any], anchors: list[dict[str, Any]]
                 retained.append(offer)
                 continue
             suppressed += 1
-            if not retain_barnacle_offers(cid, policy):
-                continue
             for anchor in containing:
                 astart = dt(anchor.get("start_at"))
                 if not astart or start == astart:
