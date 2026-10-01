@@ -123,6 +123,10 @@ class AnchorStateTests(unittest.TestCase):
         policy = json.loads(policy_path.read_text(encoding="utf-8"))
         self.assertEqual(policy["mode"], "daily_anchor_stack_v1")
         self.assertFalse(policy["one_course_type_per_calendar_day"])
+        self.assertTrue(
+            policy["compact_paid_days"],
+            "Once a real seated/committed class exists on a day, public choices must compact into nearest barnacles around planted seats instead of exposing scattered gaps",
+        )
         self.assertEqual(0, policy["default_repeat_delay_minutes"])
         self.assertTrue(policy["retain_barnacle_offers"])
         self.assertEqual(policy["open_day_excluded_families"], ["ACLS", "PALS"])
