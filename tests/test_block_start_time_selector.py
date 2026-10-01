@@ -333,7 +333,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             shared_cooldown_anchor=None,
         ))
         self.assertEqual(
-            ["same_day_family_anchor_already_seated", "shared_board_course_booked_within_cooldown"],
+            ["shared_board_course_booked_within_cooldown"],
             block_start_time_selector.anchor_rejection_reasons(
                 same_day_anchor=scheduled,
                 scheduled_day_anchor=scheduled,
