@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-01T16:35:50.038200-04:00",
+  "generated_at": "2026-10-01T16:42:44.629468-04:00",
   "source": "enrollware_ical",
   "ical_events_read": 262,
   "public_sessions_created": 262,
@@ -858,15 +858,6 @@
       "source_end": "2026-09-27T18:30:00-04:00",
       "end_at": "2026-09-27T19:30:00-04:00",
       "occupied_minutes": 60,
-      "rule_source": "data/inventory/course_consumption_rules.json"
-    },
-    {
-      "session_id": "14495100",
-      "course_id": "252737",
-      "start_at": "2026-10-02T08:45:00-04:00",
-      "source_end": "2026-10-02T08:45:00-04:00",
-      "end_at": "2026-10-02T10:45:00-04:00",
-      "occupied_minutes": 120,
       "rule_source": "data/inventory/course_consumption_rules.json"
     },
     {
