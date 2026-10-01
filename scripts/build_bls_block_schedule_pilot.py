@@ -1339,7 +1339,7 @@ def render_html(payload: dict[str, Any]) -> str:
   <meta name="description" content="{meta_description}">
   <link rel="canonical" href="{canonical_url}">
   <link rel="stylesheet" href="/assets/interaction-motion.css">
-  <link rel="stylesheet" href="/assets/calendar-time-filters.css?v=20260930.2">
+  <link rel="stylesheet" href="/assets/calendar-time-filters.css?v=20261001.1">
   <style>{css()}</style>
   {commerce_schema_html}
   {GTM_HEAD_SNIPPET}
@@ -1414,7 +1414,7 @@ def render_html(payload: dict[str, Any]) -> str:
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20261001-reconciliation-1"></script>
-  <script src="/assets/calendar-time-filters.js?v=20260930.2"></script>
+  <script src="/assets/calendar-time-filters.js?v=20261001.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
     const availabilityUrl = {availability_url_json};
