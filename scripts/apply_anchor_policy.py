@@ -563,7 +563,9 @@ def finalize_selector_payload(payload: dict[str, Any], sessions: list[dict[str, 
             reason = "RECONCILIATION_REQUIRED" if item_date(item) in blocked_dates else "ORPHAN_SYNTHETIC_OFFER"
             rejected.append({**item, "reasons": [reason]})
     payload["reconciliationIssues"] = issues
-    valid_until = datetime.now(timezone.utc) + timedelta(minutes=20)
+    # Cover one missed 30-minute publication plus build/deploy and queue time.
+    # Source-specific freshness caps below remain independent and enforced.
+    valid_until = datetime.now(timezone.utc) + timedelta(minutes=90)
     for item in retained:
         expiry = valid_until
         if item.get("offerType") != "seated_class":
