@@ -1,0 +1,261 @@
+{
+  "note": "Current stale sources cannot prove live openings. Frozen replay is structural evidence only; no public offers published.",
+  "summaries": [
+    {
+      "date": "2026-10-02",
+      "mode": "current",
+      "referenceTime": "2026-10-02T04:43:21.459Z",
+      "inputs": {
+        "scheduleGeneratedAt": "2026-10-02T00:53:37.749257+00:00",
+        "scheduleSessions": 29,
+        "availabilityGeneratedAt": "2026-10-02T00:53:38.786476+00:00",
+        "calendarEvents": 175
+      },
+      "occupied": 6,
+      "blocks": 1,
+      "edges": 0,
+      "availabilityWindows": 0,
+      "candidates": 0,
+      "acceptedDisplaySuggestions": 0,
+      "rejected": 0,
+      "reasons": {},
+      "diagnostics": [
+        {
+          "code": "schedule_source_stale_or_failed",
+          "instructor": "unknown"
+        },
+        {
+          "code": "availability_source_stale_or_failed",
+          "instructor": "brian",
+          "sourceId": "brian_do_not_schedule"
+        },
+        {
+          "code": "availability_source_stale_or_failed",
+          "instructor": "amy",
+          "sourceId": "amy_availability"
+        },
+        {
+          "code": "availability_source_stale_or_failed",
+          "instructor": "nick",
+          "sourceId": "nick_availability"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-02",
+      "mode": "frozen_source_replay",
+      "referenceTime": "2026-10-02T00:58:38.786Z",
+      "inputs": {
+        "scheduleGeneratedAt": "2026-10-02T00:53:37.749257+00:00",
+        "scheduleSessions": 29,
+        "availabilityGeneratedAt": "2026-10-02T00:53:38.786476+00:00",
+        "calendarEvents": 175
+      },
+      "occupied": 6,
+      "blocks": 1,
+      "edges": 2,
+      "availabilityWindows": 1,
+      "candidates": 12,
+      "acceptedDisplaySuggestions": 0,
+      "rejected": 12,
+      "reasons": {
+        "lead_time": 12,
+        "unresolved_course_duration": 6,
+        "outside_short_skills_rule": 6,
+        "occupied_or_travel": 9
+      },
+      "diagnostics": []
+    },
+    {
+      "date": "2026-10-03",
+      "mode": "current",
+      "referenceTime": "2026-10-02T04:43:21.486Z",
+      "inputs": {
+        "scheduleGeneratedAt": "2026-10-02T00:53:37.749257+00:00",
+        "scheduleSessions": 29,
+        "availabilityGeneratedAt": "2026-10-02T00:53:38.786476+00:00",
+        "calendarEvents": 175
+      },
+      "occupied": 5,
+      "blocks": 1,
+      "edges": 0,
+      "availabilityWindows": 0,
+      "candidates": 0,
+      "acceptedDisplaySuggestions": 0,
+      "rejected": 0,
+      "reasons": {},
+      "diagnostics": [
+        {
+          "code": "schedule_source_stale_or_failed",
+          "instructor": "unknown"
+        },
+        {
+          "code": "availability_source_stale_or_failed",
+          "instructor": "brian",
+          "sourceId": "brian_do_not_schedule"
+        },
+        {
+          "code": "availability_source_stale_or_failed",
+          "instructor": "amy",
+          "sourceId": "amy_availability"
+        },
+        {
+          "code": "availability_source_stale_or_failed",
+          "instructor": "nick",
+          "sourceId": "nick_availability"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-03",
+      "mode": "frozen_source_replay",
+      "referenceTime": "2026-10-02T00:58:38.786Z",
+      "inputs": {
+        "scheduleGeneratedAt": "2026-10-02T00:53:37.749257+00:00",
+        "scheduleSessions": 29,
+        "availabilityGeneratedAt": "2026-10-02T00:53:38.786476+00:00",
+        "calendarEvents": 175
+      },
+      "occupied": 5,
+      "blocks": 1,
+      "edges": 2,
+      "availabilityWindows": 1,
+      "candidates": 12,
+      "acceptedDisplaySuggestions": 3,
+      "rejected": 9,
+      "reasons": {
+        "occupied_or_travel": 6,
+        "unresolved_course_duration": 6,
+        "outside_short_skills_rule": 6
+      },
+      "diagnostics": []
+    },
+    {
+      "date": "2026-10-05",
+      "mode": "current",
+      "referenceTime": "2026-10-02T04:43:21.489Z",
+      "inputs": {
+        "scheduleGeneratedAt": "2026-10-02T00:53:37.749257+00:00",
+        "scheduleSessions": 29,
+        "availabilityGeneratedAt": "2026-10-02T00:53:38.786476+00:00",
+        "calendarEvents": 175
+      },
+      "occupied": 7,
+      "blocks": 0,
+      "edges": 0,
+      "availabilityWindows": 0,
+      "candidates": 0,
+      "acceptedDisplaySuggestions": 0,
+      "rejected": 0,
+      "reasons": {},
+      "diagnostics": [
+        {
+          "code": "schedule_source_stale_or_failed",
+          "instructor": "unknown"
+        },
+        {
+          "code": "availability_source_stale_or_failed",
+          "instructor": "brian",
+          "sourceId": "brian_do_not_schedule"
+        },
+        {
+          "code": "availability_source_stale_or_failed",
+          "instructor": "amy",
+          "sourceId": "amy_availability"
+        },
+        {
+          "code": "availability_source_stale_or_failed",
+          "instructor": "nick",
+          "sourceId": "nick_availability"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-05",
+      "mode": "frozen_source_replay",
+      "referenceTime": "2026-10-02T00:58:38.786Z",
+      "inputs": {
+        "scheduleGeneratedAt": "2026-10-02T00:53:37.749257+00:00",
+        "scheduleSessions": 29,
+        "availabilityGeneratedAt": "2026-10-02T00:53:38.786476+00:00",
+        "calendarEvents": 175
+      },
+      "occupied": 7,
+      "blocks": 0,
+      "edges": 0,
+      "availabilityWindows": 1,
+      "candidates": 15,
+      "acceptedDisplaySuggestions": 9,
+      "rejected": 6,
+      "reasons": {
+        "unresolved_course_duration": 6,
+        "outside_short_skills_rule": 6
+      },
+      "diagnostics": []
+    },
+    {
+      "date": "2026-10-12",
+      "mode": "current",
+      "referenceTime": "2026-10-02T04:43:21.492Z",
+      "inputs": {
+        "scheduleGeneratedAt": "2026-10-02T00:53:37.749257+00:00",
+        "scheduleSessions": 29,
+        "availabilityGeneratedAt": "2026-10-02T00:53:38.786476+00:00",
+        "calendarEvents": 175
+      },
+      "occupied": 8,
+      "blocks": 3,
+      "edges": 0,
+      "availabilityWindows": 0,
+      "candidates": 0,
+      "acceptedDisplaySuggestions": 0,
+      "rejected": 0,
+      "reasons": {},
+      "diagnostics": [
+        {
+          "code": "schedule_source_stale_or_failed",
+          "instructor": "unknown"
+        },
+        {
+          "code": "availability_source_stale_or_failed",
+          "instructor": "brian",
+          "sourceId": "brian_do_not_schedule"
+        },
+        {
+          "code": "availability_source_stale_or_failed",
+          "instructor": "amy",
+          "sourceId": "amy_availability"
+        },
+        {
+          "code": "availability_source_stale_or_failed",
+          "instructor": "nick",
+          "sourceId": "nick_availability"
+        }
+      ]
+    },
+    {
+      "date": "2026-10-12",
+      "mode": "frozen_source_replay",
+      "referenceTime": "2026-10-02T00:58:38.786Z",
+      "inputs": {
+        "scheduleGeneratedAt": "2026-10-02T00:53:37.749257+00:00",
+        "scheduleSessions": 29,
+        "availabilityGeneratedAt": "2026-10-02T00:53:38.786476+00:00",
+        "calendarEvents": 175
+      },
+      "occupied": 8,
+      "blocks": 3,
+      "edges": 2,
+      "availabilityWindows": 1,
+      "candidates": 12,
+      "acceptedDisplaySuggestions": 5,
+      "rejected": 7,
+      "reasons": {
+        "unresolved_course_duration": 6,
+        "outside_short_skills_rule": 6,
+        "occupied_or_travel": 10
+      },
+      "diagnostics": []
+    }
+  ]
+}
