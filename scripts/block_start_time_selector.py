@@ -20,6 +20,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts import generate_dynamic_offers
+from scripts import public_block_edges
 from scripts.anchor_state import anchor_promotion_reason
 from scripts.apply_anchor_policy import sessions_with_canonical_demand, resolve_selector_payload
 from scripts.canonical_scheduling_demand import load_publication_demand
@@ -609,7 +610,10 @@ def occupancy_duration_overrides(payload: Any, course_rules: dict[str, dict[str,
             continue
         canonical_end = parse_dt(session.get("consumption_end_at"))
         minimum_end = start + timedelta(minutes=int(rule["scheduler_consumption_minutes"]))
-        required_end = max(value for value in (end, canonical_end, minimum_end) if value is not None)
+        instruction_end = end
+        if end and end > start and not session.get("inferred_scheduler_consumption_minutes"):
+            instruction_end = end + timedelta(minutes=int(rule.get("cleanup_buffer_minutes") or 0))
+        required_end = max(value for value in (instruction_end, canonical_end, minimum_end) if value is not None)
         if end and end >= required_end:
             continue
         overrides[(start.isoformat(), course_id)] = {
@@ -722,6 +726,17 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "source_file": "canonical_class_sessions",
             "source_event_id": session.get("canonical_session_id"),
         })
+    for block in sessions_current + schedule_future + canonical:
+        block["is_training"] = True
+        matches = [row for payload in (loaded.get("sessions_current"), loaded.get("schedule_future"), loaded.get("canonical_demand"))
+                   for row in (payload or {}).get("sessions", [])
+                   if parse_dt(row.get("start_at")) == block.get("start")
+                   and clean_text(row.get("course_name")) == clean_text(block.get("course_title"))]
+        if matches:
+            block["course_id"] = session_course_id(matches[0])
+            block["source_event_id"] = matches[0].get("session_id") or matches[0].get("canonical_session_id")
+        if not block.get("start") or not block.get("end") or block["end"] <= block["start"]:
+            raise BlockSelectorInputError("Real class occupancy has unresolved duration")
     occupancy = sessions_current + schedule_future + calendar_blocks + canonical
     for block in occupancy:
         canonical, resource, normalized = generate_dynamic_offers.normalize_location_resource(
@@ -1112,6 +1127,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     windows, availability_stats = selected_public_page_live_windows(live_availability_snapshot, loaded["location_resource_map"])
     occupancy = build_occupancy(loaded, course_rules)
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy)
+    occupied_blocks = public_block_edges.merged_blocks(occupancy)
     reference_now = selector_reference_datetime()
     anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
     same_day_anchors = seated_family_anchors(
@@ -1167,8 +1183,11 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         block_public_ok = public_location_allowed(location, public_location_policy)
         if block_public_ok:
             public_blocks_seen += 1
-        for start in candidate_starts(window_start, window_end):
-            for course in selected_courses:
+        for course in selected_courses:
+            starts = public_block_edges.plan_starts(window_start, window_end, instructor_name, location,
+                int(course["scheduler_consumption_minutes"]), occupied_blocks, occupancy)
+            for geometry in starts:
+                start = geometry["start"]
                 course_id = str(course["course_id"])
                 course_family = str(course.get("course_family") or course.get("family") or "")
                 required_duration_minutes = int(course["duration_minutes"])
@@ -1197,7 +1216,11 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "open_window_start": window_start.strftime("%H:%M"),
                     "open_window_end": window_end.strftime("%H:%M"),
                 }
-                reasons: list[str] = []
+                reasons: list[str] = list(geometry.get("geometryReasons", []))
+                if start < window_start:
+                    reasons.append("outside_explicit_availability")
+                if geometry["mode"] == "barnacle" and course.get("edge_eligible") is not True:
+                    reasons.append("course_not_edge_eligible")
                 if course.get("appointment_eligible") is not True or course.get("appointment_allowed") is not True:
                     reasons.append("course_not_appointment_eligible")
                 if allowed_families and course_family not in allowed_families:
@@ -1294,6 +1317,11 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "matchedContainerId": container_id,
                     "appointmentUrl": url,
                     "publicSelectable": True,
+                    "offerKind": course.get("edge_offer_kind"),
+                    "schedule_role": "barnacle" if geometry["mode"] == "barnacle" else "free_day",
+                    "scheduleRole": "barnacle" if geometry["mode"] == "barnacle" else "free_day",
+                    "blockEdge": geometry.get("edge"),
+                    "freeInterval": geometry.get("freeInterval"),
                 })
 
     offers.sort(key=lambda item: (str(item["date"]), str(item["startTime"]), str(item["courseId"])))
@@ -1408,6 +1436,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         "offers": offers,
         "rejectedCourseStartTimes": rejections,
         "reconciliationIssues": hard_issues,
+        "occupiedBlockEdges": {"schemaVersion": public_block_edges.VERSION, "blocks": public_block_edges.serialize_blocks(occupied_blocks)},
+        "fullFamilyGroups": {cid: consolidation_groups.get(cid, cid) for cid, rule in course_rules.items() if rule.get("edge_offer_kind") == "full"},
         "rejectionReasonCounts": dict(rejected_counts.most_common()),
     }
     return resolve_selector_payload(payload)

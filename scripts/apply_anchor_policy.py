@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+from scripts import public_block_edges
 from scripts.anchor_state import ANCHOR_SYMBOL, in_repeat_bubble, promote_seated_sessions, repeat_scope_key, same_course_anchor
 from scripts.canonical_scheduling_demand import resolve_canonical_demand, exclude_non_session_sources, reconciliation_issues, load_publication_demand
 from scripts.fetch_canonical_scheduling_demand import validate_payload
@@ -537,7 +538,13 @@ def finalize_selector_payload(payload: dict[str, Any], sessions: list[dict[str, 
     resolved, _ = resolve_canonical_demand(sessions, rows)
     anchors = promote_seated_sessions(resolved)
     original = [item for day in payload.get("dates", []) for slot in day.get("startTimes", []) for item in slot.get("courses", [])]
-    payload = apply_selector_policy(deepcopy(payload), anchors, policy)
+    if payload.get("occupiedBlockEdges", {}).get("schemaVersion") == public_block_edges.VERSION:
+        retained_edges = public_block_edges.retain_validated_roles(payload, payload.get("fullFamilyGroups", {}))
+        payload = _rebuild_dates(deepcopy(payload), retained_edges)
+        payload["anchor_policy"] = {"version": public_block_edges.VERSION, "one_course_type_per_calendar_day": False,
+            "barnacle_positions": sum(x.get("schedule_role") == "barnacle" for x in retained_edges)}
+    else:
+        payload = apply_selector_policy(deepcopy(payload), anchors, policy)
     blocked_dates = {item["date"] for item in issues if item["blocksSynthesis"]}
     occupied_dates = {item_date(a) for a in anchors}
     occupied_dates.update(item_date(row) for row in rows
