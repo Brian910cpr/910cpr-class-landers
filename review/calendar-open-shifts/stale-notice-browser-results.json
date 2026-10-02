@@ -1,0 +1,23 @@
+[
+  {
+    "state": "stale",
+    "notice": "Additional appointment times are refreshing. Scheduled classes remain available.",
+    "errors": [],
+    "dynamic_date_visible": false,
+    "real_date_visible": true
+  },
+  {
+    "state": "fresh",
+    "notice": "",
+    "errors": [],
+    "dynamic_date_visible": true,
+    "real_date_visible": true
+  },
+  {
+    "state": "failed",
+    "notice": "Current class times are temporarily unavailable. Please retry in a moment or contact 910CPR.",
+    "errors": [],
+    "dynamic_date_visible": false,
+    "real_date_visible": false
+  }
+]
