@@ -1,0 +1,197 @@
+{
+  "checked_at": "2026-10-02T11:21:37.277181+00:00",
+  "source_publication_commit": "cf1f28fa038883672b1e0961c824bbe4ba4413d4",
+  "date": "2026-10-10",
+  "timezone": "America/New_York",
+  "freshness": {
+    "bls_valid_until": "2026-10-02T12:06:03.607508+00:00",
+    "heartsaver_valid_until": "2026-10-02T12:06:41.814704+00:00"
+  },
+  "bls_customer_variants": {
+    "initial": {
+      "oct10_button_present": false,
+      "oct10_enabled": false,
+      "notice_visible": false,
+      "errors": []
+    },
+    "renewal": {
+      "oct10_button_present": false,
+      "oct10_enabled": false,
+      "notice_visible": false,
+      "errors": []
+    },
+    "skills": {
+      "oct10_button_present": false,
+      "oct10_enabled": false,
+      "notice_visible": false,
+      "errors": []
+    },
+    "all": {
+      "oct10_button_present": false,
+      "oct10_enabled": false,
+      "notice_visible": false,
+      "errors": []
+    }
+  },
+  "full_heartsaver_customer": {
+    "selected_course": "209809",
+    "oct10_start_list": "PM\n\u2605 2:00 PM",
+    "cards": "\u2605 Scheduled class\nAHA Heartsaver First Aid CPR AED\nSaturday, October 10, 2026\n2:00 PM\n:: Wilmington; Shipyard Blvd\nIN-PERSONRegister",
+    "booking_links": [
+      "https://www.910cpr.com/register/?session=lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9"
+    ]
+  },
+  "actual_oct10_classes": [
+    {
+      "session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "course_id": "209809",
+      "course_name": "AHA Heartsaver First Aid CPR AED",
+      "start_at": "2026-10-10T18:00:00+00:00",
+      "end_at": "2026-10-10T20:30:00+00:00",
+      "consumption_start_at": "2026-10-10T18:00:00+00:00",
+      "consumption_end_at": "2026-10-10T20:30:00+00:00",
+      "location_name": ":: Wilmington; Shipyard Blvd",
+      "source": "landerware_event",
+      "active_registration_count": 1,
+      "count_available": true,
+      "demand_status": "current"
+    }
+  ],
+  "oct10_anchor": [
+    {
+      "session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "course_id": "209809",
+      "start_at": "2026-10-10T18:00:00+00:00",
+      "end_at": "2026-10-10T20:30:00+00:00",
+      "location": ":: Wilmington; Shipyard Blvd",
+      "instructor": "Brian Ennis",
+      "registered_count": 1,
+      "cluster_id": "2026-10-10-::-wilmington;-shipyard-blvd-brian-ennis-1800",
+      "registration_url": "https://www.910cpr.com/register/?session=lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "schedule_role": "anchor",
+      "schedule_symbol": "\u2693",
+      "promotion_reason": "canonical_active_registration",
+      "landing_page_required": true,
+      "external_publication_eligible": true
+    }
+  ],
+  "source_business_unavailable_intervals": [
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "ADR Shift \u2014 Brian Unavailable",
+      "start": "2026-10-09T09:00:00+00:00",
+      "end": "2026-10-10T11:00:00+00:00",
+      "location": "",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Shift: ADR",
+      "start": "2026-10-09T22:00:00+00:00",
+      "end": "2026-10-10T10:00:00+00:00",
+      "location": "Riegelwood\\, NC 28456",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "ADR POST-SHIFT BUFFER \u2014 Brian Unavailable",
+      "start": "2026-10-10T10:00:00+00:00",
+      "end": "2026-10-10T11:00:00+00:00",
+      "location": "",
+      "status": "CONFIRMED"
+    }
+  ],
+  "approved_available_intervals": [
+    {
+      "date": "2026-10-10",
+      "startTime": "07:00",
+      "endTime": "00:00",
+      "sourceAvailabilityBlockId": "brian_do_not_schedule:inverse_gap:14",
+      "sourceCalendarId": "brian_do_not_schedule",
+      "reason": "approved_inverse_generated_availability_source"
+    }
+  ],
+  "oct10_in_occupied_dates": true,
+  "oct10_in_reconciliation_blocked_dates": false,
+  "oct10_reconciliation_issues": [],
+  "public_bls_oct10_offers": [],
+  "public_heartsaver_oct10_offers": [
+    {
+      "date": "2026-10-10",
+      "displayDate": "Saturday, October 10, 2026",
+      "startTimes": [
+        {
+          "startTime": "12:00",
+          "displayStartTime": "12:00 PM",
+          "courses": [
+            {
+              "courseId": "329495",
+              "courseName": "AHA Heartsaver First Aid CPR AED - Blended",
+              "courseFamily": "Heartsaver",
+              "deliveryMode": "blended",
+              "displayStartTime": "12:00 PM",
+              "durationMinutes": 120,
+              "schedulerConsumptionMinutes": 120,
+              "appointmentDayId": 260781,
+              "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260781&startTime=12%3A00%20PM&courseId=329495",
+              "location": ":: Wilmington; Shipyard Blvd",
+              "availabilityBlockId": "brian_do_not_schedule:inverse_gap:14",
+              "offerType": "dynamic_appointment",
+              "scheduleRole": "barnacle",
+              "attached_to_session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+              "instructor": "Brian Ennis",
+              "schedulerConsumptionEnd": "14:00",
+              "validUntil": "2026-10-02T12:06:41.814704+00:00",
+              "date": "2026-10-10",
+              "startTime": "12:00"
+            }
+          ]
+        },
+        {
+          "startTime": "14:00",
+          "displayStartTime": "2:00 PM",
+          "courses": [
+            {
+              "courseId": "209809",
+              "courseName": "AHA Heartsaver First Aid CPR AED",
+              "courseFamily": "Heartsaver",
+              "deliveryMode": "classroom",
+              "displayStartTime": "2:00 PM",
+              "durationMinutes": 150,
+              "schedulerConsumptionMinutes": 150,
+              "appointmentUrl": "https://www.910cpr.com/register/?session=lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+              "location": ":: Wilmington; Shipyard Blvd",
+              "availabilityBlockId": "seated:lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+              "offerType": "seated_class",
+              "scheduleRole": "anchor",
+              "session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+              "instructor": "Brian Ennis",
+              "schedulerConsumptionEnd": "16:30",
+              "validUntil": "2026-10-02T12:06:41.814704+00:00",
+              "date": "2026-10-10",
+              "startTime": "14:00"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "allowed_barnacle_course_ids_for_209809": [
+    "329495"
+  ],
+  "rejection_rule": {
+    "compatibility": "scripts/apply_anchor_policy.py:389-390 rejects anchor/course pair absent from allowed map",
+    "finalization": "scripts/apply_anchor_policy.py:555-557 removes non-real offers on occupied dates unless schedule_role=barnacle",
+    "audit_reason": "ORPHAN_SYNTHETIC_OFFER at lines563-565; individual rejected candidates omitted from public resolved feed",
+    "candidate_count_limitation": "No fresh upstream audit artifact downloaded or generator run; exact number of Oct10 pre-finalization BLS candidates unobserved."
+  }
+}
