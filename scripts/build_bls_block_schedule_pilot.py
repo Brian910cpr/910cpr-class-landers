@@ -1440,6 +1440,20 @@ def render_html(payload: dict[str, Any]) -> str:
 
     function setAvailabilityMessage(message) {{
       availabilityMessage = message || 'Checking current class times…';
+      let notice = byId('availability-notice');
+      const dates = byId('date-list');
+      if (!notice && dates) {{
+        notice = document.createElement('div');
+        notice.id = 'availability-notice';
+        notice.className = 'empty';
+        notice.setAttribute('role', 'status');
+        notice.setAttribute('aria-live', 'polite');
+        dates.parentNode.insertBefore(notice, dates);
+      }}
+      if (notice) {{
+        notice.textContent = message || '';
+        notice.hidden = !message;
+      }}
     }}
 
     function renderAvailabilityPlaceholder(message = availabilityMessage) {{
