@@ -68,6 +68,10 @@ jobs:
       - name: Test zero-duration occupancy pipeline
         run: python -m unittest tests.test_zero_duration_pipeline tests.test_enrollware_ical_import
 
+      - name: Test publication renewal margin
+        shell: pwsh
+        run: python -m unittest discover -s tests -p "test_public_refresh_renewal.py"
+
       - name: Test strict link audit fail-closed guard
         shell: pwsh
         run: python -m unittest discover -s tests -p "test_validate_sitewide_links_strict.py"
@@ -137,7 +141,9 @@ jobs:
           "previous_hash=$previousHash" >> $env:GITHUB_OUTPUT
           # Publication leases expire even when source inventory is unchanged.
           # Missing/invalid/near-expiry selectors require fresh source validation.
-          $renewBefore = [DateTimeOffset]::UtcNow.AddMinutes(10)
+          # 30-minute cadence + 15-minute build/queue/deploy budget.
+          # Renew source-validated publication; never extend an existing lease.
+          $renewBefore = [DateTimeOffset]::UtcNow.AddMinutes(45)
           $renewPublication = $false
           foreach ($pageKey in @('bls', 'heartsaver', 'acls', 'pals')) {
             try {
