@@ -1,0 +1,82 @@
+{
+  "checked_at": "2026-10-02T09:42:52.606747+00:00",
+  "generatedAt": "2026-10-02T02:24:44.800964",
+  "validUntil": "2026-10-02T07:55:07.423120+00:00",
+  "anchor_policy": {
+    "version": "daily-anchor-stack-v1",
+    "suppressed_offers": 808,
+    "barnacle_positions": 0,
+    "one_course_type_per_calendar_day": true,
+    "finalized": true,
+    "anchors_promoted": 1
+  },
+  "raw_initial_october": {
+    "dates": 19,
+    "offers": 433,
+    "real": [
+      [
+        "2026-10-02",
+        "12:45",
+        null
+      ],
+      [
+        "2026-10-12",
+        "17:00",
+        null
+      ]
+    ],
+    "dynamic_count": 431
+  },
+  "browser": {
+    "errors": [],
+    "enabled_october_dates": [
+      "Friday, October 2, 2026. Scheduled class at 12:45 PM. Available.",
+      "Monday, October 12, 2026. Scheduled class at 5:00 PM. Available."
+    ],
+    "selected_course": "BLS Provider\nInitial \u2014 In Person\n$75.00\nFull classroom BLS certification for healthcare providers and clinical students.\nRenewal \u2014 In Person\n$75.00\nRenewal path for providers who already hold current or recently expired BLS.\nBLS Skills Session Only\nIn-person Skills Session\n$55.00\nFor students who already purchased and completed the AHA online course separately.",
+    "checkboxes": [
+      {
+        "id": "compare-toggle",
+        "checked": false
+      },
+      {
+        "id": "",
+        "checked": false
+      },
+      {
+        "id": "",
+        "checked": false
+      },
+      {
+        "id": "",
+        "checked": false
+      },
+      {
+        "id": "",
+        "checked": false
+      },
+      {
+        "id": "",
+        "checked": false
+      }
+    ],
+    "smart_filter_value": [
+      {
+        "id": "calendar-time-filters-smart",
+        "value": ""
+      }
+    ],
+    "start_list": "PM\n\u2605 12:45 PM",
+    "refresh_warning_visible": false
+  },
+  "filtered_initial_october": [
+    {
+      "date": "2026-10-02",
+      "offers": 1
+    },
+    {
+      "date": "2026-10-12",
+      "offers": 1
+    }
+  ]
+}
