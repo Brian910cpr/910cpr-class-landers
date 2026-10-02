@@ -1,0 +1,84 @@
+{
+  "checked_at": "2026-10-02T05:33:25.642957+00:00",
+  "refresh_run": 36968821283,
+  "pages_run": 36969265705,
+  "production_commit": "a87a4d5d5a3b72eaabf143d8696e95b82b324625",
+  "feeds": {
+    "admin_schedule.json": {
+      "generated_at": "2026-10-02T05:26:41.455514+00:00",
+      "validUntil": null,
+      "matches_production_commit": true,
+      "sha256": "f625620d0af4eeaf5c5e20d57a8db469501543a6bfcc732f752f280cf0cb725d"
+    },
+    "admin_availability.json": {
+      "generated_at": "2026-10-02T05:26:42.203763+00:00",
+      "validUntil": null,
+      "matches_production_commit": true,
+      "sha256": "04ab885ca446e47eaa02f7b5d804852fa0a3e867ed4de3fd80e722254998b543"
+    },
+    "block-selector-availability/bls.json": {
+      "generated_at": "2026-10-02T01:26:42.312667",
+      "validUntil": "2026-10-02T06:57:01.780686+00:00",
+      "matches_production_commit": true,
+      "sha256": "f9bc912d7363e25e9908bb3b2a7d0f740805ce34703124bee44878ef74a20e8a",
+      "publication_unexpired": true
+    },
+    "block-selector-availability/heartsaver.json": {
+      "generated_at": "2026-10-02T01:26:42.312667",
+      "validUntil": "2026-10-02T06:57:45.933228+00:00",
+      "matches_production_commit": true,
+      "sha256": "a8cd65386655770e769aab0bba76ed1a4c7dfaaf0cfd3a66ecf10b52b5fa4ffc",
+      "publication_unexpired": true
+    }
+  },
+  "browser": {
+    "bls": {
+      "errors": [],
+      "refresh_warning_visible": false,
+      "load_failure_visible": false,
+      "initial_start_list": "PM\n\u2605 12:45 PM",
+      "oct5_enabled": true,
+      "oct5_start_list": "AM\n7:45 AM\n8:15 AM\n8:45 AM\n9:15 AM\n9:45 AM\n10:15 AM",
+      "oct5_booking_links": [
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260776&startTime=7%3A45+AM&courseId=209806&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-209806"
+      ]
+    },
+    "heartsaver": {
+      "errors": [],
+      "refresh_warning_visible": false,
+      "load_failure_visible": false,
+      "initial_start_list": "AM\n7:45 AM\n8:15 AM\n8:45 AM\n9:15 AM\n9:45 AM\n10:15 AM",
+      "oct5_enabled": true,
+      "oct5_start_list": "AM\n7:45 AM\n8:15 AM\n8:45 AM\n9:15 AM\n9:45 AM\n10:15 AM",
+      "oct5_booking_links": [
+        "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260776&startTime=7%3A45+AM&courseId=344085&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=heartsaver-html_id-344085"
+      ]
+    }
+  },
+  "family_friends_projection": [
+    {
+      "session_id": "14495100",
+      "start_at": "2026-10-03T13:00:00-04:00",
+      "end_at": "2026-10-03T14:45:00-04:00",
+      "course_name": "AHA Family & Friends CPR"
+    }
+  ],
+  "family_friends_reconciliation": [
+    {
+      "date": "2026-10-02",
+      "code": "STALE_ANCHOR",
+      "externalClassId": "14495100",
+      "sourceStart": "2026-10-03T13:00:00-04:00",
+      "canonicalStart": "2026-10-02T12:45:00+00:00",
+      "blocksSynthesis": true
+    },
+    {
+      "date": "2026-10-03",
+      "code": "STALE_ANCHOR",
+      "externalClassId": "14495100",
+      "sourceStart": "2026-10-03T13:00:00-04:00",
+      "canonicalStart": "2026-10-02T12:45:00+00:00",
+      "blocksSynthesis": true
+    }
+  ]
+}
