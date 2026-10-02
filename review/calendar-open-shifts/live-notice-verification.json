@@ -1,0 +1,207 @@
+{
+  "checked_at": "2026-10-02T10:19:06.798304+00:00",
+  "pages": {
+    "acls.html": {
+      "sha256": "855306821a953b36de9a1f9b68299601392316cb701b2660042f9143cac94600",
+      "warning_script_present": true,
+      "fresh_notice_hidden": true,
+      "javascript_errors": [],
+      "enabled_dates": 3,
+      "matches_production_commit": true
+    },
+    "arc.html": {
+      "sha256": "e6f5c1fc8579a25a0c752dd7b435e2aee8d2952a78c784356887e35ae005b005",
+      "warning_script_present": true,
+      "fresh_notice_hidden": true,
+      "javascript_errors": [],
+      "enabled_dates": 76,
+      "matches_production_commit": true
+    },
+    "bls.html": {
+      "sha256": "653458ac911c542ad66f66a69f3932e0c63068d3d2ca7b24cd637760c9a750d8",
+      "warning_script_present": true,
+      "fresh_notice_hidden": true,
+      "javascript_errors": [],
+      "enabled_dates": 78,
+      "matches_production_commit": true
+    },
+    "courses/uscg-first-aid-cpr-aed.html": {
+      "sha256": "bd9fbeccb52f1ef83d2c261243be02f39cffa05e5e8fe4773a5a2b27caaf253a",
+      "warning_script_present": true,
+      "fresh_notice_hidden": true,
+      "javascript_errors": [],
+      "enabled_dates": 78,
+      "matches_production_commit": true
+    },
+    "family-cpr.html": {
+      "sha256": "0c51bbe15865c2c7684620f2537c23d277df73006e98c1805f80d161c1a857f1",
+      "warning_script_present": true,
+      "fresh_notice_hidden": true,
+      "javascript_errors": [],
+      "enabled_dates": 77,
+      "matches_production_commit": true
+    },
+    "heartsaver.html": {
+      "sha256": "ec9064eb4e331e3c9720cda56b3a13fb82b084dbb4c7321d6499f515699788c4",
+      "warning_script_present": true,
+      "fresh_notice_hidden": true,
+      "javascript_errors": [],
+      "enabled_dates": 76,
+      "matches_production_commit": true
+    },
+    "hsi.html": {
+      "sha256": "5147ed287183742cff36c2e2e14a0211af7f343b869d5b676165f7f18cb71eb2",
+      "warning_script_present": true,
+      "fresh_notice_hidden": true,
+      "javascript_errors": [],
+      "enabled_dates": 76,
+      "matches_production_commit": true
+    },
+    "pals.html": {
+      "sha256": "270b9f3531a695187527db69fb06a7a87d776551e5c85bde46c613cdc40967b0",
+      "warning_script_present": true,
+      "fresh_notice_hidden": true,
+      "javascript_errors": [],
+      "enabled_dates": 3,
+      "matches_production_commit": true
+    }
+  },
+  "simulations": {
+    "fresh": {
+      "notice_visible": false,
+      "notice": "",
+      "enabled_dates": [
+        "Friday, October 2, 2026. Scheduled class at 12:45 PM. Available.",
+        "Monday, October 5, 2026. additional options at 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM. Available.",
+        "Tuesday, October 6, 2026. additional options at 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Friday, October 9, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM. Available.",
+        "Sunday, October 11, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Monday, October 12, 2026. Scheduled class at 5:00 PM. Available.",
+        "Thursday, October 15, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Friday, October 16, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM. Available.",
+        "Sunday, October 18, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM. Available.",
+        "Monday, October 19, 2026. additional options at 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Tuesday, October 20, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Friday, October 23, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Saturday, October 24, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Sunday, October 25, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Monday, October 26, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM. Available.",
+        "Wednesday, October 28, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Thursday, October 29, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Friday, October 30, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM. Available.",
+        "Saturday, October 31, 2026. additional options at 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Sunday, November 1, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Monday, November 2, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Tuesday, November 3, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Wednesday, November 4, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Thursday, November 5, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Friday, November 6, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Saturday, November 7, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Sunday, November 8, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Monday, November 9, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Tuesday, November 10, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Wednesday, November 11, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Thursday, November 12, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Friday, November 13, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Saturday, November 14, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Sunday, November 15, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Monday, November 16, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Tuesday, November 17, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Wednesday, November 18, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Thursday, November 19, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Friday, November 20, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Saturday, November 21, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Sunday, November 22, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Monday, November 23, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Tuesday, November 24, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Wednesday, November 25, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Thursday, November 26, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Friday, November 27, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Saturday, November 28, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Sunday, November 29, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Monday, November 30, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Tuesday, December 1, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Wednesday, December 2, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Thursday, December 3, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Friday, December 4, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Saturday, December 5, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Sunday, December 6, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Wednesday, December 9, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Thursday, December 10, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Friday, December 11, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Saturday, December 12, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Sunday, December 13, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Monday, December 14, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Tuesday, December 15, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Wednesday, December 16, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Thursday, December 17, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Friday, December 18, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Saturday, December 19, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Sunday, December 20, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Monday, December 21, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Tuesday, December 22, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Wednesday, December 23, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Thursday, December 24, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Friday, December 25, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Saturday, December 26, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Sunday, December 27, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 5:00 AM, 5:30 AM, 6:00 AM, 6:30 AM, 7:00 AM, 7:30 AM, 8:00 AM, 8:30 AM, 9:00 AM, 9:30 AM, 10:00 AM, 10:30 AM, 11:00 AM, 11:30 AM, 12:00 PM, 12:30 PM, 1:00 PM, 1:30 PM, 2:00 PM, 2:30 PM, 3:00 PM, 3:30 PM, 4:00 PM, 4:30 PM, 5:00 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Monday, December 28, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Tuesday, December 29, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Wednesday, December 30, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM, 4:30 AM, 7:45 AM, 8:15 AM, 8:45 AM, 9:15 AM, 9:45 AM, 10:15 AM, 10:45 AM, 11:15 AM, 11:45 AM, 12:15 PM, 12:45 PM, 5:30 PM, 6:00 PM, 6:30 PM, 7:00 PM, 7:30 PM, 8:00 PM, 8:30 PM, 9:00 PM, 9:30 PM, 10:00 PM. Available.",
+        "Thursday, December 31, 2026. additional options at 12:00 AM, 12:30 AM, 1:00 AM, 1:30 AM, 2:00 AM, 2:30 AM, 3:00 AM, 3:30 AM, 4:00 AM. Available."
+      ],
+      "retained_real_booking_links": [
+        "https://coastalcprtraining.enrollware.com/enroll?id=14501248&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-14501248",
+        "https://coastalcprtraining.enrollware.com/enroll?id=14135047&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-14135047"
+      ],
+      "javascript_errors": []
+    },
+    "stale": {
+      "notice_visible": true,
+      "notice": "Additional appointment times are refreshing. Scheduled classes remain available.",
+      "enabled_dates": [
+        "Friday, October 2, 2026. Scheduled class at 12:45 PM. Available.",
+        "Monday, October 12, 2026. Scheduled class at 5:00 PM. Available."
+      ],
+      "retained_real_booking_links": [
+        "https://coastalcprtraining.enrollware.com/enroll?id=14501248&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-14501248",
+        "https://coastalcprtraining.enrollware.com/enroll?id=14135047&utm_source=direct&utm_medium=none&utm_campaign=910cpr_registration&utm_content=bls-html_id-14135047"
+      ],
+      "javascript_errors": []
+    },
+    "failed": {
+      "notice_visible": true,
+      "notice": "Current class times are temporarily unavailable. Please retry in a moment or contact 910CPR.",
+      "enabled_dates": [],
+      "retained_real_booking_links": [],
+      "javascript_errors": []
+    }
+  },
+  "feeds": {
+    "admin_schedule.json": {
+      "generated_at": "2026-10-02T10:13:10.801763+00:00",
+      "validUntil": null,
+      "sha256": "1d47260944d3baa6256a2a079a53faa18062b9df84e2cf503eaf62ef18edcc8c",
+      "matches_production_commit": true
+    },
+    "admin_availability.json": {
+      "generated_at": "2026-10-02T10:13:12.232255+00:00",
+      "validUntil": null,
+      "sha256": "a3209c73c145536dffd7de76492d44eb7b0cdc28efeb71b43294870de6b8e08a",
+      "matches_production_commit": true
+    },
+    "block-selector-availability/bls.json": {
+      "generated_at": "2026-10-02T06:13:12.407045",
+      "validUntil": "2026-10-02T11:43:29.565835+00:00",
+      "sha256": "81aa99a32c300b64a2afcadf3380afb36305e59862217b598d8175ecc5542489",
+      "matches_production_commit": true
+    },
+    "block-selector-availability/heartsaver.json": {
+      "generated_at": "2026-10-02T06:13:12.407045",
+      "validUntil": "2026-10-02T11:44:08.291886+00:00",
+      "sha256": "05a0b3c26216c3665ed3886bad62d3af139cb0b5410244ca1cc1f8ee87a15364",
+      "matches_production_commit": true
+    }
+  },
+  "production_commit": "ee182ed47193c0f016d073f577179a4c58337e4e"
+}
