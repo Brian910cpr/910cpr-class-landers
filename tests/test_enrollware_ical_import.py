@@ -181,12 +181,12 @@ END:VCALENDAR
         self.assertEqual(session["session_id"], "13740038")
         self.assertEqual(session["course"]["course_id"], "209808")
         self.assertEqual(session["start"], "2026-07-13T15:30:00-04:00")
-        self.assertEqual(session["end"], "2026-07-13T17:30:00-04:00")
+        self.assertEqual(session["end"], "2026-07-13T16:30:00-04:00")
         self.assertEqual(
             session["timing"]["end_inference_reason"],
             "inferred_from_course_consumption_rule_for_zero_duration_ical_event",
         )
-        self.assertEqual(session["timing"]["inferred_scheduler_consumption_minutes"], 120)
+        self.assertEqual(session["timing"]["inferred_scheduler_consumption_minutes"], 60)
 
 def json_load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))

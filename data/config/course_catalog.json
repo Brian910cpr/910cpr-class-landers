@@ -76,9 +76,9 @@
       "delivery_type": "IP",
       "renewal_or_initial": "initial",
       "blended_classroom_skills": "classroom",
-      "duration_minutes": 240,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "duration_minutes": 120,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 6,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -117,7 +117,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "209818",
@@ -130,9 +131,9 @@
       "delivery_type": "IP",
       "renewal_or_initial": "renewal",
       "blended_classroom_skills": "classroom",
-      "duration_minutes": 240,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "duration_minutes": 120,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 6,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -171,7 +172,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "372258",
@@ -186,7 +188,7 @@
       "blended_classroom_skills": "blended",
       "duration_minutes": 45,
       "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 5,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -215,7 +217,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "369209",
@@ -228,9 +231,9 @@
       "delivery_type": "IP",
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "classroom",
-      "duration_minutes": 150,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "duration_minutes": 120,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 12,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -259,7 +262,8 @@
         "scheduling_rule_source": "UNKNOWN",
         "appointment_container_source": "UNKNOWN",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "410694",
@@ -273,8 +277,8 @@
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "blended",
       "duration_minutes": 45,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 2,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -303,7 +307,8 @@
         "scheduling_rule_source": "UNKNOWN",
         "appointment_container_source": "UNKNOWN",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "444919",
@@ -360,9 +365,9 @@
       "delivery_type": "IP",
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "classroom",
-      "duration_minutes": 150,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "duration_minutes": 120,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 6,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -405,7 +410,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "248287",
@@ -419,8 +425,8 @@
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "blended",
       "duration_minutes": 45,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 6,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -462,7 +468,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "209806",
@@ -476,8 +483,8 @@
       "renewal_or_initial": "initial",
       "blended_classroom_skills": "classroom",
       "duration_minutes": 120,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 6,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -516,7 +523,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "359474",
@@ -530,8 +538,8 @@
       "renewal_or_initial": "renewal",
       "blended_classroom_skills": "classroom",
       "duration_minutes": 120,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 6,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -572,7 +580,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "210549",
@@ -585,9 +594,9 @@
       "delivery_type": "BL",
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "blended",
-      "duration_minutes": 60,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "duration_minutes": 45,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 1,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -629,7 +638,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "440431",
@@ -642,9 +652,9 @@
       "delivery_type": "BL",
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "blended",
-      "duration_minutes": 150,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "duration_minutes": 45,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 18,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -673,7 +683,8 @@
         "scheduling_rule_source": "UNKNOWN",
         "appointment_container_source": "UNKNOWN",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "374378",
@@ -775,8 +786,8 @@
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "blended",
       "duration_minutes": 45,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 2,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -805,7 +816,8 @@
         "scheduling_rule_source": "UNKNOWN",
         "appointment_container_source": "UNKNOWN",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "463743",
@@ -818,9 +830,9 @@
       "delivery_type": "IP",
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "classroom",
-      "duration_minutes": 45,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "duration_minutes": 120,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 2,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -862,7 +874,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "445670",
@@ -876,8 +889,8 @@
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "blended",
       "duration_minutes": 45,
-      "setup_buffer_minutes": 15,
-      "cleanup_buffer_minutes": 30,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 12,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -911,7 +924,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "UNKNOWN",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "448630",
@@ -969,8 +983,8 @@
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "blended",
       "duration_minutes": 45,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 2,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -999,7 +1013,8 @@
         "scheduling_rule_source": "UNKNOWN",
         "appointment_container_source": "UNKNOWN",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "344085",
@@ -1012,9 +1027,9 @@
       "delivery_type": "IP",
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "classroom",
-      "duration_minutes": 90,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "duration_minutes": 120,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 10,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -1056,7 +1071,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "252737",
@@ -1070,8 +1086,8 @@
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "classroom",
       "duration_minutes": 120,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 10,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -1114,7 +1130,8 @@
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "duration_evidence": "Existing local Enrollware iCal Family & Friends sessions span 60, 90, and 120 minutes; scheduler rule uses conservative 120-minute operational reservation block.",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "209808",
@@ -1128,8 +1145,8 @@
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "blended",
       "duration_minutes": 45,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 2,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -1158,7 +1175,8 @@
         "scheduling_rule_source": "UNKNOWN",
         "appointment_container_source": "UNKNOWN",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "209809",
@@ -1171,9 +1189,9 @@
       "delivery_type": "IP",
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "classroom",
-      "duration_minutes": 180,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "duration_minutes": 120,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 12,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -1215,7 +1233,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "329495",
@@ -1229,8 +1248,8 @@
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "blended",
       "duration_minutes": 45,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 2,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -1259,7 +1278,8 @@
         "scheduling_rule_source": "UNKNOWN",
         "appointment_container_source": "UNKNOWN",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "351632",
@@ -1272,9 +1292,9 @@
       "delivery_type": "IP",
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "classroom",
-      "duration_minutes": 180,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "duration_minutes": 120,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 12,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -1303,7 +1323,8 @@
         "scheduling_rule_source": "UNKNOWN",
         "appointment_container_source": "UNKNOWN",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "251545",
@@ -1317,8 +1338,8 @@
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "blended",
       "duration_minutes": 45,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 2,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -1360,7 +1381,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "209812",
@@ -1427,9 +1449,9 @@
       "delivery_type": "IP",
       "renewal_or_initial": "initial",
       "blended_classroom_skills": "classroom",
-      "duration_minutes": 240,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "duration_minutes": 120,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 6,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -1468,7 +1490,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "251496",
@@ -1481,9 +1504,9 @@
       "delivery_type": "IP",
       "renewal_or_initial": "renewal",
       "blended_classroom_skills": "classroom",
-      "duration_minutes": 240,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "duration_minutes": 120,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 30,
       "default_capacity": 6,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -1522,7 +1545,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     },
     {
       "course_id": "253768",
@@ -1590,8 +1614,8 @@
       "renewal_or_initial": "UNKNOWN",
       "blended_classroom_skills": "blended",
       "duration_minutes": 45,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 10,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -1630,7 +1654,8 @@
         "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
         "appointment_container_source": "data/inventory/appointment_containers.json",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
-      }
+      },
+      "duration_authority": "Brian explicit owner instruction, 2026-10-02"
     }
   ],
   "updated_at": "2026-06-18T23:08:36.877455-04:00",

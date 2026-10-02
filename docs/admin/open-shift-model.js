@@ -15,6 +15,27 @@
     const next=new Date(key+"T12:00:00Z");next.setUTCDate(next.getUTCDate()+1);
     return {start:instant(key),end:instant(next.toISOString().slice(0,10))};
   }
+  function sessionInterval(row,policy){
+    const start=parsed(row._start||row.start_at||row.start);if(!start)return null;
+    const courseId=String(row.course_id||row.course_number||row.course?.course_id||policy.courseNameIds?.[String(row.course_name||row._name||"").trim().toLowerCase()]||"");
+    const rule=policy.courseTimes?.[courseId],sourceEnd=parsed(row._sourceEnd||row.end_at||row.end||row._end);
+    let instructionEnd=parsed(row.instruction_end_at||row._instructionEnd),cleanupEnd=parsed(row.cleanup_end_at||row._cleanupEnd),durationSource="source_interval";
+    if(rule){
+      const expected=new Date(+start+rule.instructionMinutes*MIN);
+      if(!instructionEnd)instructionEnd=expected;
+      if(!cleanupEnd)cleanupEnd=new Date(+instructionEnd+rule.cleanupMinutes*MIN);
+      durationSource=rule.authority;
+    }else{
+      cleanupEnd=cleanupEnd||sourceEnd;
+      if(!cleanupEnd||cleanupEnd<=start){
+        const duration=Number(row.inferred_scheduler_consumption_minutes||row.scheduler_consumption_minutes||policy.occupancyMinutes[courseId]);
+        if(!Number.isFinite(duration)||duration<=0)return {start,courseId,instructionEnd:null,cleanupEnd:null,durationSource:"unresolved"};
+        cleanupEnd=new Date(+start+duration*MIN);durationSource="course_consumption_rule";
+      }
+      instructionEnd=instructionEnd||cleanupEnd;
+    }
+    return {start,courseId,instructionEnd,cleanupEnd,occupiedEnd:rule&&sourceEnd>cleanupEnd&&!row.end_inference_reason?sourceEnd:cleanupEnd,sourceEnd,durationSource,sourceEndMismatch:!!(rule&&sourceEnd&&sourceEnd>start&&!row.end_inference_reason&&+sourceEnd!==+instructionEnd&&+sourceEnd!==+cleanupEnd)};
+  }
   function calculate({date,sessions=[],events=[],policy,now=new Date(),sourceStatus=[],scheduleHealth=null}){
     const {start:dayStart,end:dayEnd}=dayBounds(date,policy.timezone);
     const diagnostics=[],occupied=[],blocks=[],edges=[],candidates=[],accepted=[],rejected=[],windows=[],freeIntervals=[];
@@ -23,6 +44,8 @@
       if(scheduleHealth.failed||!published||+now-+published>policy.maxSourceAgeMinutes*MIN||+published-+now>5*MIN)
         diagnostics.push({code:"schedule_source_stale_or_failed",instructor:"unknown"});
     }
+    const extensionMinutes=Math.max(60,...policy.shortSkills.map(c=>c.minutes),...(policy.fullCourses||[]).map(c=>c.minutes));
+    const contextMinutes=extensionMinutes+policy.travel.unknown_offsite_minutes;
     const profiles=policy.instructors||[];
     const instructor=value=>{const name=String(value||"").trim().toLowerCase();return profiles.find(p=>[p.instructor_key,p.display_name,...(p.aliases||[])].some(v=>String(v).toLowerCase()===name))?.instructor_key||"unknown";};
     const venue=value=>{const name=String(value||"").toLowerCase();return policy.locations.find(l=>[l.location_key,l.canonical_public_location,...l.aliases,...l.resources].some(v=>String(v).toLowerCase()===name))?.location_key||policy.travel.rules.find(r=>(r.match_any||[]).some(v=>name.includes(String(v).toLowerCase())))?.location_key||String(value||"unknown");};
@@ -34,27 +57,23 @@
     }
     for(const row of sessions){
       if(["cancelled","canceled","draft"].includes(String(row.status||row.registration_status||"").toLowerCase())||row.occupancy?.reserves_customer_availability===false)continue;
-      const start=parsed(row._start||row.start_at||row.start),cid=String(row.course_id||row.course_number||row.course?.course_id||"");
-      if(!start)continue;
+      const interval=sessionInterval(row,policy);if(!interval)continue;
+      const {start,instructionEnd,occupiedEnd:end,cleanupEnd,durationSource,courseId:cid}=interval;
       const who=instructor(row.lead_instructor_name||row.instructor||row.instructor_name),id=String(row.session_id||row.id||row.class_id||"unknown-session");
-      let end=parsed(row._end||row.end_at||row.end),durationSource="source_interval";
-      if(!end||end<=start){
-        const duration=Number(row.inferred_scheduler_consumption_minutes||row.scheduler_consumption_minutes||policy.occupancyMinutes[cid]);
-        if(!Number.isFinite(duration)||duration<=0){if(start>=+dayStart-24*60*MIN&&start<dayEnd)diagnostics.push({code:"unresolved_occupancy_duration",sourceId:id,instructor:who,start});continue;}
-        end=new Date(+start+duration*MIN);durationSource="course_consumption_rule";
-      }
-      if(end<+dayStart-policy.travel.unknown_offsite_minutes*MIN||start>+dayEnd+policy.travel.unknown_offsite_minutes*MIN)continue;
-      occupied.push({id,start,end,instructor:who,location:venue(row.location_name||row.location_display||row.location),anchor:true,headcount:row.registered_count??null,durationSource,courseId:cid});
+      if(interval.sourceEndMismatch&&start<dayEnd&&end>dayStart)diagnostics.push({code:"source_end_differs_from_owner_timing",sourceId:id,instructor:who,sourceEnd:interval.sourceEnd,instructionEnd,cleanupEnd});
+      if(!end){if(start>=+dayStart-24*60*MIN&&start<dayEnd)diagnostics.push({code:"unresolved_occupancy_duration",sourceId:id,instructor:who,start});continue;}
+      if(end<+dayStart-contextMinutes*MIN||start>+dayEnd+contextMinutes*MIN)continue;
+      occupied.push({id,start,instructionEnd,cleanupEnd,end,instructor:who,location:venue(row.location_name||row.location_display||row.location),anchor:true,headcount:row.registered_count??null,durationSource,courseId:cid});
     }
     for(const row of events){
       if(String(row.status||"").toLowerCase()==="cancelled"||String(row.status||"").toLowerCase()==="canceled")continue;
       const source=policy.sources.find(s=>s.calendar_source_key===row.source_key);
       if(!source||!source.active)continue;
       const start=parsed(row._start||row.start),end=parsed(row._end||row.end);if(!start||!end||end<=start){diagnostics.push({code:"invalid_calendar_interval",sourceId:row.source_key,instructor:source.instructor_key});continue;}
-      if(end<+dayStart-policy.travel.unknown_offsite_minutes*MIN||start>+dayEnd+policy.travel.unknown_offsite_minutes*MIN)continue;
+      if(end<+dayStart-contextMinutes*MIN||start>+dayEnd+contextMinutes*MIN)continue;
       const who=source.instructor_key,location=venue(row.location||source.default_location_key),title=String(row.title||row._name||"").trim().toUpperCase();
       if(source.mode==="explicit_availability"&&["HARD","SOFT"].includes(title)){
-        if(start<dayEnd&&end>dayStart)windows.push({start:new Date(Math.max(+start,+dayStart)),end:new Date(Math.min(+end,+dayEnd+60*MIN)),instructor:who,location,sourceId:row.source_key+":"+start.toISOString()});
+        if(start<dayEnd&&end>dayStart)windows.push({start:new Date(Math.max(+start,+dayStart)),end:new Date(Math.min(+end,+dayEnd+extensionMinutes*MIN)),instructor:who,location,sourceId:row.source_key+":"+start.toISOString()});
       }else if(source.mode==="inverse_blocking"||(source.mode==="explicit_availability"&&title==="UNAVAILABLE")){
         occupied.push({id:row.source_key+":"+start.toISOString(),start,end,instructor:who,location,anchor:false});
       }else if(source.mode==="occupancy"&&title.startsWith("CONFIRMED CLASS -")){
@@ -69,13 +88,18 @@
       if(!fresh){diagnostics.push({code:"availability_source_stale_or_failed",instructor:profile.instructor_key,sourceId:profile.calendar_source_key});continue;}
       if(source?.mode==="inverse_blocking"){
         for(const container of policy.containers.filter(c=>c.status==="active"&&instructor(c.instructor_name)===profile.instructor_key&&date>=c.first_valid_date&&date<=c.last_valid_date)){
-          windows.push({start:dayStart,end:new Date(+dayEnd+(date<container.last_valid_date?60:0)*MIN),instructor:profile.instructor_key,location:venue(container.location_name),sourceId:container.container_id});
+          windows.push({start:dayStart,end:new Date(+dayEnd+(date<container.last_valid_date?extensionMinutes:0)*MIN),instructor:profile.instructor_key,location:venue(container.location_name),sourceId:container.container_id});
         }
       }
     }
-    const unsafe=new Set(diagnostics.filter(d=>d.code!=="availability_source_stale_or_failed").map(d=>d.instructor));
+    const unsafe=new Set(diagnostics.filter(d=>["unresolved_occupancy_duration","invalid_calendar_interval","schedule_source_stale_or_failed"].includes(d.code)).map(d=>d.instructor));
     const stale=new Set(diagnostics.filter(d=>d.code==="availability_source_stale_or_failed").map(d=>d.instructor));
     const validWindows=windows.filter(w=>!unsafe.has(w.instructor)&&!unsafe.has("unknown")&&!stale.has(w.instructor));
+    for(let i=0;i<occupied.length;i++)for(let j=i+1;j<occupied.length;j++){
+      const a=occupied[i],b=occupied[j];
+      if(a.instructor===b.instructor&&a.start<b.end&&b.start<a.end)
+        diagnostics.push({code:"existing_commitment_or_cleanup_overlap",instructor:a.instructor,sourceIds:[a.id,b.id]});
+    }
     const real=occupied.filter(x=>x.anchor).sort((a,b)=>a.instructor.localeCompare(b.instructor)||a.start-b.start);
     for(const item of real){
       const last=blocks[blocks.length-1];
@@ -83,7 +107,7 @@
       if(last&&last.instructor===item.instructor&&last.location===item.location&&item.start<=+last.end+(policy.cleanupMinutes||0)*MIN&&!interrupted){last.end=new Date(Math.max(+last.end,+item.end));last.sourceIds.push(item.id);}
       else blocks.push({id:"block:"+item.id,start:item.start,end:item.end,instructor:item.instructor,location:item.location,sourceIds:[item.id]});
     }
-    function add(course,start,w,edge){candidates.push({courseId:course.id,name:course.name,start,end:new Date(+start+course.minutes*MIN),instructor:w.instructor,location:w.location,sourceWindow:w.sourceId,edgeId:edge?.id,sourceIds:edge?.sourceIds||[],mode:edge?"edge":"free",reasons:[]});}
+    function add(course,start,w,edge){candidates.push({kind:course.kind||"skills",courseId:course.id,name:course.name,start,instructionEnd:new Date(+start+(course.instructionMinutes??course.minutes)*MIN),cleanupEnd:new Date(+start+course.minutes*MIN),end:new Date(+start+course.minutes*MIN),instructor:w.instructor,location:w.location,sourceWindow:w.sourceId,edgeId:edge?.id,sourceIds:edge?.sourceIds||[],mode:edge?"edge":"free",reasons:[]});}
     for(const w of validWindows){
       const planted=blocks.filter(b=>b.instructor===w.instructor&&b.start<dayEnd&&b.end>=dayStart);
       if(planted.length){
@@ -91,7 +115,7 @@
           const edge={id:block.id+":"+side,time:side==="left"?block.start:block.end,sourceIds:block.sourceIds,instructor:w.instructor};
           if(!edges.some(e=>e.id===edge.id))edges.push(edge);
           const gap=travel(side==="left"?w.location:block.location,side==="left"?block.location:w.location,w.instructor);
-          for(const course of policy.shortSkills){
+          for(const course of [...policy.shortSkills,...(policy.fullCourses||[])]){
             const start=new Date(+edge.time+(side==="left"?-(course.minutes+(gap||0)):(gap||0))*MIN);
             add(course,start,w,edge);if(gap===null)candidates[candidates.length-1].reasons.push("unresolved_travel");
           }
@@ -106,7 +130,7 @@
         }
         for(const i of intervals){
           const step=(+i.end-+i.start)>=180*MIN?60:30;freeIntervals.push({...i,instructor:w.instructor,location:w.location,stepMinutes:step,sourceWindow:w.sourceId});
-          for(const course of policy.shortSkills)for(let time=+i.start;time+course.minutes*MIN<=+i.end;time+=step*MIN)add(course,new Date(time),w);
+          for(const course of [...policy.shortSkills,...(policy.fullCourses||[])])for(let time=+i.start;time+course.minutes*MIN<=+i.end;time+=step*MIN)add(course,new Date(time),w);
         }
       }
     }
@@ -116,11 +140,12 @@
       const old=unique.get(key);if(old){old.sourceIds=[...new Set([...old.sourceIds,...candidate.sourceIds])];old.edgeIds=[...new Set([...old.edgeIds,...(candidate.edgeId?[candidate.edgeId]:[])])];}
       else unique.set(key,{...candidate,edgeIds:candidate.edgeId?[candidate.edgeId]:[]});
     }
-    for(const c of unique.values()){
-      const course=policy.shortSkills.find(x=>x.id===c.courseId),profile=profiles.find(x=>x.instructor_key===c.instructor);
+    const fullCounts=new Map();
+    for(const c of [...unique.values()].sort((a,b)=>a.start-b.start||a.courseId.localeCompare(b.courseId))){
+      const course=[...policy.shortSkills,...(policy.fullCourses||[])].find(x=>x.id===c.courseId),profile=profiles.find(x=>x.instructor_key===c.instructor);
       if(!profile?.allowed_course_groups.includes(course.family))c.reasons.push("instructor_not_qualified");
       if(course.durationConflict)c.reasons.push("unresolved_course_duration");
-      if(course.minutes>60)c.reasons.push("outside_short_skills_rule");
+      if(c.kind!=="full"&&course.minutes>60)c.reasons.push("outside_short_skills_rule");
       if(c.start<dayStart||c.start>=dayEnd||!validWindows.some(w=>w.instructor===c.instructor&&w.location===c.location&&c.start>=w.start&&c.end<=w.end))c.reasons.push("outside_source_availability");
       if(c.start<+now+policy.minimumLeadMinutes*MIN)c.reasons.push("lead_time");
       for(const b of occupied.filter(x=>x.instructor===c.instructor||x.instructor==="unknown")){
@@ -131,9 +156,14 @@
       for(const b of occupied.filter(x=>x.instructor!==c.instructor&&x.instructor!=="unknown"&&x.location===c.location)){
         if(c.start<b.end&&b.start<c.end)c.reasons.push("location_conflict:"+b.id);
       }
-      if(c.reasons.length)rejected.push(c);else accepted.push(c);
+      const familyKey=[c.instructor,date,course.family].join("|");
+      if(c.kind==="full"&&(fullCounts.get(familyKey)||0)>=(policy.fullBarnaclesPerFamilyDay??1))c.reasons.push("full_family_barnacle_limit");
+      if(c.reasons.length)rejected.push(c);else{
+        accepted.push(c);
+        if(c.kind==="full")fullCounts.set(familyKey,(fullCounts.get(familyKey)||0)+1);
+      }
     }
     return {occupied,blocks,edges,candidates:[...unique.values()],accepted,rejected,freeIntervals,diagnostics,windows:validWindows};
   }
-  const api={calculate,dayBounds};root.OpenShiftModel=api;if(typeof module!=="undefined"&&module.exports)module.exports=api;
+  const api={calculate,dayBounds,sessionInterval};root.OpenShiftModel=api;if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);

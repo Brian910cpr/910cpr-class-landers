@@ -1,0 +1,48 @@
+{
+  "checked_at": "2026-10-02T05:12:12.733926+00:00",
+  "reads": {
+    "/data/admin_schedule.json": {
+      "generated_at": "2026-10-02T00:53:37.749257+00:00",
+      "valid_until": null,
+      "dates": [],
+      "anchor_policy": null,
+      "records": 29
+    },
+    "/data/admin_availability.json": {
+      "generated_at": "2026-10-02T00:53:38.786476+00:00",
+      "valid_until": null,
+      "dates": [],
+      "anchor_policy": null,
+      "records": 175
+    },
+    "/data/block-selector-availability/bls.json": {
+      "generated_at": "2026-10-01T20:53:38.858468",
+      "valid_until": "2026-10-02T02:23:51.381992+00:00",
+      "dates": [
+        {
+          "date": "2026-10-02",
+          "starts": 2
+        },
+        {
+          "date": "2026-10-05",
+          "starts": 8
+        }
+      ],
+      "anchor_policy": {
+        "version": "daily-anchor-stack-v1",
+        "suppressed_offers": 808,
+        "barnacle_positions": 0,
+        "one_course_type_per_calendar_day": true,
+        "finalized": true,
+        "anchors_promoted": 1
+      },
+      "records": 0
+    }
+  },
+  "browser": {
+    "url": "https://www.910cpr.com/bls.html",
+    "errors": [],
+    "stale_message_present": true,
+    "calendar_text": " completed the AHA online course separately.\nWhen are YOU available?\nTime of Day\nEarly AM\n\u2022\nAM\n\u2022\nAfternoon\n\u2022\nEvening\n\u2022\nLate PM\nSmart filter\nClear\n\nOr tell us when you can\u2019t. Matches class start times (Eastern).\n\nCalendar\nOctober 2026\nSun\nMon\nTue\nWed\nThu\nFri\nSat\n1\n2\u2605\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\u2605\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\nStart Times\nPM\n\u2605 12:45 PM\nRegister\n\nTimes shown are start times. Please allow enough time for the course you selected.\n\n\u2605 Scheduled class\nAHA BLS Provider (Initial)\nFriday, October 2, 2026\n12:45 PM\n:: Wilmington; Shipyard Blvd - B\nIN-PERSONRegister\n\n910CPR provides American Heart Association Basic Life Support training for nurses, EMTs, dental professionals, healthcare students, clinical staff, and others whose employer or school requires AHA BLS.\n\nChoose the BLS path that matches your requirement\n\nThis page shows current availability and registration for all three public AHA BLS paths in Wilmington.\n\nBLS Provider is the instructor-led option for new students or anyone returning after expiration.\nBLS Renewal is for currently certified providers who qualify for the focused renewal format.\nHeartCode BLS starts with AHA online coursework and finishes with an in-person skills session.\nCourse format guide\nINSTRUCTOR-LED\nInstructor-led classes are completed entirely in person.\nHEARTCODE\nHeartCode BLS begins online and is completed with an in-person skills session.\nSame-day eCards\nAfter successful completion and required course paperwork, 910CPR issues your eCard the same day.\nFlexible Wilmington skills checks\nDaytime, evening, and overnight appointments may appear whenever the live calendar shows verified availability.\nAUTHORIZED TRAINING\nAmerican Heart Association Training Site\n\nAHA BLS, ACLS, PALS, and Heartsaver training at 910CPR."
+  }
+}

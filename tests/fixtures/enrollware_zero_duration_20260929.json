@@ -1,7 +1,7 @@
 [
   {
     "uid": "14288234",
-    "summary": "AHA Heartsaver® First Aid CPR AED",
+    "summary": "AHA Heartsaver\u00c2\u00ae First Aid CPR AED",
     "dtstart": "2026-09-29T18:00:00-04:00",
     "dtend": "2026-09-29T18:00:00-04:00",
     "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
@@ -13,15 +13,15 @@
     "dtstart": "2026-09-30T17:30:00-04:00",
     "dtend": "2026-09-30T17:30:00-04:00",
     "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-    "expected_minutes": 120
+    "expected_minutes": 150
   },
   {
     "uid": "14495100",
-    "summary": "AHA - Family & Friends® CPR",
+    "summary": "AHA - Family & Friends\u00c2\u00ae CPR",
     "dtstart": "2026-10-02T08:45:00-04:00",
     "dtend": "2026-10-02T08:45:00-04:00",
     "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-    "expected_minutes": 120
+    "expected_minutes": 150
   },
   {
     "uid": "14382096",
@@ -29,7 +29,7 @@
     "dtstart": "2026-10-02T10:45:00-04:00",
     "dtend": "2026-10-02T10:45:00-04:00",
     "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-    "expected_minutes": 120
+    "expected_minutes": 150
   },
   {
     "uid": "14501248",
@@ -37,11 +37,11 @@
     "dtstart": "2026-10-02T12:45:00-04:00",
     "dtend": "2026-10-02T12:45:00-04:00",
     "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-    "expected_minutes": 120
+    "expected_minutes": 150
   },
   {
     "uid": "14186226",
-    "summary": "AHA BLS HeartCode®",
+    "summary": "AHA BLS HeartCode\u00c2\u00ae",
     "dtstart": "2026-10-03T10:00:00-04:00",
     "dtend": "2026-10-03T10:00:00-04:00",
     "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",

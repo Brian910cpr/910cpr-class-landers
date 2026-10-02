@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "authority": "Brian explicit owner instruction, 2026-10-02",
+  "skills_instruction_minutes": 45,
+  "skills_cleanup_minutes": 15,
+  "in_person_instruction_minutes": 120,
+  "in_person_cleanup_minutes": 30,
+  "excluded_short_skills_families": [
+    "ACLS",
+    "PALS"
+  ],
+  "rule": "Skills for all online/blended/HeartCode except ACLS/PALS: 45 instruction + 15 cleanup. In-person classes: 120 instruction + 30 cleanup. Travel is additional; preserve longer real commitments."
+}

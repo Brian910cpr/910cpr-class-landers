@@ -115,7 +115,7 @@ class ZeroDurationPipelineTests(unittest.TestCase):
             self.assertEqual(original, output.read_text())
 
     def test_rule_cache_does_not_leak_between_metadata_snapshots(self):
-        self.assertEqual(120, ingest.course_consumption_minutes(self.course_map, "252737"))
+        self.assertEqual(150, ingest.course_consumption_minutes(self.course_map, "252737"))
         self.assertIsNone(ingest.course_consumption_minutes({}, "252737"))
 
     def test_ambiguous_catalog_identity_is_not_guessed(self):

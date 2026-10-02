@@ -65,6 +65,7 @@ def normalize_session(session: dict[str, Any]) -> dict[str, Any] | None:
     return {
         "session_id": session_id,
         "course_name": course or "Class",
+        "course_id": value(session, ("course_id",), ("course_number",), ("course", "course_number"), ("course", "course_id")),
         "start_at": start,
         "end_at": end,
         "end_inference_reason": value(session, ("end_inference_reason",), ("timing", "end_inference_reason")),

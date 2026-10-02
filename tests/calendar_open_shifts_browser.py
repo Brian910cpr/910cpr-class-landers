@@ -28,10 +28,12 @@ with sync_playwright() as p:
     page.route('**/*',route)
     page.goto(url+'/admin/dashboard.html'); page.wait_for_timeout(1200)
     assert errors==[], errors
-    assert page.locator('.schedule-row.gap').count()==6
-    assert '3 open shifts' in page.locator('[data-day="2026-10-05"]').inner_text()
+    assert page.evaluate("window.lastOpenShiftReport.accepted.filter(c=>c.kind==='skills').length")==12
+    assert page.evaluate("window.lastOpenShiftReport.accepted.some(c=>c.kind==='full')")
+    assert 'open shifts' in page.locator('[data-day="2026-10-05"]').inner_text()
     assert '12:00 PM' in page.locator('.schedule-row.class').inner_text()
-    assert '1:00 PM' in page.locator('.schedule-row.class').inner_text()
+    assert '12:45 PM' in page.locator('.schedule-row.class').inner_text()
+    assert 'cleanup until 1:00 PM' in page.locator('.schedule-row.class').inner_text()
     print('errors',errors)
     print('detail',page.locator('#dayDetail').inner_text()[:3500])
     print('report',page.evaluate('window.lastOpenShiftReport?({occupied:window.lastOpenShiftReport.occupied.length,blocks:window.lastOpenShiftReport.blocks.length,edges:window.lastOpenShiftReport.edges.length,candidates:window.lastOpenShiftReport.candidates.length,accepted:window.lastOpenShiftReport.accepted.length,rejected:window.lastOpenShiftReport.rejected.length,diagnostics:window.lastOpenShiftReport.diagnostics}):null'))
