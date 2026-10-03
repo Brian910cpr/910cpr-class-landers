@@ -26,6 +26,17 @@ permissions:
   contents: read
 
 jobs:
+  verify-publication-watchdog:
+    if: vars.AVAILABILITY_WATCHDOG_HEALTH_URL != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check actual publication expiry and independent timer heartbeat
+        env:
+          WATCHDOG_HEALTH_URL: ${{ vars.AVAILABILITY_WATCHDOG_HEALTH_URL }}
+        run: |
+          curl --fail-with-body --silent --show-error --max-time 30 \
+            "$WATCHDOG_HEALTH_URL"
+
   verify-production:
     if: github.event_name != 'schedule' && github.event.inputs.projection != 'canonical-demand' && github.event.inputs.projection != 'reconciliation-health'
     runs-on: ubuntu-latest
