@@ -1,0 +1,9 @@
+{
+  "name": "910cpr-availability-refresh",
+  "main": "availability-refresh-watchdog.mjs",
+  "compatibility_date": "2026-10-03",
+  "workers_dev": true,
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "observability": { "enabled": true },
+  "kv_namespaces": [{ "binding": "STATE", "id": "53b5ac2432a946efaf2c094c07142ba7" }]
+}
