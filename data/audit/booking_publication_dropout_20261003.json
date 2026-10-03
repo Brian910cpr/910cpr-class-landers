@@ -1,0 +1,119 @@
+{
+  "before": {
+    "observed_at": "2026-10-03T11:36:11.873Z",
+    "feed_generated_at": "2026-10-03T02:37:16.787114",
+    "publication_valid_until": "2026-10-03T04:07:32.129619-04:00",
+    "published": {
+      "dates": 80,
+      "starts": 2771,
+      "offers": 7619
+    },
+    "after_datesForPublication": {
+      "dates": 5,
+      "starts": 7,
+      "offers": 7
+    },
+    "drop_reasons": {
+      "publication_expired": 7612,
+      "individual_lease_expired": 0,
+      "kept_real": 7,
+      "kept_dynamic": 0
+    },
+    "courses": {
+      "Initial": {
+        "before_expiry": {
+          "dates": 76,
+          "starts": 2425,
+          "offers": 2425
+        },
+        "after_expiry": {
+          "dates": 1,
+          "starts": 1,
+          "offers": 1
+        },
+        "after_past_filter": {
+          "dates": 1,
+          "starts": 1,
+          "offers": 1
+        }
+      },
+      "Renewal": {
+        "before_expiry": {
+          "dates": 79,
+          "starts": 2428,
+          "offers": 2428
+        },
+        "after_expiry": {
+          "dates": 4,
+          "starts": 4,
+          "offers": 4
+        },
+        "after_past_filter": {
+          "dates": 4,
+          "starts": 4,
+          "offers": 4
+        }
+      },
+      "Skills": {
+        "before_expiry": {
+          "dates": 77,
+          "starts": 2766,
+          "offers": 2766
+        },
+        "after_expiry": {
+          "dates": 2,
+          "starts": 2,
+          "offers": 2
+        },
+        "after_past_filter": {
+          "dates": 2,
+          "starts": 2,
+          "offers": 2
+        }
+      }
+    }
+  },
+  "after": {
+    "observed_at": "2026-10-03T07:55:13.2718662-04:00",
+    "generatedAt": "2026-10-03T07:40:46.749704",
+    "validUntil": "2026-10-03T09:11:09.624546-04:00",
+    "dates": 80,
+    "starts": 2779,
+    "offers": 7643,
+    "oct12": [
+      {
+        "time": "09:00",
+        "courses": [
+          {
+            "name": "AHA BLS Provider (Renewal)",
+            "registrations": null,
+            "type": "seated_class"
+          }
+        ]
+      },
+      {
+        "time": "12:00",
+        "courses": [
+          {
+            "name": "AHA BLS HeartCode®",
+            "registrations": null,
+            "type": "seated_class"
+          }
+        ]
+      },
+      {
+        "time": "17:00",
+        "courses": [
+          {
+            "name": "AHA BLS Provider (Initial)",
+            "registrations": null,
+            "type": "seated_class"
+          }
+        ]
+      }
+    ]
+  },
+  "recovery_run": 37120275947,
+  "pages_commit": "7150450b1c1b5902581a36a61e5174f4e4ee09cd",
+  "pages_deployed_at": "2026-10-03T11:46:28Z"
+}
