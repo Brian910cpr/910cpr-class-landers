@@ -28,11 +28,35 @@ $qGh = $ghPath.Replace("'", "''")
 exit `$LASTEXITCODE
 "@ | Set-Content -LiteralPath $launcherPath -Encoding UTF8
 
-$taskAction = New-ScheduledTaskAction -Execute "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe" -Argument "-NoProfile -NonInteractive -WindowStyle Hidden -File `"$launcherPath`""
+# Use the same PowerShell host that successfully runs this installer. Windows
+# PowerShell 5.1 may have a different effective script policy than PowerShell 7.
+# Do not weaken machine/user execution policy to make the scheduled task run.
+$shellPath = (Get-Process -Id $PID).Path
+$taskCommand = "& '$qNode' '$qRunner' '$qState' '$qGh'; exit `$LASTEXITCODE"
+$taskAction = New-ScheduledTaskAction -Execute $shellPath -Argument "-NoProfile -NonInteractive -WindowStyle Hidden -Command `"$taskCommand`""
 $timer = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 5)
 $logon = New-ScheduledTaskTrigger -AtLogOn -User ([Security.Principal.WindowsIdentity]::GetCurrent().Name)
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Minutes 2)
 $principal = New-ScheduledTaskPrincipal -UserId ([Security.Principal.WindowsIdentity]::GetCurrent().Name) -LogonType Interactive -RunLevel Limited
+$previousTask = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
+$previousXml = if ($previousTask) { Export-ScheduledTask -TaskName $taskName } else { $null }
 Register-ScheduledTask -TaskName $taskName -Action $taskAction -Trigger @($timer,$logon) -Settings $settings -Principal $principal -Description 'Check public booking publication every five minutes; use existing local GitHub login to refresh before expiry.' -Force | Out-Null
+$started = [DateTimeOffset]::UtcNow
 Start-ScheduledTask -TaskName $taskName
-[pscustomobject]@{TaskName=$taskName; InstallDirectory=$destination; StateFile=(Join-Path $stateDirectory 'health.json'); Requires='Computer awake with this user logged in; existing GitHub CLI login'} | ConvertTo-Json
+$healthPath = Join-Path $stateDirectory 'health.json'
+$observed = $null
+do {
+    if (Test-Path -LiteralPath $healthPath) {
+        try {
+            $candidate = Get-Content -LiteralPath $healthPath -Raw | ConvertFrom-Json
+            if ([DateTimeOffset]::Parse($candidate.checkedAt) -ge $started) { $observed = $candidate; break }
+        } catch { }
+    }
+    Start-Sleep -Milliseconds 500
+} while ([DateTimeOffset]::UtcNow -lt $started.AddSeconds(15))
+if (-not $observed) {
+    if ($previousXml) { Register-ScheduledTask -TaskName $taskName -Xml $previousXml -Force | Out-Null }
+    else { Disable-ScheduledTask -TaskName $taskName | Out-Null }
+    throw 'Scheduled process did not produce a fresh observation. Prior task restored when available. If the native task cannot see an app-private LocalAppData path, use -InstallRoot on a shared physical drive.'
+}
+[pscustomobject]@{TaskName=$taskName; InstallDirectory=$destination; StateFile=$healthPath; CheckedAt=$observed.checkedAt; Action=$observed.action; Requires='Computer awake with this user logged in; existing GitHub CLI login'} | ConvertTo-Json

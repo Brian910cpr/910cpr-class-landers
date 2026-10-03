@@ -115,3 +115,14 @@ activation. Its unset state explicitly skips that unavailable observer.
 To stop this containment after cloud proof, disable exactly the named task:
 `Disable-ScheduledTask -TaskName '910CPR Availability Refresh'`. Preserve its
 state as evidence. Do not delete or modify the separate 910CPR operator worker.
+
+CYBERPC activation uses the explicit physical-drive directory
+`D:\Users\ten77\Documents\2020 -_ 2025 & Enrollware\910CPR-AvailabilityRefresh`.
+Native Task Scheduler could not see the first app-private LocalAppData copy.
+The installer now requires a fresh observation from the actual scheduled process
+and restores any prior task if that proof fails. It uses the current PowerShell
+host without changing execution policy. At 17:03:13 Eastern, Task Scheduler ran
+the physical-drive installation successfully (exit 0), observed the fresh public
+feed, and recorded 7,678 offers valid through 18:25:24 Eastern. This proves the
+installed timer can read the publication; a future automatic refresh dispatch
+must still be observed before claiming unattended recovery is proven.
