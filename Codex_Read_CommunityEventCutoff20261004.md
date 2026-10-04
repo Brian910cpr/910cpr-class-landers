@@ -37,4 +37,4 @@ Repair evidence:
 - Both live pages exposed the r2 build and remained open before 13:00Z as intended.
 
 Remaining verification:
-- Confirm both live pages show the red event-passed state and disabled registration at or after 13:00Z.
+- VERIFIED at 2026-10-04T13:06Z: both live pages show the event-passed banner and follow-up, disable registration controls, and serve the r2 build.
