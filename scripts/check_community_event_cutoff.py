@@ -3,7 +3,7 @@ from datetime import datetime,timezone
 from playwright.sync_api import sync_playwright
 import json
 ROOT=Path(__file__).resolve().parents[1]/'docs'
-CUTOFF=datetime(2026,10,4,15,30,tzinfo=timezone.utc)
+CUTOFF=datetime(2026,10,4,13,0,tzinfo=timezone.utc)
 results=[]
 with sync_playwright() as pw:
  browser=pw.chromium.launch(headless=True)
