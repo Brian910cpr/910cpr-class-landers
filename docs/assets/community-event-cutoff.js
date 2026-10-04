@@ -1,7 +1,7 @@
 /* October 4 community pages only. No backend/session changes. */
 (function () {
   'use strict';
-  const cutoff = Date.parse('2026-10-04T11:30:00-04:00');
+  const cutoff = Date.parse('2026-10-04T09:00:00-04:00');
   let observer;
   function expired() { return Date.now() >= cutoff; }
   function close() {
