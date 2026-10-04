@@ -1,37 +1,19 @@
 {
-  "generated_at": "2026-10-04T11:37:26.589848-04:00",
+  "generated_at": "2026-10-04T12:12:41.012787-04:00",
   "source": "enrollware_ical",
-  "ical_events_read": 262,
-  "public_sessions_created": 262,
+  "ical_events_read": 260,
+  "public_sessions_created": 260,
   "skipped_events": 0,
-  "registration_unavailable_sessions_marked_not_direct_bookable": 235,
+  "registration_unavailable_sessions_marked_not_direct_bookable": 233,
   "unmapped_sessions": 7,
   "prior_sessions_read": 0,
-  "sessions_added_compared_with_prior_source": 262,
+  "sessions_added_compared_with_prior_source": 260,
   "classes_removed_compared_with_prior_source": 0,
   "stale_zapier_sheet_sessions_excluded": 0,
   "stale_manual_class_report_sessions_excluded": 0,
   "participant_truth": "canonical_registrations_only",
   "removed_examples": [],
   "inferred_occupied_windows": [
-    {
-      "session_id": "13719972",
-      "course_id": "210549",
-      "start_at": "2026-07-06T16:00:00-04:00",
-      "source_end": "2026-07-06T16:00:00-04:00",
-      "end_at": "2026-07-06T17:00:00-04:00",
-      "occupied_minutes": 60,
-      "rule_source": "data/inventory/course_consumption_rules.json"
-    },
-    {
-      "session_id": "13719989",
-      "course_id": "210549",
-      "start_at": "2026-07-06T16:00:00-04:00",
-      "source_end": "2026-07-06T16:00:00-04:00",
-      "end_at": "2026-07-06T17:00:00-04:00",
-      "occupied_minutes": 60,
-      "rule_source": "data/inventory/course_consumption_rules.json"
-    },
     {
       "session_id": "13748090",
       "course_id": "329495",
