@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04T14:22:42.757985+00:00",
+  "generated_at": "2026-10-04T15:03:45.943546+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,52 +22,28 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 377,
-    "blocks_blocked": 3,
+    "blocks_generated": 376,
+    "blocks_blocked": 2,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 3
+      "inverse_gap_shorter_than_minimum_consumption": 2
     },
     "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 3
+      "inverse_gap_shorter_than_minimum_consumption": 2
     },
     "source_type_counts": {
       "google_calendar": 2,
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 171,
+      "blocked": 170,
       "available": 206
     },
     "inverse_generated_availability_blocks": 206,
-    "inverse_blocking_event_blocks": 171,
+    "inverse_blocking_event_blocks": 170,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-04T11:00:00",
-      "end_datetime": "2026-10-04T14:00:00",
-      "date": "2026-10-04",
-      "end_date": "2026-10-04",
-      "start_time": "11:00",
-      "end_time": "14:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Earl Jackson Pool\\, 750 Bess Street\\, Wilmington\\, NC 28401",
-      "location_name": "Earl Jackson Pool\\, 750 Bess Street\\, Wilmington\\, NC 28401",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "betie68fh3s4sia4jeoftg3uf0@google.com",
-      "summary": "BLS Class — NSeaSwim / Earl Jackson Pool",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -4151,11 +4127,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-04T14:00:00",
+      "start_datetime": "2026-10-04T11:15:00",
       "end_datetime": "2026-10-04T17:00:00",
       "date": "2026-10-04",
       "end_date": "2026-10-04",
-      "start_time": "14:00",
+      "start_time": "11:15",
       "end_time": "17:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10507,11 +10483,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-02T00:00:00",
-      "end_datetime": "2027-01-02T10:30:00",
+      "end_datetime": "2027-01-02T11:15:00",
       "date": "2027-01-02",
       "end_date": "2027-01-02",
       "start_time": "00:00",
-      "end_time": "10:30",
+      "end_time": "11:15",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10536,14 +10512,6 @@
     }
   ],
   "blocked_or_placeholder_sources": [
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-10-04T10:30:00",
-      "end_datetime": "2026-10-04T11:00:00"
-    },
     {
       "calendar_source_key": "brian_do_not_schedule",
       "source_type": "inverse_google_calendar",
