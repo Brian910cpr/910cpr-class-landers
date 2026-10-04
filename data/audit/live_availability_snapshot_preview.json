@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-04T02:57:53.710017+00:00",
+  "generated_at": "2026-10-04T03:32:38.981263+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -10507,11 +10507,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-01T17:30:00",
-      "end_datetime": "2027-01-01T23:00:00",
+      "end_datetime": "2027-01-01T23:45:00",
       "date": "2027-01-01",
       "end_date": "2027-01-01",
       "start_time": "17:30",
-      "end_time": "23:00",
+      "end_time": "23:45",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10541,7 +10541,7 @@
       "source_type": "inverse_google_calendar",
       "reason_code": "inverse_gap_shorter_than_minimum_consumption",
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-10-03T23:00:00",
+      "start_datetime": "2026-10-03T23:45:00",
       "end_datetime": "2026-10-04T00:00:00"
     },
     {
