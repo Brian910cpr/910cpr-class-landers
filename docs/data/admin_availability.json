@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-10-05T22:54:56.469451+00:00",
+  "generated_at": "2026-10-05T23:28:33.885158+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-05T22:54:55.864911+00:00",
+      "generated_at": "2026-10-05T23:28:33.264093+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-05T22:54:56.469451+00:00",
-      "event_count": 163
+      "generated_at": "2026-10-05T23:28:33.885158+00:00",
+      "event_count": 162
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-05T22:54:56.100453+00:00",
+      "generated_at": "2026-10-05T23:28:33.496636+00:00",
       "event_count": 0
     }
   ],
@@ -159,17 +159,6 @@
       "start": "2026-10-09T15:00:00-04:00",
       "end": "2026-10-09T17:30:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Shift: ADR",
-      "start": "2026-10-09T22:00:00+00:00",
-      "end": "2026-10-10T10:00:00+00:00",
-      "location": "Riegelwood\\, NC 28456",
       "status": "CONFIRMED"
     },
     {
