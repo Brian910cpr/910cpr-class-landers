@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-05T20:39:03.221990+00:00",
+  "generated_at": "2026-10-05T21:28:56.274026+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 370,
+    "blocks_generated": 369,
     "blocks_blocked": 2,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -36,38 +36,14 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 165,
+      "blocked": 164,
       "available": 205
     },
     "inverse_generated_availability_blocks": 205,
-    "inverse_blocking_event_blocks": 165,
+    "inverse_blocking_event_blocks": 164,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-05T17:00:00",
-      "end_datetime": "2026-10-05T18:00:00",
-      "date": "2026-10-05",
-      "end_date": "2026-10-05",
-      "start_time": "17:00",
-      "end_time": "18:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "clm0tjcr1t6qie3e0kksqjr38s@google.com",
-      "summary": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -10332,11 +10308,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-03T00:00:00",
-      "end_datetime": "2027-01-03T16:45:00",
+      "end_datetime": "2027-01-03T17:30:00",
       "date": "2027-01-03",
       "end_date": "2027-01-03",
       "start_time": "00:00",
-      "end_time": "16:45",
+      "end_time": "17:30",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10366,8 +10342,8 @@
       "source_type": "inverse_google_calendar",
       "reason_code": "inverse_gap_shorter_than_minimum_consumption",
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-10-05T16:45:00",
-      "end_datetime": "2026-10-05T17:00:00"
+      "start_datetime": "2026-10-05T17:30:00",
+      "end_datetime": "2026-10-05T18:00:00"
     },
     {
       "calendar_source_key": "brian_do_not_schedule",
