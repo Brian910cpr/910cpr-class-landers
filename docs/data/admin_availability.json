@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-10-05T09:33:26.707590+00:00",
+  "generated_at": "2026-10-05T10:08:37.631252+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-05T09:33:26.111644+00:00",
+      "generated_at": "2026-10-05T10:08:36.998232+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-05T09:33:26.707590+00:00",
-      "event_count": 168
+      "generated_at": "2026-10-05T10:08:37.631252+00:00",
+      "event_count": 167
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-05T09:33:26.365422+00:00",
+      "generated_at": "2026-10-05T10:08:37.270379+00:00",
       "event_count": 0
     }
   ],
@@ -38,17 +38,6 @@
       "start": "2026-10-05T06:30:00-04:00",
       "end": "2026-10-05T07:45:00-04:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-05T10:00:00+00:00",
-      "end": "2026-10-05T11:00:00+00:00",
-      "location": "",
       "status": "CONFIRMED"
     },
     {
