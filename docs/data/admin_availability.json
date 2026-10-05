@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-10-05T19:03:54.263539+00:00",
+  "generated_at": "2026-10-05T20:23:41.005941+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-05T19:03:53.540990+00:00",
+      "generated_at": "2026-10-05T20:23:40.418002+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-05T19:03:54.263539+00:00",
-      "event_count": 164
+      "generated_at": "2026-10-05T20:23:41.005941+00:00",
+      "event_count": 165
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-05T19:03:53.780857+00:00",
+      "generated_at": "2026-10-05T20:23:40.686889+00:00",
       "event_count": 0
     }
   ],
@@ -588,6 +588,17 @@
       "start": "2026-10-22T09:00:00+00:00",
       "end": "2026-10-22T10:00:00+00:00",
       "location": "",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Shift: ADR",
+      "start": "2026-10-22T10:00:00+00:00",
+      "end": "2026-10-22T22:00:00+00:00",
+      "location": "Riegelwood\\, NC 28456",
       "status": "CONFIRMED"
     },
     {
