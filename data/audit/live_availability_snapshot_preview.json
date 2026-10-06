@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T09:58:34.425165+00:00",
+  "generated_at": "2026-10-06T10:33:42.344823+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 368,
+    "blocks_generated": 366,
     "blocks_blocked": 1,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -36,62 +36,14 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 162,
+      "blocked": 160,
       "available": 206
     },
     "inverse_generated_availability_blocks": 206,
-    "inverse_blocking_event_blocks": 162,
+    "inverse_blocking_event_blocks": 160,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-06T06:30:00",
-      "end_datetime": "2026-10-06T07:45:00",
-      "date": "2026-10-06",
-      "end_date": "2026-10-06",
-      "start_time": "06:30",
-      "end_time": "07:45",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261006T0630000400",
-      "summary": "CFA Drop Off",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-06T06:00:00",
-      "end_datetime": "2026-10-06T07:00:00",
-      "date": "2026-10-06",
-      "end_date": "2026-10-06",
-      "start_time": "06:00",
-      "end_time": "07:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "sktonhgmd9nem4569b89tdf3us@google.com",
-      "summary": "ADR POST-SHIFT BUFFER — Brian Unavailable",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -3935,11 +3887,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-06T07:45:00",
+      "start_datetime": "2026-10-06T06:45:00",
       "end_datetime": "2026-10-06T15:00:00",
       "date": "2026-10-06",
       "end_date": "2026-10-06",
-      "start_time": "07:45",
+      "start_time": "06:45",
       "end_time": "15:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10291,11 +10243,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-04T00:00:00",
-      "end_datetime": "2027-01-04T06:00:00",
+      "end_datetime": "2027-01-04T06:45:00",
       "date": "2027-01-04",
       "end_date": "2027-01-04",
       "start_time": "00:00",
-      "end_time": "06:00",
+      "end_time": "06:45",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
