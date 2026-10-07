@@ -8,7 +8,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from scripts.block_start_time_selector import build_block_schedule_page, load_block_schedule_page_configs
-from scripts.build_bls_block_schedule_pilot import apply_final_live_availability_guard
+from scripts.build_bls_block_schedule_pilot import apply_final_live_availability_guard, public_layered_landscape
 from scripts.canonical_scheduling_demand import load_publication_demand, resolve_canonical_demand
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -297,7 +297,7 @@ def main() -> None:
         cells.extend(compact_rejection(item, page_key) for item in rejections)
         source_pages[page_key] = {
             "schedulingModel": payload.get("schedulingModel"),
-            "layeredDiagnostics": payload.get("layeredDiagnostics"),
+            "layeredLandscape": public_layered_landscape(payload),
             "generatedAt": payload.get("generatedAt"),
             "counts": payload.get("counts", {}),
             "rejectionReasonCounts": payload.get("rejectionReasonCounts", {}),
