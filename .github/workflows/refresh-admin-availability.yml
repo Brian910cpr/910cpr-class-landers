@@ -2,6 +2,11 @@ name: Refresh admin availability
 
 on:
   workflow_dispatch:
+    inputs:
+      v2_release_probe:
+        description: Read current sources and validate V2 without publication
+        type: boolean
+        default: false
   schedule:
     - cron: "7,17,27,37,47,57 * * * *"
   push:
@@ -44,13 +49,12 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: schedule-publish-main
-  cancel-in-progress: false
-
 jobs:
   refresh:
-    if: github.ref == 'refs/heads/main'
+    concurrency:
+      group: schedule-publish-main
+      cancel-in-progress: false
+    if: github.ref == 'refs/heads/main' && !inputs.v2_release_probe
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -66,7 +70,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install python-dateutil openpyxl
+        run: pip install python-dateutil openpyxl certifi==2025.10.5
 
       - name: Test scheduling reconciliation before generating output
         run: python -B -m unittest tests.test_zero_duration_pipeline tests.test_enrollware_ical_import tests.test_scheduling_reconciliation tests.test_canonical_scheduling_demand tests.test_apply_anchor_policy tests.test_anchor_state tests.test_publish_scheduling_landscape tests.test_native_public_anchor
@@ -115,10 +119,11 @@ jobs:
       - name: Publish sanitized dashboard availability feed
         run: python -m scripts.publish_admin_availability
 
-      - name: Rebuild selector availability feeds without rewriting public pages
+      - name: Rebuild selector feeds and their matching customer pages
         run: |
           python - <<'PY'
           import json
+          from pathlib import Path
           from scripts.block_start_time_selector import (
               build_block_schedule_page,
               load_block_schedule_page_configs,
@@ -127,11 +132,15 @@ jobs:
               apply_final_live_availability_guard,
               public_selector_availability_payload,
               selector_availability_path,
+              write_page_outputs,
           )
 
           configs = load_block_schedule_page_configs()
           for page_key, page_config in configs.items():
               payload = apply_final_live_availability_guard(build_block_schedule_page(page_config))
+              if page_config.get("render_html") is not False:
+                  write_page_outputs(payload, Path(page_config["report_json_path"]),
+                      Path(page_config["report_md_path"]), Path(page_config["output_path"]))
               output = selector_availability_path(page_key)
               output.parent.mkdir(parents=True, exist_ok=True)
               output.write_text(
@@ -178,6 +187,18 @@ jobs:
         run: |
           git config user.name "910CPR Availability Bot"
           git config user.email "actions@users.noreply.github.com"
+          python - <<'PY'
+          import subprocess
+          from scripts.block_start_time_selector import load_block_schedule_page_configs
+          paths = []
+          for config in load_block_schedule_page_configs().values():
+              if config.get('render_html') is False:
+                  continue
+              paths.extend([config['output_path'], *config.get('alias_output_paths', [])])
+              if config.get('legacy_schedule_path'):
+                  paths.append(config['legacy_schedule_path'])
+          subprocess.run(['git', 'add', '--', *paths], check=True)
+          PY
           git add \
             data/runtime/calendar_snapshots \
             data/audit/enrollware_ical_import_summary.json \
@@ -219,3 +240,43 @@ jobs:
             exit 1
           fi
           git push origin HEAD:main
+
+  v2-release-probe:
+    concurrency:
+      group: v2-release-probe-${{ github.ref_name }}
+      cancel-in-progress: false
+    if: github.event_name == 'workflow_dispatch' && inputs.v2_release_probe
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install python-dateutil openpyxl certifi==2025.10.5
+      - name: Read current Enrollware occurrences
+        run: python -B -m scripts.build_sessions_current --source enrollware_ical
+      - name: Read existing occupancy
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: python -B -m scripts.fetch_hot_sync_snapshot
+      - name: Read current canonical registrations
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: python -B -m scripts.fetch_canonical_scheduling_demand
+      - name: Refresh schedule and calendar inputs
+        run: |
+          python -B -m scripts.build_schedule_future
+          python -B -m scripts.export_calendar_snapshots
+          python -B -m scripts.build_live_availability_snapshot
+      - name: Calculate existing V2 and customer previews
+        run: python -B -m scripts.run_layered_release_probe
+      - name: Upload public-safe proof only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-release-probe-${{ github.run_id }}
+          path: data/runtime/audit_previews/v2_release_probe/
+          if-no-files-found: warn
+          retention-days: 7

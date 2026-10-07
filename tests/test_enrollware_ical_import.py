@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+import ssl
+import urllib.error
 import unittest
 from datetime import datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 from zoneinfo import ZoneInfo
 
 from scripts.build_sessions_current import (
@@ -13,12 +15,41 @@ from scripts.build_sessions_current import (
     build_session_from_ical_event,
     decode_ical_bytes,
     enrollment_page_unavailable_reason,
+    enrollware_tls_context,
+    fetch_ical_text,
+    fetch_enrollment_page_text,
     load_course_map,
     parse_ical_events,
 )
 
 
 class EnrollwareIcalImportTests(unittest.TestCase):
+    def test_enrollware_context_requires_certificate_and_hostname_verification(self) -> None:
+        context = enrollware_tls_context()
+        self.assertEqual(context.verify_mode, ssl.CERT_REQUIRED)
+        self.assertTrue(context.check_hostname)
+        self.assertGreater(context.cert_store_stats()["x509_ca"], 0)
+
+    def test_feed_and_registration_read_use_verified_context(self) -> None:
+        for reader in (fetch_ical_text, fetch_enrollment_page_text):
+            with self.subTest(reader=reader.__name__):
+                response = MagicMock()
+                response.__enter__.return_value.read.return_value = b"verified content"
+                with patch("scripts.build_sessions_current.urllib.request.urlopen", return_value=response) as fetch:
+                    self.assertEqual(reader("https://www.enrollware.com/test"), "verified content")
+                context = fetch.call_args.kwargs["context"]
+                self.assertEqual(context.verify_mode, ssl.CERT_REQUIRED)
+                self.assertTrue(context.check_hostname)
+
+    def test_certificate_failure_is_not_retried_without_verification(self) -> None:
+        failure = urllib.error.URLError(ssl.SSLCertVerificationError("expired certificate"))
+        for reader in (fetch_ical_text, fetch_enrollment_page_text):
+            with self.subTest(reader=reader.__name__):
+                with patch("scripts.build_sessions_current.urllib.request.urlopen", side_effect=failure) as fetch:
+                    with self.assertRaises(urllib.error.URLError):
+                        reader("https://www.enrollware.com/test")
+                self.assertEqual(fetch.call_count, 1)
+
     def test_decode_ical_bytes_preserves_cp1252_registered_mark(self) -> None:
         raw = b"SUMMARY:AHA Heartsaver\xae CPR AED Online\r\n"
 
@@ -194,3 +225,15 @@ def json_load(path: Path):
 
 if __name__ == "__main__":
     unittest.main()
+
+class HistoricalArcTitleTests(unittest.TestCase):
+    def test_existing_arc_blended_alias_resolves_zero_duration_without_dropping_session(self):
+        root=Path(__file__).resolve().parents[1]
+        event=dict(uid="13880764",summary="ARC Adult CPR AED - Blended",
+                   dtstart="2026-08-10T09:30:00-04:00",dtend="2026-08-10T09:30:00-04:00",
+                   url="https://coastalcprtraining.enrollware.com/enroll?id=13880764")
+        session=build_session_from_ical_event(event,"2026-10-07T08:00:00-04:00",load_course_map(root,"data/config/course_map.json"))
+        self.assertEqual(session['session_id'],'13880764')
+        self.assertEqual(session['course']['course_id'],'372258')
+        self.assertEqual(session['end'],'2026-08-10T10:15:00-04:00')
+        self.assertEqual(session['timing']['end_inference_reason'],'inferred_from_course_consumption_rule_for_zero_duration_ical_event')

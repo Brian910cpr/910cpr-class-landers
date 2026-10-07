@@ -89,7 +89,7 @@ class ZeroDurationPipelineTests(unittest.TestCase):
                 loaded = {
                     "course_catalog": {"courses": [heartcode]},
                     "people_catalog": {"people": [{"person_id": "fixture_brian", "display_name": "Brian Ennis", "assignment_mode": "PRIMARY", "dynamic_offer_eligible": True, "certifications": [{"certification_code": "AHA_BLS_INSTRUCTOR"}]}]},
-                    "live_availability_snapshot": {"availability_blocks": [{"instructor_name": "Brian Ennis", "start_datetime": (start - timedelta(hours=2)).isoformat(), "end_datetime": (end + timedelta(hours=2)).isoformat(), "availability_status": "available", "location_name": event["location"], "allowed_course_families": ["BLS"]}]},
+                    "live_availability_snapshot": {"availability_blocks": [{"instructor_name": "Brian Ennis", "start_datetime": (start - timedelta(hours=2)).isoformat(), "end_datetime": (end + timedelta(hours=2)).isoformat(), "availability_status": "available", "source_type": "google_calendar", "source_calendar_id": "fixture_google", "location_name": event["location"], "allowed_course_families": ["BLS"]}]},
                     "sessions_current": {"sessions": [session]},
                 }
                 generated, rejected, _ = offers.generate_offers(loaded)

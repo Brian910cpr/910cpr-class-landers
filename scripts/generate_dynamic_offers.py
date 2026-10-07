@@ -6,6 +6,7 @@ from collections import Counter
 from datetime import datetime, time, timedelta
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 
 from scripts.audit_preview_summaries import write_summary
@@ -94,7 +95,10 @@ def parse_dt(value: Any) -> datetime | None:
     if not text:
         return None
     try:
-        return datetime.fromisoformat(text.replace("Z", "+00:00")).replace(tzinfo=None)
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+        if parsed.tzinfo is not None:
+            parsed = parsed.astimezone(ZoneInfo("America/New_York"))
+        return parsed.replace(tzinfo=None)
     except ValueError:
         return None
 
@@ -214,6 +218,16 @@ def location_alias_lookup(location_resource_map: Any) -> dict[str, dict[str, str
                     "canonical_public_location": canonical,
                     "resource_name": text,
                 }
+        # Internal room aliases are explicit resource evidence, not extra capacity.
+        for resource in resources:
+            if not isinstance(resource, dict):
+                continue
+            name = clean_text(resource.get("resource_name"))
+            for alias in resource.get("aliases", []):
+                key = normalize_key(alias)
+                if not key or not name:
+                    continue
+                lookup[key] = {"canonical_public_location": canonical, "resource_name": name}
     return lookup
 
 
@@ -322,7 +336,7 @@ def selected_availability_windows(loaded: dict[str, Any]) -> tuple[list[dict[str
     live_blocks = [
         normalize_live_availability_window(window, index, location_resource_map)
         for index, window in enumerate(live_raw_blocks, start=1)
-        if valid_available_window(window)
+        if valid_available_window(window) and window.get('source_type') in {'google_calendar', 'inverse_google_calendar'}
     ]
     if live_blocks:
         return live_blocks, {
@@ -334,17 +348,15 @@ def selected_availability_windows(loaded: dict[str, Any]) -> tuple[list[dict[str
             "availability_source_reason": "valid_live_available_blocks_found",
         }
 
-    legacy_raw_blocks = availability_windows(loaded.get("instructor_availability"))
-    legacy_blocks = [window for window in legacy_raw_blocks if valid_available_window(window)]
     reason = "live_snapshot_missing"
     if live_payload is not None:
         reason = live_error or "live_snapshot_zero_available_blocks"
-    return legacy_blocks, {
-        "availability_source_used": "legacy_instructor_availability_fallback",
-        "availability_fallback_used": True,
-        "available_blocks_read": len(legacy_blocks),
+    return [], {
+        "availability_source_used": "google_calendar_unavailable",
+        "availability_fallback_used": False,
+        "available_blocks_read": 0,
         "live_available_blocks_read": len(live_blocks),
-        "legacy_available_blocks_read": len(legacy_blocks),
+        "legacy_available_blocks_read": 0,
         "availability_source_reason": reason,
     }
 

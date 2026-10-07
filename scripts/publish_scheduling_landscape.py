@@ -8,7 +8,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from scripts.block_start_time_selector import build_block_schedule_page, load_block_schedule_page_configs
-from scripts.build_bls_block_schedule_pilot import apply_final_live_availability_guard
+from scripts.build_bls_block_schedule_pilot import apply_final_live_availability_guard, public_layered_landscape
 from scripts.canonical_scheduling_demand import load_publication_demand, resolve_canonical_demand
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -132,7 +132,10 @@ def compact_offer(item: dict[str, Any], page_key: str) -> dict[str, Any]:
         "registrationUrl": item.get("registrationUrl"),
         "sessionId": source.get("sessionId"),
         "attachedToSessionId": item.get("attached_to_session_id"),
-        "scheduleRole": item.get("schedule_role"),
+        "scheduleRole": item.get("scheduleRole") or item.get("schedule_role"),
+        "occupiedUntil": item.get("occupiedUntil"),
+        "edgeIds": item.get("edgeIds"),
+        "sourceSessionIds": item.get("sourceSessionIds"),
         "reasons": ["public_selectable", clean(item.get("offerType")) or "synthetic_offer"],
     }
 
@@ -293,6 +296,8 @@ def main() -> None:
         cells.extend(compact_offer(item, page_key) for item in offers)
         cells.extend(compact_rejection(item, page_key) for item in rejections)
         source_pages[page_key] = {
+            "schedulingModel": payload.get("schedulingModel"),
+            "layeredLandscape": public_layered_landscape(payload),
             "generatedAt": payload.get("generatedAt"),
             "counts": payload.get("counts", {}),
             "rejectionReasonCounts": payload.get("rejectionReasonCounts", {}),

@@ -23,6 +23,14 @@ class SelectorClockTests(unittest.TestCase):
         self.assertNotIn("inside_minimum_lead_time", public_policy_reasons(start=datetime(2026,9,27,15),**common))
         self.assertIn("inside_minimum_lead_time", public_policy_reasons(start=datetime(2026,9,27,14),**common))
 
+    def test_v2_aware_start_matches_existing_eastern_policy(self):
+        reference=datetime(2026,10,7,8)
+        policy={"minimum_lead_hours":24,"dynamic_public_start_time_window":{"enabled":True,"earliest_start":"07:00","latest_start":"22:00"}}
+        for instant in ("2026-10-08T12:00:00Z","2026-10-08T06:00:00Z","2026-10-07T15:00:00Z"):
+            start=datetime.fromisoformat(instant.replace("Z","+00:00"))
+            args=dict(course_id="210549",course_family="BLS",policy=policy,reference_now=reference)
+            self.assertEqual(public_policy_reasons(start=start,**args),public_policy_reasons(start=parse_dt(instant),**args))
+
     def test_winter_summer_and_dst_inputs_normalize_to_business_time(self):
         for instant, expected in [
             ("2026-01-15T18:00:00Z","2026-01-15T13:00:00"),

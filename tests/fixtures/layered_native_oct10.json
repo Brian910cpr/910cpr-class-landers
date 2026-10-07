@@ -1,0 +1,12 @@
+{
+  "evidence_scope": "Historical source-backed shadow fixture, not a live publication snapshot. Class metadata and aggregate active registrations=1 read-only canonical SQL verified 2026-10-05 about03:00UTC; instructor interval from origin/main8cbeafd18 snapshot generated2026-10-05T02:30:49.267167Z. RoomB assignment is conservative owner primary-room policy, not independently verified canonical resource assignment.",
+  "now": "2026-10-05T03:00:00Z",
+  "windows": [{"instructor_name":"Brian Ennis","person_id":"instructor_24057895173","location_name":":: Wilmington; Shipyard Blvd","source_availability_window":"brian-do-not-schedule-oct10-source-window","start":"2026-10-10T07:00:00-04:00","end":"2026-10-11T00:00:00-04:00","qualified_course_ids":[]}],
+  "occupancy": [{"start":"2026-10-10T14:00:00-04:00","end":"2026-10-10T16:30:00-04:00","instructor":"Brian Ennis","location":":: Wilmington; Shipyard Blvd","location_resolution":"location_resource_map","resource":":: Wilmington; Shipyard Blvd - B","course_id":"209809","active_registration_count":1,"source_file":"canonical_class_sessions","source_event_id":"b48b53c7-df11-409f-a8f0-61b72a7f17e9"}],
+  "courses": [
+    {"course_id":"210549","family":"BLS","blended_classroom_skills":"blended"},
+    {"course_id":"209808","family":"Heartsaver","blended_classroom_skills":"blended"},
+    {"course_id":"329495","family":"Heartsaver","blended_classroom_skills":"blended"},
+    {"course_id":"209809","family":"Heartsaver","blended_classroom_skills":"classroom"}
+  ]
+}

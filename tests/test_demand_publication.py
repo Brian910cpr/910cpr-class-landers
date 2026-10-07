@@ -116,6 +116,9 @@ def publish_fixture(directory, day, count, *, commitment=None):
                 "HOT_SYNC_ADMIN_KEY":"fixture-only",
                 "CANONICAL_SCHEDULING_DEMAND_URL":f"http://127.0.0.1:{server.server_port}/demand",
             }))
+            # Inject fixture transport only; production endpoint restrictions stay intact.
+            stack.enter_context(patch.object(fetcher, "request_url",
+                return_value=f"http://127.0.0.1:{server.server_port}/demand"))
             if fetcher.run() != 0:
                 raise AssertionError("Fixture fetch failed")
             finalized = anchor.finalize_selector_payload(legal, json.loads(schedule.read_text())["sessions"], payload,
