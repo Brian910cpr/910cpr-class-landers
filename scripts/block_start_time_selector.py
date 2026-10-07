@@ -145,7 +145,7 @@ def people_lookup(payload: Any) -> dict[str, dict[str, Any]]:
 def load_selected_windows(loaded: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     windows, stats = generate_dynamic_offers.selected_availability_windows(loaded)
     if not windows:
-        raise BlockSelectorInputError("No real availability blocks were found in live snapshot or legacy fallback")
+        raise BlockSelectorInputError("No Google Calendar instructor availability blocks were found; legacy fallback is disabled")
     return windows, stats
 
 
@@ -183,6 +183,10 @@ def selected_public_page_live_windows(live_payload: dict[str, Any], location_res
         if not generate_dynamic_offers.valid_available_window(window):
             continue
         block_id = live_snapshot_block_id(window, index)
+        if window.get('source_type') not in {'google_calendar', 'inverse_google_calendar'}:
+            suppressed.append({'sourceAvailabilityBlockId': block_id,
+                               'reason': 'instructor_availability_requires_google_calendar'})
+            continue
         source_calendar_id = clean_text(window.get("source_calendar_id"))
         inverse_generated = window.get("inverse_generated") is True
         if inverse_generated and source_calendar_id not in APPROVED_INVERSE_AVAILABILITY_SOURCE_CALENDAR_IDS:
