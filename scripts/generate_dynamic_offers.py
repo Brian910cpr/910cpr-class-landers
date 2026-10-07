@@ -6,6 +6,7 @@ from collections import Counter
 from datetime import datetime, time, timedelta
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 
 from scripts.audit_preview_summaries import write_summary
@@ -94,7 +95,10 @@ def parse_dt(value: Any) -> datetime | None:
     if not text:
         return None
     try:
-        return datetime.fromisoformat(text.replace("Z", "+00:00")).replace(tzinfo=None)
+        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+        if parsed.tzinfo is not None:
+            parsed = parsed.astimezone(ZoneInfo("America/New_York"))
+        return parsed.replace(tzinfo=None)
     except ValueError:
         return None
 

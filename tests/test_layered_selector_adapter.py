@@ -49,6 +49,27 @@ class LayeredAdapterTests(unittest.TestCase):
         self.add('14:00','16:30','209809')
         self.assertEqual(self.starts(self.report()),{'10:00','16:30'})
 
+    def test_equivalent_utc_and_local_booking_has_one_anchor_and_real_edges(self):
+        from scripts.generate_dynamic_offers import parse_dt
+        self.add('12:00', '13:00', active_registration_count=1)
+        mirrored = dict(self.busy[0], source_event_id='enrollware:real-12:00',
+                        start=parse_dt('2026-10-10T16:00:00Z'),
+                        end=parse_dt('2026-10-10T17:00:00Z'))
+        self.busy.append(mirrored)
+        report = self.report()
+        self.assertEqual(len(report['normalized_occupancy']), 1)
+        self.assertEqual(len(report['seated_offers']), 1)
+        self.assertEqual(self.starts(report), {'11:00', '13:00'})
+        for offer in report['accepted']:
+            self.assertEqual(offer['source_ids'], ['real-12:00'])
+
+    def test_utc_conversion_preserves_eastern_winter_and_dst_clock(self):
+        from scripts.generate_dynamic_offers import parse_dt
+        for utc, local in [('2026-01-10T17:00:00Z', '2026-01-10T12:00:00'),
+                           ('2026-07-10T16:00:00Z', '2026-07-10T12:00:00')]:
+            self.assertEqual(parse_dt(utc), datetime.fromisoformat(local))
+        self.assertEqual(parse_dt('2026-10-10T12:00:00'), self.at('12:00').replace(tzinfo=None))
+
     def test_oct10_actual_full_interval_and_edges(self):
         self.add('14:00','16:30','209809',active_registration_count=1)
         for cid in ['210549','209808']:
