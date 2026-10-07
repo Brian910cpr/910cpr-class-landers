@@ -132,15 +132,26 @@ jobs:
               apply_final_live_availability_guard,
               public_selector_availability_payload,
               selector_availability_path,
-              write_page_outputs,
+              render_html,
+              render_redirect_html,
           )
 
           configs = load_block_schedule_page_configs()
           for page_key, page_config in configs.items():
               payload = apply_final_live_availability_guard(build_block_schedule_page(page_config))
               if page_config.get("render_html") is not False:
-                  write_page_outputs(payload, Path(page_config["report_json_path"]),
-                      Path(page_config["report_md_path"]), Path(page_config["output_path"]))
+                  html_path = Path(page_config["output_path"])
+                  html_path.parent.mkdir(parents=True, exist_ok=True)
+                  rendered = render_html(payload)
+                  html_path.write_text(rendered, encoding="utf-8")
+                  for alias in page_config.get("alias_output_paths", []):
+                      alias_path = Path(alias)
+                      alias_path.parent.mkdir(parents=True, exist_ok=True)
+                      alias_path.write_text(rendered, encoding="utf-8")
+                  if page_config.get("legacy_schedule_path"):
+                      legacy = Path(page_config["legacy_schedule_path"])
+                      legacy.parent.mkdir(parents=True, exist_ok=True)
+                      legacy.write_text(render_redirect_html(legacy, html_path, page_config.get("title", "Schedule")), encoding="utf-8")
               output = selector_availability_path(page_key)
               output.parent.mkdir(parents=True, exist_ok=True)
               output.write_text(
