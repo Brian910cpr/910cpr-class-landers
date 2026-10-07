@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-10-07T07:27:57.067731-04:00`
+- Generated at: `2026-10-07T08:02:39.201076-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `251`
-- Public sessions created: `251`
+- iCal events read: `250`
+- Public sessions created: `250`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `222`
+- Registration unavailable sessions marked not direct-bookable: `221`
 - Unmapped sessions: `7`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12776434` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-07-09T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776568` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-07-09T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776785` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-07-09T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776342` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-07-10T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `12775322` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-07-18T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13770449` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-07-19T08:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13782611` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-07-19T15:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `13901084` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-07-20T08:30:00-04:00 | No.9 Township Fire & Rescue |
 
 ## Unmapped Examples
 
