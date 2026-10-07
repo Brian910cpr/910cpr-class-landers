@@ -225,3 +225,15 @@ def json_load(path: Path):
 
 if __name__ == "__main__":
     unittest.main()
+
+class HistoricalArcTitleTests(unittest.TestCase):
+    def test_existing_arc_blended_alias_resolves_zero_duration_without_dropping_session(self):
+        root=Path(__file__).resolve().parents[1]
+        event=dict(uid="13880764",summary="ARC Adult CPR AED - Blended",
+                   dtstart="2026-08-10T09:30:00-04:00",dtend="2026-08-10T09:30:00-04:00",
+                   url="https://coastalcprtraining.enrollware.com/enroll?id=13880764")
+        session=build_session_from_ical_event(event,"2026-10-07T08:00:00-04:00",load_course_map(root,"data/config/course_map.json"))
+        self.assertEqual(session['session_id'],'13880764')
+        self.assertEqual(session['course']['course_id'],'372258')
+        self.assertEqual(session['end'],'2026-08-10T10:15:00-04:00')
+        self.assertEqual(session['timing']['end_inference_reason'],'inferred_from_course_consumption_rule_for_zero_duration_ical_event')
