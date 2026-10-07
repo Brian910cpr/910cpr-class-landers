@@ -1,6 +1,6 @@
 import unittest
 from datetime import datetime, timedelta, timezone
-from scripts.build_live_availability_snapshot import layered_calendar_coverage
+from scripts.build_live_availability_snapshot import layered_calendar_coverage, normalize_event_block
 
 class CoverageTests(unittest.TestCase):
     def setUp(self):
@@ -48,3 +48,21 @@ class CoverageTests(unittest.TestCase):
         self.assertEqual(self.rows(),[])
         self.blocks=[]
         self.assertEqual(self.rows(),[])
+
+
+    def test_normalized_explicit_google_event_establishes_bounded_coverage(self):
+        source=dict(calendar_source_key="explicit",calendar_mode="explicit_availability",
+                    owner_instructor_key="brian")
+        person=self.people["people"][0]
+        event=dict(start="2026-10-07T09:00:00-04:00",
+                   end="2026-10-07T12:00:00-04:00",location="Shipyard")
+        block=normalize_event_block(source,event,person,{"courses":[]})
+        self.assertIsNotNone(block)
+        self.assertIsNone(datetime.fromisoformat(block["start_datetime"]).tzinfo)
+        snapshot=dict(source_evidence={"explicit":self.evidence},
+                      events_by_source={"explicit":[event]})
+        rows=layered_calendar_coverage({"calendar_sources":[source]},self.people,
+                                       snapshot,[block],now=self.now)
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["start"],"2026-10-07T09:00:00-04:00")
+        self.assertEqual(rows[0]["end"],"2026-10-07T12:00:00-04:00")

@@ -833,8 +833,13 @@ def layered_calendar_coverage(calendar_payload, people_payload, snapshot_payload
                 # never the empty remainder of an export's horizon.
                 block_start = datetime.fromisoformat(block['start_datetime'].replace('Z', '+00:00'))
                 block_end = datetime.fromisoformat(block['end_datetime'].replace('Z', '+00:00'))
-                if block_start.tzinfo is None or block_end.tzinfo is None:
-                    raise ValueError('invalid_explicit_bounds')
+                # normalize_event_block intentionally emits Eastern local-clock
+                # values without tzinfo; restore that contract before comparing
+                # with timezone-aware export evidence bounds.
+                block_start = (block_start.replace(tzinfo=LOCAL_TZ) if block_start.tzinfo is None
+                               else block_start.astimezone(LOCAL_TZ))
+                block_end = (block_end.replace(tzinfo=LOCAL_TZ) if block_end.tzinfo is None
+                             else block_end.astimezone(LOCAL_TZ))
                 start, end = max(start, block_start), min(end, block_end)
             if end <= start:
                 continue
