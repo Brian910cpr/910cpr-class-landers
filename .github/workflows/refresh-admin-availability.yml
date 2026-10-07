@@ -2,6 +2,11 @@ name: Refresh admin availability
 
 on:
   workflow_dispatch:
+    inputs:
+      v2_release_probe:
+        description: Read current sources and validate V2 without publication
+        type: boolean
+        default: false
   schedule:
     - cron: "7,17,27,37,47,57 * * * *"
   push:
@@ -50,7 +55,7 @@ concurrency:
 
 jobs:
   refresh:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && !inputs.v2_release_probe
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -219,3 +224,40 @@ jobs:
             exit 1
           fi
           git push origin HEAD:main
+
+  v2-release-probe:
+    if: github.event_name == 'workflow_dispatch' && inputs.v2_release_probe
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install python-dateutil openpyxl certifi==2025.10.5
+      - name: Read current Enrollware occurrences
+        run: python -B -m scripts.build_sessions_current --source enrollware_ical
+      - name: Read existing occupancy
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: python -B -m scripts.fetch_hot_sync_snapshot
+      - name: Read current canonical registrations
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: python -B -m scripts.fetch_canonical_scheduling_demand
+      - name: Refresh schedule and calendar inputs
+        run: |
+          python -B -m scripts.build_schedule_future
+          python -B -m scripts.export_calendar_snapshots
+          python -B -m scripts.build_live_availability_snapshot
+      - name: Calculate existing V2 and customer previews
+        run: python -B -m scripts.run_layered_release_probe
+      - name: Upload public-safe proof only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-release-probe-${{ github.run_id }}
+          path: data/runtime/audit_previews/v2_release_probe/
+          if-no-files-found: warn
+          retention-days: 7

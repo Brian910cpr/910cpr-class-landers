@@ -28,3 +28,6 @@ data/audit/zapier_registration_*review_bundle.md
 data/audit/enrollware_zapier_registration_event_bridge.md
 data/fixtures/enrollware_registration_*.csv
 ops/handoff/codex_heartbeat.json
+
+/data/runtime/layered_day_cache/
+/data/runtime/audit_previews/v2_release_probe/
