@@ -531,6 +531,9 @@ def production_anchor_policy() -> dict[str, Any]:
 def finalize_selector_payload(payload: dict[str, Any], sessions: list[dict[str, Any]],
                               demand: dict[str, Any], policy: dict[str, Any]) -> dict[str, Any]:
     """One final decision path for public selectors and the diagnostic feed."""
+    if payload.get("schedulingModel") == "layered-publication.v2":
+        from scripts.layered_publication_adapter import finalize
+        return finalize(payload)
     sessions, _ = exclude_non_session_sources(sessions, demand)
     rows = demand.get("sessions", [])
     issues = [*payload.get("reconciliationIssues", []), *reconciliation_issues(sessions, rows)]

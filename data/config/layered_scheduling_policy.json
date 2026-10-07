@@ -1,0 +1,19 @@
+{
+  "schema_version": "layered-scheduling-policy.v1",
+  "mode": "shadow",
+  "owner_room_hours_evidence": "Brian explicitly stated All rooms are 24 hrs, 2026-10-05 02:43:26 UTC",
+  "room_hours": "24/7",
+  "simultaneous_classes_per_room": 1,
+  "primary_resource": ":: Wilmington; Shipyard Blvd - B",
+  "manual_overlap_resources": [":: Wilmington; Shipyard Blvd - C", ":: Wilmington; Shipyard Blvd - C (Other)"],
+  "automatic_relocation": false,
+  "skills_instruction_minutes": 45,
+  "skills_cleanup_minutes": 15,
+  "full_instruction_minutes": 120,
+  "full_cleanup_minutes": 30,
+  "full_family_paid_positions_per_day": 1,
+  "slot_minutes": 30,
+  "edge_grid_policy": "exact_existing_boundary",
+  "brian_person_id": "instructor_24057895173",
+  "brian_excluded_families": ["ACLS", "PALS"]
+}

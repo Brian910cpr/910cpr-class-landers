@@ -262,33 +262,25 @@ def parse_ical_events(text: str) -> list[dict[str, Any]]:
     return events
 
 
+def enrollware_tls_context() -> ssl.SSLContext:
+    # Use the maintained CA bundle instead of local trust-store chain selection.
+    # Missing/invalid trust must fail closed; never retry without verification.
+    import certifi
+
+    return ssl.create_default_context(cafile=certifi.where())
+
+
 def fetch_ical_text(url: str) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": ENROLLWARE_ICAL_USER_AGENT})
-    try:
-        with urllib.request.urlopen(request, timeout=45) as response:
-            raw = response.read()
-    except urllib.error.URLError as exc:
-        reason = getattr(exc, "reason", None)
-        if not isinstance(reason, ssl.SSLError):
-            raise
-        insecure_context = ssl._create_unverified_context()
-        with urllib.request.urlopen(request, timeout=45, context=insecure_context) as response:
-            raw = response.read()
+    with urllib.request.urlopen(request, timeout=45, context=enrollware_tls_context()) as response:
+        raw = response.read()
     return decode_ical_bytes(raw)
 
 
 def fetch_enrollment_page_text(url: str) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": ENROLLWARE_ICAL_USER_AGENT})
-    try:
-        with urllib.request.urlopen(request, timeout=20) as response:
-            raw = response.read()
-    except urllib.error.URLError as exc:
-        reason = getattr(exc, "reason", None)
-        if not isinstance(reason, ssl.SSLError):
-            raise
-        insecure_context = ssl._create_unverified_context()
-        with urllib.request.urlopen(request, timeout=20, context=insecure_context) as response:
-            raw = response.read()
+    with urllib.request.urlopen(request, timeout=20, context=enrollware_tls_context()) as response:
+        raw = response.read()
     return decode_ical_bytes(raw)
 
 

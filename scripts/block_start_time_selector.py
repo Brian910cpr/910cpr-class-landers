@@ -305,7 +305,7 @@ def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, An
         block_id = clean_text(offer.get("availabilityBlockId"))
         block = live_blocks.get(block_id)
         start = parse_dt(f"{offer.get('date')}T{offer.get('startTime')}")
-        consumption_end = parse_dt(f"{offer.get('date')}T{offer.get('schedulerConsumptionEnd')}")
+        consumption_end = parse_dt(offer.get("occupiedUntil")) if offer.get("occupiedUntil") else parse_dt(f"{offer.get('date')}T{offer.get('schedulerConsumptionEnd')}")
         reason = ""
         if not block:
             reason = "source_availability_block_missing_from_current_live_snapshot"
@@ -660,7 +660,7 @@ def apply_occupancy_duration_rules(
     return occupancy
 
 
-def normalize_live_calendar_block_occupancy(payload: Any) -> list[dict[str, Any]]:
+def normalize_live_calendar_block_occupancy(payload: Any, allow_unresolved: bool = False) -> list[dict[str, Any]]:
     """Treat authoritative blocked live-calendar windows as hard occupancy."""
 
     out: list[dict[str, Any]] = []
@@ -668,14 +668,14 @@ def normalize_live_calendar_block_occupancy(payload: Any) -> list[dict[str, Any]
         if block.get("availability_status") != "blocked":
             continue
         start, end, _source = generate_dynamic_offers.availability_window_datetimes(block)
-        if not start or not end:
+        if (not start or not end) and not allow_unresolved:
             raise BlockSelectorInputError(
                 "Blocked live-calendar occupancy has an invalid interval: "
                 f"source_event_id={clean_text(block.get('source_event_id') or f'blocked[{index}]')}"
             )
         instructor = clean_text(block.get("instructor_name") or UNKNOWN)
         location = clean_text(block.get("location_name") or block.get("source_location") or UNKNOWN)
-        if instructor == UNKNOWN and location == UNKNOWN:
+        if instructor == UNKNOWN and location == UNKNOWN and not allow_unresolved:
             raise BlockSelectorInputError(
                 "Blocked live-calendar occupancy is missing both instructor and location: "
                 f"source_event_id={clean_text(block.get('source_event_id') or f'blocked[{index}]')}"
@@ -688,12 +688,14 @@ def normalize_live_calendar_block_occupancy(payload: Any) -> list[dict[str, Any]
             "course_title": clean_text(block.get("summary") or block.get("source_type") or "Authoritative calendar block"),
             "source_file": f"live_availability_snapshot.blocked[{index}]",
             "source_calendar_id": clean_text(block.get("source_calendar_id") or UNKNOWN),
+            "availability_location_mode": block.get("availability_location_mode"),
+            "instructor_unassigned": instructor == UNKNOWN,
             "source_event_id": clean_text(block.get("source_event_id") or UNKNOWN),
         })
     return out
 
 
-def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, Any]], allow_unresolved: bool = False) -> list[dict[str, Any]]:
     location_resource_map = loaded.get("location_resource_map")
     sessions_current = apply_occupancy_duration_rules(
         generate_dynamic_offers.normalize_occupancy(loaded.get("sessions_current"), "data/sessions_current.json"),
@@ -705,14 +707,26 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
         loaded.get("schedule_future"),
         course_rules,
     )
-    calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"))
+    if allow_unresolved:
+        # The V1 normalizer predates durable source identities. Carry them only
+        # for the opt-in V2 path without changing the stable generic normalizer.
+        for normalized, source in [(sessions_current, loaded.get("sessions_current")),
+                                   (schedule_future, loaded.get("schedule_future"))]:
+            raw = source.get("sessions", []) if isinstance(source, dict) else []
+            for block, session in zip(normalized, [r for r in raw if isinstance(r, dict)]):
+                block.update(source_event_id=session.get("session_id") or session.get("id"),
+                    course_id=session.get("course_id"), external_class_id=session.get("session_id"),
+                    count_available=session.get("count_available") is True,
+                    active_registration_count=session.get("active_registration_count"),
+                    uncertainty_scope=session.get("uncertainty_scope", {}))
+    calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"), allow_unresolved)
     canonical = []
     for session in loaded.get("canonical_demand", {}).get("sessions", []):
         if session.get("session_status") not in ("scheduled", "active", "completed"):
             continue
         start = parse_dt(session.get("consumption_start_at") or session.get("start_at"))
         end = parse_dt(session.get("consumption_end_at") or session.get("end_at"))
-        if not start or not end or end <= start:
+        if (not start or not end or end <= start) and not allow_unresolved:
             raise BlockSelectorInputError("Canonical session has an invalid occupied window")
         canonical.append({
             "start": start, "end": end,
@@ -721,6 +735,12 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "course_title": session.get("course_name") or "Canonical class",
             "source_file": "canonical_class_sessions",
             "source_event_id": session.get("canonical_session_id"),
+            "external_class_id": session.get("external_class_id"),
+            "course_id": session.get("course_id") or session.get("external_course_id"),
+            "uncertainty_scope": session.get("uncertainty_scope", {}),
+            "instructor_unassigned": not session.get("lead_instructor_name"),
+            "count_available": session.get("count_available") is True,
+            "active_registration_count": session.get("active_registration_count"),
         })
     occupancy = sessions_current + schedule_future + calendar_blocks + canonical
     for block in occupancy:
@@ -1110,8 +1130,11 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     if not containers:
         raise BlockSelectorInputError(f"{APPOINTMENT_CONTAINERS_PATH} has no active appointment containers")
     windows, availability_stats = selected_public_page_live_windows(live_availability_snapshot, loaded["location_resource_map"])
-    occupancy = build_occupancy(loaded, course_rules)
-    occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy)
+    layered_policy_path = ROOT / "data" / "config" / "layered_scheduling_policy.json"
+    layered_policy = read_required_json(layered_policy_path) if layered_policy_path.exists() else {}
+    from scripts.layered_publication_adapter import active as layered_active
+    occupancy = build_occupancy(loaded, course_rules, allow_unresolved=layered_active(layered_policy))
+    occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy) if not layered_active(layered_policy) else {}
     reference_now = selector_reference_datetime()
     anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
     same_day_anchors = seated_family_anchors(
@@ -1151,6 +1174,50 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             **course_rules[course_id],
             "schedule_page_option": config_course_options.get(course_id, {}),
         })
+
+    # V2 remains opt-in. Room hours alone never establish calendar coverage.
+    if layered_active(layered_policy):
+        from scripts.layered_publication_adapter import publish
+        from scripts.layered_day_cache import cached_calculate
+        venue_aliases = {str(value).casefold().strip()
+            for venue in loaded["location_resource_map"].get("locations", [])
+            if any(resource.get("resource_name") == layered_policy["primary_resource"]
+                   for resource in venue.get("internal_resources", []))
+            for value in [venue.get("canonical_public_location"), *venue.get("aliases", [])] if value}
+        coverage = [dict(proof, location=layered_policy["primary_resource"])
+            if str(proof.get("location") or "").casefold().strip() in venue_aliases else dict(proof)
+            for proof in live_availability_snapshot.get("layered_commitment_coverage", [])]
+        windows = [dict(w, public_location_allowed=public_location_allowed(
+            clean_text(w.get("location_name")), public_location_policy)) for w in windows]
+        effective_layered_policy = dict(layered_policy,
+            lead_minutes=int(public_offer_policy.get("minimum_lead_hours") or 0) * 60)
+        calculation = cached_calculate(windows, occupancy, selected_courses, effective_layered_policy,
+            loaded["location_resource_map"], reference_now, window_datetimes,
+            lambda window, course: bool(people.get(normalize_key(window.get("person_id")))
+                and has_required_cert(people[normalize_key(window.get("person_id"))], course)),
+            coverage, layered_policy.get("travel_minutes", {}),
+            cache_dir=ROOT / 'data/runtime/layered_day_cache' / page_key,
+            horizon_days=90)
+        windows = calculation.pop('selected_windows')
+        seated = seated_class_selector_offers(
+            schedule_future_payload=loaded.get("schedule_future"), selected_courses=selected_courses,
+            selected_course_ids=set(allowed_course_ids), course_rules=course_rules,
+            minimum_enrollment=0) if page_config.get("include_seated_classes", True) else []
+        def layered_public_reasons(start, course):
+            reasons = public_policy_reasons(start, str(course["course_id"]),
+                str(course.get("course_family") or course.get("family") or ""),
+                public_offer_policy, set(allowed_course_ids), reference_now=reference_now)
+            if course.get("appointment_eligible") is not True or course.get("appointment_allowed") is not True:
+                reasons.append("course_not_appointment_eligible")
+            return reasons
+        result = publish(calculation, page_config, selected_courses, windows, reference_now,
+            lambda window, start, cid: find_url(window, start, cid, containers, loaded["location_resource_map"]),
+            layered_public_reasons, seated)
+        result["inputFiles"] = {"liveAvailabilitySnapshot": str(LIVE_AVAILABILITY_PATH),
+            "courseConsumptionRules": str(COURSE_RULES_PATH), "layeredPolicy": str(layered_policy_path)}
+        result["horizonDays"] = 90
+        result["minimumLeadHours"] = int(public_offer_policy.get("minimum_lead_hours") or 0)
+        return result
 
     rejections: list[dict[str, Any]] = []
     rejection_counts_by_date: dict[str, Counter[str]] = defaultdict(Counter)

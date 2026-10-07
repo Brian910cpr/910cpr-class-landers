@@ -66,7 +66,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install python-dateutil openpyxl
+        run: pip install python-dateutil openpyxl certifi==2025.10.5
 
       - name: Test scheduling reconciliation before generating output
         run: python -B -m unittest tests.test_zero_duration_pipeline tests.test_enrollware_ical_import tests.test_scheduling_reconciliation tests.test_canonical_scheduling_demand tests.test_apply_anchor_policy tests.test_anchor_state tests.test_publish_scheduling_landscape tests.test_native_public_anchor

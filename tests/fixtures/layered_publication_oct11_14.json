@@ -1,0 +1,298 @@
+{
+  "name": "Local fixture assumptions: Oct11-14, not live booking proof",
+  "now": "2026-10-05T12:00:00-04:00",
+  "windows": [
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "location_name": ":: Wilmington; Shipyard Blvd",
+      "source_availability_window": "Brian Ennis-11-00:00",
+      "start": "2026-10-11T00:00:00-04:00",
+      "end": "2026-10-12T00:00:00-04:00"
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "location_name": ":: Wilmington; Shipyard Blvd",
+      "source_availability_window": "Brian Ennis-12-00:00",
+      "start": "2026-10-12T00:00:00-04:00",
+      "end": "2026-10-13T00:00:00-04:00"
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "location_name": ":: Wilmington; Shipyard Blvd",
+      "source_availability_window": "Brian Ennis-13-07:45",
+      "start": "2026-10-13T07:45:00-04:00",
+      "end": "2026-10-13T15:00:00-04:00"
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "location_name": ":: Wilmington; Shipyard Blvd",
+      "source_availability_window": "Brian Ennis-13-17:30",
+      "start": "2026-10-13T17:30:00-04:00",
+      "end": "2026-10-14T00:00:00-04:00"
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "location_name": ":: Wilmington; Shipyard Blvd",
+      "source_availability_window": "Brian Ennis-14-17:30",
+      "start": "2026-10-14T17:30:00-04:00",
+      "end": "2026-10-15T00:00:00-04:00"
+    }
+  ],
+  "occupancy": [
+    {
+      "source_event_id": "fixture-11-17:00-Brian Ennis",
+      "start": "2026-10-11T17:00:00-04:00",
+      "end": "2026-10-11T19:00:00-04:00",
+      "instructor": "Brian Ennis",
+      "course_id": "359474",
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "location_resolution": "location_resource_map",
+      "source_file": "canonical_class_sessions",
+      "active_registration_count": 1,
+      "count_available": true
+    },
+    {
+      "source_event_id": "fixture-12-09:00-Michelle",
+      "start": "2026-10-12T09:00:00-04:00",
+      "end": "2026-10-12T11:00:00-04:00",
+      "instructor": "Michelle",
+      "course_id": "359474",
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "location_resolution": "location_resource_map",
+      "source_file": "canonical_class_sessions",
+      "active_registration_count": null,
+      "count_available": false
+    },
+    {
+      "source_event_id": "fixture-12-12:00-Brian Ennis",
+      "start": "2026-10-12T12:00:00-04:00",
+      "end": "2026-10-12T13:00:00-04:00",
+      "instructor": "Brian Ennis",
+      "course_id": "210549",
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "location_resolution": "location_resource_map",
+      "source_file": "canonical_class_sessions",
+      "active_registration_count": null,
+      "count_available": false
+    },
+    {
+      "source_event_id": "fixture-12-17:00-Michelle",
+      "start": "2026-10-12T17:00:00-04:00",
+      "end": "2026-10-12T19:00:00-04:00",
+      "instructor": "Michelle",
+      "course_id": "359474",
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "location_resolution": "location_resource_map",
+      "source_file": "canonical_class_sessions",
+      "active_registration_count": null,
+      "count_available": false
+    },
+    {
+      "source_event_id": "fixture-12-06:30-Brian Ennis",
+      "start": "2026-10-12T06:30:00-04:00",
+      "end": "2026-10-12T07:45:00-04:00",
+      "instructor": "Brian Ennis",
+      "course_id": "210549",
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "location_resolution": "location_resource_map",
+      "source_file": "live_availability_snapshot.blocked",
+      "active_registration_count": null,
+      "count_available": false,
+      "availability_location_mode": "instructor_time_only"
+    },
+    {
+      "source_event_id": "fixture-12-09:00-Brian Ennis",
+      "start": "2026-10-12T09:00:00-04:00",
+      "end": "2026-10-12T11:00:00-04:00",
+      "instructor": "Brian Ennis",
+      "course_id": "210549",
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "location_resolution": "location_resource_map",
+      "source_file": "live_availability_snapshot.blocked",
+      "active_registration_count": null,
+      "count_available": false,
+      "availability_location_mode": "instructor_time_only"
+    },
+    {
+      "source_event_id": "fixture-12-15:00-Brian Ennis",
+      "start": "2026-10-12T15:00:00-04:00",
+      "end": "2026-10-12T17:30:00-04:00",
+      "instructor": "Brian Ennis",
+      "course_id": "210549",
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "location_resolution": "location_resource_map",
+      "source_file": "live_availability_snapshot.blocked",
+      "active_registration_count": null,
+      "count_available": false,
+      "availability_location_mode": "instructor_time_only"
+    },
+    {
+      "source_event_id": "fixture-12-17:00-Brian Ennis",
+      "start": "2026-10-12T17:00:00-04:00",
+      "end": "2026-10-12T18:00:00-04:00",
+      "instructor": "Brian Ennis",
+      "course_id": "210549",
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "location_resolution": "location_resource_map",
+      "source_file": "live_availability_snapshot.blocked",
+      "active_registration_count": null,
+      "count_available": false,
+      "availability_location_mode": "instructor_time_only"
+    },
+    {
+      "source_event_id": "fixture-12-18:00-Brian Ennis",
+      "start": "2026-10-12T18:00:00-04:00",
+      "end": "2026-10-12T23:59:00-04:00",
+      "instructor": "Brian Ennis",
+      "course_id": "210549",
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "location_resolution": "location_resource_map",
+      "source_file": "live_availability_snapshot.blocked",
+      "active_registration_count": null,
+      "count_available": false,
+      "availability_location_mode": "instructor_time_only"
+    },
+    {
+      "source_event_id": "fixture-13-14:00-Amy",
+      "start": "2026-10-13T14:00:00-04:00",
+      "end": "2026-10-13T18:00:00-04:00",
+      "instructor": "Amy",
+      "course_id": "359474",
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "location_resolution": "location_resource_map",
+      "source_file": "canonical_class_sessions",
+      "active_registration_count": null,
+      "count_available": false
+    },
+    {
+      "source_event_id": "fixture-14-17:30-Brian Ennis",
+      "start": "2026-10-14T17:30:00-04:00",
+      "end": "2026-10-14T19:30:00-04:00",
+      "instructor": "Brian Ennis",
+      "course_id": "329495",
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "location_resolution": "location_resource_map",
+      "source_file": "canonical_class_sessions",
+      "active_registration_count": null,
+      "count_available": false
+    }
+  ],
+  "courses": [
+    {
+      "course_id": "210549",
+      "course_family": "BLS",
+      "kind": "skills",
+      "clean_course_name": "AHA HeartCode BLS Skills",
+      "blended_classroom_skills": "blended"
+    },
+    {
+      "course_id": "329495",
+      "course_family": "Heartsaver",
+      "kind": "skills",
+      "clean_course_name": "Heartsaver Blended Skills",
+      "blended_classroom_skills": "blended"
+    },
+    {
+      "course_id": "209809",
+      "course_family": "Heartsaver",
+      "kind": "full",
+      "clean_course_name": "Heartsaver Full Classroom",
+      "blended_classroom_skills": "classroom"
+    },
+    {
+      "course_id": "359474",
+      "course_family": "BLS",
+      "kind": "full",
+      "clean_course_name": "BLS Renewal",
+      "blended_classroom_skills": "classroom"
+    }
+  ],
+  "coverage": [
+    {
+      "status": "known_complete",
+      "instructor": "Brian Ennis",
+      "location": ":: Wilmington; Shipyard Blvd - B",
+      "start": "2026-10-11T00:00:00-04:00",
+      "end": "2026-10-12T00:00:00-04:00",
+      "observed_at": "2026-10-05T12:00:00-04:00",
+      "valid_until": "2026-10-05T13:00:00-04:00",
+      "source": "explicit_fixture_complete_calendar"
+    },
+    {
+      "status": "known_complete",
+      "instructor": "Brian Ennis",
+      "location": ":: Wilmington; Shipyard Blvd - B",
+      "start": "2026-10-12T00:00:00-04:00",
+      "end": "2026-10-13T00:00:00-04:00",
+      "observed_at": "2026-10-05T12:00:00-04:00",
+      "valid_until": "2026-10-05T13:00:00-04:00",
+      "source": "explicit_fixture_complete_calendar"
+    },
+    {
+      "status": "known_complete",
+      "instructor": "Brian Ennis",
+      "location": ":: Wilmington; Shipyard Blvd - B",
+      "start": "2026-10-13T07:45:00-04:00",
+      "end": "2026-10-13T15:00:00-04:00",
+      "observed_at": "2026-10-05T12:00:00-04:00",
+      "valid_until": "2026-10-05T13:00:00-04:00",
+      "source": "explicit_fixture_complete_calendar"
+    },
+    {
+      "status": "known_complete",
+      "instructor": "Brian Ennis",
+      "location": ":: Wilmington; Shipyard Blvd - B",
+      "start": "2026-10-13T17:30:00-04:00",
+      "end": "2026-10-14T00:00:00-04:00",
+      "observed_at": "2026-10-05T12:00:00-04:00",
+      "valid_until": "2026-10-05T13:00:00-04:00",
+      "source": "explicit_fixture_complete_calendar"
+    },
+    {
+      "status": "known_complete",
+      "instructor": "Brian Ennis",
+      "location": ":: Wilmington; Shipyard Blvd - B",
+      "start": "2026-10-14T17:30:00-04:00",
+      "end": "2026-10-15T00:00:00-04:00",
+      "observed_at": "2026-10-05T12:00:00-04:00",
+      "valid_until": "2026-10-05T13:00:00-04:00",
+      "source": "explicit_fixture_complete_calendar"
+    }
+  ],
+  "policy": {
+    "schema_version": "layered-scheduling-policy.v1",
+    "mode": "active_local_v2",
+    "owner_room_hours_evidence": "Brian explicitly stated All rooms are 24 hrs, 2026-10-05 02:43:26 UTC",
+    "room_hours": "24/7",
+    "simultaneous_classes_per_room": 1,
+    "primary_resource": ":: Wilmington; Shipyard Blvd - B",
+    "manual_overlap_resources": [
+      ":: Wilmington; Shipyard Blvd - C",
+      ":: Wilmington; Shipyard Blvd - C (Other)"
+    ],
+    "automatic_relocation": false,
+    "skills_instruction_minutes": 45,
+    "skills_cleanup_minutes": 15,
+    "full_instruction_minutes": 120,
+    "full_cleanup_minutes": 30,
+    "full_family_paid_positions_per_day": 1,
+    "slot_minutes": 30,
+    "edge_grid_policy": "exact_existing_boundary",
+    "brian_person_id": "instructor_24057895173",
+    "brian_excluded_families": [
+      "ACLS",
+      "PALS"
+    ],
+    "lead_minutes": 0
+  },
+  "notes": [
+    "All complete coverage and known headcounts here are explicit fixture assumptions.",
+    "Source-inspired occupied times do not prove current rosters, staffing, travel or bookability.",
+    "fixture.test URLs are deliberately non-operational; no registrations or DB mutations."
+  ]
+}

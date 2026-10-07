@@ -43,6 +43,33 @@ def selector_availability_path(page_key: str) -> Path:
     return SELECTOR_AVAILABILITY_DIR / f"{safe_key}.json"
 
 
+def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
+    """Public geometry from production decisions; no calendar titles or participants."""
+    calculation = payload.get("layeredDiagnostics") or {}
+    sources = []
+    for source in calculation.get("projected_sources", []):
+        kind = source.get("kind") or ("commitment" if "blocked" in str(source.get("source_file")) or not source.get("course_id") else "planted")
+        sources.append({
+            "sourceId": source.get("source_event_id"),
+            "role": "anchor" if kind in ("paid", "seated", "planted") else "blocking",
+            "start": source.get("start"), "end": source.get("end"),
+            "courseId": source.get("course_id"), "resource": source.get("resource"),
+            "countAvailable": source.get("count_available") is True,
+            "registeredCount": source.get("active_registration_count") if source.get("count_available") is True else None,
+        })
+    blocks = []
+    seen = set()
+    for report in calculation.get("reports", []):
+        for block in report.get("blocks", []):
+            key = (block.get("id"), block.get("start"), block.get("end"))
+            if key in seen:continue
+            seen.add(key)
+            blocks.append({k: block.get(k) for k in ("id", "start", "end", "source_ids")})
+    return {"schemaVersion": "public-layered-landscape.v1", "sources": sources,
+            "occupiedBlocks": blocks, "offersAreAlternatives": True,
+            "availabilityIsNotAClass": True}
+
+
 def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, Any]:
     compact_dates: list[dict[str, Any]] = []
     for day in payload.get("dates", []):
@@ -60,6 +87,9 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "schedulerConsumptionMinutes": course.get("schedulerConsumptionMinutes"),
                     "appointmentDayId": course.get("appointmentDayId"),
                     "appointmentUrl": course.get("appointmentUrl"),
+                    "registrationUrl": course.get("registrationUrl") or course.get("appointmentUrl"),
+                    "cleanupBufferMinutes": course.get("cleanupBufferMinutes"),
+                    "setupBufferMinutes": course.get("setupBufferMinutes"),
                     "location": course.get("location"),
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "offerType": course.get("offerType") or "dynamic_appointment",
@@ -68,6 +98,10 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "session_id": course.get("session_id"),
                     "instructor": course.get("instructor"),
                     "schedulerConsumptionEnd": course.get("schedulerConsumptionEnd"),
+                    "occupiedUntil": course.get("occupiedUntil"),
+                    "sourceSessionIds": course.get("sourceSessionIds"),
+                    "edgeIds": course.get("edgeIds"),
+                    "resource": course.get("resource"),
                     "validUntil": course.get("validUntil"),
                     "date": day.get("date"),
                     "startTime": slot.get("startTime"),
@@ -87,6 +121,8 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
             })
     return {
         "schemaVersion": "selector-resolved-availability.v1",
+        "schedulingModel": payload.get("schedulingModel"),
+        "layeredLandscape": public_layered_landscape(payload),
         "generatedAt": payload.get("generatedAt"),
         "validUntil": payload.get("validUntil"),
         "pageKey": payload.get("pageKey"),
@@ -2049,8 +2085,9 @@ def render_html(payload: dict[str, Any]) -> str:
             }}
             button.disabled = disabled;
             button.setAttribute('aria-disabled', String(disabled));
-            const scheduledLabels = [...new Set([...seatedLabels, ...anchorLabels, ...barnacleLabels])];
-            const activityText = [scheduledLabels.length ? 'Scheduled class at ' + scheduledLabels.join(', ') : '', optionLabels.length ? 'additional options at ' + optionLabels.join(', ') : ''].filter(Boolean).join('; ');
+            const scheduledLabels = [...new Set(seatedLabels)];
+            const additionalLabels = [...new Set([...optionLabels, ...anchorLabels, ...barnacleLabels])];
+            const activityText = [scheduledLabels.length ? 'Scheduled class at ' + scheduledLabels.join(', ') : '', additionalLabels.length ? 'additional options at ' + additionalLabels.join(', ') : ''].filter(Boolean).join('; ');
             button.setAttribute('aria-label', available.displayDate + '. ' + activityText + '. ' + (disabled ? 'not bookable; past date or no future ' + scheduleTimezone + ' start times.' : 'Available.'));
             button.setAttribute('aria-pressed', String(available.date === selectedDate));
             button.addEventListener('click', () => {{
@@ -2120,7 +2157,7 @@ def render_html(payload: dict[str, Any]) -> str:
         }}
         button.disabled = disabled;
         button.setAttribute('aria-disabled', String(disabled));
-        button.setAttribute('aria-label', slot.displayStartTime + ((isAnchor || isBarnacle || isSeated) ? ' scheduled class' : ' available option') + (disabled ? '; not bookable; past ' + scheduleTimezone + ' start time' : ''));
+        button.setAttribute('aria-label', slot.displayStartTime + (isSeated ? ' scheduled class' : ' available option') + (disabled ? '; not bookable; past ' + scheduleTimezone + ' start time' : ''));
         button.setAttribute('aria-pressed', String(slot.startTime === selectedStart));
         button.addEventListener('click', () => {{
           if (isPastStart(day, slot)) {{
@@ -2167,11 +2204,11 @@ def render_html(payload: dict[str, Any]) -> str:
         dateRow.textContent = selectedDateLabel();
         const timeRow = document.createElement('div');
         timeRow.className = 'selected-summary-row';
-        timeRow.textContent = course.displayStartTime;
+        timeRow.textContent = course.displayStartTime + (Number(course.durationMinutes) > 0 ? ' - ' + course.durationMinutes + ' min' : '');
         const locationRow = document.createElement('div');
         locationRow.className = 'selected-summary-row';
         locationRow.textContent = course.location;
-        if (isSeated || role === 'anchor' || role === 'barnacle') {{
+        if (isSeated) {{
           const cue = document.createElement('div');
           cue.className = 'schedule-cue';
           cue.textContent = '★ Scheduled class';

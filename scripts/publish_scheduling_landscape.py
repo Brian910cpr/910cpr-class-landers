@@ -132,7 +132,10 @@ def compact_offer(item: dict[str, Any], page_key: str) -> dict[str, Any]:
         "registrationUrl": item.get("registrationUrl"),
         "sessionId": source.get("sessionId"),
         "attachedToSessionId": item.get("attached_to_session_id"),
-        "scheduleRole": item.get("schedule_role"),
+        "scheduleRole": item.get("scheduleRole") or item.get("schedule_role"),
+        "occupiedUntil": item.get("occupiedUntil"),
+        "edgeIds": item.get("edgeIds"),
+        "sourceSessionIds": item.get("sourceSessionIds"),
         "reasons": ["public_selectable", clean(item.get("offerType")) or "synthetic_offer"],
     }
 
@@ -293,6 +296,8 @@ def main() -> None:
         cells.extend(compact_offer(item, page_key) for item in offers)
         cells.extend(compact_rejection(item, page_key) for item in rejections)
         source_pages[page_key] = {
+            "schedulingModel": payload.get("schedulingModel"),
+            "layeredDiagnostics": payload.get("layeredDiagnostics"),
             "generatedAt": payload.get("generatedAt"),
             "counts": payload.get("counts", {}),
             "rejectionReasonCounts": payload.get("rejectionReasonCounts", {}),

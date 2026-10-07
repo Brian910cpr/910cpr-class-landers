@@ -126,14 +126,78 @@ def stable_hash(payload: dict[str, Any]) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
+SAFE_SERVER_ERRORS = frozenset({
+    "Dates must be real calendar dates in YYYY-MM-DD format",
+    "Could not resolve local midnight", "Invalid date range", "Invalid time value",
+    "Unauthorized", "Canonical scheduling demand is temporarily unavailable",
+    "Method not allowed", "Origin is not allowed",
+    "Bad Request", "400 Bad Request", "Invalid API key", "Invalid JWT",
+    "Missing authorization header", "Request Header Or Cookie Too Large",
+    "Request Header Fields Too Large", "Invalid HTTP request received.",
+    "Forbidden", "Access denied", "Authentication failed.", "Origin is not allowed.",
+    "Admin service is not configured.", "HOT_SYNC persistence is not connected.",
+})
+
+
+def validate_admin_key(key: str) -> str:
+    if not key:
+        raise ValueError("HOT_SYNC_ADMIN_KEY is not configured")
+    if any(ord(character) < 32 or ord(character) == 127 for character in key):
+        raise ValueError("Key contains HTTP-forbidden control characters; value not sent")
+    if key != key.strip():
+        raise ValueError("Key has surrounding whitespace; HTTP headers cannot preserve it exactly")
+    try:
+        key.encode("latin-1")
+    except UnicodeEncodeError:
+        raise ValueError("Key contains characters outside Python HTTP header encoding (Latin-1); value not sent") from None
+    return key
+
+
+def request_url(url: str) -> str:
+    parts = urllib.parse.urlsplit(url)
+    if (parts.scheme != "https" or parts.hostname != "wktwgcnwdvbebcobgyey.supabase.co"
+            or parts.username or parts.password or parts.fragment
+            or parts.path != "/functions/v1/canonical-scheduling-demand" or parts.port not in (None, 443)):
+        raise ValueError("Canonical demand URL must be the approved HTTPS endpoint")
+    # Own both bounds; do not append a second '?' to an override containing a query.
+    # Explicit ISO dates also avoid depending on edge-runtime locale formatting.
+    start = datetime.now(ZoneInfo("America/New_York")).date()
+    query = urllib.parse.urlencode({"from": start.isoformat(), "to": (start + timedelta(days=366)).isoformat()})
+    return urllib.parse.urlunsplit((parts.scheme, parts.netloc, parts.path, query, ""))
+
+
+def safe_http_error(exc: urllib.error.HTTPError) -> str:
+    message = "server error detail withheld (unrecognized or non-JSON response)"
+    try:
+        raw = exc.read(4097).decode("utf-8")
+        try:
+            body = json.loads(raw)
+        except ValueError:
+            body = None
+        candidates = [body.get(field) for field in ("error", "message", "msg")] if isinstance(body, dict) else [raw.strip()]
+        # Gateway responses may be HTML. Match only literal public headings,
+        # never serialize the surrounding page, arbitrary strings or headers.
+        for known in SAFE_SERVER_ERRORS:
+            if known in candidates or f"<title>{known}</title>" in raw or f"<h1>{known}</h1>" in raw:
+                message = known
+                break
+        kind = "json" if isinstance(body, dict) else "html" if "<html" in raw.lower() else "other"
+        if isinstance(body, dict) and body.get("code") in {
+            "origin_rejected", "authentication_failed", "service_unavailable", "storage_unavailable"
+        }:
+            message += f" [code: {body['code']}]"
+    except (ValueError, OSError, UnicodeError):
+        kind = "unreadable"
+    return f"HTTP {exc.code}: {message}" + (f" [response format: {kind}]" if "withheld" in message else "")
+
+
 def fetch(*, url: str, key: str, timeout: float = 30) -> dict[str, Any]:
-    query = urllib.parse.urlencode({"from": datetime.now(ZoneInfo("America/New_York")).date().isoformat()})
     request = urllib.request.Request(
-        f"{url}?{query}",
+        request_url(url),
         headers={
             "Accept": "application/json",
             "User-Agent": "910CPR-LanderWare-Canonical-Demand/1.0",
-            "X-Hot-Sync-Admin-Key": key,
+            "X-Hot-Sync-Admin-Key": validate_admin_key(key),
         },
     )
     with urllib.request.urlopen(request, timeout=timeout) as response:
@@ -141,13 +205,13 @@ def fetch(*, url: str, key: str, timeout: float = 30) -> dict[str, Any]:
 
 
 def run(*, now: datetime | None = None) -> int:
-    key = str(os.environ.get("HOT_SYNC_ADMIN_KEY") or "").strip()
+    key = str(os.environ.get("HOT_SYNC_ADMIN_KEY") or "")
     url = str(os.environ.get("CANONICAL_SCHEDULING_DEMAND_URL") or DEFAULT_URL).strip()
     observed_at = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
     status: dict[str, Any] = {
         "schema_version": "910cpr-canonical-demand-fetch-status.v1",
         "observed_at": observed_at.isoformat(),
-        "source_url": url,
+        "source_url": DEFAULT_URL,
         "success": False,
         "snapshot_preserved": OUTPUT.exists(),
     }
@@ -169,7 +233,8 @@ def run(*, now: datetime | None = None) -> int:
         print(f"Canonical demand stable hash: {status['stable_hash']}")
         return 0
     except (RuntimeError, ValueError, OSError, urllib.error.URLError, json.JSONDecodeError) as exc:
-        status["error"] = f"{exc.__class__.__name__}: {exc}"
+        # Never serialize an HTTP exception's URL, headers or arbitrary body.
+        status["error"] = safe_http_error(exc) if isinstance(exc, urllib.error.HTTPError) else f"{exc.__class__.__name__}: {exc}"
         _atomic_write_json(STATUS_OUTPUT, status)
         print(f"ERROR: canonical scheduling demand unavailable: {status['error']}")
         print("Refusing to rebuild anchors without a fresh validated canonical demand snapshot.")

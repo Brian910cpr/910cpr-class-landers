@@ -498,6 +498,7 @@ def load_runtime_snapshots() -> tuple[Path | None, Any | None, dict[str, str]]:
 
     events_by_source: dict[str, list[dict[str, Any]]] = {}
     loaded_files = []
+    source_evidence = {}
     for path in snapshot_files:
         payload, error = read_json(path)
         if error:
@@ -509,6 +510,8 @@ def load_runtime_snapshots() -> tuple[Path | None, Any | None, dict[str, str]]:
         source_key = str(payload.get("calendar_source_id") or path.stem)
         raw_events = payload.get("events", [])
         events_by_source[source_key] = [event for event in raw_events if isinstance(event, dict)] if isinstance(raw_events, list) else []
+        source_evidence[source_key] = {key: payload.get(key) for key in
+            ("generated_at", "date_range", "export_status", "warnings", "skipped")}
         loaded_files.append(str(path))
 
     if not loaded_files:
@@ -516,6 +519,7 @@ def load_runtime_snapshots() -> tuple[Path | None, Any | None, dict[str, str]]:
     return RUNTIME_CALENDAR_SNAPSHOT_DIR, {
         "snapshot_source": "runtime_calendar_snapshots",
         "snapshot_files": loaded_files,
+        "source_evidence": source_evidence,
         "events_by_source": events_by_source,
     }, missing
 
@@ -787,6 +791,55 @@ def render_report(stats: dict[str, Any], blocked: list[dict[str, Any]], local_sn
     return "\n".join(lines)
 
 
+def layered_calendar_coverage(calendar_payload, people_payload, snapshot_payload, blocks, *, now=None):
+    """Bound calendar coverage to complete successful exports, never room hours.
+
+    Registration completeness is a separate canonical-demand publication gate.
+    All configured calendars belonging to an instructor must have usable exports.
+    Invalid/partially parsed events, failed exports and expired captures yield no proof.
+    """
+    current = now or datetime.now(LOCAL_TZ)
+    people = people_lookup(people_payload)
+    evidence = snapshot_payload.get("source_evidence", {})
+    result = []
+    for block in blocks:
+        if block.get("availability_status") != "available":
+            continue
+        owner = people.get(normalize_key(block.get("person_id")))
+        if not owner:
+            continue
+        sources = [source for source in calendar_sources(calendar_payload)
+                   if people.get(normalize_key(source.get("owner_instructor_key") or source.get("instructor_key"))) == owner]
+        if not sources or not any(source_type(source) == "inverse_google_calendar" for source in sources):
+            continue
+        observations, starts, ends = [], [], []
+        try:
+            for source in sources:
+                key = str(source.get("calendar_source_key") or UNKNOWN)
+                item = evidence[key]
+                if item.get("export_status") != "ok" or item.get("warnings") or any(count for reason, count in item.get("skipped", {}).items() if reason not in {"outside_export_window", "excluded_by_exdate", "suppressed_by_recurrence_override", "duplicate_generated_occurrence", "duplicate_explicit_event_same_uid_start"}):
+                    raise ValueError("incomplete_export")
+                observed = datetime.fromisoformat(item["generated_at"].replace("Z", "+00:00"))
+                start = datetime.fromisoformat(item["date_range"]["start"].replace("Z", "+00:00"))
+                end = datetime.fromisoformat(item["date_range"]["end"].replace("Z", "+00:00"))
+                if any(value.tzinfo is None for value in (observed, start, end)) or not timedelta(0) <= current-observed < timedelta(minutes=15) or end <= start:
+                    raise ValueError("invalid_export_bounds_or_clock")
+                if any(event_time_validation(source, event)[2] for event in events_for_source(snapshot_payload, key)):
+                    raise ValueError("unresolved_event")
+                observations.append(observed); starts.append(start); ends.append(end)
+            start, end = max(starts), min(ends)
+            if end <= start:
+                continue
+            result.append(dict(status="known_complete", instructor=owner["display_name"],
+                location=block["location_name"], start=start.isoformat(), end=end.isoformat(),
+                observed_at=min(observations).isoformat(), valid_until=(min(observations)+timedelta(minutes=15)).isoformat(),
+                freshness_minutes=15, source="configured_calendar_exports", source_ids=[source["calendar_source_key"] for source in sources]))
+        except (KeyError, ValueError, TypeError):
+            continue
+    unique = {json.dumps(row, sort_keys=True): row for row in result}
+    return list(unique.values())
+
+
 def run() -> dict[str, Any]:
     calendar_payload, calendar_error = read_json(CALENDAR_SOURCES_PATH)
     people_payload, people_error = read_json(PEOPLE_CATALOG_PATH)
@@ -825,6 +878,8 @@ def run() -> dict[str, Any]:
         "local_snapshot_path": str(local_snapshot_path) if local_snapshot_path else None,
         "stats": stats,
         "availability_blocks": blocks,
+        "layered_commitment_coverage": layered_calendar_coverage(
+            calendar_payload or {}, people_payload or {}, local_snapshot_payload or {}, blocks),
         "blocked_or_placeholder_sources": blocked,
     }
     AUDIT_DIR.mkdir(parents=True, exist_ok=True)
