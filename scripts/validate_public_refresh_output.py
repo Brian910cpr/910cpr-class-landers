@@ -80,13 +80,25 @@ def validate_admin_reconciliation(current_payload: Any, admin_payload: Any) -> s
     }
 
 
+def validate_selector_lease(payload: dict, page_key: str) -> None:
+    expiry = datetime.fromisoformat(str(payload.get("validUntil") or "").replace("Z", "+00:00"))
+    require(expiry.tzinfo is not None, f"{page_key}: publication expiry lacks timezone")
+    # Existing classes survive expired offer leases in both V2 finalization
+    # and the browser. Only calculated offers depend on that availability proof.
+    calculated = any(course.get('offerType') != 'seated_class'
+                     for day in payload.get('dates', [])
+                     for slot in day.get('startTimes', [])
+                     for course in slot.get('courses', []))
+    if calculated:
+        require(expiry > datetime.now(timezone.utc), f"{page_key}: expired publication")
+
+
 def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, int]:
     path = SELECTOR_DIR / f"{page_key}.json"
     payload = load_json(path)
     require(payload.get("schemaVersion") == "selector-resolved-availability.v1", f"{page_key}: invalid schema")
     require((payload.get("anchor_policy") or {}).get("finalized") is True, f"{page_key}: selector has not passed final policy")
-    expiry = datetime.fromisoformat(str(payload.get("validUntil") or "").replace("Z", "+00:00"))
-    require(expiry.tzinfo is not None and expiry > datetime.now(timezone.utc), f"{page_key}: expired publication")
+    validate_selector_lease(payload, page_key)
     blocked = set(payload.get("synthesisBlockedDates", []))
     occupied = set(payload.get("occupiedDates", []))
     dates = payload.get("dates")
