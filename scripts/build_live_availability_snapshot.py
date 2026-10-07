@@ -810,7 +810,7 @@ def layered_calendar_coverage(calendar_payload, people_payload, snapshot_payload
             continue
         sources = [source for source in calendar_sources(calendar_payload)
                    if people.get(normalize_key(source.get("owner_instructor_key") or source.get("instructor_key"))) == owner]
-        if not sources or not any(source_type(source) == "inverse_google_calendar" for source in sources):
+        if not sources:
             continue
         observations, starts, ends = [], [], []
         try:
@@ -828,6 +828,14 @@ def layered_calendar_coverage(calendar_payload, people_payload, snapshot_payload
                     raise ValueError("unresolved_event")
                 observations.append(observed); starts.append(start); ends.append(end)
             start, end = max(starts), min(ends)
+            if not any(source_type(source) == "inverse_google_calendar" for source in sources):
+                # Explicit availability proves only its actual teaching interval,
+                # never the empty remainder of an export's horizon.
+                block_start = datetime.fromisoformat(block['start_datetime'].replace('Z', '+00:00'))
+                block_end = datetime.fromisoformat(block['end_datetime'].replace('Z', '+00:00'))
+                if block_start.tzinfo is None or block_end.tzinfo is None:
+                    raise ValueError('invalid_explicit_bounds')
+                start, end = max(start, block_start), min(end, block_end)
             if end <= start:
                 continue
             result.append(dict(status="known_complete", instructor=owner["display_name"],

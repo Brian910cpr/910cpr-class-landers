@@ -31,3 +31,20 @@ class CoverageTests(unittest.TestCase):
     def test_expected_exclusions_do_not_invalidate_complete_export(self):
         self.evidence["skipped"]={"outside_export_window":138,"excluded_by_exdate":2}
         self.assertEqual(len(self.rows()),1)
+
+    def test_explicit_only_calendar_proves_only_declared_interval(self):
+        self.config['calendar_sources'][0]['calendar_mode']='explicit_availability'
+        start=self.now+timedelta(hours=9);end=start+timedelta(hours=3)
+        self.blocks[0].update(start_datetime=start.isoformat(),end_datetime=end.isoformat())
+        rows=self.rows()
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]['start'],start.isoformat())
+        self.assertEqual(rows[0]['end'],end.isoformat())
+        self.evidence['export_status']='failed'
+        self.assertEqual(self.rows(),[])
+
+    def test_empty_explicit_calendar_does_not_prove_available_time(self):
+        self.config['calendar_sources'][0]['calendar_mode']='explicit_availability'
+        self.assertEqual(self.rows(),[])
+        self.blocks=[]
+        self.assertEqual(self.rows(),[])
