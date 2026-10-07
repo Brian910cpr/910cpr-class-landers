@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T13:16:54.130806+00:00",
+  "generated_at": "2026-10-07T13:57:08.543223+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -3911,11 +3911,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-07T09:30:00",
+      "start_datetime": "2026-10-07T10:00:00",
       "end_datetime": "2026-10-07T15:00:00",
       "date": "2026-10-07",
       "end_date": "2026-10-07",
-      "start_time": "09:30",
+      "start_time": "10:00",
       "end_time": "15:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10298,11 +10298,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-05T07:45:00",
-      "end_datetime": "2027-01-05T09:30:00",
+      "end_datetime": "2027-01-05T10:00:00",
       "date": "2027-01-05",
       "end_date": "2027-01-05",
       "start_time": "07:45",
-      "end_time": "09:30",
+      "end_time": "10:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10323,6 +10323,22 @@
         "local_calendar_snapshot",
         "inverse_blocking_gap_expansion",
         "default_open_minus_blocking_events"
+      ]
+    }
+  ],
+  "layered_commitment_coverage": [
+    {
+      "status": "known_complete",
+      "instructor": "Brian Ennis",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "start": "2026-10-07T13:57:07.437296+00:00",
+      "end": "2027-01-05T13:57:07.437296+00:00",
+      "observed_at": "2026-10-07T13:57:08.457216+00:00",
+      "valid_until": "2026-10-07T14:12:08.457216+00:00",
+      "freshness_minutes": 15,
+      "source": "configured_calendar_exports",
+      "source_ids": [
+        "brian_do_not_schedule"
       ]
     }
   ],

@@ -783,8 +783,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </script>
 <!-- End Google Tag Manager -->
   <script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
-<link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
-<script src="/assets/site-theme.js"></script>
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -903,7 +901,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script src="/assets/calendar-time-filters.js?v=20261001.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/pals.json?v=2026-10-06T21%3A03%3A19.474406";
+    const availabilityUrl = "/data/block-selector-availability/pals.json?v=2026-10-07T09%3A57%3A12.127354-04%3A00";
     const courseOptions = [{"courseId": "209805", "courseName": "AHA PALS Provider", "family": "PALS", "variant": "initial", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["initial", "provider", "pals-provider"], "iconLabel": "PALS", "imageUrl": "/images/pals_general.png", "imageFit": "contain", "imageAlt": "AHA PALS Provider course option", "deliveryBadge": "IN-PERSON", "clarification": "Full classroom PALS Provider certification for pediatric emergency response roles.", "familyGroup": "pals-provider", "familyLabel": "PALS Provider", "optionLabel": "Initial — In Person", "price": 275, "details": {"course_key": "aha_pals_provider", "title": "AHA PALS Provider", "certifying_body": "AHA", "family": "PALS", "short_description": "Pediatric advanced life support for clinicians who care for infants and children in emergencies.", "who_this_is_for": "Healthcare professionals involved in pediatric respiratory, shock, cardiac arrest, or emergency response.", "topics_covered": ["Pediatric assessment", "Respiratory emergencies", "Shock recognition", "Pediatric cardiac arrest algorithms", "Team dynamics"], "required_materials": ["Current AHA PALS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm pediatric advanced life support requirements with your employer or program."], "full_course_page": "/pals.html"}}, {"courseId": "251496", "courseName": "AHA PALS Renewal", "family": "PALS", "variant": "renewal", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["renewal", "provider-renewal", "pals-renewal"], "iconLabel": "RN", "imageUrl": "/images/pals_general.png", "imageFit": "contain", "imageAlt": "AHA PALS Renewal course option", "deliveryBadge": "IN-PERSON", "clarification": "Renewal path for providers with prior PALS training.", "familyGroup": "pals-provider", "familyLabel": "PALS Provider", "optionLabel": "Renewal — In Person", "price": 225, "details": {"course_key": "aha_pals_renewal", "title": "AHA PALS Renewal", "certifying_body": "AHA", "family": "PALS", "short_description": "Focused PALS renewal for current pediatric advanced life support providers.", "who_this_is_for": "Current PALS providers renewing an existing AHA PALS Provider card.", "topics_covered": ["PALS algorithm review", "Respiratory and shock scenarios", "Pediatric team response", "Skills verification"], "required_materials": ["Current AHA PALS Provider Manual or accepted eBook when required."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Choose PALS Provider if you need a full initial class."], "full_course_page": "/pals.html"}}, {"courseId": "209812", "courseName": "AHA PALS HeartCode", "family": "PALS", "variant": "heartcode", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["heartcode", "heartcode-pals"], "iconLabel": "HC", "imageUrl": "/images/hc_pals.png", "imageFit": "contain", "imageAlt": "AHA PALS HeartCode course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "For students who already purchased and completed the AHA online course separately.", "familyGroup": "pals-skills-session", "familyLabel": "PALS Skills Session Only", "optionLabel": "In-person Skills Session", "price": 100, "details": {"course_key": "aha_heartcode_pals", "title": "AHA PALS HeartCode", "certifying_body": "AHA", "family": "PALS", "short_description": "PALS skills session for students who completed the official AHA HeartCode PALS online course.", "who_this_is_for": "Clinicians completing the blended HeartCode PALS pathway.", "topics_covered": ["PALS skills verification", "Pediatric respiratory and shock scenarios", "Team response application"], "required_materials": ["Completed AHA HeartCode PALS certificate of completion before the skills session."], "certification_issued": "American Heart Association PALS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["This is the skills portion, not the online HeartCode course purchase."], "full_course_page": "/courses/heartcode-pals.html"}}];
     const optionGroups = {"PALS": {"family": "PALS", "label": "All AHA PALS options", "courseIds": ["209805", "251496", "209812"]}};
     const asapOptionLabel = "Need PALS ASAP? Show all AHA PALS options";
@@ -1535,8 +1533,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             }
             button.disabled = disabled;
             button.setAttribute('aria-disabled', String(disabled));
-            const scheduledLabels = [...new Set([...seatedLabels, ...anchorLabels, ...barnacleLabels])];
-            const activityText = [scheduledLabels.length ? 'Scheduled class at ' + scheduledLabels.join(', ') : '', optionLabels.length ? 'additional options at ' + optionLabels.join(', ') : ''].filter(Boolean).join('; ');
+            const scheduledLabels = [...new Set(seatedLabels)];
+            const additionalLabels = [...new Set([...optionLabels, ...anchorLabels, ...barnacleLabels])];
+            const activityText = [scheduledLabels.length ? 'Scheduled class at ' + scheduledLabels.join(', ') : '', additionalLabels.length ? 'additional options at ' + additionalLabels.join(', ') : ''].filter(Boolean).join('; ');
             button.setAttribute('aria-label', available.displayDate + '. ' + activityText + '. ' + (disabled ? 'not bookable; past date or no future ' + scheduleTimezone + ' start times.' : 'Available.'));
             button.setAttribute('aria-pressed', String(available.date === selectedDate));
             button.addEventListener('click', () => {
@@ -1606,7 +1605,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
         button.disabled = disabled;
         button.setAttribute('aria-disabled', String(disabled));
-        button.setAttribute('aria-label', slot.displayStartTime + ((isAnchor || isBarnacle || isSeated) ? ' scheduled class' : ' available option') + (disabled ? '; not bookable; past ' + scheduleTimezone + ' start time' : ''));
+        button.setAttribute('aria-label', slot.displayStartTime + (isSeated ? ' scheduled class' : ' available option') + (disabled ? '; not bookable; past ' + scheduleTimezone + ' start time' : ''));
         button.setAttribute('aria-pressed', String(slot.startTime === selectedStart));
         button.addEventListener('click', () => {
           if (isPastStart(day, slot)) {
@@ -1653,11 +1652,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         dateRow.textContent = selectedDateLabel();
         const timeRow = document.createElement('div');
         timeRow.className = 'selected-summary-row';
-        timeRow.textContent = course.displayStartTime;
+        timeRow.textContent = course.displayStartTime + (Number(course.durationMinutes) > 0 ? ' - ' + course.durationMinutes + ' min' : '');
         const locationRow = document.createElement('div');
         locationRow.className = 'selected-summary-row';
         locationRow.textContent = course.location;
-        if (isSeated || role === 'anchor' || role === 'barnacle') {
+        if (isSeated) {
           const cue = document.createElement('div');
           cue.className = 'schedule-cue';
           cue.textContent = '★ Scheduled class';
