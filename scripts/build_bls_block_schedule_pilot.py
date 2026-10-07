@@ -208,7 +208,7 @@ def render_report(payload: dict[str, Any]) -> str:
         f"- Public-selectable offers: `{counts['publicSelectableOfferCount']}`",
         f"- Public-selectable dates: `{counts['publicSelectableDateCount']}`",
         f"- Public-selectable start times: `{counts['publicSelectableStartTimeCount']}`",
-        f"- Rejected course/start evaluations: `{counts['rejectedOfferCount']}`",
+        f"- Rejected course/start evaluations: `{counts.get('rejectedOfferCount', 0)}`",
         f"- Suppressed stale/orphaned offers: `{counts.get('suppressedStaleOrOrphanedOfferCount', 0)}`",
         "",
         "## Sample Public-Selectable URLs",
