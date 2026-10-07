@@ -810,7 +810,7 @@
       "online_only": "UNKNOWN",
       "classroom_only": false,
       "required_instructor_certifications": [
-        "HSI_INSTRUCTOR"
+        "HSI_LEVEL_3_INSTRUCTOR"
       ],
       "required_resources": [
         "UNKNOWN"
@@ -823,10 +823,11 @@
         "escalation_tier": "UNKNOWN"
       },
       "source_trace": {
-        "identity_source": "data/config/course_map.json",
-        "scheduling_rule_source": "UNKNOWN",
-        "appointment_container_source": "UNKNOWN",
-        "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config.",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied"
       }
     },
     {
@@ -837,12 +838,12 @@
       "provider": "HSI",
       "family": "HSI",
       "subtype": "BLS Challenge",
-      "delivery_type": "IP",
+      "delivery_type": "CHALLENGE",
       "renewal_or_initial": "UNKNOWN",
-      "blended_classroom_skills": "classroom",
+      "blended_classroom_skills": "challenge",
       "duration_minutes": 45,
-      "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 2,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",
@@ -864,26 +865,42 @@
       "online_only": "UNKNOWN",
       "classroom_only": true,
       "required_instructor_certifications": [
-        "HSI_INSTRUCTOR"
+        "HSI_LEVEL_3_INSTRUCTOR"
       ],
       "required_resources": [
-        "UNKNOWN"
+        "BLS_MANIKIN",
+        "AED_TRAINER"
       ],
       "relationships": {
         "compatible_with": [
-          "AHA_BLS_HEARTCODE_SKILLS",
-          "ARC_BLS_SKILLS"
+          "HSI_BLS"
         ],
         "satisfies": "UNKNOWN",
         "does_not_satisfy": "UNKNOWN",
-        "occupancy_pool": "BLS_SKILLS_POOL",
+        "occupancy_pool": "HSI_BLS",
         "escalation_tier": 2
       },
       "source_trace": {
-        "identity_source": "data/config/course_map.json",
-        "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
-        "appointment_container_source": "data/inventory/appointment_containers.json",
-        "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config.",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied"
+      },
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
       }
     },
     {
@@ -911,7 +928,7 @@
       "online_only": "UNKNOWN",
       "classroom_only": false,
       "required_instructor_certifications": [
-        "HSI_INSTRUCTOR"
+        "HSI_LEVEL_3_INSTRUCTOR"
       ],
       "required_resources": [
         "UNKNOWN"
@@ -929,10 +946,11 @@
         "escalation_tier": 2
       },
       "source_trace": {
-        "identity_source": "data/config/course_map.json",
-        "scheduling_rule_source": "data/inventory/course_consumption_rules.json",
-        "appointment_container_source": "UNKNOWN",
-        "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config.",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied"
       }
     },
     {
@@ -1004,7 +1022,7 @@
       "online_only": "UNKNOWN",
       "classroom_only": false,
       "required_instructor_certifications": [
-        "HSI_INSTRUCTOR"
+        "HSI_LEVEL_3_INSTRUCTOR"
       ],
       "required_resources": [
         "UNKNOWN"
@@ -1017,10 +1035,11 @@
         "escalation_tier": "UNKNOWN"
       },
       "source_trace": {
-        "identity_source": "data/config/course_map.json",
-        "scheduling_rule_source": "UNKNOWN",
-        "appointment_container_source": "UNKNOWN",
-        "unknown_policy": "UNKNOWN means the value was not explicitly represented in inspected local config."
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config.",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied"
       }
     },
     {
@@ -2250,6 +2269,1726 @@
         "appointment_container_source": "LanderWare shared skills capacity",
         "unknown_policy": "UNKNOWN means the value is not explicitly represented in the current local config/source."
       }
+    },
+    {
+      "course_id": "LW-HSI-ADULT-FIRST-AID-BLENDED-SKILLS",
+      "course_key": "hsi_adult_first_aid_blended_skills",
+      "official_title": "HSI Adult First Aid - Blended Learning / Skills",
+      "short_title": "HSI Adult First Aid - Blended",
+      "subtype": "First Aid",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-ADULT-FIRST-AID-CHALLENGE",
+      "course_key": "hsi_adult_first_aid_challenge",
+      "official_title": "HSI Adult First Aid - Challenge",
+      "short_title": "HSI Adult First Aid Challenge",
+      "subtype": "First Aid Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-ADULT-CPR-AED-BLENDED-SKILLS",
+      "course_key": "hsi_adult_cpr_aed_blended_skills",
+      "official_title": "HSI Adult CPR AED - Blended Learning / Skills",
+      "short_title": "HSI Adult CPR AED - Blended",
+      "subtype": "CPR + AED",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-ADULT-CPR-AED-CHALLENGE",
+      "course_key": "hsi_adult_cpr_aed_challenge",
+      "official_title": "HSI Adult CPR AED - Challenge",
+      "short_title": "HSI Adult CPR AED Challenge",
+      "subtype": "CPR + AED Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-ADULT-CHILD-CPR-AED-BLENDED-SKILLS",
+      "course_key": "hsi_adult_child_cpr_aed_blended_skills",
+      "official_title": "HSI Adult/Child CPR AED - Blended Learning / Skills",
+      "short_title": "HSI Adult/Child CPR AED - Blended",
+      "subtype": "CPR + AED",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-ADULT-CHILD-CPR-AED-CHALLENGE",
+      "course_key": "hsi_adult_child_cpr_aed_challenge",
+      "official_title": "HSI Adult/Child CPR AED - Challenge",
+      "short_title": "HSI Adult/Child CPR AED Challenge",
+      "subtype": "CPR + AED Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-ADULT-INFANT-CPR-AED-BLENDED-SKILLS",
+      "course_key": "hsi_adult_infant_cpr_aed_blended_skills",
+      "official_title": "HSI Adult/Infant CPR AED - Blended Learning / Skills",
+      "short_title": "HSI Adult/Infant CPR AED - Blended",
+      "subtype": "CPR + AED",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-ADULT-INFANT-CPR-AED-CHALLENGE",
+      "course_key": "hsi_adult_infant_cpr_aed_challenge",
+      "official_title": "HSI Adult/Infant CPR AED - Challenge",
+      "short_title": "HSI Adult/Infant CPR AED Challenge",
+      "subtype": "CPR + AED Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-ADULT-CHILD-INFANT-CPR-AED-BLENDED-SKILLS",
+      "course_key": "hsi_adult_child_infant_cpr_aed_blended_skills",
+      "official_title": "HSI Adult/Child/Infant CPR AED - Blended Learning / Skills",
+      "short_title": "HSI Adult/Child/Infant CPR AED - Blended",
+      "subtype": "CPR + AED",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-ADULT-CHILD-INFANT-CPR-AED-CHALLENGE",
+      "course_key": "hsi_adult_child_infant_cpr_aed_challenge",
+      "official_title": "HSI Adult/Child/Infant CPR AED - Challenge",
+      "short_title": "HSI Adult/Child/Infant CPR AED Challenge",
+      "subtype": "CPR + AED Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CPR-AED-BLENDED-SKILLS",
+      "course_key": "hsi_adult_first_aid_adult_cpr_aed_blended_skills",
+      "official_title": "HSI Adult First Aid + Adult CPR AED - Blended Learning / Skills",
+      "short_title": "HSI Adult First Aid + Adult CPR AED - Blended",
+      "subtype": "First Aid + CPR + AED",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CPR-AED-CHALLENGE",
+      "course_key": "hsi_adult_first_aid_adult_cpr_aed_challenge",
+      "official_title": "HSI Adult First Aid + Adult CPR AED - Challenge",
+      "short_title": "HSI Adult First Aid + Adult CPR AED Challenge",
+      "subtype": "First Aid + CPR + AED Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CHILD-CPR-AED-BLENDED-SKILLS",
+      "course_key": "hsi_adult_first_aid_adult_child_cpr_aed_blended_skills",
+      "official_title": "HSI Adult First Aid + Adult/Child CPR AED - Blended Learning / Skills",
+      "short_title": "HSI Adult First Aid + Adult/Child CPR AED - Blended",
+      "subtype": "First Aid + CPR + AED",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CHILD-CPR-AED-CHALLENGE",
+      "course_key": "hsi_adult_first_aid_adult_child_cpr_aed_challenge",
+      "official_title": "HSI Adult First Aid + Adult/Child CPR AED - Challenge",
+      "short_title": "HSI Adult First Aid + Adult/Child CPR AED Challenge",
+      "subtype": "First Aid + CPR + AED Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-INFANT-CPR-AED-BLENDED-SKILLS",
+      "course_key": "hsi_adult_first_aid_adult_infant_cpr_aed_blended_skills",
+      "official_title": "HSI Adult First Aid + Adult/Infant CPR AED - Blended Learning / Skills",
+      "short_title": "HSI Adult First Aid + Adult/Infant CPR AED - Blended",
+      "subtype": "First Aid + CPR + AED",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-INFANT-CPR-AED-CHALLENGE",
+      "course_key": "hsi_adult_first_aid_adult_infant_cpr_aed_challenge",
+      "official_title": "HSI Adult First Aid + Adult/Infant CPR AED - Challenge",
+      "short_title": "HSI Adult First Aid + Adult/Infant CPR AED Challenge",
+      "subtype": "First Aid + CPR + AED Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CHILD-INFANT-CPR-AED-BLENDED-SKILLS",
+      "course_key": "hsi_adult_first_aid_adult_child_infant_cpr_aed_blended_skills",
+      "official_title": "HSI Adult First Aid + Adult/Child/Infant CPR AED - Blended Learning / Skills",
+      "short_title": "HSI Adult First Aid + Adult/Child/Infant CPR AED - Blended",
+      "subtype": "First Aid + CPR + AED",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CHILD-INFANT-CPR-AED-CHALLENGE",
+      "course_key": "hsi_adult_first_aid_adult_child_infant_cpr_aed_challenge",
+      "official_title": "HSI Adult First Aid + Adult/Child/Infant CPR AED - Challenge",
+      "short_title": "HSI Adult First Aid + Adult/Child/Infant CPR AED Challenge",
+      "subtype": "First Aid + CPR + AED Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-BLENDED-SKILLS",
+      "course_key": "hsi_pediatric_first_aid_blended_skills",
+      "official_title": "HSI Pediatric First Aid - Blended Learning / Skills",
+      "short_title": "HSI Pediatric First Aid - Blended",
+      "subtype": "Pediatric First Aid",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHALLENGE",
+      "course_key": "hsi_pediatric_first_aid_challenge",
+      "official_title": "HSI Pediatric First Aid - Challenge",
+      "short_title": "HSI Pediatric First Aid Challenge",
+      "subtype": "Pediatric First Aid Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-CHILD-INFANT-CPR-AED-BLENDED-SKILLS",
+      "course_key": "hsi_child_infant_cpr_aed_blended_skills",
+      "official_title": "HSI Child & Infant CPR AED - Blended Learning / Skills",
+      "short_title": "HSI Child & Infant CPR AED - Blended",
+      "subtype": "Pediatric CPR + AED",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-CHILD-INFANT-CPR-AED-CHALLENGE",
+      "course_key": "hsi_child_infant_cpr_aed_challenge",
+      "official_title": "HSI Child & Infant CPR AED - Challenge",
+      "short_title": "HSI Child & Infant CPR AED Challenge",
+      "subtype": "Pediatric CPR + AED Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-CHILD-INFANT-ADULT-CPR-AED-BLENDED-SKILLS",
+      "course_key": "hsi_child_infant_adult_cpr_aed_blended_skills",
+      "official_title": "HSI Child/Infant/Adult CPR AED - Blended Learning / Skills",
+      "short_title": "HSI Child/Infant/Adult CPR AED - Blended",
+      "subtype": "All Ages CPR + AED",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-CHILD-INFANT-ADULT-CPR-AED-CHALLENGE",
+      "course_key": "hsi_child_infant_adult_cpr_aed_challenge",
+      "official_title": "HSI Child/Infant/Adult CPR AED - Challenge",
+      "short_title": "HSI Child/Infant/Adult CPR AED Challenge",
+      "subtype": "All Ages CPR + AED Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHILD-INFANT-CPR-AED-BLENDED-SKILLS",
+      "course_key": "hsi_pediatric_first_aid_child_infant_cpr_aed_blended_skills",
+      "official_title": "HSI Pediatric First Aid + Child & Infant CPR AED - Blended Learning / Skills",
+      "short_title": "HSI Pediatric First Aid + Child & Infant CPR AED - Blended",
+      "subtype": "Pediatric First Aid + CPR + AED",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHILD-INFANT-CPR-AED-CHALLENGE",
+      "course_key": "hsi_pediatric_first_aid_child_infant_cpr_aed_challenge",
+      "official_title": "HSI Pediatric First Aid + Child & Infant CPR AED - Challenge",
+      "short_title": "HSI Pediatric First Aid + Child & Infant CPR AED Challenge",
+      "subtype": "Pediatric First Aid + CPR + AED Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHILD-INFANT-ADULT-CPR-AED-BLENDED-SKILLS",
+      "course_key": "hsi_pediatric_first_aid_child_infant_adult_cpr_aed_blended_skills",
+      "official_title": "HSI Pediatric First Aid + Child/Infant/Adult CPR AED - Blended Learning / Skills",
+      "short_title": "HSI Pediatric First Aid + Child/Infant/Adult CPR AED - Blended",
+      "subtype": "Pediatric First Aid + All Ages CPR + AED",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
+    },
+    {
+      "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHILD-INFANT-ADULT-CPR-AED-CHALLENGE",
+      "course_key": "hsi_pediatric_first_aid_child_infant_adult_cpr_aed_challenge",
+      "official_title": "HSI Pediatric First Aid + Child/Infant/Adult CPR AED - Challenge",
+      "short_title": "HSI Pediatric First Aid + Child/Infant/Adult CPR AED Challenge",
+      "subtype": "Pediatric First Aid + All Ages CPR + AED Challenge",
+      "delivery_type": "CHALLENGE",
+      "blended_classroom_skills": "challenge",
+      "duration_minutes": 45,
+      "classroom_only": true,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "CPR_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_GENERAL_SKILLS_CHALLENGE"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_GENERAL_SKILLS_CHALLENGE",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "CHALLENGE_ONLY",
+        "OPTIONAL_REVIEW_PLUS_CHALLENGE"
+      ],
+      "online_component_required": false,
+      "challenge_written_exam_required": true,
+      "challenge_skills_evaluation_required": true,
+      "challenge_instruction_during_evaluation": false,
+      "optional_review_template": {
+        "review_is_separate_noncertifying_event": true,
+        "review_start_offset_minutes": -60,
+        "challenge_start_offset_minutes": 0,
+        "challenge_reserved_minutes": 45,
+        "challenge_only_arrival_allowed": true,
+        "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
+      }
+    },
+    {
+      "course_id": "LW-HSI-BLS-BLENDED-SKILLS",
+      "course_key": "hsi_bls_blended_skills",
+      "official_title": "HSI Basic Life Support - Blended Learning / Skills",
+      "short_title": "HSI BLS - Blended",
+      "subtype": "BLS",
+      "delivery_type": "BL",
+      "blended_classroom_skills": "blended",
+      "duration_minutes": 45,
+      "classroom_only": false,
+      "provider": "HSI",
+      "family": "HSI",
+      "renewal_or_initial": "UNKNOWN",
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": "UNKNOWN",
+      "minimum_capacity": 1,
+      "maximum_capacity": "UNKNOWN",
+      "appointment_allowed": true,
+      "deterministic_url_supported": "UNKNOWN",
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": "UNKNOWN",
+      "manual_only": false,
+      "online_only": false,
+      "required_instructor_certifications": [
+        "HSI_LEVEL_3_INSTRUCTOR"
+      ],
+      "required_resources": [
+        "BLS_MANIKIN",
+        "AED_TRAINER"
+      ],
+      "relationships": {
+        "compatible_with": [
+          "HSI_BLS"
+        ],
+        "satisfies": "UNKNOWN",
+        "does_not_satisfy": "UNKNOWN",
+        "occupancy_pool": "HSI_BLS",
+        "escalation_tier": 2
+      },
+      "source_trace": {
+        "identity_source": "HSI program configuration / owner-approved catalog expansion",
+        "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
+        "appointment_container_source": "LanderWare shared skills/challenge capacity",
+        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
+      },
+      "external_hsi_product_id": "UNKNOWN",
+      "customer_delivery_modes": [
+        "BLENDED_ONLINE_PLUS_SKILLS",
+        "SKILLS_SESSION_ONLY"
+      ],
+      "online_component_required": true
     }
   ],
   "updated_at": "2026-10-07",
@@ -2265,5 +4004,6 @@
     },
     "safety_note": "Only scheduler-critical reviewed fields were imported by course_id."
   },
-  "arc_2027_catalog_note": "ARC r.25 blended and skills products added from owner-supplied 2027 Training Provider Course and Price List. ARC skills/BLS session capacity is 4 per session; unrelated provider capacities unchanged."
+  "arc_2027_catalog_note": "ARC r.25 blended and skills products added from owner-supplied 2027 Training Provider Course and Price List. ARC skills/BLS session capacity is 4 per session; unrelated provider capacities unchanged.",
+  "hsi_challenge_catalog_note": "Expanded HSI Level 3 First Aid/CPR/AED, Pediatric, and BLS catalog with blended/skills and Challenge delivery identities. Challenge review is modeled as a separate optional non-certifying event. External HSI SKUs were not invented."
 }
