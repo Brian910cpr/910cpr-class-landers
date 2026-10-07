@@ -2,12 +2,22 @@ from __future__ import annotations
 
 import unittest
 
-from scripts.validate_public_refresh_output import validate_admin_reconciliation, validate_public_demand
+from scripts.validate_public_refresh_output import validate_admin_reconciliation, validate_public_demand, validate_selector_lease
 from scripts.fetch_canonical_scheduling_demand import validate_payload, SCHEMA_VERSION
 from datetime import datetime, timedelta, timezone
 
 
 class ValidatePublicRefreshOutputTests(unittest.TestCase):
+    def test_expired_lease_preserves_existing_classes_but_rejects_calculated_offers(self):
+        payload=dict(validUntil=(datetime.now(timezone.utc)-timedelta(minutes=1)).isoformat(),
+                     dates=[dict(startTimes=[dict(courses=[dict(offerType='seated_class')])])])
+        validate_selector_lease(payload,'acls')
+        for kind in ['dynamic_appointment',None]:
+            payload['dates'][0]['startTimes'][0]['courses'].append(dict(offerType=kind))
+            with self.assertRaisesRegex(ValueError,'expired publication'):
+                validate_selector_lease(payload,'acls')
+            payload['dates'][0]['startTimes'][0]['courses'].pop()
+
     def demand(self, count=1):
         now = datetime(2026, 9, 27, 14, 0, tzinfo=timezone.utc)
         return now, {
