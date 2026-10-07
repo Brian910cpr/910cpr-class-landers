@@ -38,8 +38,8 @@ class CoverageTests(unittest.TestCase):
         self.blocks[0].update(start_datetime=start.isoformat(),end_datetime=end.isoformat())
         rows=self.rows()
         self.assertEqual(len(rows),1)
-        self.assertEqual(rows[0]['start'],start.isoformat())
-        self.assertEqual(rows[0]['end'],end.isoformat())
+        self.assertEqual(datetime.fromisoformat(rows[0]['start']),start)
+        self.assertEqual(datetime.fromisoformat(rows[0]['end']),end)
         self.evidence['export_status']='failed'
         self.assertEqual(self.rows(),[])
 
