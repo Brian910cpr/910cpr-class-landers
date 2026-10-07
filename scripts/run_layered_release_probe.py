@@ -36,11 +36,14 @@ def run():
                         role='anchor' if course.get('offerType')=='seated_class' else ('barnacle' if course.get('scheduleRole')=='barnacle' else 'open')
                         courses.setdefault(course['courseId'],dict(anchor=[],barnacle=[],open=[]))[role].append(slot['startTime'])
                 patterns[day['date']]=courses
-            result['pages'][key]=dict(day_patterns=patterns,counts=payload.get('counts'),offer_roles=dict(Counter(o.get('scheduleRole') or o.get('offerType') for o in offers)),rejection_reasons=payload.get('rejectionReasonCounts'),synthesis_blocked_dates=payload.get('synthesisBlockedDates'),model=payload.get('schedulingModel'),valid_until=feed.get('validUntil'))
+            result['pages'][key]=dict(calculation_issue_counts=dict(Counter(issue.get('reason') or 'unclassified' for issue in payload.get('reconciliationIssues',[]))),day_patterns=patterns,counts=payload.get('counts'),offer_roles=dict(Counter(o.get('scheduleRole') or o.get('offerType') for o in offers)),rejection_reasons=payload.get('rejectionReasonCounts'),synthesis_blocked_dates=payload.get('synthesisBlockedDates'),model=payload.get('schedulingModel'),valid_until=feed.get('validUntil'))
         result['calculation_completed']=True
+        result['release_passed']=all(not (row['counts'].get('input_windows',0)>0 and row['counts'].get('evaluated_windows',0)==0) for row in result['pages'].values())
     finally:
         policy_path.write_bytes(original)
         (output/'proof.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
     print(json.dumps(result,indent=2))
+    if not result.get("release_passed"):
+        raise RuntimeError("V2 could not evaluate current source windows; publication remains stopped")
 
 if __name__=='__main__':run()
