@@ -21,14 +21,22 @@ def run():
         canonical=json.loads((ROOT/'data/runtime/canonical_scheduling_demand.json').read_text())
         result['canonical_generated_at']=canonical.get('generated_at')
         result['canonical_session_count']=len(canonical.get('sessions',[]))
-        for key in load_block_schedule_page_configs():
-            payload=apply_final_live_availability_guard(build_block_schedule_page(key))
+        for key, config in load_block_schedule_page_configs().items():
+            payload=apply_final_live_availability_guard(build_block_schedule_page(config))
             feed=public_selector_availability_payload(payload)
             (output/(key+'.json')).write_text(json.dumps(feed,ensure_ascii=False),encoding='utf-8')
             html=render_html(payload).replace('<body>','<body><aside>READ-ONLY RELEASE PROBE: not published.</aside>',1)
             (output/(key+'.html')).write_text(html,encoding='utf-8')
             offers=payload.get('offers',[])
-            result['pages'][key]=dict(counts=payload.get('counts'),offer_roles=dict(Counter(o.get('scheduleRole') or o.get('offerType') for o in offers)),rejection_reasons=payload.get('rejectionReasonCounts'),synthesis_blocked_dates=payload.get('synthesisBlockedDates'),model=payload.get('schedulingModel'),valid_until=feed.get('validUntil'))
+            patterns={}
+            for day in feed.get('dates',[]):
+                courses={}
+                for slot in day.get('startTimes',[]):
+                    for course in slot.get('courses',[]):
+                        role='anchor' if course.get('offerType')=='seated_class' else ('barnacle' if course.get('scheduleRole')=='barnacle' else 'open')
+                        courses.setdefault(course['courseId'],dict(anchor=[],barnacle=[],open=[]))[role].append(slot['startTime'])
+                patterns[day['date']]=courses
+            result['pages'][key]=dict(day_patterns=patterns,counts=payload.get('counts'),offer_roles=dict(Counter(o.get('scheduleRole') or o.get('offerType') for o in offers)),rejection_reasons=payload.get('rejectionReasonCounts'),synthesis_blocked_dates=payload.get('synthesisBlockedDates'),model=payload.get('schedulingModel'),valid_until=feed.get('validUntil'))
         result['calculation_completed']=True
     finally:
         policy_path.write_bytes(original)

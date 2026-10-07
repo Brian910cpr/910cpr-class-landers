@@ -12,6 +12,7 @@ class ProbeTests(unittest.TestCase):
             snap=root/'data/audit/live_availability_snapshot_preview.json';snap.parent.mkdir(parents=True);snap.write_text('{"layered_commitment_coverage":[]}')
             canonical=root/'data/runtime/canonical_scheduling_demand.json';canonical.parent.mkdir(parents=True);canonical.write_text('{"sessions":[]}')
             def fail(key):
+                self.assertIsInstance(key,dict)
                 self.assertEqual(json.loads(policy.read_bytes())["mode"],"active_local_v2")
                 raise ValueError("invalid source")
             with patch.object(probe,'ROOT',root),patch.object(probe,'load_block_schedule_page_configs',return_value={'bls':{}}),patch.object(probe,'build_block_schedule_page',side_effect=fail):
