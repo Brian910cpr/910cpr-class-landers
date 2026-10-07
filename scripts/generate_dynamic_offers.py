@@ -214,6 +214,16 @@ def location_alias_lookup(location_resource_map: Any) -> dict[str, dict[str, str
                     "canonical_public_location": canonical,
                     "resource_name": text,
                 }
+        # Internal room aliases are explicit resource evidence, not extra capacity.
+        for resource in resources:
+            if not isinstance(resource, dict):
+                continue
+            name = clean_text(resource.get("resource_name"))
+            for alias in resource.get("aliases", []):
+                key = normalize_key(alias)
+                if not key or not name:
+                    continue
+                lookup[key] = {"canonical_public_location": canonical, "resource_name": name}
     return lookup
 
 
