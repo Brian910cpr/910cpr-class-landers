@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T03:33:41.333556+00:00",
+  "generated_at": "2026-10-07T04:08:55.398828+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -3911,11 +3911,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-07T00:00:00",
+      "start_datetime": "2026-10-07T00:15:00",
       "end_datetime": "2026-10-07T06:30:00",
       "date": "2026-10-07",
       "end_date": "2026-10-07",
-      "start_time": "00:00",
+      "start_time": "00:15",
       "end_time": "06:30",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10267,11 +10267,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-04T17:30:00",
-      "end_datetime": "2027-01-04T23:45:00",
+      "end_datetime": "2027-01-05T00:00:00",
       "date": "2027-01-04",
-      "end_date": "2027-01-04",
+      "end_date": "2027-01-05",
       "start_time": "17:30",
-      "end_time": "23:45",
+      "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10301,16 +10301,16 @@
       "source_type": "inverse_google_calendar",
       "reason_code": "inverse_gap_shorter_than_minimum_consumption",
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-10-06T23:45:00",
-      "end_datetime": "2026-10-07T00:00:00"
+      "start_datetime": "2026-10-12T07:45:00",
+      "end_datetime": "2026-10-12T09:00:00"
     },
     {
       "calendar_source_key": "brian_do_not_schedule",
       "source_type": "inverse_google_calendar",
       "reason_code": "inverse_gap_shorter_than_minimum_consumption",
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-10-12T07:45:00",
-      "end_datetime": "2026-10-12T09:00:00"
+      "start_datetime": "2027-01-05T00:00:00",
+      "end_datetime": "2027-01-05T00:15:00"
     }
   ]
 }
