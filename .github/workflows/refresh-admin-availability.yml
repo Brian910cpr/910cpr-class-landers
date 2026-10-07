@@ -119,10 +119,11 @@ jobs:
       - name: Publish sanitized dashboard availability feed
         run: python -m scripts.publish_admin_availability
 
-      - name: Rebuild selector availability feeds without rewriting public pages
+      - name: Rebuild selector feeds and their matching customer pages
         run: |
           python - <<'PY'
           import json
+          from pathlib import Path
           from scripts.block_start_time_selector import (
               build_block_schedule_page,
               load_block_schedule_page_configs,
@@ -131,11 +132,15 @@ jobs:
               apply_final_live_availability_guard,
               public_selector_availability_payload,
               selector_availability_path,
+              write_page_outputs,
           )
 
           configs = load_block_schedule_page_configs()
           for page_key, page_config in configs.items():
               payload = apply_final_live_availability_guard(build_block_schedule_page(page_config))
+              if page_config.get("render_html") is not False:
+                  write_page_outputs(payload, Path(page_config["report_json_path"]),
+                      Path(page_config["report_md_path"]), Path(page_config["output_path"]))
               output = selector_availability_path(page_key)
               output.parent.mkdir(parents=True, exist_ok=True)
               output.write_text(
@@ -182,6 +187,18 @@ jobs:
         run: |
           git config user.name "910CPR Availability Bot"
           git config user.email "actions@users.noreply.github.com"
+          python - <<'PY'
+          import subprocess
+          from scripts.block_start_time_selector import load_block_schedule_page_configs
+          paths = []
+          for config in load_block_schedule_page_configs().values():
+              if config.get('render_html') is False:
+                  continue
+              paths.extend([config['output_path'], *config.get('alias_output_paths', [])])
+              if config.get('legacy_schedule_path'):
+                  paths.append(config['legacy_schedule_path'])
+          subprocess.run(['git', 'add', '--', *paths], check=True)
+          PY
           git add \
             data/runtime/calendar_snapshots \
             data/audit/enrollware_ical_import_summary.json \
