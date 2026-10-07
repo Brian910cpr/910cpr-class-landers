@@ -81,6 +81,14 @@ class LayeredAdapterTests(unittest.TestCase):
         self.assertIn('23:00',self.starts(self.report()))
         self.assertEqual(self.starts(self.report('03:30','04:30',10)),{'03:30'})
 
+    def test_heartsaver_cpr_aed_uses_90_plus_15_at_real_edges(self):
+        self.courses.append(dict(course_id='344085', course_family='Heartsaver', kind='full'))
+        self.add('12:00','13:00')
+        offers=[c for c in self.report()['accepted'] if c['course']=='344085']
+        self.assertEqual(self.starts(self.report(),'344085'), {'10:15','13:00'})
+        self.assertTrue(all(c['duration_minutes']==105 for c in offers))
+        self.assertEqual(self.starts(self.report(),'209806'), {'09:30','13:00'})
+
     def test_real_room_reservation_blocks_and_no_automatic_room_c(self):
         self.add('12:00','13:00')
         self.add('13:00','14:00',source_file_override='calendar')

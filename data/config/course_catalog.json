@@ -1014,7 +1014,7 @@
       "blended_classroom_skills": "classroom",
       "duration_minutes": 90,
       "setup_buffer_minutes": "UNKNOWN",
-      "cleanup_buffer_minutes": "UNKNOWN",
+      "cleanup_buffer_minutes": 15,
       "default_capacity": 10,
       "minimum_capacity": "UNKNOWN",
       "maximum_capacity": "UNKNOWN",

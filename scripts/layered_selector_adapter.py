@@ -55,6 +55,12 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         skills = course.get("blended_classroom_skills") == "blended" or course.get("kind") == "skills"
         instruction = policy["skills_instruction_minutes" if skills else "full_instruction_minutes"]
         cleanup = policy["skills_cleanup_minutes" if skills else "full_cleanup_minutes"]
+        override = policy.get("course_duration_overrides", {}).get(cid)
+        if override is not None:
+            instruction, cleanup = override['instruction_minutes'], override['cleanup_minutes']
+            if (type(instruction) is not int or instruction <= 0 or
+                    type(cleanup) is not int or cleanup < 0 or not override.get('evidence')):
+                raise ValueError('invalid evidenced course duration override: '+cid)
         family = str(course.get("course_family") or course.get("family") or "")
         semantic = str(course.get("subtype") or family).upper()
         clinical = next((f for f in ["ACLS", "PALS", "BLS"] if f in semantic.split()), family)
@@ -62,7 +68,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             kind="skills" if skills else "full", duration_minutes=instruction+cleanup,
             instruction_minutes=instruction, cleanup_minutes=cleanup,
             source_course_id=cid,
-            duration_evidence="owner45+15skills/120+30full; actual occupied intervals preserved",
+            duration_evidence=override['evidence'] if override else "owner45+15skills/120+30full; actual occupied intervals preserved",
             provider=course.get("provider") or course.get("brand"), locations=[primary])
     origins = {}
     brian_names = set()

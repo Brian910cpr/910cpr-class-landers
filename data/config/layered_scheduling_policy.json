@@ -13,6 +13,9 @@
   "full_cleanup_minutes": 30,
   "full_family_paid_positions_per_day": 1,
   "full_class_consolidation_scope": "course",
+  "course_duration_overrides": {
+    "344085": {"instruction_minutes": 90, "cleanup_minutes": 15, "evidence": "Owner instruction: Heartsaver CPR/AED 90 minutes plus 15-minute cleanup"}
+  },
   "slot_minutes": 30,
   "edge_grid_policy": "exact_existing_boundary",
   "brian_person_id": "instructor_24057895173",
