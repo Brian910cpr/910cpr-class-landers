@@ -46,6 +46,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         "edge_grid_policy": policy["edge_grid_policy"], "location_capacity_one": True,
         "require_commitment_coverage": True,
         "paid_full_positions_per_family_day": policy["full_family_paid_positions_per_day"],
+        "full_class_consolidation_scope": policy.get("full_class_consolidation_scope", "family"),
         "travel_minutes": {}, "instructor_family_eligibility": {},
         "shared_room_edges": shared_room_edges,
         "reject_unknown_full_family_count": commitment_coverage is not None})

@@ -283,6 +283,11 @@ def run(fixture):
     accepted, rejected = [], []
     now = stamp(fixture["now"])
     family_counts = Counter(); seating_positions = {}; uncertain_full = []; uncertain_family_groups = set()
+    consolidation_scope = policy.get('full_class_consolidation_scope', 'family')
+    if consolidation_scope not in {'family', 'course'}:
+        raise ValueError('invalid full class consolidation scope')
+    def consolidation_identity(course_id):
+        return course_id if consolidation_scope == 'course' else courses[course_id]['family']
     zone = ZoneInfo(policy['business_timezone']) if policy.get('business_timezone') else datetime.fromisoformat(fixture['availability'][0]['start'].replace('Z', '+00:00')).tzinfo
     for busy in occupied:
         meta = courses.get(busy.get('course'), {})
@@ -290,9 +295,9 @@ def run(fixture):
         if busy.get('kind') not in {'paid', 'seated'}:
             uncertain_full.append({'source_id': busy['id'], 'kind': busy['kind'], 'headcount': busy.get('headcount')})
             if busy.get('kind') == 'planted' and busy.get('headcount') is None:
-                uncertain_family_groups.add((busy['instructor'], busy['start'].astimezone(zone).date().isoformat(), meta['family']))
+                uncertain_family_groups.add((busy['instructor'], busy['start'].astimezone(zone).date().isoformat(), consolidation_identity(busy['course'])))
             continue
-        group = (busy['instructor'], busy['start'].astimezone(zone).date().isoformat(), meta['family'])
+        group = (busy['instructor'], busy['start'].astimezone(zone).date().isoformat(), consolidation_identity(busy['course']))
         seating_positions.setdefault(group, {}).setdefault((busy['start'], busy['location']), []).append(busy['id'])
     for group, positions in seating_positions.items(): family_counts[group] = len(positions)
     for c in sorted(candidates, key=lambda x: (x["start"], x["course"])):
@@ -324,11 +329,11 @@ def run(fixture):
                     reasons.append('commitment_coverage_unknown:' + busy['id'])
         # Only real paid/seated full classes consume the allowance; offers never do.
         day = c["start"].astimezone(zone).date().isoformat()
-        key = (c["instructor"], day, c["family"])
+        key = (c["instructor"], day, consolidation_identity(c['course']))
         if meta["kind"] == "full" and family_counts[key] >= policy.get("paid_full_positions_per_family_day", 1):
-            reasons.append("full_family_already_paid_seated")
+            reasons.append("full_course_already_paid_seated" if consolidation_scope == 'course' else "full_family_already_paid_seated")
         if meta["kind"] == "full" and policy.get("reject_unknown_full_family_count") and key in uncertain_family_groups:
-            reasons.append("full_family_count_unknown")
+            reasons.append("full_course_count_unknown" if consolidation_scope == 'course' else "full_family_count_unknown")
         c["reasons"] = reasons
         if reasons:
             rejected.append(c)

@@ -151,6 +151,22 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(payload['offers'])
         self.assertIn('missing_owned_appointment_url',payload['rejectionReasonCounts'])
 
+    def test_distinct_full_formats_share_family_without_daywide_suppression(self):
+        alternative = dict(self.courses[2], course_id='fixture-distinct-full-format',
+                           clean_course_name='Fixture distinct Heartsaver format')
+        self.courses.append(alternative)
+        for count in (1, None):
+            with self.subTest(count=count):
+                self.sources=[]
+                self.add(11,'12:00','14:30','209809',count=count)
+                report=self.calculation()['reports'][0]
+                choices=[c for c in report['accepted'] if c['course']==alternative['course_id']]
+                self.assertTrue(choices)
+                self.assertTrue(all(c['end'] <= self.at(11,'12:00') or
+                                    c['start'] >= self.at(11,'14:30') for c in choices))
+                self.assertFalse([c for c in report['accepted'] if c['course']=='209809'])
+                self.assertEqual(self.sources[0]['active_registration_count'], count)
+
     def test_zero_length_source_resolves_course_metadata_not_free_time(self):
         row=self.add(11,'12:00','12:00')
         row['duration_minutes']=60

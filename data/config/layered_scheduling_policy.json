@@ -12,6 +12,7 @@
   "full_instruction_minutes": 120,
   "full_cleanup_minutes": 30,
   "full_family_paid_positions_per_day": 1,
+  "full_class_consolidation_scope": "course",
   "slot_minutes": 30,
   "edge_grid_policy": "exact_existing_boundary",
   "brian_person_id": "instructor_24057895173",
