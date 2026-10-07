@@ -1,6 +1,6 @@
 {
   "schema_version": "layered-scheduling-policy.v1",
-  "mode": "shadow",
+  "mode": "active_local_v2",
   "owner_room_hours_evidence": "Brian explicitly stated All rooms are 24 hrs, 2026-10-05 02:43:26 UTC",
   "room_hours": "24/7",
   "simultaneous_classes_per_room": 1,
