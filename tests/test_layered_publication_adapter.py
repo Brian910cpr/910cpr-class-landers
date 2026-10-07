@@ -139,6 +139,25 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(any(o['instructor']=='Brian Ennis' for o in offers))
         self.assertTrue(any(o['instructor']=='Michelle' for o in offers))
 
+    def test_anchored_day_keeps_edges_but_not_detached_evening_gap(self):
+        self.windows=[];self.coverage=[]
+        self.window(11,'07:45','14:15',next_day=False)
+        self.window(11,'20:00','00:00')
+        self.window(11,'20:00','00:00',name='Michelle')
+        self.window(12)
+        row=self.add(11,'11:45','13:45',cid='209806')
+        # The BLS anchor is outside the Heartsaver page's course catalog.
+        seated=dict(session_id=row['source_event_id'],date='2026-10-11',startTime='11:45',
+                    courseId='209806',courseName='Existing BLS',offerType='seated_class',instructor='Brian Ennis')
+        payload=self.payload([seated])
+        day=[o for o in payload['offers'] if o['date']=='2026-10-11']
+        self.assertTrue(any(o.get('offerType')=='seated_class' for o in day))
+        self.assertTrue(any(o.get('scheduleRole')=='barnacle' for o in day))
+        self.assertFalse(any(o.get('scheduleRole')=='open_day' and o.get('instructor')=='Brian Ennis' for o in day))
+        self.assertTrue(any(o.get('scheduleRole')=='open_day' and o.get('instructor')=='Michelle' for o in day))
+        self.assertTrue(any(o.get('scheduleRole')=='open_day' and o['date']=='2026-10-12' for o in payload['offers']))
+        self.assertIn('anchored_day_requires_attached_offer',payload['rejectionReasonCounts'])
+
     def test_unknown_offsite_travel_affects_only_own_instructor(self):
         self.window(11,name='Michelle')
         self.sources.append(dict(source_event_id='offsite',start=self.at(11,'09:00').isoformat(),
