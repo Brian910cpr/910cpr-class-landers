@@ -49,12 +49,11 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: schedule-publish-main
-  cancel-in-progress: false
-
 jobs:
   refresh:
+    concurrency:
+      group: schedule-publish-main
+      cancel-in-progress: false
     if: github.ref == 'refs/heads/main' && !inputs.v2_release_probe
     runs-on: ubuntu-latest
     steps:
@@ -226,6 +225,9 @@ jobs:
           git push origin HEAD:main
 
   v2-release-probe:
+    concurrency:
+      group: v2-release-probe-${{ github.ref_name }}
+      cancel-in-progress: false
     if: github.event_name == 'workflow_dispatch' && inputs.v2_release_probe
     runs-on: ubuntu-latest
     permissions:
