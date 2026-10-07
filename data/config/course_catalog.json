@@ -2322,7 +2322,13 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-FA-25",
+      "hsi_list_price_usd": 11.96,
+      "hsi_discounted_cost_usd": 11.6,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-CHALLENGE",
@@ -2387,7 +2393,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCFA-25",
+      "hsi_list_price_usd": 8.47,
+      "hsi_discounted_cost_usd": 8.22,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-CPR-AED-BLENDED-SKILLS",
@@ -2441,7 +2453,13 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-CPR-A25",
+      "hsi_list_price_usd": 11.96,
+      "hsi_discounted_cost_usd": 11.6,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-CPR-AED-CHALLENGE",
@@ -2506,7 +2524,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCCPR-25A",
+      "hsi_list_price_usd": 8.47,
+      "hsi_discounted_cost_usd": 8.22,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-CHILD-CPR-AED-BLENDED-SKILLS",
@@ -2560,7 +2584,13 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-CPR-AC25",
+      "hsi_list_price_usd": 11.96,
+      "hsi_discounted_cost_usd": 11.6,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-CHILD-CPR-AED-CHALLENGE",
@@ -2625,7 +2655,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCCPR-25AC",
+      "hsi_list_price_usd": 8.47,
+      "hsi_discounted_cost_usd": 8.22,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-INFANT-CPR-AED-BLENDED-SKILLS",
@@ -2679,7 +2715,13 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-CPR-AI25",
+      "hsi_list_price_usd": 11.96,
+      "hsi_discounted_cost_usd": 11.6,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-INFANT-CPR-AED-CHALLENGE",
@@ -2744,7 +2786,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCCPR-25AI",
+      "hsi_list_price_usd": 8.47,
+      "hsi_discounted_cost_usd": 8.22,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-CHILD-INFANT-CPR-AED-BLENDED-SKILLS",
@@ -2798,7 +2846,13 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-CPR-25",
+      "hsi_list_price_usd": 11.96,
+      "hsi_discounted_cost_usd": 11.6,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-CHILD-INFANT-CPR-AED-CHALLENGE",
@@ -2863,7 +2917,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCCPR-25",
+      "hsi_list_price_usd": 8.47,
+      "hsi_discounted_cost_usd": 8.22,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CPR-AED-BLENDED-SKILLS",
@@ -2917,7 +2977,13 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-COMBO-A25",
+      "hsi_list_price_usd": 16.77,
+      "hsi_discounted_cost_usd": 16.27,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CPR-AED-CHALLENGE",
@@ -2982,7 +3048,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCCOMBO-25A",
+      "hsi_list_price_usd": 14.58,
+      "hsi_discounted_cost_usd": 14.14,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CHILD-CPR-AED-BLENDED-SKILLS",
@@ -3036,7 +3108,13 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-COMBO-AC25",
+      "hsi_list_price_usd": 16.77,
+      "hsi_discounted_cost_usd": 16.27,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CHILD-CPR-AED-CHALLENGE",
@@ -3101,7 +3179,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCCOMBO-25AC",
+      "hsi_list_price_usd": 14.58,
+      "hsi_discounted_cost_usd": 14.14,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-INFANT-CPR-AED-BLENDED-SKILLS",
@@ -3155,7 +3239,13 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-COMBO-AI25",
+      "hsi_list_price_usd": 16.77,
+      "hsi_discounted_cost_usd": 16.27,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-INFANT-CPR-AED-CHALLENGE",
@@ -3220,7 +3310,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCCOMBO-25AI",
+      "hsi_list_price_usd": 14.58,
+      "hsi_discounted_cost_usd": 14.14,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CHILD-INFANT-CPR-AED-BLENDED-SKILLS",
@@ -3274,7 +3370,13 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-COMBO-25",
+      "hsi_list_price_usd": 16.77,
+      "hsi_discounted_cost_usd": 16.27,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CHILD-INFANT-CPR-AED-CHALLENGE",
@@ -3339,7 +3441,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCCOMBO-25",
+      "hsi_list_price_usd": 14.58,
+      "hsi_discounted_cost_usd": 14.14,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-BLENDED-SKILLS",
@@ -3393,7 +3501,21 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-PEDFA-25",
+      "hsi_list_price_usd": 11.96,
+      "hsi_discounted_cost_usd": 11.6,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "hsi_alternate_fulfillment_products": [
+        {
+          "product_code": "HRSV-PEDFA25",
+          "list_price_usd": 15.03,
+          "discounted_cost_usd": 14.73,
+          "mode": "RSV"
+        }
+      ]
     },
     {
       "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHALLENGE",
@@ -3458,7 +3580,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCPEDFA-25",
+      "hsi_list_price_usd": 8.47,
+      "hsi_discounted_cost_usd": 8.22,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-CHILD-INFANT-CPR-AED-BLENDED-SKILLS",
@@ -3512,7 +3640,27 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-PEDCPR-CI25",
+      "hsi_list_price_usd": 11.96,
+      "hsi_discounted_cost_usd": 11.6,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "hsi_alternate_fulfillment_products": [
+        {
+          "product_code": "HRSV-PEDCPR-CI25",
+          "list_price_usd": 18.8,
+          "discounted_cost_usd": 18.24,
+          "mode": "RSV"
+        },
+        {
+          "product_code": "HRSVM-PEDCPR-CI25",
+          "list_price_usd": 74.97,
+          "discounted_cost_usd": 74.57,
+          "mode": "RSV_WITH_LOANER_MANIKIN"
+        }
+      ]
     },
     {
       "course_id": "LW-HSI-CHILD-INFANT-CPR-AED-CHALLENGE",
@@ -3577,7 +3725,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCPEDCPR-25CI",
+      "hsi_list_price_usd": 8.47,
+      "hsi_discounted_cost_usd": 8.22,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-CHILD-INFANT-ADULT-CPR-AED-BLENDED-SKILLS",
@@ -3631,7 +3785,27 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-PEDCPR-25",
+      "hsi_list_price_usd": 11.96,
+      "hsi_discounted_cost_usd": 11.6,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "hsi_alternate_fulfillment_products": [
+        {
+          "product_code": "HRSV-PEDCPR25",
+          "list_price_usd": 18.8,
+          "discounted_cost_usd": 18.24,
+          "mode": "RSV"
+        },
+        {
+          "product_code": "HRSVM-PEDCPR25",
+          "list_price_usd": 74.97,
+          "discounted_cost_usd": 74.57,
+          "mode": "RSV_WITH_LOANER_MANIKIN"
+        }
+      ]
     },
     {
       "course_id": "LW-HSI-CHILD-INFANT-ADULT-CPR-AED-CHALLENGE",
@@ -3696,7 +3870,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCPEDCPR-25",
+      "hsi_list_price_usd": 8.47,
+      "hsi_discounted_cost_usd": 8.22,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHILD-INFANT-CPR-AED-BLENDED-SKILLS",
@@ -3750,7 +3930,27 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-PEDCOMBO-CI25",
+      "hsi_list_price_usd": 16.77,
+      "hsi_discounted_cost_usd": 16.27,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "hsi_alternate_fulfillment_products": [
+        {
+          "product_code": "HRSV-PED-CI25",
+          "list_price_usd": 18.8,
+          "discounted_cost_usd": "UNKNOWN",
+          "mode": "RSV"
+        },
+        {
+          "product_code": "HRSVM-PED-CI25",
+          "list_price_usd": 74.97,
+          "discounted_cost_usd": 74.6,
+          "mode": "RSV_WITH_LOANER_MANIKIN"
+        }
+      ]
     },
     {
       "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHILD-INFANT-CPR-AED-CHALLENGE",
@@ -3815,7 +4015,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCPEDCOMBO-25CI",
+      "hsi_list_price_usd": 14.58,
+      "hsi_discounted_cost_usd": 14.14,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHILD-INFANT-ADULT-CPR-AED-BLENDED-SKILLS",
@@ -3869,7 +4075,27 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "hsi_product_code": "HBL-PEDCOMBO-25",
+      "hsi_list_price_usd": 16.77,
+      "hsi_discounted_cost_usd": 16.27,
+      "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "hsi_alternate_fulfillment_products": [
+        {
+          "product_code": "HRSV-PED25",
+          "list_price_usd": 18.8,
+          "discounted_cost_usd": 18.24,
+          "mode": "RSV"
+        },
+        {
+          "product_code": "HRSVM-PED-25",
+          "list_price_usd": 74.97,
+          "discounted_cost_usd": 74.6,
+          "mode": "RSV_WITH_LOANER_MANIKIN"
+        }
+      ]
     },
     {
       "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHILD-INFANT-ADULT-CPR-AED-CHALLENGE",
@@ -3934,7 +4160,13 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "hsi_product_code": "DCPEDCOMBO-25",
+      "hsi_list_price_usd": 14.58,
+      "hsi_discounted_cost_usd": 14.14,
+      "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
+      "hsi_generation": "G25",
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
     },
     {
       "course_id": "LW-HSI-BLS-BLENDED-SKILLS",
@@ -4005,5 +4237,6 @@
     "safety_note": "Only scheduler-critical reviewed fields were imported by course_id."
   },
   "arc_2027_catalog_note": "ARC r.25 blended and skills products added from owner-supplied 2027 Training Provider Course and Price List. ARC skills/BLS session capacity is 4 per session; unrelated provider capacities unchanged.",
-  "hsi_challenge_catalog_note": "Expanded HSI Level 3 First Aid/CPR/AED, Pediatric, and BLS catalog with blended/skills and Challenge delivery identities. Challenge review is modeled as a separate optional non-certifying event. External HSI SKUs were not invented."
+  "hsi_challenge_catalog_note": "Expanded HSI Level 3 First Aid/CPR/AED, Pediatric, and BLS catalog with blended/skills and Challenge delivery identities. Challenge review is modeled as a separate optional non-certifying event. External HSI SKUs were not invented.",
+  "hsi_g25_price_note": "HSI G25 digital-card, blended, pediatric RSV and related product pricing enriched from owner-supplied HSI Training Center store data. List and discounted costs are preserved separately; missing discounted cost remains UNKNOWN."
 }
