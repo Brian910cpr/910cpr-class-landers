@@ -497,6 +497,11 @@ def public_policy_reasons(
 ) -> list[str]:
     reasons: list[str] = []
     reference = reference_now or selector_reference_datetime()
+    # V1 wall-clock inputs and V2 offset-bearing instants share Eastern policy.
+    if start.tzinfo is not None:
+        start = start.astimezone(PUBLIC_TZ).replace(tzinfo=None)
+    if reference.tzinfo is not None:
+        reference = reference.astimezone(PUBLIC_TZ).replace(tzinfo=None)
     enabled_ids = {str(item) for item in policy.get("enabled_course_ids", [])}
     disabled_ids = {str(item) for item in policy.get("disabled_course_ids", [])}
     enabled_families = {str(item) for item in policy.get("enabled_course_families", [])}
