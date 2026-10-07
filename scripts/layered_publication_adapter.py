@@ -220,6 +220,18 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
         else:
             accepted.append(deepcopy(original))
+    # Every retained existing class is that exact course's day anchor,
+    # including when its roster count is unknown. Consolidate across separate
+    # Google availability gaps without suppressing different course formats.
+    day_anchors = {(o['date'], str(o['courseId'])) for o in accepted
+                   if o.get('offerType') == 'seated_class'}
+    retained = []
+    for offer in accepted:
+        if offer.get('offerType') != 'seated_class' and (offer['date'], str(offer['courseId'])) in day_anchors:
+            rejected.append(dict(offer, reasons=['existing_course_day_anchor']))
+        else:
+            retained.append(offer)
+    accepted = retained
     seen = set(); unique=[]
     for offer in accepted:
         key = (offer["date"],offer["startTime"],offer["courseId"],offer.get("instructor"),offer.get("offerType"))

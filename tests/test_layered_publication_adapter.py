@@ -115,6 +115,23 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(self.starts(day=13))
         self.assertTrue(self.calculation()['issues'])
 
+    def test_all_starred_formats_exclude_same_course_for_entire_day(self):
+        for cid in ['210549','209809']:
+            with self.subTest(course=cid):
+                self.sources=[]
+                row=self.add(11,'12:00','13:00',cid=cid)
+                self.window(12)
+                seated=dict(session_id=row['source_event_id'],date='2026-10-11',startTime='12:00',
+                            courseId=cid,courseName='Existing class',offerType='seated_class')
+                payload=self.payload([seated])
+                day=[o for o in payload['offers'] if o['date']=='2026-10-11' and o['courseId']==cid]
+                self.assertEqual([o['offerType'] for o in day],['seated_class'])
+                self.assertTrue(any(o['courseId']!=cid and o['date']=='2026-10-11' for o in payload['offers']))
+                self.assertTrue(any(o['courseId']==cid and o['date']=='2026-10-12' for o in payload['offers']))
+                if cid=='210549':
+                    self.assertIn('existing_course_day_anchor',payload['rejectionReasonCounts'])
+                self.windows=self.windows[:1];self.coverage=self.coverage[:1]
+
     def test_incomplete_proof_does_not_sterilize_another_instructor(self):
         self.window(11,name='Michelle')
         self.coverage=self.coverage[1:]
