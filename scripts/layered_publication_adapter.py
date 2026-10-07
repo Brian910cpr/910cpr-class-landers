@@ -225,10 +225,28 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     # Google availability gaps without suppressing different course formats.
     day_anchors = {(o['date'], str(o['courseId'])) for o in accepted
                    if o.get('offerType') == 'seated_class'}
+    def instructor_key(name):
+        key = str(name or '').strip().casefold()
+        return 'brian ennis' if key == 'brian' else key
+    # Class occupancy comes from every program, not just the page's selected
+    # courses. A second calendar gap does not reset an instructor's anchored day.
+    anchored_days = set()
+    for source in calculation['projected_sources']:
+        if (source.get('course_id') and source.get('start') and source.get('end') and
+                not source.get('normalization_issue') and aware(source['end']) > aware(source['start'])):
+            anchored_days.add((aware(source['start']).date().isoformat(),
+                               instructor_key(source.get('instructor'))))
+    for offer in accepted:
+        if offer.get('offerType') == 'seated_class':
+            anchored_days.add((offer['date'], instructor_key(offer.get('instructor'))))
     retained = []
     for offer in accepted:
         if offer.get('offerType') != 'seated_class' and (offer['date'], str(offer['courseId'])) in day_anchors:
             rejected.append(dict(offer, reasons=['existing_course_day_anchor']))
+        elif offer.get('scheduleRole') == 'open_day' and (
+                (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days or
+                (offer['date'], '') in anchored_days):
+            rejected.append(dict(offer, reasons=['anchored_day_requires_attached_offer']))
         else:
             retained.append(offer)
     accepted = retained
