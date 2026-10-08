@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T19:59:07.033836+00:00",
+  "generated_at": "2026-10-08T20:09:06.045472+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 365,
+    "blocks_generated": 364,
     "blocks_blocked": 1,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -36,11 +36,11 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 159,
+      "blocked": 158,
       "available": 206
     },
     "inverse_generated_availability_blocks": 206,
-    "inverse_blocking_event_blocks": 159,
+    "inverse_blocking_event_blocks": 158,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
@@ -107,7 +107,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "60omadphcoo3cbb46gq3gb9k6gq3ib9o61hjgb9n74q6ccr4cosj0d9i70@google.com",
+      "source_event_id": "61hm2e1m6kr66bb16ti38b9k64p6cb9pc8r3cb9n6gqj8c1mcgrj0cb570@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -155,7 +155,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "ckpjgeb46gp36b9o64o62b9kcor3gb9o61i64b9icoq34oj46sojedj1cc@google.com",
+      "source_event_id": "6orjie9k68q32b9kcoojeb9kcooj6b9p6oq30bb66koj0e336kqmaeb370@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -275,7 +275,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "60q38cb1c8q30bb6clgj2b9k65j3ab9o6dgjgbb5c4qjecb16osj2e9mc4@google.com",
+      "source_event_id": "ckq32e1n6co68b9lcdi38b9k6ssmabb16go64b9i6cs68cb6chij4d1gco@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -467,7 +467,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "6ti66e1hc8r64b9o69i38b9k65ijab9ockoj2b9hc8p3ephm64sjcd1kcg@google.com",
+      "source_event_id": "cph3ccpjccr6cb9icdhjab9k6spjebb1chh34b9m69hmcchp6gqj2oj1c8@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -611,7 +611,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "65im2opkcop62bb26lhmcb9k6gr38bb16koj4bb26cq3cpb6c8rjacj36c@google.com",
+      "source_event_id": "c5hmcc1iccpj0b9l74pjcb9kcgo3eb9p6co6ab9m64rjeob4clhj0d35ck@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -707,7 +707,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "6goj8pho6krmabb2ckr68b9kc8qm8b9o6lh3ebb169ijcob56kqj8cj174@google.com",
+      "source_event_id": "74p66cj26sq6abb5c4o64b9kccrmcb9p64sjeb9n74r62p9i64pj0e9occ@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -1019,7 +1019,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "64p3cd1g60p62b9l60pjab9kclh38b9pc4r3ab9jccq66p1mc4q66c3270@google.com",
+      "source_event_id": "clgjid1h6goj2b9h6go62b9k60o3gb9o6go3gb9n75h64dhnchgm2cr268@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -1235,7 +1235,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "6cpjecb36gsmab9l64o64b9k6ko3cb9p6gomcb9h74q66d1pc4r34eb16c@google.com",
+      "source_event_id": "c9hj6chn6cr32bb5copm2b9k74o36bb268sj0bb36opmceb1ckq62cj660@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -1487,30 +1487,6 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-30T06:00:00",
-      "end_datetime": "2026-10-30T18:00:00",
-      "date": "2026-10-30",
-      "end_date": "2026-10-30",
-      "start_time": "06:00",
-      "end_time": "18:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Riegelwood\\, NC 28456",
-      "location_name": "Riegelwood\\, NC 28456",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "65h3ge1n6pi38bb66ti38b9k60s36b9p6oomcb9n6soj6ohncdgj6d1h6g@google.com",
-      "summary": "Shift: ADR",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-30T15:00:00",
       "end_datetime": "2026-10-30T17:30:00",
       "date": "2026-10-30",
@@ -1525,30 +1501,6 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261030T1500000400",
       "summary": "CFA Pickup",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-30T18:00:00",
-      "end_datetime": "2026-10-31T06:00:00",
-      "date": "2026-10-30",
-      "end_date": "2026-10-31",
-      "start_time": "18:00",
-      "end_time": "06:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Riegelwood\\, NC 28456",
-      "location_name": "Riegelwood\\, NC 28456",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "cdij2dj269im8bb560pjeb9kckqjcbb1cphm2bb668pjep1o75h64e9hc8@google.com",
-      "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -3863,11 +3815,35 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-08T16:00:00",
+      "start_datetime": "2027-01-06T15:00:00",
+      "end_datetime": "2027-01-06T17:30:00",
+      "date": "2027-01-06",
+      "end_date": "2027-01-06",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20270106T1500000500",
+      "summary": "CFA Pickup",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-08T16:15:00",
       "end_datetime": "2026-10-09T00:00:00",
       "date": "2026-10-08",
       "end_date": "2026-10-09",
-      "start_time": "16:00",
+      "start_time": "16:15",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10219,11 +10195,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-06T07:45:00",
-      "end_datetime": "2027-01-06T16:00:00",
+      "end_datetime": "2027-01-06T15:00:00",
       "date": "2027-01-06",
       "end_date": "2027-01-06",
       "start_time": "07:45",
-      "end_time": "16:00",
+      "end_time": "15:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10252,10 +10228,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-10-08T19:59:05.497799+00:00",
-      "end": "2027-01-06T19:59:05.497799+00:00",
-      "observed_at": "2026-10-08T19:59:06.915133+00:00",
-      "valid_until": "2026-10-08T20:14:06.915133+00:00",
+      "start": "2026-10-08T20:09:05.068166+00:00",
+      "end": "2027-01-06T20:09:05.068166+00:00",
+      "observed_at": "2026-10-08T20:09:05.924779+00:00",
+      "valid_until": "2026-10-08T20:24:05.924779+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
