@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T00:43:31.078305+00:00",
+  "generated_at": "2026-10-08T00:52:59.175944+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 369,
+    "blocks_generated": 367,
     "blocks_blocked": 1,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -36,11 +36,11 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 162,
+      "blocked": 160,
       "available": 207
     },
     "inverse_generated_availability_blocks": 207,
-    "inverse_blocking_event_blocks": 162,
+    "inverse_blocking_event_blocks": 160,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
@@ -143,30 +143,6 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-09T05:00:00",
-      "end_datetime": "2026-10-10T07:00:00",
-      "date": "2026-10-09",
-      "end_date": "2026-10-10",
-      "start_time": "05:00",
-      "end_time": "07:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "q5mprdhb5100f2v9rtipl3n810@google.com",
-      "summary": "ADR Shift — Brian Unavailable",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-09T06:00:00",
       "end_datetime": "2026-10-09T18:00:00",
       "date": "2026-10-09",
@@ -229,30 +205,6 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "ckpjgeb46gp36b9o64o62b9kcor3gb9o61i64b9icoq34oj46sojedj1cc@google.com",
       "summary": "Shift: ADR",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-10T06:00:00",
-      "end_datetime": "2026-10-10T07:00:00",
-      "date": "2026-10-10",
-      "end_date": "2026-10-10",
-      "start_time": "06:00",
-      "end_time": "07:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "f1q4al2d5npba1min493m0b2vg@google.com",
-      "summary": "ADR POST-SHIFT BUFFER — Brian Unavailable",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -3935,11 +3887,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-07T20:45:00",
+      "start_datetime": "2026-10-07T21:00:00",
       "end_datetime": "2026-10-08T00:00:00",
       "date": "2026-10-07",
       "end_date": "2026-10-08",
-      "start_time": "20:45",
+      "start_time": "21:00",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -4090,11 +4042,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-10T07:00:00",
+      "start_datetime": "2026-10-10T06:00:00",
       "end_datetime": "2026-10-11T00:00:00",
       "date": "2026-10-10",
       "end_date": "2026-10-11",
-      "start_time": "07:00",
+      "start_time": "06:00",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10322,11 +10274,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-05T17:30:00",
-      "end_datetime": "2027-01-05T20:45:00",
+      "end_datetime": "2027-01-05T21:00:00",
       "date": "2027-01-05",
       "end_date": "2027-01-05",
       "start_time": "17:30",
-      "end_time": "20:45",
+      "end_time": "21:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10355,10 +10307,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-10-08T00:43:29.916680+00:00",
-      "end": "2027-01-06T00:43:29.916680+00:00",
-      "observed_at": "2026-10-08T00:43:30.952792+00:00",
-      "valid_until": "2026-10-08T00:58:30.952792+00:00",
+      "start": "2026-10-08T00:52:58.109181+00:00",
+      "end": "2027-01-06T00:52:58.109181+00:00",
+      "observed_at": "2026-10-08T00:52:59.101858+00:00",
+      "valid_until": "2026-10-08T01:07:59.101858+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
