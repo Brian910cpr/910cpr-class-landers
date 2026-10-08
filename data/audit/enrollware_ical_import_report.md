@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-10-08T13:18:04.828781-04:00`
+- Generated at: `2026-10-08T13:30:46.103292-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `245`
-- Public sessions created: `245`
+- iCal events read: `244`
+- Public sessions created: `244`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `219`
+- Registration unavailable sessions marked not direct-bookable: `218`
 - Unmapped sessions: `6`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12775797` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-07-10T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774587` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-07-10T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775320` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-07-10T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13753715` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-07-11T09:00:00-04:00 | Gray's Creek Fire Department (Station 24) |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `12774086` | enrollware_registration_closed | AHA ACLS HeartCode | 2026-07-20T13:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13673161` | enrollware_registration_closed | AHA ACLS Provider (Initial) | 2026-07-20T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775788` | enrollware_registration_closed | AHA - Family & Friends® CPR | 2026-07-20T18:00:00-04:00 | Messiah Lutheran Church |
+| `13676931` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-07-20T18:30:00-04:00 | No.9 Township Fire & Rescue |
 
 ## Unmapped Examples
 
