@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-10-08T14:07:59.654400-04:00`
+- Generated at: `2026-10-08T14:18:03.298952-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `244`
-- Public sessions created: `244`
+- iCal events read: `242`
+- Public sessions created: `242`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `218`
+- Registration unavailable sessions marked not direct-bookable: `216`
 - Unmapped sessions: `6`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,8 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12774587` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-07-10T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
-| `12775320` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-07-10T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13753715` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-07-11T09:00:00-04:00 | Gray's Creek Fire Department (Station 24) |
 | `12775976` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-07-11T09:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776439` | enrollware_registration_closed | HSI BLS and Adult First Aid | Blended Learning | 2026-07-11T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,12 +71,14 @@ They remain separate registration-signal/audit inputs only.
 | `13673161` | enrollware_registration_closed | AHA ACLS Provider (Initial) | 2026-07-20T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12775788` | enrollware_registration_closed | AHA - Family & Friends® CPR | 2026-07-20T18:00:00-04:00 | Messiah Lutheran Church |
 | `13676931` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-07-20T18:30:00-04:00 | No.9 Township Fire & Rescue |
+| `13623366` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-07-21T09:00:00-04:00 | NHCS Technology & Digital Learning Division - Carolina Beach Rd |
+| `13835379` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-07-21T09:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
+- `11341058`: AHA - BLS Instructor Renewal (2026-12-01T00:00:00-05:00)
 - `13415738`: HSI Adult/Child/Infant CPR AED | Blended Learning (2026-09-01T05:30:00-04:00)
 - `13901730`: BLS Provider (NHCSO) (2026-08-12T13:00:00-04:00)
 - `13929405`: AHA Heartsaver K-12 - In-person ?? (2026-08-14T08:00:00-04:00)
 - `13956873`: BLS Provider (NHCSO) (2026-08-19T13:00:00-04:00)
 - `14344219`: AHA Heartsaver First Aid CPR AED In-person training for workplace, OSHA, and general public certification (2026-09-23T17:00:00-04:00)
-- `11341058`: AHA - BLS Instructor Renewal (2026-12-01T00:00:00-05:00)
