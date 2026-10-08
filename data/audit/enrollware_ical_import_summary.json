@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T14:28:17.008353-04:00",
+  "generated_at": "2026-10-08T14:42:42.999618-04:00",
   "source": "enrollware_ical",
   "ical_events_read": 242,
   "public_sessions_created": 242,
@@ -917,9 +917,9 @@
     {
       "session_id": "14661534",
       "course_id": "209806",
-      "start_at": "2026-10-16T11:00:00-04:00",
-      "source_end": "2026-10-16T11:00:00-04:00",
-      "end_at": "2026-10-16T13:00:00-04:00",
+      "start_at": "2026-10-18T11:00:00-04:00",
+      "source_end": "2026-10-18T11:00:00-04:00",
+      "end_at": "2026-10-18T13:00:00-04:00",
       "occupied_minutes": 120,
       "rule_source": "data/inventory/course_consumption_rules.json"
     },
