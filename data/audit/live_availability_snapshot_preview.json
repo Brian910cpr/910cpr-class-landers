@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T08:58:31.089082+00:00",
+  "generated_at": "2026-10-09T09:08:12.179963+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,25 +22,25 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 364,
-    "blocks_blocked": 1,
+    "blocks_generated": 363,
+    "blocks_blocked": 2,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 1
+      "inverse_gap_shorter_than_minimum_consumption": 2
     },
     "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 1
+      "inverse_gap_shorter_than_minimum_consumption": 2
     },
     "source_type_counts": {
       "google_calendar": 2,
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 158,
+      "blocked": 157,
       "available": 206
     },
     "inverse_generated_availability_blocks": 206,
-    "inverse_blocking_event_blocks": 158,
+    "inverse_blocking_event_blocks": 157,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
@@ -61,30 +61,6 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261009T0630000400",
       "summary": "CFA Drop Off",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-09T05:00:00",
-      "end_datetime": "2026-10-09T06:00:00",
-      "date": "2026-10-09",
-      "end_date": "2026-10-09",
-      "start_time": "05:00",
-      "end_time": "06:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "kfefu2cogbg6q56tkaulug3kn4@google.com",
-      "summary": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -10195,11 +10171,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-07T00:00:00",
-      "end_datetime": "2027-01-07T05:00:00",
+      "end_datetime": "2027-01-07T05:15:00",
       "date": "2027-01-07",
       "end_date": "2027-01-07",
       "start_time": "00:00",
-      "end_time": "05:00",
+      "end_time": "05:15",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10228,10 +10204,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-10-09T08:58:29.978171+00:00",
-      "end": "2027-01-07T08:58:29.978171+00:00",
-      "observed_at": "2026-10-09T08:58:30.991083+00:00",
-      "valid_until": "2026-10-09T09:13:30.991083+00:00",
+      "start": "2026-10-09T09:08:11.016977+00:00",
+      "end": "2027-01-07T09:08:11.016977+00:00",
+      "observed_at": "2026-10-09T09:08:12.104061+00:00",
+      "valid_until": "2026-10-09T09:23:12.104061+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
@@ -10240,6 +10216,14 @@
     }
   ],
   "blocked_or_placeholder_sources": [
+    {
+      "calendar_source_key": "brian_do_not_schedule",
+      "source_type": "inverse_google_calendar",
+      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
+      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
+      "start_datetime": "2026-10-09T05:15:00",
+      "end_datetime": "2026-10-09T06:00:00"
+    },
     {
       "calendar_source_key": "brian_do_not_schedule",
       "source_type": "inverse_google_calendar",
