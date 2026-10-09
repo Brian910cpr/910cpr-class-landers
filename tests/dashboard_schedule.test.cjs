@@ -84,3 +84,11 @@ test("dashboard startup has no dead legacy month bindings and schedule read rema
   assert.match(html, /ScheduleModel\.brianExceptionRows/);
   assert.doesNotMatch(html, /fetch\(`\$\{SCHEDULE_URL\}[^`]*X-Hot-Sync-Admin-Key/);
 });
+
+
+test("dashboard open-window ledger covers the full local day, including weekends", () => {
+  const html = fs.readFileSync(path.join(__dirname, "../docs/admin/dashboard.html"), "utf8");
+  assert.match(html, /const dayStart=new Date\(k\+'T00:00:00'\)/);
+  assert.match(html, /dayEnd\.setDate\(dayEnd\.getDate\(\)\+1\)/);
+  assert.doesNotMatch(html, /T08:00:00'\),dayEnd=new Date\(k\+'T19:00:00/);
+});
