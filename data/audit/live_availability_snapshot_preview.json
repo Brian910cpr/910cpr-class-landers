@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-09T12:58:05.288790+00:00",
+  "generated_at": "2026-10-09T13:09:06.155311+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,14 +22,14 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 363,
-    "blocks_blocked": 3,
+    "blocks_generated": 364,
+    "blocks_blocked": 2,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 3
+      "inverse_gap_shorter_than_minimum_consumption": 2
     },
     "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 3
+      "inverse_gap_shorter_than_minimum_consumption": 2
     },
     "source_type_counts": {
       "google_calendar": 2,
@@ -37,9 +37,9 @@
     },
     "availability_status_counts": {
       "blocked": 156,
-      "available": 207
+      "available": 208
     },
-    "inverse_generated_availability_blocks": 207,
+    "inverse_generated_availability_blocks": 208,
     "inverse_blocking_event_blocks": 156,
     "confirmed_training_class_blocks": 0
   },
@@ -3791,11 +3791,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-09T09:00:00",
+      "start_datetime": "2026-10-09T09:15:00",
       "end_datetime": "2026-10-09T15:00:00",
       "date": "2026-10-09",
       "end_date": "2026-10-09",
-      "start_time": "09:00",
+      "start_time": "09:15",
       "end_time": "15:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10204,6 +10204,37 @@
         "inverse_blocking_gap_expansion",
         "default_open_minus_blocking_events"
       ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2027-01-07T07:45:00",
+      "end_datetime": "2027-01-07T09:15:00",
+      "date": "2027-01-07",
+      "end_date": "2027-01-07",
+      "start_time": "07:45",
+      "end_time": "09:15",
+      "availability_status": "available",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "ARC",
+        "BLS",
+        "HSI",
+        "Heartsaver",
+        "USCG"
+      ],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "brian_do_not_schedule:inverse_gap:208",
+      "source_type": "inverse_google_calendar",
+      "inverse_generated": true,
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_blocking_gap_expansion",
+        "default_open_minus_blocking_events"
+      ]
     }
   ],
   "layered_commitment_coverage": [
@@ -10211,10 +10242,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-10-09T12:58:04.209788+00:00",
-      "end": "2027-01-07T12:58:04.209788+00:00",
-      "observed_at": "2026-10-09T12:58:05.204639+00:00",
-      "valid_until": "2026-10-09T13:13:05.204639+00:00",
+      "start": "2026-10-09T13:09:04.745165+00:00",
+      "end": "2027-01-07T13:09:04.745165+00:00",
+      "observed_at": "2026-10-09T13:09:06.037650+00:00",
+      "valid_until": "2026-10-09T13:24:06.037650+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
@@ -10238,14 +10269,6 @@
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
       "start_datetime": "2026-10-12T07:45:00",
       "end_datetime": "2026-10-12T09:00:00"
-    },
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2027-01-07T07:45:00",
-      "end_datetime": "2027-01-07T09:00:00"
     }
   ]
 }
