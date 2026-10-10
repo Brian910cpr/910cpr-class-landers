@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T04:43:52.645373+00:00",
+  "generated_at": "2026-10-10T04:54:30.379958+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -3767,11 +3767,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-10T00:45:00",
+      "start_datetime": "2026-10-10T01:00:00",
       "end_datetime": "2026-10-11T00:00:00",
       "date": "2026-10-10",
       "end_date": "2026-10-11",
-      "start_time": "00:45",
+      "start_time": "01:00",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10218,10 +10218,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-10-10T04:43:51.567705+00:00",
-      "end": "2027-01-08T04:43:51.567705+00:00",
-      "observed_at": "2026-10-10T04:43:52.526329+00:00",
-      "valid_until": "2026-10-10T04:58:52.526329+00:00",
+      "start": "2026-10-10T04:54:29.348632+00:00",
+      "end": "2027-01-08T04:54:29.348632+00:00",
+      "observed_at": "2026-10-10T04:54:30.254050+00:00",
+      "valid_until": "2026-10-10T05:09:30.254050+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
@@ -10244,7 +10244,7 @@
       "reason_code": "inverse_gap_shorter_than_minimum_consumption",
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
       "start_datetime": "2027-01-08T00:00:00",
-      "end_datetime": "2027-01-08T00:45:00"
+      "end_datetime": "2027-01-08T01:00:00"
     }
   ]
 }
