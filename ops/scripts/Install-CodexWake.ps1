@@ -15,6 +15,7 @@ $installedLoop = Join-Path $installDirectory 'Start-CodexWakeLoop.ps1'
 New-Item -ItemType Directory -Force -Path $installDirectory | Out-Null
 Copy-Item -LiteralPath $source -Destination $installedScript -Force
 Copy-Item -LiteralPath $loopSource -Destination $installedLoop -Force
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'Publish-CodexWakeHealth.ps1') -Destination (Join-Path $installDirectory 'Publish-CodexWakeHealth.ps1') -Force
 
 if ($SeedCurrentTask -gt 0) {
     $stateFile = Join-Path $installDirectory 'state.json'

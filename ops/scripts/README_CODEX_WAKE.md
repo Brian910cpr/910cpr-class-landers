@@ -42,6 +42,8 @@ Expected polling cadence is 15 minutes while the Windows user session is running
 
 Evidence level: **PROVEN for one intake-to-session cycle, not MONITORED/HEALTHY**. The loop heartbeat is local. The existing ChatGPT Scheduled Tasks “910CPR Delta Watch” and “910CPR Deep Stability Review” are supervisors, not launchers, and were not changed. Their independent access to current launcher health is not proven. No new scheduler was created; a stopped/sleeping CyberPC is still an availability boundary. Do not claim continuous service or observer health until those existing supervisors can actually observe staleness.
 
+October 10 follow-up: `Publish-CodexWakeHealth.ps1` now publishes a sanitized heartbeat from this same loop approximately every minute, including during a running execution. Configure local `health-publish.json` with `{"comment_id":6102455692}`; installer copies the publisher without changing that configuration. The fixed GitHub signal and exact proposed additions to the two existing supervisors are documented in `docs/CODEX_WAKE_SUPERVISION.md`. Two real publications from loop PID 33536 were observed. **The ChatGPT task edits, independent stale detection and delivered alert remain unproven pending browser account sign-in.** No second automation was created. A live publication proves publication/loop liveness; it does not prove independent observation.
+
 Uninstall only when intentionally retiring the worker:
 
 ```powershell

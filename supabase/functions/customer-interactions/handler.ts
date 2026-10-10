@@ -12,6 +12,30 @@ export function createHandler(deps: Dependencies) {
     try {
       if(!await deps.authorize(req)) return response({error:'Unauthorized'},401);
       if(req.method==='GET') {
+        const query=new URL(req.url).searchParams;
+        if(query.size) {
+          const collection=query.get('collection');
+          const collections: Record<string,{table:string,time:string,key:string,select:string,statuses:string[]}> = {
+            interactions:{table:'customer_interactions',time:'created_at',key:'id',select:'*',statuses:['new','in_progress','paused','awaiting_data','awaiting_approval','follow_up_due','resolved']},
+            tasks:{table:'customer_follow_up_tasks',time:'created_at',key:'id',select:'*',statuses:['proposed','pending','snoozed','complete']},
+            interruptions:{table:'customer_interruption_events',time:'occurred_at',key:'request_id',select:'request_id,input,result,occurred_at',statuses:[]},
+          };
+          const spec=collection&&Object.hasOwn(collections,collection)?collections[collection]:null;
+          const rawLimit=query.get('limit')??'100', limit=Number(rawLimit);
+          const before=query.get('before'), beforeId=query.get('before_id'), status=query.get('status');
+          if(!spec||!/^\d+$/.test(rawLimit)||limit<1||limit>100||
+            [...query.keys()].some(key=>!['collection','limit','before','before_id','status'].includes(key)||query.getAll(key).length!==1)||
+            ((before!==null)!==(beforeId!==null))||
+            (before!==null&&(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})$/.test(before)||!Number.isFinite(Date.parse(before))||!uuid.test(beforeId!)))||
+            (status!==null&&!spec.statuses.includes(status))) return response({error:'Invalid collection, filter or cursor'},400);
+          const params=new URLSearchParams({select:spec.select,order:`${spec.time}.desc,${spec.key}.desc`,limit:String(limit+1)});
+          if(status!==null) params.set('status',`eq.${status}`);
+          if(before!==null) params.set('or',`(${spec.time}.lt.${before},and(${spec.time}.eq.${before},${spec.key}.lt.${beforeId}))`);
+          const result=await deps.rest(`${spec.table}?${params}`);
+          if(!Array.isArray(result)) throw Error('Invalid storage response');
+          const items=result.slice(0,limit), last=items.at(-1), hasMore=result.length>limit;
+          return response({collection,items,limit,has_more:hasMore,next_cursor:hasMore?{before:last[spec.time],before_id:last[spec.key]}:null});
+        }
         const rows=await deps.rest('customer_interactions?select=*&order=updated_at.desc&limit=100');
         const interruptions=await deps.rest('customer_interruption_events?select=request_id,input,result,occurred_at&order=occurred_at.desc&limit=100');
         const tasks=await deps.rest('customer_follow_up_tasks?select=*&order=created_at.desc&limit=100');
