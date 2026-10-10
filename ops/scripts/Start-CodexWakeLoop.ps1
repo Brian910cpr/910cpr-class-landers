@@ -22,7 +22,8 @@ try {
     "$(Get-Date -Format o) startup loop active; pid=$PID" | Add-Content -LiteralPath $loopLogPath
     Start-Sleep -Seconds $InitialDelaySeconds
     while ($true) {
-        & $worker -RepoPath $RepoPath -StateDirectory $StateDirectory
+        # Isolate exit/native-command failures from the persistent supervisor.
+        & (Get-Process -Id $PID).Path -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $worker -RepoPath $RepoPath -StateDirectory $StateDirectory
         "$(Get-Date -Format o) cycle_exit=$LASTEXITCODE; next_minutes=$IntervalMinutes" | Add-Content -LiteralPath $loopLogPath
         Start-Sleep -Seconds ($IntervalMinutes * 60)
     }
