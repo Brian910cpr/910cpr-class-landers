@@ -23,13 +23,17 @@ export function createHandler(deps: Dependencies) {
           const spec=collection&&Object.hasOwn(collections,collection)?collections[collection]:null;
           const rawLimit=query.get('limit')??'100', limit=Number(rawLimit);
           const before=query.get('before'), beforeId=query.get('before_id'), status=query.get('status');
+          const caseId=query.get('case_id'), interactionId=query.get('interaction_id');
           if(!spec||!/^\d+$/.test(rawLimit)||limit<1||limit>100||
-            [...query.keys()].some(key=>!['collection','limit','before','before_id','status'].includes(key)||query.getAll(key).length!==1)||
+            [...query.keys()].some(key=>!['collection','limit','before','before_id','status','case_id','interaction_id'].includes(key)||query.getAll(key).length!==1)||
+            ((caseId!==null||interactionId!==null)&&(collection==='interruptions'||(caseId!==null&&!uuid.test(caseId))||(interactionId!==null&&!uuid.test(interactionId))))||
             ((before!==null)!==(beforeId!==null))||
             (before!==null&&(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})$/.test(before)||!Number.isFinite(Date.parse(before))||!uuid.test(beforeId!)))||
             (status!==null&&!spec.statuses.includes(status))) return response({error:'Invalid collection, filter or cursor'},400);
           const params=new URLSearchParams({select:spec.select,order:`${spec.time}.desc,${spec.key}.desc`,limit:String(limit+1)});
           if(status!==null) params.set('status',`eq.${status}`);
+          if(caseId!==null) params.set('case_id',`eq.${caseId}`);
+          if(interactionId!==null) params.set(collection==='interactions'?'id':'interaction_id',`eq.${interactionId}`);
           if(before!==null) params.set('or',`(${spec.time}.lt.${before},and(${spec.time}.eq.${before},${spec.key}.lt.${beforeId}))`);
           const result=await deps.rest(`${spec.table}?${params}`);
           if(!Array.isArray(result)) throw Error('Invalid storage response');

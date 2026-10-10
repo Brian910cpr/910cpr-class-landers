@@ -38,3 +38,18 @@ test('paginated recovery remains owner-only',async()=>{
  const handle=createHandler({authorize:async()=>false,actor:async()=>assert.fail(),rest:async()=>assert.fail()});
  assert.equal((await handle(get({collection:'interactions',status:'paused'}))).status,401);
 });
+test('case recovery and direct interaction resume use canonical UUID filters',async()=>{
+ for(const collection of ['interactions','tasks']){
+  const handle=createHandler({authorize:async()=>true,actor:async()=>assert.fail(),rest:async path=>{
+   const q=new URLSearchParams(path.split('?')[1]);assert.equal(q.get('case_id'),'eq.'+uuid(1));
+   assert.equal(q.get(collection==='interactions'?'id':'interaction_id'),'eq.'+uuid(2));return [];
+  }});
+  assert.equal((await handle(get({collection,case_id:uuid(1),interaction_id:uuid(2)}))).status,200);
+ }
+});
+test('invalid case linkage and unsupported receipt filters never reach storage',async()=>{
+ const handle=createHandler({authorize:async()=>true,actor:async()=>assert.fail(),rest:async()=>assert.fail()});
+ for(const params of [{collection:'tasks',case_id:'bad'},{collection:'interactions',interaction_id:uuid(1)+',id.gt.0'},{collection:'interruptions',case_id:uuid(1)},{collection:'tasks',case_id:''}]){
+  assert.equal((await handle(get(params))).status,400);
+ }
+});
