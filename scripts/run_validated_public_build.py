@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 
@@ -40,9 +41,27 @@ def main() -> int:
 
     skip_tests = os.environ.get("LANDER_SKIP_REPOSITORY_TESTS", "").casefold() == "1"
     print(f"910CPR validated public build: {ROOT}", flush=True)
+    timeout_seconds = int(os.environ.get("LANDER_BUILD_MODULE_TIMEOUT_SECONDS", "300"))
     for command in command_plan(skip_tests):
+        label = command[-1]
+        started = time.monotonic()
+        print(f"::group::Running {label}", flush=True)
         print(f"Running: {' '.join(command)}", flush=True)
-        completed = subprocess.run(command, cwd=ROOT)
+        try:
+            completed = subprocess.run(command, cwd=ROOT, timeout=timeout_seconds)
+        except subprocess.TimeoutExpired:
+            elapsed = time.monotonic() - started
+            print(f"::endgroup::", flush=True)
+            print(
+                f"ERROR: Build module timed out after {elapsed:.1f}s "
+                f"(limit {timeout_seconds}s): {label}",
+                file=sys.stderr,
+                flush=True,
+            )
+            return 124
+        elapsed = time.monotonic() - started
+        print(f"Completed {label} in {elapsed:.1f}s with exit code {completed.returncode}", flush=True)
+        print(f"::endgroup::", flush=True)
         if completed.returncode:
             print(f"Build failed with exit code {completed.returncode}: {' '.join(command)}", file=sys.stderr)
             return completed.returncode
