@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T08:03:42.890533+00:00",
+  "generated_at": "2026-10-10T08:13:13.319491+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -10249,10 +10249,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-10-10T08:03:41.954974+00:00",
-      "end": "2027-01-08T08:03:41.954974+00:00",
-      "observed_at": "2026-10-10T08:03:42.768248+00:00",
-      "valid_until": "2026-10-10T08:18:42.768248+00:00",
+      "start": "2026-10-10T08:13:12.337730+00:00",
+      "end": "2027-01-08T08:13:12.337730+00:00",
+      "observed_at": "2026-10-10T08:13:13.221279+00:00",
+      "valid_until": "2026-10-10T08:28:13.221279+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
