@@ -1,0 +1,198 @@
+{
+  "checked_at": "2026-10-11T01:41:29.020524+00:00",
+  "freshness_minutes": 60,
+  "healthy": false,
+  "canonical_external_sessions": 21,
+  "non_session_sources": [
+    {
+      "external_class_id": "11341058",
+      "non_session_classification": "renewal_deadline",
+      "approved_location_key": "910cpr-office-shipyard"
+    }
+  ],
+  "gaps": [
+    {
+      "external_class_id": "13895152",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "13895154",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "13895155",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14114232",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14130362",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14130363",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14130364",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14130381",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14130382",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14130383",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14130390",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14130391",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14130392",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14130406",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14130407",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14130408",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14133024",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14135047",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14184954",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-09-27T05:56:16.932+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14377157",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-10-10T13:24:57.527084Z",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14565236",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14589762",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14601690",
+      "status": "stale_reconciliation",
+      "source_observed_at": "2026-10-10T21:32:31+00:00",
+      "reason": "complete current source roster reconciled"
+    },
+    {
+      "external_class_id": "14612057",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14651686",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14655502",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14655539",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14655751",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14661534",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14662237",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14668746",
+      "status": "external_reconciliation_required",
+      "source_observed_at": null,
+      "reason": null
+    },
+    {
+      "external_class_id": "14668771",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14671753",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14677627",
+      "status": "committed_projection_without_canonical_session"
+    },
+    {
+      "external_class_id": "14690999",
+      "status": "committed_projection_without_canonical_session"
+    }
+  ],
+  "signature": "19ba82fef698694ac99cbe6c28d302eb0a7178d46e1d7c655a28df6b098f448e"
+}
