@@ -458,6 +458,7 @@ def public_indexable_session(session: dict, register_url: str) -> bool:
             and session.get("demand_status") == "current"
             and session_has_public_class_location(session)
             and register_url == session.get("registration_url")
+            and register_url == f"https://www.910cpr.com/register/?session={session.get('session_id', '')}"
             and entry.get("active") is True
         )
     return status in {"published", "active"} and verified_enrollware_url(register_url)

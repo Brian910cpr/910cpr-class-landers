@@ -41,6 +41,7 @@ class NativeLanderMetadataTests(unittest.TestCase):
             ("public_direct_booking", False), ("location_name", "Private workplace"),
             ("course_id", "unknown"), ("session_id", "lw-not-a-uuid"),
             ("registration_url", "https://example.invalid/register"),
+            ("registration_url", "https://coastalcprtraining.enrollware.com/enroll?id=123"),
             ("session_status", "unavailable"),
         ]:
             with self.subTest(key=key):
