@@ -67,3 +67,33 @@ test('idle/no-delta invocation is deterministic and does not mutate inputs', () 
   assert.deepEqual(snapshot, before);
   assert.equal(preflight(snapshot).queue_depth, 0);
 });
+
+test('queued active job cannot become eligible on another idle worker', () => {
+  const a = worker('a', ['site.healthcheck']), b = worker('b', ['site.healthcheck']);
+  a.profile.active_job_ids = ['health-001'];
+  a.profile.max_concurrency = 2;
+  const result = run([a, b], [job(), job('site.healthcheck', 'health-002')]);
+  assert.equal(result.preview[0].blocker, 'job_already_active');
+  assert.deepEqual(result.preview[0].eligible_worker_ids, []);
+  assert.deepEqual(result.preview[1].eligible_worker_ids, ['a', 'b']);
+  assert.equal(result.dispatch_enabled, false);
+});
+
+test('disabled and stale active owners still block duplicate execution', () => {
+  for (const state of ['disabled', 'stale']) {
+    const a = worker('a'), b = worker('b', ['site.healthcheck']);
+    a.profile.active_job_ids = ['health-001'];
+    if (state === 'disabled') a.profile.disabled = true;
+    else a.heartbeat.observed_at_utc = '2026-10-10T22:57:00Z';
+    const result = run([a, b]);
+    assert.equal(result.preview[0].blocker, 'job_already_active');
+    assert.deepEqual(result.preview[0].eligible_worker_ids, []);
+  }
+});
+
+test('conflicting active ownership rejects the entire snapshot', () => {
+  const a = worker('a'), b = worker('b');
+  a.profile.active_job_ids = b.profile.active_job_ids = ['same-job'];
+  b.profile.disabled = true;
+  assert.throws(() => run([a, b]), /multiple worker owners/);
+});

@@ -21,7 +21,7 @@ export function preflight({workers, queue, now, staleSeconds = 180}) {
   const clock = instant(now);
   requireValue(Number.isInteger(staleSeconds) && staleSeconds > 0, 'Invalid stale window');
   requireValue(Array.isArray(workers) && Array.isArray(queue), 'Expected worker and queue arrays');
-  const ids = new Set(), names = new Set(), jobs = new Set();
+  const ids = new Set(), names = new Set(), jobs = new Set(), activeJobs = new Set();
   const fleet = workers.map(({identity, heartbeat, profile}) => {
     requireValue(identity && heartbeat && profile, 'Missing worker snapshot fields');
     const {worker_id: id, worker_name: name, worker_version: version} = identity;
@@ -38,6 +38,10 @@ export function preflight({workers, queue, now, staleSeconds = 180}) {
     requireValue(Number.isInteger(limit) && limit > 0, 'Invalid concurrency');
     requireValue(Array.isArray(profile.active_job_ids) && profile.active_job_ids.every(x => typeof x === 'string' && x.length > 0), 'Invalid active jobs');
     requireValue(new Set(profile.active_job_ids).size === profile.active_job_ids.length, 'Duplicate active job');
+    for (const jobId of profile.active_job_ids) {
+      requireValue(!activeJobs.has(jobId), 'Active job has multiple worker owners');
+      activeJobs.add(jobId);
+    }
     const age = clock - instant(heartbeat.observed_at_utc);
     const state = profile.disabled || heartbeat.state === 'disabled' ? 'disabled'
       : age < 0 || age >= staleSeconds * 1000 ? 'stale'
@@ -54,10 +58,13 @@ export function preflight({workers, queue, now, staleSeconds = 180}) {
     requireValue(job.source === 'explicit' && job.worker_safe === true, 'Unapproved job source');
     requireValue(typeof job.job_type === 'string', 'Missing job type');
     const capable = fleet.filter(w => w.job_types.includes(job.job_type));
-    const eligible = capable.filter(w => w.state === 'idle');
+    // Even disabled/stale owners require reconciliation before another execution.
+    const alreadyActive = activeJobs.has(job.job_id);
+    const eligible = alreadyActive ? [] : capable.filter(w => w.state === 'idle');
     return {job_id: job.job_id, job_type: job.job_type,
       eligible_worker_ids: eligible.map(w => w.worker_id).sort(),
       blocker: !TYPES.has(job.job_type) ? 'unsupported_job_type'
+        : alreadyActive ? 'job_already_active'
         : capable.length === 0 ? 'no_capable_worker'
         : eligible.length === 0 ? 'no_idle_capable_worker' : null};
   });

@@ -28,6 +28,13 @@ snapshot. Stale (default 180 seconds), future, working, and disabled heartbeats
 cannot become eligible. This does not authenticate snapshot provenance; a future
 adapter must authenticate sources before invoking it. Caller owns snapshot time.
 
+Active job IDs must have one worker owner across the entire snapshot; conflicting
+ownership rejects the snapshot. A queued ID already active anywhere returns
+`job_already_active` with no eligible workers, including when its owner is stale
+or disabled. Reconcile durable execution evidence before releasing that ID;
+staleness or revocation alone does not prove a prior execution stopped. This is
+offline input consistency checking, not an atomic lease or restart proof.
+
 Run local checks with `node --test tests/dispatcher_preflight.test.mjs`.
 Tests use synthetic workers only. They are not real fleet proof or restart proof.
 
