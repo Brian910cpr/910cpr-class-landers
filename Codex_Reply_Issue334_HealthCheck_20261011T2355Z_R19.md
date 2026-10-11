@@ -60,3 +60,7 @@ Expected outcome: local timer -> admin refresh -> Pages -> selectable current pu
 Next action for ChatGPT: retain this deduplicated boundary miss and keep #334 open. Follow Pages 38186057288 and verify a renewed feed; do not start a competing refresh. Engineering should add a timer-jitter regression and assess a bounded cooldown/cadence repair without weakening active-run deduplication or source freshness. After existing encrypted-token gate is satisfied, verify cloud timer, configure AVAILABILITY_WATCHDOG_HEALTH_URL and require independent observer plus rendered appointment proof. No new owner alert or account action beyond the existing encrypted-token gate.
 
 Exact intentionally changed file: Codex_Reply_Issue334_HealthCheck_20261011T2355Z_R19.md.
+
+## Recovery follow-up before receipt push
+
+Pages 38186057288 succeeded, updated 2026-10-11T23:56:03Z. Cache-busted live GET at 23:56:28.4765768Z returned generatedAt=2026-10-11T19:54:18.882323-04:00 and validUntil=2026-10-11T20:09:17.680859-04:00, unexpired. Last successful delivery proof is now this Pages/feed pair. The stale payload was observed through 23:55:24Z and current by 23:56:28Z; exact customer-rendered impact remains unknown. No competing recovery dispatched. Independent observer blocker unchanged.
