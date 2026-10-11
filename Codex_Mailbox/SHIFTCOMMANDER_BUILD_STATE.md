@@ -46,9 +46,9 @@ Every ShiftCommander work session that makes meaningful progress, encounters a b
 
 **Last known blocker:** Reviewed settings provenance and trusted loopback TLS PEM paths remain unselected/unverified. Presence-only checks at 2026-10-11 04:28 EDT found the candidate PrivatePilot root and PrivatePilotInputs/tls.crt and tls.key absent. Existing launcher refuses a competing Astra run (dispatcher lock held or inaccessible); runtime model remains unverified. Production credential-incident and real end-to-end proof gates remain unchanged.
 
-**Last attempted action:** Private-install gate R3 resumed from owner-reviewed R2: presence-only input checks, existing Astra launcher -CheckOnly, two in-memory Python AST checks, and read-only PR/dependency checks. No unchanged setup/auth failure was retried.
+**Last attempted action:** R4 honored the latest owner instruction not to repeat preflight until inputs change. Reviewed current draft PR heads and independent backend queue; no setup, auth, certificate or launcher retry.
 
-**Observed result:** No changed installation inputs established. Draft ShiftCommander PR #19 remains open/draft at b9cc8cfeb3412569fc02ebed878e3124a5d19dee; held PR #372 remains open/draft. Two AST checks passed. No application change, initialization, account activation, merge, deployment or calendar cutover.
+**Observed result:** Latest owner review retains the missing reviewed-settings/trusted-TLS gate. No new input selection is recorded. PR #19 and held PR #372 remain draft at their existing heads. This round changed transport documentation only; private installation remains BLOCKED.
 
 **Next exact action:**
 1. Resume from the current draft stack through PR #19; do not restart the release audit.
@@ -63,7 +63,7 @@ Every ShiftCommander work session that makes meaningful progress, encounters a b
 
 Keep unresolved human gates visible here until positively verified cleared. An owner gate is not acceptable unless it states the exact physical action Brian must take.
 
-**Current gate status:** As of 2026-10-11, trusted TLS inputs are absent at the checked paths, no matching valid localhost/127.0.0.1 certificate with private key was found in CurrentUser/My, and this execution has noninteractive stdin. Do not initialize real accounts through captured input. The Astra launcher reports its dispatcher lock held or inaccessible; preserve it. No newly verified need for Brian to manipulate GitHub/Cloudflare/Render/Windows settings merely to resume code work. The worker should first execute the reversible private-installation preparation above. If the private installation reaches an interactive hidden-password step, Brian (or the authorized intended Windows user) must enter temporary passwords locally; passwords must not be sent through GitHub/chat or stored in arguments/environment variables. If bridge-token rotation cannot be completed using already-authorized provider access, the worker must name the exact provider/account page and exact credential/permission action Brian must perform. Until that exact provider-side blocker is reproduced, do not ask Brian to guess, retrieve, or paste a key.
+**Current gate status:** Latest owner review says reviewed settings and trusted loopback TLS PEM paths are still absent/unselected; do not repeat preflight until inputs change. Last presence/launcher evidence is R3 at 04:28 EDT, not a new R4 observation. R2 TTY=True supersedes the R1 execution-specific noninteractive finding; no current TTY claim is made. Real temporary passwords must be entered by the intended Windows user through private local hidden prompts only after check-only succeeds. Preserve the dispatcher lock. No new provider permission failure is established, and R43 connected metadata evidence remains valid.
 
 Production remains blocked until the credential-incident disposition and superseded-key rejection proof are complete.
 
@@ -150,3 +150,16 @@ When a Codex round is required, use a new unique `Codex_Reply_ShiftCommander...R
 - Next exact action: follow existing R77 operator continuation with actual private paths and member IDs 159/186/188; check-only, hidden initialization, startup check-only and private end-to-end demonstration. Do not repeat unchanged preflight until inputs change. Preserve production/calendar hold and coordinated credential-incident disposition.
 - Queue: #373 must not interrupt #371/PR #372; #215/#219 have delivered paths and distinct remaining access/roles/authenticated-proof work. No newly established narrow unclaimed deterministic backend repair; no duplicate implementation or existing assignment displaced.
 - Persistence/scope: only canonical state and this round receipt; original dirty courier and all other worktrees preserved. No generator, retired handoff, Codex_Read creation, merge or deployment.
+
+### 2026-10-11 07:26 EDT - Owner gate honored, R4
+- Starting blocker: latest owner review after R3 prohibits repeating preflight until actual installation inputs change.
+- Evidence inspected: issue body, dispatch, retrieved comment history and governing recent owner updates; current root and target AGENTS, handoff/proof protocols, canonical state, #116; live PR #19/#372 heads and open CODEX queue, #373 body and #215/#219 latest delivery comments.
+- Action attempted: acknowledged actual execution on #214 before changes; isolated named courier worktree from reviewed R3 ea5e73fc06a912f93adeff2bef0a4851607ac75b; read-only PR/queue checks. No setup/auth/certificate/launcher retry.
+- Result: no changed input selection reported; no new implementation justified. Corrected stale current-state noninteractive wording using already-recorded R2 evidence. PR #19 remains draft at b9cc8cfeb3412569fc02ebed878e3124a5d19dee; PR #372 remains draft at 14a4ddcc1a05299b31e1cbd3a0d5c688e134f414.
+- New/unchanged root cause: privately selected reviewed settings/trusted PEM paths and actual private installation remain required. Model runtime unverified; no Astra review or duplicate launch claimed.
+- Tests/checks run: documentation scope/whitespace and receipt verification only; prior 16 setup tests and 96 R81 synthetic tests not rerun. No product source changed.
+- Commit/PR/branch: codex/issue-214-owner-gate-20261011-r4; required unique root Codex_Reply_ShiftCommanderPrivateInstall_20261011_R4.md references the state commit.
+- Owner/account gate: privately select actual reviewed settings/trusted TLS inputs; after successful check-only, intended Windows user enters temporary passwords through hidden local prompts. No secrets through GitHub/chat/arguments/environment.
+- Next exact action: wait for evidence that installation inputs changed, then resume existing R77/R81 check-only path with supervisor IDs 159/186/188, hidden initialization, startup check and private demonstration. Preserve credential-incident and production/calendar gates.
+- Queue: #373 depends on #371 foundation and must not interrupt it. #215/#219 have existing deliveries and remaining role/access/proof work; no independently eligible unclaimed narrow backend repair established. No other assignment changed.
+- Persistence: only state and unique receipt changed in isolated E:/GitHub/910cpr-issue214-receipt-20261011-r4. Original dirty checkout preserved. No merge, deployment, account activation, credential handling, retired mailbox write or Codex_Read creation.
