@@ -603,6 +603,7 @@
       font-weight: 700;
     }
     .register-link:hover { background: var(--accent-dark); }
+    .register-link.registration-unavailable { background: #f3f4f6; border-color: #d1d5db; color: #6b7280; cursor: not-allowed; }
     .empty {
       border: 1px dashed var(--line);
       border-radius: 8px;
@@ -880,7 +881,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <div><h2>Complete registration</h2><p id="intake-selection" class="muted"></p></div>
               <button type="button" id="intake-close" class="intake-close">Close ×</button>
             </div>
-            <p class="register-note">Complete the secure registration below. If the booking form cannot display here, use the direct registration link instead.</p>
+            <p class="register-note">Complete your registration using the 910CPR LanderWare intake form below.</p>
             <iframe id="intake-frame" title="Secure 910CPR registration" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
             <p class="intake-fallback"><a id="intake-direct-link" target="_blank" rel="noopener noreferrer">Open registration in a new tab ↗</a></p>
           </section>
@@ -1672,17 +1673,24 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const slot = day?.startTimes.find(item => item.startTime === selectedStart);
       byId('selected-time-caption').textContent = slot ? slot.displayStartTime + ' · Change time' : 'Choose a time';
     }
+    // Only LanderWare-native session identities may start registration.
+    // Legacy Enrollware appointment URLs are deliberately ignored and never embedded.
+    function landerwareSessionId(course) {
+      const raw = course.sessionId || course.session_id || course.landerwareSessionId
+        || course.landerware_session_id || course.session?.id || '';
+      const value = String(raw).trim();
+      return /^(?:\\d+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/i.test(value) ? value : '';
+    }
     function openRegistrationIntake(course, day, slot) {
-      if (!course.appointmentUrl) return;
+      const id = landerwareSessionId(course);
+      if (!id) return;
       intakeOpen = true;
       timesExpanded = false;
-      const url = new URL(course.appointmentUrl, window.location.href);
-      if (!/^https?:$/.test(url.protocol)) return;
-      activeIntakeUrl = url.href;
+      activeIntakeUrl = '/register/?session=' + encodeURIComponent(id);
       byId('intake-selection').textContent = course.courseName + ' · ' + selectedDateLabel() + ' · ' + course.displayStartTime;
       byId('intake-direct-link').href = activeIntakeUrl;
-      // Preserve intake contents on a mere expand/collapse of the time selector.
-      if (byId('intake-frame').src !== activeIntakeUrl) byId('intake-frame').src = activeIntakeUrl;
+      const frame = byId('intake-frame');
+      if (frame.getAttribute('src') !== activeIntakeUrl) frame.setAttribute('src', activeIntakeUrl);
       syncRegistrationWorkspace();
       byId('registration-intake').scrollIntoView({behavior: 'smooth', block: 'nearest'});
     }
@@ -1744,16 +1752,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         badge.textContent = deliveryLabel(course.deliveryMode);
         const link = document.createElement('a');
         link.className = 'register-link';
-        link.href = course.appointmentUrl;
-        link.textContent = 'Register';
+        const nativeSessionId = landerwareSessionId(course);
+        link.textContent = nativeSessionId ? 'Register' : 'Registration unavailable';
+        link.href = nativeSessionId ? '/register/?session=' + encodeURIComponent(nativeSessionId) : '#';
+        link.setAttribute('aria-disabled', String(!nativeSessionId));
+        if (!nativeSessionId) {
+          link.classList.add('registration-unavailable');
+          link.title = 'LanderWare session ID is required; legacy appointment links are not supported.';
+        }
         link.addEventListener('click', event => {
           if (isPastStart(day, slot)) {
             event.preventDefault();
             loadResolvedAvailability();
             return;
           }
-          if (!course.appointmentUrl) return;
           event.preventDefault();
+          if (!nativeSessionId) return;
           openRegistrationIntake(course, day, slot);
         });
         item.append(summary, badge, link);
