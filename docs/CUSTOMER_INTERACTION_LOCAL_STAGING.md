@@ -16,6 +16,12 @@ Host: CyberPC. WSL executable exists, but `wsl --status` explicitly reports Wind
 
 ## Resume safely
 
+### Completed-task restart evidence (October 11 follow-up)
+
+The restart suite also persists a synthetic completed follow-up, closes/reopens storage, and replays both the original create request and completion request. The original create receipt remains an immutable historical response while the current task remains complete at version 2; it does not re-enter the pending queue. Changed-actor retries, stale updates and duplicate source imports are rejected. Completion evidence and original provenance survive reopening, with exactly two audit events. Both anon and authenticated database roles are denied task/audit reads and RPC execution. This does not prove frontend handling of a delayed historical response; the UI must reload current state rather than overwrite it with an old receipt.
+
+37 CRM/auth tests passed, zero failures; Node syntax and diff checks passed. This remains bounded synthetic SQL restart evidence, not owner-session/UI/API or concurrent-process proof. Runtime preflight reconfirmed WSL not installed, Docker absent from PATH/common Docker executable path. Installation approval and the approved Synology destination remain unresolved. No production or browser code changed.
+
 Owner approval is required for privileged container/WSL installation, per the local staging directive. Request approval for a suitable Docker Desktop/WSL2 installation (including any required Windows feature/reboot) after checking platform prerequisites. Do not install or clean destructively without that approval. Ask for the intended Synology UNC backup folder and security expectations; keep credentials out of GitHub. Verify access before storing artifacts.
 
 Once a usable runtime exists, configure an isolated localhost-only development stack, synthetic owner-session fixtures and explicit development-only origin policy without modifying production auth. Apply CRM additive migrations with a faithful canonical person-table prerequisite. Then prove owner session -> UI -> API -> storage -> reload/interrupt/resume before connecting operational capture. Existing Studio stays explicitly a tab-local prototype. Keep PR372 draft/unmerged and production undeployed.

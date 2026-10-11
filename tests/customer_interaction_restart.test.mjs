@@ -42,3 +42,45 @@ test('disk reopen retains interrupted notes, audit, retry receipt and resumable 
   await rm(directory,{recursive:true,force:true});
  }
 });
+
+test('completed follow-up survives disk reopen and lost-response retries without reopening work',async()=>{
+ const directory=await mkdtemp(join(tmpdir(),'crm-task-restart-'));
+ let db;
+ try {
+  db=new PGlite(directory);
+  await db.exec('create role anon; create role authenticated; create role service_role bypassrls; create table landerware_people(id uuid primary key)');
+  for(const name of ['20261010210607_customer_interaction_storage.sql','20261010211804_customer_interaction_interruptions.sql','20261010212019_customer_follow_up_task_mutations.sql'])
+   await db.exec(readFileSync(new URL('../supabase/migrations/'+name,import.meta.url),'utf8'));
+  await db.exec('set role service_role');
+  const interaction={id:crypto.randomUUID(),case_id:crypto.randomUUID(),expected_version:0,kind:'phone',status:'follow_up_due',source:'manual',source_id:crypto.randomUUID(),document:{notes:'Synthetic promised callback'}};
+  await db.query('select save_customer_interaction($1,$2,$3)',[crypto.randomUUID(),'synthetic-owner',interaction]);
+  const task={id:crypto.randomUUID(),case_id:interaction.case_id,interaction_id:interaction.id,source_key:'synthetic:'+interaction.id,title:'Synthetic callback',status:'pending',expected_version:0,provenance:{evidence:'Synthetic call commitment'}};
+  const save=async(value,request,actor='synthetic-owner')=>(await db.query('select save_customer_follow_up_task($1,$2,$3) r',[request,actor,value])).rows[0].r;
+  const createRequest=crypto.randomUUID(),created=await save(task,createRequest);
+  const completeRequest=crypto.randomUUID(),completedInput={...task,expected_version:1,status:'complete',completion_evidence:'Synthetic owner confirms callback'};
+  const completed=await save(completedInput,completeRequest);
+  await db.close();db=null;
+  db=new PGlite(directory);await db.exec('set role service_role');
+  // An old create response is replayed verbatim; it must never reset current state.
+  assert.deepEqual(await save(task,createRequest),created);
+  assert.deepEqual(await save(completedInput,completeRequest),completed);
+  await assert.rejects(save(task,createRequest,'different-session'),/idempotency_conflict/);
+  await assert.rejects(save({...task,expected_version:1},crypto.randomUUID()),/version_conflict/);
+  await assert.rejects(save({...task,id:crypto.randomUUID()},crypto.randomUUID()),/duplicate key/);
+  const stored=(await db.query('select * from customer_follow_up_tasks where id=$1',[task.id])).rows[0];
+  assert.equal(stored.status,'complete');assert.equal(stored.version,2);
+  assert.deepEqual(stored.provenance,task.provenance);
+  assert.equal((await db.query("select count(*)::int n from customer_follow_up_tasks where status in ('pending','snoozed','proposed')")).rows[0].n,0);
+  const events=(await db.query('select input from customer_task_events where task_id=$1 order by occurred_at',[task.id])).rows;
+  assert.equal(events.length,2);assert.deepEqual(events[1].input,completedInput);
+  for(const role of ['anon','authenticated']){
+   await db.exec('reset role; set role '+role);
+   await assert.rejects(db.query('select * from customer_follow_up_tasks'),/permission denied/);
+   await assert.rejects(db.query('select * from customer_task_events'),/permission denied/);
+   await assert.rejects(save(completedInput,completeRequest),/permission denied/);
+  }
+ } finally {
+  if(db) await db.close();
+  await rm(directory,{recursive:true,force:true});
+ }
+});
