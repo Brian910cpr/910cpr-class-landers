@@ -1679,7 +1679,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const raw = course.sessionId || course.session_id || course.landerwareSessionId
         || course.landerware_session_id || course.session?.id || '';
       const value = String(raw).trim();
-      return /^(?:\\d+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/i.test(value) ? value : '';
+      return /^(?:\d+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/i.test(value) ? value : '';
     }
     function openRegistrationIntake(course, day, slot) {
       const id = landerwareSessionId(course);
