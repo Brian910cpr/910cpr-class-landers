@@ -12,7 +12,7 @@ Worktree: `C:\Users\ten77\Documents\Codex\2026-10-11\task\v2-demand-fix`
 
 ## Result
 
-The active `layered-publication.v2` path separates direct bookability, committed capacity, and demand Anchors. Confirmed-zero inventory no longer creates occupied blocks or demand Anchors. Empty direct classes beyond 24 hours remain offered; inside 24 hours they are rejected. Speculative open-day offers and barnacles keep the 24-hour cutoff. Positive/seated direct offers do not inherit that empty cutoff, and lifecycle/capacity filtering remains upstream. Independent room/instructor commitments still veto conflicting direct and dynamic choices.
+The active `layered-publication.v2` path separates direct bookability, committed capacity, and demand Anchors. Confirmed-zero inventory no longer creates occupied blocks or demand Anchors. Empty direct classes beyond 24 hours remain offered; inside 24 hours they are rejected. Speculative open-day offers and barnacles keep the 24-hour cutoff. Positive/seated direct offers do not inherit that empty cutoff, and lifecycle/capacity filtering remains upstream. Independent room/instructor commitments still veto conflicting direct and dynamic choices. Follow-up diff review also added directional instructor travel buffers to the direct-offer veto: touching after the evidenced travel interval is allowed, overlap and unknown travel are rejected conservatively.
 
 Unknown counts remain unknown and conservatively reserve their bounded capacity; they no longer automatically manufacture a demand Anchor or daywide unknown-full-course rejection. Exact previously verified positive commitments retain their Anchor and occupancy through an unknown refresh. A compact identity ledger in `data/state_public/layered_verified_commitments.json` is supplied by the active selector and included in the existing refresh workflow's approved output. Its records contain only identity, timing, instructor/resource and verified counts. It never substitutes a historical count into the current roster count. Tests verify continuity with an empty calculation cache, zero clearing, cancellation, and moves. Independent manual/calendar commitments survive zero.
 
@@ -48,7 +48,7 @@ Passed:
 
 - Python syntax compilation of all six changed scheduling modules.
 - `git diff --check` and Node syntax check of `docs/assets/resolved-selector-availability.js`.
-- Focused unittest suite: 99 executions, 70 unique tests, all passed. The existing day-cache test module imports the publication test class, causing repeated executions.
+- Focused unittest suite: 101 executions, 71 unique tests, all passed. The existing day-cache test module imports the publication test class, causing repeated executions.
 - `tests.test_v2_empty_window_rendered` plus `tests.test_layered_publication_pipeline`: 5 tests passed, including actual offline Chrome at desktop/mobile widths. All browser requests were intercepted; no live requests were made.
 - Node aggregate: 51 passed, 0 failed, for canonical endpoint fixtures, external roster proof, and resolved selector availability.
 
@@ -95,6 +95,20 @@ The original checkout remains on its unrelated intake branch; existing worktrees
 
 1. Review this local branch, the shared identity ledger, lifecycle matching, and aggregate failures.
 2. Obtain the approved existing credentials/environment and refresh canonical demand and complete resource/instructor coverage. Do not infer emptiness for unknown rows; reconcile exact historical/manual commitments as needed. Seed history only from authoritative verified evidence.
-3. Run real-input aggregate checks and a bounded current-source before/after comparison. Confirm real occupied intervals and seats are preserved, and inspect the October 17 example with its actual commitment evidence. Resolve baseline validation blockers before treating the release as ready.
+3. Run the relevant real-input checks and a bounded current-source before/after comparison. Confirm real occupied intervals and seats are preserved, and inspect the October 17 example with its actual commitment evidence. The identical historical/template baseline failures are not new defects or blanket blockers for this correction; triage them separately rather than requiring unrelated repairs before a release decision.
 4. Review the expected selector/feed generation scope before rebuilding public output. Verify rendered pages and booking URLs, the new asset version, empty cutoffs, and the ledger's persistence across fresh runners. Coverage leases/issue 334 must be assessed independently.
 5. Only after explicit release authorization: push/create the reviewed PR, merge, allow the existing production workflow, and verify production output. This receipt grants no such authorization.
+
+## Exact blocker clarification and follow-up review (22:46 UTC)
+
+Actual missing inputs checked: `data/sessions_current.json` and `data/runtime/canonical_scheduling_demand.json`. Credential presence check only: `HOT_SYNC_ADMIN_KEY` is absent. The existing `data/audit/live_availability_snapshot_preview.json` is present, generated at 22:04:17 UTC; its one complete-coverage proof was observed at 22:04:17 UTC and expired at 22:19:17 UTC. At the 22:46 UTC check that proof cannot open V2 availability. The existing envelope freshness helper accepts the snapshot, but V2's scoped lease enforcement still rejects its expired proof. This is input freshness, not a newly fixed issue 334.
+
+Present inputs checked: `docs/data/schedule_future.json`, location/resource map, course catalog, people catalog, appointment containers, and course consumption rules. The absence of `data/state_public/layered_verified_commitments.json` is expected before an authoritative first run; it is not a credential or required preexisting input. Cold-start unknown rows keep conservative occupied intervals without invented positive history.
+
+All 18 aggregate errors stop at missing `data/sessions_current.json`. The 15 failures are one obsolete August 29–31 inventory assertion and 14 template/UI/asset-version assertions, including subtests; all fail on unchanged main too. None is newly caused by this scheduling correction. The relevant real-input integration checks remain unverified until valid inputs exist; unrelated historical/template failures should be triaged separately.
+
+The browser before/after is synthetic fixture data. It uses a zero-count 12:00–13:00 HeartCode BLS occurrence, a covered 10:00–15:00 resource/instructor window, and a frozen October 5 clock. Both views use the same renderer/assets and only fixture.test links; all network requests are intercepted. It proves the decision and rendered bookability change, not current live demand or production readiness.
+
+Booking-safety review: current zero does not reserve capacity, unknown is never silently zero, exact historical positive commitments survive unknown, independent commitments survive zero, lifecycle changes clear only their identity, dynamic alternatives remain constrained by room/instructor availability, and direct offers now respect collisions and directional travel. No additional reproducible defect was identified in the authorized scope after this follow-up fix. Open uncertainty is actual current roster/commitment evidence, including October 17; production inventory and history-ledger persistence through an actual refresh job are unrun.
+
+Next owner action is access to the existing approved refresh environment or current validated snapshots, followed by review of the bounded real-source comparison. A separate explicit release decision is required before push/PR/merge/deploy. No unrelated baseline repair is automatically required by this patch.

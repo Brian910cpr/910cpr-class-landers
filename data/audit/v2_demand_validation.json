@@ -146,7 +146,7 @@
     "failures": [
       {
         "test": "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_august_29_30_31_real_feeds_keep_only_fitting_cross_group_barnacles",
-        "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\ten77\\Documents\\Codex\\2026-10-11\\task\\v2-demand-fix\\tests\\test_block_start_time_selector.py\", line 351, in test_august_29_30_31_real_feeds_keep_only_fitting_cross_group_barnacles\n    self.assertEqual({(\"209806\", \"09:30\"), (\"351632\", \"11:30\")}, anchors[\"2026-08-29\"])\nAssertionError: Items in the first set but not the second:\n('209806', '09:30')\n('351632', '11:30')\n"
+        "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\ten77\\Documents\\Codex\\2026-10-11\\task\\v2-demand-fix\\tests\\test_block_start_time_selector.py\", line 351, in test_august_29_30_31_real_feeds_keep_only_fitting_cross_group_barnacles\n    self.assertEqual({(\"209806\", \"09:30\"), (\"351632\", \"11:30\")}, anchors[\"2026-08-29\"])\nAssertionError: Items in the first set but not the second:\n('351632', '11:30')\n('209806', '09:30')\n"
       },
       {
         "test": "tests.test_block_start_time_selector.BlockStartTimeSelectorTests.test_canonical_family_pages_use_customer_facing_selector_template (slug='bls')",
@@ -284,9 +284,9 @@
   "new_failing_tests": [],
   "environment": "Windows; final aggregate run allowed localhost fixture servers; absent real runtime inputs still block some tests",
   "focused_tests": {
-    "run": 99,
-    "passed": 99,
-    "unique_tests": 70
+    "run": 101,
+    "passed": 101,
+    "unique_tests": 71
   },
   "browser_pipeline_and_empty_window": {
     "run": 5,

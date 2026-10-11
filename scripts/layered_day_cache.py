@@ -168,6 +168,8 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
         reports.extend(cached['reports']);issues.extend(cached['issues'])
     projected=project_sources(occupancy,{str(c['course_id']):c for c in courses})
     return dict(schema=SCHEMA,reports=reports,issues=issues,projected_sources=projected,
+        direct_constraints=dict(travel_minutes=travel_minutes or {},
+            resources=[r["resource_name"] for venue in resources.get("locations", []) for r in venue.get("internal_resources", [])]),
         counts=dict(input_sources=len(occupancy),normalized_sources=len(projected),input_windows=len(selected),
             evaluated_windows=len(reports),failed_windows=len(selected)-len(reports),uncertainty_issues=len(issues)),
         incremental_cache=dict(version=VERSION,horizon_days=horizon_days,hits=hits,rebuilt=rebuilt),

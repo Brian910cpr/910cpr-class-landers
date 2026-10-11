@@ -358,6 +358,19 @@ class LayeredPublicationTests(unittest.TestCase):
         seated_payload=self.payload([self.direct(row)])
         self.assertTrue([o for o in finalize(seated_payload,self.at(10,'12:01'))['offers'] if o.get('offerType')=='seated_class'])
 
+    def test_direct_class_respects_directional_instructor_travel(self):
+        row=self.add(11,'12:00','13:00',count=1)
+        self.sources.append(dict(source_event_id='offsite-trip',start=self.at(11,'10:00').isoformat(),
+            end=self.at(11,'11:45').isoformat(),instructor='Brian Ennis',location='offsite',kind='commitment'))
+        self.policy['travel_minutes']={self.room+'->offsite':30,'offsite->'+self.room:30}
+        self.assertFalse([o for o in self.payload([self.direct(row)])['offers'] if o.get('offerType')=='seated_class'])
+        self.sources[-1]['end']=self.at(11,'11:30').isoformat()
+        self.assertTrue([o for o in self.payload([self.direct(row)])['offers'] if o.get('offerType')=='seated_class'])
+        self.policy['travel_minutes']={}
+        payload=self.payload([self.direct(row)])
+        self.assertFalse([o for o in payload['offers'] if o.get('offerType')=='seated_class'])
+        self.assertIn('existing_class_travel_uncertain',payload['rejectionReasonCounts'])
+
     def test_old_or_naive_coverage_and_bad_count_are_not_proof(self):
         self.coverage[0]['observed_at']='2026-09-27T12:00:00-04:00'
         self.assertFalse(self.starts())

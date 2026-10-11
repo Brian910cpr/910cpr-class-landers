@@ -8,7 +8,7 @@ from copy import deepcopy
 from collections import Counter
 from datetime import timedelta
 from scripts.layered_selector_adapter import aware, build_shadow
-from scripts.layered_scheduling_engine import encode as encode_value, commitment_state
+from scripts.layered_scheduling_engine import encode as encode_value, commitment_state, interval_conflict
 import json
 
 
@@ -169,6 +169,8 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             issues.append(dict(reason=str(error), instructor=window.get("instructor_name"),
                 resource=room, start=ws.isoformat(), end=we.isoformat()))
     return dict(schema=SCHEMA, reports=reports, issues=issues, projected_sources=projected,
+        direct_constraints=dict(travel_minutes=travel_minutes or {},
+            resources=[r["resource_name"] for venue in resources.get("locations", []) for r in venue.get("internal_resources", [])]),
         counts=dict(input_sources=len(occupancy), normalized_sources=len(projected),
                     input_windows=len(windows), evaluated_windows=len(reports),
                     failed_windows=len(windows)-len(reports), uncertainty_issues=len(issues)))
@@ -254,7 +256,20 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             same_room = source and source.get('resource') and busy.get('resource') == source.get('resource') and busy.get('availability_location_mode') != 'instructor_time_only'
             if not (same_person or same_room): continue
             try:
-                if aware(busy['start']) < end and start < aware(busy['end']):
+                before = after = 0
+                constraints = calculation.get('direct_constraints', {})
+                known = set(constraints.get('resources', []))
+                def location(row):
+                    if row.get('availability_location_mode') == 'instructor_time_only': return 'instructor_time_only'
+                    return row.get('resource') if row.get('location_resolution') == 'location_resource_map' else row.get('location')
+                origin, destination = location(source or original), location(busy)
+                if same_person and origin and destination and origin != destination and 'instructor_time_only' not in (origin, destination) and not ({origin, destination} <= known):
+                    travel = constraints.get('travel_minutes', {})
+                    before, after = travel.get(origin+'->'+destination), travel.get(destination+'->'+origin)
+                    if before is None or after is None:
+                        reasons.append('existing_class_travel_uncertain')
+                        continue
+                if interval_conflict(start, end, aware(busy['start']), aware(busy['end']), before, after):
                     reasons.append('existing_class_resource_conflict')
             except (KeyError, TypeError, ValueError):
                 reasons.append('existing_class_resource_uncertain')
