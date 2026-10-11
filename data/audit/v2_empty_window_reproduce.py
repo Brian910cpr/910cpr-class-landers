@@ -1,3 +1,4 @@
+"""Run from the repository: python -B -m data.audit.v2_empty_window_reproduce."""
 import json,sys,types,subprocess,copy
 from pathlib import Path
 from tests import test_layered_publication_adapter as fixture
@@ -24,6 +25,5 @@ receipt={'baseline':'e663209d1e3db7d582079008250da622a2a01856','scenario':'Confi
 for name,p in [('before',before),('after',after)]:
  receipt[name]={'feed':public_selector_availability_payload(p),'offers':[{'courseId':o['courseId'],'startTime':o['startTime'],'offerType':o['offerType'],'scheduleRole':o.get('scheduleRole'),'registrationUrl':o.get('registrationUrl')} for o in p['offers']], 'rejectionReasonCounts':p['rejectionReasonCounts'],'occupiedBlocks':p['layeredDiagnostics']['reports'][0]['blocks']}
  Path('data/audit/v2_empty_window_'+name+'.html').write_text(render_html(p),encoding='utf-8')
- Path('.test-tmp/v2_empty_window_'+name+'_feed.json').write_text(json.dumps(public_selector_availability_payload(p)),encoding='utf-8')
 Path('data/audit/v2_empty_window_before_after.json').write_text(json.dumps(receipt,indent=2),encoding='utf-8')
 print(json.dumps(receipt,indent=2))
