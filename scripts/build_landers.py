@@ -140,6 +140,25 @@ def nested_value(mapping: dict, path: tuple[str, ...], default=""):
 
 def normalize_session_record(session: dict) -> dict:
     if "course_name" in session and "registration_url" in session:
+        # Native occurrences arrive after the Class Report mapping pass. Resolve
+        # their presentation from the same course map, never from the title.
+        if session.get("source") == "landerware_event" and session.get("registration_backend") == "landerware":
+            entry = course_map_entry(session.get("course_id", ""), session.get("course_number", ""))
+            if entry and entry.get("active") is True:
+                normalized = dict(session)
+                for target, source in {
+                    "mapped_family": "family", "mapped_subtype": "subtype",
+                    "mapped_certifying_body": "certifying_body", "mapped_delivery_mode": "delivery_mode",
+                    "mapped_logo_key": "logo_key", "mapped_clean_title": "official_title",
+                    "mapped_short_description": "short_description", "mapped_who_class_for": "who_class_for",
+                    "mapped_prerequisites": "prerequisites", "mapped_what_to_expect": "what_to_expect",
+                    "mapped_certification_card": "certification_card", "mapped_renewal_info": "renewal_info",
+                    "mapped_official_description_source": "official_description_source",
+                    "mapped_description_status": "description_status",
+                }.items():
+                    normalized[target] = entry.get(source)
+                normalized["mapping_status"] = "mapped"
+                return normalized
         return session
 
     course = session.get("course", {}) if isinstance(session.get("course"), dict) else {}
@@ -430,6 +449,17 @@ def public_indexable_session(session: dict, register_url: str) -> bool:
     status = str(session.get("session_status") or "").strip().lower()
     # Current Class Report-derived records use "active" for real Enrollware sessions.
     # Treat that as published-equivalent only when a verified Enrollware enroll URL exists.
+    if status in {"scheduled", "active"} and session.get("source") == "landerware_event":
+        # Reuse the existing native identity/projection/registration gates. A
+        # canonical URL alone cannot authorize a booking CTA.
+        entry = course_map_entry(session.get("course_id", ""), session.get("course_number", ""))
+        return bool(
+            is_session_lander_candidate(session)
+            and session.get("demand_status") == "current"
+            and session_has_public_class_location(session)
+            and register_url == session.get("registration_url")
+            and entry.get("active") is True
+        )
     return status in {"published", "active"} and verified_enrollware_url(register_url)
 
 
