@@ -371,6 +371,16 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse([o for o in payload['offers'] if o.get('offerType')=='seated_class'])
         self.assertIn('existing_class_travel_uncertain',payload['rejectionReasonCounts'])
 
+    def test_zero_canonical_truth_clears_class_mirror_without_top_level_course_id(self):
+        row=self.add(11,'12:00','13:00',count=0);row['external_class_id']='raw-class'
+        self.sources.append(dict(row, source_file='data/sessions_current.json',source_event_id='raw-class',
+                                 course_id='',count_available=False,active_registration_count=None))
+        self.assertIn('12:00',self.starts('329495'))
+        self.assertFalse(self.calculation()['reports'][0]['normalized_occupancy'])
+        self.sources.append(dict(row,source_file='live_availability_snapshot.blocked',source_event_id='independent',
+                                 course_id='',kind='commitment'))
+        self.assertNotIn('12:00',self.starts('329495'))
+
     def test_old_or_naive_coverage_and_bad_count_are_not_proof(self):
         self.coverage[0]['observed_at']='2026-09-27T12:00:00-04:00'
         self.assertFalse(self.starts())

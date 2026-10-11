@@ -31,3 +31,6 @@ ops/handoff/codex_heartbeat.json
 
 /data/runtime/layered_day_cache/
 /data/runtime/audit_previews/v2_release_probe/
+
+# Verified commitment history contains private source identities; never publish.
+/data/runtime/layered_verified_commitments.json

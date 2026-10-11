@@ -53,7 +53,8 @@ def project_sources(rows, course_metadata):
                  if r.get('source_file') == 'canonical_class_sessions' and r.get('external_class_id')}
     for row in result:
         truth = canonical.get(str(row.get('external_class_id')))
-        if truth is not None and truth is not row and row.get('course_id'):
+        if truth is not None and truth is not row and row.get('source_file') in {'data/sessions_current.json', 'docs/data/schedule_future.json'}:
+            row['course_id'] = row.get('course_id') or truth.get('course_id') or ''
             try:
                 moved = aware(truth['start']) != aware(row['start'])
             except (KeyError, TypeError, ValueError):

@@ -59,7 +59,7 @@ class BlockSelectorInputError(RuntimeError):
     pass
 
 
-LAYERED_HISTORY_PATH = ROOT / 'data/state_public/layered_verified_commitments.json'
+LAYERED_HISTORY_PATH = ROOT / 'data/runtime/layered_verified_commitments.json'
 
 def read_required_json(path: Path) -> Any:
     if not path.exists():
