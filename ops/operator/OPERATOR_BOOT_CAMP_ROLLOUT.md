@@ -3,6 +3,14 @@
 Issue #254; inspected baseline 2393ff85ac6e14e5dfb876b8b14ab65f68c800bb on 2026-10-10.
 Status: BLOCKED for clean-room graduation. This is a rollout plan, not proof that the fleet has graduated.
 
+Read-only readiness check (no enrollment, process launch, credential reads, or network calls):
+
+```powershell
+powershell -NoProfile -File .\ops\operator\Test-910CPRBootCamp.ps1
+```
+
+It emits JSON prerequisite results and the four reviewed graduation blockers, then exits 1 while those gates remain closed. CLI presence does not establish authentication. Startup folder presence does not prove startup registration or logon survival. A passing host prerequisite list must never be interpreted as graduation. The implementation gates are deliberately fixed until replacement code and durable proof are reviewed.
+
 ## Existing evidence to reuse
 
 | Worker | Identity | Evidence |
