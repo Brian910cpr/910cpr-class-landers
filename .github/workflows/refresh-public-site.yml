@@ -246,6 +246,10 @@ jobs:
           if ($LASTEXITCODE -ne 0 -or -not $baseCommit) { throw "Could not capture checked-out base commit" }
 
           git add -- docs data/state_public/enrollware_ical_hash.txt data/state_public/canonical_scheduling_demand_hash.txt
+          # Carry only compact previously verified V2 identities across runners.
+          if (Test-Path data/state_public/layered_verified_commitments.json) {
+            git add -- data/state_public/layered_verified_commitments.json
+          }
 
           $staged = @(git diff --cached --name-only)
           if ($staged.Count -eq 0) {

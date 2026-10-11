@@ -27,7 +27,7 @@ class LayeredAdapterTests(unittest.TestCase):
         self.busy.append(dict(start=self.at(start), end=self.at(end), instructor='Brian',
             course_id=cid, resource=self.policy['primary_resource'],
             location_resolution='location_resource_map', source_file='canonical_class_sessions',
-            source_event_id='real-'+start, **extra))
+            source_event_id='real-'+start, anchor_basis='committed_public_session', **extra))
 
     def report(self, start='00:00', end='00:00', end_day=11):
         return build_shadow([self.window], self.busy, self.courses, self.policy, self.resources,

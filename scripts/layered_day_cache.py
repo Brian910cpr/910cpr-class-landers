@@ -65,13 +65,54 @@ def scoped_sources(rows, start, end, travel):
     return [chosen[i] for i in sorted(chosen)]
 
 
+
+def retain_verified_commitments(rows, cache_dir, history_path=None):
+    """Local continuity evidence, never a replacement for current roster counts.
+
+    Only canonical verified positive rows enter the ledger. A fresh known count
+    or lifecycle/move replaces that identity; unrelated commitments survive.
+    """
+    path = Path(history_path) if history_path else Path(cache_dir) / 'verified_commitments.json'
+    try:
+        ledger = unpack(json.loads(path.read_text(encoding='utf-8')))
+        if not isinstance(ledger, dict): ledger = {}
+    except (OSError, ValueError):
+        ledger = {}
+    projected = project_sources(rows, {})
+    for row in projected:
+        if row.get('source_file') != 'canonical_class_sessions' or not row.get('source_event_id'):
+            continue
+        identity = str(row['source_event_id'])
+        prior = ledger.get(identity)
+        state = row['commitment_state']
+        if state == 'inactive' or row.get('count_available') is True:
+            ledger.pop(identity, None)
+        elif isinstance(prior, dict):
+            fields = ('course_id', 'instructor', 'resource')
+            try:
+                exact = all(row.get(k) == prior.get(k) for k in fields) and aware(row['start']) == aware(prior['start'])
+            except (KeyError, TypeError, ValueError):
+                exact = False
+            if exact:
+                row['previous_verified_commitment'] = prior
+            else:
+                ledger.pop(identity, None)
+        if state != 'inactive' and row.get('count_available') is True and row.get('active_registration_count', 0) > 0:
+            ledger[identity] = {k: row.get(k) for k in ('source_event_id', 'external_class_id', 'course_id', 'start', 'end', 'instructor', 'resource', 'count_available', 'active_registration_count')}
+            ledger[identity]['demand_basis'] = 'canonical_active_registrations'
+    # Projection rechecks exact course/start/instructor/resource, so a moved or
+    # changed unknown identity cannot reuse a previous occupied Anchor.
+    _atomic_write_json(path, pack(ledger))
+    return projected
+
 def cached_calculate(windows, occupancy, courses, policy, resources, now, interval,
-                     qualified, coverage, travel_minutes=None, *, cache_dir, horizon_days=90):
+                     qualified, coverage, travel_minutes=None, *, cache_dir, horizon_days=90, history_path=None):
     now=aware(now)
     horizon_start=now.astimezone(ZONE).replace(hour=0,minute=0,second=0,microsecond=0)
     horizon_end=horizon_start+timedelta(days=horizon_days)
     if not 1 <= horizon_days <= 90: raise ValueError('cache horizon must be 1..90 days')
     cache_dir=Path(cache_dir)
+    occupancy=retain_verified_commitments(occupancy, cache_dir, history_path)
     travel=max([0]+[int(v) for v in (travel_minutes or {}).values() if isinstance(v,(int,float)) and v>=0])
     code=digest([Path(__file__).read_text(), *[Path(__file__).with_name(name).read_text() for name in
         ('layered_publication_adapter.py','layered_selector_adapter.py','layered_scheduling_engine.py','layered_resource_readiness.py')]])

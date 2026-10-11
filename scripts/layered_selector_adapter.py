@@ -5,7 +5,7 @@ Room hours come from the owner's explicit policy; occupancy always wins.
 """
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
-from scripts.layered_scheduling_engine import run
+from scripts.layered_scheduling_engine import run, commitment_state
 
 ZONE = ZoneInfo("America/New_York")
 
@@ -100,7 +100,11 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
     if commitment_coverage is not None:
         fixture["commitment_coverage"] = commitment_coverage
     source_keys = set()
+    occupancy = sorted(occupancy, key=lambda row: commitment_state(row) not in {'paid', 'seated', 'planted'})
     for index, busy in enumerate(occupancy):
+        state = commitment_state(busy)
+        if state in {'inventory', 'inactive'}:
+            continue
         if not busy.get("start") or not busy.get("end"):
             raise ValueError("unresolved occupied interval")
         start, end = aware(busy["start"]), aware(busy["end"])
@@ -122,15 +126,16 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             continue
         source_keys.add(key)
         cid = str(busy.get("course_id") or "")
-        kind = busy.get("kind") or ("commitment" if "blocked" in str(busy.get("source_file")) else "planted")
+        kind = state
         count = busy.get("active_registration_count")
         if isinstance(count, int) and count > 0 and kind == "planted":
             kind = "paid"
         fixture["sources"].append(dict(id=str(busy.get("source_event_id") or "occupied-"+str(index)),
             instructor=instructor, location=location, start=start.isoformat(), end=end.isoformat(),
             course=cid if cid in fixture["courses"] else None, kind=kind, headcount=count,
+            anchor_basis=busy.get("anchor_basis") or busy.get("promotion_reason"),
             evidence=busy.get("source_file"),
-            resource_uncertain=busy.get("resource_uncertain", False),
+            resource_uncertain=busy.get("resource_uncertain", False) or (state == "uncertain" and same_venue),
             uncertainty_reason=busy.get("uncertainty_reason"),
             adr_shift="adr" in str(busy.get("course_title") or "").casefold()))
         if busy.get("instructor_unassigned"):

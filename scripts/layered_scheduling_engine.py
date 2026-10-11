@@ -17,6 +17,45 @@ def stamp(value):
     return result.astimezone(timezone.utc)
 
 
+def commitment_state(source):
+    """Separate roster evidence, independent commitments and unresolved inventory.
+
+    Unknown inventory reserves its bounded capacity conservatively, but cannot
+    manufacture a demand Anchor. Historical evidence must match the occurrence.
+    """
+    status = str(source.get('session_status') or source.get('status') or '').lower()
+    if status in {'cancelled', 'canceled', 'deleted', 'moved'} or source.get('revoked') is True:
+        return 'inactive'
+    kind = source.get('kind') or ('commitment' if 'blocked' in str(source.get('source_file')) else 'planted')
+    if kind not in {'paid', 'seated', 'planted', 'hold', 'commitment', 'uncertain'}:
+        return kind
+    explicit = source.get('anchor_basis') or source.get('promotion_reason')
+    if kind in {'hold', 'commitment', 'uncertain'}:
+        return kind
+    count = source.get('active_registration_count', source.get('headcount'))
+    known = (source.get('count_available') is not False and type(count) is int and count >= 0)
+    if known and count > 0:
+        return 'paid'
+    if explicit in {'committed_public_session', 'manual_override', 'calendar_commitment'}:
+        return 'planted'
+    if known:
+        return 'inventory'
+    prior = source.get('previous_verified_commitment') or {}
+    fields = ('source_event_id', 'course_id', 'instructor', 'resource')
+    exact = all(source.get(k) is not None and prior.get(k) == source.get(k) for k in fields)
+    try:
+        exact = exact and stamp(str(prior['start'])) == stamp(str(source['start']))
+    except (KeyError, TypeError, ValueError):
+        exact = False
+    if (exact and prior.get('demand_basis') == 'canonical_active_registrations'
+            and prior.get('count_available') is True
+            and type(prior.get('active_registration_count')) is int
+            and prior['active_registration_count'] > 0):
+        return 'seated'
+    # A paid/seated DTO is itself an explicit verified commitment. Planted rows
+    # lack that evidence and reserve capacity only as uncertainty.
+    return kind if kind in {'paid', 'seated'} else 'uncertain'
+
 def minutes(value):
     return timedelta(minutes=value)
 
@@ -123,7 +162,8 @@ def run(fixture):
                                   'location': window['location'],
                                   'uncertainty_reason': 'commitment_coverage_not_established'}
     occupied, ignored = [], []
-    for source in sources.values():
+    for original in sources.values():
+        source = dict(original, kind=commitment_state(original))
         if source.get("kind") not in {"paid", "seated", "planted", "hold", "commitment", "uncertain"}:
             ignored.append({"source_id": source["id"], "reason": "not_explicit_work_commitment"})
             continue

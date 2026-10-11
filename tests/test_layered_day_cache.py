@@ -70,3 +70,44 @@ class DayCacheTests(unittest.TestCase):
         self.assertEqual({r['date'] for r in result['incremental_cache']['rebuilt']},{'2026-10-11','2026-10-12'})
         self.assertEqual(result['incremental_cache']['hits'],1)
         self.assertEqual(f.sources[0]['active_registration_count'],None)
+
+    def test_verified_positive_unknown_zero_and_move_preserve_exact_history(self):
+        f=self.f; row=f.add(11,'12:00','13:00',count=1)
+        row['external_class_id']='history-one'
+        self.run_cache()
+        row.update(count_available=False,active_registration_count=None)
+        result=self.run_cache()
+        self.assertEqual(len(result['reports'][0]['blocks']),1)
+        self.assertIsNone(result['projected_sources'][0]['active_registration_count'])
+        row.update(count_available=True,active_registration_count=0)
+        self.assertFalse(self.run_cache()['reports'][0]['blocks'])
+        row.update(count_available=False,active_registration_count=None)
+        self.assertFalse(self.run_cache()['reports'][0]['blocks'])
+        row.update(count_available=True,active_registration_count=2)
+        self.run_cache()
+        row.update(count_available=False,active_registration_count=None,
+                   start=f.at(11,'14:00').isoformat(),end=f.at(11,'15:00').isoformat())
+        self.assertFalse(self.run_cache()['reports'][0]['blocks'])
+
+    def test_cancel_one_ledger_identity_keeps_other_booking(self):
+        f=self.f;one=f.add(11,'12:00','13:00',count=1);two=f.add(11,'17:00','18:00',count=2)
+        self.run_cache()
+        one['session_status']='canceled';two.update(count_available=False,active_registration_count=None)
+        result=self.run_cache()
+        self.assertEqual([b['source_ids'] for b in result['reports'][0]['blocks']],[[two['source_event_id']]])
+
+    def test_native_datetime_sources_are_serialized_in_history(self):
+        f=self.f;row=f.add(11,'12:00','13:00',count=1)
+        row['start']=f.at(11,'12:00');row['end']=f.at(11,'13:00')
+        self.run_cache();row.update(count_available=False,active_registration_count=None)
+        self.assertTrue(self.run_cache()['reports'][0]['blocks'])
+
+    def test_shared_history_survives_an_empty_calculation_cache(self):
+        from scripts.layered_day_cache import retain_verified_commitments
+        f=self.f;row=f.add(11,'12:00','13:00',count=1)
+        path=Path(self.directory.name)/'public-state.json'
+        retain_verified_commitments(f.sources,Path(self.directory.name)/'first',path)
+        row.update(count_available=False,active_registration_count=None)
+        restored=retain_verified_commitments(f.sources,Path(self.directory.name)/'fresh-runner',path)
+        from scripts.layered_scheduling_engine import commitment_state
+        self.assertEqual(commitment_state(restored[0]),'seated')
