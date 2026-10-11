@@ -1,0 +1,187 @@
+{
+  "checkedAt": "2026-10-11T01:17:48.202038+00:00",
+  "baseCommit": "0acc0c32b5a0deab012c15766e5af71571122a4b",
+  "mode": "read-only production HTTP verification; no rebuild or deployment",
+  "browserLimitation": "CUA reports no available browsers; fresh responsive screenshot checks unavailable. Prior PR291/292 screenshots and DOM checks retained as historical evidence.",
+  "results": [
+    {
+      "url": "https://www.910cpr.com/bls.html",
+      "status": 200,
+      "bytes": 73101,
+      "heroPresent": true,
+      "ahaCardCodePresent": true,
+      "tinyNurseReference": false,
+      "registrationCodePresent": true,
+      "sha256": "1226f0a20cfc21d838601fc156e9379d04908bd01c3b7487162b98ee81305daf"
+    },
+    {
+      "url": "https://www.910cpr.com/acls.html",
+      "status": 200,
+      "bytes": 74131,
+      "heroPresent": true,
+      "ahaCardCodePresent": true,
+      "tinyNurseReference": false,
+      "registrationCodePresent": true,
+      "sha256": "42242b72656f6e36a97d9b42c01c978bda12be37f218dc407176c1ffaa5a291e"
+    },
+    {
+      "url": "https://www.910cpr.com/pals.html",
+      "status": 200,
+      "bytes": 74067,
+      "heroPresent": true,
+      "ahaCardCodePresent": true,
+      "tinyNurseReference": false,
+      "registrationCodePresent": true,
+      "sha256": "f10263f70b6487e1f00717e29033ec611b7a53ab27c9376684db6af1ecbd590c"
+    },
+    {
+      "url": "https://www.910cpr.com/heartsaver.html",
+      "status": 200,
+      "bytes": 80225,
+      "heroPresent": true,
+      "ahaCardCodePresent": true,
+      "tinyNurseReference": false,
+      "registrationCodePresent": true,
+      "sha256": "765203b7b20493e345ce84eba486802e937f17ed8a4edfe90e39f08e3b112b5a"
+    },
+    {
+      "url": "https://www.910cpr.com/family-cpr.html",
+      "status": 200,
+      "bytes": 66098,
+      "heroPresent": true,
+      "ahaCardCodePresent": true,
+      "tinyNurseReference": false,
+      "registrationCodePresent": true,
+      "sha256": "8051113fe15ee9e15297e5651906554a17409693b5b028dcd3a14a4833def30a"
+    },
+    {
+      "url": "https://www.910cpr.com/assets/family-hero.js?v=6d88341997f7",
+      "status": 200,
+      "bytes": 1232,
+      "matchesCurrentMain": false,
+      "sha256": "6d88341997f7b0b1c857aec62aefb441b923bd83e0e893630718881866c1e4d7",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/0aha.png?v=85e7b1aed907",
+      "status": 200,
+      "bytes": 11782,
+      "matchesCurrentMain": true,
+      "sha256": "85e7b1aed9072cde9d784bc9d450d4d85c8e34582b0660c0d94a0eb7c3be3b12",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/ACLS-1-480.webp?v=73a72e4cd8c4",
+      "status": 200,
+      "bytes": 92348,
+      "matchesCurrentMain": true,
+      "sha256": "73a72e4cd8c4f84d229773227c650666536ef1cdfb4edfd3cd1d38d3231f4a59",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/ACLS-1.webp?v=316d0b3a38fd",
+      "status": 200,
+      "bytes": 263278,
+      "matchesCurrentMain": true,
+      "sha256": "316d0b3a38fddd7591e8928aeb51eaf3dea91ec13b290a8ba510b6e6d5c23fc5",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/ACLS-2-480.webp?v=a0a2f2f60913",
+      "status": 200,
+      "bytes": 94508,
+      "matchesCurrentMain": true,
+      "sha256": "a0a2f2f6091398ed8a7ad14c30cc99f56c4aff2606f0a59717a015fd160c0de4",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/ACLS-2.webp?v=c50647615ba2",
+      "status": 200,
+      "bytes": 276754,
+      "matchesCurrentMain": true,
+      "sha256": "c50647615ba25e683a041f1104b9313b2c74f04e2081fbe8df8a36af5ef98dfd",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/ACLS-3-480.webp?v=a03e9bebb375",
+      "status": 200,
+      "bytes": 46468,
+      "matchesCurrentMain": true,
+      "sha256": "a03e9bebb375c1bed82f4c6c79684ccb28203e811da407cb5373f728843e8d0d",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/ACLS-3.webp?v=d6fd96bf5b35",
+      "status": 200,
+      "bytes": 125358,
+      "matchesCurrentMain": true,
+      "sha256": "d6fd96bf5b35d4ca50250f9ebf3c6b1409ea3530e7a9999f00ae3b7beb8bfe3c",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/BLS-1-480.webp?v=0151cb601137",
+      "status": 200,
+      "bytes": 56292,
+      "matchesCurrentMain": true,
+      "sha256": "0151cb6011371b762c1d52d2ee5576a5f76a5a33722d204c1659ab6fe05c2e44",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/BLS-1.webp?v=a48708e29627",
+      "status": 200,
+      "bytes": 165834,
+      "matchesCurrentMain": true,
+      "sha256": "a48708e29627ef7be1ac2fa5da2ce9bbe34cc8c79f7c75c1d9c26ad86921d60c",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/PALS-1-480.webp?v=25624ce568b7",
+      "status": 200,
+      "bytes": 52600,
+      "matchesCurrentMain": true,
+      "sha256": "25624ce568b7d2ce87762045a6a0c5738f101a8328596b583d7fbaded80d944d",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/PALS-1.webp?v=0eddeeb26fb4",
+      "status": 200,
+      "bytes": 125214,
+      "matchesCurrentMain": true,
+      "sha256": "0eddeeb26fb4e5fae3ff0d1cb0be620d35f41deda752a9e3fbe87929fb7cadb8",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/PALS-2.webp?v=9e34bb3c9d38",
+      "status": 200,
+      "bytes": 23378,
+      "matchesCurrentMain": true,
+      "sha256": "9e34bb3c9d38541f08c6c69cb5c5fc7b3d87d3b613fed8c1abb97fb65a2cb274",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/PALS-3.webp?v=9c1c63d270c7",
+      "status": 200,
+      "bytes": 21394,
+      "matchesCurrentMain": true,
+      "sha256": "9c1c63d270c718e4b1586c42095944813a934f09deedf3c66cbe36ef7ebfc365",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/PALS-4.webp?v=b7f261077fc4",
+      "status": 200,
+      "bytes": 17328,
+      "matchesCurrentMain": true,
+      "sha256": "b7f261077fc43efd48913c9c5fe243bb918d53c60517ceea5fbb338e9759c5b2",
+      "matchesCommittedMain": true
+    },
+    {
+      "url": "https://www.910cpr.com/images/characters/PALS-5.webp?v=8e95adf314c3",
+      "status": 200,
+      "bytes": 17528,
+      "matchesCurrentMain": true,
+      "sha256": "8e95adf314c3ccb330c54be0bb5067cf2a5588a175b6364c904872acda5265a9",
+      "matchesCommittedMain": true
+    }
+  ],
+  "comparisonNote": "Windows checkout converts JS LF to CRLF. matchesCurrentMain compares working-tree bytes; matchesCommittedMain compares authoritative Git blob bytes. All deployed assets match committed main."
+}
