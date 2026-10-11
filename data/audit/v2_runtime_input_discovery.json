@@ -1,0 +1,76 @@
+{
+  "checked_at": "2026-10-11T22:55:02.608483+00:00",
+  "ordinary_runtime_search": {
+    "scope": "all 14 registered repository worktrees, including primary checkout; explicit ordinary runtime filenames only",
+    "sessions_current_existing": false,
+    "canonical_demand_existing": false,
+    "no_secret_store_search": true
+  },
+  "fresh_read_only_producers": {
+    "sessions": {
+      "producer": "scripts.build_sessions_current.build_sessions_from_enrollware_ical",
+      "success": true,
+      "generated_at": "2026-10-11T18:51:16.707133-04:00",
+      "source_mode": "enrollware_ical_authoritative",
+      "sessions": 232,
+      "roster_authority": "canonical_registrations_only",
+      "output": "C:\\Users\\ten77\\Documents\\Codex\\2026-10-11\\task\\v2-demand-fix\\.test-tmp\\source-validation\\sessions_current.json"
+    },
+    "calendars": {
+      "producer": "scripts.export_calendar_snapshots.export_calendar_snapshots",
+      "generated_at": "2026-10-11T18:52:18.061513-04:00",
+      "private_credentials_consulted": false,
+      "sources": [
+        {
+          "source": "amy_availability",
+          "status": "ok",
+          "url_basis": "derived_public_ics_from_calendar_id",
+          "events": 0,
+          "failure_reason": null
+        },
+        {
+          "source": "nick_availability",
+          "status": "ok",
+          "url_basis": "derived_public_ics_from_calendar_id",
+          "events": 0,
+          "failure_reason": null
+        },
+        {
+          "source": "brian_do_not_schedule",
+          "status": "ok",
+          "url_basis": "derived_public_ics_from_calendar_id",
+          "events": 157,
+          "failure_reason": null
+        }
+      ]
+    },
+    "availability": {
+      "generated_at": "2026-10-11T18:52:18.130546-04:00",
+      "blocks": 368,
+      "coverage_proofs": [
+        {
+          "status": "known_complete",
+          "observed_at": "2026-10-11T18:52:18.049004-04:00",
+          "valid_until": "2026-10-11T19:07:18.049004-04:00",
+          "freshness_minutes": 15
+        }
+      ]
+    }
+  },
+  "validation": {
+    "sessions_shape_and_unique_identity": "passed",
+    "sessions_source_provenance": "enrollware_ical_authoritative",
+    "counts_not_inferred_from_ical": true,
+    "calendar_schema_and_timestamp": "passed",
+    "calendar_provenance": "configured calendar IDs via documented public ICS resolver",
+    "coverage_lease": "valid when checked",
+    "raw_snapshot_directory": ".test-tmp\\source-validation"
+  },
+  "remaining_blocker": {
+    "canonical_snapshot": "not available",
+    "HOT_SYNC_ADMIN_KEY_present": false,
+    "supported_reader": "python -B -m scripts.fetch_canonical_scheduling_demand",
+    "needed_environment": "existing approved runtime/CI environment with HOT_SYNC_ADMIN_KEY already injected, as documented in refresh-public-site.yml; execute only reader, not the production workflow"
+  },
+  "production_mutations": false
+}
