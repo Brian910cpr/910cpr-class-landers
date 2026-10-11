@@ -16,6 +16,11 @@ export async function executionCheck(id, expectedUpdatedAt, readCard) {
   if (['handled_manually', 'verified_resolved'].includes(card.resolution_state)) {
     return respond(200, {...context, decision: 'skip', reason: 'recorded_resolution', resolution_state: card.resolution_state});
   }
+  // Missing/null is the legacy schema. Any other value must match the reviewed
+  // canonical contract; a new/invalid state cannot be treated as unresolved.
+  if (card.resolution_state != null && card.resolution_state !== 'unresolved') {
+    return respond(409, {...context, decision: 'review', reason: 'unknown_resolution_state'});
+  }
   if (!version || !Number.isFinite(Date.parse(version))) {
     return respond(409, {...context, decision: 'review', reason: 'card_version_unavailable'});
   }

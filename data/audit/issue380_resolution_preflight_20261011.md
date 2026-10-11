@@ -1,3 +1,95 @@
+## R2 current evidence — 2026-10-11T22:22Z
+
+This section supersedes R1's access blocker below; R1 is retained as historical evidence.
+The connected Supabase tools are available in this dispatch. No owner credential or
+metadata export is needed. Owner follow-up/read acknowledgment at
+`Codex_Read_Issue380_20261011T2029Z_R1.md` was read before editing.
+
+Read-only `execute_sql` observation at `2026-10-11 22:21:35.13496+00`:
+- `production_board_cards` has `context_manifest` (jsonb), `implementation_status`
+  (text), `card_type`, `parent_card_id`, and original/incremental/separate/bundled
+  work-score fields plus bundle_advantage. The tracked original migration lacks
+  these additions; this is schema-history drift, not absent live columns.
+- No `resolution_state`, canonical version or evidence reference field is present
+  on cards. Existing timestamp is `updated_at`.
+- Noninternal triggers on public production_board_* tables: 0. Board RLS policies: 0.
+- Storage buckets: class-session-docs, nhcso-class-docs,
+  landerware-requirement-documents; all public=false. Storage objects policies: 0.
+  None is a dedicated Production Board evidence bucket.
+- Total cards: 100; Doing/Next: 42. These counts are a point-in-time observation,
+  not proof of freshness or unresolved business state. Owner's earlier 99/42
+  observation is historical, not a contradiction.
+- `list_edge_functions`: production-board ACTIVE, version 13. No function was
+  deployed or mutated. Route absence was confirmed by the owner's R1 read receipt;
+  this dispatch independently checked version metadata, not deployed source.
+
+SQL used (metadata and aggregate counts only; no private card/evidence contents):
+```sql
+select now() as observed_at,
+ (select jsonb_agg(jsonb_build_object('name',column_name,'type',data_type)
+  order by ordinal_position) from information_schema.columns
+  where table_schema='public' and table_name='production_board_cards') as card_columns,
+ (select count(*) from pg_trigger t join pg_class c on c.oid=t.tgrelid
+  join pg_namespace n on n.oid=c.relnamespace where n.nspname='public'
+  and c.relname like 'production_board_%' and not t.tgisinternal) as board_triggers,
+ (select count(*) from pg_policies where schemaname='public'
+  and tablename like 'production_board_%') as board_policies,
+ (select jsonb_agg(jsonb_build_object('id',id,'public',public))
+  from storage.buckets) as buckets,
+ (select count(*) from pg_policies where schemaname='storage'
+  and tablename='objects') as storage_policies,
+ (select count(*) from public.production_board_cards) as card_count,
+ (select count(*) from public.production_board_cards
+  where lane in ('doing','next')) as doing_next_count;
+```
+
+Security advisors at 2026-10-11T22:22:21.462Z: 107 INFO RLS-enabled/no-policy
+findings, including board cards/activity/thoughts/dependencies. These fit the
+current service-role-only model; do not add broad authenticated access to silence
+an advisor. Other baseline findings: 2 ERROR security-definer views, 3 WARN mutable
+function search paths, 1 WARN anon and 1 WARN authenticated security-definer
+function execution. No DDL was applied; this dispatch did not remediate unrelated
+findings or claim a clean security baseline.
+[Advisor guidance](https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy).
+
+### Backend increment and local validation
+
+`execution-check.mjs` now returns HTTP 409 / `unknown_resolution_state` when a
+non-null canonical state is neither unresolved nor either supported resolved
+state. This prevents a future/invalid state from falling through as unresolved.
+Missing/null states retain legacy source-review behavior. All outcomes still
+have can_execute=false. Unknown values and private card text are not echoed.
+
+`node --experimental-strip-types --test tests/production_execution_check.test.mjs tests/owner_access.test.mjs`:
+tests 28, pass 28, fail 0 (11 additional cases). Includes actual handler route
+execution via Node VM, not only the helper. Mocked DB/auth; not Deno or live
+end-to-end proof. `node --check supabase/functions/production-board/execution-check.mjs`
+and `git diff --check`: exit 0.
+
+### Remaining gates versus unfinished implementation
+
+Issue #266 explicitly scopes v1 to queued/recurring allowlisted worker jobs and
+puts later Production Board integration behind an explicit worker-safe flag.
+The actual installed Windows dispatcher, approved worker-safe card contract and
+atomic side-effect boundary are not established by this checkout. Repository
+search of scripts/ops/tests found no dispatcher implementation to safely wire.
+Do not change launcher/runtime or infer executable jobs from card prose.
+
+No schema/storage access blocker remains. Transactional resolution/version/
+idempotency/audit migration, owner-proxied evidence, UI/history/count changes,
+and isolated SQL/concurrency/upload/browser tests are still **unfinished work**,
+not claimed blocked by missing credentials. Local SQL tooling discovery found
+no psql/docker/supabase command and no PostgreSQL/Docker installation at the
+common Program Files paths checked; no installation or production SQL test was
+attempted. Obtain an isolated database test target before proving migrations.
+Review/authorization is still required before production mutation/merge/deploy.
+All six acceptance criteria remain open. BUILT for advisory backend only;
+production schema metadata CONNECTED read-only does not prove the feature.
+The proof contract below remains unmet. #371 stays the primary deep stream,
+#372 stays draft/unmerged/undeployed, and subsequent increments reuse #381.
+
+---
+
 # Issue 380: Production Board resolution preflight
 
 State: BLOCKED for resolution writes/private uploads; read-only backend increment BUILT and locally validated.

@@ -61,3 +61,30 @@ test('actual route fails closed on outages, malformed IDs and unsupported paths'
   const invalid=service();assert.equal((await invalid.request('bad/execution-check')).status,400);assert.equal(invalid.calls.length,0);
   assert.equal((await invalid.request(id+'/execution-check/extra')).status,404);
 });
+
+for (const resolution_state of ['', 'resolved', 'HANDLED_MANUALLY', 'future_state', false, {}, []]) {
+  test(`unknown resolution state ${JSON.stringify(resolution_state)} fails closed`, async()=>{
+    const result=await executionCheck(id,version,async()=>({...card,resolution_state}));
+    assert.equal(result.status,409);
+    assert.equal(result.body.reason,'unknown_resolution_state');
+    assert.equal(result.body.can_execute,false);
+    assert.equal(Object.hasOwn(result.body,'resolution_state'),false);
+  });
+}
+for (const resolution_state of [undefined, null, 'unresolved']) {
+  test(`legacy or explicit unresolved ${resolution_state} still requires source review`, async()=>{
+    const result=await executionCheck(id,version,async()=>({...card,resolution_state}));
+    assert.equal(result.body.reason,'authoritative_source_check_required');
+    assert.equal(result.body.can_execute,false);
+  });
+}
+test('actual route preserves unknown-state conflict without exposing card content',async()=>{
+  const s=service({row:{...card,resolution_state:'future_state',details:'private explanation'}});
+  const response=await s.request(id+'/execution-check?expected_updated_at='+encodeURIComponent(version));
+  assert.equal(response.status,409);
+  const body=await response.json();
+  assert.equal(body.reason,'unknown_resolution_state');
+  assert.equal(body.can_execute,false);
+  assert.ok(!JSON.stringify(body).includes('private explanation'));
+  assert.equal(s.calls.length,1);
+});
