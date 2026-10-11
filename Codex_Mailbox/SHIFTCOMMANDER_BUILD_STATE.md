@@ -44,11 +44,11 @@ Every ShiftCommander work session that makes meaningful progress, encounters a b
 
 **Last verified checkpoint:** ShiftCommander R81 was reviewed and acknowledged. Draft PR #19 remains open/draft/unmerged at `b9cc8cfeb3412569fc02ebed878e3124a5d19dee`. The R81 implementation fails closed if the private pilot availability file is deleted, initializes a deliberate blank availability record for a new private root, and preserves the reviewed offline recovery path. The reported combined local validation was 96 passing tests with no failures/errors/skips; no CI status checks are attached to PR #19. The transport receipt has already been retired as `Codex_Read_ShiftCommanderAstra_R81.md` on its receipt branch.
 
-**Last known blocker:** The code-preparation stack has reached the point where the next useful step is an actual private installation, not another broad code audit. No real private store has been established in the verified R81 evidence: `SC_AUTH_DB_PATH`/signing configuration were absent in that worker and the candidate `E:/ShiftCommander/PrivatePilot` did not exist. Production also remains gated on coordinated disposition of the R37/R47/R77/R81 bridge-credential exposures and proof that superseded credentials are rejected, followed by real staffing/client/publication/recovery/observer proof.
+**Last known blocker:** 2026-10-11 private-install preflight: E:/ShiftCommander now exists as an empty outside-Git parent, but no operational PrivatePilot root or selected TLS input files exist. No valid localhost/127.0.0.1 certificate with a private key was found in CurrentUser/My (count 0). The existing launcher reports dispatcher worker lock held or inaccessible; no duplicate Astra worker was started and no fresh Astra review is claimed. Reviewed settings provenance and trusted TLS inputs must be selected before check-only can pass; initialization then requires hidden password entry in an interactive local terminal. Production incident/release gates remain unchanged.
 
-**Last attempted action:** R81 reproduced deletion of saved private availability being silently treated as empty state after restart and repaired it so missing state now blocks reads/writes/resolver/health and startup until reviewed recovery.
+**Last attempted action:** 2026-10-11: resumed R81, ran existing Astra launcher CheckOnly, ran initialize_private_pilot.py --check-only, created only the missing outside-Git parent E:/ShiftCommander, and repeated check-only. No private store/accounts or TLS trust were created.
 
-**Observed result:** Draft PR #19 is still open and unmerged. The narrow fail-closed change is consistent with the private-pilot integrity contract and the receipt was already acknowledged. No production deployment, account activation, real recovery, calendar cutover, or member communication is proven by this checkpoint.
+**Observed result:** Initial check-only returned root_requires_existing_absolute_parent. After parent creation, it returned private_setup_failed; presence checks independently confirm selected TLS certificate/key are absent. PrivatePilot remains absent. No real workflow proof. Existing draft PR #19 remains the implementation checkpoint; no source change, merge or deployment.
 
 **Next exact action:**
 1. Resume from the current draft stack through PR #19; do not restart the release audit.
@@ -110,3 +110,17 @@ Then refresh **Last known blocker**, **Last attempted action**, **Observed resul
 ## Receipt rule
 
 When a Codex round is required, use a new unique `Codex_Reply_ShiftCommander...R<n>.md` receipt. Never overwrite an earlier receipt. The receipt should summarize that round; this file is the continuing cross-round state. ChatGPT, not Codex, performs any `Codex_Read_*` acknowledgement in the transport repository after genuine review.
+
+
+### 2026-10-11 EDT - Private-install prerequisite execution
+- Starting blocker: R81 preparation complete; actual private installation absent.
+- Evidence inspected: originating #214 body/history, pinned dispatch, this state, R77/R81 reports, target AGENTS.md and confirmed rules, #116, root handoff/proof protocols, draft #372 hold.
+- Action attempted: existing launcher CheckOnly; actual setup --check-only before and after creating E:/ShiftCommander outside Git; certificate metadata/presence checks only. No credential values read.
+- Result: parent prepared; selected TLS inputs absent, CurrentUser/My matching valid certificate/private-key count zero, no private root initialized. Setup returns private_setup_failed after the missing-parent gate is resolved.
+- New/unchanged root cause: installation inputs and interactive password entry remain required; dispatcher lock prevents a competing Astra launch.
+- Tests/checks run: focused existing private setup suite; two Python AST checks; scope/whitespace and remote receipt readback recorded in this round's receipt.
+- Commit/PR/branch: existing ShiftCommander draft #19 at b9cc8cfeb3412569fc02ebed878e3124a5d19dee unchanged. Courier codex/issue-214-private-install-preflight-20261011; see Codex_Reply_ShiftCommanderPrivateInstall_20261011_R1.md for state-update commit.
+- Owner/account gate: intended Windows user must enter temporary passwords locally only after reviewed settings and trusted TLS pass check-only. No password in chat, GitHub, arguments or environment. Do not claim a provider rotation blocker from this run; no provider write/probe attempted.
+- Next exact action: select reviewed settings and trusted loopback TLS PEM pair privately; rerun existing initialize_private_pilot.py --check-only with actual paths. Then intended user runs --initialize with hidden prompts, followed by start_private_pilot.py --check-only and the private workflow demonstration. Preserve PR #372, the existing target draft stack, production/calendar hold and credential incident disposition.
+- Queue sweep: current open [CODEX] list reviewed; #373 explicitly follows #371 foundation and must not interrupt it; #215/#219 have existing delivered work with remaining access/role/proof gates. No newly eligible unclaimed narrow backend edit was established; no competing stream or duplicate repair launched.
+- Courier integrity: original E:/GitHub/910cpr-class-landers fetch failed on bad object 6e61cabca5981d1389e52c60d95424d9893bb50f and refs/remotes/origin/codex/group-training-experience. No ref deletion/cleanup/reset attempted. Fresh sparse remote checkout used only for the two intended transport files.
