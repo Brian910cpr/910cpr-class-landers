@@ -1779,6 +1779,15 @@ def render_emergency_mailto(session: dict[str, Any], *, page_slug: str) -> str:
     return f"mailto:{EMERGENCY_REGISTRATION_EMAIL}?subject={quote(subject)}&body={quote(body)}"
 
 
+def booking_action_url(session: dict[str, Any]) -> str:
+    # Canonical-demand occurrences may not be in the earlier class-page input.
+    # Use their existing direct booking URL when no durable class page exists.
+    session_id = str(session.get("session_id") or "").strip()
+    if session_id and (OUTPUT_DIR / "classes" / f"{session_id}.html").is_file():
+        return escape(f"/classes/{session_id}.html#ForwardToEnrollware", quote=True)
+    return escape(session.get("registration_url") or "#", quote=True)
+
+
 def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug: str) -> str:
     start_dt = parse_dt(session.get("start_at"))
     end_dt = parse_dt(session.get("end_at"))
@@ -1803,7 +1812,7 @@ def render_session_card(session: dict[str, Any], *, group_mode: bool, page_slug:
         )
 
     action_label = "See Public Class" if group_mode else "Book This Class"
-    action_url = escape(f"/classes/{str(session.get('session_id') or '').strip()}.html#ForwardToEnrollware", quote=True) if str(session.get("session_id") or "").strip() else register_url
+    action_url = booking_action_url(session)
     action_hint = ""
     badge_html = ""
     if format_badge:
@@ -1853,8 +1862,7 @@ def session_key(session: dict[str, Any]) -> str:
 def session_action(session: dict[str, Any], *, page_slug: str) -> tuple[str, str, str]:
     register_url = escape(session.get("registration_url") or "#", quote=True)
     action_label = "Book This Class"
-    session_id = str(session.get("session_id") or "").strip()
-    action_url = escape(f"/classes/{session_id}.html#ForwardToEnrollware", quote=True) if session_id else register_url
+    action_url = booking_action_url(session)
     return action_label, action_url, register_url
 
 
