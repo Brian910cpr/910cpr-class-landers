@@ -12,6 +12,13 @@ from tests import test_layered_publication_adapter as fixtures
 
 
 class ValidationDriverTests(unittest.TestCase):
+    def test_attribution_preserves_booking_identity_but_changed_time_or_host_does_not(self):
+        expected='https://booking.test/enroll?courseId=209806&appointmentDayId=1&startTime=12%3A00%20AM'
+        decorated='https://booking.test/enroll?startTime=12%3A00+AM&appointmentDayId=1&courseId=209806&utm_source=direct'
+        self.assertTrue(driver.same_public_booking_url(expected,decorated))
+        self.assertFalse(driver.same_public_booking_url(expected,decorated.replace('12%3A00','13%3A00')))
+        self.assertFalse(driver.same_public_booking_url(expected,decorated.replace('booking.test','wrong.test')))
+
     def test_private_source_id_is_removed_from_shareable_reason_counts(self):
         self.assertEqual(driver.public_reasons({'conflict_or_transition:private-source-id':2,
                                                'outside_explicit_availability':3}),

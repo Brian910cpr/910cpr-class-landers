@@ -24,6 +24,12 @@ ROOT = Path(__file__).resolve().parents[1]
 PAGES = ("bls", "heartsaver", "acls", "pals")
 
 
+class PublicProbeFailure(RuntimeError):
+    def __init__(self, code, public_probe):
+        super().__init__(code)
+        self.public_probe = public_probe
+
+
 def write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, default=str), encoding="utf-8")
@@ -170,6 +176,17 @@ def offer_key(offer):
     return (offer["date"], offer["startTime"], str(offer["courseId"]), offer.get("offerType", ""))
 
 
+def same_public_booking_url(expected, actual):
+    """Attribution may decorate/re-encode a link, but booking identity must match."""
+    from urllib.parse import urlparse, urljoin, parse_qs
+    def identity(url):
+        parsed = urlparse(urljoin('https://validation.invalid/', url or ''))
+        params = {key: values for key, values in parse_qs(parsed.query).items()
+                  if not key.lower().startswith('utm_')}
+        return parsed.scheme, parsed.hostname, parsed.path, params
+    return identity(expected) == identity(actual)
+
+
 def physical_occupancy_preserved(before, after):
     """Count safety violations without exposing private source identities."""
     from scripts.layered_selector_adapter import aware
@@ -199,7 +216,7 @@ def rendered_probe(payload, now):
     """Offline Chrome consumes the actual real-source calculated public feed."""
     from playwright.sync_api import sync_playwright
     from scripts.build_bls_block_schedule_pilot import render_html, public_selector_availability_payload
-    from urllib.parse import urlparse
+    from urllib.parse import urlparse, parse_qs
     choices = [o for o in payload["offers"] if o.get("offerType") == "dynamic_appointment"]
     if not choices:
         return {"status": "unrun_no_dynamic_choices"}
@@ -236,8 +253,18 @@ def rendered_probe(payload, now):
                 if [chosen["date"], chosen["startTime"]] not in visible or errors:
                     raise RuntimeError("rendered_real_window_not_selectable")
                 hrefs = page.locator("#course-list a").evaluate_all("els=>els.map(e=>e.getAttribute('href'))")
-                if not any(chosen["appointmentUrl"] in (href or "") for href in hrefs):
-                    raise RuntimeError("rendered_real_booking_link_mismatch")
+                if not any(same_public_booking_url(chosen["appointmentUrl"], href) for href in hrefs):
+                    def public_parameters(url):
+                        params = parse_qs(urlparse(url or '').query)
+                        return {k: params[k] for k in ('courseId', 'appointmentDayId', 'startTime', 'date') if k in params}
+                    raise PublicProbeFailure("rendered_real_booking_link_mismatch", {
+                        'expected_window': offer_key(chosen),
+                        'selection': page.evaluate('({courseId:selectedCourseId,date:selectedDate,startTime:selectedStart})'),
+                        'expected_parameters': public_parameters(chosen['appointmentUrl']),
+                        'expected_query_keys': sorted(parse_qs(urlparse(chosen['appointmentUrl']).query)),
+                        'rendered_query_keys': [sorted(parse_qs(urlparse(href or '').query)) for href in hrefs],
+                        'rendered_parameters': [public_parameters(href) for href in hrefs],
+                    })
                 page.close()
         finally:
             browser.close()
@@ -265,10 +292,14 @@ def run(out, baseline):
             "added_public_windows": sorted(current-previous), "removed_public_windows": sorted(previous-current),
             "occupancy_preservation_violations": violations,
             "before_rejection_reasons": public_reasons(before[name]["rejectionReasonCounts"]),
-            "after_rejection_reasons": public_reasons(after[name]["rejectionReasonCounts"]),
-            "rendered_probe": rendered_probe(after[name], now)}
+            "after_rejection_reasons": public_reasons(after[name]["rejectionReasonCounts"])}
         if violations:
             raise RuntimeError("real_occupied_interval_not_preserved")
+    summary['status'] = 'calculated'
+    write(out / 'sanitized/summary.json', summary)
+    for name in PAGES:
+        summary['pages'][name]['rendered_probe'] = rendered_probe(after[name], now)
+        write(out / 'sanitized/summary.json', summary)
     summary["status"] = "passed"
     return summary
 
@@ -281,12 +312,14 @@ def main():
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=True)
     safe = out / "sanitized"
+    write(safe / 'summary.json', {'status':'started', 'baseline':args.baseline})
     try:
         with contextlib.redirect_stdout(io.StringIO()):
             result = run(out, args.baseline)
     except Exception as error:
         # No exception bodies, headers, source rows, URLs or credentials in logs.
-        result = {"status": "failed", "failure_type": type(error).__name__,
+        result = json.loads((safe / 'summary.json').read_text())
+        result.update({"status": "failed", "failure_type": type(error).__name__,
                   "failure_code": str(error) if str(error) in {
                       "approved_reader_credential_unavailable", "configured_calendar_export_incomplete",
                       "complete_calendar_coverage_unavailable", "calendar_coverage_expired", "unexpected_timing_source", "timing_source_stale",
@@ -295,7 +328,9 @@ def main():
                   "http_status": getattr(error, "code", None),
                   "code_locations": [{"file": Path(frame.filename).name, "function": frame.name, "line": frame.lineno}
                                      for frame in traceback.extract_tb(error.__traceback__)][-5:],
-                  "private_inputs_uploaded": False, "production_mutations": False}
+                  "private_inputs_uploaded": False, "production_mutations": False})
+        if isinstance(error, PublicProbeFailure):
+            result['public_probe'] = error.public_probe
     write(safe / "summary.json", result)
     report = "V2 validation-only result: " + result["status"] + "\n\n"
     if result["status"] == "passed":
