@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-10-11T14:12:26.958417-04:00`
+- Generated at: `2026-10-11T14:28:22.541712-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `234`
-- Public sessions created: `234`
+- iCal events read: `232`
+- Public sessions created: `232`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `207`
+- Registration unavailable sessions marked not direct-bookable: `205`
 - Unmapped sessions: `6`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,8 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `12774598` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-07-13T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
-| `12775309` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-07-13T18:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13782679` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-07-14T08:00:00-04:00 | Brunswick Living Center |
 | `12776267` | enrollware_registration_closed | USCG Elementary First Aid | CPR (AHA Heartsaver®) | 2026-07-14T08:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12776430` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-07-14T11:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +71,8 @@ They remain separate registration-signal/audit inputs only.
 | `13673173` | enrollware_registration_closed | AHA ACLS Provider (Renewal) | 2026-07-24T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13832096` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-07-24T17:00:00-04:00 | Surf City Fire Station #25 |
 | `13832090` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-07-25T09:00:00-04:00 | Surf City Fire Station #23 |
+| `12775558` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-07-25T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `13782361` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-07-25T14:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
