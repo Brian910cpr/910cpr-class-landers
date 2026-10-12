@@ -113,3 +113,30 @@ test('invalid deadlines fail before adapter side effects', async () => {
   }
   assert.equal(calls,0);
 });
+
+for (const phase of ['selection','pre_side_effect']) {
+  test(`${phase}: throwing canonical version getter produces a persisted closed decision`, async () => {
+    const state={...base}; const events=[];
+    Object.defineProperty(state,'version',{get(){throw Error('private getter failure');}});
+    const result=await checkLiveDispatch({...request,phase},{
+      readSnapshot:async()=>state, recordDecision:async event=>{events.push(event);return true;}
+    });
+    assert.equal(result.reason,'canonical_read_failed');
+    assert.equal(result.can_execute,false);
+    assert.equal(events.length,1);
+    assert.equal(events[0].observed_version,null);
+    assert.equal(JSON.stringify(events).includes('private'),false);
+  });
+  test(`${phase}: unreadable shared snapshot after persistence fails closed`, async () => {
+    const state={...base};
+    const result=await checkLiveDispatch({...request,phase},{
+      readSnapshot:async()=>state,
+      recordDecision:async()=>{
+        Object.defineProperty(state,'blocked',{get(){throw Error('private drift failure');}});
+        return true;
+      }
+    });
+    assert.equal(result.reason,'canonical_snapshot_changed_during_persistence');
+    assert.equal(result.can_execute,false);
+  });
+}

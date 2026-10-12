@@ -40,16 +40,20 @@ export async function checkLiveDispatch(request, {readSnapshot, recordDecision, 
   try {
     snapshot = await boundedCall(readSnapshot, issue_id, timeoutMs);
     evaluatedState = values(snapshot);
-    check = snapshot?.issue_id === issue_id
-      ? reconcileDispatch(snapshot, expectedVersion, phase)
+    // Evaluate a scalar projection once; audit construction must not reread
+    // arbitrary adapter getters outside this protected boundary.
+    const canonical = Object.fromEntries(fields.map((field, index) => [field, evaluatedState[index]]));
+    check = canonical.issue_id === issue_id
+      ? reconcileDispatch(canonical, expectedVersion, phase)
       : review('canonical_identity_mismatch');
   } catch {
+    evaluatedState = undefined;
     check = review('canonical_read_failed');
   }
   // Record only an allowlisted decision envelope, never private source/evidence.
   // Acknowledgement means persisted by the adapter, not merely queued locally.
   const event = Object.freeze({issue_id, phase, expected_version:expectedVersion,
-    observed_version:typeof snapshot?.version === 'string' ? snapshot.version : null,
+    observed_version:typeof evaluatedState?.[2] === 'string' ? evaluatedState[2] : null,
     decision:check.decision, reason:check.reason, can_execute:false});
   try {
     if (await boundedCall(recordDecision, event, timeoutMs) !== true) return review('decision_not_persisted');
@@ -59,7 +63,11 @@ export async function checkLiveDispatch(request, {readSnapshot, recordDecision, 
   // A reader may share a mutable cache object. Do not return a decision whose
   // input changed while the audit adapter was awaited. This local drift check
   // cannot detect remote changes and does not replace transactional fencing.
-  if (evaluatedState && values(snapshot).some((value, index) => !Object.is(value, evaluatedState[index]))) {
+  try {
+    if (evaluatedState && values(snapshot).some((value, index) => !Object.is(value, evaluatedState[index]))) {
+      return review('canonical_snapshot_changed_during_persistence');
+    }
+  } catch {
     return review('canonical_snapshot_changed_during_persistence');
   }
   return {...check, can_execute:false};
