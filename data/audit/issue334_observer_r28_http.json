@@ -1,0 +1,16 @@
+{
+  "observedAt": "2026-10-12T09:15:57.311993+00:00",
+  "healthVariableLookup": "HTTP404",
+  "pages": [
+    {
+      "url": "https://www.910cpr.com/bls.html",
+      "status": 200,
+      "bytes": 73101
+    },
+    {
+      "url": "https://www.910cpr.com/heartsaver.html",
+      "status": 200,
+      "bytes": 80225
+    }
+  ]
+}
