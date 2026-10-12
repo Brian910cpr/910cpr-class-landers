@@ -1,0 +1,321 @@
+{
+  "observed_at": "2026-10-12T01:18:54.766725+00:00",
+  "canonical_generated_at": "2026-10-12T01:18:50.958Z",
+  "canonical_session_count": 31,
+  "calendar_coverage_count": 1,
+  "calculation_completed": true,
+  "release_passed": true,
+  "published": false,
+  "run": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/38191338705",
+  "pages": {
+    "bls": {
+      "counts": {
+        "publicSelectableDateCount": 88,
+        "publicSelectableStartTimeCount": 1526,
+        "publicSelectableOfferCount": 4014,
+        "input_sources": 444,
+        "normalized_sources": 444,
+        "input_windows": 210,
+        "evaluated_windows": 210,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "calculation_issue_counts": {},
+      "oct14": {
+        "209806": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        },
+        "210549": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        },
+        "359474": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        }
+      },
+      "rejection_reasons": {
+        "lead_time": 40,
+        "outside_explicit_availability": 157,
+        "conflict_or_transition": 180,
+        "full_course_count_unknown": 4,
+        "existing_course_day_anchor": 12,
+        "anchored_day_requires_attached_offer": 6
+      },
+      "valid_until": "2026-10-11T21:33:53.805755-04:00"
+    },
+    "acls": {
+      "counts": {
+        "publicSelectableDateCount": 2,
+        "publicSelectableStartTimeCount": 2,
+        "publicSelectableOfferCount": 3,
+        "input_sources": 444,
+        "normalized_sources": 444,
+        "input_windows": 210,
+        "evaluated_windows": 210,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "calculation_issue_counts": {},
+      "oct14": {},
+      "rejection_reasons": {
+        "instructor_not_qualified": 4203,
+        "lead_time": 40,
+        "outside_explicit_availability": 157,
+        "conflict_or_transition": 180
+      },
+      "valid_until": "2026-10-11T21:18:58.098566-04:00"
+    },
+    "pals": {
+      "counts": {
+        "publicSelectableDateCount": 1,
+        "publicSelectableStartTimeCount": 1,
+        "publicSelectableOfferCount": 2,
+        "input_sources": 444,
+        "normalized_sources": 444,
+        "input_windows": 210,
+        "evaluated_windows": 210,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "calculation_issue_counts": {},
+      "oct14": {},
+      "rejection_reasons": {
+        "instructor_not_qualified": 4203,
+        "lead_time": 40,
+        "outside_explicit_availability": 157,
+        "conflict_or_transition": 180
+      },
+      "valid_until": "2026-10-11T21:19:00.060406-04:00"
+    },
+    "heartsaver": {
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1527,
+        "publicSelectableOfferCount": 8369,
+        "input_sources": 444,
+        "normalized_sources": 444,
+        "input_windows": 210,
+        "evaluated_windows": 210,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "calculation_issue_counts": {},
+      "oct14": {
+        "329495": {
+          "anchor": [
+            "17:30"
+          ],
+          "barnacle": [],
+          "open": []
+        },
+        "209808": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        },
+        "209809": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        },
+        "251545": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        },
+        "344085": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        },
+        "351632": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        }
+      },
+      "rejection_reasons": {
+        "lead_time": 82,
+        "outside_explicit_availability": 303,
+        "conflict_or_transition": 323,
+        "full_course_already_paid_seated": 12,
+        "full_course_count_unknown": 6,
+        "existing_course_day_anchor": 3,
+        "anchored_day_requires_attached_offer": 17
+      },
+      "valid_until": "2026-10-11T21:33:53.805755-04:00"
+    },
+    "uscg_first_aid_cpr_aed": {
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1520,
+        "publicSelectableOfferCount": 2765,
+        "input_sources": 444,
+        "normalized_sources": 444,
+        "input_windows": 210,
+        "evaluated_windows": 210,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "calculation_issue_counts": {},
+      "oct14": {
+        "329495": {
+          "anchor": [
+            "17:30"
+          ],
+          "barnacle": [],
+          "open": []
+        },
+        "209809": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        }
+      },
+      "rejection_reasons": {
+        "lead_time": 27,
+        "outside_explicit_availability": 102,
+        "conflict_or_transition": 110,
+        "full_course_already_paid_seated": 12,
+        "full_course_count_unknown": 6,
+        "existing_course_day_anchor": 3,
+        "anchored_day_requires_attached_offer": 4
+      },
+      "valid_until": "2026-10-11T21:33:53.805755-04:00"
+    },
+    "hsi": {
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1517,
+        "publicSelectableOfferCount": 2763,
+        "input_sources": 444,
+        "normalized_sources": 444,
+        "input_windows": 210,
+        "evaluated_windows": 210,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "calculation_issue_counts": {},
+      "oct14": {
+        "445670": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        },
+        "463743": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        }
+      },
+      "rejection_reasons": {
+        "lead_time": 27,
+        "outside_explicit_availability": 102,
+        "conflict_or_transition": 110,
+        "anchored_day_requires_attached_offer": 6
+      },
+      "valid_until": "2026-10-11T21:33:53.805755-04:00"
+    },
+    "arc": {
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1517,
+        "publicSelectableOfferCount": 4015,
+        "input_sources": 444,
+        "normalized_sources": 444,
+        "input_windows": 210,
+        "evaluated_windows": 210,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "calculation_issue_counts": {},
+      "oct14": {
+        "248288": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        },
+        "369209": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        },
+        "372258": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        }
+      },
+      "rejection_reasons": {
+        "lead_time": 40,
+        "outside_explicit_availability": 157,
+        "conflict_or_transition": 180,
+        "anchored_day_requires_attached_offer": 8
+      },
+      "valid_until": "2026-10-11T21:33:53.805755-04:00"
+    },
+    "family_cpr": {
+      "counts": {
+        "publicSelectableDateCount": 85,
+        "publicSelectableStartTimeCount": 1252,
+        "publicSelectableOfferCount": 1252,
+        "input_sources": 444,
+        "normalized_sources": 444,
+        "input_windows": 210,
+        "evaluated_windows": 210,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "calculation_issue_counts": {},
+      "oct14": {
+        "252737": {
+          "anchor": [],
+          "barnacle": [
+            "19:30"
+          ],
+          "open": []
+        }
+      },
+      "rejection_reasons": {
+        "lead_time": 13,
+        "outside_explicit_availability": 55,
+        "conflict_or_transition": 70,
+        "anchored_day_requires_attached_offer": 2
+      },
+      "valid_until": "2026-10-11T21:33:53.805755-04:00"
+    }
+  }
+}
