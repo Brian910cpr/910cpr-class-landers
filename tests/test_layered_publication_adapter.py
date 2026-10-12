@@ -60,6 +60,23 @@ class LayeredPublicationTests(unittest.TestCase):
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
 
+    def test_unknown_peer_preserves_direct_but_blocks_new_overlap(self):
+        original = self.add(11, '12:00', '13:00', count=None)
+        peer = self.add(11, '12:00', '14:00', cid='329495', count=None)
+        peer['source_event_id'] = 'distinct-peer'
+        direct = dict(session_id=original['source_event_id'], date='2026-10-11',
+            startTime='12:00', courseId='210549', instructor='Brian Ennis',
+            durationMinutes=60, courseName='existing', offerType='seated_class')
+        self.assertTrue(any(o.get('offerType') == 'seated_class' for o in self.payload([direct])['offers']))
+        self.assertNotIn('12:00', self.starts('329495'))
+        for override in ({'count_available':True, 'active_registration_count':1},
+                         {'anchor_basis':'manual_override'}, {'kind':'uncertain'}):
+            with self.subTest(override=override):
+                saved = copy.deepcopy(peer)
+                peer.update(override)
+                self.assertFalse(any(o.get('offerType') == 'seated_class' for o in self.payload([direct])['offers']))
+                peer.clear(); peer.update(saved)
+
     def test_repeated_skills_growth_and_full_class_enlarges_block(self):
         self.add(11,'12:00','13:00')
         for cid in ['210549','329495']: self.assertEqual(self.starts(cid),{'11:00','13:00'})

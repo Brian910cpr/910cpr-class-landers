@@ -242,56 +242,59 @@ def rendered_probe(payload, now):
     from urllib.parse import urlparse, parse_qs
     choices = [o for o in payload["offers"] if o.get("offerType") == "dynamic_appointment"]
     if not choices:
-        return {"status": "unrun_no_dynamic_choices"}
-    chosen = choices[0]
+        choices = [o for o in payload["offers"] if o.get("offerType") == "seated_class"]
+    if not choices:
+        return {"status": "unrun_no_public_choices"}
+    probe_choices = choices[:1] if choices[0].get("offerType") == "dynamic_appointment" else choices
     html, feed = render_html(payload), public_selector_availability_payload(payload)
     with sync_playwright() as p:
         browser = p.chromium.launch(channel="chrome", headless=True)
         try:
-            for width in (1440, 390):
-                page = browser.new_page(viewport={"width": width, "height": 1000}, timezone_id="America/New_York")
-                page.add_init_script("const D=Date;const t=" + str(int(now.timestamp()*1000)) +
-                                     ";window.Date=class extends D{constructor(...a){super(...(a.length?a:[t]));}static now(){return t;}};")
-                errors = []
-                page.on("pageerror", lambda e: errors.append(type(e).__name__))
-                def route(request):
-                    path = urlparse(request.request.url).path
-                    if path == "/validation.html":
-                        request.fulfill(status=200, content_type="text/html", body=html)
-                    elif path.startswith("/data/block-selector-availability/"):
-                        request.fulfill(status=200, content_type="application/json", body=json.dumps(feed))
-                    elif path.startswith("/assets/") and (ROOT / "docs" / path.lstrip("/")).is_file():
-                        request.fulfill(status=200, path=str(ROOT / "docs" / path.lstrip("/")))
-                    else:
-                        request.fulfill(status=204, body="")
-                page.route("**/*", route)
-                page.goto("https://validation.invalid/validation.html", wait_until="domcontentloaded")
-                page.wait_for_function("typeof availabilityReady==='function' && availabilityReady()")
-                button = page.locator(f'[data-course-id="{chosen["courseId"]}"]')
-                toggle = page.locator("#show-all-toggle")
-                if not button.is_visible() and toggle.is_visible(): toggle.check()
-                if button.is_visible(): button.click()
-                page.evaluate("o=>{selectedCourseId=o.courseId;selectedDate=o.date;selectedStart=o.startTime;renderAll();}", chosen)
-                visible = page.evaluate("filteredDates().flatMap(d=>d.startTimes.map(t=>[d.date,t.startTime]))")
-                if [chosen["date"], chosen["startTime"]] not in visible or errors:
-                    raise RuntimeError("rendered_real_window_not_selectable")
-                hrefs = page.locator("#course-list a").evaluate_all("els=>els.map(e=>e.getAttribute('href'))")
-                if not any(same_public_booking_url(chosen["appointmentUrl"], href) for href in hrefs):
-                    def public_parameters(url):
-                        params = parse_qs(urlparse(url or '').query)
-                        return {k: params[k] for k in ('courseId', 'appointmentDayId', 'startTime', 'date') if k in params}
-                    raise PublicProbeFailure("rendered_real_booking_link_mismatch", {
-                        'expected_window': offer_key(chosen),
-                        'selection': page.evaluate('({courseId:selectedCourseId,date:selectedDate,startTime:selectedStart})'),
-                        'expected_parameters': public_parameters(chosen['appointmentUrl']),
-                        'expected_query_keys': sorted(parse_qs(urlparse(chosen['appointmentUrl']).query)),
-                        'rendered_query_keys': [sorted(parse_qs(urlparse(href or '').query)) for href in hrefs],
-                        'rendered_parameters': [public_parameters(href) for href in hrefs],
-                    })
-                page.close()
+            for chosen in probe_choices:
+                for width in (1440, 390):
+                    page = browser.new_page(viewport={"width": width, "height": 1000}, timezone_id="America/New_York")
+                    page.add_init_script("const D=Date;const t=" + str(int(now.timestamp()*1000)) +
+                                         ";window.Date=class extends D{constructor(...a){super(...(a.length?a:[t]));}static now(){return t;}};")
+                    errors = []
+                    page.on("pageerror", lambda e: errors.append(type(e).__name__))
+                    def route(request):
+                        path = urlparse(request.request.url).path
+                        if path == "/validation.html":
+                            request.fulfill(status=200, content_type="text/html", body=html)
+                        elif path.startswith("/data/block-selector-availability/"):
+                            request.fulfill(status=200, content_type="application/json", body=json.dumps(feed))
+                        elif path.startswith("/assets/") and (ROOT / "docs" / path.lstrip("/")).is_file():
+                            request.fulfill(status=200, path=str(ROOT / "docs" / path.lstrip("/")))
+                        else:
+                            request.fulfill(status=204, body="")
+                    page.route("**/*", route)
+                    page.goto("https://validation.invalid/validation.html", wait_until="domcontentloaded")
+                    page.wait_for_function("typeof availabilityReady==='function' && availabilityReady()")
+                    button = page.locator(f'[data-course-id="{chosen["courseId"]}"]')
+                    toggle = page.locator("#show-all-toggle")
+                    if not button.is_visible() and toggle.is_visible(): toggle.check()
+                    if button.is_visible(): button.click()
+                    page.evaluate("o=>{selectedCourseId=o.courseId;selectedDate=o.date;selectedStart=o.startTime;renderAll();}", chosen)
+                    visible = page.evaluate("filteredDates().flatMap(d=>d.startTimes.map(t=>[d.date,t.startTime]))")
+                    if [chosen["date"], chosen["startTime"]] not in visible or errors:
+                        raise RuntimeError("rendered_real_window_not_selectable")
+                    hrefs = page.locator("#course-list a").evaluate_all("els=>els.map(e=>e.getAttribute('href'))")
+                    if not any(same_public_booking_url((chosen.get("appointmentUrl") or chosen.get("registrationUrl") or chosen.get("url")), href) for href in hrefs):
+                        def public_parameters(url):
+                            params = parse_qs(urlparse(url or '').query)
+                            return {k: params[k] for k in ('courseId', 'appointmentDayId', 'startTime', 'date') if k in params}
+                        raise PublicProbeFailure("rendered_real_booking_link_mismatch", {
+                            'expected_window': offer_key(chosen),
+                            'selection': page.evaluate('({courseId:selectedCourseId,date:selectedDate,startTime:selectedStart})'),
+                            'expected_parameters': public_parameters(chosen['appointmentUrl']),
+                            'expected_query_keys': sorted(parse_qs(urlparse(chosen['appointmentUrl']).query)),
+                            'rendered_query_keys': [sorted(parse_qs(urlparse(href or '').query)) for href in hrefs],
+                            'rendered_parameters': [public_parameters(href) for href in hrefs],
+                        })
+                    page.close()
         finally:
             browser.close()
-    return {"status": "passed", "viewports": [1440, 390]}
+    return {"status": "passed", "viewports": [1440, 390], "public_choices_checked": [offer_key(o) for o in probe_choices]}
 
 
 def run(out, baseline):

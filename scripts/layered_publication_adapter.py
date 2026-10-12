@@ -18,6 +18,15 @@ def encode(value):
 SCHEMA = "layered-publication.v2"
 
 
+def unknown_class_inventory(source):
+    """Unverified inventory constrains new generation, not existing direct choice."""
+    return (commitment_state(source) == 'uncertain'
+            and source.get('kind') in (None, 'planted')
+            and source.get('source_file') in {
+                'canonical_class_sessions', 'data/sessions_current.json',
+                'docs/data/schedule_future.json'})
+
+
 def active(policy):
     return policy.get("mode") == "active_local_v2"
 
@@ -254,7 +263,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             category = {'paid':'verified_positive_demand','seated':'retained_verified_commitment',
                         'planted':'explicit_class_commitment','commitment':'explicit_calendar_or_manual_commitment',
                         'hold':'explicit_hold'}.get(basis,'unresolved_input')
-            if basis == 'uncertain' and busy.get('source_file') in {'canonical_class_sessions','data/sessions_current.json','docs/data/schedule_future.json'}:
+            if unknown_class_inventory(busy):
                 category = 'unknown_class_inventory'
             known_resources = set(calculation.get('direct_constraints', {}).get('resources', []))
             subject_person = str(original.get('instructor') or '').strip().casefold()
@@ -279,7 +288,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         travel_rules = calculation.get('direct_constraints', {}).get('travel_minutes', {})
         travel_scope = max([0] + [int(v) for v in travel_rules.values() if isinstance(v, (int, float)) and v >= 0])
         for busy in scoped_sources(calculation['projected_sources'], start, end, travel_scope):
-            if commitment_state(busy) in {'inventory', 'inactive'} or busy is source:
+            if commitment_state(busy) in {'inventory', 'inactive'} or busy is source or unknown_class_inventory(busy):
                 continue
             same_identity = source and set(str(v) for v in (source.get('source_event_id'), source.get('external_class_id')) if v) & set(str(v) for v in (busy.get('source_event_id'), busy.get('external_class_id')) if v)
             if same_identity: continue
