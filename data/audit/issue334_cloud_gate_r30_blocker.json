@@ -1,0 +1,7 @@
+{
+  "httpStatus": 404,
+  "response": "Not Found",
+  "limitation": "Absent variable is proven; encrypted secret contents were not read. Existing owner-recorded secure provisioning gate remains; no activation attempted.",
+  "observedAt": "2026-10-12T11:44:30.7532754Z",
+  "variable": "AVAILABILITY_WATCHDOG_HEALTH_URL"
+}
