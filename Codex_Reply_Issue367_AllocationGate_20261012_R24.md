@@ -1,6 +1,6 @@
 # Issue 367 dispatch R24
 
-- Timestamp: 2026-10-12T08:10:00-04:00 (America/New_York; dispatch date, approximate time).
+- Timestamp: 2026-10-12T08:04:53.7135280-04:00 (local system timestamp).
 - Assignment: Brian910cpr/910cpr-class-landers#367.
 - State: BLOCKED.
 - Local branch: codex/issue367-receipt-20261012-r24.
