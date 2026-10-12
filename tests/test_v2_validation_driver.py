@@ -19,6 +19,16 @@ class ValidationDriverTests(unittest.TestCase):
         self.assertFalse(driver.same_public_booking_url(expected,decorated.replace('12%3A00','13%3A00')))
         self.assertFalse(driver.same_public_booking_url(expected,decorated.replace('booking.test','wrong.test')))
 
+    def test_unknown_inventory_is_not_reported_as_verified_removal_proof(self):
+        offer=dict(date='2026-10-22',startTime='14:00',courseId='209818',offerType='seated_class')
+        before={'offers':[offer]}
+        row=dict(offer,reasons=['existing_class_resource_conflict'],directConstraintProofs=[dict(
+            basis='unknown_class_inventory',bounded_interval_conflict=True,room_constraint=True,instructor_constraint=True)])
+        after={'offers':[],'rejectedCourseStartTimes':[row]}
+        self.assertFalse(driver.removed_direct_proofs(before,after)[0]['verified_or_explicit_constraint_proven'])
+        row['directConstraintProofs'][0]['basis']='explicit_calendar_or_manual_commitment'
+        self.assertTrue(driver.removed_direct_proofs(before,after)[0]['verified_or_explicit_constraint_proven'])
+
     def test_private_source_id_is_removed_from_shareable_reason_counts(self):
         self.assertEqual(driver.public_reasons({'conflict_or_transition:private-source-id':2,
                                                'outside_explicit_availability':3}),

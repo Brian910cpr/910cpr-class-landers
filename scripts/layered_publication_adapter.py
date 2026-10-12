@@ -247,11 +247,26 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         state = commitment_state(source) if source else 'uncertain'
         start = aware(f"{original['date']}T{original['startTime']}")
         reasons = []
+        lifecycle_proven = False
+        direct_checks = []
+        def record_check(busy, reason, same_room, same_person, bounded):
+            basis = commitment_state(busy)
+            category = {'paid':'verified_positive_demand','seated':'retained_verified_commitment',
+                        'planted':'explicit_class_commitment','commitment':'explicit_calendar_or_manual_commitment',
+                        'hold':'explicit_hold'}.get(basis,'unresolved_input')
+            if basis == 'uncertain' and busy.get('source_file') in {'canonical_class_sessions','data/sessions_current.json','docs/data/schedule_future.json'}:
+                category = 'unknown_class_inventory'
+            direct_checks.append(dict(reason=reason,basis=category,room_constraint=bool(same_room),
+                instructor_constraint=bool(same_person),bounded_interval_conflict=bounded))
         if state == 'inactive' or (source and source.get('start') and aware(source.get('session_start') or source['start']) != start):
             reasons.append('inactive_or_moved_existing_identity')
+            lifecycle_proven = state == 'inactive' or bool(source and source.get('count_available') is True)
         if source and source.get('count_available') is True and source.get('active_registration_count') == 0 and start < now + timedelta(hours=24):
             reasons.append('empty_class_booking_cutoff')
-        if start <= now: reasons.append('existing_class_started')
+            lifecycle_proven = True
+        if start <= now:
+            reasons.append('existing_class_started')
+            lifecycle_proven = True
         # Existing seats keep their own interval, but another room/instructor
         # commitment still vetoes selling a conflicting direct offer.
         end = start + timedelta(minutes=original.get('schedulerConsumptionMinutes') or original.get('durationMinutes') or 1)
@@ -267,6 +282,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             same_room = source and source.get('resource') and busy.get('resource') == source.get('resource') and busy.get('availability_location_mode') != 'instructor_time_only'
             if not (same_person or same_room): continue
             try:
+                busy_start, busy_end = aware(busy['start']), aware(busy['end'])
+                if busy_end <= busy_start: raise ValueError('unresolved direct constraint bounds')
                 before = after = 0
                 constraints = calculation.get('direct_constraints', {})
                 known = set(constraints.get('resources', []))
@@ -279,13 +296,16 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                     before, after = travel.get(origin+'->'+destination), travel.get(destination+'->'+origin)
                     if before is None or after is None:
                         reasons.append('existing_class_travel_uncertain')
+                        record_check(busy,'existing_class_travel_uncertain',same_room,same_person,False)
                         continue
-                if interval_conflict(start, end, aware(busy['start']), aware(busy['end']), before, after):
+                if interval_conflict(start, end, busy_start, busy_end, before, after):
                     reasons.append('existing_class_resource_conflict')
+                    record_check(busy,'existing_class_resource_conflict',same_room,same_person,True)
             except (KeyError, TypeError, ValueError):
                 reasons.append('existing_class_resource_uncertain')
+                record_check(busy,'existing_class_resource_uncertain',same_room,same_person,False)
         if reasons:
-            rejected.append(dict(original, reasons=reasons))
+            rejected.append(dict(original, reasons=reasons, directConstraintProofs=direct_checks, directLifecycleProven=lifecycle_proven))
         else:
             offer = deepcopy(original)
             offer['demandAnchor'] = state in {'paid', 'seated', 'planted'}

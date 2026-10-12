@@ -187,6 +187,29 @@ def same_public_booking_url(expected, actual):
     return identity(expected) == identity(actual)
 
 
+
+def removed_direct_proofs(before, after):
+    current = {offer_key(o) for o in after['offers']}
+    rejected = {offer_key(o): o for o in after['rejectedCourseStartTimes'] if o.get('offerType') == 'seated_class'}
+    results = []
+    trusted = {'verified_positive_demand','retained_verified_commitment','explicit_class_commitment',
+               'explicit_calendar_or_manual_commitment','explicit_hold'}
+    for offer in before['offers']:
+        key = offer_key(offer)
+        if offer.get('offerType') != 'seated_class' or key in current:
+            continue
+        row = rejected.get(key, {})
+        proofs = row.get('directConstraintProofs', [])
+        lifecycle = row.get('directLifecycleProven') is True
+        verified = lifecycle or any(p['basis'] in trusted and p['bounded_interval_conflict'] for p in proofs)
+        results.append({'public_choice':key,'reasons':sorted(set(row.get('reasons',[]))),
+                        'constraint_bases':sorted({p['basis'] for p in proofs}),
+                        'room_conflict_checked':any(p['room_constraint'] for p in proofs),
+                        'instructor_conflict_checked':any(p['instructor_constraint'] for p in proofs),
+                        'verified_or_explicit_constraint_proven':verified,
+                        'readiness':'proven_constraint' if verified else 'unresolved_source_uncertainty'})
+    return results
+
 def physical_occupancy_preserved(before, after):
     """Count safety violations without exposing private source identities."""
     from scripts.layered_selector_adapter import aware
@@ -292,7 +315,8 @@ def run(out, baseline):
             "added_public_windows": sorted(current-previous), "removed_public_windows": sorted(previous-current),
             "occupancy_preservation_violations": violations,
             "before_rejection_reasons": public_reasons(before[name]["rejectionReasonCounts"]),
-            "after_rejection_reasons": public_reasons(after[name]["rejectionReasonCounts"])}
+            "after_rejection_reasons": public_reasons(after[name]["rejectionReasonCounts"]),
+            "removed_direct_choice_proofs": removed_direct_proofs(before[name], after[name])}
         if violations:
             raise RuntimeError("real_occupied_interval_not_preserved")
     summary['status'] = 'calculated'
@@ -300,6 +324,12 @@ def run(out, baseline):
     for name in PAGES:
         summary['pages'][name]['rendered_probe'] = rendered_probe(after[name], now)
         write(out / 'sanitized/summary.json', summary)
+    clinical_unproven = [p for name in ('acls','pals') for p in summary['pages'][name]['removed_direct_choice_proofs'] if not p['verified_or_explicit_constraint_proven']]
+    if clinical_unproven:
+        summary['release_readiness'] = 'blocked_unproven_clinical_direct_suppression'
+        write(out / 'sanitized/summary.json', summary)
+        raise RuntimeError('unproven_clinical_direct_suppression')
+    summary['release_readiness'] = 'clinical_removals_proven_by_verified_or_explicit_constraints'
     summary["status"] = "passed"
     return summary
 
@@ -324,7 +354,7 @@ def main():
                       "approved_reader_credential_unavailable", "configured_calendar_export_incomplete",
                       "complete_calendar_coverage_unavailable", "calendar_coverage_expired", "unexpected_timing_source", "timing_source_stale",
                       "rendered_real_window_not_selectable", "rendered_real_booking_link_mismatch",
-                      "real_occupied_interval_not_preserved"} else "source_or_validation_check_failed",
+                      "real_occupied_interval_not_preserved", "unproven_clinical_direct_suppression"} else "source_or_validation_check_failed",
                   "http_status": getattr(error, "code", None),
                   "code_locations": [{"file": Path(frame.filename).name, "function": frame.name, "line": frame.lineno}
                                      for frame in traceback.extract_tb(error.__traceback__)][-5:],
