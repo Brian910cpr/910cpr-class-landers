@@ -4,6 +4,9 @@ export const FEED = 'https://www.910cpr.com/data/block-selector-availability/bls
 export const WORKFLOW = 'https://api.github.com/repos/Brian910cpr/910cpr-class-landers/actions/workflows/refresh-admin-availability.yml';
 const MINUTE = 60_000;
 const STATE_KEY = 'publication-watchdog';
+// Five-minute timers can arrive slightly before the ten-minute boundary.
+// Allow at most 30 seconds of jitter; the active-run check still gates dispatch.
+const DISPATCH_COOLDOWN = 10 * MINUTE - 30_000;
 
 async function jsonResponse(response, maxBytes) {
   if (!response.ok) throw new Error(`http_${response.status}`);
@@ -55,7 +58,7 @@ export async function checkAndRefresh(env, { now = Date.now(), request = fetch }
     }
     if (state.publication && !state.publication.refreshDue) {
       state.action = 'fresh';
-    } else if (now - Date.parse(previous.lastDispatchAt) < 10 * MINUTE) {
+    } else if (now - Date.parse(previous.lastDispatchAt) < DISPATCH_COOLDOWN) {
       state.action = 'dispatch_cooldown';
     } else {
       if (!env.GITHUB_ACTIONS_TOKEN) throw new Error('github_token_missing');
