@@ -1,8 +1,8 @@
-// Prepared Studio checkpoint coordinator; unloaded until the owner UI release gate.
+// Studio checkpoint coordinator; page integration remains default-off.
 // Server interaction/version is authoritative. Browser drafts never imply a save.
-export function createInteractionCheckpoint(client, initial) {
-  let draft=structuredClone(initial), revision=0, savedRevision=-1;
-  let pending=null, flight=null, state='unsaved', failure=null;
+export function createInteractionCheckpoint(client, initial, {confirmed=false}={}) {
+  let draft=structuredClone(initial), revision=0, savedRevision=confirmed?0:-1;
+  let pending=null, flight=null, state=confirmed?'saved':'unsaved', failure=null;
   const blocked=()=>Object.assign(Error('Confirm the pending checkpoint before leaving this interaction.'),{reconcile:state==='conflict'});
   function view(){return {draft:structuredClone(draft),state,dirty:revision!==savedRevision,pendingRequestId:pending?.write.requestId??null,error:failure?.message??null};}
   function edit(document){

@@ -62,3 +62,10 @@ test('explicit conflict reconciliation preserves draft and starts a fresh versio
  const uncertain=fixture(async()=>{throw Error('offline')});await assert.rejects(uncertain.checkpoint.save());
  assert.throws(()=>uncertain.checkpoint.reconcile({id:'synthetic-id',version:1}));
 });
+
+test('a fetched confirmed checkpoint permits navigation without a redundant write',async()=>{
+ const client={prepare:()=>assert.fail('fetch does not write')};
+ const c=createInteractionCheckpoint(client,{id:'stored',expected_version:4,document:{notes:'stored'}},{confirmed:true});
+ assert.equal(c.canLeave(),true);assert.equal((await c.save()).state,'saved');
+ c.edit({notes:'edited'});assert.equal(c.canLeave(),false);
+});
