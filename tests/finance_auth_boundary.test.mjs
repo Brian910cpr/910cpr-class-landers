@@ -29,4 +29,3 @@ test('legacy finance CORS does not imply remembered-owner session support',async
   assert.equal(response.headers.get('access-control-allow-headers'),'Content-Type,X-Hot-Sync-Admin-Key');
   assert.equal((await finance.fetch(new Request(endpoint,{headers:{Origin:'https://untrusted.example'}}),env)).status,403);
 });
-
