@@ -3,12 +3,33 @@ import {reconcileDispatch} from './dispatch-reconciliation.mjs';
 // Adapter boundary, not a runtime claim. The injected reader must authenticate
 // canonical intake; never implement it by parsing issue prose or cached checks.
 // Deliberately exposes no launch/mutation callback or execution permission.
-export async function checkLiveDispatch(request, {readSnapshot, recordDecision} = {}) {
+// Each adapter gets an AbortSignal; adapters should cancel network work on abort.
+// The deadline bounds this caller even when an adapter ignores cancellation.
+async function boundedCall(callback, value, timeoutMs) {
+  const controller = new AbortController();
+  let timer;
+  try {
+    return await Promise.race([
+      Promise.resolve().then(() => callback(value, {signal:controller.signal})),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => {
+          reject(new Error('adapter_deadline_exceeded'));
+          controller.abort();
+        }, timeoutMs);
+      })
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+export async function checkLiveDispatch(request, {readSnapshot, recordDecision, timeoutMs = 5000} = {}) {
   const review = reason => ({decision:'review', reason, can_execute:false});
   const {issue_id, expectedVersion, phase} = request || {};
   if (!Number.isSafeInteger(issue_id) || issue_id <= 0
       || typeof expectedVersion !== 'string' || !expectedVersion
       || !['selection', 'pre_side_effect'].includes(phase)) return review('invalid_request');
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 30000) return review('invalid_adapter_deadline');
   if (typeof readSnapshot !== 'function' || typeof recordDecision !== 'function') return review('adapter_required');
   let snapshot;
   let evaluatedState;
@@ -17,7 +38,7 @@ export async function checkLiveDispatch(request, {readSnapshot, recordDecision} 
   const values = state => fields.map(field => state?.[field]);
   let check;
   try {
-    snapshot = await readSnapshot(issue_id);
+    snapshot = await boundedCall(readSnapshot, issue_id, timeoutMs);
     evaluatedState = values(snapshot);
     check = snapshot?.issue_id === issue_id
       ? reconcileDispatch(snapshot, expectedVersion, phase)
@@ -31,7 +52,7 @@ export async function checkLiveDispatch(request, {readSnapshot, recordDecision} 
     observed_version:typeof snapshot?.version === 'string' ? snapshot.version : null,
     decision:check.decision, reason:check.reason, can_execute:false});
   try {
-    if (await recordDecision(event) !== true) return review('decision_not_persisted');
+    if (await boundedCall(recordDecision, event, timeoutMs) !== true) return review('decision_not_persisted');
   } catch {
     return review('decision_not_persisted');
   }

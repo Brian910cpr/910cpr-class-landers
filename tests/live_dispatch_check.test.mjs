@@ -74,3 +74,42 @@ for (const phase of ['selection','pre_side_effect']) test(`${phase}: snapshot ch
     assert.equal(events.length,1);
   }
 });
+
+for (const phase of ['selection','pre_side_effect']) {
+  test(`${phase}: hung canonical read aborts and durably records a closed decision`, async () => {
+    let signal; const events=[];
+    const result=await checkLiveDispatch({...request,phase},{timeoutMs:10,
+      readSnapshot:(_id,options)=>{signal=options.signal;return new Promise(()=>{});},
+      recordDecision:async event=>{events.push(event);return true;}
+    });
+    assert.equal(signal.aborted,true);
+    assert.equal(result.reason,'canonical_read_failed');
+    assert.equal(result.can_execute,false);
+    assert.equal(events.length,1);
+    assert.equal(events[0].decision,'review');
+    assert.equal(events[0].observed_version,null);
+  });
+  test(`${phase}: late persistence acknowledgement cannot revive a timed-out candidate`, async () => {
+    let signal; let acknowledge;
+    const pending=checkLiveDispatch({...request,phase},{timeoutMs:10,
+      readSnapshot:async()=>({...base}),
+      recordDecision:(_event,options)=>{signal=options.signal;return new Promise(resolve=>{acknowledge=resolve;});}
+    });
+    const result=await pending;
+    assert.equal(signal.aborted,true);
+    assert.equal(result.reason,'decision_not_persisted');
+    assert.equal(result.can_execute,false);
+    acknowledge(true);
+    await Promise.resolve();
+    assert.equal(result.decision,'review');
+  });
+}
+test('invalid deadlines fail before adapter side effects', async () => {
+  let calls=0;
+  for (const timeoutMs of [0,-1,1.5,30001,Infinity,NaN,'10',null]) {
+    const result=await checkLiveDispatch(request,{timeoutMs,
+      readSnapshot:async()=>{calls++;return base;},recordDecision:async()=>{calls++;return true;}});
+    assert.equal(result.reason,'invalid_adapter_deadline');
+  }
+  assert.equal(calls,0);
+});
