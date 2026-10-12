@@ -28,8 +28,10 @@ GitHub refresh on `main`. It neither generates offers nor extends their leases.
 All calendar, occupied-date, roster freshness, and course compatibility gates
 continue to run inside the existing publisher.
 
-Active/queued refreshes prevent duplicate dispatches. A ten-minute KV cooldown
-covers delayed visibility of a just-dispatched run. Failed public feed reads also
+Active/queued refreshes prevent duplicate dispatches. A nominal ten-minute KV
+cooldown allows at most 30 seconds of early timer jitter (minimum 9m30s between
+dispatches), covering delayed visibility without skipping a whole five-minute
+tick at 9m59.999s. Every eligible tick still checks active runs before dispatch. Failed public feed reads also
 request recovery. Upstream errors are sanitized and bodies are bounded. The
 public HTTP endpoint only reads health; it cannot dispatch jobs.
 

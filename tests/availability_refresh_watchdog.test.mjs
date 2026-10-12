@@ -86,3 +86,36 @@ test('public HTTP interface cannot dispatch refreshes', async () => {
   const result = await worker.fetch(new Request('https://example.test/health', { method: 'POST' }), t.env);
   assert.equal(result.status, 404); assert.equal(t.calls.length, 0);
 });
+
+
+test('bounded timer jitter does not skip the ten-minute refresh tick', async () => {
+  for (const elapsed of [570_000, 599_999, 600_000, 600_001]) {
+    const t = setup({ previous: { lastDispatchAt: new Date(now - elapsed).toISOString() } });
+    const result = await t.run();
+    assert.equal(result.action, 'refresh_dispatched', `elapsed=${elapsed}`);
+    assert.equal(t.calls.length, 3);
+    assert.equal(result.lastDispatchAt, iso(0));
+  }
+});
+
+test('jitter tolerance remains bounded and preserves visibility cooldown', async () => {
+  for (const elapsed of [0, 300_000, 569_999]) {
+    const previous = { lastDispatchAt: new Date(now - elapsed).toISOString() };
+    const t = setup({ previous });
+    const result = await t.run();
+    assert.equal(result.action, 'dispatch_cooldown', `elapsed=${elapsed}`);
+    assert.equal(t.calls.length, 1);
+    assert.equal(result.lastDispatchAt, previous.lastDispatchAt);
+  }
+});
+
+test('early timer tick still refuses duplicate active refreshes', async () => {
+  for (const status of ['queued', 'in_progress', 'waiting', 'pending']) {
+    const previous = { lastDispatchAt: new Date(now - 599_999).toISOString() };
+    const t = setup({ previous, runs: [{ id: 123, status, created_at: iso(-10) }] });
+    const result = await t.run();
+    assert.equal(result.action, 'refresh_running');
+    assert.equal(t.calls.length, 2);
+    assert.equal(result.lastDispatchAt, previous.lastDispatchAt);
+  }
+});
