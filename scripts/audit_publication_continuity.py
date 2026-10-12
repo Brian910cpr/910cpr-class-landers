@@ -1,4 +1,7 @@
-import json,subprocess,urllib.request,datetime,pathlib
+import argparse,json,subprocess,urllib.request,datetime,pathlib
+parser=argparse.ArgumentParser(description="Read-only publication/booking handoff evidence; never submits registrations")
+parser.add_argument("--output",type=pathlib.Path,required=True)
+args=parser.parse_args()
 now=lambda:datetime.datetime.now(datetime.timezone.utc).isoformat()
 def gh(path): return json.loads(subprocess.check_output(['gh','api',path],text=True))
 def fetch(url):
@@ -34,5 +37,7 @@ for family in ['bls','heartsaver']:
  pageStatus,pageUrl,html=fetch('https://www.910cpr.com/'+family)
  result['live'][family]={'observedAt':stamp,'httpStatus':status,'generatedAt':p['generatedAt'],'validUntil':p['validUntil'],'unexpired':dt(p['validUntil'])>dt(stamp),'counts':p.get('counts'),'sampleOffer':sample,'handoff':{'error':handoffError,'httpStatus':status2,'finalUrl':url2,'bodyBytes':len(body2),'containsForm':b'<form' in body2.lower()},'page':{'httpStatus':pageStatus,'url':pageUrl,'loadsFamilyFeed':('/data/block-selector-availability/'+family+'.json').encode() in html}}
 result['publishers']=[{k:r[k] for k in ['id','name','event','created_at','updated_at','status','conclusion','head_sha']} for r in runs if r['name'] in ['Refresh admin availability','Refresh public site from Enrollware iCal']][:12]
-out=pathlib.Path('data/audit/issue334_continuity_r21.json');out.write_text(json.dumps(result,indent=2)+'\n')
+out=args.output
+out.parent.mkdir(parents=True,exist_ok=True)
+out.write_text(json.dumps(result,indent=2)+'\n')
 print(json.dumps(result,indent=2))
