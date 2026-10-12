@@ -1,0 +1,7 @@
+{
+  "observedAt": "2026-10-12T12:45:02.1407457Z",
+  "limitation": "Repository-variable API returned 404; encrypted secret contents were not inspected. Existing owner-recorded Actions read/write provisioning gate remains. No activation retry.",
+  "httpStatus": 404,
+  "response": "Not Found",
+  "variable": "AVAILABILITY_WATCHDOG_HEALTH_URL"
+}
