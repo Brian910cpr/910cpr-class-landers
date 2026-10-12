@@ -1,0 +1,16 @@
+[
+  {
+    "url": "https://www.910cpr.com/bls.html",
+    "status": 200,
+    "bytes": 73101,
+    "observedAt": "2026-10-12T06:10:59.4788694Z",
+    "limitation": "HTTP retrieval only; no browser rendering or registration submission"
+  },
+  {
+    "url": "https://www.910cpr.com/heartsaver.html",
+    "status": 200,
+    "bytes": 80225,
+    "observedAt": "2026-10-12T06:10:59.5976885Z",
+    "limitation": "HTTP retrieval only; no browser rendering or registration submission"
+  }
+]
