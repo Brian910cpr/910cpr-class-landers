@@ -11,6 +11,11 @@ $loopSource = Join-Path $PSScriptRoot 'Start-CodexWakeLoop.ps1'
 $installDirectory = Join-Path $env:LOCALAPPDATA '910CPR\CodexWake'
 $installedScript = Join-Path $installDirectory 'Invoke-CodexWake.ps1'
 $installedLoop = Join-Path $installDirectory 'Start-CodexWakeLoop.ps1'
+. (Join-Path $PSScriptRoot 'Test-CodexWakeInstallBaseline.ps1')
+Assert-CodexWakeInstallBaseline -Files @(
+    @{ Source = $source; Destination = $installedScript },
+    @{ Source = $loopSource; Destination = $installedLoop }
+)
 New-Item -ItemType Directory -Force -Path $installDirectory | Out-Null
 Copy-Item -LiteralPath $source -Destination $installedScript -Force
 Copy-Item -LiteralPath $loopSource -Destination $installedLoop -Force
