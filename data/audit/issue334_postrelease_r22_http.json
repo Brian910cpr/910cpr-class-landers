@@ -1,0 +1,95 @@
+{
+  "observedAt": "2026-10-12T03:19:33.336934+00:00",
+  "pages": {
+    "bls": {
+      "url": "https://www.910cpr.com/bls.html?proof=2026-10-12T03:19:33.336934+00:00",
+      "status": 200,
+      "htmlSha256": "4158559511659d861b46142bec60510dd2eba9572f4c75f93db77ce1f4ee1518",
+      "assets": [
+        {
+          "url": "https://www.910cpr.com/assets/analytics-attribution.js?v=20260912-1",
+          "status": 200,
+          "sha256": "f4b0b914d6a80cacad1a3124dd6c405ac22e1a045feb8d03ec87162d4cd21385"
+        },
+        {
+          "url": "https://www.910cpr.com/assets/calendar-time-filters.css?v=20261001.1",
+          "status": 200,
+          "sha256": "65cf3f213fc5566953eac5a21e2b84d31ae8e456e1c5da42873c9498d5c09b52"
+        },
+        {
+          "url": "https://www.910cpr.com/assets/calendar-time-filters.js?v=20261001.1",
+          "status": 200,
+          "sha256": "374e8c74d10c8963081a34049c6cbe3ad32e7b2e6d298c4bdb67db2e51388bed"
+        },
+        {
+          "url": "https://www.910cpr.com/assets/family-hero.js?v=6d88341997f7",
+          "status": 200,
+          "sha256": "6d88341997f7b0b1c857aec62aefb441b923bd83e0e893630718881866c1e4d7"
+        },
+        {
+          "url": "https://www.910cpr.com/assets/interaction-motion.css",
+          "status": 200,
+          "sha256": "59363bcbef8408647168b134db2b4afb638e3f0a781b1494f32bfab7bc60fd9b"
+        },
+        {
+          "url": "https://www.910cpr.com/assets/interaction-motion.js?v=20260809.1",
+          "status": 200,
+          "sha256": "8a1ddc8e70f70bd747ab8361f07d48832fa6e8ebf0af43021136b46e21a14b5d"
+        },
+        {
+          "url": "https://www.910cpr.com/assets/resolved-selector-availability.js?v=20261001-reconciliation-1",
+          "status": 200,
+          "sha256": "e93334ac0af79f7f108a376d7e4e1b34e8e35ddc02b37671e6775737461be672"
+        }
+      ],
+      "limitations": [
+        "Static HTML and referenced assets only; no JavaScript execution or registration submitted."
+      ]
+    },
+    "heartsaver": {
+      "url": "https://www.910cpr.com/heartsaver.html?proof=2026-10-12T03:19:33.336934+00:00",
+      "status": 200,
+      "htmlSha256": "9147782087fcf67b7987d882cb5159cf661ee10c9d7093277cbbcaaa247c7c16",
+      "assets": [
+        {
+          "url": "https://www.910cpr.com/assets/analytics-attribution.js?v=20260912-1",
+          "status": 200,
+          "sha256": "f4b0b914d6a80cacad1a3124dd6c405ac22e1a045feb8d03ec87162d4cd21385"
+        },
+        {
+          "url": "https://www.910cpr.com/assets/calendar-time-filters.css?v=20261001.1",
+          "status": 200,
+          "sha256": "65cf3f213fc5566953eac5a21e2b84d31ae8e456e1c5da42873c9498d5c09b52"
+        },
+        {
+          "url": "https://www.910cpr.com/assets/calendar-time-filters.js?v=20261001.1",
+          "status": 200,
+          "sha256": "374e8c74d10c8963081a34049c6cbe3ad32e7b2e6d298c4bdb67db2e51388bed"
+        },
+        {
+          "url": "https://www.910cpr.com/assets/family-hero.js?v=6d88341997f7",
+          "status": 200,
+          "sha256": "6d88341997f7b0b1c857aec62aefb441b923bd83e0e893630718881866c1e4d7"
+        },
+        {
+          "url": "https://www.910cpr.com/assets/interaction-motion.css",
+          "status": 200,
+          "sha256": "59363bcbef8408647168b134db2b4afb638e3f0a781b1494f32bfab7bc60fd9b"
+        },
+        {
+          "url": "https://www.910cpr.com/assets/interaction-motion.js?v=20260809.1",
+          "status": 200,
+          "sha256": "8a1ddc8e70f70bd747ab8361f07d48832fa6e8ebf0af43021136b46e21a14b5d"
+        },
+        {
+          "url": "https://www.910cpr.com/assets/resolved-selector-availability.js?v=20261001-reconciliation-1",
+          "status": 200,
+          "sha256": "e93334ac0af79f7f108a376d7e4e1b34e8e35ddc02b37671e6775737461be672"
+        }
+      ],
+      "limitations": [
+        "Static HTML and referenced assets only; no JavaScript execution or registration submitted."
+      ]
+    }
+  }
+}

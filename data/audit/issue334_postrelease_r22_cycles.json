@@ -1,0 +1,729 @@
+{
+  "observedAt": "2026-10-12T03:19:07.267637+00:00",
+  "records": [
+    {
+      "commit": "fc3e7ac592709e48a8b33591f42326cd6d379882",
+      "pages": {
+        "conclusion": "success",
+        "databaseId": 38198226870,
+        "event": "dynamic",
+        "headSha": "fc3e7ac592709e48a8b33591f42326cd6d379882",
+        "jobs": [
+          {
+            "completedAt": "2026-10-12T03:03:50Z",
+            "conclusion": "success",
+            "databaseId": 114645585615,
+            "name": "build",
+            "startedAt": "2026-10-12T03:03:13Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-12T03:03:15Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-12T03:03:14Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:03:26Z",
+                "conclusion": "success",
+                "name": "Pull ghcr.io/actions/jekyll-build-pages:v1.0.13",
+                "number": 2,
+                "startedAt": "2026-10-12T03:03:15Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:03:39Z",
+                "conclusion": "success",
+                "name": "Checkout",
+                "number": 3,
+                "startedAt": "2026-10-12T03:03:26Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:03:45Z",
+                "conclusion": "success",
+                "name": "Build with Jekyll",
+                "number": 4,
+                "startedAt": "2026-10-12T03:03:39Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:03:49Z",
+                "conclusion": "success",
+                "name": "Upload artifact",
+                "number": 5,
+                "startedAt": "2026-10-12T03:03:45Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:03:49Z",
+                "conclusion": "success",
+                "name": "Post Checkout",
+                "number": 10,
+                "startedAt": "2026-10-12T03:03:49Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:03:49Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 11,
+                "startedAt": "2026-10-12T03:03:49Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/38198226870/job/114645585615"
+          },
+          {
+            "completedAt": "2026-10-12T03:04:05Z",
+            "conclusion": "success",
+            "databaseId": 114645721387,
+            "name": "deploy",
+            "startedAt": "2026-10-12T03:03:54Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-12T03:03:56Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-12T03:03:55Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:04:03Z",
+                "conclusion": "success",
+                "name": "Deploy to GitHub Pages",
+                "number": 2,
+                "startedAt": "2026-10-12T03:03:56Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:04:03Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 3,
+                "startedAt": "2026-10-12T03:04:03Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/38198226870/job/114645721387"
+          },
+          {
+            "completedAt": "2026-10-12T03:03:56Z",
+            "conclusion": "success",
+            "databaseId": 114645721464,
+            "name": "report-build-status",
+            "startedAt": "2026-10-12T03:03:52Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-12T03:03:53Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-12T03:03:53Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:03:54Z",
+                "conclusion": "success",
+                "name": "Report Build Status",
+                "number": 2,
+                "startedAt": "2026-10-12T03:03:54Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:03:54Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 3,
+                "startedAt": "2026-10-12T03:03:54Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/38198226870/job/114645721464"
+          }
+        ],
+        "status": "completed"
+      },
+      "completedAt": "2026-10-12T03:04:05Z",
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T23:02:20.842279-04:00",
+          "validUntil": "2026-10-11T23:17:19.355337-04:00",
+          "publicPage": "docs/bls.html",
+          "counts": {
+            "publicSelectableDateCount": 88,
+            "publicSelectableStartTimeCount": 1528,
+            "publicSelectableOfferCount": 4018,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 209,
+            "evaluated_windows": 209,
+            "failed_windows": 0,
+            "uncertainty_issues": 0
+          },
+          "actualOffers": 4018,
+          "actualDates": 88,
+          "dynamicOffers": 4006,
+          "seatedOffers": 12,
+          "publicationExpired": false,
+          "perCourse": {
+            "210549": 1514,
+            "359474": 1252,
+            "209806": 1252
+          },
+          "day": "2026-10-14",
+          "dayOffers": 3,
+          "dayTimes": [
+            "19:30"
+          ],
+          "dayPerCourse": {
+            "209806": 1,
+            "210549": 1,
+            "359474": 1
+          },
+          "failedWindowReasons": {},
+          "dayFailedWindows": 0,
+          "coverageAlert": false
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T23:02:28.808266-04:00",
+          "validUntil": "2026-10-11T23:17:19.355337-04:00",
+          "publicPage": "docs/heartsaver.html",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1527,
+            "publicSelectableOfferCount": 8370,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 209,
+            "evaluated_windows": 209,
+            "failed_windows": 0,
+            "uncertainty_issues": 0
+          },
+          "actualOffers": 8370,
+          "actualDates": 87,
+          "dynamicOffers": 8366,
+          "seatedOffers": 4,
+          "publicationExpired": false,
+          "perCourse": {
+            "209809": 1254,
+            "209808": 1511,
+            "251545": 1511,
+            "329495": 1512,
+            "344085": 1330,
+            "351632": 1252
+          },
+          "day": "2026-10-14",
+          "dayOffers": 7,
+          "dayTimes": [
+            "17:30",
+            "19:30"
+          ],
+          "dayPerCourse": {
+            "329495": 2,
+            "209808": 1,
+            "209809": 1,
+            "251545": 1,
+            "344085": 1,
+            "351632": 1
+          },
+          "failedWindowReasons": {},
+          "dayFailedWindows": 0,
+          "coverageAlert": false
+        }
+      }
+    },
+    {
+      "commit": "53e608976556c32f60557b9bef9acff87a3a5c12",
+      "pages": {
+        "conclusion": "success",
+        "databaseId": 38198690188,
+        "event": "dynamic",
+        "headSha": "53e608976556c32f60557b9bef9acff87a3a5c12",
+        "jobs": [
+          {
+            "completedAt": "2026-10-12T03:10:51Z",
+            "conclusion": "success",
+            "databaseId": 114647009165,
+            "name": "build",
+            "startedAt": "2026-10-12T03:10:12Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-12T03:10:14Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-12T03:10:13Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:10:26Z",
+                "conclusion": "success",
+                "name": "Pull ghcr.io/actions/jekyll-build-pages:v1.0.13",
+                "number": 2,
+                "startedAt": "2026-10-12T03:10:14Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:10:37Z",
+                "conclusion": "success",
+                "name": "Checkout",
+                "number": 3,
+                "startedAt": "2026-10-12T03:10:26Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:10:47Z",
+                "conclusion": "success",
+                "name": "Build with Jekyll",
+                "number": 4,
+                "startedAt": "2026-10-12T03:10:37Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:10:49Z",
+                "conclusion": "success",
+                "name": "Upload artifact",
+                "number": 5,
+                "startedAt": "2026-10-12T03:10:47Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:10:49Z",
+                "conclusion": "success",
+                "name": "Post Checkout",
+                "number": 10,
+                "startedAt": "2026-10-12T03:10:49Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:10:49Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 11,
+                "startedAt": "2026-10-12T03:10:49Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/38198690188/job/114647009165"
+          },
+          {
+            "completedAt": "2026-10-12T03:10:56Z",
+            "conclusion": "success",
+            "databaseId": 114647147656,
+            "name": "report-build-status",
+            "startedAt": "2026-10-12T03:10:53Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-12T03:10:53Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-12T03:10:53Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:10:55Z",
+                "conclusion": "success",
+                "name": "Report Build Status",
+                "number": 2,
+                "startedAt": "2026-10-12T03:10:54Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:10:55Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 3,
+                "startedAt": "2026-10-12T03:10:55Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/38198690188/job/114647147656"
+          },
+          {
+            "completedAt": "2026-10-12T03:11:04Z",
+            "conclusion": "success",
+            "databaseId": 114647147717,
+            "name": "deploy",
+            "startedAt": "2026-10-12T03:10:54Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-12T03:10:56Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-12T03:10:55Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:11:03Z",
+                "conclusion": "success",
+                "name": "Deploy to GitHub Pages",
+                "number": 2,
+                "startedAt": "2026-10-12T03:10:56Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:11:03Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 3,
+                "startedAt": "2026-10-12T03:11:03Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/38198690188/job/114647147717"
+          }
+        ],
+        "status": "completed"
+      },
+      "completedAt": "2026-10-12T03:11:04Z",
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T23:09:17.934169-04:00",
+          "validUntil": "2026-10-11T23:24:16.710731-04:00",
+          "publicPage": "docs/bls.html",
+          "counts": {
+            "publicSelectableDateCount": 88,
+            "publicSelectableStartTimeCount": 1528,
+            "publicSelectableOfferCount": 4018,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 209,
+            "evaluated_windows": 209,
+            "failed_windows": 0,
+            "uncertainty_issues": 0
+          },
+          "actualOffers": 4018,
+          "actualDates": 88,
+          "dynamicOffers": 4006,
+          "seatedOffers": 12,
+          "publicationExpired": false,
+          "perCourse": {
+            "210549": 1514,
+            "359474": 1252,
+            "209806": 1252
+          },
+          "day": "2026-10-14",
+          "dayOffers": 3,
+          "dayTimes": [
+            "19:30"
+          ],
+          "dayPerCourse": {
+            "209806": 1,
+            "210549": 1,
+            "359474": 1
+          },
+          "failedWindowReasons": {},
+          "dayFailedWindows": 0,
+          "coverageAlert": false
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T23:09:25.402077-04:00",
+          "validUntil": "2026-10-11T23:24:16.710731-04:00",
+          "publicPage": "docs/heartsaver.html",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1527,
+            "publicSelectableOfferCount": 8370,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 209,
+            "evaluated_windows": 209,
+            "failed_windows": 0,
+            "uncertainty_issues": 0
+          },
+          "actualOffers": 8370,
+          "actualDates": 87,
+          "dynamicOffers": 8366,
+          "seatedOffers": 4,
+          "publicationExpired": false,
+          "perCourse": {
+            "209809": 1254,
+            "209808": 1511,
+            "251545": 1511,
+            "329495": 1512,
+            "344085": 1330,
+            "351632": 1252
+          },
+          "day": "2026-10-14",
+          "dayOffers": 7,
+          "dayTimes": [
+            "17:30",
+            "19:30"
+          ],
+          "dayPerCourse": {
+            "329495": 2,
+            "209808": 1,
+            "209809": 1,
+            "251545": 1,
+            "344085": 1,
+            "351632": 1
+          },
+          "failedWindowReasons": {},
+          "dayFailedWindows": 0,
+          "coverageAlert": false
+        }
+      },
+      "priorExpiryMarginSeconds": {
+        "bls": 375.355337,
+        "heartsaver": 375.355337
+      }
+    },
+    {
+      "commit": "e2304a1decff1a925878faf69fdc3027e63c8522",
+      "pages": {
+        "conclusion": "success",
+        "databaseId": 38198978345,
+        "event": "dynamic",
+        "headSha": "e2304a1decff1a925878faf69fdc3027e63c8522",
+        "jobs": [
+          {
+            "completedAt": "2026-10-12T03:15:18Z",
+            "conclusion": "success",
+            "databaseId": 114647900256,
+            "name": "build",
+            "startedAt": "2026-10-12T03:14:40Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-12T03:14:42Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-12T03:14:40Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:14:53Z",
+                "conclusion": "success",
+                "name": "Pull ghcr.io/actions/jekyll-build-pages:v1.0.13",
+                "number": 2,
+                "startedAt": "2026-10-12T03:14:42Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:15:05Z",
+                "conclusion": "success",
+                "name": "Checkout",
+                "number": 3,
+                "startedAt": "2026-10-12T03:14:53Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:15:14Z",
+                "conclusion": "success",
+                "name": "Build with Jekyll",
+                "number": 4,
+                "startedAt": "2026-10-12T03:15:05Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:15:16Z",
+                "conclusion": "success",
+                "name": "Upload artifact",
+                "number": 5,
+                "startedAt": "2026-10-12T03:15:14Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:15:16Z",
+                "conclusion": "success",
+                "name": "Post Checkout",
+                "number": 10,
+                "startedAt": "2026-10-12T03:15:16Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:15:16Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 11,
+                "startedAt": "2026-10-12T03:15:16Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/38198978345/job/114647900256"
+          },
+          {
+            "completedAt": "2026-10-12T03:15:31Z",
+            "conclusion": "success",
+            "databaseId": 114648038945,
+            "name": "deploy",
+            "startedAt": "2026-10-12T03:15:22Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-12T03:15:24Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-12T03:15:23Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:15:30Z",
+                "conclusion": "success",
+                "name": "Deploy to GitHub Pages",
+                "number": 2,
+                "startedAt": "2026-10-12T03:15:24Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:15:30Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 3,
+                "startedAt": "2026-10-12T03:15:30Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/38198978345/job/114648038945"
+          },
+          {
+            "completedAt": "2026-10-12T03:15:26Z",
+            "conclusion": "success",
+            "databaseId": 114648038968,
+            "name": "report-build-status",
+            "startedAt": "2026-10-12T03:15:21Z",
+            "status": "completed",
+            "steps": [
+              {
+                "completedAt": "2026-10-12T03:15:22Z",
+                "conclusion": "success",
+                "name": "Set up job",
+                "number": 1,
+                "startedAt": "2026-10-12T03:15:22Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:15:24Z",
+                "conclusion": "success",
+                "name": "Report Build Status",
+                "number": 2,
+                "startedAt": "2026-10-12T03:15:23Z",
+                "status": "completed"
+              },
+              {
+                "completedAt": "2026-10-12T03:15:24Z",
+                "conclusion": "success",
+                "name": "Complete job",
+                "number": 3,
+                "startedAt": "2026-10-12T03:15:24Z",
+                "status": "completed"
+              }
+            ],
+            "url": "https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/38198978345/job/114648038968"
+          }
+        ],
+        "status": "completed"
+      },
+      "completedAt": "2026-10-12T03:15:31Z",
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T23:13:49.282761-04:00",
+          "validUntil": "2026-10-11T23:28:48.075959-04:00",
+          "publicPage": "docs/bls.html",
+          "counts": {
+            "publicSelectableDateCount": 88,
+            "publicSelectableStartTimeCount": 1528,
+            "publicSelectableOfferCount": 4018,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 209,
+            "evaluated_windows": 209,
+            "failed_windows": 0,
+            "uncertainty_issues": 0
+          },
+          "actualOffers": 4018,
+          "actualDates": 88,
+          "dynamicOffers": 4006,
+          "seatedOffers": 12,
+          "publicationExpired": false,
+          "perCourse": {
+            "210549": 1514,
+            "359474": 1252,
+            "209806": 1252
+          },
+          "day": "2026-10-14",
+          "dayOffers": 3,
+          "dayTimes": [
+            "19:30"
+          ],
+          "dayPerCourse": {
+            "209806": 1,
+            "210549": 1,
+            "359474": 1
+          },
+          "failedWindowReasons": {},
+          "dayFailedWindows": 0,
+          "coverageAlert": false
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T23:13:56.225748-04:00",
+          "validUntil": "2026-10-11T23:28:48.075959-04:00",
+          "publicPage": "docs/heartsaver.html",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1527,
+            "publicSelectableOfferCount": 8370,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 209,
+            "evaluated_windows": 209,
+            "failed_windows": 0,
+            "uncertainty_issues": 0
+          },
+          "actualOffers": 8370,
+          "actualDates": 87,
+          "dynamicOffers": 8366,
+          "seatedOffers": 4,
+          "publicationExpired": false,
+          "perCourse": {
+            "209809": 1254,
+            "209808": 1511,
+            "251545": 1511,
+            "329495": 1512,
+            "344085": 1330,
+            "351632": 1252
+          },
+          "day": "2026-10-14",
+          "dayOffers": 7,
+          "dayTimes": [
+            "17:30",
+            "19:30"
+          ],
+          "dayPerCourse": {
+            "329495": 2,
+            "209808": 1,
+            "209809": 1,
+            "251545": 1,
+            "344085": 1,
+            "351632": 1
+          },
+          "failedWindowReasons": {},
+          "dayFailedWindows": 0,
+          "coverageAlert": false
+        }
+      },
+      "priorExpiryMarginSeconds": {
+        "bls": 525.710731,
+        "heartsaver": 525.710731
+      }
+    }
+  ],
+  "limitations": [
+    "Pages completion timestamps are delivery evidence, not continuous browser or every-edge cache proof.",
+    "No fresh browser available in this dispatch.",
+    "No observed-feed outage duration can be inferred from historical screenshots."
+  ]
+}
