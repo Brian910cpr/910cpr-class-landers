@@ -176,3 +176,61 @@ Exact remaining blocker: no authenticated live schema/storage/card-state access 
 Evidence level: BUILT for advisory check only; not CONNECTED/PROVEN/MONITORED/HEALTHY. Last real owner-card resolution + private-evidence + worker-skip cycle: none observed. Expected outcome: owner records manual completion with private retrievable evidence, all active views exclude it, next worker skips, justified reopen retains history. Expected window: each submitted resolution and every worker claim/side effect. Failure: stale version accepted, unavailable state treated as executable, false attachment success, resolved card counted/executed or history lost. Future observer: real dispatcher reconciliation receipts plus owner-board health outcome; observer heartbeat/recovery not yet implemented/proven. Recovery: suspend affected execution, preserve audit/evidence, re-read canonical state; do not auto-reopen. Escalate only unavailable account access, retention decisions or rollout approval. Present process is not monitored and must not be represented as healthy; routine owner checking is not an acceptable final monitor.
 
 All six issue acceptance criteria remain open. Continue #371 as primary; use this branch/PR for subsequent #380 increments rather than creating a competing deep stream.
+
+## R3 dispatcher contract and installed-selector discovery — 2026-10-12T03:42Z
+
+Correcting the earlier search conclusion: `ops/scripts/Invoke-CodexWake.ps1`
+contains a Codex queue selector. The installed copy exists at
+`C:/Users/ten77/AppData/Local/910CPR/CodexWake/Invoke-CodexWake.ps1`.
+Read-only SHA256 observations:
+- Installed: DB81F14C5894B614FBD34FC6C9E2DDA4E24C9D3F8B5A17D70DFFE1918F7AB168
+- Tracked: 9B5DC9D634FD65143952D9634203C1E0BFCB77DB2221CFC0837E70EAF8A96B0F
+
+Installed selection lines 78-87 use owner-authored issue/title plus updatedAt
+watermarks, not canonical resolution/blocker/source state. Owner filtering prevents
+third-party issue dispatch, but subsequent comments still change updatedAt. Receipt
+verification and post-run watermarking exist in the installed copy; neither proves
+that a blocker has cleared. Preferred task selection precedes priority ordering,
+so a preferred non-P0 can outrank a new P0. These are code findings consistent with
+the issue's #297 reproducer, not an observed new launcher cycle.
+
+No runtime/state/task changes were made. Do not overwrite the installed copy from
+the older tracked installer: that would lose receipt verification, manual holds,
+retry handling and explicit dispatch support. Actual integration now needs a
+reviewed reconciliation of that drift plus an authenticated structured intake
+adapter and atomic side-effect boundary. Identification of the selector is no
+longer the blocker; authoritative runtime input/claim wiring remains unimplemented.
+
+Independent backend increment: `dispatch-reconciliation.mjs` provides pure typed
+selection/pre-side-effect checks and stable candidate ranking. Canonically resolved
+cards skip; any blocked item skips until explicit authoritative reconciliation,
+even if source signature changes; stale/missing/ambiguous state requires review.
+Already-corrected sources propose verification. Worker-safe opt-in is required.
+P0 candidates outrank authenticated owner priority; blocked candidates cannot enter
+ranking. All outcomes retain can_execute=false. No HTTP route/dispatcher imports
+this module yet. This is executable contract coverage, not a lease or integration.
+
+Mature queue lesson: distinguish source-event updates from lifecycle transitions;
+retain explicit blockers and versioned claims instead of treating comments as work.
+Canonical card owns resolution; immutable transition history and separate evidence
+remain necessary. This increment introduces no Enrollware dependency and improves
+native operating discipline; no training workflow is replaced.
+
+Validation: node --experimental-strip-types --test tests/dispatch_reconciliation.test.mjs tests/production_execution_check.test.mjs tests/owner_access.test.mjs
+Result: 37 tests, 37 pass, 0 fail. New contract cases: 9. Mocked/pure local tests only.
+node --check supabase/functions/production-board/dispatch-reconciliation.mjs and
+git diff --check passed. No generator, SQL, upload/browser proof, merge or deploy.
+
+All six issue acceptance criteria remain open. Canonical transaction/evidence/UI
+work remains unfinished, not access-blocked. Keep #381 draft and #371 primary;
+#372 untouched. Next: reconcile installed selector into a reviewed source baseline,
+add authenticated typed intake/versioned claim adapter with durable skip audit,
+then prove #297 suppression before launch and owner-resolution stop before mutation
+in an isolated runtime. Never infer worker permission from issue prose.
+
+Evidence level BUILT only. Last end-to-end reconciliation proof: none. Expected
+window: each selection and side effect. Failure: blocked/resolved work launches,
+stale claim executes, priority bypasses P0. Observer/observer health: not integrated
+or proven; current regression is reported on #380. Recovery: preserve runtime
+and audit state, suspend affected dispatch via approved controls, reconcile live
+canonical state. No Brian action required for this code review increment.
