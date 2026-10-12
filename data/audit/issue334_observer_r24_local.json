@@ -1,0 +1,34 @@
+{
+  "observedAt": "2026-10-12T04:58:19.1958817Z",
+  "health": {
+    "ok": true,
+    "heartbeatStale": false,
+    "publicationExpired": false,
+    "checkedAt": "2026-10-12T04:55:53.439Z",
+    "lastDispatchAt": "2026-10-12T04:55:53.439Z",
+    "publication": {
+      "validUntil": "2026-10-12T01:08:22.141701-04:00",
+      "generatedAt": "2026-10-12T00:53:22.834278-04:00",
+      "dates": 88,
+      "offers": 4018,
+      "expired": false,
+      "refreshDue": true
+    },
+    "action": "refresh_dispatched",
+    "runtime": "local-task-scheduler",
+    "observedAt": "2026-10-12T04:55:56.241Z"
+  },
+  "installedHash": null,
+  "sourceHash": "7AED7695D4CB167B967BB310B9B506999149E6F88CA9C70223A63742BBF19BB5",
+  "healthVariable": "GitHub API HTTP 404",
+  "pages": [
+    {
+      "status": 200,
+      "url": "https://www.910cpr.com/bls.html"
+    },
+    {
+      "status": 200,
+      "url": "https://www.910cpr.com/heartsaver.html"
+    }
+  ]
+}
