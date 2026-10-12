@@ -43,7 +43,7 @@ alter table public.customer_cases enable row level security;
 alter table public.customer_interactions enable row level security;
 alter table public.customer_follow_up_tasks enable row level security;
 alter table public.customer_interaction_events enable row level security;
-revoke all on public.customer_cases,public.customer_interactions,public.customer_follow_up_tasks,public.customer_interaction_events from public,anon,authenticated;
+revoke all on public.customer_cases,public.customer_interactions,public.customer_follow_up_tasks,public.customer_interaction_events from public,anon,authenticated,service_role;
 grant select,insert,update on public.customer_cases,public.customer_interactions,public.customer_follow_up_tasks to service_role;
 grant select,insert on public.customer_interaction_events to service_role;
 
@@ -89,6 +89,6 @@ begin
     values(p_request_id,interaction_id,p_actor,p_input,to_jsonb(saved));
   return to_jsonb(saved);
 end $$;
-revoke all on function public.save_customer_interaction(uuid,text,jsonb) from public,anon,authenticated;
+revoke all on function public.save_customer_interaction(uuid,text,jsonb) from public,anon,authenticated,service_role;
 grant execute on function public.save_customer_interaction(uuid,text,jsonb) to service_role;
 commit;

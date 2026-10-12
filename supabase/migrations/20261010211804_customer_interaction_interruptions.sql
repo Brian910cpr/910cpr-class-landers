@@ -11,7 +11,7 @@ create unique index customer_interruption_resume_once
   on public.customer_interruption_events ((input->>'interrupt_request_id'))
   where input->>'operation'='resume';
 alter table public.customer_interruption_events enable row level security;
-revoke all on public.customer_interruption_events from public,anon,authenticated;
+revoke all on public.customer_interruption_events from public,anon,authenticated,service_role;
 grant select,insert on public.customer_interruption_events to service_role;
 
 create function public.switch_customer_interaction(p_request_id uuid,p_actor text,p_input jsonb)
@@ -80,6 +80,6 @@ begin
   insert into public.customer_interruption_events(request_id,actor,input,result) values(p_request_id,p_actor,p_input,result);
   return result;
 end $$;
-revoke all on function public.switch_customer_interaction(uuid,text,jsonb) from public,anon,authenticated;
+revoke all on function public.switch_customer_interaction(uuid,text,jsonb) from public,anon,authenticated,service_role;
 grant execute on function public.switch_customer_interaction(uuid,text,jsonb) to service_role;
 commit;

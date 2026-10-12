@@ -10,7 +10,7 @@ create table public.customer_task_events (
   occurred_at timestamptz not null default now()
 );
 alter table public.customer_task_events enable row level security;
-revoke all on public.customer_task_events from public,anon,authenticated;
+revoke all on public.customer_task_events from public,anon,authenticated,service_role;
 grant select,insert on public.customer_task_events to service_role;
 create function public.save_customer_follow_up_task(p_request_id uuid,p_actor text,p_input jsonb)
 returns jsonb language plpgsql security invoker set search_path='' as $$
@@ -64,6 +64,6 @@ begin
   insert into public.customer_task_events(request_id,task_id,actor,input,result) values(p_request_id,task_id,p_actor,p_input,to_jsonb(saved));
   return to_jsonb(saved);
 end $$;
-revoke all on function public.save_customer_follow_up_task(uuid,text,jsonb) from public,anon,authenticated;
+revoke all on function public.save_customer_follow_up_task(uuid,text,jsonb) from public,anon,authenticated,service_role;
 grant execute on function public.save_customer_follow_up_task(uuid,text,jsonb) to service_role;
 commit;
