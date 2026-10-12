@@ -78,3 +78,8 @@ Unrelated unstaged files preserved: `docs/Earl/index.html`, `docs/Jackson/index.
 - Codex_Reply_NativeCheckoutProof_20261012.md
 
 Owner decision: approve a staging canary and then a separately gated narrow production migration/two-function/page release and one freshly validated native Renewal session. No broad generated-output publication authorized or performed. Recommended next step: stage the exact migration against a production-equivalent schema and run multi-connection seat contention, confirm queue-worker delivery with an approved test recipient, wire the existing observer, then request final activation approval.
+
+## Published checkpoint
+Implementation commit: 983cad54166; branch pushed. Draft PR: https://github.com/Brian910cpr/910cpr-class-landers/pull/387. Owner issue evidence: https://github.com/Brian910cpr/910cpr-class-landers/issues/270#issuecomment-6117858333.
+
+Connector project inventory exposes only production LanderWare and unrelated ShiftCommander; no LanderWare staging project is available. Do not use ShiftCommander as a test database. Owner action needed for the remaining hosted canary: provide an isolated production-equivalent LanderWare staging/branch environment (or explicitly approve provisioning one). Production activation approval remains separate. Temporary test webhook was disabled; isolated tunnel and in-memory proof server were stopped after saving evidence. Final validation: 37 passed, syntax and diff checks passed. Five unrelated/tracked runtime files remain unstaged as listed above.
