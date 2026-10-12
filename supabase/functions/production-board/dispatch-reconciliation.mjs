@@ -21,7 +21,18 @@ export function reconcileDispatch(snapshot, expectedVersion, phase) {
 export function rankDispatchCandidates(candidates, ownerPriorityId) {
   // Input order is the deterministic tie-break. P0 precedes owner P1 priority.
   // IDs/priorities must come from authenticated structured intake, never comments.
-  return candidates.filter(c => c.check?.decision === 'candidate').map((c, index) => ({c, index}))
+  // Cached checks are advisory and may predate a resolution or blocker. Recompute
+  // from the supplied canonical snapshot; the authenticated adapter must still
+  // fetch it live and atomically claim its version before any launch/mutation.
+  if (!Array.isArray(candidates)) return [];
+  const counts = new Map();
+  for (const c of candidates) {
+    if (Number.isSafeInteger(c?.id) && c.id > 0) counts.set(c.id, (counts.get(c.id) || 0) + 1);
+  }
+  return candidates.filter(c => Number.isSafeInteger(c?.id) && c.id > 0
+      && counts.get(c.id) === 1 && ['P0', 'P1', 'P2', 'P3'].includes(c.priority)
+      && reconcileDispatch(c.state, c.expectedVersion, 'selection').decision === 'candidate')
+    .map((c, index) => ({c, index}))
     .sort((a, b) => (a.c.priority === 'P0' ? 0 : a.c.id === ownerPriorityId ? 1 : 2)
       - (b.c.priority === 'P0' ? 0 : b.c.id === ownerPriorityId ? 1 : 2) || a.index - b.index)
     .map(({c}) => c);

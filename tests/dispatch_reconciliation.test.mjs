@@ -8,7 +8,7 @@ for (const phase of ['selection', 'pre_side_effect']) {
       {id:297, priority:'P1', state:{...base, blocked:true}},
       {id:371, priority:'P1', state:base},
       {id:900, priority:'P0', state:base},
-    ].map(c => ({...c, check:reconcileDispatch(c.state,'v1',phase)}));
+    ].map(c => ({...c, expectedVersion:'v1', check:reconcileDispatch(c.state,'v1',phase)}));
     assert.equal(entries[0].check.reason,'blocked_requires_explicit_reconciliation');
     assert.deepEqual(rankDispatchCandidates(entries,371).map(c=>c.id),[900,371]);
     assert.ok(entries.every(c=>c.check.can_execute === false));
@@ -34,4 +34,28 @@ test('external fix proposes verification without silently resolving or executing
 test('invalid phase and missing version cannot become candidates', () => {
   assert.equal(reconcileDispatch(base,'v1','launch').decision,'review');
   assert.equal(reconcileDispatch({...base,version:''},'','selection').decision,'review');
+});
+
+const candidate = (id, priority = 'P1', state = base) => ({id, priority, state, expectedVersion:'v1', check:{decision:'candidate'}});
+test('ranking rejects cached candidate checks after resolution, blocker or version change', () => {
+  const entries = [candidate(297,'P0',{...base,blocked:true}),
+    candidate(380,'P0',{...base,resolution_state:'handled_manually'}),
+    candidate(900,'P0',{...base,version:'v2'}), candidate(371)];
+  assert.deepEqual(rankDispatchCandidates(entries,371).map(c=>c.id),[371]);
+});
+test('ranking requires a snapshot and expected version even with forged candidate check', () => {
+  assert.deepEqual(rankDispatchCandidates([{id:297,priority:'P0',check:{decision:'candidate'}}],297),[]);
+  assert.deepEqual(rankDispatchCandidates([{...candidate(371),expectedVersion:undefined}],371),[]);
+});
+test('ranking rejects ambiguous identities and malformed priorities', () => {
+  const entries = [candidate(297),candidate(297,'P0'),candidate('371'),candidate(-1),
+    candidate(0),candidate(1.5),candidate(900,'urgent'),null,candidate(371)];
+  assert.deepEqual(rankDispatchCandidates(entries,371).map(c=>c.id),[371]);
+  assert.deepEqual(rankDispatchCandidates(null,371),[]);
+});
+test('ranking keeps P0 ahead of owner priority and stable ties without mutating inputs', () => {
+  const entries = [candidate(12,'P2'),candidate(371),candidate(901,'P0'),candidate(902,'P0'),candidate(13,'P3')];
+  const before=structuredClone(entries);
+  assert.deepEqual(rankDispatchCandidates(entries,371).map(c=>c.id),[901,902,371,12,13]);
+  assert.deepEqual(entries,before);
 });
