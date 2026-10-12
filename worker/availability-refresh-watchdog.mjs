@@ -4,9 +4,9 @@ export const FEED = 'https://www.910cpr.com/data/block-selector-availability/bls
 export const WORKFLOW = 'https://api.github.com/repos/Brian910cpr/910cpr-class-landers/actions/workflows/refresh-admin-availability.yml';
 const MINUTE = 60_000;
 const STATE_KEY = 'publication-watchdog';
-// Five-minute timers can arrive slightly before the ten-minute boundary.
-// Allow at most 30 seconds of jitter; the active-run check still gates dispatch.
-const DISPATCH_COOLDOWN = 10 * MINUTE - 30_000;
+// Source coverage currently expires after 15 minutes, including build/Pages time.
+// Permit each five-minute tick with bounded jitter; active runs still gate dispatch.
+const DISPATCH_COOLDOWN = 5 * MINUTE - 30_000;
 
 async function jsonResponse(response, maxBytes) {
   if (!response.ok) throw new Error(`http_${response.status}`);

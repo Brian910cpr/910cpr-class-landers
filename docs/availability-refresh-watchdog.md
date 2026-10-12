@@ -28,10 +28,10 @@ GitHub refresh on `main`. It neither generates offers nor extends their leases.
 All calendar, occupied-date, roster freshness, and course compatibility gates
 continue to run inside the existing publisher.
 
-Active/queued refreshes prevent duplicate dispatches. A nominal ten-minute KV
-cooldown allows at most 30 seconds of early timer jitter (minimum 9m30s between
+Active/queued refreshes prevent duplicate dispatches. A nominal five-minute KV
+cooldown allows at most 30 seconds of early timer jitter (minimum 4m30s between
 dispatches), covering delayed visibility without skipping a whole five-minute
-tick at 9m59.999s. Every eligible tick still checks active runs before dispatch. Failed public feed reads also
+tick at 4m59.999s. Every eligible tick still checks active runs before dispatch. Failed public feed reads also
 request recovery. Upstream errors are sanitized and bodies are bounded. The
 public HTTP endpoint only reads health; it cannot dispatch jobs.
 
@@ -61,7 +61,7 @@ wrangler deploy --config worker/wrangler.availability-refresh.jsonc --dry-run
 
 - Outcome: a fresh publication reaches the actual public booking page before the
   previous publication expires. A dispatch or successful build alone is not proof.
-- Cadence: Cron every five minutes, refresh normally about every 30 minutes.
+- Cadence: five-minute timer; dispatch eligible every five minutes, subject to active-run guards.
 - Observer: the Worker reads the real public feed; `/health` exposes the observed
   expiry, offer count, last check, dispatch and active run ID without credentials.
 - Failure: expired/missing public feed, a refresh pending for over 30 minutes,
@@ -128,3 +128,22 @@ the physical-drive installation successfully (exit 0), observed the fresh public
 feed, and recorded 7,678 offers valid through 18:25:24 Eastern. This proves the
 installed timer can read the publication; a future automatic refresh dispatch
 must still be observed before claiming unattended recovery is proven.
+
+## October 12 approved local cadence retention
+
+The owner-approved R21 cooldown is 270000 ms. The physical local module was
+activated at 02:43:51 UTC and is retained in source with matching regressions.
+The 90-minute publication lease remains capped by upstream source freshness;
+current calendar coverage is only 15 minutes, so dispatch plus build and Pages
+must finish inside that source window. No expiry or conflict gate is relaxed.
+
+At 04:15:54 UTC, the existing local task exited 0 and dispatched the normal main
+publisher. Installed module SHA256 matched the retained source exactly:
+`7aed7695d4cb167b967bb310b9b506999149e6f88ca9c70223a63742bbf19bb5`.
+This source retention does not reinstall or alter the physical task or state.
+
+The Cloudflare timer remains unproven and its independent health URL variable
+is absent (GitHub HTTP 404). The public read-only observer is configured every
+five minutes, but its observed runs remain manual as of this checkpoint.
+CYBERPC awake/login/network and delayed GitHub delivery remain dependencies.
+Do not describe local successful cycles as cloud-independent HEALTHY operation.

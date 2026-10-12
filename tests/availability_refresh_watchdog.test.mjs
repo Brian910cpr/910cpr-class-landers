@@ -52,7 +52,7 @@ test('hung refresh reports failure without cancelling it', async () => {
   assert.equal((await t.run()).error, 'refresh_stalled'); assert.equal(t.calls.length, 2);
 });
 test('KV cooldown covers GitHub dispatch visibility delay', async () => {
-  const t = setup({ previous: { lastDispatchAt: iso(-5) } });
+  const t = setup({ previous: { lastDispatchAt: iso(-2) } });
   assert.equal((await t.run()).action, 'dispatch_cooldown'); assert.equal(t.calls.length, 1);
 });
 test('missing token and rejected dispatch are recorded, not reported successful', async () => {
@@ -88,8 +88,8 @@ test('public HTTP interface cannot dispatch refreshes', async () => {
 });
 
 
-test('bounded timer jitter does not skip the ten-minute refresh tick', async () => {
-  for (const elapsed of [570_000, 599_999, 600_000, 600_001]) {
+test('bounded timer jitter does not skip the five-minute refresh tick', async () => {
+  for (const elapsed of [270_000, 299_999, 300_000, 300_001]) {
     const t = setup({ previous: { lastDispatchAt: new Date(now - elapsed).toISOString() } });
     const result = await t.run();
     assert.equal(result.action, 'refresh_dispatched', `elapsed=${elapsed}`);
@@ -99,7 +99,7 @@ test('bounded timer jitter does not skip the ten-minute refresh tick', async () 
 });
 
 test('jitter tolerance remains bounded and preserves visibility cooldown', async () => {
-  for (const elapsed of [0, 300_000, 569_999]) {
+  for (const elapsed of [0, 120_000, 269_999]) {
     const previous = { lastDispatchAt: new Date(now - elapsed).toISOString() };
     const t = setup({ previous });
     const result = await t.run();
@@ -111,7 +111,7 @@ test('jitter tolerance remains bounded and preserves visibility cooldown', async
 
 test('early timer tick still refuses duplicate active refreshes', async () => {
   for (const status of ['queued', 'in_progress', 'waiting', 'pending']) {
-    const previous = { lastDispatchAt: new Date(now - 599_999).toISOString() };
+    const previous = { lastDispatchAt: new Date(now - 299_999).toISOString() };
     const t = setup({ previous, runs: [{ id: 123, status, created_at: iso(-10) }] });
     const result = await t.run();
     assert.equal(result.action, 'refresh_running');
