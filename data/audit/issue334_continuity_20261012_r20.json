@@ -1,0 +1,169 @@
+{
+  "checkedAt": "2026-10-12T02:18:35.761227+00:00",
+  "publications": [
+    {
+      "sha": "162903d1203c8d1e6b206143ece3f02164a56302",
+      "pages": {
+        "id": 38193723228,
+        "conclusion": "success",
+        "created_at": "2026-10-12T01:54:47Z",
+        "updated_at": "2026-10-12T01:55:46Z"
+      },
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T21:54:00.504780-04:00",
+          "validUntil": "2026-10-11T22:08:59.292885-04:00",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1512,
+            "publicSelectableOfferCount": 3991,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          }
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T21:54:07.374523-04:00",
+          "validUntil": "2026-10-11T22:08:59.292885-04:00",
+          "counts": {
+            "publicSelectableDateCount": 81,
+            "publicSelectableStartTimeCount": 1506,
+            "publicSelectableOfferCount": 8297,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          }
+        }
+      }
+    },
+    {
+      "sha": "49690a1ea655d2721e2fe32f9d4b0d40b37bb20f",
+      "pages": {
+        "id": 38194405870,
+        "conclusion": "success",
+        "created_at": "2026-10-12T02:05:09Z",
+        "updated_at": "2026-10-12T02:06:19Z"
+      },
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T22:04:23.775760-04:00",
+          "validUntil": "2026-10-11T22:19:22.627560-04:00",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1512,
+            "publicSelectableOfferCount": 3991,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 160.292885
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T22:04:30.389115-04:00",
+          "validUntil": "2026-10-11T22:19:22.627560-04:00",
+          "counts": {
+            "publicSelectableDateCount": 81,
+            "publicSelectableStartTimeCount": 1506,
+            "publicSelectableOfferCount": 8297,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 160.292885
+        }
+      }
+    },
+    {
+      "sha": "6ee7da28c500e82b46ecb775116c2f3f3c637e5a",
+      "pages": {
+        "id": 38195054954,
+        "conclusion": "success",
+        "created_at": "2026-10-12T02:15:15Z",
+        "updated_at": "2026-10-12T02:16:08Z"
+      },
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T22:14:30.344491-04:00",
+          "validUntil": "2026-10-11T22:29:29.213089-04:00",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1512,
+            "publicSelectableOfferCount": 3991,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 194.62756
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T22:14:36.757563-04:00",
+          "validUntil": "2026-10-11T22:29:29.213089-04:00",
+          "counts": {
+            "publicSelectableDateCount": 81,
+            "publicSelectableStartTimeCount": 1506,
+            "publicSelectableOfferCount": 8297,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 194.62756
+        }
+      }
+    }
+  ],
+  "live": {
+    "bls": {
+      "observedAt": "2026-10-12T02:18:26.862728+00:00",
+      "generatedAt": "2026-10-11T22:14:30.344491-04:00",
+      "validUntil": "2026-10-11T22:29:29.213089-04:00",
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1512,
+        "publicSelectableOfferCount": 3991,
+        "input_sources": 444,
+        "normalized_sources": 444,
+        "input_windows": 210,
+        "evaluated_windows": 190,
+        "failed_windows": 20,
+        "uncertainty_issues": 20
+      },
+      "unexpired": true
+    },
+    "heartsaver": {
+      "observedAt": "2026-10-12T02:18:29.977808+00:00",
+      "generatedAt": "2026-10-11T22:14:36.757563-04:00",
+      "validUntil": "2026-10-11T22:29:29.213089-04:00",
+      "counts": {
+        "publicSelectableDateCount": 81,
+        "publicSelectableStartTimeCount": 1506,
+        "publicSelectableOfferCount": 8297,
+        "input_sources": 444,
+        "normalized_sources": 444,
+        "input_windows": 210,
+        "evaluated_windows": 190,
+        "failed_windows": 20,
+        "uncertainty_issues": 20
+      },
+      "unexpired": true
+    }
+  },
+  "limitations": "Pages completion time is delivery evidence, not continuous edge/browser observation. No rendered browser proof or payment exercised."
+}
