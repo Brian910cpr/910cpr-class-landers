@@ -1,3 +1,4 @@
+import { ownerAuthorization } from "./owner-session-auth.js";
 const ALLOWED_ORIGINS = new Set(["https://www.910cpr.com", "https://910cpr.com"]);
 const ALLOWED_STATUSES = new Set(["committed", "tentative", "completed", "cancelled"]);
 const ALLOWED_VISIBILITY = new Set(["hidden", "public"]);
@@ -9,8 +10,9 @@ export async function handleAdminApi(request, env, url) {
   const origin = request.headers.get("Origin") || "";
   if (origin && !ALLOWED_ORIGINS.has(origin)) return json({ error: "Origin is not allowed.", code: "origin_rejected" }, 403, origin);
   if (request.method === "OPTIONS") return corsPreflight(origin);
-  if (!env.HOT_SYNC_ADMIN_KEY) return json({ error: "Admin service is not configured.", code: "service_unavailable" }, 503, origin);
-  if (!(await authorized(request, env.HOT_SYNC_ADMIN_KEY))) return json({ error: "Authentication failed.", code: "authentication_failed" }, 401, origin);
+  const authStatus = await ownerAuthorization(request, env);
+  if (authStatus === 503) return json({ error: "Admin service is temporarily unavailable.", code: "service_unavailable" }, 503, origin);
+  if (authStatus !== 200) return json({ error: "Authentication failed.", code: "authentication_failed" }, 401, origin);
 
   if (url.pathname === "/admin/hot-sync" && request.method === "GET") return listHotSync(env, origin);
   if (url.pathname === "/admin/hot-sync" && request.method === "POST") return createHotSync(request, env, origin);
@@ -36,18 +38,6 @@ export async function handleAdminApi(request, env, url) {
   if (inboxMatch && request.method === "PATCH") return updateInbox(inboxMatch[1], request, env, origin);
   if (inboxMatch && request.method === "DELETE") return deleteInbox(inboxMatch[1], env, origin);
   return json({ error: "Admin endpoint not found.", code: "not_found" }, 404, origin);
-}
-
-async function authorized(request, expected) {
-  const supplied = request.headers.get("X-Hot-Sync-Admin-Key") || "";
-  const encoder = new TextEncoder();
-  const expectedDigest = await crypto.subtle.digest("SHA-256", encoder.encode(expected));
-  const suppliedDigest = await crypto.subtle.digest("SHA-256", encoder.encode(supplied));
-  const left = new Uint8Array(expectedDigest);
-  const right = new Uint8Array(suppliedDigest);
-  let mismatch = left.length ^ right.length;
-  for (let index = 0; index < left.length; index += 1) mismatch |= left[index] ^ (right[index] || 0);
-  return supplied.length > 0 && mismatch === 0;
 }
 
 function requireDatabase(env, origin) {
@@ -408,7 +398,7 @@ function corsPreflight(origin) {
 function corsHeaders(origin, additional = {}) {
   const headers = {
     "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type,X-Hot-Sync-Admin-Key",
+    "Access-Control-Allow-Headers": "Content-Type,X-Hot-Sync-Admin-Key,X-LanderWare-Owner-Session",
     "Access-Control-Max-Age": "600",
     "Vary": "Origin",
     ...additional,

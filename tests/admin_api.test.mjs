@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const source = await readFile(new URL("../worker/admin-api.js", import.meta.url), "utf8");
-const moduleUrl = `data:text/javascript;base64,${Buffer.from(source).toString("base64")}`;
+const authSource = await readFile(new URL("../worker/owner-session-auth.js", import.meta.url), "utf8");
+const authUrl = `data:text/javascript;base64,${Buffer.from(authSource).toString("base64")}`;
+const moduleUrl = `data:text/javascript;base64,${Buffer.from(source.replace("./owner-session-auth.js", authUrl)).toString("base64")}`;
 const { handleAdminApi, adminApiInternals } = await import(moduleUrl);
 
 const workerSource = await readFile(new URL("../worker/free-time-offer-worker.js", import.meta.url), "utf8");
