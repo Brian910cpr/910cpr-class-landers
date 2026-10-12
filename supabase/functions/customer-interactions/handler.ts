@@ -3,11 +3,17 @@ type Dependencies = {
   actor: (req: Request) => Promise<string>;
   rest: (path: string, init?: RequestInit) => Promise<unknown>;
 };
-const headers = {'access-control-allow-origin':'https://www.910cpr.com','access-control-allow-headers':'content-type, x-landerware-owner-session','access-control-allow-methods':'GET,POST,OPTIONS','content-type':'application/json','cache-control':'no-store'};
-const response = (data: unknown,status=200) => Response.json(data,{status,headers});
+const allowedOrigins = new Set(['https://www.910cpr.com','https://910cpr.com']);
+const baseHeaders = {'vary':'Origin','access-control-allow-headers':'content-type, x-landerware-owner-session','access-control-allow-methods':'GET,POST,OPTIONS','content-type':'application/json','cache-control':'no-store'};
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export function createHandler(deps: Dependencies) {
   return async (req: Request) => {
+    const origin=req.headers.get('origin');
+    const headers: Record<string,string> = {...baseHeaders};
+    if(origin && allowedOrigins.has(origin)) headers['access-control-allow-origin']=origin;
+    const response = (data: unknown,status=200) => Response.json(data,{status,headers});
+    // Reject foreign origins before authorization or storage, including preflight.
+    if(origin && !allowedOrigins.has(origin)) return response({error:'Forbidden'},403);
     if(req.method==='OPTIONS') return new Response(null,{status:204,headers});
     try {
       if(!await deps.authorize(req)) return response({error:'Unauthorized'},401);
