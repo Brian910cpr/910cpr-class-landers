@@ -52,3 +52,25 @@ test('audit envelope excludes private evidence and input cannot gain permission'
   assert.deepEqual(Object.keys(event),['issue_id','phase','expected_version','observed_version','decision','reason','can_execute']);
   assert.equal(JSON.stringify(event).includes('secret'),false);
 });
+
+for (const phase of ['selection','pre_side_effect']) test(`${phase}: snapshot changed while persisting decision cannot return a stale candidate`, async () => {
+  for (const mutation of [
+    state => { state.resolution_state='handled_manually'; },
+    state => { state.version='v2'; },
+    state => { state.blocked=true; },
+    state => { state.issue_id=371; },
+    state => { state.source_state='already_corrected'; },
+    state => { state.worker_safe=false; },
+    state => { state.authoritative=false; }
+  ]) {
+    const state={...base}; const events=[];
+    const result=await checkLiveDispatch({...request,phase},{
+      readSnapshot:async()=>state,
+      recordDecision:async event=>{ events.push(event); mutation(state); return true; }
+    });
+    assert.equal(result.decision,'review');
+    assert.equal(result.reason,'canonical_snapshot_changed_during_persistence');
+    assert.equal(result.can_execute,false);
+    assert.equal(events.length,1);
+  }
+});
