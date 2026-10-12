@@ -381,6 +381,15 @@ class LayeredPublicationTests(unittest.TestCase):
                                  course_id='',kind='commitment'))
         self.assertNotIn('12:00',self.starts('329495'))
 
+    def test_unknown_canonical_time_disagreement_does_not_retire_current_class_bounds(self):
+        row=self.add(11,'12:00','13:00',count=None);row['external_class_id']='uncertain-move'
+        self.sources.append(dict(row,source_event_id='uncertain-move',source_file='data/sessions_current.json',
+                                 start=self.at(11,'14:00').isoformat(),end=self.at(11,'15:00').isoformat()))
+        report=self.calculation()['reports'][0]
+        self.assertEqual({aware(x['start']).strftime('%H:%M') for x in report['normalized_occupancy']},{'12:00','14:00'})
+        self.assertNotIn('14:00',self.starts('329495'))
+        self.assertTrue(self.calculation()['projected_sources'][1]['timing_reconciliation_required'])
+
     def test_old_or_naive_coverage_and_bad_count_are_not_proof(self):
         self.coverage[0]['observed_at']='2026-09-27T12:00:00-04:00'
         self.assertFalse(self.starts())

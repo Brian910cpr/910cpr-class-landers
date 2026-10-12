@@ -59,8 +59,15 @@ def project_sources(rows, course_metadata):
                 moved = aware(truth['start']) != aware(row['start'])
             except (KeyError, TypeError, ValueError):
                 moved = False  # Unresolved occupancy remains scoped by calculate.
-            if truth.get('session_status') in {'cancelled', 'canceled', 'deleted', 'moved'} or moved:
-                row['session_status'] = 'moved' if truth.get('session_status') not in {'cancelled', 'canceled', 'deleted'} else truth['session_status']
+            if truth.get('session_status') in {'cancelled', 'canceled', 'deleted', 'moved'}:
+                row['session_status'] = truth['session_status']
+            elif moved and truth.get('count_available') is True:
+                row['session_status'] = 'moved'
+            elif moved:
+                # A current unknown roster cannot prove which conflicting time
+                # is the occupied occurrence. Keep both bounds conservative.
+                row.update(count_available=False, active_registration_count=None,
+                           timing_reconciliation_required=True)
             else:
                 for field in ('count_available', 'active_registration_count', 'previous_verified_commitment'):
                     if field in truth: row[field] = deepcopy(truth[field])
