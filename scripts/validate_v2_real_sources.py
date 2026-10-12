@@ -201,7 +201,7 @@ def removed_direct_proofs(before, after):
         row = rejected.get(key, {})
         proofs = row.get('directConstraintProofs', [])
         lifecycle = row.get('directLifecycleProven') is True
-        verified = lifecycle or any(p['basis'] in trusted and p['bounded_interval_conflict'] for p in proofs)
+        verified = lifecycle or any(p['basis'] in trusted and p['bounded_interval_conflict'] and (p['room_constraint'] or p['instructor_constraint']) for p in proofs)
         results.append({'public_choice':key,'reasons':sorted(set(row.get('reasons',[]))),
                         'constraint_bases':sorted({p['basis'] for p in proofs}),
                         'room_conflict_checked':any(p['room_constraint'] for p in proofs),

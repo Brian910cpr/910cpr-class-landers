@@ -256,8 +256,13 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                         'hold':'explicit_hold'}.get(basis,'unresolved_input')
             if basis == 'uncertain' and busy.get('source_file') in {'canonical_class_sessions','data/sessions_current.json','docs/data/schedule_future.json'}:
                 category = 'unknown_class_inventory'
-            direct_checks.append(dict(reason=reason,basis=category,room_constraint=bool(same_room),
-                instructor_constraint=bool(same_person),bounded_interval_conflict=bounded))
+            known_resources = set(calculation.get('direct_constraints', {}).get('resources', []))
+            subject_person = str(original.get('instructor') or '').strip().casefold()
+            blocker_person = str(busy.get('instructor') or '').strip().casefold()
+            person_known = subject_person not in {'','unknown','unassigned'} and blocker_person not in {'','unknown','unassigned'}
+            direct_checks.append(dict(reason=reason,basis=category,
+                room_constraint=bool(same_room and source and source.get('resource') in known_resources),
+                instructor_constraint=bool(same_person and person_known),bounded_interval_conflict=bounded))
         if state == 'inactive' or (source and source.get('start') and aware(source.get('session_start') or source['start']) != start):
             reasons.append('inactive_or_moved_existing_identity')
             lifecycle_proven = state == 'inactive' or bool(source and source.get('count_available') is True)
