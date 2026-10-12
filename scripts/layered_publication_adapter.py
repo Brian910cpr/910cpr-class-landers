@@ -241,7 +241,13 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             anchored_days.add((offer['date'], instructor_key(offer.get('instructor'))))
     retained = []
     for offer in accepted:
-        if offer.get('offerType') != 'seated_class' and (offer['date'], str(offer['courseId'])) in day_anchors:
+        course = catalog.get(str(offer['courseId']), {})
+        skills_edge = offer.get('scheduleRole') == 'barnacle' and (
+            course.get('kind') == 'skills' or course.get('blended_classroom_skills') == 'blended')
+        # A retained skills seat occupies its actual interval; it does not consume
+        # the whole day's eligible skills edges. Calculation already checks each
+        # candidate's 45-minute instruction plus 15-minute cleanup and conflicts.
+        if offer.get('offerType') != 'seated_class' and (offer['date'], str(offer['courseId'])) in day_anchors and not skills_edge:
             rejected.append(dict(offer, reasons=['existing_course_day_anchor']))
         elif offer.get('scheduleRole') == 'open_day' and (
                 (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days or

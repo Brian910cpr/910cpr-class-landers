@@ -115,7 +115,7 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(self.starts(day=13))
         self.assertTrue(self.calculation()['issues'])
 
-    def test_all_starred_formats_exclude_same_course_for_entire_day(self):
+    def test_starred_full_course_consolidates_but_skills_keeps_valid_edges(self):
         for cid in ['210549','209809']:
             with self.subTest(course=cid):
                 self.sources=[]
@@ -125,12 +125,33 @@ class LayeredPublicationTests(unittest.TestCase):
                             courseId=cid,courseName='Existing class',offerType='seated_class')
                 payload=self.payload([seated])
                 day=[o for o in payload['offers'] if o['date']=='2026-10-11' and o['courseId']==cid]
-                self.assertEqual([o['offerType'] for o in day],['seated_class'])
+                self.assertEqual(sum(o['offerType']=='seated_class' for o in day),1)
+                if cid=='210549':
+                    self.assertEqual({o['startTime'] for o in day},{'11:00','12:00','13:00'})
+                    self.assertTrue(all(o.get('scheduleRole')=='barnacle' for o in day if o['offerType']!='seated_class'))
+                else:
+                    self.assertEqual([o['offerType'] for o in day],['seated_class'])
                 self.assertTrue(any(o['courseId']!=cid and o['date']=='2026-10-11' for o in payload['offers']))
                 self.assertTrue(any(o['courseId']==cid and o['date']=='2026-10-12' for o in payload['offers']))
-                if cid=='210549':
-                    self.assertIn('existing_course_day_anchor',payload['rejectionReasonCounts'])
                 self.windows=self.windows[:1];self.coverage=self.coverage[:1]
+
+    def test_oct14_skills_edges_preserve_canonical_two_hour_occupancy(self):
+        self.windows=[];self.coverage=[];self.sources=[]
+        self.window(14,'15:00','22:00',next_day=False)
+        row=self.add(14,'17:30','19:30',cid='329495',count=None)
+        seated=dict(session_id=row['source_event_id'],date='2026-10-14',startTime='17:30',
+                    courseId='329495',courseName='Existing skills',offerType='seated_class')
+        payload=self.payload([seated])
+        offers=[o for o in payload['offers'] if o['courseId']=='329495']
+        edges=[o for o in offers if o['offerType']!='seated_class']
+        self.assertEqual({o['startTime'] for o in edges},{'16:30','19:30'})
+        self.assertTrue(all(o['durationMinutes']==45 and o['cleanupBufferMinutes']==15 for o in edges))
+        self.assertEqual({o['schedulerConsumptionEnd'] for o in edges},{'17:30','20:30'})
+        self.assertEqual(len([o for o in offers if o['offerType']=='seated_class']),1)
+        occupied=payload['layeredDiagnostics']['reports'][0]['normalized_occupancy']
+        self.assertTrue(any(aware(o['start'])==self.at(14,'17:30') and aware(o['end'])==self.at(14,'19:30') for o in occupied))
+        self.windows[0]['start']=self.at(14,'17:30').isoformat()
+        self.assertEqual(self.starts('329495',day=14),{'19:30'})
 
     def test_incomplete_proof_does_not_sterilize_another_instructor(self):
         self.window(11,name='Michelle')
