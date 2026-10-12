@@ -18,6 +18,46 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 class LayeredPipelineTests(unittest.TestCase):
+    def test_oct14_same_skills_edges_render_beside_retained_seated_class(self):
+        case=fixtures.LayeredPublicationTests();case.setUp()
+        case.windows=[];case.coverage=[];case.sources=[]
+        case.window(14,'15:00','22:00',next_day=False)
+        row=case.add(14,'17:30','19:30',cid='329495',count=None)
+        seated=dict(session_id=row['source_event_id'],date='2026-10-14',startTime='17:30',
+            displayStartTime='5:30 PM',courseId='329495',courseName='Existing skills',
+            offerType='seated_class',durationMinutes=120,registrationUrl='https://fixture.test/enroll?id=existing',
+            appointmentDayId=None,appointmentUrl='https://fixture.test/enroll?id=existing',location=case.room)
+        payload=case.payload([seated]);html=render_html(payload)
+        feed=public_selector_availability_payload(payload)
+        with sync_playwright() as playwright:
+            browser=playwright.chromium.launch(channel='chrome',headless=True)
+            try:
+                for width in (1440,390):
+                    with self.subTest(width=width):
+                        page=browser.new_page(viewport={'width':width,'height':1000},timezone_id='America/New_York')
+                        page.add_init_script("const NativeDate=Date;const fixtureNow=NativeDate.parse('2026-10-05T16:00:00Z');window.Date=class extends NativeDate{constructor(...args){super(...(args.length?args:[fixtureNow]));}static now(){return fixtureNow;}};")
+                        def local(route):
+                            path=urlparse(route.request.url).path
+                            if path=='/heartsaver.html':route.fulfill(status=200,content_type='text/html',body=html)
+                            elif path.startswith('/data/block-selector-availability/'):
+                                route.fulfill(status=200,content_type='application/json',body=json.dumps(feed))
+                            elif path.startswith('/assets/') and (ROOT/'docs'/path.lstrip('/')).is_file():
+                                route.fulfill(status=200,path=str(ROOT/'docs'/path.lstrip('/')))
+                            else:route.fulfill(status=204,body='')
+                        page.route('**/*',local)
+                        page.goto('https://fixture.test/heartsaver.html',wait_until='domcontentloaded')
+                        page.wait_for_function("typeof availabilityReady==='function' && availabilityReady()")
+                        button=page.locator('[data-course-id="329495"]')
+                        if not button.is_visible():page.locator('#show-all-toggle').check()
+                        button.click()
+                        self.assertEqual(page.evaluate('filteredDates().flatMap(d=>d.startTimes.map(t=>t.startTime))'),['16:30','17:30','19:30'])
+                        page.locator('#start-list button').filter(has_text='4:30 PM').click()
+                        self.assertIn('45 min',page.locator('#course-list').inner_text())
+                        href=page.locator('#course-list a').first.get_attribute('href')
+                        self.assertIn('courseId=329495',href);self.assertIn('startTime=16:30',href)
+                        page.close()
+            finally:browser.close()
+
     def fixture(self):
         case=fixtures.LayeredPublicationTests();case.setUp()
         source=case.add(11,'17:00','19:00','359474',count=1)
