@@ -38,6 +38,18 @@ Every ShiftCommander work session that makes meaningful progress, encounters a b
 - Brian has already approved the initial supervisors (member IDs 159, 186, 188) and the accepted starter roster is sufficient for private-pilot preparation. Missing roster members alone are not a blocker.
 - Connected Cloudflare metadata access was established in the R43 evidence. Do not revive the retired blanket metadata-access blocker without new contradictory evidence.
 
+## Current owner gate — 2026-10-12 dispatch
+
+This section supersedes the older operational next-action wording below. Issue #214 owner acknowledgement of R7 explicitly prohibits repeating preflight until reviewed settings and trusted loopback TLS PEM paths are privately selected. No changed inputs were supplied in this dispatch. Do not repeat setup/auth/launcher checks or launch a competing Astra worker.
+
+- Last known blocker: reviewed private installation settings and trusted loopback TLS paths remain unselected according to the latest owner evidence; no new local presence probe was performed.
+- Last attempted action: read-only dispatch/queue reconciliation on 2026-10-12; no preflight retry.
+- Observed result: target draft PR #19 remains open/draft at b9cc8cfeb3412569fc02ebed878e3124a5d19dee; local target worktree status is clean. Courier original dirty work remains preserved.
+- Next exact action: privately select reviewed settings/TLS inputs; only after inputs change run the reviewed check-only with supervisor IDs 159/186/188, then intended Windows user enters temporary passwords through hidden local prompts. No passwords in chat/GitHub/arguments/environment.
+- Owner/account gate: private settings/TLS selection and later intended-user hidden password entry. No credential mutation or new provider-access diagnosis in this dispatch.
+- Independent queue: #380 already owns draft #381 and its R5 installer safeguard; #373 awaits Studio foundation; #371/#372 owns the priority deep stream; #387 owns payment routing work. No safe unassigned narrow backend repair established. Preserve all assignments.
+- Evidence level: BUILT with previously reported synthetic proof; no fresh real end-to-end, monitoring, health or Astra attestation.
+
 ## Current state
 
 **Overall state:** BUILT WITH SYNTHETIC PRIVATE-PILOT PROOF / PRODUCTION BLOCKED
