@@ -1,6 +1,6 @@
 # Issue 215 — Finance hosting provenance R4
 
-Timestamp: 2026-10-12T18:00:00-04:00 (dispatch date; exact commit timestamp in Git).
+Timestamp: 2026-10-12T18:45:48.0643193-04:00
 Branch: codex/issue215-finance-hosting-20261012
 Base: 201bba36855c9ee3b26f4cc9285aad38df14d553
 Substantive commit: 1b24d3fb4daa9190b4d4624a7408bf38f0224e9d
@@ -50,3 +50,4 @@ Scanned open CODEX issues and open PRs. Active independent backend work already 
 Expected outcome: remembered private access across owner pages, Finance/Hot Sync/inbox with revocation and corporate/automation separation. Last successful accepted-session Finance end-to-end proof: none established. Current success evidence is the local 50-test suite; prior September owner proof covers other APIs only. Failure condition: missing handler/binding, legitimate-session denial, authority outage, or stale private UI restoration. Production cadence, observer and observer-health proof remain unestablished; no MONITORED or HEALTHY claim. Recovery is the hosting/binding decision followed by reviewed backend deployment and real session proof. Brian must not become routine monitoring layer.
 
 Publication: intended test and unique root receipt committed/pushed only. Original unrelated dirty files preserved. No merge or production deployment. Issue remains open/BLOCKED for deployment. Owner/supervisor hosting authorization is needed only for the absent Finance installation; account grant is not yet justified. Remaining privacy, roles and monitoring requirements remain unchanged.
+
