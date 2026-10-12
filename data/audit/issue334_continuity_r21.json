@@ -1,0 +1,554 @@
+{
+  "checkedAt": "2026-10-12T02:39:57.988510+00:00",
+  "publications": [
+    {
+      "sha": "514e221506bed073b3ef74ac5d63276e49ed15c8",
+      "pagesRun": 38192441207,
+      "pagesCompletedAt": "2026-10-12T01:35:55Z",
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T21:34:11.599970-04:00",
+          "validUntil": "2026-10-11T21:49:10.394722-04:00",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1512,
+            "publicSelectableOfferCount": 3991,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          }
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T21:34:18.417160-04:00",
+          "validUntil": "2026-10-11T21:49:10.394722-04:00",
+          "counts": {
+            "publicSelectableDateCount": 81,
+            "publicSelectableStartTimeCount": 1506,
+            "publicSelectableOfferCount": 8297,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          }
+        }
+      }
+    },
+    {
+      "sha": "b625f76daaef740b4a2699096815fdefda0ff3d0",
+      "pagesRun": 38193119145,
+      "pagesCompletedAt": "2026-10-12T01:46:31Z",
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T21:44:41.263412-04:00",
+          "validUntil": "2026-10-11T21:59:40.229679-04:00",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1512,
+            "publicSelectableOfferCount": 3991,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 159.394722
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T21:44:47.413963-04:00",
+          "validUntil": "2026-10-11T21:59:40.229679-04:00",
+          "counts": {
+            "publicSelectableDateCount": 81,
+            "publicSelectableStartTimeCount": 1506,
+            "publicSelectableOfferCount": 8297,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 159.394722
+        }
+      }
+    },
+    {
+      "sha": "162903d1203c8d1e6b206143ece3f02164a56302",
+      "pagesRun": 38193723228,
+      "pagesCompletedAt": "2026-10-12T01:55:46Z",
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T21:54:00.504780-04:00",
+          "validUntil": "2026-10-11T22:08:59.292885-04:00",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1512,
+            "publicSelectableOfferCount": 3991,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 234.229679
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T21:54:07.374523-04:00",
+          "validUntil": "2026-10-11T22:08:59.292885-04:00",
+          "counts": {
+            "publicSelectableDateCount": 81,
+            "publicSelectableStartTimeCount": 1506,
+            "publicSelectableOfferCount": 8297,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 234.229679
+        }
+      }
+    },
+    {
+      "sha": "49690a1ea655d2721e2fe32f9d4b0d40b37bb20f",
+      "pagesRun": 38194405870,
+      "pagesCompletedAt": "2026-10-12T02:06:19Z",
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T22:04:23.775760-04:00",
+          "validUntil": "2026-10-11T22:19:22.627560-04:00",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1512,
+            "publicSelectableOfferCount": 3991,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 160.292885
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T22:04:30.389115-04:00",
+          "validUntil": "2026-10-11T22:19:22.627560-04:00",
+          "counts": {
+            "publicSelectableDateCount": 81,
+            "publicSelectableStartTimeCount": 1506,
+            "publicSelectableOfferCount": 8297,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 160.292885
+        }
+      }
+    },
+    {
+      "sha": "6ee7da28c500e82b46ecb775116c2f3f3c637e5a",
+      "pagesRun": 38195054954,
+      "pagesCompletedAt": "2026-10-12T02:16:08Z",
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T22:14:30.344491-04:00",
+          "validUntil": "2026-10-11T22:29:29.213089-04:00",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1512,
+            "publicSelectableOfferCount": 3991,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 194.62756
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T22:14:36.757563-04:00",
+          "validUntil": "2026-10-11T22:29:29.213089-04:00",
+          "counts": {
+            "publicSelectableDateCount": 81,
+            "publicSelectableStartTimeCount": 1506,
+            "publicSelectableOfferCount": 8297,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 194.62756
+        }
+      }
+    },
+    {
+      "sha": "1ec1ba674b7004d3e60729837aece45f63b47f5c",
+      "pagesRun": 38195607809,
+      "pagesCompletedAt": "2026-10-12T02:24:40Z",
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T22:23:12.394659-04:00",
+          "validUntil": "2026-10-11T22:38:11.701803-04:00",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1512,
+            "publicSelectableOfferCount": 3991,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 289.213089
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T22:23:16.231250-04:00",
+          "validUntil": "2026-10-11T22:38:11.701803-04:00",
+          "counts": {
+            "publicSelectableDateCount": 81,
+            "publicSelectableStartTimeCount": 1506,
+            "publicSelectableOfferCount": 8297,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 289.213089
+        }
+      }
+    },
+    {
+      "sha": "8c984015e0423b32185e0ae2be4c5bac732b6f6f",
+      "pagesRun": 38196040745,
+      "pagesCompletedAt": "2026-10-12T02:31:12Z",
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T22:28:59.183036-04:00",
+          "validUntil": "2026-10-11T22:42:37.248437-04:00",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1512,
+            "publicSelectableOfferCount": 3991,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 419.701803
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T22:29:02.845669-04:00",
+          "validUntil": "2026-10-11T22:42:37.248437-04:00",
+          "counts": {
+            "publicSelectableDateCount": 81,
+            "publicSelectableStartTimeCount": 1506,
+            "publicSelectableOfferCount": 8297,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 210,
+            "evaluated_windows": 190,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 419.701803
+        }
+      }
+    },
+    {
+      "sha": "5e6b7d6805d03f20e8db3b41c9770c16dd37fa39",
+      "pagesRun": 38196228033,
+      "pagesCompletedAt": "2026-10-12T02:34:07Z",
+      "families": {
+        "bls": {
+          "generatedAt": "2026-10-11T22:32:37.862382-04:00",
+          "validUntil": "2026-10-11T22:47:37.206832-04:00",
+          "counts": {
+            "publicSelectableDateCount": 87,
+            "publicSelectableStartTimeCount": 1512,
+            "publicSelectableOfferCount": 3991,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 209,
+            "evaluated_windows": 189,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 510.248437
+        },
+        "heartsaver": {
+          "generatedAt": "2026-10-11T22:32:41.580832-04:00",
+          "validUntil": "2026-10-11T22:47:37.206832-04:00",
+          "counts": {
+            "publicSelectableDateCount": 81,
+            "publicSelectableStartTimeCount": 1506,
+            "publicSelectableOfferCount": 8297,
+            "input_sources": 444,
+            "normalized_sources": 444,
+            "input_windows": 209,
+            "evaluated_windows": 189,
+            "failed_windows": 20,
+            "uncertainty_issues": 20
+          },
+          "deliveryMarginSeconds": 510.248437
+        }
+      }
+    }
+  ],
+  "live": {
+    "bls": {
+      "observedAt": "2026-10-12T02:40:02.894134+00:00",
+      "httpStatus": 200,
+      "generatedAt": "2026-10-11T22:38:23.159632-04:00",
+      "validUntil": "2026-10-11T22:53:22.461266-04:00",
+      "unexpired": true,
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1512,
+        "publicSelectableOfferCount": 3991,
+        "input_sources": 444,
+        "normalized_sources": 444,
+        "input_windows": 209,
+        "evaluated_windows": 189,
+        "failed_windows": 20,
+        "uncertainty_issues": 20
+      },
+      "sampleOffer": {
+        "courseId": "209806",
+        "courseName": "AHA BLS Provider",
+        "courseFamily": "BLS",
+        "deliveryMode": "classroom",
+        "displayStartTime": "12:00 AM",
+        "durationMinutes": 120,
+        "schedulerConsumptionMinutes": 150,
+        "appointmentDayId": 260786,
+        "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260786&startTime=12%3A00%20AM&courseId=209806",
+        "registrationUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260786&startTime=12%3A00%20AM&courseId=209806",
+        "cleanupBufferMinutes": 30,
+        "setupBufferMinutes": 0,
+        "location": ":: Wilmington; Shipyard Blvd",
+        "availabilityBlockId": "brian_do_not_schedule:inverse_gap:8",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "instructor": "Brian Ennis",
+        "schedulerConsumptionEnd": "02:30",
+        "occupiedUntil": "2026-10-15T02:30:00-04:00",
+        "sourceSessionIds": [],
+        "edgeIds": [],
+        "resource": ":: Wilmington; Shipyard Blvd - B",
+        "validUntil": "2026-10-11T22:53:22.461266-04:00",
+        "date": "2026-10-15",
+        "startTime": "00:00"
+      },
+      "handoff": {
+        "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1010)>",
+        "httpStatus": null,
+        "finalUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260786&startTime=12%3A00%20AM&courseId=209806",
+        "bodyBytes": 0,
+        "containsForm": false
+      },
+      "page": {
+        "httpStatus": 200,
+        "url": "https://www.910cpr.com/bls",
+        "loadsFamilyFeed": true
+      }
+    },
+    "heartsaver": {
+      "observedAt": "2026-10-12T02:40:03.583235+00:00",
+      "httpStatus": 200,
+      "generatedAt": "2026-10-11T22:38:27.209324-04:00",
+      "validUntil": "2026-10-11T22:53:22.461266-04:00",
+      "unexpired": true,
+      "counts": {
+        "publicSelectableDateCount": 81,
+        "publicSelectableStartTimeCount": 1506,
+        "publicSelectableOfferCount": 8297,
+        "input_sources": 444,
+        "normalized_sources": 444,
+        "input_windows": 209,
+        "evaluated_windows": 189,
+        "failed_windows": 20,
+        "uncertainty_issues": 20
+      },
+      "sampleOffer": {
+        "courseId": "209808",
+        "courseName": "AHA Heartsaver CPR AED Online",
+        "courseFamily": "Heartsaver",
+        "deliveryMode": "blended",
+        "displayStartTime": "12:00 AM",
+        "durationMinutes": 45,
+        "schedulerConsumptionMinutes": 60,
+        "appointmentDayId": 260786,
+        "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260786&startTime=12%3A00%20AM&courseId=209808",
+        "registrationUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260786&startTime=12%3A00%20AM&courseId=209808",
+        "cleanupBufferMinutes": 15,
+        "setupBufferMinutes": 0,
+        "location": ":: Wilmington; Shipyard Blvd",
+        "availabilityBlockId": "brian_do_not_schedule:inverse_gap:8",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "instructor": "Brian Ennis",
+        "schedulerConsumptionEnd": "01:00",
+        "occupiedUntil": "2026-10-15T01:00:00-04:00",
+        "sourceSessionIds": [],
+        "edgeIds": [],
+        "resource": ":: Wilmington; Shipyard Blvd - B",
+        "validUntil": "2026-10-11T22:53:22.461266-04:00",
+        "date": "2026-10-15",
+        "startTime": "00:00"
+      },
+      "handoff": {
+        "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: certificate has expired (_ssl.c:1010)>",
+        "httpStatus": null,
+        "finalUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260786&startTime=12%3A00%20AM&courseId=209808",
+        "bodyBytes": 0,
+        "containsForm": false
+      },
+      "page": {
+        "httpStatus": 200,
+        "url": "https://www.910cpr.com/heartsaver",
+        "loadsFamilyFeed": true
+      }
+    }
+  },
+  "limitations": "Pages updated_at is deployment completion proxy, not exact edge switch or continuous browser observation. GET only; no registration/payment submitted.",
+  "publishers": [
+    {
+      "id": 38196409024,
+      "name": "Refresh admin availability",
+      "event": "workflow_dispatch",
+      "created_at": "2026-10-12T02:35:55Z",
+      "updated_at": "2026-10-12T02:38:55Z",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "5e6b7d6805d03f20e8db3b41c9770c16dd37fa39"
+    },
+    {
+      "id": 38195665765,
+      "name": "Refresh admin availability",
+      "event": "schedule",
+      "created_at": "2026-10-12T02:24:36Z",
+      "updated_at": "2026-10-12T02:33:07Z",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "1ec1ba674b7004d3e60729837aece45f63b47f5c"
+    },
+    {
+      "id": 38195663249,
+      "name": "Refresh public site from Enrollware iCal",
+      "event": "schedule",
+      "created_at": "2026-10-12T02:24:34Z",
+      "updated_at": "2026-10-12T02:30:21Z",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "1ec1ba674b7004d3e60729837aece45f63b47f5c"
+    },
+    {
+      "id": 38195428044,
+      "name": "Refresh admin availability",
+      "event": "workflow_dispatch",
+      "created_at": "2026-10-12T02:20:55Z",
+      "updated_at": "2026-10-12T02:23:43Z",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "6ee7da28c500e82b46ecb775116c2f3f3c637e5a"
+    },
+    {
+      "id": 38194778977,
+      "name": "Refresh admin availability",
+      "event": "workflow_dispatch",
+      "created_at": "2026-10-12T02:10:55Z",
+      "updated_at": "2026-10-12T02:15:17Z",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "49690a1ea655d2721e2fe32f9d4b0d40b37bb20f"
+    },
+    {
+      "id": 38194128243,
+      "name": "Refresh admin availability",
+      "event": "workflow_dispatch",
+      "created_at": "2026-10-12T02:00:55Z",
+      "updated_at": "2026-10-12T02:05:11Z",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "162903d1203c8d1e6b206143ece3f02164a56302"
+    },
+    {
+      "id": 38193476252,
+      "name": "Refresh admin availability",
+      "event": "workflow_dispatch",
+      "created_at": "2026-10-12T01:50:55Z",
+      "updated_at": "2026-10-12T01:54:49Z",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "b625f76daaef740b4a2699096815fdefda0ff3d0"
+    },
+    {
+      "id": 38192829171,
+      "name": "Refresh admin availability",
+      "event": "workflow_dispatch",
+      "created_at": "2026-10-12T01:40:55Z",
+      "updated_at": "2026-10-12T01:45:26Z",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "514e221506bed073b3ef74ac5d63276e49ed15c8"
+    },
+    {
+      "id": 38192185929,
+      "name": "Refresh admin availability",
+      "event": "workflow_dispatch",
+      "created_at": "2026-10-12T01:30:55Z",
+      "updated_at": "2026-10-12T01:35:00Z",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "bfd2453fb712c686ab5f6a5792396630d5202456"
+    },
+    {
+      "id": 38191535597,
+      "name": "Refresh admin availability",
+      "event": "workflow_dispatch",
+      "created_at": "2026-10-12T01:20:55Z",
+      "updated_at": "2026-10-12T01:23:46Z",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "713877faa6c6b09f577ca5b823f53679d1778da4"
+    },
+    {
+      "id": 38190888937,
+      "name": "Refresh admin availability",
+      "event": "workflow_dispatch",
+      "created_at": "2026-10-12T01:10:55Z",
+      "updated_at": "2026-10-12T01:14:14Z",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "e0d632920517a04b1097a331d8889cdce776125c"
+    },
+    {
+      "id": 38190231797,
+      "name": "Refresh admin availability",
+      "event": "workflow_dispatch",
+      "created_at": "2026-10-12T01:00:55Z",
+      "updated_at": "2026-10-12T01:03:56Z",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "9a4c494f6b1e445a77d070c684ccf59a9d660999"
+    }
+  ]
+}

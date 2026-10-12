@@ -28,14 +28,16 @@ GitHub refresh on `main`. It neither generates offers nor extends their leases.
 All calendar, occupied-date, roster freshness, and course compatibility gates
 continue to run inside the existing publisher.
 
-Active/queued refreshes prevent duplicate dispatches. A nominal ten-minute KV
-cooldown allows at most 30 seconds of early timer jitter (minimum 9m30s between
-dispatches), covering delayed visibility without skipping a whole five-minute
-tick at 9m59.999s. Every eligible tick still checks active runs before dispatch. Failed public feed reads also
+Active/queued refreshes prevent duplicate dispatches. A nominal five-minute KV
+cooldown allows at most 30 seconds of early timer jitter (minimum 4m30s between
+dispatches), covering delayed visibility without skipping the next five-minute
+tick. This accommodates the effective 15-minute source coverage lease without
+extending source freshness or changing booking-time conflict checks. Every eligible tick still checks active runs before dispatch. Failed public feed reads also
 request recovery. Upstream errors are sanitized and bodies are bounded. The
 public HTTP endpoint only reads health; it cannot dispatch jobs.
 
-This fixes publication cadence and introduces no additional Enrollware dependency.
+This is bounded publication containment and introduces no additional Enrollware dependency.
+It cannot guarantee continuity when a refresh plus Pages delivery exceeds the source lease.
 It does not solve the separate missing unattended complete-roster collector.
 
 ## Deployment
@@ -61,7 +63,8 @@ wrangler deploy --config worker/wrangler.availability-refresh.jsonc --dry-run
 
 - Outcome: a fresh publication reaches the actual public booking page before the
   previous publication expires. A dispatch or successful build alone is not proof.
-- Cadence: Cron every five minutes, refresh normally about every 30 minutes.
+- Cadence: Cron every five minutes; while source coverage is 15 minutes, refresh on each
+  eligible tick after the prior publisher completes.
 - Observer: the Worker reads the real public feed; `/health` exposes the observed
   expiry, offer count, last check, dispatch and active run ID without credentials.
 - Failure: expired/missing public feed, a refresh pending for over 30 minutes,
