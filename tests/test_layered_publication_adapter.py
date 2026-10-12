@@ -396,6 +396,16 @@ class LayeredPublicationTests(unittest.TestCase):
                                  end=self.at(14,'11:45').isoformat(),instructor='Brian Ennis',location='offsite',kind='commitment'))
         self.assertTrue([o for o in self.payload([self.direct(row)])['offers'] if o.get('offerType')=='seated_class'])
 
+    def test_advertised_class_start_is_not_confused_with_setup_occupancy(self):
+        row=self.add(11,'11:45','13:00',count=1)
+        row['session_start']=self.at(11,'12:00').isoformat()
+        direct=dict(self.direct(row),startTime='12:00')
+        self.assertTrue([o for o in self.payload([direct])['offers'] if o.get('offerType')=='seated_class'])
+        self.assertNotIn('11:45',self.starts('329495'))
+        row['active_registration_count']=0
+        self.assertTrue([o for o in self.payload([direct])['offers'] if o.get('offerType')=='seated_class'])
+        self.assertIn('12:00',self.starts('329495'))
+
     def test_old_or_naive_coverage_and_bad_count_are_not_proof(self):
         self.coverage[0]['observed_at']='2026-09-27T12:00:00-04:00'
         self.assertFalse(self.starts())

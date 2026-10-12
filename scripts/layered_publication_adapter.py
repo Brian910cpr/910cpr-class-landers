@@ -56,7 +56,7 @@ def project_sources(rows, course_metadata):
         if truth is not None and truth is not row and row.get('source_file') in {'data/sessions_current.json', 'docs/data/schedule_future.json'}:
             row['course_id'] = row.get('course_id') or truth.get('course_id') or ''
             try:
-                moved = aware(truth['start']) != aware(row['start'])
+                moved = aware(truth.get('session_start') or truth['start']) != aware(row.get('session_start') or row['start'])
             except (KeyError, TypeError, ValueError):
                 moved = False  # Unresolved occupancy remains scoped by calculate.
             if truth.get('session_status') in {'cancelled', 'canceled', 'deleted', 'moved'}:
@@ -247,7 +247,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         state = commitment_state(source) if source else 'uncertain'
         start = aware(f"{original['date']}T{original['startTime']}")
         reasons = []
-        if state == 'inactive' or (source and source.get('start') and aware(source['start']) != start):
+        if state == 'inactive' or (source and source.get('start') and aware(source.get('session_start') or source['start']) != start):
             reasons.append('inactive_or_moved_existing_identity')
         if source and source.get('count_available') is True and source.get('active_registration_count') == 0 and start < now + timedelta(hours=24):
             reasons.append('empty_class_booking_cutoff')
@@ -303,7 +303,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     for source in calculation['projected_sources']:
         if (commitment_state(source) in {'paid', 'seated', 'planted'} and source.get('course_id') and source.get('start') and source.get('end') and
                 not source.get('normalization_issue') and aware(source['end']) > aware(source['start'])):
-            anchored_days.add((aware(source['start']).date().isoformat(),
+            anchored_days.add((aware(source.get('session_start') or source['start']).date().isoformat(),
                                instructor_key(source.get('instructor'))))
     for offer in accepted:
         if offer.get('demandAnchor') is True:

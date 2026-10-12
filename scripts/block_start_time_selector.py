@@ -725,7 +725,7 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
                                    (schedule_future, loaded.get("schedule_future"))]:
             raw = source.get("sessions", []) if isinstance(source, dict) else []
             for block, session in zip(normalized, [r for r in raw if isinstance(r, dict)]):
-                block.update(source_event_id=session.get("session_id") or session.get("id"),
+                block.update(session_start=block.get("start"), source_event_id=session.get("session_id") or session.get("id"),
                     course_id=session.get("course_id"), external_class_id=session.get("session_id"),
                     count_available=session.get("count_available") is True,
                     active_registration_count=session.get("active_registration_count"),
@@ -741,7 +741,7 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
         if (not start or not end or end <= start) and not allow_unresolved:
             raise BlockSelectorInputError("Canonical session has an invalid occupied window")
         canonical.append({
-            "start": start, "end": end,
+            "start": start, "end": end, "session_start": parse_dt(session.get("start_at")),
             "location": session.get("location_name") or UNKNOWN,
             "instructor": session.get("lead_instructor_name") or UNKNOWN,
             "course_title": session.get("course_name") or "Canonical class",

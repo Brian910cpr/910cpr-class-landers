@@ -90,7 +90,7 @@ def retain_verified_commitments(rows, cache_dir, history_path=None):
         elif isinstance(prior, dict):
             fields = ('course_id', 'instructor', 'resource')
             try:
-                exact = all(row.get(k) == prior.get(k) for k in fields) and aware(row['start']) == aware(prior['start'])
+                exact = all(row.get(k) == prior.get(k) for k in fields) and aware(row.get('session_start') or row['start']) == aware(prior.get('session_start') or prior['start'])
             except (KeyError, TypeError, ValueError):
                 exact = False
             if exact:
@@ -98,7 +98,7 @@ def retain_verified_commitments(rows, cache_dir, history_path=None):
             else:
                 ledger.pop(identity, None)
         if state != 'inactive' and row.get('count_available') is True and row.get('active_registration_count', 0) > 0:
-            ledger[identity] = {k: row.get(k) for k in ('source_event_id', 'external_class_id', 'course_id', 'start', 'end', 'instructor', 'resource', 'count_available', 'active_registration_count')}
+            ledger[identity] = {k: row.get(k) for k in ('source_event_id', 'external_class_id', 'course_id', 'start', 'end', 'session_start', 'instructor', 'resource', 'count_available', 'active_registration_count')}
             ledger[identity]['demand_basis'] = 'canonical_active_registrations'
     # Projection rechecks exact course/start/instructor/resource, so a moved or
     # changed unknown identity cannot reuse a previous occupied Anchor.

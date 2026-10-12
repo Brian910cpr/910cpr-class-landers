@@ -44,7 +44,7 @@ def commitment_state(source):
     fields = ('source_event_id', 'course_id', 'instructor', 'resource')
     exact = all(source.get(k) is not None and prior.get(k) == source.get(k) for k in fields)
     try:
-        exact = exact and stamp(str(prior['start'])) == stamp(str(source['start']))
+        exact = exact and stamp(str(prior.get('session_start') or prior['start'])) == stamp(str(source.get('session_start') or source['start']))
     except (KeyError, TypeError, ValueError):
         exact = False
     if (exact and prior.get('demand_basis') == 'canonical_active_registrations'
@@ -335,9 +335,9 @@ def run(fixture):
         if busy.get('kind') not in {'paid', 'seated'}:
             uncertain_full.append({'source_id': busy['id'], 'kind': busy['kind'], 'headcount': busy.get('headcount')})
             if busy.get('kind') == 'planted' and busy.get('headcount') is None:
-                uncertain_family_groups.add((busy['instructor'], busy['start'].astimezone(zone).date().isoformat(), consolidation_identity(busy['course'])))
+                uncertain_family_groups.add((busy['instructor'], stamp(busy['session_start']).astimezone(zone).date().isoformat() if busy.get('session_start') else busy['start'].astimezone(zone).date().isoformat(), consolidation_identity(busy['course'])))
             continue
-        group = (busy['instructor'], busy['start'].astimezone(zone).date().isoformat(), consolidation_identity(busy['course']))
+        group = (busy['instructor'], stamp(busy['session_start']).astimezone(zone).date().isoformat() if busy.get('session_start') else busy['start'].astimezone(zone).date().isoformat(), consolidation_identity(busy['course']))
         seating_positions.setdefault(group, {}).setdefault((busy['start'], busy['location']), []).append(busy['id'])
     for group, positions in seating_positions.items(): family_counts[group] = len(positions)
     for c in sorted(candidates, key=lambda x: (x["start"], x["course"])):
@@ -385,7 +385,7 @@ def run(fixture):
         capacity, count = busy.get('capacity'), busy.get('headcount')
         remaining = max(0, capacity-count) if isinstance(capacity,int) and isinstance(count,int) else None
         if remaining == 0: continue
-        seated.append(dict(source_id=busy['id'], course=busy.get('course'), start=busy['start'],
+        seated.append(dict(source_id=busy['id'], course=busy.get('course'), start=stamp(busy['session_start']) if busy.get('session_start') else busy['start'],
             end=busy['raw_end'] if busy['raw_end']>busy['start'] else busy['end'],
             occupied_end=busy['end'], instructor=busy['instructor'], location=busy['location'],
             remaining_seats=remaining, seats_status='known' if remaining is not None else 'unknown', mode='existing_seated'))
