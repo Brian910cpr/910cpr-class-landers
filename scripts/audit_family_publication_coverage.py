@@ -16,14 +16,23 @@ ROOT = Path(__file__).resolve().parents[1]
 FAMILIES = ('bls', 'heartsaver', 'acls', 'pals', 'arc', 'hsi', 'uscg_first_aid_cpr_aed', 'family_cpr')
 
 
-def summarize(payload, day):
+def summarize(payload, day, now=None):
     rows = [(d['date'], t['startTime'], c) for d in payload.get('dates', [])
             for t in d.get('startTimes', []) for c in t.get('courses', [])]
     failures = payload.get('reconciliationIssues', [])
+    now = now or datetime.now(timezone.utc)
+    try:
+        expiry = datetime.fromisoformat(str(payload.get('validUntil', '')).replace('Z', '+00:00'))
+        expired = expiry.tzinfo is None or expiry <= now
+    except ValueError:
+        expired = True
     return {
         'generatedAt': payload.get('generatedAt'), 'validUntil': payload.get('validUntil'),
         'publicPage': payload.get('publicPage'), 'counts': payload.get('counts'),
         'actualOffers': len(rows), 'actualDates': len({d for d, _, _ in rows}),
+        'dynamicOffers': sum(c.get('offerType') != 'seated_class' for _, _, c in rows),
+        'seatedOffers': sum(c.get('offerType') == 'seated_class' for _, _, c in rows),
+        'publicationExpired': expired,
         'perCourse': dict(Counter(str(c['courseId']) for _, _, c in rows)),
         'day': day, 'dayOffers': len([r for r in rows if r[0] == day]),
         'dayTimes': sorted({t for d, t, _ in rows if d == day}),
@@ -37,6 +46,8 @@ def summarize(payload, day):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--live', action='store_true')
+    parser.add_argument('--continuity', action='store_true',
+        help='Alert for expired dynamic inventory or absent BLS/Heartsaver appointments; never retire seated classes')
     parser.add_argument('--day', default='2026-10-14')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
@@ -65,7 +76,11 @@ def main():
     args.output.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     print(json.dumps({k:{f:v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','coverageAlert')}
         for k,v in feeds.items()}, indent=2))
-    return int(any(v['coverageAlert'] for v in feeds.values()))
+    continuity_alert = args.continuity and any(
+        (v['publicationExpired'] and v['dynamicOffers'] > 0) or
+        (family in ('bls', 'heartsaver') and v['dynamicOffers'] == 0)
+        for family, v in feeds.items())
+    return int(any(v['coverageAlert'] for v in feeds.values()) or continuity_alert)
 
 
 if __name__ == '__main__':

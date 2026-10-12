@@ -1,0 +1,30 @@
+name: Verify public booking inventory
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: public-booking-observation
+  cancel-in-progress: false
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: scripts/audit_family_publication_coverage.py
+      - name: Check all public families and BLS/Heartsaver continuity
+        run: python scripts/audit_family_publication_coverage.py --live --continuity --output public-booking-observation.json
+      - name: Preserve timestamped public evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-booking-observation-${{ github.run_id }}
+          path: public-booking-observation.json
+          if-no-files-found: warn
+          retention-days: 7
