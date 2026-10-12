@@ -51,7 +51,8 @@ class PublicRegistrationTests(unittest.TestCase):
         self.assertIn('"idempotency-key":idempotencyKey', EDGE)
         self.assertIn('p.set("integration_identifier"', EDGE)
         self.assertNotIn("payment_method_types", EDGE)
-        self.assertLess(EDGE.index("stripeKey();const result"), EDGE.index('rpc("landerware_create_public_order"'))
+        start = EDGE[EDGE.index("async function start"):EDGE.index("async function recover")]
+        self.assertLess(start.index("stripeKey();"), start.index('rpc("landerware_create_public_order"'))
 
     def test_bls_offer_materializes_a_class_before_seat_hold(self):
         self.assertIn("function materializedOffer", EDGE)
@@ -65,7 +66,8 @@ class PublicRegistrationTests(unittest.TestCase):
     def test_gmail_queue_is_preserved_and_page_does_not_restart_in_enrollware(self):
         self.assertIn('delivery_provider:"gmail"', EDGE)
         self.assertIn("landerware_messages", EDGE)
-        self.assertNotIn("fallbackRegistrationUrl", PAGE)
+        self.assertIn("fallbackRegistrationUrl", PAGE)
+        self.assertIn("!p.session.nativeReady", PAGE)
         self.assertIn("Your information is still on this page", PAGE)
 
     def test_bls_initial_addons_and_company_picker_are_present(self):
@@ -102,11 +104,15 @@ class PublicRegistrationTests(unittest.TestCase):
         self.assertIn("to service_role", SQL)
         self.assertIn("from public, anon, authenticated", QUEUE_SQL)
 
-    def test_only_real_bls_initial_sessions_route_to_native_registration(self):
-        self.assertIn("String(course.courseId) === '209806'", BLS_PAGE)
-        self.assertIn("course.offerType === 'seated_class'", BLS_PAGE)
-        self.assertIn("/register/?session=${encodeURIComponent(nativeSessionId)}", BLS_PAGE)
-        self.assertIn(": course.appointmentUrl", BLS_PAGE)
+    def test_selector_preserves_verified_native_and_existing_enrollware_urls(self):
+        from scripts.block_start_time_selector import seated_class_selector_offers
+        native = "https://www.910cpr.com/register/?session=lw-00000000-0000-4000-8000-000000000001"
+        external = "https://coastalcprtraining.enrollware.com/enroll?id=14377157"
+        rows = [{"session_id":str(i),"course_id":"359474","course_name":"BLS Renewal","start_at":"2030-01-01T10:00:00-05:00","end_at":"2030-01-01T12:00:00-05:00","public_direct_booking":True,"registration_status":"open","registration_url":url} for i,url in enumerate((native,external))]
+        offers = seated_class_selector_offers(schedule_future_payload={"sessions":rows},selected_courses=[],selected_course_ids={"359474"},course_rules={})
+        self.assertEqual([offer["appointmentUrl"] for offer in offers],[native,external])
+        self.assertIn("link.href = course.appointmentUrl", BLS_PAGE)
+        self.assertIn('if(!s.nativeReady)throw Error("native_registration_unavailable")', EDGE)
 
 
 if __name__ == "__main__":

@@ -10,10 +10,11 @@ const secret = 'whsec_local_fixture_only';
 function signature(raw, timestamp = Math.floor(Date.now()/1000)) {
   return `t=${timestamp},v1=${createHmac('sha256', secret).update(`${timestamp}.${raw}`).digest('hex')}`;
 }
-function runtime() {
+function runtime(kind='retail',overrides={}) {
   let handler; const calls=[];
-  const db={from(){return {select(){return this},eq(){return this},async maybeSingle(){return {data:{secret_value:secret}}}}},async rpc(name,args){calls.push({name,args});return {data:{ok:true}}}};
-  const context=vm.createContext({Date,TextEncoder,crypto:webcrypto,Response,JSON,Array,Number,Math,Set,createClient:()=>db,Deno:{env:{get:()=>''},serve(fn){handler=fn}}});
+  const order={id:'00000000-0000-4000-8000-000000000001',total:7500,total_amount_cents:7500,currency:'usd',stripe_checkout_session_id:'cs_local',...overrides};
+  const db={from(table){return {select(){return this},eq(){return this},async maybeSingle(){return {data:table==='landerware_integration_secrets'?{secret_value:secret}:table===`landerware_${kind}_orders`?order:null}}}},async rpc(name,args){calls.push({name,args});return {data:{ok:true}}}};
+  const context=vm.createContext({Date,TextEncoder,crypto:webcrypto,Response,JSON,Array,Number,Math,Set,console,createClient:()=>db,Deno:{env:{get:()=>''},serve(fn){handler=fn}}});
   vm.runInContext(stripTypeScriptTypes(source)+'\nthis.verifySignature=verify;',context);
   return {verify:context.verifySignature,calls,handler};
 }
@@ -37,7 +38,7 @@ test('rejects missing, ambiguous and malformed signature headers',async()=>{
   assert.equal(await r.verify('{}',signature('{}'),null),false);
 });
 async function deliver(r,type,payment_status){
-  const raw=JSON.stringify({id:'evt_local',type,data:{object:{id:'cs_local',payment_status,metadata:{landerware_order_id:'local-order'},payment_intent:'pi_local'}}});
+  const raw=JSON.stringify({id:'evt_local',type,livemode:true,data:{object:{id:'cs_local',mode:'payment',livemode:true,amount_total:7500,currency:'usd',payment_status,metadata:{landerware_order_id:'00000000-0000-4000-8000-000000000001'},payment_intent:'pi_local'}}});
   return r.handler(new Request('https://local.test/webhook',{method:'POST',body:raw,headers:{'stripe-signature':signature(raw)}}));
 }
 test('unpaid asynchronous success cannot confirm a seat',async()=>{
@@ -55,4 +56,19 @@ test('expiration and failure events never confirm a seat',async()=>{
   for(const type of ['checkout.session.expired','checkout.session.async_payment_failed']){
     const r=runtime();await deliver(r,type,'unpaid');assert.equal(r.calls.length,0);
   }
+});
+test('public orders route to the public transaction with payment evidence',async()=>{
+ const r=runtime('public');const response=await deliver(r,'checkout.session.completed','paid');
+ assert.equal(response.status,200);assert.equal(r.calls[0].name,'landerware_finalize_public_order');
+ assert.equal(r.calls[0].args.p_evidence.amount_total,7500);
+});
+test('wrong amount, currency or Checkout cannot confirm either order type',async()=>{
+ for(const kind of ['public','retail'])for(const mismatch of [{total:999,total_amount_cents:999},{currency:'eur'},{stripe_checkout_session_id:'cs_other'}]){
+  const r=runtime(kind,mismatch),response=await deliver(r,'checkout.session.completed','paid');
+  assert.equal(response.status,409);assert.equal(r.calls.length,0);
+ }
+});
+test('unknown order remains retryable rather than silently acknowledged',async()=>{
+ const r=runtime('missing'),response=await deliver(r,'checkout.session.completed','paid');
+ assert.equal(response.status,500);assert.equal(r.calls.length,0);
 });
