@@ -5,11 +5,15 @@ function hex(bytes:ArrayBuffer){return Array.from(new Uint8Array(bytes)).map(byt
 function safeEqual(a:string,b:string){if(a.length!==b.length)return false;let difference=0;for(let i=0;i<a.length;i+=1)difference|=a.charCodeAt(i)^b.charCodeAt(i);return difference===0}
 async function verify(raw:string,header:string|null,secret:string|null){
   if(!secret||!header)return false;
-  const pieces=Object.fromEntries(header.split(",").map(piece=>piece.split("=",2) as [string,string]));
-  if(!pieces.t||!pieces.v1)return false;
+  const pieces=header.split(",").map(piece=>piece.trim().split("=",2));
+  const timestamps=pieces.filter(([name])=>name==="t").map(([,value])=>value);
+  const signatures=pieces.filter(([name,value])=>name==="v1"&&/^[a-f0-9]{64}$/.test(value||"")).map(([,value])=>value);
+  if(timestamps.length!==1||!/^\d+$/.test(timestamps[0]||"")||!signatures.length)return false;
+  const timestamp=Number(timestamps[0]);
+  if(!Number.isSafeInteger(timestamp)||Math.abs(Date.now()/1000-timestamp)>300)return false;
   const key=await crypto.subtle.importKey("raw",enc.encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
-  const signature=hex(await crypto.subtle.sign("HMAC",key,enc.encode(`${pieces.t}.${raw}`)));
-  return safeEqual(signature,pieces.v1);
+  const signature=hex(await crypto.subtle.sign("HMAC",key,enc.encode(`${timestamps[0]}.${raw}`)));
+  return signatures.some(candidate=>safeEqual(signature,candidate));
 }
 const reply=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json","cache-control":"no-store"}});
 
@@ -25,7 +29,7 @@ Deno.serve(async(request)=>{
   try{event=JSON.parse(raw)}catch{return reply({ok:false,error:"Invalid JSON"},400)}
   const session=event?.data?.object||{};
   const retailOrderId=String(session?.metadata?.landerware_order_id||"").trim();
-  const paid=event.type==="checkout.session.completed"?session.payment_status==="paid":event.type==="checkout.session.async_payment_succeeded";
+  const paid=["checkout.session.completed","checkout.session.async_payment_succeeded"].includes(event.type)&&session.payment_status==="paid";
 
   if(retailOrderId){
     if(!paid)return reply({ok:true,ignored:"Retail checkout not paid"});
