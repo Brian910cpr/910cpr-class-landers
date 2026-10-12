@@ -30,6 +30,7 @@ export function rankDispatchCandidates(candidates, ownerPriorityId) {
     if (Number.isSafeInteger(c?.id) && c.id > 0) counts.set(c.id, (counts.get(c.id) || 0) + 1);
   }
   return candidates.filter(c => Number.isSafeInteger(c?.id) && c.id > 0
+      && c.state?.issue_id === c.id
       && counts.get(c.id) === 1 && ['P0', 'P1', 'P2', 'P3'].includes(c.priority)
       && reconcileDispatch(c.state, c.expectedVersion, 'selection').decision === 'candidate')
     .map((c, index) => ({c, index}))

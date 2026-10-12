@@ -8,7 +8,7 @@ for (const phase of ['selection', 'pre_side_effect']) {
       {id:297, priority:'P1', state:{...base, blocked:true}},
       {id:371, priority:'P1', state:base},
       {id:900, priority:'P0', state:base},
-    ].map(c => ({...c, expectedVersion:'v1', check:reconcileDispatch(c.state,'v1',phase)}));
+    ].map(c => ({...c, state:{...c.state,issue_id:c.id}, expectedVersion:'v1', check:reconcileDispatch(c.state,'v1',phase)}));
     assert.equal(entries[0].check.reason,'blocked_requires_explicit_reconciliation');
     assert.deepEqual(rankDispatchCandidates(entries,371).map(c=>c.id),[900,371]);
     assert.ok(entries.every(c=>c.check.can_execute === false));
@@ -36,7 +36,7 @@ test('invalid phase and missing version cannot become candidates', () => {
   assert.equal(reconcileDispatch({...base,version:''},'','selection').decision,'review');
 });
 
-const candidate = (id, priority = 'P1', state = base) => ({id, priority, state, expectedVersion:'v1', check:{decision:'candidate'}});
+const candidate = (id, priority = 'P1', state = base) => ({id, priority, state:{...state,issue_id:id}, expectedVersion:'v1', check:{decision:'candidate'}});
 test('ranking rejects cached candidate checks after resolution, blocker or version change', () => {
   const entries = [candidate(297,'P0',{...base,blocked:true}),
     candidate(380,'P0',{...base,resolution_state:'handled_manually'}),
@@ -58,4 +58,19 @@ test('ranking keeps P0 ahead of owner priority and stable ties without mutating 
   const before=structuredClone(entries);
   assert.deepEqual(rankDispatchCandidates(entries,371).map(c=>c.id),[901,902,371,12,13]);
   assert.deepEqual(entries,before);
+});
+
+
+test('ranking binds outer issue identity to canonical snapshot before priority', () => {
+  const valid = candidate(371);
+  for (const issue_id of [297, '371', null, undefined, 0, -1, 1.5]) {
+    const wrong = {...candidate(900, 'P0'), state:{...base, issue_id}};
+    assert.deepEqual(rankDispatchCandidates([wrong, valid],900).map(c=>c.id),[371]);
+  }
+  const swapped = [
+    {...candidate(297), state:{...base,issue_id:371}},
+    {...candidate(371), state:{...base,issue_id:297}},
+  ];
+  assert.deepEqual(rankDispatchCandidates(swapped,371),[]);
+  assert.equal(rankDispatchCandidates([valid],371)[0],valid);
 });
