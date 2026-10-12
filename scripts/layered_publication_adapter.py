@@ -255,7 +255,10 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         # Existing seats keep their own interval, but another room/instructor
         # commitment still vetoes selling a conflicting direct offer.
         end = start + timedelta(minutes=original.get('schedulerConsumptionMinutes') or original.get('durationMinutes') or 1)
-        for busy in calculation['projected_sources']:
+        from scripts.layered_day_cache import scoped_sources
+        travel_rules = calculation.get('direct_constraints', {}).get('travel_minutes', {})
+        travel_scope = max([0] + [int(v) for v in travel_rules.values() if isinstance(v, (int, float)) and v >= 0])
+        for busy in scoped_sources(calculation['projected_sources'], start, end, travel_scope):
             if commitment_state(busy) in {'inventory', 'inactive'} or busy is source:
                 continue
             same_identity = source and set(str(v) for v in (source.get('source_event_id'), source.get('external_class_id')) if v) & set(str(v) for v in (busy.get('source_event_id'), busy.get('external_class_id')) if v)

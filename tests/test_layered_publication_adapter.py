@@ -390,6 +390,12 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertNotIn('14:00',self.starts('329495'))
         self.assertTrue(self.calculation()['projected_sources'][1]['timing_reconciliation_required'])
 
+    def test_unknown_offsite_travel_on_unrelated_day_does_not_retire_direct_class(self):
+        row=self.add(11,'12:00','13:00',count=1)
+        self.sources.append(dict(source_event_id='unrelated-trip',start=self.at(14,'10:00').isoformat(),
+                                 end=self.at(14,'11:45').isoformat(),instructor='Brian Ennis',location='offsite',kind='commitment'))
+        self.assertTrue([o for o in self.payload([self.direct(row)])['offers'] if o.get('offerType')=='seated_class'])
+
     def test_old_or_naive_coverage_and_bad_count_are_not_proof(self):
         self.coverage[0]['observed_at']='2026-09-27T12:00:00-04:00'
         self.assertFalse(self.starts())
