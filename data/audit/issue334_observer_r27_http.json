@@ -1,0 +1,17 @@
+{
+  "observedAt": "2026-10-12T07:43:55.080193+00:00",
+  "pages": [
+    {
+      "url": "https://www.910cpr.com/bls.html",
+      "status": 200
+    },
+    {
+      "url": "https://www.910cpr.com/heartsaver.html",
+      "status": 200
+    }
+  ],
+  "healthVariable": {
+    "status": 404,
+    "name": "AVAILABILITY_WATCHDOG_HEALTH_URL"
+  }
+}
