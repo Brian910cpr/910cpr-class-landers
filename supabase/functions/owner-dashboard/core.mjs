@@ -10,11 +10,12 @@ export function financeWindow(snapshot, now = Date.now()) {
   const cents = n => Number.isSafeInteger(n) && n >= 0;
   const accounts = new Map();
   for (const a of p.accounts) {
-    if (!a.id || accounts.has(a.id) || !cents(a.available_cents) || !cents(a.reserve_cents) || a.currency !== 'USD') return unavailable('Account totals need verification.');
+    if (!a || typeof a !== 'object' || Array.isArray(a) || typeof a.id !== 'string' || !a.id.trim() || accounts.has(a.id) || !cents(a.available_cents) || !cents(a.reserve_cents) || a.currency !== 'USD') return unavailable('Account totals need verification.');
     accounts.set(a.id, {...a, obligations:0});
   }
   const due = [], seen = new Set();
   for (const b of p.bills) {
+    if (!b || typeof b !== 'object' || Array.isArray(b)) return unavailable('A bill needs verification.');
     const date = Date.parse(b.due_at);
     if (!b.id || seen.has(b.id) || !cents(b.amount_cents) || !Number.isFinite(date) || !accounts.has(b.account_id) || !['paid','unpaid'].includes(b.status)) return unavailable('A bill needs verification.');
     seen.add(b.id);
