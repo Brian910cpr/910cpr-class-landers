@@ -29,3 +29,20 @@ test('finance CORS permits owner sessions only at first-party origins',async()=>
   assert.equal(response.headers.get('access-control-allow-headers'),'Content-Type,X-Hot-Sync-Admin-Key,X-LanderWare-Owner-Session');
   assert.equal((await finance.fetch(new Request(endpoint,{headers:{Origin:'https://untrusted.example'}}),env)).status,403);
 });
+
+test('authorized Finance without Stripe binding fails closed before financial reads or writes',async t=>{
+  t.mock.method(globalThis,'fetch',async()=>assert.fail('must not contact Stripe without its binding'));
+  for(const [path,method] of [['/admin/finance/invoices','GET'],['/admin/finance/invoices/in_fixture/outside-payment','POST']]){
+    const response=await finance.fetch(new Request('https://schedule.910cpr.com'+path,{method,headers:{Origin:origin,'X-Hot-Sync-Admin-Key':env.HOT_SYNC_ADMIN_KEY}}),{HOT_SYNC_ADMIN_KEY:env.HOT_SYNC_ADMIN_KEY});
+    assert.equal(response.status,503);
+    assert.equal((await response.json()).code,'stripe_unavailable');
+    assert.match(response.headers.get('cache-control'),/no-store/);
+  }
+});
+
+test('missing Stripe configuration is disclosed only after owner authorization',async t=>{
+  t.mock.method(globalThis,'fetch',async()=>assert.fail('anonymous caller must not reach upstream'));
+  const response=await finance.fetch(new Request('https://schedule.910cpr.com/admin/finance/invoices',{headers:{Origin:origin}}),{HOT_SYNC_ADMIN_KEY:env.HOT_SYNC_ADMIN_KEY});
+  assert.equal(response.status,401);
+  assert.equal((await response.json()).code,'authentication_failed');
+});
