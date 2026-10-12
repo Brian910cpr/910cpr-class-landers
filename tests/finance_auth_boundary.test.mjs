@@ -4,7 +4,7 @@ import finance from '../worker/finance-worker.js';
 
 const endpoint='https://schedule.910cpr.com/admin/finance/unknown';
 const origin='https://www.910cpr.com';
-const env={HOT_SYNC_ADMIN_KEY:'local-fixture-only'};
+const env={HOT_SYNC_ADMIN_KEY:'local-fixture-only',STRIPE_SECRET_KEY:'unused-local-fixture'};
 const request=(headers={},method='GET')=>new Request(endpoint,{method,headers:{Origin:origin,...headers}});
 
 test('legacy finance denies anonymous, corporate and remembered-owner sessions without touching financial data',async()=>{
@@ -29,3 +29,4 @@ test('legacy finance CORS does not imply remembered-owner session support',async
   assert.equal(response.headers.get('access-control-allow-headers'),'Content-Type,X-Hot-Sync-Admin-Key');
   assert.equal((await finance.fetch(new Request(endpoint,{headers:{Origin:'https://untrusted.example'}}),env)).status,403);
 });
+
