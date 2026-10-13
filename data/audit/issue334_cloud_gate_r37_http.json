@@ -1,0 +1,14 @@
+[
+  {
+    "page": "bls",
+    "status": 200,
+    "observedAt": "2026-10-13T04:44:16.0415269Z",
+    "bytes": 73101
+  },
+  {
+    "page": "heartsaver",
+    "status": 200,
+    "observedAt": "2026-10-13T04:44:16.1574508Z",
+    "bytes": 80225
+  }
+]
