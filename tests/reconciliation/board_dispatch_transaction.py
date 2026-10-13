@@ -145,6 +145,68 @@ class DispatchTransaction(foundation.ResolutionContention):
                 finally:
                     a.rollback()
 
+    def wait_for_lock(self, conn, pending):
+        deadline = time.monotonic() + 4
+        while time.monotonic() < deadline:
+            row = self.admin.execute('select wait_event_type from pg_stat_activity where pid=%s',
+                                     (conn.info.backend_pid,)).fetchone()
+            if row and row[0] == 'Lock':
+                print(self._testMethodName + ': observed Lock wait', flush=True)
+                return
+            if pending.done():
+                self.fail('contender finished before lock release')
+            time.sleep(.02)
+        self.fail('contender did not reach Lock wait')
+
+    def test_dispatch_intake_writer_first_no_deadlock(self):
+        args = self.fixture()
+        with self.pg.connect(foundation.DSN) as writer, self.pg.connect(foundation.DSN) as dispatcher:
+            for conn in (writer, dispatcher):
+                conn.execute('set role service_role')
+                conn.execute("set statement_timeout='8s'")
+                conn.commit()
+            # Model UPDATE's intake-row lock before its AFTER trigger touches card.
+            writer.execute('select 1 from production_board_dispatch_intake where card_id=%s for update', (args[0],))
+            def decide():
+                value = dispatcher.execute(CALL, args).fetchone()[0]
+                dispatcher.commit()
+                return value
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                pending = pool.submit(decide)
+                try:
+                    self.wait_for_lock(dispatcher, pending)
+                    writer.execute('update production_board_dispatch_intake set blocked=true where card_id=%s', (args[0],))
+                    writer.commit()
+                    result = pending.result(timeout=10)
+                    self.assertEqual(result['reason'], 'stale_card_version')
+                    self.assertFalse(result['can_execute'])
+                finally:
+                    writer.rollback()
+            self.assertEqual(self.admin.execute('select row_version from production_board_cards where id=%s', (args[0],)).fetchone()[0], 3)
+
+    def test_dispatch_reader_first_intake_writer_waits(self):
+        args = self.fixture()
+        with self.pg.connect(foundation.DSN) as dispatcher, self.pg.connect(foundation.DSN) as writer:
+            for conn in (dispatcher, writer):
+                conn.execute('set role service_role')
+                conn.execute("set statement_timeout='8s'")
+                conn.commit()
+            self.assertEqual(dispatcher.execute(CALL, args).fetchone()[0]['decision'], 'reserved')
+            def change():
+                writer.execute('update production_board_dispatch_intake set blocked=true where card_id=%s', (args[0],))
+                writer.commit()
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                pending = pool.submit(change)
+                try:
+                    self.wait_for_lock(writer, pending)
+                    dispatcher.commit()
+                    pending.result(timeout=10)
+                finally:
+                    dispatcher.rollback()
+            result = self.call((*args[:3], uuid.uuid4(), 'pre_side_effect', args[3]))
+            self.assertEqual(result['reason'], 'stale_card_version')
+            self.assertFalse(result['can_execute'])
+
 
 if __name__ == '__main__':
     if not foundation.DSN:

@@ -71,11 +71,13 @@ begin
     return jsonb_build_object('replayed',true,'decision',e.decision,'reason',e.reason,
       'version',e.card_version::text,'request_id',p_request,'can_execute',false);
   end if;
+  -- Match intake DML and its AFTER trigger: intake row BEFORE card row.
+  -- Never take a card lock and then wait for intake. A missing intake row has
+  -- no gap lock: a concurrent insert may be unseen, yielding a safe review.
+  -- Future publisher RPCs must preserve this order (including version checks).
+  select * into i from public.production_board_dispatch_intake where card_id=p_card for share;
   select * into c from public.production_board_cards where id=p_card for update;
   if not found then raise exception 'card_not_found'; end if;
-  -- Lock intake against updates between this read and commit. Intake edits lock
-  -- their row first then card; deadlock detection aborts one transaction safely.
-  select * into i from public.production_board_dispatch_intake where card_id=p_card for share;
   if i.card_id is null or i.issue_id<>p_issue then why:='canonical_intake_required';
   elsif c.resolution_state<>'unresolved' then outcome:='skip'; why:='recorded_resolution';
   elsif c.row_version<>p_version then why:='stale_card_version';
