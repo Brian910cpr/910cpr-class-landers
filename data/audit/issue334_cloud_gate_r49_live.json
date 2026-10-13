@@ -1,0 +1,603 @@
+{
+  "observedAt": "2026-10-13T23:54:43.783928+00:00",
+  "mode": "live-read-only",
+  "families": {
+    "bls": {
+      "generatedAt": "2026-10-13T19:48:36.667010-04:00",
+      "validUntil": "2026-10-13T20:03:36.027471-04:00",
+      "publicPage": "docs/bls.html",
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1370,
+        "publicSelectableOfferCount": 3584,
+        "input_sources": 446,
+        "normalized_sources": 446,
+        "input_windows": 189,
+        "evaluated_windows": 187,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      },
+      "actualOffers": 3584,
+      "actualDates": 87,
+      "dynamicOffers": 3574,
+      "seatedOffers": 10,
+      "publicationExpired": false,
+      "perCourse": {
+        "209806": 1113,
+        "210549": 1357,
+        "359474": 1114
+      },
+      "day": "2026-10-14",
+      "dayOffers": 0,
+      "dayTimes": [],
+      "dayPerCourse": {},
+      "failedWindowReasons": {
+        "missing directional travel rule: 4018 Shipyard Blvd, Room B, 910CPR Office->:: Wilmington; Shipyard Blvd - B": 2
+      },
+      "dayFailedWindows": 0,
+      "coverageAlert": true,
+      "sha256": "f36ef84c947587c0054689aeec6a75f664e327ee04951e790f3766ab453b3163"
+    },
+    "heartsaver": {
+      "generatedAt": "2026-10-13T19:48:40.461611-04:00",
+      "validUntil": "2026-10-13T20:03:36.027471-04:00",
+      "publicPage": "docs/heartsaver.html",
+      "counts": {
+        "publicSelectableDateCount": 88,
+        "publicSelectableStartTimeCount": 1372,
+        "publicSelectableOfferCount": 7488,
+        "input_sources": 446,
+        "normalized_sources": 446,
+        "input_windows": 189,
+        "evaluated_windows": 187,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      },
+      "actualOffers": 7488,
+      "actualDates": 88,
+      "dynamicOffers": 7483,
+      "seatedOffers": 5,
+      "publicationExpired": false,
+      "perCourse": {
+        "209809": 1116,
+        "329495": 1356,
+        "209808": 1355,
+        "251545": 1355,
+        "344085": 1192,
+        "351632": 1114
+      },
+      "day": "2026-10-14",
+      "dayOffers": 1,
+      "dayTimes": [
+        "17:30"
+      ],
+      "dayPerCourse": {
+        "329495": 1
+      },
+      "failedWindowReasons": {
+        "missing directional travel rule: 4018 Shipyard Blvd, Room B, 910CPR Office->:: Wilmington; Shipyard Blvd - B": 2
+      },
+      "dayFailedWindows": 0,
+      "coverageAlert": true,
+      "sha256": "add67b0414cfa8c9c74bc75c29ef42d02d7965c6f81550cdb455e03d10662b96"
+    },
+    "acls": {
+      "generatedAt": "2026-10-13T19:48:38.316515-04:00",
+      "validUntil": "2026-10-13T19:48:38.316515-04:00",
+      "publicPage": "docs/acls.html",
+      "counts": {
+        "publicSelectableDateCount": 2,
+        "publicSelectableStartTimeCount": 2,
+        "publicSelectableOfferCount": 3,
+        "input_sources": 446,
+        "normalized_sources": 446,
+        "input_windows": 189,
+        "evaluated_windows": 187,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      },
+      "actualOffers": 3,
+      "actualDates": 2,
+      "dynamicOffers": 0,
+      "seatedOffers": 3,
+      "publicationExpired": true,
+      "perCourse": {
+        "241108": 1,
+        "209818": 2
+      },
+      "day": "2026-10-14",
+      "dayOffers": 0,
+      "dayTimes": [],
+      "dayPerCourse": {},
+      "failedWindowReasons": {
+        "missing directional travel rule: 4018 Shipyard Blvd, Room B, 910CPR Office->:: Wilmington; Shipyard Blvd - B": 2
+      },
+      "dayFailedWindows": 0,
+      "coverageAlert": true,
+      "sha256": "2a0fa07aca2f3ece96c2fcf5f386e466615ab0d220aef93407929482b8ec9889"
+    },
+    "pals": {
+      "generatedAt": "2026-10-13T19:48:39.416349-04:00",
+      "validUntil": "2026-10-13T19:48:39.416349-04:00",
+      "publicPage": "docs/pals.html",
+      "counts": {
+        "publicSelectableDateCount": 1,
+        "publicSelectableStartTimeCount": 1,
+        "publicSelectableOfferCount": 2,
+        "input_sources": 446,
+        "normalized_sources": 446,
+        "input_windows": 189,
+        "evaluated_windows": 187,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      },
+      "actualOffers": 2,
+      "actualDates": 1,
+      "dynamicOffers": 0,
+      "seatedOffers": 2,
+      "publicationExpired": true,
+      "perCourse": {
+        "209805": 1,
+        "251496": 1
+      },
+      "day": "2026-10-14",
+      "dayOffers": 0,
+      "dayTimes": [],
+      "dayPerCourse": {},
+      "failedWindowReasons": {
+        "missing directional travel rule: 4018 Shipyard Blvd, Room B, 910CPR Office->:: Wilmington; Shipyard Blvd - B": 2
+      },
+      "dayFailedWindows": 0,
+      "coverageAlert": true,
+      "sha256": "f4af86cbb9cf95d8521657ce0eb5607b057291cf6ca5b814b24228efa4a7c802"
+    },
+    "arc": {
+      "generatedAt": "2026-10-13T19:48:46.213221-04:00",
+      "validUntil": "2026-10-13T20:03:36.027471-04:00",
+      "publicPage": "docs/arc.html",
+      "counts": {
+        "publicSelectableDateCount": 86,
+        "publicSelectableStartTimeCount": 1361,
+        "publicSelectableOfferCount": 3583,
+        "input_sources": 446,
+        "normalized_sources": 446,
+        "input_windows": 189,
+        "evaluated_windows": 187,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      },
+      "actualOffers": 3583,
+      "actualDates": 86,
+      "dynamicOffers": 3583,
+      "seatedOffers": 0,
+      "publicationExpired": false,
+      "perCourse": {
+        "248288": 1114,
+        "369209": 1114,
+        "372258": 1355
+      },
+      "day": "2026-10-14",
+      "dayOffers": 0,
+      "dayTimes": [],
+      "dayPerCourse": {},
+      "failedWindowReasons": {
+        "missing directional travel rule: 4018 Shipyard Blvd, Room B, 910CPR Office->:: Wilmington; Shipyard Blvd - B": 2
+      },
+      "dayFailedWindows": 0,
+      "coverageAlert": true,
+      "sha256": "a72d0e9d9653ee7234f35c96c67ce239254c331939c69bb28284ac05e51cbd13"
+    },
+    "hsi": {
+      "generatedAt": "2026-10-13T19:48:44.975671-04:00",
+      "validUntil": "2026-10-13T20:03:36.027471-04:00",
+      "publicPage": "docs/hsi.html",
+      "counts": {
+        "publicSelectableDateCount": 86,
+        "publicSelectableStartTimeCount": 1361,
+        "publicSelectableOfferCount": 2469,
+        "input_sources": 446,
+        "normalized_sources": 446,
+        "input_windows": 189,
+        "evaluated_windows": 187,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      },
+      "actualOffers": 2469,
+      "actualDates": 86,
+      "dynamicOffers": 2469,
+      "seatedOffers": 0,
+      "publicationExpired": false,
+      "perCourse": {
+        "445670": 1355,
+        "463743": 1114
+      },
+      "day": "2026-10-14",
+      "dayOffers": 0,
+      "dayTimes": [],
+      "dayPerCourse": {},
+      "failedWindowReasons": {
+        "missing directional travel rule: 4018 Shipyard Blvd, Room B, 910CPR Office->:: Wilmington; Shipyard Blvd - B": 2
+      },
+      "dayFailedWindows": 0,
+      "coverageAlert": true,
+      "sha256": "869bded13dd87ae80aed20900fb42ff89a03483398fc67f7d2587dcefeb164be"
+    },
+    "uscg_first_aid_cpr_aed": {
+      "generatedAt": "2026-10-13T19:48:43.605140-04:00",
+      "validUntil": "2026-10-13T20:03:36.027471-04:00",
+      "publicPage": "docs/courses/uscg-first-aid-cpr-aed.html",
+      "counts": {
+        "publicSelectableDateCount": 88,
+        "publicSelectableStartTimeCount": 1364,
+        "publicSelectableOfferCount": 2472,
+        "input_sources": 446,
+        "normalized_sources": 446,
+        "input_windows": 189,
+        "evaluated_windows": 187,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      },
+      "actualOffers": 2472,
+      "actualDates": 88,
+      "dynamicOffers": 2467,
+      "seatedOffers": 5,
+      "publicationExpired": false,
+      "perCourse": {
+        "209809": 1116,
+        "329495": 1356
+      },
+      "day": "2026-10-14",
+      "dayOffers": 1,
+      "dayTimes": [
+        "17:30"
+      ],
+      "dayPerCourse": {
+        "329495": 1
+      },
+      "failedWindowReasons": {
+        "missing directional travel rule: 4018 Shipyard Blvd, Room B, 910CPR Office->:: Wilmington; Shipyard Blvd - B": 2
+      },
+      "dayFailedWindows": 0,
+      "coverageAlert": true,
+      "sha256": "589c55199db7768f6c7ac9407d57e3ef1026aaea4a20fe0e1f72a2f5e0b9003e"
+    },
+    "family_cpr": {
+      "generatedAt": "2026-10-13T19:48:47.801857-04:00",
+      "validUntil": "2026-10-13T20:03:36.027471-04:00",
+      "publicPage": "docs/family-cpr.html",
+      "counts": {
+        "publicSelectableDateCount": 85,
+        "publicSelectableStartTimeCount": 1114,
+        "publicSelectableOfferCount": 1114,
+        "input_sources": 446,
+        "normalized_sources": 446,
+        "input_windows": 189,
+        "evaluated_windows": 187,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      },
+      "actualOffers": 1114,
+      "actualDates": 85,
+      "dynamicOffers": 1114,
+      "seatedOffers": 0,
+      "publicationExpired": false,
+      "perCourse": {
+        "252737": 1114
+      },
+      "day": "2026-10-14",
+      "dayOffers": 0,
+      "dayTimes": [],
+      "dayPerCourse": {},
+      "failedWindowReasons": {
+        "missing directional travel rule: 4018 Shipyard Blvd, Room B, 910CPR Office->:: Wilmington; Shipyard Blvd - B": 2
+      },
+      "dayFailedWindows": 0,
+      "coverageAlert": true,
+      "sha256": "4896041c77eb6e52e316b756ee7ed80937d0e8e5dd86903801eb3f5b344c6dec"
+    }
+  },
+  "landscape": {
+    "buildId": "ebff4fedd037",
+    "builtAt": "2026-10-13T23:48:57.432291+00:00",
+    "sha256": "7d3b41216397c5bbde9697eb54f4a96d59ae05c12e98f975a9ef73e07606fb32",
+    "dayCellResults": {
+      "suppressed": 42,
+      "seated": 1
+    },
+    "sourcePages": {
+      "bls": {
+        "generatedAt": "2026-10-13T19:48:48.673751-04:00",
+        "counts": {
+          "publicSelectableDateCount": 87,
+          "publicSelectableStartTimeCount": 1370,
+          "publicSelectableOfferCount": 3584,
+          "input_sources": 446,
+          "normalized_sources": 446,
+          "input_windows": 189,
+          "evaluated_windows": 187,
+          "failed_windows": 2,
+          "uncertainty_issues": 2
+        },
+        "rejectionReasonCounts": {
+          "outside_explicit_availability": 107,
+          "lead_time": 24,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 3,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 4,
+          "conflict_or_transition:c9ij6c1g75imcb9p6tj36b9kcpij4bb1cpij6bb66dh3ep1hccsj4chm6c@google.com": 2,
+          "full_course_count_unknown": 4,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 6,
+          "conflict_or_transition:cdj34oj56gq30b9i6gp3cb9k68omab9p70rj6b9o6orj8dj36cqmap1ock@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 4,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 4,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 4,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 12,
+          "conflict_or_transition:69gjedhic4ojebb46thjab9k60rmcbb268p64bb474sj2c9m68r3acpo68@google.com": 6,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 6,
+          "existing_course_day_anchor": 8,
+          "anchored_day_requires_attached_offer": 6
+        }
+      },
+      "acls": {
+        "generatedAt": "2026-10-13T19:48:49.832717-04:00",
+        "counts": {
+          "publicSelectableDateCount": 2,
+          "publicSelectableStartTimeCount": 2,
+          "publicSelectableOfferCount": 3,
+          "input_sources": 446,
+          "normalized_sources": 446,
+          "input_windows": 189,
+          "evaluated_windows": 187,
+          "failed_windows": 2,
+          "uncertainty_issues": 2
+        },
+        "rejectionReasonCounts": {
+          "instructor_not_qualified": 3707,
+          "outside_explicit_availability": 107,
+          "lead_time": 24,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 3,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 4,
+          "conflict_or_transition:c9ij6c1g75imcb9p6tj36b9kcpij4bb1cpij6bb66dh3ep1hccsj4chm6c@google.com": 2,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 6,
+          "conflict_or_transition:cdj34oj56gq30b9i6gp3cb9k68omab9p70rj6b9o6orj8dj36cqmap1ock@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 4,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 4,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 4,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 12,
+          "conflict_or_transition:69gjedhic4ojebb46thjab9k60rmcbb268p64bb474sj2c9m68r3acpo68@google.com": 6,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 6
+        }
+      },
+      "pals": {
+        "generatedAt": "2026-10-13T19:48:50.509477-04:00",
+        "counts": {
+          "publicSelectableDateCount": 1,
+          "publicSelectableStartTimeCount": 1,
+          "publicSelectableOfferCount": 2,
+          "input_sources": 446,
+          "normalized_sources": 446,
+          "input_windows": 189,
+          "evaluated_windows": 187,
+          "failed_windows": 2,
+          "uncertainty_issues": 2
+        },
+        "rejectionReasonCounts": {
+          "instructor_not_qualified": 3707,
+          "outside_explicit_availability": 107,
+          "lead_time": 24,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 3,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 4,
+          "conflict_or_transition:c9ij6c1g75imcb9p6tj36b9kcpij4bb1cpij6bb66dh3ep1hccsj4chm6c@google.com": 2,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 6,
+          "conflict_or_transition:cdj34oj56gq30b9i6gp3cb9k68omab9p70rj6b9o6orj8dj36cqmap1ock@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 4,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 4,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 4,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 12,
+          "conflict_or_transition:69gjedhic4ojebb46thjab9k60rmcbb268p64bb474sj2c9m68r3acpo68@google.com": 6,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 6
+        }
+      },
+      "heartsaver": {
+        "generatedAt": "2026-10-13T19:48:51.195705-04:00",
+        "counts": {
+          "publicSelectableDateCount": 88,
+          "publicSelectableStartTimeCount": 1372,
+          "publicSelectableOfferCount": 7488,
+          "input_sources": 446,
+          "normalized_sources": 446,
+          "input_windows": 189,
+          "evaluated_windows": 187,
+          "failed_windows": 2,
+          "uncertainty_issues": 2
+        },
+        "rejectionReasonCounts": {
+          "outside_explicit_availability": 208,
+          "lead_time": 48,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 6,
+          "full_course_already_paid_seated": 2,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 18,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 6,
+          "conflict_or_transition:c9ij6c1g75imcb9p6tj36b9kcpij4bb1cpij6bb66dh3ep1hccsj4chm6c@google.com": 3,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 12,
+          "conflict_or_transition:cdj34oj56gq30b9i6gp3cb9k68omab9p70rj6b9o6orj8dj36cqmap1ock@google.com": 12,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 6,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 12,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 6,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 12,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 6,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 24,
+          "conflict_or_transition:69gjedhic4ojebb46thjab9k60rmcbb268p64bb474sj2c9m68r3acpo68@google.com": 12,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 12,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 18,
+          "full_course_count_unknown": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 6,
+          "existing_course_day_anchor": 3,
+          "anchored_day_requires_attached_offer": 17
+        }
+      },
+      "uscg_first_aid_cpr_aed": {
+        "generatedAt": "2026-10-13T19:48:53.739490-04:00",
+        "counts": {
+          "publicSelectableDateCount": 88,
+          "publicSelectableStartTimeCount": 1364,
+          "publicSelectableOfferCount": 2472,
+          "input_sources": 446,
+          "normalized_sources": 446,
+          "input_windows": 189,
+          "evaluated_windows": 187,
+          "failed_windows": 2,
+          "uncertainty_issues": 2
+        },
+        "rejectionReasonCounts": {
+          "outside_explicit_availability": 70,
+          "lead_time": 16,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 2,
+          "full_course_already_paid_seated": 2,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 2,
+          "conflict_or_transition:c9ij6c1g75imcb9p6tj36b9kcpij4bb1cpij6bb66dh3ep1hccsj4chm6c@google.com": 1,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 4,
+          "conflict_or_transition:cdj34oj56gq30b9i6gp3cb9k68omab9p70rj6b9o6orj8dj36cqmap1ock@google.com": 4,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 2,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 4,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 2,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 2,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 8,
+          "conflict_or_transition:69gjedhic4ojebb46thjab9k60rmcbb268p64bb474sj2c9m68r3acpo68@google.com": 4,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 6,
+          "full_course_count_unknown": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 3,
+          "existing_course_day_anchor": 3,
+          "anchored_day_requires_attached_offer": 4
+        }
+      },
+      "hsi": {
+        "generatedAt": "2026-10-13T19:48:54.748785-04:00",
+        "counts": {
+          "publicSelectableDateCount": 86,
+          "publicSelectableStartTimeCount": 1361,
+          "publicSelectableOfferCount": 2469,
+          "input_sources": 446,
+          "normalized_sources": 446,
+          "input_windows": 189,
+          "evaluated_windows": 187,
+          "failed_windows": 2,
+          "uncertainty_issues": 2
+        },
+        "rejectionReasonCounts": {
+          "outside_explicit_availability": 70,
+          "lead_time": 16,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 2,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 2,
+          "conflict_or_transition:c9ij6c1g75imcb9p6tj36b9kcpij4bb1cpij6bb66dh3ep1hccsj4chm6c@google.com": 1,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 4,
+          "conflict_or_transition:cdj34oj56gq30b9i6gp3cb9k68omab9p70rj6b9o6orj8dj36cqmap1ock@google.com": 4,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 2,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 4,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 2,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 2,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 8,
+          "conflict_or_transition:69gjedhic4ojebb46thjab9k60rmcbb268p64bb474sj2c9m68r3acpo68@google.com": 4,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 3,
+          "anchored_day_requires_attached_offer": 6
+        }
+      },
+      "arc": {
+        "generatedAt": "2026-10-13T19:48:55.669611-04:00",
+        "counts": {
+          "publicSelectableDateCount": 86,
+          "publicSelectableStartTimeCount": 1361,
+          "publicSelectableOfferCount": 3583,
+          "input_sources": 446,
+          "normalized_sources": 446,
+          "input_windows": 189,
+          "evaluated_windows": 187,
+          "failed_windows": 2,
+          "uncertainty_issues": 2
+        },
+        "rejectionReasonCounts": {
+          "outside_explicit_availability": 107,
+          "lead_time": 24,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 3,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 4,
+          "conflict_or_transition:c9ij6c1g75imcb9p6tj36b9kcpij4bb1cpij6bb66dh3ep1hccsj4chm6c@google.com": 2,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 6,
+          "conflict_or_transition:cdj34oj56gq30b9i6gp3cb9k68omab9p70rj6b9o6orj8dj36cqmap1ock@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 4,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 4,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 4,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 12,
+          "conflict_or_transition:69gjedhic4ojebb46thjab9k60rmcbb268p64bb474sj2c9m68r3acpo68@google.com": 6,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 6,
+          "anchored_day_requires_attached_offer": 8
+        }
+      },
+      "family_cpr": {
+        "generatedAt": "2026-10-13T19:48:56.872853-04:00",
+        "counts": {
+          "publicSelectableDateCount": 85,
+          "publicSelectableStartTimeCount": 1114,
+          "publicSelectableOfferCount": 1114,
+          "input_sources": 446,
+          "normalized_sources": 446,
+          "input_windows": 189,
+          "evaluated_windows": 187,
+          "failed_windows": 2,
+          "uncertainty_issues": 2
+        },
+        "rejectionReasonCounts": {
+          "outside_explicit_availability": 37,
+          "lead_time": 8,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 1,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 3,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 2,
+          "conflict_or_transition:c9ij6c1g75imcb9p6tj36b9kcpij4bb1cpij6bb66dh3ep1hccsj4chm6c@google.com": 1,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 2,
+          "conflict_or_transition:cdj34oj56gq30b9i6gp3cb9k68omab9p70rj6b9o6orj8dj36cqmap1ock@google.com": 2,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 2,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 2,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 2,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 2,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 2,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 4,
+          "conflict_or_transition:69gjedhic4ojebb46thjab9k60rmcbb268p64bb474sj2c9m68r3acpo68@google.com": 2,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 2,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 3,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 3,
+          "anchored_day_requires_attached_offer": 2
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Sequential HTTP reads may straddle publication; timestamps and hashes retained.",
+    "Failed windows are not candidate rejections; nonzero failed_windows is an explicit coverage alert.",
+    "Counts do not prove legal free-window coverage, browser rendering, or recurring health."
+  ]
+}
