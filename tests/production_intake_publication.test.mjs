@@ -15,7 +15,7 @@ test('publisher maps typed declaration; commit acknowledgement allowlists output
  assert.equal(r.body.can_execute,false);assert.equal(r.body.private_data,undefined);
 });
 test('publisher rejects malformed inputs and client actor/permission before RPC',async()=>{
- for(const change of [{actor:'Brian'},{can_execute:true},{blocked:'false'},{worker_safe:1},
+ for(const change of [{provenance:'authoritative_observation'},{actor:'Brian'},{can_execute:true},{blocked:'false'},{worker_safe:1},
   {source_state:'verified'},{source_ref:''},{checked_at:'2026-02-30T00:00:00.000Z'},
   {checked_at:'tomorrow'},{expected_version:1},{issue_id:0},{request_id:'bad'}]){
   assert.equal((await publishIntake(id,{...body,...change},()=>{throw Error('must not call');})).status,400);

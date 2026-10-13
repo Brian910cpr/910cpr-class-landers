@@ -54,9 +54,11 @@ begin
   end if;
   prior:=case when i.card_id is null then null else to_jsonb(i) end;
   insert into public.production_board_dispatch_intake
+    (card_id,issue_id,blocked,source_state,worker_safe,source_ref,checked_at)
     values(p_card,p_issue,p_blocked,p_source_state,p_worker_safe,p_source_ref,p_checked_at)
     on conflict(card_id) do update set blocked=excluded.blocked,source_state=excluded.source_state,
-      worker_safe=excluded.worker_safe,source_ref=excluded.source_ref,checked_at=excluded.checked_at;
+      worker_safe=excluded.worker_safe,source_ref=excluded.source_ref,checked_at=excluded.checked_at,
+      provenance='owner_assertion';
   select * into c from public.production_board_cards where id=p_card;
   insert into public.production_board_intake_publications values(p_request,p_card,payload,c.row_version,default);
   insert into public.production_board_activity(card_id,action,actor,detail)

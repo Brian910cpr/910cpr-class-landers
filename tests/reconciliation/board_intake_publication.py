@@ -70,6 +70,29 @@ class IntakePublication(dispatch.DispatchTransaction):
         finally:self.admin.execute('drop trigger fail_publication on production_board_activity; drop function fail_publication()')
         self.assertFalse(self.publish(args)['replayed'])
 
+    def test_owner_assertion_cannot_become_authoritative_reservation(self):
+        args=self.publication()
+        args=(*args[:4],False,'action_required',True,*args[7:])
+        self.publish(args)
+        result=self.call((args[0],args[1],2,uuid.uuid4(),'selection',None))
+        self.assertEqual(result['decision'],'review')
+        self.assertEqual(result['reason'],'authoritative_source_check_required')
+        self.assertFalse(result['can_execute'])
+        self.assertEqual(self.admin.execute('select provenance from production_board_dispatch_intake where card_id=%s',(args[0],)).fetchone()[0],'owner_assertion')
+
+    def test_owner_republication_downgrades_previous_source_observation(self):
+        args=self.fixture()
+        self.assertEqual(self.call(args)['decision'],'reserved')
+        publication=self.publication(args[0],args[1],2)
+        publication=(*publication[:4],False,'action_required',True,*publication[7:])
+        self.publish(publication)
+        result=self.call((args[0],args[1],3,uuid.uuid4(),'selection',None))
+        self.assertEqual(result['reason'],'authoritative_source_check_required')
+        self.assertEqual(result['decision'],'review')
+        prior=self.call((*args[:3],uuid.uuid4(),'pre_side_effect',args[3]))
+        self.assertEqual(prior['reason'],'stale_card_version')
+        self.assertFalse(prior['can_execute'])
+
     def test_publication_roles(self):
         args=self.publication()
         for role in ('anon','authenticated'):

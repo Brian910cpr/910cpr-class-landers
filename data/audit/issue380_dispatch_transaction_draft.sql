@@ -9,7 +9,11 @@ create table public.production_board_dispatch_intake (
   source_state text not null check (source_state in ('action_required','already_corrected','unknown')),
   worker_safe boolean not null,
   source_ref text not null check (length(trim(source_ref)) between 1 and 2000),
-  checked_at timestamptz not null check (isfinite(checked_at))
+  checked_at timestamptz not null check (isfinite(checked_at)),
+  -- A structured owner assertion does not prove the source was inspected.
+  -- Only a future reviewed collector may establish authoritative_observation.
+  provenance text not null default 'owner_assertion'
+    check (provenance in ('owner_assertion','authoritative_observation'))
 );
 create function public.production_board_dispatch_intake_changed() returns trigger
 language plpgsql security invoker set search_path = '' as $$
@@ -88,6 +92,7 @@ begin
   elsif i.checked_at>clock_timestamp() or i.checked_at<clock_timestamp()-interval '5 minutes' then why:='source_check_stale';
   elsif i.source_state='already_corrected' then why:='propose_verified_resolved';
   elsif i.source_state<>'action_required' then why:='authoritative_source_check_required';
+  elsif i.provenance<>'authoritative_observation' then why:='authoritative_source_check_required';
   elsif not i.worker_safe then why:='worker_safe_opt_in_required';
   elsif p_phase='selection' then
     if exists(select 1 from public.production_board_dispatch_decisions

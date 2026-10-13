@@ -17,7 +17,7 @@ class DispatchTransaction(foundation.ResolutionContention):
     def fixture(self, blocked=False, source='action_required', safe=True):
         card = self.admin.execute("insert into production_board_cards(title) values ('Dispatch fixture') returning id").fetchone()[0]
         issue = self.admin.execute('select coalesce(max(issue_id),296)+1 from production_board_dispatch_intake').fetchone()[0]
-        self.admin.execute('insert into production_board_dispatch_intake values(%s,%s,%s,%s,%s,%s,clock_timestamp())',
+        self.admin.execute("insert into production_board_dispatch_intake values(%s,%s,%s,%s,%s,%s,clock_timestamp(),'authoritative_observation')",
                            (card, issue, blocked, source, safe, 'synthetic-authoritative-fixture'))
         return (card, issue, 2, uuid.uuid4(), 'selection', None)
 
