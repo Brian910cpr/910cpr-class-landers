@@ -1,0 +1,233 @@
+{
+  "at": "2026-10-12T04:36:06.170Z",
+  "environment": "isolated local PGlite with real Stripe test payments; no production writes",
+  "emailDelivery": "disabled; queue only",
+  "state": {
+    "sessionId": "lw-e16390ba-1462-46dc-b5fb-4b49eb0b1d4c",
+    "canonicalSessionId": "e16390ba-1462-46dc-b5fb-4b49eb0b1d4c",
+    "seats": {
+      "holds": 0,
+      "capacity": 12,
+      "remaining": 10,
+      "registered": 2,
+      "nativeRegistered": 2,
+      "externallyRegistered": 0
+    },
+    "orders": [
+      {
+        "id": "7731dba2-6342-41af-81f6-15a5a8fd616f",
+        "status": "paid",
+        "total": 7500,
+        "stripe_checkout_session_id": "cs_test_a1Bq0RlCKYOLxHN93wzmykBRpawOnzus5rEu50gooNzaWoTHPkjbOu6Llq",
+        "stripe_payment_intent_id": "pi_3UPas5C9bZe0CGm21rm2dKhl",
+        "paid_at": "2026-10-12T04:30:29.255Z",
+        "payment_evidence": {
+          "id": "cs_test_a1Bq0RlCKYOLxHN93wzmykBRpawOnzus5rEu50gooNzaWoTHPkjbOu6Llq",
+          "mode": "payment",
+          "currency": "usd",
+          "livemode": false,
+          "metadata": {
+            "landerware_order_id": "7731dba2-6342-41af-81f6-15a5a8fd616f"
+          },
+          "amount_total": 7500,
+          "payment_status": "paid",
+          "verificationSource": "stripe_api_recovery"
+        },
+        "reconciliation_error": null
+      },
+      {
+        "id": "1915f6a8-ecf0-4974-84b0-072d25a4629a",
+        "status": "paid",
+        "total": 7500,
+        "stripe_checkout_session_id": "cs_test_a1P5SgMnbT9j9C9QiwScaH5XN0xrsPwkHB636G4WNnq6kGZalRJyDYvtKd",
+        "stripe_payment_intent_id": "pi_3UPawxC9bZe0CGm21o1wLNoG",
+        "paid_at": "2026-10-12T04:35:02.825Z",
+        "payment_evidence": {
+          "id": "cs_test_a1P5SgMnbT9j9C9QiwScaH5XN0xrsPwkHB636G4WNnq6kGZalRJyDYvtKd",
+          "mode": "payment",
+          "currency": "usd",
+          "livemode": false,
+          "metadata": {
+            "landerware_order_id": "1915f6a8-ecf0-4974-84b0-072d25a4629a"
+          },
+          "amount_total": 7500,
+          "eventCreated": 1791779700,
+          "stripeEventId": "evt_1UPawzC9bZe0CGm2vDGU6YIp",
+          "payment_status": "paid"
+        },
+        "reconciliation_error": null
+      }
+    ],
+    "registrations": [
+      {
+        "id": "de68a635-9f13-4102-a165-aa98b7e5d91f",
+        "customer_id": "3208a411-dbcf-4862-8775-24b4058258e8",
+        "class_session_id": "e16390ba-1462-46dc-b5fb-4b49eb0b1d4c",
+        "status": "registered",
+        "registration_source": "landerware_native_checkout",
+        "external_registration_id": null,
+        "created_at": "2026-10-12T04:30:29.255Z",
+        "updated_at": "2026-10-12T04:30:29.255Z",
+        "material_choice": null,
+        "cancel_token_hash": null,
+        "canceled_at": null,
+        "optional_survey": {
+          "publicOrderId": "7731dba2-6342-41af-81f6-15a5a8fd616f",
+          "stripePaymentIntentId": "pi_3UPas5C9bZe0CGm21rm2dKhl"
+        },
+        "nhcso_student_id": null,
+        "historical_import_key": null,
+        "historical_status": null,
+        "historical_score": null,
+        "historical_checked_in": null,
+        "historical_ecard_code": null,
+        "historical_codes": null,
+        "historical_comments": null,
+        "idempotency_key": null,
+        "handoff_intent_id": null,
+        "external_checkout_url": null,
+        "external_checkout_state": null,
+        "external_checkout_started_at": null,
+        "external_reconciled_at": null,
+        "external_reconciliation_evidence": {},
+        "first_name": "Synthetic",
+        "last_name": "RenewalProof",
+        "email": "native-renewal-20261012@example.test"
+      },
+      {
+        "id": "75715a6e-7b3c-4cb0-8493-3d03d6cea338",
+        "customer_id": "e01f6c03-6309-4f99-ad24-2f6551422632",
+        "class_session_id": "e16390ba-1462-46dc-b5fb-4b49eb0b1d4c",
+        "status": "registered",
+        "registration_source": "landerware_native_checkout",
+        "external_registration_id": null,
+        "created_at": "2026-10-12T04:35:02.825Z",
+        "updated_at": "2026-10-12T04:35:02.825Z",
+        "material_choice": null,
+        "cancel_token_hash": null,
+        "canceled_at": null,
+        "optional_survey": {
+          "publicOrderId": "1915f6a8-ecf0-4974-84b0-072d25a4629a",
+          "stripePaymentIntentId": "pi_3UPawxC9bZe0CGm21o1wLNoG"
+        },
+        "nhcso_student_id": null,
+        "historical_import_key": null,
+        "historical_status": null,
+        "historical_score": null,
+        "historical_checked_in": null,
+        "historical_ecard_code": null,
+        "historical_codes": null,
+        "historical_comments": null,
+        "idempotency_key": null,
+        "handoff_intent_id": null,
+        "external_checkout_url": null,
+        "external_checkout_state": null,
+        "external_checkout_started_at": null,
+        "external_reconciled_at": null,
+        "external_reconciliation_evidence": {},
+        "first_name": "Synthetic",
+        "last_name": "WebhookProof",
+        "email": "native-webhook-20261012@example.test"
+      }
+    ],
+    "messages": [
+      {
+        "id": "523e03f6-927d-4284-ad04-89af4b880a7e",
+        "template_key": "retail-paid-confirmation-v3",
+        "recipient": "native-renewal-20261012@example.test",
+        "subject": "Registration confirmed — AHA BLS Provider Renewal",
+        "body_text": "Your registration is confirmed for AHA BLS Provider Renewal.\nOctober 14, 2026 07:30 PM America/New_York\nShipyard Blvd\nOrder: 7731dba2-6342-41af-81f6-15a5a8fd616f\nRegistration: de68a635-9f13-4102-a165-aa98b7e5d91f\nPayment received. Your Stripe payment receipt is separate.\nA current BLS Provider Manual must be available for class. Official purchase link: https://shopcpr.heart.org/all-products?associated_course=49&format=84",
+        "delivery_provider": "gmail",
+        "delivery_status": "pending",
+        "idempotency_key": "public-order-paid:7731dba2-6342-41af-81f6-15a5a8fd616f:native-renewal-20261012@example.test"
+      },
+      {
+        "id": "5e5af0a1-38de-4725-8e7f-b46dbe445ec6",
+        "template_key": "retail-paid-confirmation-v3",
+        "recipient": "native-webhook-20261012@example.test",
+        "subject": "Registration confirmed — AHA BLS Provider Renewal",
+        "body_text": "Your registration is confirmed for AHA BLS Provider Renewal.\nOctober 14, 2026 07:30 PM America/New_York\nShipyard Blvd\nOrder: 1915f6a8-ecf0-4974-84b0-072d25a4629a\nRegistration: 75715a6e-7b3c-4cb0-8493-3d03d6cea338\nPayment received. Your Stripe payment receipt is separate.\nA current BLS Provider Manual must be available for class. Official purchase link: https://shopcpr.heart.org/all-products?associated_course=49&format=84",
+        "delivery_provider": "gmail",
+        "delivery_status": "pending",
+        "idempotency_key": "public-order-paid:1915f6a8-ecf0-4974-84b0-072d25a4629a:native-webhook-20261012@example.test"
+      }
+    ],
+    "deliveries": [
+      {
+        "at": "2026-10-12T04:31:27.944Z",
+        "status": 400
+      },
+      {
+        "at": "2026-10-12T04:31:57.517Z",
+        "status": 400
+      },
+      {
+        "at": "2026-10-12T04:32:24.427Z",
+        "status": 200,
+        "eventId": "evt_1UPas7C9bZe0CGm2ekSPLQae"
+      },
+      {
+        "at": "2026-10-12T04:35:02.830Z",
+        "status": 200,
+        "eventId": "evt_1UPawzC9bZe0CGm2vDGU6YIp"
+      },
+      {
+        "at": "2026-10-12T04:35:37.485Z",
+        "status": 200,
+        "eventId": "evt_1UPawzC9bZe0CGm2vDGU6YIp"
+      }
+    ]
+  },
+  "sessionWorkspaceProjection": {
+    "session_id": "e16390ba-1462-46dc-b5fb-4b49eb0b1d4c",
+    "external_class_id": "lw-e16390ba-1462-46dc-b5fb-4b49eb0b1d4c",
+    "source": "landerware_event",
+    "status": "scheduled",
+    "course_name": "AHA BLS Provider Renewal",
+    "course_key": "aha-bls-provider-renewal",
+    "location_name": "Shipyard Blvd",
+    "organization_name": null,
+    "participant_count": 2,
+    "registered_count": 2,
+    "count_available": true,
+    "demand_status": "current",
+    "source_observed_at": null,
+    "reconciled_at": null,
+    "source_sha256": null,
+    "freshness_minutes": null,
+    "active_registration_count": 2,
+    "roster_available": true,
+    "count_source": "canonical_active_registrations",
+    "active_registration_statuses": [
+      "registered",
+      "confirmed",
+      "completed"
+    ],
+    "registration_ids": [
+      "de68a635-9f13-4102-a165-aa98b7e5d91f",
+      "75715a6e-7b3c-4cb0-8493-3d03d6cea338"
+    ],
+    "participants": [
+      {
+        "registration_id": "de68a635-9f13-4102-a165-aa98b7e5d91f",
+        "registration_status": "registered",
+        "customer_id": "3208a411-dbcf-4862-8775-24b4058258e8",
+        "display_name": "Synthetic RenewalProof",
+        "first_name": "Synthetic",
+        "last_name": "RenewalProof",
+        "email": "native-renewal-20261012@example.test",
+        "phone": null
+      },
+      {
+        "registration_id": "75715a6e-7b3c-4cb0-8493-3d03d6cea338",
+        "registration_status": "registered",
+        "customer_id": "e01f6c03-6309-4f99-ad24-2f6551422632",
+        "display_name": "Synthetic WebhookProof",
+        "first_name": "Synthetic",
+        "last_name": "WebhookProof",
+        "email": "native-webhook-20261012@example.test",
+        "phone": null
+      }
+    ]
+  }
+}
