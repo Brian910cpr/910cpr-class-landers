@@ -91,6 +91,56 @@ test('browser switch coordinator/transport/real handler/RPC commit once across r
  await assert.rejects(createInteractionSwitch(client,'interrupt',source).send(),{status:409});
 });
 
+const saveTask=async(input,request=crypto.randomUUID())=>(await db.query('select save_customer_follow_up_task($1,$2,$3) r',[request,'owner',input])).rows[0].r;
+const taskFor=active=>({id:crypto.randomUUID(),case_id:active.case_id,interaction_id:active.id,source_key:'manual:'+crypto.randomUUID(),title:'Synthetic promised callback',status:'pending',expected_version:0,provenance:{evidence:'Synthetic explicit owner promise'}});
+const resumeInput=(source,interruptId,status='resolved')=>({operation:'resume',interrupt_request_id:interruptId,previous:{...source.previous,expected_version:2,status:'in_progress'},active:{...source.active,expected_version:1,status}});
+
+test('task created after UI read prevents resolved resume and rolls back both interaction saves',async()=>{
+ for(const status of ['proposed','pending','snoozed']){
+  const source=await fixture(),interrupted=await switchCase(source),task={...taskFor(source.active),status,...(status==='snoozed'?{due_at:'2026-10-20T12:00:00Z'}:{})};
+  await saveTask(task);
+  const resume=resumeInput(source,interrupted.request_id),request=crypto.randomUUID();
+  const before=(await db.query('select count(*)::int n from customer_interaction_events')).rows[0].n;
+  await assert.rejects(switchCase(resume,request),{code:'40001'});
+  assert.equal((await reload(source.previous.id)).status,'paused');assert.equal((await reload(source.previous.id)).version,2);
+  assert.equal((await reload(source.active.id)).status,'in_progress');assert.equal((await reload(source.active.id)).version,1);
+  assert.equal((await db.query('select count(*)::int n from customer_interaction_events')).rows[0].n,before);
+  assert.equal((await db.query('select count(*)::int n from customer_interruption_events where request_id=$1',[request])).rows[0].n,0);
+  // Explicit reconciled disposition retains the obligation; retry remains identical.
+  const safe={...resume,active:{...resume.active,status:'follow_up_due'}},safeRequest=crypto.randomUUID();
+  const result=await switchCase(safe,safeRequest);assert.deepEqual(await switchCase(safe,safeRequest),result);
+  assert.equal(result.active.status,'follow_up_due');
+ }
+});
+
+test('resolution-first rejects late creation/reopening without consuming requests; explicit reopen allows retry',async()=>{
+ const source=await fixture(),interrupted=await switchCase(source),task=taskFor(source.active);
+ const createdRequest=crypto.randomUUID();await saveTask(task,createdRequest);
+ const completed={...task,expected_version:1,status:'complete',completion_evidence:'Synthetic owner confirms callback'};
+ const completedRequest=crypto.randomUUID(),done=await saveTask(completed,completedRequest);
+ const resume=resumeInput(source,interrupted.request_id),resumeRequest=crypto.randomUUID();
+ const result=await switchCase(resume,resumeRequest);assert.equal(result.active.status,'resolved');
+ assert.equal((await saveTask(task,createdRequest)).status,'pending'); // Earlier receipt survives current resolved state.
+ assert.deepEqual(await saveTask(completed,completedRequest),done);
+ assert.deepEqual(await switchCase(resume,resumeRequest),result);
+ const late=taskFor(source.active),lateRequest=crypto.randomUUID(),reopenTask={...task,expected_version:2};
+ await assert.rejects(saveTask(late,lateRequest),{code:'40001'});
+ await assert.rejects(saveTask(reopenTask),{code:'40001'});
+ assert.equal((await db.query('select count(*)::int n from customer_follow_up_tasks where id=$1',[late.id])).rows[0].n,0);
+ assert.equal((await db.query('select count(*)::int n from customer_task_events where request_id=$1',[lateRequest])).rows[0].n,0);
+ await save({...source.active,expected_version:2,status:'follow_up_due'});
+ const saved=await saveTask(late,lateRequest);assert.equal(saved.version,1);
+ await saveTask(reopenTask);assert.equal((await reload(source.active.id)).status,'follow_up_due');
+});
+
+test('single interaction save also refuses to resolve an outstanding task, then accepts evidenced completion',async()=>{
+ const interaction=record();await save(interaction);const task=taskFor(interaction);await saveTask(task);
+ await assert.rejects(save({...interaction,expected_version:1,status:'resolved'}),{code:'40001'});
+ assert.equal((await reload(interaction.id)).version,1);
+ await saveTask({...task,expected_version:1,status:'complete',completion_evidence:'Synthetic completed callback'});
+ assert.equal((await save({...interaction,expected_version:1,status:'resolved'})).status,'resolved');
+});
+
 test('private switch links/RPC deny anon/authenticated and service role cannot alter audit',async()=>{
  for(const role of ['anon','authenticated']){await db.exec('reset role; set role '+role);await assert.rejects(db.query('select * from customer_interruption_events'),/permission denied/);await assert.rejects(switchCase({}),/permission denied/);await assert.rejects(db.query('select * from customer_task_events'),/permission denied/);await assert.rejects(db.query('select save_customer_follow_up_task($1,$2,$3)',[crypto.randomUUID(),'owner',{}]),/permission denied/)}
  await db.exec('reset role; set role service_role');await assert.rejects(db.query('update customer_interruption_events set actor=\'forged\''),/permission denied/);await assert.rejects(db.query('delete from customer_task_events'),/permission denied/);

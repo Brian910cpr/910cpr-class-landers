@@ -40,9 +40,20 @@ begin
     end if;
     return prior.result;
   end if;
+  -- Same interaction lock family as saves and atomic switches. Acquire it before
+  -- the task lock, so creation/disposition and resume cannot use separate snapshots.
+  perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended((p_input->>'interaction_id')::uuid::text,1));
   -- Tasks reference the actual interaction/case pair, never a same-name match.
   if not exists(select 1 from public.customer_interactions where id=(p_input->>'interaction_id')::uuid and case_id=(p_input->>'case_id')::uuid) then
     raise exception 'invalid_task_link' using errcode='22023';
+  end if;
+  -- If resolution won the race, retain the proposed task in the client's conflict
+  -- draft. Explicitly reopen the interaction before creating/reopening an obligation.
+  if p_input->>'status'<>'complete' and exists(
+    select 1 from public.customer_interactions
+    where id=(p_input->>'interaction_id')::uuid and status='resolved'
+  ) then
+    raise exception 'resolved_interaction_conflict' using errcode='40001';
   end if;
   perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(task_id::text,4));
   select * into current_row from public.customer_follow_up_tasks where id=task_id for update;

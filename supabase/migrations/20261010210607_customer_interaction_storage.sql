@@ -70,6 +70,14 @@ begin
     return prior.result;
   end if;
   perform pg_catalog.pg_advisory_xact_lock(pg_catalog.hashtextextended(interaction_id::text,1));
+  -- Task writers share this interaction lock. Resolve only from current durable truth,
+  -- including tasks created after a browser's last paginated read.
+  if p_input->>'status'='resolved' and exists(
+    select 1 from public.customer_follow_up_tasks t
+    where t.interaction_id=(p_input->>'id')::uuid and t.status<>'complete'
+  ) then
+    raise exception 'outstanding_follow_up_conflict' using errcode='40001';
+  end if;
   select * into current_row from public.customer_interactions i where i.id=interaction_id for update;
   if found then
     if expected<>current_row.version then raise exception 'version_conflict' using errcode='40001'; end if;
