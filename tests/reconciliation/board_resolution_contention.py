@@ -47,6 +47,8 @@ class ResolutionContention(unittest.TestCase):
         cls.pg = psycopg
         validate_target(conninfo_to_dict(DSN))
         cls.admin = psycopg.connect(DSN, autocommit=True, connect_timeout=5)
+        print('PostgreSQL:', cls.admin.execute('select version()').fetchone()[0], flush=True)
+        print('psycopg:', psycopg.__version__, 'libpq:', psycopg.pq.version(), flush=True)
         # Check effective target too, including environment/libpq overrides.
         effective = cls.admin.info.get_parameters()
         validate_target(effective)
@@ -96,6 +98,7 @@ class ResolutionContention(unittest.TestCase):
                     while time.monotonic() < deadline:
                         row = self.admin.execute('select wait_event_type from pg_stat_activity where pid=%s', (pid,)).fetchone()
                         if row and row[0] == 'Lock':
+                            print(self._testMethodName + ': observed contender Lock wait', flush=True)
                             break
                         if future.done():
                             self.fail('contender finished before lock release')
