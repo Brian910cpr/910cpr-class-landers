@@ -44,7 +44,7 @@ Every ShiftCommander work session that makes meaningful progress, encounters a b
 
 **Last verified checkpoint:** ShiftCommander R81 was reviewed and acknowledged. Draft PR #19 remains open/draft/unmerged at `b9cc8cfeb3412569fc02ebed878e3124a5d19dee`. The R81 implementation fails closed if the private pilot availability file is deleted, initializes a deliberate blank availability record for a new private root, and preserves the reviewed offline recovery path. The reported combined local validation was 96 passing tests with no failures/errors/skips; no CI status checks are attached to PR #19. The transport receipt has already been retired as `Codex_Read_ShiftCommanderAstra_R81.md` on its receipt branch.
 
-**Last known blocker:** The code-preparation stack has reached the point where the next useful step is an actual private installation, not another broad code audit. No real private store has been established in the verified R81 evidence: `SC_AUTH_DB_PATH`/signing configuration were absent in that worker and the candidate `E:/ShiftCommander/PrivatePilot` did not exist. Production also remains gated on coordinated disposition of the R37/R47/R77/R81 bridge-credential exposures and proof that superseded credentials are rejected, followed by real staffing/client/publication/recovery/observer proof.
+**Last known blocker (superseded by latest issue #214 owner gate):** The code-preparation stack has reached the point where the next useful step is an actual private installation, not another broad code audit. No real private store has been established in the verified R81 evidence: `SC_AUTH_DB_PATH`/signing configuration were absent in that worker and the candidate `E:/ShiftCommander/PrivatePilot` did not exist. Production also remains gated on coordinated disposition of the R37/R47/R77/R81 bridge-credential exposures and proof that superseded credentials are rejected, followed by real staffing/client/publication/recovery/observer proof.
 
 **Last attempted action:** R81 reproduced deletion of saved private availability being silently treated as empty state after restart and repaired it so missing state now blocks reads/writes/resolver/health and startup until reviewed recovery.
 
@@ -110,3 +110,15 @@ Then refresh **Last known blocker**, **Last attempted action**, **Observed resul
 ## Receipt rule
 
 When a Codex round is required, use a new unique `Codex_Reply_ShiftCommander...R<n>.md` receipt. Never overwrite an earlier receipt. The receipt should summarize that round; this file is the continuing cross-round state. ChatGPT, not Codex, performs any `Codex_Read_*` acknowledgement in the transport repository after genuine review.
+
+### 20261013T062805Z UTC - Dispatch gate reconciliation
+- Starting blocker: latest owner issue comments retain reviewed private settings/trusted loopback TLS gate.
+- Evidence inspected: current issue #214, PR #19 and held #372, open backend queue and existing PRs.
+- Action attempted: read-only gate/queue review; no setup/auth/preflight/launcher retry.
+- Result: BLOCKED; no new clearing input. Earlier immediate setup instruction above remains gated by newer owner comments.
+- Tests/checks: documentation whitespace and explicit staged scope; no application tests rerun.
+- Branch/base: codex/issue-214-gate-20261013T062805Z / f55a26ffedcacf12dd8c7df644ba7803522f03a2.
+- Owner gate: approved private settings/TLS inputs, then intended-user hidden local prompts.
+- Next exact action: suppress unchanged retries; after gate changes resume existing reviewed check-only IDs 159/186/188 and controlled workflow/restart/recovery/observer proof.
+- Receipt: Codex_Reply_Issue214_OwnerGate_20261013T062805Z.md.
+
