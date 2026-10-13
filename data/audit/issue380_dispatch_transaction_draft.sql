@@ -73,8 +73,11 @@ begin
   end if;
   -- Match intake DML and its AFTER trigger: intake row BEFORE card row.
   -- Never take a card lock and then wait for intake. A missing intake row has
-  -- no gap lock: a concurrent insert may be unseen, yielding a safe review.
+  -- no gap lock for trusted direct DML: an insert outside the approved
+  -- publisher protocol may be unseen, yielding a safe review.
   -- Future publisher RPCs must preserve this order (including version checks).
+  -- Same missing-row serialization as the typed publisher.
+  perform pg_advisory_xact_lock(hashtextextended(p_card::text,3820));
   select * into i from public.production_board_dispatch_intake where card_id=p_card for share;
   select * into c from public.production_board_cards where id=p_card for update;
   if not found then raise exception 'card_not_found'; end if;
