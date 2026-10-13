@@ -38,6 +38,10 @@ class StudioBrowserTests(unittest.TestCase):
         self.page.on('pageerror', lambda e: self.errors.append(str(e)))
         self.rows, self.receipts, self.writes, self.requests = {}, {}, [], []
         self.events = []
+        self.tasks = {}
+        self.task_conflict = False
+        self.fail_task_read = False
+        self.task_pages = False
         self.fail_next = False
         self.conflict_next = False
         session = {'token': 'lw_s_' + 'a' * 64, 'expiresAt': (datetime.now(timezone.utc) + timedelta(days=30)).isoformat()}
@@ -56,14 +60,35 @@ class StudioBrowserTests(unittest.TestCase):
         self.assertTrue(route.request.headers.get('x-landerware-owner-session', '').startswith('lw_s_'))
         if route.request.method == 'GET':
             query = parse_qs(urlparse(url).query)
-            rows = self.events if query.get('collection') == ['interruptions'] else list(self.rows.values())
+            if query.get('collection') == ['tasks'] and self.fail_task_read:
+                route.fulfill(status=503, json={'error': 'Synthetic task read failure'})
+                return
+            rows = list(self.tasks.values()) if query.get('collection') == ['tasks'] else self.events if query.get('collection') == ['interruptions'] else list(self.rows.values())
             if 'interaction_id' in query:
-                rows = [r for r in rows if r['id'] == query['interaction_id'][0]]
+                rows = [r for r in rows if r.get('interaction_id' if query.get('collection') == ['tasks'] else 'id') == query['interaction_id'][0]]
+            if query.get('collection') == ['tasks'] and self.task_pages and 'before' not in query:
+                route.fulfill(json={'items': [], 'next_cursor': {'before': '2026-10-13T12:00:00.123456Z', 'before_id': '00000000-0000-4000-8000-000000000001'}})
+                return
             route.fulfill(json={'items': rows, 'next_cursor': None})
             return
         body = route.request.post_data_json
         self.writes.append(body)
         key = body['request_id']
+        if body.get('operation') == 'save_task':
+            if self.task_conflict:
+                route.fulfill(status=409, json={'error': 'Synthetic task conflict'})
+                return
+            if key not in self.receipts:
+                value = body['input']
+                task = {**value, 'version': value['expected_version'] + 1, 'due_at': value.get('due_at')}
+                self.tasks[task['id']] = task
+                self.receipts[key] = {'task': task}
+            if self.fail_next:
+                self.fail_next = False
+                route.fulfill(status=503, json={'error': 'Synthetic lost task response after commit'})
+                return
+            route.fulfill(json=self.receipts[key])
+            return
         if self.conflict_next:
             self.conflict_next = False
             row = self.rows[body['input']['id']]
@@ -233,6 +258,78 @@ class StudioBrowserTests(unittest.TestCase):
         self.assertEqual(data['pendingSwitch']['input']['previous']['document']['callNotes'], 'Synthetic inbound email')
         self.assertEqual(data['pendingSwitch']['input']['active']['kind'], 'phone')
         self.assertEqual(len(self.rows), 1)
+        self.assertEqual(self.errors, [])
+
+    def follow_up(self):
+        self.page.locator('summary').filter(has_text='Capture promised follow-up').click()
+        self.page.fill('#followUpTitle', 'Synthetic promised callback')
+        self.page.fill('#followUpEvidence', 'Synthetic owner promised a callback')
+
+    def test_follow_up_uncertain_save_reload_and_resume_preserves_obligation(self):
+        self.visit()
+        self.create()
+        self.page.click('#newCall')
+        self.saved()
+        self.follow_up()
+        self.assertTrue(self.page.locator('#resumePrevious').is_disabled())
+        before = self.page.url
+        self.page.click('a[href="/admin/dashboard.html"]')
+        self.assertEqual(self.page.url, before)
+        self.fail_next = True
+        self.page.click('#saveFollowUp')
+        self.page.wait_for_function("document.getElementById('storageStatus').textContent.startsWith('Follow-up not confirmed')")
+        self.assertTrue(self.page.locator('#newEmail').is_disabled())
+        self.assertTrue(self.page.locator('#callNotes').is_disabled())
+        self.page.click('#retryFollowUp')
+        self.saved()
+        self.assertEqual(self.writes[-1], self.writes[-2])
+        self.assertEqual(len(self.tasks), 1)
+        self.task_pages = True
+        self.page.reload()
+        self.page.wait_for_selector('#queueList button')
+        self.page.locator('#queueList button').filter(has_text='phone').click()
+        self.saved()
+        self.assertIn('Synthetic promised callback', self.page.locator('#storedFollowUps').text_content())
+        self.page.click('#resumePrevious')
+        self.saved()
+        phone = next(r for r in self.rows.values() if r['kind'] == 'phone')
+        self.assertEqual(phone['status'], 'follow_up_due')
+        self.assertEqual(next(iter(self.tasks.values()))['status'], 'pending')
+        self.assertEqual(self.errors, [])
+
+    def test_follow_up_conflict_export_and_privacy_lock(self):
+        self.visit()
+        self.create()
+        self.follow_up()
+        self.task_conflict = True
+        self.page.click('#saveFollowUp')
+        self.page.wait_for_function("document.getElementById('storageStatus').textContent.startsWith('Follow-up conflict')")
+        self.assertTrue(self.page.locator('#retryFollowUp').is_disabled())
+        self.assertTrue(self.page.locator('#reloadStored').is_disabled())
+        with self.page.expect_download() as pending:
+            self.page.click('#downloadCase')
+        data = json.loads(Path(pending.value.path()).read_text())
+        self.assertEqual(data['pendingTask']['input']['provenance']['evidence'], 'Synthetic owner promised a callback')
+        self.page.evaluate("window.dispatchEvent(new CustomEvent('admin-auth-lock'))")
+        self.assertEqual(self.page.input_value('#followUpEvidence'), '')
+        self.assertEqual(self.page.locator('#storedFollowUps').inner_text(), '')
+        self.assertTrue(self.page.locator('#saveFollowUp').is_disabled())
+        self.assertEqual(self.errors, [])
+
+    def test_resume_fails_closed_when_follow_up_read_fails(self):
+        self.visit()
+        self.create()
+        self.page.click('#newCall')
+        self.saved()
+        self.fail_task_read = True
+        count = len(self.writes)
+        self.page.click('#resumePrevious')
+        self.page.wait_for_function("document.getElementById('storageStatus').textContent.startsWith('Resume unavailable')")
+        self.assertEqual(len(self.writes), count)
+        self.assertEqual(self.page.input_value('#kind'), 'phone')
+        self.fail_task_read = False
+        self.page.click('#resumePrevious')
+        self.saved()
         self.assertEqual(self.errors, [])
 
     def test_autosave_recovers_after_closing_the_tab(self):
