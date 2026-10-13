@@ -31,6 +31,41 @@ alter table public.production_board_resolution_events enable row level security;
 revoke all on public.production_board_resolution_events from public, anon, authenticated, service_role;
 grant select, insert on public.production_board_resolution_events to service_role;
 
+-- Check at transaction end: the RPC writes the card before its event/activity.
+-- Legacy edits still bump versions; only canonical resolution transitions need
+-- matching durable provenance. This is not authentication or a worker lease.
+create function public.production_board_require_resolution_audit() returns trigger
+language plpgsql security invoker set search_path = '' as $$
+begin
+  if TG_OP = 'INSERT' then
+    if new.resolution_state <> 'unresolved' then
+      raise exception 'resolution_requires_existing_card';
+    end if;
+    return null;
+  end if;
+  if new.resolution_state = old.resolution_state then return null; end if;
+  if not exists (
+    select 1 from public.production_board_resolution_events e
+    join public.production_board_activity a on a.card_id=e.card_id
+      and a.action='resolution_transition' and a.actor=e.actor
+      and a.detail=jsonb_build_object('request_id',e.request_id,
+        'prior_state',e.prior_state,'new_state',e.new_state,'version',e.resulting_version)
+    where e.card_id=new.id and e.prior_state=old.resolution_state
+      and e.new_state=new.resolution_state and e.resulting_version=new.row_version
+      and e.request->>'card_id'=new.id::text
+      and e.request->>'expected_version'=old.row_version::text
+      and e.request->>'state'=new.resolution_state
+      and e.request->>'actor'=e.actor
+  ) then raise exception 'resolution_audit_required'; end if;
+  return null;
+end $$;
+revoke all on function public.production_board_require_resolution_audit()
+  from public, anon, authenticated;
+create constraint trigger production_board_resolution_audit_required
+after insert or update on public.production_board_cards
+deferrable initially deferred for each row
+execute function public.production_board_require_resolution_audit();
+
 create function public.production_board_resolve(
   p_card uuid, p_version bigint, p_request uuid, p_actor text,
   p_state text, p_explanation text, p_source text, p_completed_at timestamptz

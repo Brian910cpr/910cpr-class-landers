@@ -1,4 +1,43 @@
-# Issue 380 R17 — local transaction security review
+# Issue 380 R17 — security review and repaired audit invariant
+
+## Final result, superseding the initial review below
+
+2026-10-13T05:12Z. BUILT, locally validated only. Initial review commit 339490ee25f22327779135732e7d358ddc5bb466 reproduced the privileged direct-write bypass. It is now repaired in the unapplied draft by an initially deferred constraint trigger, not left as a rollout blocker. The remainder of this report records the historical pre-repair evidence; its OPEN gate and green insecure-reproducer statements are superseded by this section.
+
+Changed SQL: data/audit/issue380_resolution_transaction_draft.sql. New production_board_require_resolution_audit() is SECURITY INVOKER with empty search_path. Card INSERT must start unresolved. Resolution UPDATE must have matching resolution event and activity at COMMIT, binding card ID, old/new state, resulting/expected version, request ID and actor. RPC can write card before audit; legacy ordinary edits continue to increment versions. Missing activity fails COMMIT and rolls back card/event. No browser privilege or SECURITY DEFINER added.
+
+Limitations: trusted service_role can still manufacture matching provenance using existing INSERT privileges, and can modify legacy activity after a transition commits. This enforces audit completeness at transition time, not independent actor authentication or immutable activity retention. Resolution events remain protected from service-role UPDATE/DELETE/TRUNCATE. Authenticated proxy must bind actor server-side. Intermediate RETURNING is not committed proof; external effects must wait for commit. Superuser/DDL authority is outside the application boundary. This is not a worker lease or side-effect fence.
+
+Final test replaces the insecure reproducer with direct resolve/reopen/insert rejection checks and adds missing-activity COMMIT rollback plus ordinary-edit/justified-reopen compatibility. All three functions' invoker/search_path properties are checked. Actual roles/SQL executed locally. Five inherited two-session cases again observed Lock waits.
+
+Retained synthetic databases: issue380_test_r17 (before), issue380_test_r17_guard (first repair, 11/11), issue380_test_r17_final (final, 13/13). Same dedicated local PostgreSQL 16.4/psycopg 3.2.10 infrastructure below; server stopped after tests. No existing evidence deleted. Test command unchanged except explicit DSN selects each fresh empty database. Reusing initialized databases is rejected.
+
+Final exact result:
+```text
+test_reject_operational_or_indirect_targets ... ok
+PostgreSQL: PostgreSQL 16.4, compiled by Visual C++ build 1940, 64-bit
+psycopg: 3.2.10 libpq: 160009
+test_distinct_request_stale_writer_rejected: observed contender Lock wait ... ok
+test_functions_are_invoker_with_fixed_search_path ... ok
+test_identical_request_replays_once: observed contender Lock wait ... ok
+test_missing_activity_rolls_back_card_and_event_at_commit ... ok
+test_ordinary_edits_and_justified_rpc_reopen_remain_supported ... ok
+test_request_reuse_across_cards_conflicts: observed contender Lock wait ... ok
+test_rls_still_denies_rows_if_untrusted_select_accidentally_granted ... ok
+test_rollback_releases_request_without_phantom_receipt: observed contender Lock wait ... ok
+test_same_request_changed_payload_conflicts: observed contender Lock wait ... ok
+test_service_direct_resolution_and_reopen_require_audit ... ok
+test_service_event_history_cannot_update_delete_truncate ... ok
+test_untrusted_roles_cannot_read_write_or_invoke ... ok
+Ran 13 tests in 2.156s
+OK
+```
+
+Also executed: npm ci --prefix tests/reconciliation --ignore-scripts --no-audit --no-fund (one existing pinned dependency; no package/lock changes); node --test tests/reconciliation/board-resolution.test.mjs tests/reconciliation/reconcile.test.mjs: 2 tests, 2 pass, 0 fail, 0 skipped. Both are local PGlite despite the inherited second test name. Python AST parse and git diff --check pass. No failed tests. Previous 60 route tests not rerun; historical evidence only.
+
+Next: review deferred invariant, target grants/defaults and commit-time semantics, then implement authenticated canonical transactional claim-or-skip/audit adapter and isolated pre-side-effect race proof. Private evidence/UI/history/counts and all six original acceptance remain unfinished. No credential/account blocker or Brian action now. No production migration, runtime/state change, merge or deploy. Draft SQL must remain outside migrations pending coordinated review/authorization. Overall BUILT only; no end-to-end or monitoring proof. Additional intended changed file beyond initial review: data/audit/issue380_resolution_transaction_draft.sql.
+
+## Historical initial review (before repair)
 
 2026-10-13T05:06Z. Existing draft PR #381. Overall evidence: BUILT; all six acceptance criteria remain open. This is the requested security review prerequisite, not another advisory selector change and not approval to apply the SQL.
 
