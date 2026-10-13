@@ -1,0 +1,665 @@
+{
+  "observedAt": "2026-10-13T16:15:53.589691+00:00",
+  "mode": "live-read-only",
+  "families": {
+    "bls": {
+      "generatedAt": "2026-10-13T12:09:21.971018-04:00",
+      "validUntil": "2026-10-13T12:24:20.836059-04:00",
+      "publicPage": "docs/bls.html",
+      "counts": {
+        "publicSelectableDateCount": 89,
+        "publicSelectableStartTimeCount": 1573,
+        "publicSelectableOfferCount": 4149,
+        "input_sources": 430,
+        "normalized_sources": 430,
+        "input_windows": 209,
+        "evaluated_windows": 209,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "actualOffers": 4149,
+      "actualDates": 89,
+      "dynamicOffers": 4139,
+      "seatedOffers": 10,
+      "publicationExpired": false,
+      "perCourse": {
+        "209806": 1295,
+        "210549": 1560,
+        "359474": 1294
+      },
+      "day": "2026-10-14",
+      "dayOffers": 3,
+      "dayTimes": [
+        "19:30"
+      ],
+      "dayPerCourse": {
+        "209806": 1,
+        "210549": 1,
+        "359474": 1
+      },
+      "failedWindowReasons": {},
+      "dayFailedWindows": 0,
+      "coverageAlert": false,
+      "sha256": "10ed23fe9400428769e5669689fd6f684f1f3b544e608059d93a2a6d44d4f90d"
+    },
+    "heartsaver": {
+      "generatedAt": "2026-10-13T12:09:28.993795-04:00",
+      "validUntil": "2026-10-13T12:24:20.836059-04:00",
+      "publicPage": "docs/heartsaver.html",
+      "counts": {
+        "publicSelectableDateCount": 89,
+        "publicSelectableStartTimeCount": 1575,
+        "publicSelectableOfferCount": 8641,
+        "input_sources": 430,
+        "normalized_sources": 430,
+        "input_windows": 209,
+        "evaluated_windows": 209,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "actualOffers": 8641,
+      "actualDates": 89,
+      "dynamicOffers": 8636,
+      "seatedOffers": 5,
+      "publicationExpired": false,
+      "perCourse": {
+        "209809": 1297,
+        "329495": 1559,
+        "209808": 1558,
+        "251545": 1558,
+        "344085": 1374,
+        "351632": 1295
+      },
+      "day": "2026-10-14",
+      "dayOffers": 7,
+      "dayTimes": [
+        "17:30",
+        "19:30"
+      ],
+      "dayPerCourse": {
+        "329495": 2,
+        "209808": 1,
+        "209809": 1,
+        "251545": 1,
+        "344085": 1,
+        "351632": 1
+      },
+      "failedWindowReasons": {},
+      "dayFailedWindows": 0,
+      "coverageAlert": false,
+      "sha256": "9c3b9aebb334ff57fdf18982aca6812070a3a93ffbd1042b0670156382101490"
+    },
+    "acls": {
+      "generatedAt": "2026-10-13T12:09:25.130305-04:00",
+      "validUntil": "2026-10-13T12:09:25.130305-04:00",
+      "publicPage": "docs/acls.html",
+      "counts": {
+        "publicSelectableDateCount": 2,
+        "publicSelectableStartTimeCount": 2,
+        "publicSelectableOfferCount": 3,
+        "input_sources": 430,
+        "normalized_sources": 430,
+        "input_windows": 209,
+        "evaluated_windows": 209,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "actualOffers": 3,
+      "actualDates": 2,
+      "dynamicOffers": 0,
+      "seatedOffers": 3,
+      "publicationExpired": true,
+      "perCourse": {
+        "241108": 1,
+        "209818": 2
+      },
+      "day": "2026-10-14",
+      "dayOffers": 0,
+      "dayTimes": [],
+      "dayPerCourse": {},
+      "failedWindowReasons": {},
+      "dayFailedWindows": 0,
+      "coverageAlert": false,
+      "sha256": "9aae9cfe2e111152ae04cbbfb924ac67ae665d6b60bc262a87e898b5a6528889"
+    },
+    "pals": {
+      "generatedAt": "2026-10-13T12:09:27.074990-04:00",
+      "validUntil": "2026-10-13T12:09:27.074990-04:00",
+      "publicPage": "docs/pals.html",
+      "counts": {
+        "publicSelectableDateCount": 1,
+        "publicSelectableStartTimeCount": 1,
+        "publicSelectableOfferCount": 2,
+        "input_sources": 430,
+        "normalized_sources": 430,
+        "input_windows": 209,
+        "evaluated_windows": 209,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "actualOffers": 2,
+      "actualDates": 1,
+      "dynamicOffers": 0,
+      "seatedOffers": 2,
+      "publicationExpired": true,
+      "perCourse": {
+        "209805": 1,
+        "251496": 1
+      },
+      "day": "2026-10-14",
+      "dayOffers": 0,
+      "dayTimes": [],
+      "dayPerCourse": {},
+      "failedWindowReasons": {},
+      "dayFailedWindows": 0,
+      "coverageAlert": false,
+      "sha256": "487dd6bc9757c78034ff1e3b3a89ab853ad276778556ad14ecf6fbf4276227ea"
+    },
+    "arc": {
+      "generatedAt": "2026-10-13T12:09:39.946212-04:00",
+      "validUntil": "2026-10-13T12:24:20.836059-04:00",
+      "publicPage": "docs/arc.html",
+      "counts": {
+        "publicSelectableDateCount": 88,
+        "publicSelectableStartTimeCount": 1564,
+        "publicSelectableOfferCount": 4148,
+        "input_sources": 430,
+        "normalized_sources": 430,
+        "input_windows": 209,
+        "evaluated_windows": 209,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "actualOffers": 4148,
+      "actualDates": 88,
+      "dynamicOffers": 4148,
+      "seatedOffers": 0,
+      "publicationExpired": false,
+      "perCourse": {
+        "248288": 1295,
+        "369209": 1295,
+        "372258": 1558
+      },
+      "day": "2026-10-14",
+      "dayOffers": 3,
+      "dayTimes": [
+        "19:30"
+      ],
+      "dayPerCourse": {
+        "248288": 1,
+        "369209": 1,
+        "372258": 1
+      },
+      "failedWindowReasons": {},
+      "dayFailedWindows": 0,
+      "coverageAlert": false,
+      "sha256": "f619a8093a3f7a55c2c6c3c8a6648cdecfa03b2ec16f776a621742f4dc5684b5"
+    },
+    "hsi": {
+      "generatedAt": "2026-10-13T12:09:37.496465-04:00",
+      "validUntil": "2026-10-13T12:24:20.836059-04:00",
+      "publicPage": "docs/hsi.html",
+      "counts": {
+        "publicSelectableDateCount": 88,
+        "publicSelectableStartTimeCount": 1564,
+        "publicSelectableOfferCount": 2853,
+        "input_sources": 430,
+        "normalized_sources": 430,
+        "input_windows": 209,
+        "evaluated_windows": 209,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "actualOffers": 2853,
+      "actualDates": 88,
+      "dynamicOffers": 2853,
+      "seatedOffers": 0,
+      "publicationExpired": false,
+      "perCourse": {
+        "445670": 1558,
+        "463743": 1295
+      },
+      "day": "2026-10-14",
+      "dayOffers": 2,
+      "dayTimes": [
+        "19:30"
+      ],
+      "dayPerCourse": {
+        "445670": 1,
+        "463743": 1
+      },
+      "failedWindowReasons": {},
+      "dayFailedWindows": 0,
+      "coverageAlert": false,
+      "sha256": "5f6f560d140a7effed2ebdc60d7d102d1bc2d311d0fafd9f4834b9e8abb47ca9"
+    },
+    "uscg_first_aid_cpr_aed": {
+      "generatedAt": "2026-10-13T12:09:35.001850-04:00",
+      "validUntil": "2026-10-13T12:24:20.836059-04:00",
+      "publicPage": "docs/courses/uscg-first-aid-cpr-aed.html",
+      "counts": {
+        "publicSelectableDateCount": 89,
+        "publicSelectableStartTimeCount": 1567,
+        "publicSelectableOfferCount": 2856,
+        "input_sources": 430,
+        "normalized_sources": 430,
+        "input_windows": 209,
+        "evaluated_windows": 209,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "actualOffers": 2856,
+      "actualDates": 89,
+      "dynamicOffers": 2851,
+      "seatedOffers": 5,
+      "publicationExpired": false,
+      "perCourse": {
+        "209809": 1297,
+        "329495": 1559
+      },
+      "day": "2026-10-14",
+      "dayOffers": 3,
+      "dayTimes": [
+        "17:30",
+        "19:30"
+      ],
+      "dayPerCourse": {
+        "329495": 2,
+        "209809": 1
+      },
+      "failedWindowReasons": {},
+      "dayFailedWindows": 0,
+      "coverageAlert": false,
+      "sha256": "5fc69e7428588ac5a8a19278ffb8f24ad424d95917673c4a30a324a4666214a5"
+    },
+    "family_cpr": {
+      "generatedAt": "2026-10-13T12:09:43.187566-04:00",
+      "validUntil": "2026-10-13T12:24:20.836059-04:00",
+      "publicPage": "docs/family-cpr.html",
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1295,
+        "publicSelectableOfferCount": 1295,
+        "input_sources": 430,
+        "normalized_sources": 430,
+        "input_windows": 209,
+        "evaluated_windows": 209,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "actualOffers": 1295,
+      "actualDates": 87,
+      "dynamicOffers": 1295,
+      "seatedOffers": 0,
+      "publicationExpired": false,
+      "perCourse": {
+        "252737": 1295
+      },
+      "day": "2026-10-14",
+      "dayOffers": 1,
+      "dayTimes": [
+        "19:30"
+      ],
+      "dayPerCourse": {
+        "252737": 1
+      },
+      "failedWindowReasons": {},
+      "dayFailedWindows": 0,
+      "coverageAlert": false,
+      "sha256": "738b2eeb3c30e5832981b78ca7b944399966aa9863042215107a0bc8f0fa63f1"
+    }
+  },
+  "landscape": {
+    "buildId": "3673f10f3f9d",
+    "builtAt": "2026-10-13T16:10:01.756533+00:00",
+    "sha256": "3554f2ed161968236f9e47018874ee419974dc37fcd72c103b644e4511699dc2",
+    "dayCellResults": {
+      "suppressed": 27,
+      "seated": 1,
+      "offered": 15
+    },
+    "sourcePages": {
+      "bls": {
+        "generatedAt": "2026-10-13T12:09:44.919216-04:00",
+        "counts": {
+          "publicSelectableDateCount": 89,
+          "publicSelectableStartTimeCount": 1573,
+          "publicSelectableOfferCount": 4149,
+          "input_sources": 430,
+          "normalized_sources": 430,
+          "input_windows": 209,
+          "evaluated_windows": 209,
+          "failed_windows": 0,
+          "uncertainty_issues": 0
+        },
+        "rejectionReasonCounts": {
+          "outside_explicit_availability": 132,
+          "lead_time": 36,
+          "conflict_or_transition:14677627": 6,
+          "conflict_or_transition:b8bcc0d6-f5d4-4072-bc11-bac11f80dc96": 6,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 12,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261013T1500000400": 10,
+          "conflict_or_transition:eb4b1a90-a20d-4dc1-9fa3-9c0c8f32516b": 6,
+          "conflict_or_transition:14668746": 4,
+          "conflict_or_transition:bcc5d5c5-67c7-421e-81de-8bc698e2c5d2": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 4,
+          "conflict_or_transition:c5hmcc1iccpj0b9l74pjcb9kcgo3eb9p6co6ab9m64rjeob4clhj0d35ck@google.com": 2,
+          "full_course_count_unknown": 4,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 6,
+          "conflict_or_transition:74p66cj26sq6abb5c4o64b9kccrmcb9p64sjeb9n74r62p9i64pj0e9occ@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 4,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 4,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 4,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 12,
+          "conflict_or_transition:clgjid1h6goj2b9h6go62b9k60o3gb9o6go3gb9n75h64dhnchgm2cr268@google.com": 6,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 6,
+          "existing_course_day_anchor": 8,
+          "anchored_day_requires_attached_offer": 6
+        }
+      },
+      "acls": {
+        "generatedAt": "2026-10-13T12:09:47.265598-04:00",
+        "counts": {
+          "publicSelectableDateCount": 2,
+          "publicSelectableStartTimeCount": 2,
+          "publicSelectableOfferCount": 3,
+          "input_sources": 430,
+          "normalized_sources": 430,
+          "input_windows": 209,
+          "evaluated_windows": 209,
+          "failed_windows": 0,
+          "uncertainty_issues": 0
+        },
+        "rejectionReasonCounts": {
+          "instructor_not_qualified": 4299,
+          "outside_explicit_availability": 132,
+          "lead_time": 36,
+          "conflict_or_transition:14677627": 6,
+          "conflict_or_transition:b8bcc0d6-f5d4-4072-bc11-bac11f80dc96": 6,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 12,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261013T1500000400": 10,
+          "conflict_or_transition:eb4b1a90-a20d-4dc1-9fa3-9c0c8f32516b": 6,
+          "conflict_or_transition:14668746": 4,
+          "conflict_or_transition:bcc5d5c5-67c7-421e-81de-8bc698e2c5d2": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 4,
+          "conflict_or_transition:c5hmcc1iccpj0b9l74pjcb9kcgo3eb9p6co6ab9m64rjeob4clhj0d35ck@google.com": 2,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 6,
+          "conflict_or_transition:74p66cj26sq6abb5c4o64b9kccrmcb9p64sjeb9n74r62p9i64pj0e9occ@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 4,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 4,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 4,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 12,
+          "conflict_or_transition:clgjid1h6goj2b9h6go62b9k60o3gb9o6go3gb9n75h64dhnchgm2cr268@google.com": 6,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 6
+        }
+      },
+      "pals": {
+        "generatedAt": "2026-10-13T12:09:48.567665-04:00",
+        "counts": {
+          "publicSelectableDateCount": 1,
+          "publicSelectableStartTimeCount": 1,
+          "publicSelectableOfferCount": 2,
+          "input_sources": 430,
+          "normalized_sources": 430,
+          "input_windows": 209,
+          "evaluated_windows": 209,
+          "failed_windows": 0,
+          "uncertainty_issues": 0
+        },
+        "rejectionReasonCounts": {
+          "instructor_not_qualified": 4299,
+          "outside_explicit_availability": 132,
+          "lead_time": 36,
+          "conflict_or_transition:14677627": 6,
+          "conflict_or_transition:b8bcc0d6-f5d4-4072-bc11-bac11f80dc96": 6,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 12,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261013T1500000400": 10,
+          "conflict_or_transition:eb4b1a90-a20d-4dc1-9fa3-9c0c8f32516b": 6,
+          "conflict_or_transition:14668746": 4,
+          "conflict_or_transition:bcc5d5c5-67c7-421e-81de-8bc698e2c5d2": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 4,
+          "conflict_or_transition:c5hmcc1iccpj0b9l74pjcb9kcgo3eb9p6co6ab9m64rjeob4clhj0d35ck@google.com": 2,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 6,
+          "conflict_or_transition:74p66cj26sq6abb5c4o64b9kccrmcb9p64sjeb9n74r62p9i64pj0e9occ@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 4,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 4,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 4,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 12,
+          "conflict_or_transition:clgjid1h6goj2b9h6go62b9k60o3gb9o6go3gb9n75h64dhnchgm2cr268@google.com": 6,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 6
+        }
+      },
+      "heartsaver": {
+        "generatedAt": "2026-10-13T12:09:49.811582-04:00",
+        "counts": {
+          "publicSelectableDateCount": 89,
+          "publicSelectableStartTimeCount": 1575,
+          "publicSelectableOfferCount": 8641,
+          "input_sources": 430,
+          "normalized_sources": 430,
+          "input_windows": 209,
+          "evaluated_windows": 209,
+          "failed_windows": 0,
+          "uncertainty_issues": 0
+        },
+        "rejectionReasonCounts": {
+          "outside_explicit_availability": 255,
+          "lead_time": 72,
+          "full_course_already_paid_seated": 12,
+          "conflict_or_transition:14677627": 12,
+          "conflict_or_transition:b8bcc0d6-f5d4-4072-bc11-bac11f80dc96": 12,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 24,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261013T1500000400": 18,
+          "conflict_or_transition:eb4b1a90-a20d-4dc1-9fa3-9c0c8f32516b": 12,
+          "conflict_or_transition:14668746": 6,
+          "conflict_or_transition:bcc5d5c5-67c7-421e-81de-8bc698e2c5d2": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 18,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 6,
+          "conflict_or_transition:c5hmcc1iccpj0b9l74pjcb9kcgo3eb9p6co6ab9m64rjeob4clhj0d35ck@google.com": 3,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 12,
+          "conflict_or_transition:74p66cj26sq6abb5c4o64b9kccrmcb9p64sjeb9n74r62p9i64pj0e9occ@google.com": 12,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 6,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 12,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 6,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 12,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 6,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 24,
+          "conflict_or_transition:clgjid1h6goj2b9h6go62b9k60o3gb9o6go3gb9n75h64dhnchgm2cr268@google.com": 12,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 12,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 18,
+          "full_course_count_unknown": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 6,
+          "existing_course_day_anchor": 3,
+          "anchored_day_requires_attached_offer": 17
+        }
+      },
+      "uscg_first_aid_cpr_aed": {
+        "generatedAt": "2026-10-13T12:09:54.489738-04:00",
+        "counts": {
+          "publicSelectableDateCount": 89,
+          "publicSelectableStartTimeCount": 1567,
+          "publicSelectableOfferCount": 2856,
+          "input_sources": 430,
+          "normalized_sources": 430,
+          "input_windows": 209,
+          "evaluated_windows": 209,
+          "failed_windows": 0,
+          "uncertainty_issues": 0
+        },
+        "rejectionReasonCounts": {
+          "outside_explicit_availability": 86,
+          "lead_time": 24,
+          "full_course_already_paid_seated": 12,
+          "conflict_or_transition:14677627": 4,
+          "conflict_or_transition:b8bcc0d6-f5d4-4072-bc11-bac11f80dc96": 4,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 8,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261013T1500000400": 6,
+          "conflict_or_transition:eb4b1a90-a20d-4dc1-9fa3-9c0c8f32516b": 4,
+          "conflict_or_transition:14668746": 2,
+          "conflict_or_transition:bcc5d5c5-67c7-421e-81de-8bc698e2c5d2": 2,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 2,
+          "conflict_or_transition:c5hmcc1iccpj0b9l74pjcb9kcgo3eb9p6co6ab9m64rjeob4clhj0d35ck@google.com": 1,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 4,
+          "conflict_or_transition:74p66cj26sq6abb5c4o64b9kccrmcb9p64sjeb9n74r62p9i64pj0e9occ@google.com": 4,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 2,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 4,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 2,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 2,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 8,
+          "conflict_or_transition:clgjid1h6goj2b9h6go62b9k60o3gb9o6go3gb9n75h64dhnchgm2cr268@google.com": 4,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 6,
+          "full_course_count_unknown": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 3,
+          "existing_course_day_anchor": 3,
+          "anchored_day_requires_attached_offer": 4
+        }
+      },
+      "hsi": {
+        "generatedAt": "2026-10-13T12:09:56.315169-04:00",
+        "counts": {
+          "publicSelectableDateCount": 88,
+          "publicSelectableStartTimeCount": 1564,
+          "publicSelectableOfferCount": 2853,
+          "input_sources": 430,
+          "normalized_sources": 430,
+          "input_windows": 209,
+          "evaluated_windows": 209,
+          "failed_windows": 0,
+          "uncertainty_issues": 0
+        },
+        "rejectionReasonCounts": {
+          "outside_explicit_availability": 86,
+          "lead_time": 24,
+          "conflict_or_transition:14677627": 4,
+          "conflict_or_transition:b8bcc0d6-f5d4-4072-bc11-bac11f80dc96": 4,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 8,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261013T1500000400": 6,
+          "conflict_or_transition:eb4b1a90-a20d-4dc1-9fa3-9c0c8f32516b": 4,
+          "conflict_or_transition:14668746": 2,
+          "conflict_or_transition:bcc5d5c5-67c7-421e-81de-8bc698e2c5d2": 2,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 2,
+          "conflict_or_transition:c5hmcc1iccpj0b9l74pjcb9kcgo3eb9p6co6ab9m64rjeob4clhj0d35ck@google.com": 1,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 4,
+          "conflict_or_transition:74p66cj26sq6abb5c4o64b9kccrmcb9p64sjeb9n74r62p9i64pj0e9occ@google.com": 4,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 2,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 4,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 2,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 2,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 8,
+          "conflict_or_transition:clgjid1h6goj2b9h6go62b9k60o3gb9o6go3gb9n75h64dhnchgm2cr268@google.com": 4,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 3,
+          "anchored_day_requires_attached_offer": 6
+        }
+      },
+      "arc": {
+        "generatedAt": "2026-10-13T12:09:58.191626-04:00",
+        "counts": {
+          "publicSelectableDateCount": 88,
+          "publicSelectableStartTimeCount": 1564,
+          "publicSelectableOfferCount": 4148,
+          "input_sources": 430,
+          "normalized_sources": 430,
+          "input_windows": 209,
+          "evaluated_windows": 209,
+          "failed_windows": 0,
+          "uncertainty_issues": 0
+        },
+        "rejectionReasonCounts": {
+          "outside_explicit_availability": 132,
+          "lead_time": 36,
+          "conflict_or_transition:14677627": 6,
+          "conflict_or_transition:b8bcc0d6-f5d4-4072-bc11-bac11f80dc96": 6,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 12,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261013T1500000400": 10,
+          "conflict_or_transition:eb4b1a90-a20d-4dc1-9fa3-9c0c8f32516b": 6,
+          "conflict_or_transition:14668746": 4,
+          "conflict_or_transition:bcc5d5c5-67c7-421e-81de-8bc698e2c5d2": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 4,
+          "conflict_or_transition:c5hmcc1iccpj0b9l74pjcb9kcgo3eb9p6co6ab9m64rjeob4clhj0d35ck@google.com": 2,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 6,
+          "conflict_or_transition:74p66cj26sq6abb5c4o64b9kccrmcb9p64sjeb9n74r62p9i64pj0e9occ@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 4,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 6,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 4,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 4,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 12,
+          "conflict_or_transition:clgjid1h6goj2b9h6go62b9k60o3gb9o6go3gb9n75h64dhnchgm2cr268@google.com": 6,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 6,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 9,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 6,
+          "anchored_day_requires_attached_offer": 8
+        }
+      },
+      "family_cpr": {
+        "generatedAt": "2026-10-13T12:10:00.663992-04:00",
+        "counts": {
+          "publicSelectableDateCount": 87,
+          "publicSelectableStartTimeCount": 1295,
+          "publicSelectableOfferCount": 1295,
+          "input_sources": 430,
+          "normalized_sources": 430,
+          "input_windows": 209,
+          "evaluated_windows": 209,
+          "failed_windows": 0,
+          "uncertainty_issues": 0
+        },
+        "rejectionReasonCounts": {
+          "outside_explicit_availability": 46,
+          "lead_time": 12,
+          "conflict_or_transition:14677627": 2,
+          "conflict_or_transition:b8bcc0d6-f5d4-4072-bc11-bac11f80dc96": 2,
+          "conflict_or_transition:7fa8b8e6-befb-40c7-b600-cacab31aeb21": 4,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261013T1500000400": 4,
+          "conflict_or_transition:eb4b1a90-a20d-4dc1-9fa3-9c0c8f32516b": 2,
+          "conflict_or_transition:14668746": 2,
+          "conflict_or_transition:bcc5d5c5-67c7-421e-81de-8bc698e2c5d2": 2,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261014T1500000400": 3,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261016T1500000400": 2,
+          "conflict_or_transition:c5hmcc1iccpj0b9l74pjcb9kcgo3eb9p6co6ab9m64rjeob4clhj0d35ck@google.com": 1,
+          "conflict_or_transition:ksurludemcc2f1ur2oh4v3u61o@google.com": 2,
+          "conflict_or_transition:74p66cj26sq6abb5c4o64b9kccrmcb9p64sjeb9n74r62p9i64pj0e9occ@google.com": 2,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261019T0630000400": 2,
+          "conflict_or_transition:7f8q3tah892u35vs6vk6e0o204@google.com": 2,
+          "conflict_or_transition:7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400": 2,
+          "conflict_or_transition:kd2dgfr1l4b5n3thh7j33hmct4@google.com": 2,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261020T1500000400": 2,
+          "conflict_or_transition:tsbi15rpteiojno4qm5mo3aadk@google.com": 4,
+          "conflict_or_transition:clgjid1h6goj2b9h6go62b9k60o3gb9o6go3gb9n75h64dhnchgm2cr268@google.com": 2,
+          "conflict_or_transition:g1g36uu7qmop0efkmbrh01e3u8@google.com": 2,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261207T1500000500": 3,
+          "conflict_or_transition:70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261208T1500000500": 3,
+          "anchored_day_requires_attached_offer": 2
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Sequential HTTP reads may straddle publication; timestamps and hashes retained.",
+    "Failed windows are not candidate rejections; nonzero failed_windows is an explicit coverage alert.",
+    "Counts do not prove legal free-window coverage, browser rendering, or recurring health."
+  ]
+}
