@@ -197,7 +197,7 @@
     const doc = host.ownerDocument;
     host.className = "calendar-time-filters";
     host.setAttribute("aria-label", "Calendar timing preferences");
-    host.dataset.version = "20261001.1";
+    host.dataset.version = "20261013.1";
     const quick = doc.createElement("div");
     quick.className = "calendar-time-quick";
     quick.setAttribute("role", "group");
@@ -261,7 +261,15 @@
     const heading = doc.createElement("h2");
     heading.className = "calendar-availability-heading";
     heading.textContent = "When are YOU available?";
-    timingPill.append(heading, quick, row, hint, status);
+    const attentionHint = doc.createElement("p");
+    attentionHint.className = "calendar-filter-attention-hint";
+    attentionHint.textContent = "Too many choices? Narrow your options here.";
+    timingPill.append(heading, attentionHint, quick, row, hint, status);
+    timingPill.classList.add("calendar-filter-attention");
+    function stopAttention() {
+      timingPill.classList.remove("calendar-filter-attention");
+    }
+    timingPill.addEventListener("animationend", stopAttention, { once: true });
     pillRow.append(timingPill);
     host.append(pillRow);
     let constraints = compile([], "", today());
@@ -275,8 +283,8 @@
       clear.disabled = !constraints.active;
       onChange();
     }
-    boxes.forEach(box => box.addEventListener("change", update));
-    input.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(update, 180); });
+    boxes.forEach(box => box.addEventListener("change", () => { stopAttention(); update(); }));
+    input.addEventListener("input", () => { stopAttention(); clearTimeout(timer); timer = setTimeout(update, 180); });
     input.addEventListener("keydown", event => {
       if (event.key === "Enter") { event.preventDefault(); update(); }
     });

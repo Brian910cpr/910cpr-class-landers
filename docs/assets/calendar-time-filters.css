@@ -81,3 +81,26 @@
   .calendar-time-smart > label { flex-basis: 100%; }
   .calendar-time-smart input { font-size: 16px; }
 }
+
+/* A quiet invitation to narrow choices; text and controls remain steady. */
+.calendar-filter-attention-hint {
+  margin: -4px 0 8px;
+  color: var(--muted, #526171);
+  font-size: .8125rem;
+}
+.calendar-timing-pill.calendar-filter-attention {
+  animation: calendar-filter-attention 8s ease-in-out 3;
+}
+@keyframes calendar-filter-attention {
+  0%, 100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #0a66a5) 12%, transparent);
+    background: color-mix(in srgb, var(--accent, #0a66a5) 9%, var(--surface, white));
+    border-color: color-mix(in srgb, var(--accent, #0a66a5) 52%, var(--line, #c7cdd3));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .calendar-timing-pill.calendar-filter-attention { animation: none; }
+}
