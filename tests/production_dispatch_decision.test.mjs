@@ -68,3 +68,26 @@ test('actual POST route hides outage details and cannot acknowledge uncertain co
   const result=await response.json();assert.equal(result.committed,false);assert.equal(result.can_execute,false);
   assert.ok(!JSON.stringify(result).includes('private outage'));
 });
+
+
+test('dispatch acknowledgement strips unexpected private fields',async()=>{
+  const ack={request_id:id,decision:'reserved',reason:'runtime_fence_required',version:'2',
+    replayed:false,can_execute:false,private_evidence:'synthetic private value',actor:'private actor'};
+  const r=await dispatchDecision(id,body,()=>ack);
+  assert.equal(r.status,200);
+  assert.deepEqual(Object.keys(r.body).sort(),
+    ['request_id','decision','reason','version','replayed','committed','can_execute'].sort());
+  assert.ok(!JSON.stringify(r).includes('private'));
+});
+
+test('unknown reasons and invalid bigint versions do not confirm dispatch commit',async()=>{
+  const ack={request_id:id,decision:'review',reason:'source_check_stale',version:'2',
+    replayed:false,can_execute:false};
+  for(const change of [{reason:'synthetic private database detail'},{reason:''},
+    ...['','0','-1','01','2.5','1e3','9223372036854775808','99999999999999999999'].map(version=>({version}))]){
+    const r=await dispatchDecision(id,body,()=>({...ack,...change}));
+    assert.equal(r.status,503);assert.equal(r.body.committed,false);assert.equal(r.body.can_execute,false);
+    assert.ok(!JSON.stringify(r).includes('synthetic private'));
+  }
+  assert.equal((await dispatchDecision(id,body,()=>({...ack,version:'9223372036854775807'}))).status,200);
+});
