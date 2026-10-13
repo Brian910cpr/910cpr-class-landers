@@ -121,4 +121,3 @@ When a Codex round is required, use a new unique `Codex_Reply_ShiftCommander...R
 - Owner gate: approved private settings/TLS inputs, then intended-user hidden local prompts.
 - Next exact action: suppress unchanged retries; after gate changes resume existing reviewed check-only IDs 159/186/188 and controlled workflow/restart/recovery/observer proof.
 - Receipt: Codex_Reply_Issue214_OwnerGate_20261013T062805Z.md.
-
