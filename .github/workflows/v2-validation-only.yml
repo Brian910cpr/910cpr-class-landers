@@ -1,0 +1,49 @@
+name: V2 validation only
+on:
+  push:
+    branches: ['fix/v2-demand-availability-20261011']
+permissions:
+  contents: read
+concurrency:
+  group: v2-validation-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  validate:
+    if: github.repository == 'Brian910cpr/910cpr-class-landers'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.20.0'
+      - name: Install validation dependencies
+        run: |
+          python -m pip install openpyxl python-dateutil tzdata beautifulsoup4 certifi playwright
+          python -m playwright install --with-deps chrome
+      - name: Compile and run focused regressions
+        run: |
+          python -m py_compile scripts/layered_scheduling_engine.py scripts/layered_selector_adapter.py scripts/layered_publication_adapter.py scripts/layered_day_cache.py scripts/block_start_time_selector.py scripts/build_bls_block_schedule_pilot.py scripts/validate_v2_real_sources.py
+          python -B -m unittest tests.test_layered_publication_adapter tests.test_layered_selector_adapter tests.test_layered_day_cache tests.test_layered_calendar_coverage tests.test_layered_location_aliases tests.test_layered_resource_readiness tests.test_layered_release_probe tests.test_layered_publication_pipeline tests.test_v2_empty_window_rendered tests.test_v2_validation_driver
+          node --test tests/canonical_demand_endpoint.test.cjs tests/enrollware_roster_proof.test.cjs tests/resolved_selector_availability.test.mjs
+      - name: Authenticated read-only sources and real-window comparison
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: python -B -m scripts.validate_v2_real_sources --baseline bd3db41cbc9e5cf03883d86605a0e8be7f6c3a54 --output "$RUNNER_TEMP/v2-source-validation"
+      - name: Upload sanitized validation results only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v2-validation-${{ github.sha }}
+          path: |
+            ${{ runner.temp }}/v2-source-validation/sanitized/summary.json
+            ${{ runner.temp }}/v2-source-validation/sanitized/report.md
+          if-no-files-found: warn
+          retention-days: 7

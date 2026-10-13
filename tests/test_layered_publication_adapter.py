@@ -41,7 +41,7 @@ class LayeredPublicationTests(unittest.TestCase):
             valid_until=(self.now+timedelta(minutes=60)).isoformat(),source='explicit_fixture_complete_calendar'))
         return row
 
-    def add(self,day,start,end,cid='210549',name='Brian Ennis',count=None,**extra):
+    def add(self,day,start,end,cid='210549',name='Brian Ennis',count=1,**extra):
         row=dict(source_event_id=f'fixture-{day}-{start}-{name}',start=self.at(day,start).isoformat(),
             end=self.at(day,end).isoformat(),instructor=name,course_id=cid,resource=self.room,
             location_resolution='location_resource_map',source_file='canonical_class_sessions',
@@ -60,6 +60,23 @@ class LayeredPublicationTests(unittest.TestCase):
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
 
+    def test_unknown_peer_preserves_direct_but_blocks_new_overlap(self):
+        original = self.add(11, '12:00', '13:00', count=None)
+        peer = self.add(11, '12:00', '14:00', cid='329495', count=None)
+        peer['source_event_id'] = 'distinct-peer'
+        direct = dict(session_id=original['source_event_id'], date='2026-10-11',
+            startTime='12:00', courseId='210549', instructor='Brian Ennis',
+            durationMinutes=60, courseName='existing', offerType='seated_class')
+        self.assertTrue(any(o.get('offerType') == 'seated_class' for o in self.payload([direct])['offers']))
+        self.assertNotIn('12:00', self.starts('329495'))
+        for override in ({'count_available':True, 'active_registration_count':1},
+                         {'anchor_basis':'manual_override'}, {'kind':'uncertain'}):
+            with self.subTest(override=override):
+                saved = copy.deepcopy(peer)
+                peer.update(override)
+                self.assertFalse(any(o.get('offerType') == 'seated_class' for o in self.payload([direct])['offers']))
+                peer.clear(); peer.update(saved)
+
     def test_repeated_skills_growth_and_full_class_enlarges_block(self):
         self.add(11,'12:00','13:00')
         for cid in ['210549','329495']: self.assertEqual(self.starts(cid),{'11:00','13:00'})
@@ -74,7 +91,7 @@ class LayeredPublicationTests(unittest.TestCase):
         self.add(11,'17:00','19:00','359474',count=1)
         self.window(13,'07:45','15:00',next_day=False)
         self.window(13,'17:30','00:00')
-        self.add(13,'14:00','18:00','359474',name='Amy',count=None)
+        self.add(13,'14:00','18:00','359474',name='Amy',count=1)
         self.window(14,'17:30','00:00')
         self.add(14,'17:30','19:30','329495')
         self.assertEqual(self.starts(day=11),{'14:30','19:00'})
@@ -93,18 +110,21 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(self.starts(),set())
         self.assertTrue(self.calculation()['reports'][0]['rejected'])
 
-    def test_positive_count_changes_keep_occupied_edges_and_zero_does_not_free_room(self):
+    def test_positive_growth_then_zero_frees_room_and_keeps_empty_direct_offer(self):
         row=self.add(11,'12:00','13:00',count=1)
         before=self.starts('329495');row['active_registration_count']=2
         self.assertEqual(self.starts('329495'),before)
         seated=dict(session_id=row['source_event_id'],date='2026-10-11',startTime='12:00',
             courseId='210549',courseName='existing',offerType='seated_class')
         row['active_registration_count']=0
-        self.assertFalse(any(o.get('offerType')=='seated_class' for o in self.payload([seated])['offers']))
-        self.assertEqual(self.starts('329495'),before)
+        self.assertTrue(any(o.get('offerType')=='seated_class' for o in self.payload([seated])['offers']))
+        self.assertIn('12:00',self.starts('329495'))
+        self.assertFalse(self.calculation()['reports'][0]['blocks'])
         row['count_available']=False
         self.assertTrue(any(o.get('offerType')=='seated_class' for o in self.payload([seated])['offers']))
         self.assertIsNone(self.calculation()['projected_sources'][0]['active_registration_count'])
+        self.assertNotIn('12:00', self.starts('329495'))
+        self.assertFalse(self.calculation()['reports'][0]['blocks'])
 
     def test_unknown_bounds_are_scoped_and_stale_coverage_fails_closed(self):
         self.window(13)
@@ -182,14 +202,14 @@ class LayeredPublicationTests(unittest.TestCase):
     def test_unknown_offsite_travel_affects_only_own_instructor(self):
         self.window(11,name='Michelle')
         self.sources.append(dict(source_event_id='offsite',start=self.at(11,'09:00').isoformat(),
-            end=self.at(11,'11:00').isoformat(),instructor='Brian Ennis',location='offsite',course_id='210549'))
+            end=self.at(11,'11:00').isoformat(),instructor='Brian Ennis',location='offsite',course_id='210549',count_available=True,active_registration_count=1))
         offers=self.payload()['offers']
         self.assertFalse(any(o['instructor']=='Brian Ennis' for o in offers))
         self.assertTrue(any(o['instructor']=='Michelle' for o in offers))
 
     def test_known_directional_travel_changes_edges_and_actual_room_collision_rejects(self):
         self.sources.append(dict(source_event_id='offsite',start=self.at(11,'09:00').isoformat(),
-            end=self.at(11,'11:00').isoformat(),instructor='Brian Ennis',location='offsite',course_id='210549'))
+            end=self.at(11,'11:00').isoformat(),instructor='Brian Ennis',location='offsite',course_id='210549',count_available=True,active_registration_count=1))
         self.policy['travel_minutes']={self.room+'->offsite':30,'offsite->'+self.room:30}
         self.assertEqual(self.starts('210549'),{'07:30','11:30'})
         self.add(11,'12:00','13:00',name='Michelle')
@@ -212,7 +232,7 @@ class LayeredPublicationTests(unittest.TestCase):
         alternative = dict(self.courses[2], course_id='fixture-distinct-full-format',
                            clean_course_name='Fixture distinct Heartsaver format')
         self.courses.append(alternative)
-        for count in (1, None):
+        for count in (1,):
             with self.subTest(count=count):
                 self.sources=[]
                 self.add(11,'12:00','14:30','209809',count=count)
@@ -272,11 +292,157 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertNotIn('12:00',starts)
         self.assertIn('10:00',starts);self.assertIn('14:00',starts)
 
-    def test_unknown_full_family_count_rejects_only_full_family_not_skills(self):
-        self.add(11,'12:00','14:30','209809')
-        self.assertFalse(self.starts('209809'))
-        self.assertEqual(self.starts('329495'),{'11:00','14:30'})
-        self.assertTrue(self.starts('359474'))
+    def test_unknown_inventory_blocks_interval_without_manufacturing_anchor(self):
+        self.add(11,'12:00','14:30','209809',count=None)
+        self.assertNotIn('12:00', self.starts('209809'))
+        self.assertIn('08:00', self.starts('209809'))
+        self.assertIn('16:30', self.starts('329495'))
+        self.assertFalse(self.calculation()['reports'][0]['blocks'])
+
+    def direct(self, row):
+        start=aware(row['start'])
+        return dict(session_id=row['source_event_id'],date=start.date().isoformat(),startTime=start.strftime('%H:%M'),
+                    courseId=row['course_id'],courseName='Existing class',offerType='seated_class',
+                    instructor=row['instructor'],resource=row['resource'],schedulerConsumptionMinutes=60)
+
+    def test_empty_cutoff_and_seated_class_inside_24_hours(self):
+        self.now=self.at(10,'13:00')
+        self.coverage[0].update(observed_at=self.now.isoformat(),valid_until=(self.now+timedelta(hours=1)).isoformat())
+        row=self.add(11,'12:00','13:00',count=0)
+        self.policy['lead_minutes']=1440
+        payload=self.payload([self.direct(row)])
+        self.assertFalse([o for o in payload['offers'] if o.get('offerType')=='seated_class'])
+        self.assertIn('empty_class_booking_cutoff',payload['rejectionReasonCounts'])
+        self.assertNotIn('12:00',self.starts('329495'))
+        row['active_registration_count']=1
+        self.assertTrue([o for o in self.payload([self.direct(row)])['offers'] if o.get('offerType')=='seated_class'])
+        self.assertFalse([o for o in self.payload()['offers'] if o.get('scheduleRole')=='barnacle' and aware(f"{o['date']}T{o['startTime']}")<self.now+timedelta(hours=24)])
+
+    def test_unknown_historical_positive_requires_exact_identity_and_zero_clears_only_demand(self):
+        row=self.add(11,'12:00','13:00',count=None)
+        prior=dict(row,count_available=True,active_registration_count=1,demand_basis='canonical_active_registrations')
+        row['previous_verified_commitment']=prior
+        self.assertEqual(self.starts('329495'),{'11:00','13:00'})
+        self.assertIsNone(self.calculation()['projected_sources'][0]['active_registration_count'])
+        row['source_event_id']='different-seat'
+        self.assertIn('08:00',self.starts('329495'))
+        self.assertFalse(self.calculation()['reports'][0]['blocks'])
+        row['source_event_id']=prior['source_event_id'];row.update(count_available=True,active_registration_count=0)
+        self.assertIn('12:00',self.starts('329495'))
+        row['anchor_basis']='manual_override'
+        self.assertEqual(self.starts('329495'),{'11:00','13:00'})
+        self.assertTrue([o for o in self.payload([self.direct(row)])['offers'] if o.get('offerType')=='seated_class'])
+
+    def test_cancellation_and_move_clear_only_exact_mirrored_identity(self):
+        first=self.add(11,'12:00','13:00',count=1);first['external_class_id']='one'
+        second=self.add(11,'17:00','18:00',count=2);second['external_class_id']='two'
+        mirror=dict(first,source_file='docs/data/schedule_future.json',source_event_id='one')
+        self.sources.append(mirror)
+        first['session_status']='canceled'
+        calc=self.calculation()['reports'][0]
+        self.assertEqual([b['source_ids'] for b in calc['blocks']],[[second['source_event_id']]])
+        self.assertFalse([o for o in self.payload([self.direct(mirror)])['offers'] if o.get('offerType')=='seated_class'])
+        first['session_status']='scheduled';first['start']=self.at(11,'14:00').isoformat();first['end']=self.at(11,'15:00').isoformat()
+        occupied=self.calculation()['reports'][0]['normalized_occupancy']
+        self.assertEqual(len(occupied),2)
+        self.assertEqual({aware(r['start']).strftime('%H:%M') for r in occupied},{'14:00','17:00'})
+        self.assertEqual(second['active_registration_count'],2)
+
+    def test_empty_inventory_allows_multiple_families_in_same_free_window(self):
+        self.windows=[];self.coverage=[];self.window(11,'10:00','15:00',next_day=False)
+        row=self.add(11,'12:00','13:00',count=0)
+        payload=self.payload([self.direct(row)])
+        for cid in ('210549','329495','209809','359474'):
+            self.assertTrue(any(o['courseId']==cid and o['startTime']=='12:00' for o in payload['offers']))
+        self.assertFalse(self.calculation()['reports'][0]['blocks'])
+        self.assertEqual(row['active_registration_count'],0)
+
+    def test_independent_calendar_commitment_survives_zero_and_blocks_every_instructor(self):
+        row=self.add(11,'12:00','13:00',count=0)
+        self.sources.append(dict(row, source_event_id='independent-calendar',course_id='',
+                                 kind='commitment',source_file='live_availability_snapshot.blocked'))
+        self.window(11,name='Michelle')
+        self.assertNotIn('12:00',self.starts('329495'))
+        self.assertTrue(self.calculation()['reports'][0]['normalized_occupancy'])
+        self.assertFalse([o for o in self.payload([self.direct(row)])['offers'] if o.get('offerType')=='seated_class'])
+        self.sources=self.sources[:1];row.update(count_available=False,active_registration_count=None)
+        self.assertFalse([o for o in self.payload()['offers'] if o['startTime']=='12:00'])
+
+    def test_oct17_bounded_unknown_renewal_keeps_ten_and_allows_noon_without_demand_anchor(self):
+        self.windows=[];self.coverage=[];self.window(17,'10:00','17:00',next_day=False)
+        row=self.add(17,'10:00','12:00',cid='359474',count=None)
+        payload=self.payload([self.direct(row)])
+        self.assertTrue(any(o['courseId']=='359474' and o['startTime']=='10:00' and o['offerType']=='seated_class' for o in payload['offers']))
+        self.assertTrue(any(o['courseId']=='359474' and o['startTime']=='12:00' for o in payload['offers']))
+        self.assertNotIn('full_course_count_unknown',payload['rejectionReasonCounts'])
+        self.assertFalse(self.calculation()['reports'][0]['blocks'])
+        self.assertEqual(len(self.calculation()['reports'][0]['normalized_occupancy']),1)
+
+    def test_canceled_identity_does_not_remove_another_seated_identity_at_same_time(self):
+        one=self.add(11,'12:00','13:00',count=1);one['source_event_id']='seat-one'
+        two=self.add(11,'12:00','13:00',count=2);two['source_event_id']='seat-two'
+        one['session_status']='canceled'
+        report=self.calculation()['reports'][0]
+        self.assertEqual(report['blocks'][0]['source_ids'],['seat-two'])
+        self.assertEqual(two['active_registration_count'],2)
+
+    def test_empty_direct_cutoff_rechecked_by_finalizer_without_hiding_positive(self):
+        row=self.add(11,'12:00','13:00',count=0)
+        payload=self.payload([self.direct(row)])
+        self.assertTrue([o for o in payload['offers'] if o.get('offerType')=='seated_class'])
+        expired=finalize(payload,self.at(10,'12:01'))
+        self.assertFalse([o for o in expired['offers'] if o.get('offerType')=='seated_class'])
+        row['active_registration_count']=1
+        seated_payload=self.payload([self.direct(row)])
+        self.assertTrue([o for o in finalize(seated_payload,self.at(10,'12:01'))['offers'] if o.get('offerType')=='seated_class'])
+
+    def test_direct_class_respects_directional_instructor_travel(self):
+        row=self.add(11,'12:00','13:00',count=1)
+        self.sources.append(dict(source_event_id='offsite-trip',start=self.at(11,'10:00').isoformat(),
+            end=self.at(11,'11:45').isoformat(),instructor='Brian Ennis',location='offsite',kind='commitment'))
+        self.policy['travel_minutes']={self.room+'->offsite':30,'offsite->'+self.room:30}
+        self.assertFalse([o for o in self.payload([self.direct(row)])['offers'] if o.get('offerType')=='seated_class'])
+        self.sources[-1]['end']=self.at(11,'11:30').isoformat()
+        self.assertTrue([o for o in self.payload([self.direct(row)])['offers'] if o.get('offerType')=='seated_class'])
+        self.policy['travel_minutes']={}
+        payload=self.payload([self.direct(row)])
+        self.assertFalse([o for o in payload['offers'] if o.get('offerType')=='seated_class'])
+        self.assertIn('existing_class_travel_uncertain',payload['rejectionReasonCounts'])
+
+    def test_zero_canonical_truth_clears_class_mirror_without_top_level_course_id(self):
+        row=self.add(11,'12:00','13:00',count=0);row['external_class_id']='raw-class'
+        self.sources.append(dict(row, source_file='data/sessions_current.json',source_event_id='raw-class',
+                                 course_id='',count_available=False,active_registration_count=None))
+        self.assertIn('12:00',self.starts('329495'))
+        self.assertFalse(self.calculation()['reports'][0]['normalized_occupancy'])
+        self.sources.append(dict(row,source_file='live_availability_snapshot.blocked',source_event_id='independent',
+                                 course_id='',kind='commitment'))
+        self.assertNotIn('12:00',self.starts('329495'))
+
+    def test_unknown_canonical_time_disagreement_does_not_retire_current_class_bounds(self):
+        row=self.add(11,'12:00','13:00',count=None);row['external_class_id']='uncertain-move'
+        self.sources.append(dict(row,source_event_id='uncertain-move',source_file='data/sessions_current.json',
+                                 start=self.at(11,'14:00').isoformat(),end=self.at(11,'15:00').isoformat()))
+        report=self.calculation()['reports'][0]
+        self.assertEqual({aware(x['start']).strftime('%H:%M') for x in report['normalized_occupancy']},{'12:00','14:00'})
+        self.assertNotIn('14:00',self.starts('329495'))
+        self.assertTrue(self.calculation()['projected_sources'][1]['timing_reconciliation_required'])
+
+    def test_unknown_offsite_travel_on_unrelated_day_does_not_retire_direct_class(self):
+        row=self.add(11,'12:00','13:00',count=1)
+        self.sources.append(dict(source_event_id='unrelated-trip',start=self.at(14,'10:00').isoformat(),
+                                 end=self.at(14,'11:45').isoformat(),instructor='Brian Ennis',location='offsite',kind='commitment'))
+        self.assertTrue([o for o in self.payload([self.direct(row)])['offers'] if o.get('offerType')=='seated_class'])
+
+    def test_advertised_class_start_is_not_confused_with_setup_occupancy(self):
+        row=self.add(11,'11:45','13:00',count=1)
+        row['session_start']=self.at(11,'12:00').isoformat()
+        direct=dict(self.direct(row),startTime='12:00')
+        self.assertTrue([o for o in self.payload([direct])['offers'] if o.get('offerType')=='seated_class'])
+        self.assertNotIn('11:45',self.starts('329495'))
+        row['active_registration_count']=0
+        self.assertTrue([o for o in self.payload([direct])['offers'] if o.get('offerType')=='seated_class'])
+        self.assertIn('12:00',self.starts('329495'))
 
     def test_old_or_naive_coverage_and_bad_count_are_not_proof(self):
         self.coverage[0]['observed_at']='2026-09-27T12:00:00-04:00'

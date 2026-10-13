@@ -229,3 +229,10 @@ test("BLS and ACLS real artifacts are only narrowed, preserving course IDs and r
     assert.equal(JSON.stringify(source), original);
   }
 });
+
+ test("empty direct class cutoff expires while seated and unknown commitments remain", () => {
+  const empty={offerType:"seated_class",courseId:"empty",bookableUntil:"2026-10-10T16:00:00Z"};
+  const dates=[{date:"2026-10-11",startTimes:[{startTime:"12:00",courses:[empty,{offerType:"seated_class",courseId:"positive"},{offerType:"seated_class",courseId:"unknown"}]}]}];
+  assert.equal(shared.datesForPublication(dates,null,Date.parse(empty.bookableUntil))[0].startTimes[0].courses.length,3);
+  assert.deepEqual(shared.datesForPublication(dates,null,Date.parse(empty.bookableUntil)+1)[0].startTimes[0].courses.map(c=>c.courseId),["positive","unknown"]);
+});

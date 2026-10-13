@@ -48,10 +48,11 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
     calculation = payload.get("layeredDiagnostics") or {}
     sources = []
     for source in calculation.get("projected_sources", []):
-        kind = source.get("kind") or ("commitment" if "blocked" in str(source.get("source_file")) or not source.get("course_id") else "planted")
+        from scripts.layered_scheduling_engine import commitment_state
+        kind = commitment_state(source)
         sources.append({
             "sourceId": source.get("source_event_id"),
-            "role": "anchor" if kind in ("paid", "seated", "planted") else "blocking",
+            "role": "anchor" if kind in ("paid", "seated", "planted") else "inventory" if kind in ("inventory", "inactive") else "blocking",
             "start": source.get("start"), "end": source.get("end"),
             "courseId": source.get("course_id"), "resource": source.get("resource"),
             "countAvailable": source.get("count_available") is True,
@@ -103,6 +104,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "edgeIds": course.get("edgeIds"),
                     "resource": course.get("resource"),
                     "validUntil": course.get("validUntil"),
+                    "bookableUntil": course.get("bookableUntil"),
                     "date": day.get("date"),
                     "startTime": slot.get("startTime"),
                 }
@@ -1077,6 +1079,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     "sourceAvailabilityBlock": course.get("sourceAvailabilityBlock", {}),
                     "offerType": course.get("offerType") or "dynamic_appointment",
                     "publicSelectable": course.get("publicSelectable") is True,
+                    "bookableUntil": course.get("bookableUntil"),
                 }
                 courses.append(course_record)
                 course_options_by_id.setdefault(course["courseId"], {
@@ -1449,7 +1452,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261001-reconciliation-1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261011-empty-demand-1"></script>
   <script src="/assets/calendar-time-filters.js?v=20261001.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};

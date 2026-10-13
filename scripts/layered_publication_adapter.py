@@ -8,7 +8,7 @@ from copy import deepcopy
 from collections import Counter
 from datetime import timedelta
 from scripts.layered_selector_adapter import aware, build_shadow
-from scripts.layered_scheduling_engine import encode as encode_value
+from scripts.layered_scheduling_engine import encode as encode_value, commitment_state, interval_conflict
 import json
 
 
@@ -16,6 +16,15 @@ def encode(value):
     return json.loads(json.dumps(value, default=encode_value))
 
 SCHEMA = "layered-publication.v2"
+
+
+def unknown_class_inventory(source):
+    """Unverified inventory constrains new generation, not existing direct choice."""
+    return (commitment_state(source) == 'uncertain'
+            and source.get('kind') in (None, 'planted')
+            and source.get('source_file') in {
+                'canonical_class_sessions', 'data/sessions_current.json',
+                'docs/data/schedule_future.json'})
 
 
 def active(policy):
@@ -48,6 +57,30 @@ def project_sources(rows, course_metadata):
             row["active_registration_count"] = None
         row.setdefault("source_file", "canonical_class_sessions")
         result.append(row)
+    # Canonical lifecycle/count evidence wins over mirrored published inventory.
+    canonical = {str(r.get('external_class_id')): r for r in result
+                 if r.get('source_file') == 'canonical_class_sessions' and r.get('external_class_id')}
+    for row in result:
+        truth = canonical.get(str(row.get('external_class_id')))
+        if truth is not None and truth is not row and row.get('source_file') in {'data/sessions_current.json', 'docs/data/schedule_future.json'}:
+            row['course_id'] = row.get('course_id') or truth.get('course_id') or ''
+            try:
+                moved = aware(truth.get('session_start') or truth['start']) != aware(row.get('session_start') or row['start'])
+            except (KeyError, TypeError, ValueError):
+                moved = False  # Unresolved occupancy remains scoped by calculate.
+            if truth.get('session_status') in {'cancelled', 'canceled', 'deleted', 'moved'}:
+                row['session_status'] = truth['session_status']
+            elif moved and truth.get('count_available') is True:
+                row['session_status'] = 'moved'
+            elif moved:
+                # A current unknown roster cannot prove which conflicting time
+                # is the occupied occurrence. Keep both bounds conservative.
+                row.update(count_available=False, active_registration_count=None,
+                           timing_reconciliation_required=True)
+            else:
+                for field in ('count_available', 'active_registration_count', 'previous_verified_commitment'):
+                    if field in truth: row[field] = deepcopy(truth[field])
+        row['commitment_state'] = commitment_state(row)
     return result
 
 
@@ -79,6 +112,8 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
         room = policy["primary_resource"]
         relevant, invalid = [], []
         for source in projected:
+            if source['commitment_state'] in {'inventory', 'inactive'}:
+                continue
             person = str(source.get("instructor") or "").casefold().strip()
             same_person = person == name or person in {"brian", "brian ennis"} and "brian" in name
             resource = source.get("resource") or room
@@ -137,7 +172,7 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             continue
         try:
             report = build_shadow([window], relevant, courses, policy, resources, now,
-                interval, qualified, lead_minutes=policy.get("lead_minutes", 1440),
+                interval, qualified, lead_minutes=max(1440, policy.get("lead_minutes", 1440)),
                 travel_minutes=travel_minutes, commitment_coverage=fresh,
                 shared_room_edges=True)
             report["adapter_mode"] = "active_local_v2"
@@ -151,6 +186,8 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             issues.append(dict(reason=str(error), instructor=window.get("instructor_name"),
                 resource=room, start=ws.isoformat(), end=we.isoformat()))
     return dict(schema=SCHEMA, reports=reports, issues=issues, projected_sources=projected,
+        direct_constraints=dict(travel_minutes=travel_minutes or {},
+            resources=[r["resource_name"] for venue in resources.get("locations", []) for r in venue.get("internal_resources", [])]),
         counts=dict(input_sources=len(occupancy), normalized_sources=len(projected),
                     input_windows=len(windows), evaluated_windows=len(reports),
                     failed_windows=len(windows)-len(reports), uncertainty_issues=len(issues)))
@@ -207,24 +244,90 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 offerType="dynamic_appointment", scheduleRole="barnacle" if candidate["mode"]=="barnacle" else "open_day",
                 sourceSessionIds=candidate["source_ids"], edgeIds=candidate["edge_ids"],
                 validUntil=report["valid_until"].isoformat(), publicSelectable=True))
-    # Never retire a source record. Confirmed-zero booking choices are retired
-    # only from this projection; their occupied interval remains in calculation.
+    # Existing booking choices do not imply occupancy or a demand Anchor.
     counts = {}
-    for source in calculation["projected_sources"]:
-        for identity in [source.get("source_event_id"), source.get("external_class_id")]:
+    for source in calculation['projected_sources']:
+        for identity in [source.get('source_event_id'), source.get('external_class_id')]:
             if identity is not None and str(identity) not in counts:
                 counts[str(identity)] = source
+    anchored_offers = []
     for original in seated_offers:
-        source = counts.get(str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId")))
-        if source and source.get("count_available") is True and source.get("active_registration_count") == 0:
-            rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
+        source = counts.get(str(original.get('session_id') or original.get('sourceSessionId') or original.get('sourceAvailabilityBlock', {}).get('sessionId')))
+        state = commitment_state(source) if source else 'uncertain'
+        start = aware(f"{original['date']}T{original['startTime']}")
+        reasons = []
+        lifecycle_proven = False
+        direct_checks = []
+        def record_check(busy, reason, same_room, same_person, bounded):
+            basis = commitment_state(busy)
+            category = {'paid':'verified_positive_demand','seated':'retained_verified_commitment',
+                        'planted':'explicit_class_commitment','commitment':'explicit_calendar_or_manual_commitment',
+                        'hold':'explicit_hold'}.get(basis,'unresolved_input')
+            if unknown_class_inventory(busy):
+                category = 'unknown_class_inventory'
+            known_resources = set(calculation.get('direct_constraints', {}).get('resources', []))
+            subject_person = str(original.get('instructor') or '').strip().casefold()
+            blocker_person = str(busy.get('instructor') or '').strip().casefold()
+            person_known = subject_person not in {'','unknown','unassigned'} and blocker_person not in {'','unknown','unassigned'}
+            direct_checks.append(dict(reason=reason,basis=category,
+                room_constraint=bool(same_room and source and source.get('resource') in known_resources),
+                instructor_constraint=bool(same_person and person_known),bounded_interval_conflict=bounded))
+        if state == 'inactive' or (source and source.get('start') and aware(source.get('session_start') or source['start']) != start):
+            reasons.append('inactive_or_moved_existing_identity')
+            lifecycle_proven = state == 'inactive' or bool(source and source.get('count_available') is True)
+        if source and source.get('count_available') is True and source.get('active_registration_count') == 0 and start < now + timedelta(hours=24):
+            reasons.append('empty_class_booking_cutoff')
+            lifecycle_proven = True
+        if start <= now:
+            reasons.append('existing_class_started')
+            lifecycle_proven = True
+        # Existing seats keep their own interval, but another room/instructor
+        # commitment still vetoes selling a conflicting direct offer.
+        end = start + timedelta(minutes=original.get('schedulerConsumptionMinutes') or original.get('durationMinutes') or 1)
+        from scripts.layered_day_cache import scoped_sources
+        travel_rules = calculation.get('direct_constraints', {}).get('travel_minutes', {})
+        travel_scope = max([0] + [int(v) for v in travel_rules.values() if isinstance(v, (int, float)) and v >= 0])
+        for busy in scoped_sources(calculation['projected_sources'], start, end, travel_scope):
+            if commitment_state(busy) in {'inventory', 'inactive'} or busy is source or unknown_class_inventory(busy):
+                continue
+            same_identity = source and set(str(v) for v in (source.get('source_event_id'), source.get('external_class_id')) if v) & set(str(v) for v in (busy.get('source_event_id'), busy.get('external_class_id')) if v)
+            if same_identity: continue
+            same_person = str(busy.get('instructor') or '').casefold().replace(' ennis','') == str(original.get('instructor') or '').casefold().replace(' ennis','')
+            same_room = source and source.get('resource') and busy.get('resource') == source.get('resource') and busy.get('availability_location_mode') != 'instructor_time_only'
+            if not (same_person or same_room): continue
+            try:
+                busy_start, busy_end = aware(busy['start']), aware(busy['end'])
+                if busy_end <= busy_start: raise ValueError('unresolved direct constraint bounds')
+                before = after = 0
+                constraints = calculation.get('direct_constraints', {})
+                known = set(constraints.get('resources', []))
+                def location(row):
+                    if row.get('availability_location_mode') == 'instructor_time_only': return 'instructor_time_only'
+                    return row.get('resource') if row.get('location_resolution') == 'location_resource_map' else row.get('location')
+                origin, destination = location(source or original), location(busy)
+                if same_person and origin and destination and origin != destination and 'instructor_time_only' not in (origin, destination) and not ({origin, destination} <= known):
+                    travel = constraints.get('travel_minutes', {})
+                    before, after = travel.get(origin+'->'+destination), travel.get(destination+'->'+origin)
+                    if before is None or after is None:
+                        reasons.append('existing_class_travel_uncertain')
+                        record_check(busy,'existing_class_travel_uncertain',same_room,same_person,False)
+                        continue
+                if interval_conflict(start, end, busy_start, busy_end, before, after):
+                    reasons.append('existing_class_resource_conflict')
+                    record_check(busy,'existing_class_resource_conflict',same_room,same_person,True)
+            except (KeyError, TypeError, ValueError):
+                reasons.append('existing_class_resource_uncertain')
+                record_check(busy,'existing_class_resource_uncertain',same_room,same_person,False)
+        if reasons:
+            rejected.append(dict(original, reasons=reasons, directConstraintProofs=direct_checks, directLifecycleProven=lifecycle_proven))
         else:
-            accepted.append(deepcopy(original))
-    # Every retained existing class is that exact course's day anchor,
-    # including when its roster count is unknown. Consolidate across separate
-    # Google availability gaps without suppressing different course formats.
-    day_anchors = {(o['date'], str(o['courseId'])) for o in accepted
-                   if o.get('offerType') == 'seated_class'}
+            offer = deepcopy(original)
+            offer['demandAnchor'] = state in {'paid', 'seated', 'planted'}
+            if source and source.get('count_available') is True and source.get('active_registration_count') == 0:
+                offer['bookableUntil'] = (start - timedelta(hours=24)).isoformat()
+            accepted.append(offer)
+            if offer['demandAnchor']: anchored_offers.append(offer)
+    day_anchors = {(o['date'], str(o['courseId'])) for o in anchored_offers}
     def instructor_key(name):
         key = str(name or '').strip().casefold()
         return 'brian ennis' if key == 'brian' else key
@@ -232,12 +335,12 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     # courses. A second calendar gap does not reset an instructor's anchored day.
     anchored_days = set()
     for source in calculation['projected_sources']:
-        if (source.get('course_id') and source.get('start') and source.get('end') and
+        if (commitment_state(source) in {'paid', 'seated', 'planted'} and source.get('course_id') and source.get('start') and source.get('end') and
                 not source.get('normalization_issue') and aware(source['end']) > aware(source['start'])):
-            anchored_days.add((aware(source['start']).date().isoformat(),
+            anchored_days.add((aware(source.get('session_start') or source['start']).date().isoformat(),
                                instructor_key(source.get('instructor'))))
     for offer in accepted:
-        if offer.get('offerType') == 'seated_class':
+        if offer.get('demandAnchor') is True:
             anchored_days.add((offer['date'], instructor_key(offer.get('instructor'))))
     retained = []
     for offer in accepted:
@@ -282,7 +385,9 @@ def finalize(payload, now=None):
     original=result.get("offers", [])
     kept=[]
     for offer in original:
-        if offer.get("offerType")=="seated_class":
+        if offer.get('bookableUntil') and aware(offer['bookableUntil']) < now:
+            result.setdefault('rejectedCourseStartTimes', []).append(dict(offer,reasons=['empty_class_booking_cutoff']))
+        elif offer.get("offerType")=="seated_class":
             kept.append(offer)
         elif offer.get("validUntil") and aware(offer["validUntil"]) > now:
             kept.append(offer)

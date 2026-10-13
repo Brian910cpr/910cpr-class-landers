@@ -59,6 +59,8 @@ class BlockSelectorInputError(RuntimeError):
     pass
 
 
+LAYERED_HISTORY_PATH = ROOT / 'data/runtime/layered_verified_commitments.json'
+
 def read_required_json(path: Path) -> Any:
     if not path.exists():
         raise BlockSelectorInputError(f"Required real input is missing: {path}")
@@ -723,25 +725,27 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
                                    (schedule_future, loaded.get("schedule_future"))]:
             raw = source.get("sessions", []) if isinstance(source, dict) else []
             for block, session in zip(normalized, [r for r in raw if isinstance(r, dict)]):
-                block.update(source_event_id=session.get("session_id") or session.get("id"),
+                block.update(session_start=block.get("start"), source_event_id=session.get("session_id") or session.get("id"),
                     course_id=session.get("course_id"), external_class_id=session.get("session_id"),
                     count_available=session.get("count_available") is True,
                     active_registration_count=session.get("active_registration_count"),
-                    uncertainty_scope=session.get("uncertainty_scope", {}))
+                    uncertainty_scope=session.get("uncertainty_scope", {}),
+                    **{k: session[k] for k in ('session_status', 'anchor_basis', 'promotion_reason', 'previous_verified_commitment') if k in session})
     calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"), allow_unresolved)
     canonical = []
     for session in loaded.get("canonical_demand", {}).get("sessions", []):
-        if session.get("session_status") not in ("scheduled", "active", "completed"):
+        if session.get("session_status") not in ("scheduled", "active", "completed") and not allow_unresolved:
             continue
         start = parse_dt(session.get("consumption_start_at") or session.get("start_at"))
         end = parse_dt(session.get("consumption_end_at") or session.get("end_at"))
         if (not start or not end or end <= start) and not allow_unresolved:
             raise BlockSelectorInputError("Canonical session has an invalid occupied window")
         canonical.append({
-            "start": start, "end": end,
+            "start": start, "end": end, "session_start": parse_dt(session.get("start_at")),
             "location": session.get("location_name") or UNKNOWN,
             "instructor": session.get("lead_instructor_name") or UNKNOWN,
             "course_title": session.get("course_name") or "Canonical class",
+            **{k: session[k] for k in ('session_status', 'anchor_basis', 'promotion_reason', 'previous_verified_commitment') if k in session},
             "source_file": "canonical_class_sessions",
             "source_event_id": session.get("canonical_session_id"),
             "external_class_id": session.get("external_class_id"),
@@ -1206,7 +1210,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 and has_required_cert(people[normalize_key(window.get("person_id"))], course)),
             coverage, layered_policy.get("travel_minutes", {}),
             cache_dir=ROOT / 'data/runtime/layered_day_cache' / page_key,
-            horizon_days=90)
+            horizon_days=90, history_path=LAYERED_HISTORY_PATH)
         windows = calculation.pop('selected_windows')
         seated = seated_class_selector_offers(
             schedule_future_payload=loaded.get("schedule_future"), selected_courses=selected_courses,

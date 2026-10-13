@@ -1,0 +1,930 @@
+{
+  "baseline": "e663209d1e3db7d582079008250da622a2a01856",
+  "scenario": "Confirmed-zero 12:00-13:00 class, verified room/instructor window 10:00-15:00, beyond 24 hours, no independent commitment",
+  "sources_unchanged": true,
+  "before": {
+    "feed": {
+      "schemaVersion": "selector-resolved-availability.v1",
+      "schedulingModel": "layered-publication.v2",
+      "layeredLandscape": {
+        "schemaVersion": "public-layered-landscape.v1",
+        "sources": [
+          {
+            "sourceId": "fixture-11-12:00-Brian Ennis",
+            "role": "inventory",
+            "start": "2026-10-11T12:00:00-04:00",
+            "end": "2026-10-11T13:00:00-04:00",
+            "courseId": "210549",
+            "resource": ":: Wilmington; Shipyard Blvd - B",
+            "countAvailable": true,
+            "registeredCount": 0
+          }
+        ],
+        "occupiedBlocks": [
+          {
+            "id": "block-fixture-11-12:00-Brian Ennis",
+            "start": "2026-10-11T16:00:00+00:00",
+            "end": "2026-10-11T17:00:00+00:00",
+            "source_ids": [
+              "fixture-11-12:00-Brian Ennis"
+            ]
+          }
+        ],
+        "offersAreAlternatives": true,
+        "availabilityIsNotAClass": true
+      },
+      "generatedAt": "2026-10-05T12:00:00-04:00",
+      "validUntil": "2026-10-05T13:00:00-04:00",
+      "pageKey": "heartsaver",
+      "publicPage": "docs/heartsaver.html",
+      "sourceArtifacts": {
+        "hotSyncCurrentOccupancy": "data/sessions_current.json",
+        "publicScheduleFuture": "docs/data/schedule_future.json",
+        "liveAvailabilitySnapshot": null,
+        "courseConsumptionRules": null
+      },
+      "authority": {
+        "name": "block_start_time_selector.build_block_schedule_page",
+        "description": "Resolved selector availability generated server-side from the same Work Order 1B occupancy, conflict, course-consumption, public-location, and public-offer rules. Browsers consume this result and do not run an independent conflict engine."
+      },
+      "counts": {
+        "publicSelectableDateCount": 1,
+        "publicSelectableStartTimeCount": 2,
+        "publicSelectableOfferCount": 4,
+        "input_sources": 1,
+        "normalized_sources": 1,
+        "input_windows": 1,
+        "evaluated_windows": 1,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "liveAvailabilityGuard": {},
+      "anchor_policy": {
+        "mode": "layered-publication.v2",
+        "finalized": true
+      },
+      "synthesisBlockedDates": [],
+      "occupiedDates": [],
+      "reconciliationIssues": [],
+      "dates": [
+        {
+          "date": "2026-10-11",
+          "displayDate": "Sunday, October 11, 2026",
+          "startTimes": [
+            {
+              "startTime": "11:00",
+              "displayStartTime": "11:00 AM",
+              "courses": [
+                {
+                  "courseId": "210549",
+                  "courseName": "AHA HeartCode BLS Skills",
+                  "courseFamily": "BLS",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "11:00 AM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=11:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=11:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "barnacle",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "12:00",
+                  "occupiedUntil": "2026-10-11T12:00:00-04:00",
+                  "sourceSessionIds": [
+                    "fixture-11-12:00-Brian Ennis"
+                  ],
+                  "edgeIds": [
+                    "block-fixture-11-12:00-Brian Ennis-left"
+                  ],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "11:00"
+                },
+                {
+                  "courseId": "329495",
+                  "courseName": "Heartsaver Blended Skills",
+                  "courseFamily": "Heartsaver",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "11:00 AM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=11:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=11:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "barnacle",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "12:00",
+                  "occupiedUntil": "2026-10-11T12:00:00-04:00",
+                  "sourceSessionIds": [
+                    "fixture-11-12:00-Brian Ennis"
+                  ],
+                  "edgeIds": [
+                    "block-fixture-11-12:00-Brian Ennis-left"
+                  ],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "11:00"
+                }
+              ]
+            },
+            {
+              "startTime": "13:00",
+              "displayStartTime": "1:00 PM",
+              "courses": [
+                {
+                  "courseId": "210549",
+                  "courseName": "AHA HeartCode BLS Skills",
+                  "courseFamily": "BLS",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "1:00 PM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=13:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=13:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "barnacle",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "14:00",
+                  "occupiedUntil": "2026-10-11T14:00:00-04:00",
+                  "sourceSessionIds": [
+                    "fixture-11-12:00-Brian Ennis"
+                  ],
+                  "edgeIds": [
+                    "block-fixture-11-12:00-Brian Ennis-right"
+                  ],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "13:00"
+                },
+                {
+                  "courseId": "329495",
+                  "courseName": "Heartsaver Blended Skills",
+                  "courseFamily": "Heartsaver",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "1:00 PM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=13:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=13:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "barnacle",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "14:00",
+                  "occupiedUntil": "2026-10-11T14:00:00-04:00",
+                  "sourceSessionIds": [
+                    "fixture-11-12:00-Brian Ennis"
+                  ],
+                  "edgeIds": [
+                    "block-fixture-11-12:00-Brian Ennis-right"
+                  ],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "13:00"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "offers": [
+      {
+        "courseId": "210549",
+        "startTime": "11:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "barnacle",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=11:00"
+      },
+      {
+        "courseId": "329495",
+        "startTime": "11:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "barnacle",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=11:00"
+      },
+      {
+        "courseId": "210549",
+        "startTime": "13:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "barnacle",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=13:00"
+      },
+      {
+        "courseId": "329495",
+        "startTime": "13:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "barnacle",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=13:00"
+      }
+    ],
+    "rejectionReasonCounts": {
+      "outside_explicit_availability": 4,
+      "confirmed_zero_existing_booking_choice_retired": 1
+    },
+    "occupiedBlocks": [
+      {
+        "id": "block-fixture-11-12:00-Brian Ennis",
+        "instructor": "Brian Ennis",
+        "start": "2026-10-11T16:00:00+00:00",
+        "end": "2026-10-11T17:00:00+00:00",
+        "start_location": ":: Wilmington; Shipyard Blvd - B",
+        "end_location": ":: Wilmington; Shipyard Blvd - B",
+        "source_ids": [
+          "fixture-11-12:00-Brian Ennis"
+        ]
+      }
+    ]
+  },
+  "after": {
+    "feed": {
+      "schemaVersion": "selector-resolved-availability.v1",
+      "schedulingModel": "layered-publication.v2",
+      "layeredLandscape": {
+        "schemaVersion": "public-layered-landscape.v1",
+        "sources": [
+          {
+            "sourceId": "fixture-11-12:00-Brian Ennis",
+            "role": "inventory",
+            "start": "2026-10-11T12:00:00-04:00",
+            "end": "2026-10-11T13:00:00-04:00",
+            "courseId": "210549",
+            "resource": ":: Wilmington; Shipyard Blvd - B",
+            "countAvailable": true,
+            "registeredCount": 0
+          }
+        ],
+        "occupiedBlocks": [],
+        "offersAreAlternatives": true,
+        "availabilityIsNotAClass": true
+      },
+      "generatedAt": "2026-10-05T12:00:00-04:00",
+      "validUntil": "2026-10-05T13:00:00-04:00",
+      "pageKey": "heartsaver",
+      "publicPage": "docs/heartsaver.html",
+      "sourceArtifacts": {
+        "hotSyncCurrentOccupancy": "data/sessions_current.json",
+        "publicScheduleFuture": "docs/data/schedule_future.json",
+        "liveAvailabilitySnapshot": null,
+        "courseConsumptionRules": null
+      },
+      "authority": {
+        "name": "block_start_time_selector.build_block_schedule_page",
+        "description": "Resolved selector availability generated server-side from the same Work Order 1B occupancy, conflict, course-consumption, public-location, and public-offer rules. Browsers consume this result and do not run an independent conflict engine."
+      },
+      "counts": {
+        "publicSelectableDateCount": 1,
+        "publicSelectableStartTimeCount": 5,
+        "publicSelectableOfferCount": 17,
+        "input_sources": 1,
+        "normalized_sources": 1,
+        "input_windows": 1,
+        "evaluated_windows": 1,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      },
+      "liveAvailabilityGuard": {},
+      "anchor_policy": {
+        "mode": "layered-publication.v2",
+        "finalized": true
+      },
+      "synthesisBlockedDates": [],
+      "occupiedDates": [],
+      "reconciliationIssues": [],
+      "dates": [
+        {
+          "date": "2026-10-11",
+          "displayDate": "Sunday, October 11, 2026",
+          "startTimes": [
+            {
+              "startTime": "10:00",
+              "displayStartTime": "10:00 AM",
+              "courses": [
+                {
+                  "courseId": "209809",
+                  "courseName": "Heartsaver Full Classroom",
+                  "courseFamily": "Heartsaver",
+                  "deliveryMode": "classroom",
+                  "displayStartTime": "10:00 AM",
+                  "durationMinutes": 120,
+                  "schedulerConsumptionMinutes": 150,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=209809&startTime=10:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=209809&startTime=10:00",
+                  "cleanupBufferMinutes": 30,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "12:30",
+                  "occupiedUntil": "2026-10-11T12:30:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "10:00"
+                },
+                {
+                  "courseId": "210549",
+                  "courseName": "AHA HeartCode BLS Skills",
+                  "courseFamily": "BLS",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "10:00 AM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=10:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=10:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "11:00",
+                  "occupiedUntil": "2026-10-11T11:00:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "10:00"
+                },
+                {
+                  "courseId": "329495",
+                  "courseName": "Heartsaver Blended Skills",
+                  "courseFamily": "Heartsaver",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "10:00 AM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=10:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=10:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "11:00",
+                  "occupiedUntil": "2026-10-11T11:00:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "10:00"
+                },
+                {
+                  "courseId": "359474",
+                  "courseName": "BLS Renewal",
+                  "courseFamily": "BLS",
+                  "deliveryMode": "classroom",
+                  "displayStartTime": "10:00 AM",
+                  "durationMinutes": 120,
+                  "schedulerConsumptionMinutes": 150,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=359474&startTime=10:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=359474&startTime=10:00",
+                  "cleanupBufferMinutes": 30,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "12:30",
+                  "occupiedUntil": "2026-10-11T12:30:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "10:00"
+                }
+              ]
+            },
+            {
+              "startTime": "11:00",
+              "displayStartTime": "11:00 AM",
+              "courses": [
+                {
+                  "courseId": "209809",
+                  "courseName": "Heartsaver Full Classroom",
+                  "courseFamily": "Heartsaver",
+                  "deliveryMode": "classroom",
+                  "displayStartTime": "11:00 AM",
+                  "durationMinutes": 120,
+                  "schedulerConsumptionMinutes": 150,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=209809&startTime=11:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=209809&startTime=11:00",
+                  "cleanupBufferMinutes": 30,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "13:30",
+                  "occupiedUntil": "2026-10-11T13:30:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "11:00"
+                },
+                {
+                  "courseId": "210549",
+                  "courseName": "AHA HeartCode BLS Skills",
+                  "courseFamily": "BLS",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "11:00 AM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=11:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=11:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "12:00",
+                  "occupiedUntil": "2026-10-11T12:00:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "11:00"
+                },
+                {
+                  "courseId": "329495",
+                  "courseName": "Heartsaver Blended Skills",
+                  "courseFamily": "Heartsaver",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "11:00 AM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=11:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=11:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "12:00",
+                  "occupiedUntil": "2026-10-11T12:00:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "11:00"
+                },
+                {
+                  "courseId": "359474",
+                  "courseName": "BLS Renewal",
+                  "courseFamily": "BLS",
+                  "deliveryMode": "classroom",
+                  "displayStartTime": "11:00 AM",
+                  "durationMinutes": 120,
+                  "schedulerConsumptionMinutes": 150,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=359474&startTime=11:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=359474&startTime=11:00",
+                  "cleanupBufferMinutes": 30,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "13:30",
+                  "occupiedUntil": "2026-10-11T13:30:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "11:00"
+                }
+              ]
+            },
+            {
+              "startTime": "12:00",
+              "displayStartTime": "12:00 PM",
+              "courses": [
+                {
+                  "courseId": "209809",
+                  "courseName": "Heartsaver Full Classroom",
+                  "courseFamily": "Heartsaver",
+                  "deliveryMode": "classroom",
+                  "displayStartTime": "12:00 PM",
+                  "durationMinutes": 120,
+                  "schedulerConsumptionMinutes": 150,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=209809&startTime=12:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=209809&startTime=12:00",
+                  "cleanupBufferMinutes": 30,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "14:30",
+                  "occupiedUntil": "2026-10-11T14:30:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "12:00"
+                },
+                {
+                  "courseId": "210549",
+                  "courseName": "AHA HeartCode BLS Skills",
+                  "courseFamily": "BLS",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "12:00 PM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=12:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=12:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "13:00",
+                  "occupiedUntil": "2026-10-11T13:00:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "12:00"
+                },
+                {
+                  "courseId": "329495",
+                  "courseName": "Heartsaver Blended Skills",
+                  "courseFamily": "Heartsaver",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "12:00 PM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=12:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=12:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "13:00",
+                  "occupiedUntil": "2026-10-11T13:00:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "12:00"
+                },
+                {
+                  "courseId": "359474",
+                  "courseName": "BLS Renewal",
+                  "courseFamily": "BLS",
+                  "deliveryMode": "classroom",
+                  "displayStartTime": "12:00 PM",
+                  "durationMinutes": 120,
+                  "schedulerConsumptionMinutes": 150,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=359474&startTime=12:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=359474&startTime=12:00",
+                  "cleanupBufferMinutes": 30,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "14:30",
+                  "occupiedUntil": "2026-10-11T14:30:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "12:00"
+                },
+                {
+                  "courseId": "210549",
+                  "courseName": "Existing class",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "12:00 PM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentUrl": "https://fixture.test/direct-empty",
+                  "registrationUrl": "https://fixture.test/direct-empty",
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "offerType": "seated_class",
+                  "session_id": "fixture-11-12:00-Brian Ennis",
+                  "instructor": "Brian Ennis",
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "bookableUntil": "2026-10-10T12:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "12:00"
+                }
+              ]
+            },
+            {
+              "startTime": "13:00",
+              "displayStartTime": "1:00 PM",
+              "courses": [
+                {
+                  "courseId": "210549",
+                  "courseName": "AHA HeartCode BLS Skills",
+                  "courseFamily": "BLS",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "1:00 PM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=13:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=13:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "14:00",
+                  "occupiedUntil": "2026-10-11T14:00:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "13:00"
+                },
+                {
+                  "courseId": "329495",
+                  "courseName": "Heartsaver Blended Skills",
+                  "courseFamily": "Heartsaver",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "1:00 PM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=13:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=13:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "14:00",
+                  "occupiedUntil": "2026-10-11T14:00:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "13:00"
+                }
+              ]
+            },
+            {
+              "startTime": "14:00",
+              "displayStartTime": "2:00 PM",
+              "courses": [
+                {
+                  "courseId": "210549",
+                  "courseName": "AHA HeartCode BLS Skills",
+                  "courseFamily": "BLS",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "2:00 PM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=14:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=14:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "15:00",
+                  "occupiedUntil": "2026-10-11T15:00:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "14:00"
+                },
+                {
+                  "courseId": "329495",
+                  "courseName": "Heartsaver Blended Skills",
+                  "courseFamily": "Heartsaver",
+                  "deliveryMode": "blended",
+                  "displayStartTime": "2:00 PM",
+                  "durationMinutes": 45,
+                  "schedulerConsumptionMinutes": 60,
+                  "appointmentDayId": "fixture-day",
+                  "appointmentUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=14:00",
+                  "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=14:00",
+                  "cleanupBufferMinutes": 15,
+                  "setupBufferMinutes": 0,
+                  "location": ":: Wilmington; Shipyard Blvd",
+                  "availabilityBlockId": "Brian Ennis-11-10:00",
+                  "offerType": "dynamic_appointment",
+                  "scheduleRole": "open_day",
+                  "instructor": "Brian Ennis",
+                  "schedulerConsumptionEnd": "15:00",
+                  "occupiedUntil": "2026-10-11T15:00:00-04:00",
+                  "sourceSessionIds": [],
+                  "edgeIds": [],
+                  "resource": ":: Wilmington; Shipyard Blvd - B",
+                  "validUntil": "2026-10-05T13:00:00-04:00",
+                  "date": "2026-10-11",
+                  "startTime": "14:00"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "offers": [
+      {
+        "courseId": "209809",
+        "startTime": "10:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=209809&startTime=10:00"
+      },
+      {
+        "courseId": "210549",
+        "startTime": "10:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=10:00"
+      },
+      {
+        "courseId": "329495",
+        "startTime": "10:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=10:00"
+      },
+      {
+        "courseId": "359474",
+        "startTime": "10:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=359474&startTime=10:00"
+      },
+      {
+        "courseId": "209809",
+        "startTime": "11:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=209809&startTime=11:00"
+      },
+      {
+        "courseId": "210549",
+        "startTime": "11:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=11:00"
+      },
+      {
+        "courseId": "329495",
+        "startTime": "11:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=11:00"
+      },
+      {
+        "courseId": "359474",
+        "startTime": "11:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=359474&startTime=11:00"
+      },
+      {
+        "courseId": "209809",
+        "startTime": "12:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=209809&startTime=12:00"
+      },
+      {
+        "courseId": "210549",
+        "startTime": "12:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=12:00"
+      },
+      {
+        "courseId": "329495",
+        "startTime": "12:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=12:00"
+      },
+      {
+        "courseId": "359474",
+        "startTime": "12:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=359474&startTime=12:00"
+      },
+      {
+        "courseId": "210549",
+        "startTime": "13:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=13:00"
+      },
+      {
+        "courseId": "329495",
+        "startTime": "13:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=13:00"
+      },
+      {
+        "courseId": "210549",
+        "startTime": "14:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=210549&startTime=14:00"
+      },
+      {
+        "courseId": "329495",
+        "startTime": "14:00",
+        "offerType": "dynamic_appointment",
+        "scheduleRole": "open_day",
+        "registrationUrl": "https://fixture.test/enroll?appointmentDayId=fixture-day&courseId=329495&startTime=14:00"
+      },
+      {
+        "courseId": "210549",
+        "startTime": "12:00",
+        "offerType": "seated_class",
+        "scheduleRole": null,
+        "registrationUrl": "https://fixture.test/direct-empty"
+      }
+    ],
+    "rejectionReasonCounts": {},
+    "occupiedBlocks": []
+  }
+}

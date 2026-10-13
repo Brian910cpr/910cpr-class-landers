@@ -61,8 +61,9 @@
     return (Array.isArray(dates) ? dates : []).map((day) => {
       const startTimes = (day.startTimes || []).map((slot) => {
         const courses = (slot.courses || []).filter((course) => (
-          isSeatedCourse(course)
-          || (!stalePublication && !courseLeaseExpired(course, nowInstant))
+          (!course.bookableUntil || Date.parse(course.bookableUntil) >= nowInstant)
+          && (isSeatedCourse(course)
+          || (!stalePublication && !courseLeaseExpired(course, nowInstant)))
         ));
         return { ...slot, courses };
       }).filter((slot) => slot.courses.length);

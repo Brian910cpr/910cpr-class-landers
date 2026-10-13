@@ -88,6 +88,8 @@ class LayeredPipelineTests(unittest.TestCase):
             selector.PUBLIC_OFFER_POLICY_PATH:dict(minimum_lead_hours=0,maximum_days_out=30),
             ROOT/'data/config/layered_scheduling_policy.json':case.policy}
         with ExitStack() as stack:
+            history_directory=stack.enter_context(tempfile.TemporaryDirectory())
+            stack.enter_context(patch.object(selector,'LAYERED_HISTORY_PATH',Path(history_directory)/'verified.json'))
             patches=dict(require_current_live_availability_snapshot=lambda:snapshot,
                 load_block_schedule_page_configs=lambda:{'heartsaver':page},
                 read_required_json=lambda path:copy.deepcopy(inputs[path]),
