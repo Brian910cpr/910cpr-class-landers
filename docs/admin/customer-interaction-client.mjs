@@ -40,6 +40,23 @@ export function createInteractionClient(auth,{enabled=false,uuid=()=>crypto.rand
         if(operation==='save'&&(data.interaction.id!==expected.id||
           !Number.isInteger(data.interaction.version)||data.interaction.version<=expected.expected_version))
           throw Error('Invalid checkpoint identity/version; preserve draft and retry the same request.');
+        if(operation==='save_task'){
+          const task=data.task;
+          const due=value=>{
+            if(value==null)return null;
+            if(typeof value!=='string'||!Number.isFinite(Date.parse(value)))return NaN;
+            const fraction=value.match(/\.(\d+)(?:Z|[+-]\d{2}:\d{2})$/)?.[1]??'';
+            return Date.parse(value)+':'+fraction.padEnd(6,'0').slice(3,6);
+          };
+          // Task completion/navigation must not trust an unrelated or partial
+          // HTTP-200 acknowledgment. Compare immutable linkage/provenance and
+          // the exact submitted disposition before caching an idempotent result.
+          if(!['id','case_id','interaction_id','source_key','title','status'].every(key=>task[key]===expected[key])||
+            !Number.isInteger(task.version)||task.version!==expected.expected_version+1||
+            JSON.stringify(canonical(task.provenance))!==JSON.stringify(canonical(expected.provenance))||
+            !Object.hasOwn(task,'due_at')||due(task.due_at)!==due(expected.due_at))
+            throw Error('Invalid task receipt; retain disposition and retry the same request.');
+        }
         if(operation==='interrupt'||operation==='resume'){
           const result=data.switch;
           const matches=(record,input)=>record&&record.id===input.id&&record.case_id===input.case_id&&

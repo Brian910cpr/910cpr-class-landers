@@ -24,10 +24,10 @@ test('uncertain network/503/invalid receipt retries preserve exact request and s
   assert.equal(f.calls[0].options.headers['Content-Type'],'application/json');
 });
 test('double click coalesces; successful receipt is cached and protected from caller edits',async()=>{
-  let finish;const f=fixture(()=>new Promise(r=>finish=r));const write=f.client.prepare('save_task',{});
-  const first=write.send(),second=write.send();finish(Response.json({task:{version:2}}));
-  const result=await first;await second;result.task.version=99;
-  assert.equal((await write.send()).task.version,2);assert.equal(f.calls.length,1);
+  let finish;const f=fixture(()=>new Promise(r=>finish=r));const write=f.client.prepare('save',{id:'synthetic-id',expected_version:1});
+  const first=write.send(),second=write.send();finish(Response.json({interaction:{id:'synthetic-id',version:2}}));
+  const result=await first;await second;result.interaction.version=99;
+  assert.equal((await write.send()).interaction.version,2);assert.equal(f.calls.length,1);
 });
 test('conflict and invalid writes require reconciliation rather than another write',async()=>{
   for(const status of [400,403,409]){
