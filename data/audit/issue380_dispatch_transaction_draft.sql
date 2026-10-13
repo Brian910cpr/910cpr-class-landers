@@ -21,6 +21,9 @@ begin
   if TG_OP='UPDATE' and new.card_id<>old.card_id then
     raise exception 'dispatch_intake_identity_immutable';
   end if;
+  if TG_OP='UPDATE' and new.issue_id<>old.issue_id then
+    raise exception 'intake_issue_immutable';
+  end if;
   update public.production_board_cards set updated_at=clock_timestamp()
     where id=coalesce(new.card_id,old.card_id);
   return null;
