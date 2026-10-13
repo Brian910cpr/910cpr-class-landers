@@ -29,6 +29,17 @@ test('publisher waits for acknowledgement and handles uncertain outcomes private
   assert.equal(r.body.can_execute,false);assert.ok(!JSON.stringify(r).includes('private SQL'));
  }
 });
+test('publisher denies malformed or out-of-range canonical acknowledgement versions',async()=>{
+ for(const version of ['0','01','-1','1.0','1e2',' 2','2\n','9223372036854775808','9'.repeat(10000),2,null]){
+  const r=await publishIntake(id,body,()=>({...ack,version}));
+  assert.equal(r.status,503);assert.equal(r.body.committed,false);
+  assert.equal(r.body.can_execute,false);assert.equal(r.body.version,undefined);
+ }
+ for(const version of ['1','9223372036854775807']){
+  const r=await publishIntake(id,body,()=>({...ack,version}));
+  assert.equal(r.status,200);assert.equal(r.body.committed,true);assert.equal(r.body.version,version);
+ }
+});
 function service(allow,fail=false){
  let handler;const calls=[];
  const source=fs.readFileSync(new URL('../supabase/functions/production-board/index.ts',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'');

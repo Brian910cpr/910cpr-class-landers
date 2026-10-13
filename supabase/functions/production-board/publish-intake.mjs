@@ -19,7 +19,8 @@ export async function publishIntake(cardId,body,rpc){
       p_worker_safe:body.worker_safe,p_source_ref:body.source_ref,p_checked_at:body.checked_at});
     if(!result||result.request_id!==body.request_id||result.can_execute!==false
       ||typeof result.replayed!=='boolean'||typeof result.version!=='string'
-      ||!/^[1-9][0-9]*$/.test(result.version))throw Error('Invalid acknowledgement');
+      ||!/^[1-9][0-9]{0,18}$/.test(result.version)
+      ||BigInt(result.version)>9223372036854775807n)throw Error('Invalid acknowledgement');
     return {status:200,body:{request_id:result.request_id,version:result.version,replayed:result.replayed,
       committed:true,can_execute:false,provenance:'owner_assertion_not_source_verification'}};
   }catch(error){
