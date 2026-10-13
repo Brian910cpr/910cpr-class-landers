@@ -1,0 +1,16 @@
+[
+  {
+    "url": "https://www.910cpr.com/bls?issue334=r42",
+    "status": 200,
+    "observedAt": "2026-10-13T13:00:16.575879+00:00",
+    "bytes": 73101,
+    "sha256": "1786cf22ab5e0f3aa849d007af6d56252c79a6c30ba1fbdd73822d57c3f5dbae"
+  },
+  {
+    "url": "https://www.910cpr.com/heartsaver?issue334=r42",
+    "status": 200,
+    "observedAt": "2026-10-13T13:00:16.724989+00:00",
+    "bytes": 80225,
+    "sha256": "46ed0170a5bda7f8e5060ec82c4934bae7beb04b9817b3f29a819289737a0142"
+  }
+]
