@@ -1,6 +1,6 @@
 # Issue #380 — R22 dispatch receipt
 
-Timestamp: 2026-10-13T15:00:00Z (dispatch date; exact commit timestamp is in Git).
+Timestamp: 2026-10-13T16:55:41Z.
 Branch: codex/issue380-r22-20261013; pushed to existing PR #381 head codex/issue380-manual-resolution-20261011.
 Substantive commit: abd8079a667c7247d56007fdbac2e51625d9a07b.
 State: PR_OPEN / IN_PROGRESS. Persistent evidence: BUILT only.
@@ -16,3 +16,4 @@ Deployment: locally persisted, committed, pushed for draft review only. No merge
 Operational proof: no production end-to-end proof or deployed observer health exists. Last narrow success is local 77-test run on dispatch date. Expected checks: each selection/pre-side-effect; unresolved source/version/commit/fence denies execution. Recovery: refresh canonical state, retain request ID for uncertain outcomes; do not infer rollback from unconfirmed acknowledgement. No Brian monitoring/account action required.
 
 Next action for ChatGPT: review substantive commit and full report; keep #381 draft. Continue authoritative collector/installed no-launch consumer and external side-effect fence/race proof, policy/trusted-role review, then evidence/private storage/UI/history/counts. Those are unfinished engineering/review gates, not credential blockers. This receipt does not claim installed suppression or acceptance completion. No ops/handoff/next_task.md used; no Codex_Read manufactured.
+
