@@ -10,6 +10,58 @@ from board_resolution_contention import DSN, CALL, ResolutionContention, TargetS
 
 
 class ResolutionSecurity(ResolutionContention):
+    def test_provisional_rpc_response_is_not_visible_and_rollback_is_not_proof(self):
+        args = self.args()
+        with self.pg.connect(DSN) as conn:
+            conn.execute('set role service_role')
+            result = conn.execute(CALL, args).fetchone()[0]
+            self.assertEqual(result['version'], 2)
+            # A different session still sees the last committed canonical state.
+            self.assertEqual(self.admin.execute('select row_version,resolution_state from production_board_cards where id=%s', (args[0],)).fetchone(), (1, 'unresolved'))
+            self.assertEqual(self.admin.execute('select count(*) from production_board_resolution_events where request_id=%s', (args[2],)).fetchone()[0], 0)
+            conn.rollback()
+        with self.pg.connect(DSN, autocommit=True) as conn:
+            conn.execute('set role service_role')
+            # Rolled-back request IDs must be usable, never replayed as success.
+            self.assertFalse(conn.execute(CALL, args).fetchone()[0]['replayed'])
+        self.assert_effects(args[0], 1)
+
+    def test_multiple_transitions_in_one_commit_preserve_each_audit(self):
+        import uuid
+        args = self.args()
+        with self.pg.connect(DSN) as conn:
+            conn.execute('set role service_role')
+            conn.execute(CALL, args)
+            conn.execute(CALL, (args[0], 2, uuid.uuid4(), args[3], 'unresolved', 'New verified regression', args[6], args[7]))
+            conn.commit()
+        self.assertEqual(self.admin.execute('select row_version,resolution_state from production_board_cards where id=%s', (args[0],)).fetchone(), (3, 'unresolved'))
+        self.assertEqual(self.admin.execute('select prior_state,new_state,resulting_version from production_board_resolution_events where card_id=%s order by resulting_version', (args[0],)).fetchall(), [('unresolved', 'handled_manually', 2), ('handled_manually', 'unresolved', 3)])
+        self.assertEqual(self.admin.execute('select count(*) from production_board_activity where card_id=%s', (args[0],)).fetchone()[0], 2)
+
+    def test_missing_intermediate_audit_rejects_even_when_final_state_is_original(self):
+        import uuid
+        args = self.args()
+        with self.pg.connect(DSN) as conn:
+            conn.execute('set role service_role')
+            conn.execute(CALL, args)
+            conn.execute(CALL, (args[0], 2, uuid.uuid4(), args[3], 'unresolved', 'New verified regression', args[6], args[7]))
+            conn.execute("delete from production_board_activity where card_id=%s and detail->>'version'='2'", (args[0],))
+            with self.assertRaisesRegex(self.pg.errors.RaiseException, 'resolution_audit_required'):
+                conn.commit()
+        self.assertEqual(self.admin.execute('select row_version,resolution_state from production_board_cards where id=%s', (args[0],)).fetchone(), (1, 'unresolved'))
+        for table in ('production_board_resolution_events', 'production_board_activity'):
+            self.assertEqual(self.admin.execute(f'select count(*) from {table} where card_id=%s', (args[0],)).fetchone()[0], 0)
+
+    def test_forcing_deferred_checks_rejects_unaudited_transition(self):
+        args = self.args()
+        with self.pg.connect(DSN) as conn:
+            conn.execute('set role service_role')
+            conn.execute("update production_board_cards set resolution_state='handled_manually' where id=%s", (args[0],))
+            with self.assertRaisesRegex(self.pg.errors.RaiseException, 'resolution_audit_required'):
+                conn.execute('set constraints production_board_resolution_audit_required immediate')
+            conn.rollback()
+        self.assertEqual(self.admin.execute('select row_version,resolution_state from production_board_cards where id=%s', (args[0],)).fetchone(), (1, 'unresolved'))
+
     def denied(self, role, statement, params=()):
         with self.pg.connect(DSN, autocommit=True, connect_timeout=5) as conn:
             conn.execute(f'set role {role}')
