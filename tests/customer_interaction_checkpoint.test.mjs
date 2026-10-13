@@ -69,3 +69,20 @@ test('a fetched confirmed checkpoint permits navigation without a redundant writ
  assert.equal(c.canLeave(),true);assert.equal((await c.save()).state,'saved');
  c.edit({notes:'edited'});assert.equal(c.canLeave(),false);
 });
+
+
+test('malformed acknowledgment does not poison identical retry or permit navigation',async()=>{
+ for(const malformed of [{id:'another',version:1},{id:'synthetic-id',version:0},{id:'synthetic-id',version:'1'}]){
+  let attempt=0;
+  const f=fixture(async()=>Response.json({interaction:++attempt===1?malformed:{id:'synthetic-id',version:1}}));
+  await assert.rejects(f.checkpoint.save(),/identity\/version/);
+  assert.equal(f.checkpoint.canLeave(),false);
+  f.checkpoint.edit({notes:'typed after malformed response'});
+  await f.checkpoint.save();
+  assert.deepEqual(f.calls[0],f.calls[1]);
+  assert.equal(f.checkpoint.view().draft.expected_version,1);
+  assert.equal(f.checkpoint.view().draft.document.notes,'typed after malformed response');
+  assert.equal(f.checkpoint.view().state,'unsaved');
+  assert.equal(f.checkpoint.canLeave(),false);
+ }
+});

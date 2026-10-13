@@ -14,8 +14,8 @@ test('flag defaults off and disabled transport never requests private data',asyn
   assert.throws(()=>createInteractionClient({get:()=>true}).prepare('save',{}),{status:503});
 });
 test('uncertain network/503/invalid receipt retries preserve exact request and snapshot',async()=>{
-  let n=0;const f=fixture(async()=>{n++;if(n===1)throw Error('lost response');if(n===2)return new Response('{}',{status:503});if(n===3)return Response.json({});return Response.json({interaction:{version:1}})});
-  const input={document:{notes:'synthetic original'}};const write=f.client.prepare('save',input);input.document.notes='later edit';
+  let n=0;const f=fixture(async()=>{n++;if(n===1)throw Error('lost response');if(n===2)return new Response('{}',{status:503});if(n===3)return Response.json({});return Response.json({interaction:{id:'synthetic-id',version:1}})});
+  const input={id:'synthetic-id',expected_version:0,document:{notes:'synthetic original'}};const write=f.client.prepare('save',input);input.document.notes='later edit';
   for(let i=0;i<3;i++)await assert.rejects(write.send());
   assert.equal((await write.send()).interaction.version,1);
   assert.equal(new Set(f.calls.map(c=>c.options.body)).size,1);

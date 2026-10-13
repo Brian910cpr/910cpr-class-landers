@@ -1,5 +1,5 @@
-import {createInteractionClient} from './customer-interaction-client.mjs?v=20261012-ui1';
-import {createInteractionCheckpoint} from './customer-interaction-checkpoint.mjs?v=20261012-ui1';
+import {createInteractionClient} from './customer-interaction-client.mjs?v=20261013-recovery1';
+import {createInteractionCheckpoint} from './customer-interaction-checkpoint.mjs?v=20261013-recovery1';
 
 // Default-off integration. The gate controls rollout only; the server still
 // authorizes every request. Never import sessionStorage prototype drafts.

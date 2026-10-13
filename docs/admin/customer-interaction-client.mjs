@@ -13,6 +13,7 @@ export function createInteractionClient(auth,{enabled=false,uuid=()=>crypto.rand
     if(!operations.has(operation)) throw Error('Unsupported CRM operation.');
     const stamp=auth.snapshot();
     const body=JSON.stringify({request_id:uuid(),...(operation==='save'?{}:{operation}),input});
+    const expected=JSON.parse(body).input;
     const resultKey=operation==='save'?'interaction':operation==='save_task'?'task':'switch';
     let running=null,receipt=null,terminal=null;
     async function send(){
@@ -31,6 +32,12 @@ export function createInteractionClient(auth,{enabled=false,uuid=()=>crypto.rand
         const data=await response.json();
         if(!auth.current(stamp)) throw Object.assign(Error('Sign-in changed; reconcile stored work.'),{status:409,reconcile:true});
         if(!data||!Object.hasOwn(data,resultKey)||!data[resultKey]||typeof data[resultKey]!=='object') throw Error('Invalid save receipt; preserve your draft and retry the same request.');
+        // Reject malformed save acknowledgments before caching: identical retry
+        // must be able to retrieve a corrected server receipt. Use the immutable
+        // envelope rather than caller input that may have changed during flight.
+        if(operation==='save'&&(data.interaction.id!==expected.id||
+          !Number.isInteger(data.interaction.version)||data.interaction.version<=expected.expected_version))
+          throw Error('Invalid checkpoint identity/version; preserve draft and retry the same request.');
         receipt=structuredClone(data);
         return structuredClone(receipt);
       })();
