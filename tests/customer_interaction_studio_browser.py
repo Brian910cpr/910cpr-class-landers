@@ -37,6 +37,7 @@ class StudioBrowserTests(unittest.TestCase):
         self.errors = []
         self.page.on('pageerror', lambda e: self.errors.append(str(e)))
         self.rows, self.receipts, self.writes, self.requests = {}, {}, [], []
+        self.events = []
         self.fail_next = False
         self.conflict_next = False
         session = {'token': 'lw_s_' + 'a' * 64, 'expiresAt': (datetime.now(timezone.utc) + timedelta(days=30)).isoformat()}
@@ -55,7 +56,7 @@ class StudioBrowserTests(unittest.TestCase):
         self.assertTrue(route.request.headers.get('x-landerware-owner-session', '').startswith('lw_s_'))
         if route.request.method == 'GET':
             query = parse_qs(urlparse(url).query)
-            rows = list(self.rows.values())
+            rows = self.events if query.get('collection') == ['interruptions'] else list(self.rows.values())
             if 'interaction_id' in query:
                 rows = [r for r in rows if r['id'] == query['interaction_id'][0]]
             route.fulfill(json={'items': rows, 'next_cursor': None})
@@ -69,6 +70,24 @@ class StudioBrowserTests(unittest.TestCase):
             row['version'] += 1
             row['document'] = {**row['document'], 'callNotes': 'Synthetic other-tab note'}
             route.fulfill(status=409, json={'error': 'Conflict'})
+            return
+        if body.get('operation') in ('interrupt', 'resume'):
+            value = body['input']
+            if key not in self.receipts:
+                if any(self.rows.get(v['id'], {}).get('version', 0) != v['expected_version'] for v in [value['previous'], value['active']]):
+                    route.fulfill(status=409, json={'error': 'Conflict'})
+                    return
+                result = {name: {**value[name], 'version': value[name]['expected_version'] + 1} for name in ['previous', 'active']}
+                result.update(request_id=key, operation=body['operation'])
+                for name in ['previous', 'active']:
+                    self.rows[result[name]['id']] = result[name]
+                self.receipts[key] = {'switch': result}
+                self.events.insert(0, {'request_id': key, 'input': {**value, 'operation': body['operation']}, 'result': result})
+            if self.fail_next:
+                self.fail_next = False
+                route.fulfill(status=503, json={'error': 'Synthetic lost switch response after commit'})
+                return
+            route.fulfill(json=self.receipts[key])
             return
         if key not in self.receipts:
             value = body['input']
@@ -111,7 +130,7 @@ class StudioBrowserTests(unittest.TestCase):
     def test_save_reload_conflict_retry_and_safe_navigation(self):
         self.visit()
         self.create()
-        self.assertTrue(self.page.locator('#newCall').is_disabled())
+        self.assertTrue(self.page.locator('#newCall').is_enabled())
         self.assertTrue(self.page.locator('#finish').is_disabled())
         self.assertIsNone(self.page.evaluate("sessionStorage.getItem('lw-learning-studio-draft-v1')"))
         self.page.reload()
@@ -142,6 +161,78 @@ class StudioBrowserTests(unittest.TestCase):
         self.page.click('#saveCheckpoint')
         self.saved()
         self.assertEqual(self.writes[-1]['input']['expected_version'], 3)
+        self.assertEqual(self.errors, [])
+
+    def test_atomic_interrupt_reload_and_resume(self):
+        self.visit()
+        self.create()
+        previous_id = next(iter(self.rows))
+        self.page.click('#newCall')
+        self.saved()
+        self.assertEqual(self.page.input_value('#kind'), 'phone')
+        self.assertEqual(self.rows[previous_id]['status'], 'paused')
+        self.assertEqual(self.rows[previous_id]['document']['callNotes'], 'Synthetic inbound email')
+        self.assertTrue(self.page.locator('#newCall').is_disabled())
+        self.page.fill('#callNotes', 'Synthetic unknown caller raw note')
+        self.page.click('#saveCheckpoint')
+        self.saved()
+        self.page.reload()
+        self.page.wait_for_selector('#queueList button')
+        self.page.locator('#queueList button').filter(has_text='phone').click()
+        self.saved()
+        self.assertEqual(self.page.input_value('#callNotes'), 'Synthetic unknown caller raw note')
+        self.page.click('#resumePrevious')
+        self.saved()
+        self.assertEqual(self.page.input_value('#kind'), 'email')
+        self.assertEqual(self.page.input_value('#callNotes'), 'Synthetic inbound email')
+        self.assertEqual(self.rows[previous_id]['status'], 'in_progress')
+        phone = next(r for r in self.rows.values() if r['kind'] == 'phone')
+        self.assertEqual(phone['status'], 'resolved')
+        self.assertIsNone(phone['person_id'])
+        self.assertEqual(len(self.events), 2)
+        self.assertEqual(self.errors, [])
+
+    def test_uncertain_atomic_switch_freezes_both_drafts_and_retries_identically(self):
+        self.visit()
+        self.create()
+        self.fail_next = True
+        self.page.click('#newCall')
+        self.page.wait_for_function("document.getElementById('storageStatus').textContent.startsWith('Atomic switch not confirmed')")
+        self.assertEqual(self.page.input_value('#kind'), 'email')
+        self.assertTrue(self.page.locator('#callNotes').is_disabled())
+        self.assertTrue(self.page.locator('#newEmail').is_disabled())
+        self.assertTrue(self.page.locator('#resumePrevious').is_disabled())
+        self.page.click('#retryCheckpoint')
+        self.saved()
+        self.assertEqual(self.writes[-1], self.writes[-2])
+        self.assertEqual(len(self.events), 1)
+        self.assertEqual(len(self.rows), 2)
+        self.assertEqual(self.page.input_value('#kind'), 'phone')
+        self.fail_next = True
+        self.page.click('#resumePrevious')
+        self.page.wait_for_function("document.getElementById('storageStatus').textContent.startsWith('Atomic switch not confirmed')")
+        self.page.click('#retryCheckpoint')
+        self.saved()
+        self.assertEqual(self.writes[-1], self.writes[-2])
+        self.assertEqual(len(self.events), 2)
+        self.assertEqual(self.page.input_value('#kind'), 'email')
+        self.assertEqual(self.errors, [])
+
+    def test_atomic_stale_conflict_retains_both_drafts_for_export(self):
+        self.visit()
+        self.create()
+        next(iter(self.rows.values()))['version'] += 1
+        self.page.click('#newCall')
+        self.page.wait_for_function("document.getElementById('storageStatus').textContent.startsWith('Atomic switch conflict')")
+        self.assertTrue(self.page.locator('#retryCheckpoint').is_disabled())
+        self.assertTrue(self.page.locator('#callNotes').is_disabled())
+        self.assertEqual(self.page.input_value('#callNotes'), 'Synthetic inbound email')
+        with self.page.expect_download() as pending:
+            self.page.click('#downloadCase')
+        data = json.loads(Path(pending.value.path()).read_text())
+        self.assertEqual(data['pendingSwitch']['input']['previous']['document']['callNotes'], 'Synthetic inbound email')
+        self.assertEqual(data['pendingSwitch']['input']['active']['kind'], 'phone')
+        self.assertEqual(len(self.rows), 1)
         self.assertEqual(self.errors, [])
 
     def test_autosave_recovers_after_closing_the_tab(self):

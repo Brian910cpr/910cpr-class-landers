@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {createHandler} from '../supabase/functions/customer-interactions/handler.ts';
+import {createInteractionClient} from '../docs/admin/customer-interaction-client.mjs';
+import {createInteractionSwitch} from '../docs/admin/customer-interaction-switch.mjs';
 const {PGlite}=await import(process.env.PGLITE_MODULE||'@electric-sql/pglite');
 const db=new PGlite();
 await db.exec('create role anon; create role authenticated; create role service_role bypassrls; create table landerware_people(id uuid primary key)');
@@ -63,6 +66,31 @@ test('follow-up tasks save/reload, deduplicate, conflict and require explicit co
  assert.equal(events.length,2);assert.match(events[1].input.completion_evidence,/Owner confirms/);
  assert.equal((await db.query('select status from customer_follow_up_tasks where id=$1',[task.id])).rows[0].status,'complete');
 });
+test('browser switch coordinator/transport/real handler/RPC commit once across response loss and resume',async()=>{
+ const source=await fixture();let drop=true;const calls=[];
+ const handler=createHandler({authorize:async()=>true,actor:async()=> 'synthetic-owner-session',rest:async(path,options)=>{
+  assert.equal(path,'rpc/switch_customer_interaction');
+  const args=JSON.parse(options.body);
+  return (await db.query('select switch_customer_interaction($1,$2,$3) r',[args.p_request_id,args.p_actor,args.p_input])).rows[0].r;
+ }});
+ const client=createInteractionClient({get:()=>true,snapshot:()=>0,current:()=>true,fetch:async(url,options)=>{
+  calls.push(options.body);const response=await handler(new Request(url,{...options,headers:{...options.headers,origin:'https://www.910cpr.com'}}));
+  if(drop&&response.ok){drop=false;throw Error('lost after SQL commit')}
+  return response;
+ }},{enabled:true});
+ const pending=createInteractionSwitch(client,'interrupt',source);
+ await assert.rejects(pending.send(),/lost after SQL commit/);
+ assert.equal((await reload(source.previous.id)).status,'paused');
+ assert.equal((await reload(source.active.id)).version,1);
+ const committed=await pending.send();assert.equal(calls[0],calls[1]);
+ assert.equal((await db.query('select count(*)::int n from customer_interruption_events where request_id=$1',[committed.request_id])).rows[0].n,1);
+ const previous=await reload(source.previous.id),active=await reload(source.active.id);
+ const resumed=await createInteractionSwitch(client,'resume',{interrupt_request_id:committed.request_id,previous:{...previous,expected_version:previous.version,status:'in_progress'},active:{...active,expected_version:active.version,status:'resolved'}}).send();
+ assert.equal(resumed.previous.version,3);assert.equal(resumed.active.status,'resolved');
+ assert.equal((await reload(source.previous.id)).document.notes,'checkpoint including unsaved edits');
+ await assert.rejects(createInteractionSwitch(client,'interrupt',source).send(),{status:409});
+});
+
 test('private switch links/RPC deny anon/authenticated and service role cannot alter audit',async()=>{
  for(const role of ['anon','authenticated']){await db.exec('reset role; set role '+role);await assert.rejects(db.query('select * from customer_interruption_events'),/permission denied/);await assert.rejects(switchCase({}),/permission denied/);await assert.rejects(db.query('select * from customer_task_events'),/permission denied/);await assert.rejects(db.query('select save_customer_follow_up_task($1,$2,$3)',[crypto.randomUUID(),'owner',{}]),/permission denied/)}
  await db.exec('reset role; set role service_role');await assert.rejects(db.query('update customer_interruption_events set actor=\'forged\''),/permission denied/);await assert.rejects(db.query('delete from customer_task_events'),/permission denied/);

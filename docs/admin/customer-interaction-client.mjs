@@ -1,6 +1,8 @@
 // Prepared transport only: no page imports this module until the UI release gate.
 const endpoint='https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/customer-interactions';
 const operations=new Set(['save','save_task','interrupt','resume']);
+const canonical=value=>value&&typeof value==='object'?
+  (Array.isArray(value)?value.map(canonical):Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])]))):value;
 export function createInteractionClient(auth,{enabled=false,uuid=()=>crypto.randomUUID()}={}) {
   function ready(){
     if(!enabled) throw Object.assign(Error('Durable CRM is not enabled.'),{status:503});
@@ -38,6 +40,17 @@ export function createInteractionClient(auth,{enabled=false,uuid=()=>crypto.rand
         if(operation==='save'&&(data.interaction.id!==expected.id||
           !Number.isInteger(data.interaction.version)||data.interaction.version<=expected.expected_version))
           throw Error('Invalid checkpoint identity/version; preserve draft and retry the same request.');
+        if(operation==='interrupt'||operation==='resume'){
+          const result=data.switch;
+          const matches=(record,input)=>record&&record.id===input.id&&record.case_id===input.case_id&&
+            record.status===input.status&&Number.isInteger(record.version)&&record.version===input.expected_version+1&&
+            ['kind','source','source_id'].every(key=>record[key]===input[key])&&
+            (record.person_id??null)===(input.person_id??null)&&
+            JSON.stringify(canonical(record.document))===JSON.stringify(canonical(input.document));
+          if(result.request_id!==JSON.parse(body).request_id||result.operation!==operation||
+            !matches(result.previous,expected.previous)||!matches(result.active,expected.active))
+            throw Error('Invalid atomic switch receipt; retain both drafts and retry the same request.');
+        }
         receipt=structuredClone(data);
         return structuredClone(receipt);
       })();

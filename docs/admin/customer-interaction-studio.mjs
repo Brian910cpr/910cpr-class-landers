@@ -1,5 +1,7 @@
-import {createInteractionClient} from './customer-interaction-client.mjs?v=20261013-recovery1';
-import {createInteractionCheckpoint} from './customer-interaction-checkpoint.mjs?v=20261013-recovery1';
+import {createInteractionClient} from './customer-interaction-client.mjs?v=20261013-interrupt1';
+import {createInteractionCheckpoint} from './customer-interaction-checkpoint.mjs?v=20261013-interrupt1';
+
+import {createInteractionSwitch,findInteractionInterruption} from './customer-interaction-switch.mjs?v=20261013-interrupt1';
 
 // Default-off integration. The gate controls rollout only; the server still
 // authorizes every request. Never import sessionStorage prototype drafts.
@@ -8,26 +10,29 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
   client??=createInteractionClient(auth,{enabled:true});
   const $=id=>document.getElementById(id);
   const fields=['customer','contact','callNotes','intent','evidence','plan','resolution','recipient','subject','reply','feedback'];
-  let checkpoint=null,rows=[],cursor=null,timer=null,loading=false,locked=false,remote=null;
+  let checkpoint=null,rows=[],cursor=null,timer=null,loading=false,locked=false,remote=null,switching=null,interruption=null;
   const notify=message=>{$('storageStatus').textContent=message;};
   function controls(){
     const view=checkpoint?.view();
-    for(const f of fields)$(f).disabled=locked||loading||!checkpoint;
+    const frozen=locked||loading||Boolean(switching);
+    for(const f of fields)$(f).disabled=frozen||!checkpoint;
     $('kind').disabled=true;
-    $('saveCheckpoint').disabled=locked||!view||view.state==='saving'||view.state==='conflict';
-    $('retryCheckpoint').disabled=locked||view?.state!=='error';
-    $('reviewConflict').disabled=locked||view?.state!=='conflict';
-    $('keepConflictDraft').disabled=locked||!remote;
-    $('reloadStored').disabled=locked||loading||Boolean(checkpoint&&!checkpoint.canLeave());
-    $('loadMoreStored').disabled=locked||loading||!cursor||Boolean(checkpoint&&!checkpoint.canLeave());
-    $('newEmail').disabled=locked||loading||Boolean(checkpoint&&!checkpoint.canLeave());
-    // Do not degrade an atomic call interruption into independent saves.
-    $('newCall').disabled=locked||loading||Boolean(checkpoint);
+    $('saveCheckpoint').disabled=frozen||!view||view.state==='saving'||view.state==='conflict';
+    $('retryCheckpoint').disabled=locked||loading||(switching?switching.view().state!=='error':view?.state!=='error');
+    $('reviewConflict').disabled=frozen||view?.state!=='conflict';
+    $('keepConflictDraft').disabled=frozen||!remote;
+    $('reloadStored').disabled=frozen||Boolean(checkpoint&&!checkpoint.canLeave());
+    $('loadMoreStored').disabled=frozen||!cursor||Boolean(checkpoint&&!checkpoint.canLeave());
+    $('newEmail').disabled=frozen||Boolean(checkpoint&&!checkpoint.canLeave());
+    // First slice permits one interruption level; save all edits before switching.
+    $('newCall').disabled=frozen||Boolean(checkpoint&&(!checkpoint.canLeave()||!['email','manual'].includes(view.draft.kind)||!['new','in_progress','awaiting_data','awaiting_approval','follow_up_due'].includes(view.draft.status)));
+    $('resumePrevious').disabled=frozen||!interruption||!checkpoint?.canLeave()||view?.draft.status!=='in_progress';
     for(const id of ['finish','clearCase'])$(id).disabled=true;
     for(const id of ['copyCase','downloadCase','copyReply'])$(id).disabled=locked||!checkpoint;
   }
   function state(){
     const v=checkpoint?.view();controls();
+    if(switching){const v=switching.view();notify(v.state==='saving'?'Saving atomic interruption/resume... keep this page open.':v.state==='conflict'?'Atomic switch conflict. Both drafts retained. Export both drafts before reloading and reviewing current server work.':'Atomic switch not confirmed. Both drafts retained; Retry reuses the same request.');return;}
     if(!v)return;
     const messages={saved:'Saved on server. No external action executed.',unsaved:'Unsaved changes — keep this page open.',saving:'Saving checkpoint… keep this page open.',error:'Save not confirmed. Keep this page open; Retry reuses the same request.',conflict:'Conflict or sign-in changed. Draft retained; review stored work before saving.'};
     notify(messages[v.state]+(v.error?' '+v.error:''));
@@ -37,7 +42,7 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
     for(const f of fields)$(f).value=typeof draft?.document?.[f]==='string'?draft.document[f]:'';
     $('kind').value=draft?.kind||'phone';state();render();
   }
-  function guard(){if(locked||loading||checkpoint&&!checkpoint.canLeave()){notify('Confirm all edits on server before navigating. Your draft is retained.');return false}return true}
+  function guard(){if(locked||loading||switching||checkpoint&&!checkpoint.canLeave()){notify('Confirm all edits on server before navigating. Your draft is retained.');return false}return true}
   function render(){
     const host=$('queueList');host.replaceChildren();
     for(const row of rows){
@@ -56,7 +61,9 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
       const record=data.items.find(r=>r.id===id);if(!record)throw Error('Stored interaction unavailable.');
       // A fetched server version is already a confirmed checkpoint.
       // Seed through the constructor's explicit confirmed option, not a write.
-      checkpoint=createInteractionCheckpoint(client,{...record,expected_version:record.version},{confirmed:true});
+      const recovered=record.kind==='phone'&&record.status==='in_progress'?await findInteractionInterruption(client,record.id):null;
+      if(locked)return;
+      interruption=recovered;checkpoint=createInteractionCheckpoint(client,{...record,expected_version:record.version},{confirmed:true});
       remote=null;$('serverConflict').textContent='';populate();
     }catch(e){notify('Load failed: '+e.message+'. Retry loading; current draft is retained.')}
     finally{loading=false;controls()}
@@ -73,7 +80,7 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
     finally{loading=false;controls()}
   }
   async function save(){
-    window.clearTimeout(timer);timer=null;if(locked||!checkpoint)return;
+    window.clearTimeout(timer);timer=null;if(locked||switching||!checkpoint)return;
     const current=checkpoint;
     try{const flight=current.save();state();await flight;if(locked||current!==checkpoint)return;
       const d=current.view().draft;const row={...d,version:d.expected_version};rows=[row,...rows.filter(r=>r.id!==d.id)];render();state();
@@ -82,14 +89,14 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
   }
   function schedule(){window.clearTimeout(timer);timer=window.setTimeout(()=>{void save()},delay)}
   function edit(){
-    if(locked||!checkpoint)return;
+    if(locked||switching||!checkpoint)return;
     const doc={...checkpoint.view().draft.document};for(const f of fields)doc[f]=$(f).value;
     checkpoint.edit(doc);remote=null;$('serverConflict').textContent='';state();
     if(checkpoint.view().state==='unsaved')schedule();
   }
   function fresh(kind){
     if(!guard())return;
-    const id=uuid();checkpoint=createInteractionCheckpoint(client,{id,case_id:uuid(),expected_version:0,kind,status:'in_progress',source:'manual',source_id:id,person_id:null,document:{resolution:'Customer email reply',captured_at:new Date().toISOString()}});
+    interruption=null;const id=uuid();checkpoint=createInteractionCheckpoint(client,{id,case_id:uuid(),expected_version:0,kind,status:'in_progress',source:'manual',source_id:id,person_id:null,document:{resolution:'Customer email reply',captured_at:new Date().toISOString()}});
     populate();schedule();$('customer').focus();
   }
   async function review(){
@@ -103,25 +110,66 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
       notify('Compare stored work below with your retained draft. Explicitly merge edits before choosing Keep reviewed draft.');controls();
     }catch(e){notify('Cannot review conflict: '+e.message);controls()}
   }
+  function fromRecord(record){return {...record,expected_version:record.version}}
+  function newPhone(){const id=uuid();return {id,case_id:uuid(),expected_version:0,kind:'phone',status:'in_progress',source:'manual',source_id:id,person_id:null,document:{resolution:'Phone recap',captured_at:new Date().toISOString()}}}
+  async function sendSwitch(){
+    if(locked||!switching)return;
+    const pending=switching;
+    try{
+      const flight=pending.send();state();const result=await flight;
+      if(locked||pending!==switching)return;
+      const isInterrupt=pending.view().operation==='interrupt';
+      rows=[result.previous,result.active,...rows.filter(r=>![result.previous.id,result.active.id].includes(r.id))];
+      interruption=isInterrupt?{request_id:result.request_id,input:pending.view().input}:null;
+      checkpoint=createInteractionCheckpoint(client,fromRecord(isInterrupt?result.active:result.previous),{confirmed:true});
+      switching=null;populate();$('customer').focus();
+    }catch{if(!locked)state()}
+  }
+  async function interrupt(){
+    if(!checkpoint){fresh('phone');return}
+    if(!guard())return;
+    const previous=checkpoint.view().draft;
+    if(!['email','manual'].includes(previous.kind))return;
+    window.clearTimeout(timer);
+    try{switching=createInteractionSwitch(client,'interrupt',{previous:{...previous,status:'paused'},active:newPhone()});await sendSwitch()}
+    catch(e){notify('Interruption unavailable: '+e.message);controls()}
+  }
+  async function resume(){
+    if(!guard()||!interruption)return;
+    loading=true;controls();notify('Loading paused server checkpoint...');
+    try{
+      const active=checkpoint.view().draft;
+      const data=await client.list({collection:'interactions',interaction_id:interruption.input.previous.id});
+      if(locked)return;
+      const previous=data.items.find(r=>r.id===interruption.input.previous.id);
+      if(!previous||previous.status!=='paused')throw Error('Previous work is no longer paused. Reload and review both interactions.');
+      // No automatic follow-up or external completion is inferred. The owner
+      // explicitly closes this call with no follow-up; tasks remain a later gate.
+      switching=createInteractionSwitch(client,'resume',{interrupt_request_id:interruption.request_id,previous:{...fromRecord(previous),status:'in_progress'},active:{...active,status:'resolved'}});
+    }catch(e){notify('Resume unavailable: '+e.message)}
+    finally{loading=false;controls()}
+    if(switching)await sendSwitch();
+  }
+  function exportDraft(){return switching?{pendingSwitch:switching.view(),current:checkpoint?.view().draft}:checkpoint?.view().draft}
   function lock(){
-    locked=true;window.clearTimeout(timer);checkpoint=null;rows=[];remote=null;cursor=null;
+    locked=true;window.clearTimeout(timer);checkpoint=null;rows=[];remote=null;cursor=null;switching=null;interruption=null;
     for(const f of fields)$(f).value='';$('serverConflict').textContent='';render();controls();notify('Owner session locked. Reopen after sign-in to load stored work.');
   }
   for(const f of fields)$(f).addEventListener('input',edit);
-  $('saveCheckpoint').onclick=save;$('retryCheckpoint').onclick=save;
+  $('saveCheckpoint').onclick=save;$('retryCheckpoint').onclick=()=>switching?sendSwitch():save();
   $('reloadStored').onclick=()=>load();$('loadMoreStored').onclick=()=>load(true);
-  $('newEmail').onclick=()=>fresh('email');$('newCall').onclick=()=>fresh('phone');
+  $('newEmail').onclick=()=>fresh('email');$('newCall').onclick=interrupt;$('resumePrevious').onclick=resume;
   $('reviewConflict').onclick=review;
   $('keepConflictDraft').onclick=()=>{if(!remote||locked)return;checkpoint.reconcile(remote);remote=null;$('serverConflict').textContent='';state();};
-  $('coachButtons').addEventListener('click',event=>{const button=event.target.closest('button[data-coach]');if(!button||!checkpoint||locked)return;$('feedback').value+='\n['+button.dataset.coach+'] ';edit()});
+  $('coachButtons').addEventListener('click',event=>{const button=event.target.closest('button[data-coach]');if(!button||!checkpoint||locked||loading||switching)return;$('feedback').value+='\n['+button.dataset.coach+'] ';edit()});
   $('copyReply').onclick=async()=>{try{await window.navigator.clipboard.writeText($('reply').value);notify('Draft copied; nothing sent.')}catch{notify('Clipboard unavailable. Select and copy draft manually.')}};
-  $('copyCase').onclick=async()=>{try{await window.navigator.clipboard.writeText(JSON.stringify(checkpoint.view().draft,null,2));notify('Case copied. Review private information before sharing.')}catch{notify('Clipboard unavailable; export the draft.')}};
-  $('downloadCase').onclick=()=>{const url=window.URL.createObjectURL(new Blob([JSON.stringify(checkpoint.view().draft,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='customer-interaction-draft.json';a.click();window.setTimeout(()=>window.URL.revokeObjectURL(url),1000)};
-  window.addEventListener('beforeunload',event=>{if(checkpoint&&!checkpoint.canLeave()){event.preventDefault();event.returnValue=''}});
-  document.addEventListener('click',event=>{if(event.target.closest('a[href]')&&checkpoint&&!checkpoint.canLeave()){event.preventDefault();notify('Save or export pending changes before leaving this page.')}});
+  $('copyCase').onclick=async()=>{try{await window.navigator.clipboard.writeText(JSON.stringify(exportDraft(),null,2));notify('Case copied. Review private information before sharing.')}catch{notify('Clipboard unavailable; export the draft.')}};
+  $('downloadCase').onclick=()=>{const url=window.URL.createObjectURL(new Blob([JSON.stringify(exportDraft(),null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='customer-interaction-draft.json';a.click();window.setTimeout(()=>window.URL.revokeObjectURL(url),1000)};
+  window.addEventListener('beforeunload',event=>{if(switching||checkpoint&&!checkpoint.canLeave()){event.preventDefault();event.returnValue=''}});
+  document.addEventListener('click',event=>{if(event.target.closest('a[href]')&&(switching||checkpoint&&!checkpoint.canLeave())){event.preventDefault();notify('Save or export pending changes before leaving this page.')}});
   auth?.onLock(lock);
-  $('prototypeBanner').textContent='Durable CRM validation mode. Server-confirmed checkpoints only; unsaved changes can be lost on closure. No external actions, customer matching, interruption/resume or task disposition enabled in this slice. Existing tab-local drafts are not imported. Production Board attention remains read-only.';
-  $('queueTitle').textContent='Stored interactions';$('captureHelp').textContent='Save before switching cases. Interruption/resume and follow-up disposition await atomic integration.';
+  $('prototypeBanner').textContent='Durable CRM validation mode. Server-confirmed checkpoints only; unsaved changes can be lost on closure. No external actions, customer matching or follow-up task disposition enabled in this slice. One saved email/manual interaction may be interrupted by a call; resume explicitly closes that call with no follow-up. Existing tab-local drafts are not imported. Production Board attention remains read-only.';
+  $('queueTitle').textContent='Stored interactions';$('captureHelp').textContent='Save before switching cases. Interrupt a saved email/manual case; finish the call with no follow-up to resume. Nested calls and durable follow-up disposition are not enabled.';
   $('status').textContent='No outbound action is connected.';controls();void load();
   return Object.freeze({load,save,edit,fresh,view:()=>checkpoint?.view(),lock});
 }
