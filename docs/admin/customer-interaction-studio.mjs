@@ -1,8 +1,8 @@
-import {createFollowUpTaskWrite} from './customer-interaction-task.mjs?v=20261013-followup1';
-import {createInteractionClient} from './customer-interaction-client.mjs?v=20261013-followup1';
-import {createInteractionCheckpoint} from './customer-interaction-checkpoint.mjs?v=20261013-followup1';
+import {createFollowUpTaskWrite,createFollowUpTaskDisposition} from './customer-interaction-task.mjs?v=20261014-taskcontrols1';
+import {createInteractionClient} from './customer-interaction-client.mjs?v=20261014-taskcontrols1';
+import {createInteractionCheckpoint} from './customer-interaction-checkpoint.mjs?v=20261014-taskcontrols1';
 
-import {createInteractionSwitch,findInteractionInterruption} from './customer-interaction-switch.mjs?v=20261013-followup1';
+import {createInteractionSwitch,findInteractionInterruption} from './customer-interaction-switch.mjs?v=20261014-taskcontrols1';
 
 // Default-off integration. The gate controls rollout only; the server still
 // authorizes every request. Never import sessionStorage prototype drafts.
@@ -11,19 +11,23 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
   client??=createInteractionClient(auth,{enabled:true});
   const $=id=>document.getElementById(id);
   const fields=['customer','contact','callNotes','intent','evidence','plan','resolution','recipient','subject','reply','feedback'];
-  let checkpoint=null,rows=[],cursor=null,timer=null,loading=false,locked=false,remote=null,switching=null,interruption=null,taskWrite=null,tasks=[],switchTasks=[];
+  let checkpoint=null,rows=[],cursor=null,timer=null,loading=false,locked=false,remote=null,switching=null,interruption=null,taskWrite=null,selectedTask=null,tasks=[],switchTasks=[];
   const notify=message=>{$('storageStatus').textContent=message;};
-  const taskDirty=()=>Boolean(taskWrite&&!taskWrite.canLeave())||Boolean($('followUpTitle').value.trim()||$('followUpEvidence').value.trim());
+  const taskDirty=()=>Boolean(taskWrite&&!taskWrite.canLeave())||Boolean(selectedTask)||Boolean($('followUpTitle').value.trim()||$('followUpEvidence').value.trim());
   function controls(){
     const view=checkpoint?.view();
     const frozen=locked||loading||Boolean(switching)||Boolean(taskWrite&&!taskWrite.canLeave());
-    for(const f of fields)$(f).disabled=frozen||!checkpoint;
+    for(const f of fields)$(f).disabled=frozen||Boolean(selectedTask)||!checkpoint;
     $('kind').disabled=true;
-    for(const id of ['followUpTitle','followUpEvidence'])$(id).disabled=frozen||!checkpoint;
-    $('saveFollowUp').disabled=frozen||!checkpoint?.canLeave()||!$('followUpTitle').value.trim()||!$('followUpEvidence').value.trim();
+    for(const id of ['followUpTitle','followUpEvidence'])$(id).disabled=frozen||Boolean(selectedTask)||!checkpoint;
+    $('saveFollowUp').disabled=frozen||Boolean(selectedTask)||!checkpoint?.canLeave()||!$('followUpTitle').value.trim()||!$('followUpEvidence').value.trim();
+    for(const id of ['taskStatus','taskDispositionEvidence','taskDueAt'])$(id).disabled=frozen||!selectedTask;
+    $('saveTaskDisposition').disabled=frozen||!selectedTask||!checkpoint?.canLeave()||!$('taskDispositionEvidence').value.trim()||$('taskStatus').value===selectedTask.status;
+    $('cancelTaskDisposition').disabled=frozen||!selectedTask;
+    for(const button of document.querySelectorAll('[data-task-disposition]'))button.disabled=frozen||Boolean(selectedTask)||!checkpoint?.canLeave()||taskDirty();
     $('retryFollowUp').disabled=locked||loading||taskWrite?.view().state!=='error';
     $('resumePrevious').textContent='Finish call / resume previous (checks follow-ups)';
-    $('saveCheckpoint').disabled=frozen||!view||view.state==='saving'||view.state==='conflict';
+    $('saveCheckpoint').disabled=frozen||Boolean(selectedTask)||!view||view.state==='saving'||view.state==='conflict';
     $('retryCheckpoint').disabled=locked||loading||(switching?switching.view().state!=='error':view?.state!=='error');
     $('reviewConflict').disabled=frozen||view?.state!=='conflict';
     $('keepConflictDraft').disabled=frozen||!remote;
@@ -60,7 +64,8 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
       button.onclick=async()=>{if(!guard())return;await open(row.id)};host.append(button);
     }
     const hostTasks=$('storedFollowUps');hostTasks.replaceChildren();
-    for(const task of tasks){const p=document.createElement('p');p.textContent=task.title+' · '+task.status+' · No reminder scheduled';hostTasks.append(p)}
+    for(const task of tasks){const p=document.createElement('p');p.textContent=task.title+' · '+task.status+' · No reminder scheduled';hostTasks.append(p);const button=document.createElement('button');button.type='button';button.textContent='Change follow-up status';button.setAttribute('data-task-disposition',task.id);button.onclick=()=>chooseTask(task);hostTasks.append(button)}
+    controls();
     if(!rows.length){const p=document.createElement('p');p.textContent='No stored interactions loaded.';host.append(p)}
   }
   async function readTasks(id){
@@ -73,19 +78,29 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
     }while(cursor);
     return [...new Map(found.map(t=>[t.id,t])).values()];
   }
-  function resetTasks(){taskWrite=null;tasks=[];$('followUpTitle').value='';$('followUpEvidence').value='';}
+  function clearDisposition(){selectedTask=null;$('taskDispositionEvidence').value='';$('taskDueAt').value='';$('taskDispositionTitle').textContent='Select a stored follow-up to change status.';}
+  function chooseTask(task){
+    if(!guard()||taskDirty()||!checkpoint?.canLeave())return;
+    selectedTask=structuredClone(task);$('taskStatus').value=task.status==='complete'?'pending':'complete';$('taskDispositionTitle').textContent=task.title+' - stored version '+task.version;state();
+  }
+  async function saveDisposition(){
+    if(locked||loading||switching||!selectedTask||!checkpoint?.canLeave()||taskWrite)return;
+    try{taskWrite=createFollowUpTaskDisposition(client,selectedTask,{status:$('taskStatus').value,evidence:$('taskDispositionEvidence').value,dueAt:$('taskDueAt').value?new Date($('taskDueAt').value).toISOString():undefined});await sendTask()}
+    catch(e){notify('Disposition unavailable: '+e.message);controls()}
+  }
+  function resetTasks(){clearDisposition();taskWrite=null;tasks=[];$('followUpTitle').value='';$('followUpEvidence').value='';}
   async function sendTask(){
     if(locked||!taskWrite)return;
     const pending=taskWrite;
     try{const flight=pending.send();state();const task=await flight;
       if(locked||pending!==taskWrite)return;
-      tasks=[task,...tasks.filter(t=>t.id!==task.id)];taskWrite=null;$('followUpTitle').value='';$('followUpEvidence').value='';render();state();
+      tasks=[task,...tasks.filter(t=>t.id!==task.id)];taskWrite=null;clearDisposition();$('followUpTitle').value='';$('followUpEvidence').value='';render();state();
     }catch{if(!locked)state()}
   }
   async function saveTask(){
     if(locked||loading||switching||!checkpoint?.canLeave()||taskWrite&&!taskWrite.canLeave())return;
     const title=$('followUpTitle').value.trim(),evidence=$('followUpEvidence').value.trim();
-    if(!title||!evidence)return;
+    if(!title||!evidence||selectedTask)return;
     const current=checkpoint.view().draft,id=uuid();
     try{taskWrite=createFollowUpTaskWrite(client,{id,case_id:current.case_id,interaction_id:current.id,expected_version:0,source_key:'manual:'+id,title,status:'pending',provenance:{evidence,source:'owner_studio',interaction_version:current.expected_version}});await sendTask()}
     catch(e){notify('Follow-up unavailable: '+e.message);controls()}
@@ -118,7 +133,7 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
     finally{loading=false;controls()}
   }
   async function save(){
-    window.clearTimeout(timer);timer=null;if(locked||switching||taskWrite&&!taskWrite.canLeave()||!checkpoint)return;
+    window.clearTimeout(timer);timer=null;if(locked||switching||selectedTask||taskWrite&&!taskWrite.canLeave()||!checkpoint)return;
     const current=checkpoint;
     try{const flight=current.save();state();await flight;if(locked||current!==checkpoint)return;
       const d=current.view().draft;const row={...d,version:d.expected_version};rows=[row,...rows.filter(r=>r.id!==d.id)];render();state();
@@ -127,7 +142,7 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
   }
   function schedule(){window.clearTimeout(timer);timer=window.setTimeout(()=>{void save()},delay)}
   function edit(){
-    if(locked||switching||taskWrite&&!taskWrite.canLeave()||!checkpoint)return;
+    if(locked||switching||selectedTask||taskWrite&&!taskWrite.canLeave()||!checkpoint)return;
     const doc={...checkpoint.view().draft.document};for(const f of fields)doc[f]=$(f).value;
     checkpoint.edit(doc);remote=null;$('serverConflict').textContent='';state();
     if(checkpoint.view().state==='unsaved')schedule();
@@ -190,20 +205,22 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
     finally{loading=false;controls()}
     if(switching)await sendSwitch();
   }
-  function exportDraft(){if(taskWrite||taskDirty())return {current:checkpoint?.view().draft,pendingTask:taskWrite?.view(),followUpDraft:{title:$('followUpTitle').value,evidence:$('followUpEvidence').value},tasks};return switching?{pendingSwitch:switching.view(),current:checkpoint?.view().draft}:checkpoint?.view().draft}
+  function exportDraft(){if(taskWrite||taskDirty())return {current:checkpoint?.view().draft,pendingTask:taskWrite?.view(),dispositionDraft:selectedTask?{record:selectedTask,status:$('taskStatus').value,evidence:$('taskDispositionEvidence').value,dueAt:$('taskDueAt').value}:null,followUpDraft:{title:$('followUpTitle').value,evidence:$('followUpEvidence').value},tasks};return switching?{pendingSwitch:switching.view(),current:checkpoint?.view().draft}:checkpoint?.view().draft}
   function lock(){
     locked=true;resetTasks();window.clearTimeout(timer);checkpoint=null;rows=[];remote=null;cursor=null;switching=null;interruption=null;switchTasks=[];
     for(const f of fields)$(f).value='';$('serverConflict').textContent='';render();controls();notify('Owner session locked. Reopen after sign-in to load stored work.');
   }
   for(const f of fields)$(f).addEventListener('input',edit);
   for(const id of ['followUpTitle','followUpEvidence'])$(id).addEventListener('input',state);
+  for(const id of ['taskStatus','taskDispositionEvidence','taskDueAt'])$(id).addEventListener('input',state);
+  $('saveTaskDisposition').onclick=saveDisposition;$('cancelTaskDisposition').onclick=()=>{if(taskWrite||locked)return;clearDisposition();state()};
   $('saveFollowUp').onclick=saveTask;$('retryFollowUp').onclick=sendTask;
   $('saveCheckpoint').onclick=save;$('retryCheckpoint').onclick=()=>switching?sendSwitch():save();
   $('reloadStored').onclick=()=>load();$('loadMoreStored').onclick=()=>load(true);
   $('newEmail').onclick=()=>fresh('email');$('newCall').onclick=interrupt;$('resumePrevious').onclick=resume;
   $('reviewConflict').onclick=review;
   $('keepConflictDraft').onclick=()=>{if(!remote||locked)return;checkpoint.reconcile(remote);remote=null;$('serverConflict').textContent='';state();};
-  $('coachButtons').addEventListener('click',event=>{const button=event.target.closest('button[data-coach]');if(!button||!checkpoint||locked||loading||switching||taskWrite&&!taskWrite.canLeave())return;$('feedback').value+='\n['+button.dataset.coach+'] ';edit()});
+  $('coachButtons').addEventListener('click',event=>{const button=event.target.closest('button[data-coach]');if(!button||!checkpoint||locked||loading||switching||selectedTask||taskWrite&&!taskWrite.canLeave())return;$('feedback').value+='\n['+button.dataset.coach+'] ';edit()});
   $('copyReply').onclick=async()=>{try{await window.navigator.clipboard.writeText($('reply').value);notify('Draft copied; nothing sent.')}catch{notify('Clipboard unavailable. Select and copy draft manually.')}};
   $('copyCase').onclick=async()=>{try{await window.navigator.clipboard.writeText(JSON.stringify(exportDraft(),null,2));notify('Case copied. Review private information before sharing.')}catch{notify('Clipboard unavailable; export the draft.')}};
   $('downloadCase').onclick=()=>{const url=window.URL.createObjectURL(new Blob([JSON.stringify(exportDraft(),null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='customer-interaction-draft.json';a.click();window.setTimeout(()=>window.URL.revokeObjectURL(url),1000)};
@@ -211,7 +228,7 @@ export function mountInteractionStudio({document,window,auth,enabled=false,clien
   document.addEventListener('click',event=>{if(event.target.closest('a[href]')&&(switching||checkpoint&&(!checkpoint.canLeave()||taskDirty()))){event.preventDefault();notify('Save or export pending changes before leaving this page.')}});
   auth?.onLock(lock);
   $('prototypeBanner').textContent='Durable CRM validation mode. Server-confirmed checkpoints only; unsaved changes can be lost on closure. No external actions or customer matching. Follow-ups save explicit owner evidence; no reminders or automatic task discovery are connected. One saved email/manual interaction may be interrupted by a call; resume checks stored follow-ups before closing the call. Existing tab-local drafts are not imported. Production Board attention remains read-only.';
-  $('queueTitle').textContent='Stored interactions';$('captureHelp').textContent='Save before switching cases. Interrupt a saved email/manual case; save promised follow-ups before resuming. Nested calls, task completion controls and automatic NEXT are not enabled.';
+  $('queueTitle').textContent='Stored interactions';$('captureHelp').textContent='Save before switching cases. Interrupt a saved email/manual case; save promised follow-ups before resuming. Stored follow-up status changes require owner evidence. Snooze records a due time only, with no reminder. Nested calls and automatic NEXT are not enabled.';
   $('status').textContent='No outbound action is connected.';controls();void load();
   return Object.freeze({load,save,edit,fresh,view:()=>checkpoint?.view(),lock});
 }
