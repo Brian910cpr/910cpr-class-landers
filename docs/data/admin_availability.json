@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-10-14T16:55:07.984020+00:00",
+  "generated_at": "2026-10-14T17:05:38.497126+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-14T16:55:07.181779+00:00",
+      "generated_at": "2026-10-14T17:05:37.634241+00:00",
       "event_count": 0
     },
     {
@@ -16,7 +16,7 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-14T16:55:07.984020+00:00",
+      "generated_at": "2026-10-14T17:05:38.497126+00:00",
       "event_count": 168
     },
     {
@@ -24,7 +24,7 @@
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-14T16:55:07.497741+00:00",
+      "generated_at": "2026-10-14T17:05:37.910012+00:00",
       "event_count": 0
     }
   ],
@@ -320,9 +320,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "ADR Shift — Brian Unavailable",
+      "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
       "start": "2026-10-22T09:00:00+00:00",
-      "end": "2026-10-22T23:00:00+00:00",
+      "end": "2026-10-22T10:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
@@ -331,9 +331,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "start": "2026-10-22T09:00:00+00:00",
-      "end": "2026-10-22T10:00:00+00:00",
+      "title": "ADR Shift — Brian Unavailable",
+      "start": "2026-10-22T10:00:00+00:00",
+      "end": "2026-10-22T22:00:00+00:00",
       "location": "",
       "status": "CONFIRMED"
     },
