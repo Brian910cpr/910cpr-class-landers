@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-10-14T16:50:01.046674+00:00",
+  "generated_at": "2026-10-14T16:55:07.984020+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-14T16:50:00.016819+00:00",
+      "generated_at": "2026-10-14T16:55:07.181779+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-14T16:50:01.046674+00:00",
-      "event_count": 167
+      "generated_at": "2026-10-14T16:55:07.984020+00:00",
+      "event_count": 168
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-14T16:50:00.329952+00:00",
+      "generated_at": "2026-10-14T16:55:07.497741+00:00",
       "event_count": 0
     }
   ],
@@ -254,10 +254,32 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
+      "title": "TRAVEL GAP",
+      "start": "2026-10-20T17:45:00+00:00",
+      "end": "2026-10-20T20:00:00+00:00",
+      "location": "",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
       "title": "Dunes Dental Onsite",
-      "start": "2026-10-20T18:15:00+00:00",
-      "end": "2026-10-21T00:00:00+00:00",
+      "start": "2026-10-20T20:00:00+00:00",
+      "end": "2026-10-20T22:00:00+00:00",
       "location": "Dunes Dental Services\\, 100 Sutter Drive\\, Suite 106\\, Surfside Beach\\, SC 29575",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "TRAVEL GAP",
+      "start": "2026-10-20T22:00:00+00:00",
+      "end": "2026-10-20T23:30:00+00:00",
+      "location": "",
       "status": "CONFIRMED"
     },
     {
@@ -313,17 +335,6 @@
       "start": "2026-10-22T09:00:00+00:00",
       "end": "2026-10-22T10:00:00+00:00",
       "location": "",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Shift: ADR",
-      "start": "2026-10-22T10:00:00+00:00",
-      "end": "2026-10-22T22:00:00+00:00",
-      "location": "Riegelwood\\, NC 28456",
       "status": "CONFIRMED"
     },
     {

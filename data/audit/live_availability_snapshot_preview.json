@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14T16:50:01.163471+00:00",
+  "generated_at": "2026-10-14T16:55:08.102734+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 359,
+    "blocks_generated": 360,
     "blocks_blocked": 19,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -36,11 +36,11 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 167,
+      "blocked": 168,
       "available": 192
     },
     "inverse_generated_availability_blocks": 192,
-    "inverse_blocking_event_blocks": 167,
+    "inverse_blocking_event_blocks": 168,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
@@ -527,12 +527,36 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-20T14:15:00",
-      "end_datetime": "2026-10-20T20:00:00",
+      "start_datetime": "2026-10-20T13:45:00",
+      "end_datetime": "2026-10-20T16:00:00",
       "date": "2026-10-20",
       "end_date": "2026-10-20",
-      "start_time": "14:15",
-      "end_time": "20:00",
+      "start_time": "13:45",
+      "end_time": "16:00",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "5eat3sda9vak9nkru5a41s01u3@google.com",
+      "summary": "TRAVEL GAP",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-20T16:00:00",
+      "end_datetime": "2026-10-20T18:00:00",
+      "date": "2026-10-20",
+      "end_date": "2026-10-20",
+      "start_time": "16:00",
+      "end_time": "18:00",
       "availability_status": "blocked",
       "availability_location_mode": "instructor_time_only",
       "source_location": "Dunes Dental Services\\, 100 Sutter Drive\\, Suite 106\\, Surfside Beach\\, SC 29575",
@@ -541,6 +565,30 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "kd2dgfr1l4b5n3thh7j33hmct4@google.com",
       "summary": "Dunes Dental Onsite",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-20T18:00:00",
+      "end_datetime": "2026-10-20T19:30:00",
+      "date": "2026-10-20",
+      "end_date": "2026-10-20",
+      "start_time": "18:00",
+      "end_time": "19:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "1iq49es3884qraggjnkanesusd@google.com",
+      "summary": "TRAVEL GAP",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -661,30 +709,6 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "u6qias6sj4ohqierrdmak3alk4@google.com",
       "summary": "ADR PRE-SHIFT BUFFER — Brian Unavailable",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-22T06:00:00",
-      "end_datetime": "2026-10-22T18:00:00",
-      "date": "2026-10-22",
-      "end_date": "2026-10-22",
-      "start_time": "06:00",
-      "end_time": "18:00",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Riegelwood\\, NC 28456",
-      "location_name": "Riegelwood\\, NC 28456",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "69gjedhic4ojebb46thjab9k60rmcbb268p64bb474sj2c9m68r3acpo68@google.com",
-      "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -4397,11 +4421,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-20T07:45:00",
-      "end_datetime": "2026-10-20T14:15:00",
+      "end_datetime": "2026-10-20T13:45:00",
       "date": "2026-10-20",
       "end_date": "2026-10-20",
       "start_time": "07:45",
-      "end_time": "14:15",
+      "end_time": "13:45",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -4427,11 +4451,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-20T20:00:00",
+      "start_datetime": "2026-10-20T19:30:00",
       "end_datetime": "2026-10-21T00:00:00",
       "date": "2026-10-20",
       "end_date": "2026-10-21",
-      "start_time": "20:00",
+      "start_time": "19:30",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10010,10 +10034,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-10-14T16:49:59.675028+00:00",
-      "end": "2027-01-12T16:49:59.675028+00:00",
-      "observed_at": "2026-10-14T16:50:01.046674+00:00",
-      "valid_until": "2026-10-14T17:05:01.046674+00:00",
+      "start": "2026-10-14T16:55:06.868269+00:00",
+      "end": "2027-01-12T16:55:06.868269+00:00",
+      "observed_at": "2026-10-14T16:55:07.984020+00:00",
+      "valid_until": "2026-10-14T17:10:07.984020+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
