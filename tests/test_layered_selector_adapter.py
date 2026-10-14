@@ -103,6 +103,27 @@ class LayeredAdapterTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'missing directional travel'):
             self.report()
 
+    def test_proven_native_venue_label_reserves_primary_without_claiming_room(self):
+        from scripts.generate_dynamic_offers import normalize_location_resource
+        label = '4018 Shipyard Blvd, Room B, 910CPR Office'
+        location, resource, resolved = normalize_location_resource(label, label, self.resources)
+        self.assertTrue(resolved)
+        self.assertEqual(location, ':: Wilmington; Shipyard Blvd')
+        # Authenticated session FK proves the venue, but resource_id is null.
+        # Keep this a venue alias, never an invented explicit Room B assignment.
+        self.assertEqual(resource, label)
+        self.busy = [dict(start=self.at('12:00'), end=self.at('13:00'),
+            instructor='another instructor', location=location, resource=resource,
+            location_resolution='location_resource_map', source_file='canonical_class_sessions')]
+        report = self.report()
+        self.assertEqual(len(report['normalized_occupancy']), 1)
+        self.assertNotIn('12:00', self.starts(report))
+        self.assertTrue(all(c['location'] == self.policy['primary_resource']
+                            for c in report['accepted']))
+        # The same physical reservation must still block Brian himself.
+        self.busy[0]['instructor'] = 'Brian'
+        self.assertNotIn('12:00', self.starts(self.report()))
+
     def test_room_hours_do_not_resolve_unknown_occupied_duration(self):
         self.add('12:00','12:00')
         with self.assertRaisesRegex(ValueError,'zero-duration'):

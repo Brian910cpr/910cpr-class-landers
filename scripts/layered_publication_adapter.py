@@ -65,6 +65,8 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
     metadata = {str(c["course_id"]): c for c in courses}
     projected = project_sources(occupancy, metadata)
     projected.sort(key=lambda row: row.get("source_file") != "canonical_class_sessions")
+    known_rooms = {r["resource_name"] for location in resources.get("locations", [])
+                   for r in location.get("internal_resources", [])}
     reports, issues = [], []
     for index, window in enumerate(windows):
         try:
@@ -82,6 +84,10 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             person = str(source.get("instructor") or "").casefold().strip()
             same_person = person == name or person in {"brian", "brian ennis"} and "brian" in name
             resource = source.get("resource") or room
+            # Match build_shadow's conservative venue-only primary-room fallback
+            # before filtering other instructors' occupied intervals.
+            if resource not in known_rooms or resource == "Shipyard Office":
+                resource = room
             same_room = resource == room and source.get("location_resolution") == "location_resource_map"
             if source.get("availability_location_mode") == "instructor_time_only":
                 same_room = False

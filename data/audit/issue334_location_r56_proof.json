@@ -1,0 +1,76 @@
+{
+  "before": {
+    "counts": {
+      "publicSelectableDateCount": 0,
+      "publicSelectableStartTimeCount": 0,
+      "publicSelectableOfferCount": 0,
+      "input_sources": 1,
+      "normalized_sources": 1,
+      "input_windows": 1,
+      "evaluated_windows": 0,
+      "failed_windows": 1,
+      "uncertainty_issues": 1
+    },
+    "issues": [
+      {
+        "reason": "missing directional travel rule: :: Wilmington; Shipyard Blvd - B->4018 Shipyard Blvd, Room B, 910CPR Office",
+        "instructor": "Brian Ennis",
+        "resource": ":: Wilmington; Shipyard Blvd - B",
+        "start": "2026-10-11T00:00:00-04:00",
+        "end": "2026-10-12T00:00:00-04:00"
+      }
+    ],
+    "offers": 0,
+    "starts": [],
+    "occupancy": [
+      {
+        "start": "2026-10-11 12:00:00",
+        "end": "2026-10-11 14:00:00",
+        "location": "4018 Shipyard Blvd, Room B, 910CPR Office"
+      }
+    ]
+  },
+  "after": {
+    "counts": {
+      "publicSelectableDateCount": 1,
+      "publicSelectableStartTimeCount": 3,
+      "publicSelectableOfferCount": 6,
+      "input_sources": 1,
+      "normalized_sources": 1,
+      "input_windows": 1,
+      "evaluated_windows": 1,
+      "failed_windows": 0,
+      "uncertainty_issues": 0
+    },
+    "issues": [],
+    "offers": 6,
+    "starts": [
+      "09:30",
+      "11:00",
+      "14:00"
+    ],
+    "occupancy": [
+      {
+        "start": "2026-10-11 12:00:00",
+        "end": "2026-10-11 14:00:00",
+        "location": ":: Wilmington; Shipyard Blvd",
+        "raw_location": "4018 Shipyard Blvd, Room B, 910CPR Office",
+        "resource": "4018 Shipyard Blvd, Room B, 910CPR Office",
+        "location_resolution": "location_resource_map"
+      }
+    ]
+  },
+  "observed_at": "2026-10-14T08:25:13.157864+00:00",
+  "mode": "local-synthetic-pinned; no production projection or publication",
+  "authenticated_provenance": {
+    "project": "wktwgcnwdvbebcobgyey",
+    "session_id": "dfa08088-1266-4dd6-ad7d-14856b7f845a",
+    "location_id": "fd44e20f-af86-4198-ab7c-fa13dad6a7fd",
+    "source_location_label": "4018 Shipyard Blvd, Room B, 910CPR Office",
+    "canonical_location_name": "910CPR Office - Shipyard Blvd",
+    "location_key": "910cpr-office-shipyard",
+    "resource_id": null,
+    "location_resource_rows": [],
+    "method": "Supabase execute_sql SELECT only, 2026-10-14 approximately08:18Z"
+  }
+}

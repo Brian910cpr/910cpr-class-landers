@@ -187,6 +187,38 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(any(o['instructor']=='Brian Ennis' for o in offers))
         self.assertTrue(any(o['instructor']=='Michelle' for o in offers))
 
+    def test_native_venue_alias_keeps_occupied_interval_through_publication(self):
+        from scripts.block_start_time_selector import build_occupancy
+        label = '4018 Shipyard Blvd, Room B, 910CPR Office'
+        for instructor in ('Brian Ennis', 'Michelle'):
+            with self.subTest(instructor=instructor):
+                demand = dict(canonical_session_id='fixture-native-venue',
+                    location_name=label, lead_instructor_name=instructor,
+                    session_status='scheduled', external_course_id='359474',
+                    start_at=self.at(11, '12:00').isoformat(),
+                    end_at=self.at(11, '14:00').isoformat(),
+                    count_available=True, active_registration_count=1)
+                self.sources = build_occupancy(dict(location_resource_map=self.resources,
+                    canonical_demand=dict(sessions=[demand])), {}, allow_unresolved=True)
+                self.assertEqual(self.sources[0]['raw_location'], label)
+                self.assertEqual(self.sources[0]['resource'], label)
+                payload = self.payload()
+                self.assertTrue(payload['offers'])
+                for offer in payload['offers']:
+                    start = aware(offer['date'] + 'T' + offer['startTime'] + ':00-04:00')
+                    end = aware(offer['occupiedUntil'])
+                    self.assertTrue(end <= self.at(11, '12:00') or start >= self.at(11, '14:00'))
+                feed = public_selector_availability_payload(payload)
+                self.assertTrue(feed['dates'])
+                self.assertIn('fixture.test/enroll', json.dumps(feed))
+                html = render_html(payload)
+                self.assertTrue('/data/block-selector-availability/heartsaver.json' in html)
+
+    def test_explicit_other_room_is_not_reassigned_to_primary(self):
+        self.add(11, '12:00', '14:00', name='Michelle')
+        self.sources[0]['resource'] = ':: Wilmington; Shipyard Blvd - A'
+        self.assertIn('12:00', self.starts('329495'))
+
     def test_known_directional_travel_changes_edges_and_actual_room_collision_rejects(self):
         self.sources.append(dict(source_event_id='offsite',start=self.at(11,'09:00').isoformat(),
             end=self.at(11,'11:00').isoformat(),instructor='Brian Ennis',location='offsite',course_id='210549'))
