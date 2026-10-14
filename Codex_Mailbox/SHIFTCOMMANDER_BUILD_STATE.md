@@ -110,3 +110,14 @@ Then refresh **Last known blocker**, **Last attempted action**, **Observed resul
 ## Receipt rule
 
 When a Codex round is required, use a new unique `Codex_Reply_ShiftCommander...R<n>.md` receipt. Never overwrite an earlier receipt. The receipt should summarize that round; this file is the continuing cross-round state. ChatGPT, not Codex, performs any `Codex_Read_*` acknowledgement in the transport repository after genuine review.
+
+### 2026-10-14 01:46 UTC - Owner gate dispatch checkpoint
+- Starting blocker: approved private settings/trusted-loopback TLS inputs unchanged; latest owner instruction suppresses setup/auth/preflight/launcher retries until inputs change.
+- Evidence inspected: issue #214 owner history; PR #19 b9cc8cfeb3412569fc02ebed878e3124a5d19dee OPEN/DRAFT; held #372 OPEN/DRAFT; open queue and backend PRs #389/#388/#381; #373 dependency.
+- Action attempted: bounded read-only dependency review; acknowledged execution; isolated courier receipt and checkpoint only.
+- Result: BLOCKED, no fresh application/Astra/operational proof; prior BUILT with synthetic evidence only. No merge/deploy or competing launch.
+- New/unchanged root cause: no changed approved private settings/TLS inputs supplied on originating issue. Latest issue gate overrides older setup-next instructions above.
+- Tests/checks run: explicit documentation scope and staged whitespace check; application tests intentionally not repeated.
+- Commit/PR/branch: codex/issue-214-gate-20261014T014618Z; receipt Codex_Reply_Issue214_OwnerGate_20261014T014618Z.md; pushed SHA recorded on issue #214.
+- Owner/account gate: changed approved private settings/TLS inputs, then local hidden password entry only when reviewed initialization reaches it; credential incident disposition remains production gate.
+- Next exact action: suppress unchanged retries; after approved inputs change, existing reviewed check-only sequence then controlled workflow/restart/recovery/observer proof. Existing backend assignments retained; no safe unassigned narrow repair established.
