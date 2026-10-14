@@ -14,6 +14,7 @@
 <style id="owner-access-gates">#ownerAccess,#auth-gate,#authGate,#accessGate,#adminUnlockPanel,dialog#access{display:none!important}</style>
 <link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
 <script src="/assets/site-theme.js"></script>
+<script defer src="/admin/cabinet-navigation.js?v=20261014-241"></script>
 </head>
 <body>
   <div id="adminNav"></div>
@@ -50,6 +51,7 @@
         <div class="panel-head"><div><span class="eyebrow">ACTIVE CLASS</span><h2 id="detailTitle">Choose a class</h2></div><span id="detailState" class="state">No selection</span></div>
         <div id="emptyDetail" class="empty">Select a class on the calendar or in the list. The selected class will be highlighted in bright blue.</div>
         <div id="classDetail" hidden>
+          <a id="cabinetUp" class="btn" href="/admin/all-classes.html">↑ Up</a>
           <div id="classFacts" class="facts"></div>
           <div class="actionbar">
             <button id="preRoster" class="btn" type="button">Print Pre-Class Roster</button>
@@ -110,6 +112,6 @@
   </main>
   <script src="/admin/admin-nav.js?v=20260914-session1"></script>
   <script src="/admin/canonical-session-model.js?v=20260906-1"></script>
-  <script src="/admin/all-classes.js?v=20260923-227"></script>
+  <script src="/admin/all-classes.js?v=20261014-241"></script>
 </body>
 </html>
