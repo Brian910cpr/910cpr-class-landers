@@ -167,7 +167,10 @@ def main():
     except ImportError:
         parser.error("psycopg 3 missing; no database contacted or dependency installed")
     dsn = os.environ.get("ISSUE371_LOCAL_DSN", "")
-    params = conninfo_to_dict(dsn)
+    try:
+        params = conninfo_to_dict(dsn)
+    except Exception:
+        parser.error("invalid local connection settings; no database contacted")
     if params.get("host") not in ("127.0.0.1", "::1") or not params.get("dbname", "").startswith("issue371_") or params.get("hostaddr") or params.get("service"):
         parser.error("explicit loopback host and issue371_* database required; no database contacted")
     try:
