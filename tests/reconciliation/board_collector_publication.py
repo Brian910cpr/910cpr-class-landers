@@ -100,6 +100,65 @@ class CollectorPublication(capability.CollectorCapability):
         self.assertTrue(self.observe(args)['replayed'])
         self.assertFalse(self.observe(args)['can_execute'])
 
+    def test_collector_conflicting_request_contention_preserves_first_receipt(self):
+        args=self.publication()
+        changed=(*args[:4],False,*args[5:])
+        self.assertIn('idempotency_conflict',self.race_publication(args,changed))
+        row=self.admin.execute('select request,resulting_version from production_board_collector_publications where request_id=%s',(args[3],)).fetchone()
+        self.assertTrue(row[0]['blocked']);self.assertEqual(row[1],2)
+        self.assertEqual(self.admin.execute('select count(*) from production_board_observation_events where card_id=%s',(args[0],)).fetchone()[0],1)
+        other=self.publication()
+        cross_card=(*other[:3],args[3],*other[4:])
+        with self.assertRaisesRegex(self.pg.Error,'idempotency_conflict'):self.observe(cross_card)
+        self.assertEqual(self.admin.execute('select row_version from production_board_cards where id=%s',(other[0],)).fetchone()[0],1)
+        self.assertIsNone(self.admin.execute('select card_id from production_board_dispatch_intake where card_id=%s',(other[0],)).fetchone())
+
+    def test_collector_and_manual_resolution_serialize_both_orders(self):
+        args=self.publication()
+        resolution=(args[0],1,uuid.uuid4(),'owner-fixture','handled_manually','Fixed externally','synthetic',args[8])
+        # Publication wins: stale owner editor must retry, never silently resolve.
+        self.assertIn('stale_card_version',self.race_publication(args,resolution,foundation.CALL,False))
+        self.assertEqual(self.admin.execute('select row_version,resolution_state from production_board_cards where id=%s',(args[0],)).fetchone(),(2,'unresolved'))
+        self.assertEqual(self.admin.execute('select count(*) from production_board_resolution_events where card_id=%s',(args[0],)).fetchone()[0],0)
+        # Owner wins: a waiting collector cannot publish over manual resolution.
+        args=self.publication()
+        resolution=(args[0],1,uuid.uuid4(),'owner-fixture','handled_manually','Fixed externally','synthetic',args[8])
+        with self.pg.connect(foundation.DSN) as a,self.collector() as b:
+            a.execute('set role service_role');a.execute(foundation.CALL,resolution)
+            b.execute("set statement_timeout='8s'");b.commit()
+            def contender():
+                try:b.execute(CALL,args);b.commit();return 'unexpected_commit'
+                except self.pg.Error as exc:b.rollback();return str(exc)
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                pending=pool.submit(contender)
+                try:self.wait_for_lock(b,pending);a.commit();self.assertIn('stale_card_version',pending.result(timeout=10))
+                finally:a.rollback()
+        self.assertEqual(self.admin.execute('select row_version,resolution_state from production_board_cards where id=%s',(args[0],)).fetchone(),(2,'handled_manually'))
+        for table in ('production_board_dispatch_intake','production_board_observation_events','production_board_collector_publications'):
+            self.assertEqual(self.admin.execute(f'select count(*) from {table} where card_id=%s',(args[0],)).fetchone()[0],0)
+        with self.assertRaisesRegex(self.pg.Error,'card_resolved'):
+            self.observe((*args[:2],2,uuid.uuid4(),*args[4:]))
+
+    def test_other_collector_request_collision_rolls_back_without_receipt_disclosure(self):
+        args=self.publication();self.observe(args)
+        other=self.publication()
+        login='issue380_collector_'+uuid.uuid4().hex
+        self.admin.execute(capability.sql.SQL('create role {} login nosuperuser nocreatedb nocreaterole noreplication nobypassrls in role production_board_collector').format(capability.sql.Identifier(login)))
+        try:
+            with self.pg.connect(foundation.DSN,user=login) as conn:
+                conn.execute('set role production_board_collector')
+                self.assertIsNone(conn.execute('select request from production_board_collector_publications where request_id=%s',(args[3],)).fetchone())
+                # RLS hides the first actor's receipt; uniqueness must still
+                # reject its reuse and roll back the second card transition.
+                with self.assertRaises(self.pg.errors.UniqueViolation):
+                    conn.execute(CALL,(*other[:3],args[3],*other[4:]))
+                conn.rollback()
+            self.assertEqual(self.admin.execute('select row_version from production_board_cards where id=%s',(other[0],)).fetchone()[0],1)
+            for table in ('production_board_dispatch_intake','production_board_observation_events','production_board_collector_publications'):
+                self.assertEqual(self.admin.execute(f'select count(*) from {table} where card_id=%s',(other[0],)).fetchone()[0],0)
+            self.assertTrue(self.observe(args)['replayed'])
+        finally:self.admin.execute(capability.sql.SQL('drop role {}').format(capability.sql.Identifier(login)))
+
     def test_collector_provisional_response_and_receipt_failure_roll_back(self):
         args=self.publication()
         with self.collector() as conn:
