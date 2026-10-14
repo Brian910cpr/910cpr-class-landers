@@ -68,7 +68,9 @@ process.stdout.write(JSON.stringify({result,ghCalls})+'\\n');
                 if proc.poll() is None:proc.kill();proc.communicate()
 
     def bridge_fixture(self):
-        args=self.publication();self.publish(args)
+        # Other inherited tests deliberately insert unsupported bigint identities.
+        issue=self.admin.execute('select coalesce(max(issue_id),1000)+1 from production_board_dispatch_intake where issue_id<1000000').fetchone()[0]
+        args=self.publication(issue=issue);self.publish(args)
         return args
 
     def test_real_psql_service_identity_and_read_only_acquisition(self):
