@@ -11,6 +11,53 @@ import board_resolution_contention as foundation
 
 
 class IntakeTrustBoundary(publication.IntakePublication):
+    def test_trusted_insert_can_forge_initial_observation_without_publication(self):
+        args = self.publication()
+        before = self.admin.execute(
+            'select count(*) from production_board_activity where card_id=%s',
+            (args[0],)).fetchone()[0]
+        with self.pg.connect(foundation.DSN) as conn:
+            conn.execute('set role service_role')
+            conn.execute("""insert into production_board_dispatch_intake
+                (card_id,issue_id,blocked,source_state,worker_safe,source_ref,checked_at,provenance)
+                values(%s,%s,false,'action_required',true,'synthetic-forged-insert',
+                       clock_timestamp(),'authoritative_observation')""", args[:2])
+            conn.commit()
+        self.assertEqual(self.admin.execute(
+            'select count(*) from production_board_intake_publications where card_id=%s',
+            (args[0],)).fetchone()[0], 0)
+        self.assertEqual(self.admin.execute(
+            'select count(*) from production_board_activity where card_id=%s',
+            (args[0],)).fetchone()[0], before)
+        result = self.call((args[0], args[1], 2, uuid.uuid4(), 'selection', None))
+        self.assertEqual(result['decision'], 'reserved')
+        self.assertFalse(result['can_execute'])
+        print('NEGATIVE CONTROL: initial INSERT forged observation without publication/audit', flush=True)
+
+    def test_trusted_refresh_retains_provenance_and_revives_stale_observation(self):
+        args = self.fixture()
+        self.admin.execute("""update production_board_dispatch_intake
+            set checked_at=clock_timestamp()-interval '6 minutes' where card_id=%s""", (args[0],))
+        result = self.call((args[0], args[1], 3, uuid.uuid4(), 'selection', None))
+        self.assertEqual(result['reason'], 'source_check_stale')
+        before = self.admin.execute(
+            'select count(*) from production_board_activity where card_id=%s',
+            (args[0],)).fetchone()[0]
+        with self.pg.connect(foundation.DSN) as conn:
+            conn.execute('set role service_role')
+            # No assignment to provenance: protecting that column alone is insufficient.
+            conn.execute("""update production_board_dispatch_intake
+                set checked_at=clock_timestamp(), source_ref='synthetic-unverified-refresh'
+                where card_id=%s""", (args[0],))
+            conn.commit()
+        self.assertEqual(self.admin.execute(
+            'select count(*) from production_board_activity where card_id=%s',
+            (args[0],)).fetchone()[0], before)
+        result = self.call((args[0], args[1], 4, uuid.uuid4(), 'selection', None))
+        self.assertEqual(result['decision'], 'reserved')
+        self.assertFalse(result['can_execute'])
+        print('NEGATIVE CONTROL: refresh revived stale observation without provenance assignment/audit', flush=True)
+
     def test_trusted_dml_can_forge_observation_without_publication_audit(self):
         args = self.publication()
         args = (*args[:4], False, 'action_required', True, *args[7:])
