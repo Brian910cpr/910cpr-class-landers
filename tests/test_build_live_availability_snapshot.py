@@ -216,6 +216,36 @@ END:VCALENDAR
         self.assertIn("inverse_blocking_gap_expansion", available[0]["reasons"])
         self.assertEqual(1, stats["inverse_generated_availability_blocks"])
 
+    def test_inverse_midnight_is_not_a_blocker_but_real_blocks_are(self) -> None:
+        source = dict(calendar_source_key="overnight", mode="inverse_blocking",
+            inverse_expansion_start_datetime="2026-07-01T00:00:00",
+            inverse_expansion_horizon_days=2,
+            inverse_expansion_require_active_appointment_container=False,
+            inverse_expansion_min_gap_minutes=90)
+        events = [dict(id="before", summary="BUSY", start="2026-07-01T00:00:00",
+                       end="2026-07-01T23:30:00"),
+                  dict(id="after", summary="BUSY", start="2026-07-02T01:30:00",
+                       end="2026-07-03T00:00:00")]
+        blocks, rejected, _ = snapshot.expand_inverse_availability(source, events, None, {}, {})
+        available = [b for b in blocks if b["availability_status"] == "available"]
+        self.assertEqual([], rejected)
+        self.assertEqual([(b["start_datetime"], b["end_datetime"]) for b in available],
+                         [("2026-07-01T23:30:00", "2026-07-02T01:30:00")])
+
+    def test_inverse_daily_closure_remains_a_boundary(self) -> None:
+        source = dict(calendar_source_key="daily", mode="inverse_blocking",
+            inverse_expansion_start_datetime="2026-07-01T00:00:00",
+            inverse_expansion_horizon_days=2,
+            inverse_expansion_day_start_time="08:00",
+            inverse_expansion_day_end_time="19:00",
+            inverse_expansion_require_active_appointment_container=False)
+        blocks, rejected, _ = snapshot.expand_inverse_availability(source, [], None, {}, {})
+        available = [b for b in blocks if b["availability_status"] == "available"]
+        self.assertEqual([], rejected)
+        self.assertEqual([(b["start_datetime"], b["end_datetime"]) for b in available],
+            [("2026-07-01T08:00:00", "2026-07-01T19:00:00"),
+             ("2026-07-02T08:00:00", "2026-07-02T19:00:00")])
+
     def test_inverse_blocking_events_subtract_from_default_open_windows(self) -> None:
         calendar_payload = {
             "calendar_sources": [{
@@ -578,3 +608,4 @@ END:VCALENDAR
 
 if __name__ == "__main__":
     unittest.main()
+
