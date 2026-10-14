@@ -38,6 +38,16 @@ Every ShiftCommander work session that makes meaningful progress, encounters a b
 - Brian has already approved the initial supervisors (member IDs 159, 186, 188) and the accepted starter roster is sufficient for private-pilot preparation. Missing roster members alone are not a blocker.
 - Connected Cloudflare metadata access was established in the R43 evidence. Do not revive the retired blanket metadata-access blocker without new contradictory evidence.
 
+## Current owner gate override — 2026-10-14
+
+This section supersedes the older September setup directions below. Issue #214 owner acknowledgment at 2026-10-14T11:54:56Z (https://github.com/Brian910cpr/910cpr-class-landers/issues/214#issuecomment-6167750287) requires suppression of setup/auth/preflight/launcher retries until approved outside-Git private settings and trusted-loopback TLS inputs change. No such input-change evidence was established during this dispatch. Do not treat the historical setup sequence below as permission to retry an unchanged path.
+
+- Last known blocker: approved private settings and trusted-loopback TLS certificate/key paths remain gated; bridge-credential disposition and real operational proof also remain outstanding.
+- Last attempted action: bounded read-only issue/dependency review; no installation, auth, preflight or launcher attempt.
+- Observed result: existing ShiftCommander draft #19 remains at b9cc8cfeb3412569fc02ebed878e3124a5d19dee; no merge/deploy or fresh Astra runtime proof. Existing backend assignments preserved.
+- Next exact action: wait for evidence that approved private inputs changed, then resume existing reviewed check-only member flow for IDs 159/186/188. Require controlled workflow, restart, recovery and observer proof before release claims. Keep #214 open and #372 unmerged/undeployed.
+- Owner/account gate: deliver reviewed settings/TLS paths through the approved private local path; never put passwords, signing material or private settings in GitHub/chat. No duplicate owner alert or unchanged retry.
+
 ## Current state
 
 **Overall state:** BUILT WITH SYNTHETIC PRIVATE-PILOT PROOF / PRODUCTION BLOCKED
@@ -110,3 +120,24 @@ Then refresh **Last known blocker**, **Last attempted action**, **Observed resul
 ## Receipt rule
 
 When a Codex round is required, use a new unique `Codex_Reply_ShiftCommander...R<n>.md` receipt. Never overwrite an earlier receipt. The receipt should summarize that round; this file is the continuing cross-round state. ChatGPT, not Codex, performs any `Codex_Read_*` acknowledgement in the transport repository after genuine review.
+
+### 2026-10-14 14:34 UTC - Owner-gate continuation
+- Starting blocker: approved private settings/trusted-loopback TLS inputs remain gated by the latest owner acknowledgment; no evidence of approved input change.
+- Evidence inspected: issue #214 body/current owner instructions, full dispatch artifact, durable checkpoint and previous receipt; both repository AGENTS.md; handoff/proof protocols; current draft #19/#372 metadata and backend queue/PRs.
+- Action attempted: read-only dependency/eligibility assessment; actual execution acknowledged before changes. No setup/auth/preflight/launcher retry or secret access.
+- Result: BLOCKED. Target draft #19 remains b9cc8cfeb3412569fc02ebed878e3124a5d19dee; courier #372 remains draft/open and untouched. No independently verified Astra runtime.
+- New/unchanged root cause: approved private input gate unchanged; credential-incident disposition and real operational proof remain outstanding.
+- Tests/checks run: documentation scope/whitespace checks; no source changes, tests, build or generator. Backend #389/#388/#381 already have partial repair PRs; #373 depends on Studio foundation; #392 requires coordinated deep work. No safe unassigned narrow repair established.
+- Commit/PR/branch: codex/issue-214-gate-20261014T143431Z; existing ShiftCommander PR #19 reused as target, no new application PR.
+- Owner/account gate: privately reviewed settings/TLS paths must change through approved local channel; intended user supplies passwords only through later hidden local prompts. No duplicate owner alert.
+- Next exact action: suppress unchanged retries; after approved inputs change resume reviewed check-only IDs 159/186/188, then controlled workflow/restart/recovery/observer proof. Preserve all assignments and held #372. Evidence remains BUILT/prior synthetic only.
+
+### 2026-10-14 15:54 UTC - Bounded dispatch owner-gate review
+- Starting blocker: approved private-settings/trusted-loopback TLS gate unchanged in latest owner acknowledgement.
+- Evidence inspected: originating issue, dispatch/checkpoint, repository instructions/protocols, current #19/#372 metadata, open backend issue/PR queue.
+- Action attempted: execution acknowledged, read-only gate/dependency eligibility review; no setup/auth/preflight/launcher retry.
+- Result: BLOCKED; #19 unchanged at b9cc8cfeb3412569fc02ebed878e3124a5d19dee; held #372 untouched. No fresh Astra claim.
+- Tests/checks run: documentation scope/whitespace checks; no source/build/test changes. Existing #389/#388/#381 assignments and #373/#392 dependencies retained; no safe independent narrow backend repair established.
+- Commit/PR/branch: codex/issue-214-gate-20261014-dispatch-receipt; unique receipt Codex_Reply_Issue214_OwnerGate_20261014T155452Z.md.
+- Owner/account gate: approved private input change required; no duplicate alert, secret access or competing launch.
+- Next exact action: after private inputs change, reviewed check-only IDs 159/186/188 and controlled workflow/restart/recovery/observer proof. BUILT/prior synthetic evidence only; no merge/deploy.
