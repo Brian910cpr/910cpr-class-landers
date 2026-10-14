@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-14T20:00:00.031961+00:00",
+  "generated_at": "2026-10-14T20:04:40.370538+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 358,
+    "blocks_generated": 359,
     "blocks_blocked": 19,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -36,11 +36,11 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 167,
+      "blocked": 168,
       "available": 191
     },
     "inverse_generated_availability_blocks": 191,
-    "inverse_blocking_event_blocks": 167,
+    "inverse_blocking_event_blocks": 168,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
@@ -4045,6 +4045,30 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20270112T0630000500",
       "summary": "CFA Drop Off",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2027-01-12T15:00:00",
+      "end_datetime": "2027-01-12T17:30:00",
+      "date": "2027-01-12",
+      "end_date": "2027-01-12",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20270112T1500000500",
+      "summary": "CFA Pickup",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -9946,11 +9970,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-12T07:45:00",
-      "end_datetime": "2027-01-12T16:15:00",
+      "end_datetime": "2027-01-12T15:00:00",
       "date": "2027-01-12",
       "end_date": "2027-01-12",
       "start_time": "07:45",
-      "end_time": "16:15",
+      "end_time": "15:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -9979,10 +10003,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-10-14T19:59:58.988716+00:00",
-      "end": "2027-01-12T19:59:58.988716+00:00",
-      "observed_at": "2026-10-14T19:59:59.904029+00:00",
-      "valid_until": "2026-10-14T20:14:59.904029+00:00",
+      "start": "2026-10-14T20:04:39.139272+00:00",
+      "end": "2027-01-12T20:04:39.139272+00:00",
+      "observed_at": "2026-10-14T20:04:40.272515+00:00",
+      "valid_until": "2026-10-14T20:19:40.272515+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
