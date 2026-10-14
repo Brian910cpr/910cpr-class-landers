@@ -26,3 +26,25 @@ test('malformed finance rows fail closed without interrupting the dashboard',()=
     assert.deepEqual(result.prompts,[]);
   }
 });
+
+test('malformed bill IDs and unsafe aggregate cents never produce payment prompts',()=>{
+  for(const id of [true, 7, {}, [], '   ']) {
+    const s=snapshot();s.payload.bills[0].id=id;
+    assert.equal(financeWindow(s,now).state,'unavailable');
+  }
+  const cases=[];
+  const obligations=snapshot();
+  obligations.payload.bills.forEach(b=>b.amount_cents=Number.MAX_SAFE_INTEGER);
+  cases.push(obligations);
+  const protectedTotal=snapshot();
+  protectedTotal.payload.accounts[0].reserve_cents=Number.MAX_SAFE_INTEGER;
+  cases.push(protectedTotal);
+  const availableTotal=snapshot();
+  availableTotal.payload.accounts.push({id:'business',currency:'USD',available_cents:Number.MAX_SAFE_INTEGER,reserve_cents:0});
+  cases.push(availableTotal);
+  for(const s of cases) {
+    const result=financeWindow(s,now);
+    assert.equal(result.state,'unavailable');
+    assert.deepEqual(result.prompts,[]);
+  }
+});

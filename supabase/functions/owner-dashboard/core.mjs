@@ -17,13 +17,14 @@ export function financeWindow(snapshot, now = Date.now()) {
   for (const b of p.bills) {
     if (!b || typeof b !== 'object' || Array.isArray(b)) return unavailable('A bill needs verification.');
     const date = Date.parse(b.due_at);
-    if (!b.id || seen.has(b.id) || !cents(b.amount_cents) || !Number.isFinite(date) || !accounts.has(b.account_id) || !['paid','unpaid'].includes(b.status)) return unavailable('A bill needs verification.');
+    if (typeof b.id !== 'string' || !b.id.trim() || seen.has(b.id) || !cents(b.amount_cents) || !Number.isFinite(date) || !accounts.has(b.account_id) || !['paid','unpaid'].includes(b.status)) return unavailable('A bill needs verification.');
     seen.add(b.id);
     if (b.status === 'paid' || date > through) continue;
     accounts.get(b.account_id).obligations += b.amount_cents;
     due.push(b);
   }
   const sums = [...accounts.values()];
+  if (!sums.every(a => cents(a.obligations) && cents(a.reserve_cents+a.obligations)) || !cents(sums.reduce((s,a)=>s+a.available_cents,0)) || !cents(sums.reduce((s,a)=>s+a.reserve_cents+a.obligations,0))) return unavailable('Account totals exceed supported precision.');
   const prompts = due.filter(b => {
     const a = accounts.get(b.account_id);
     return b.amount_cents > 0 && a.available_cents-a.reserve_cents-a.obligations >= 0;
