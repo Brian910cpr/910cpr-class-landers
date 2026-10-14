@@ -1,0 +1,51 @@
+{
+  "scope": "Checked-in local HTML and root sitemap XML only; not indexability, content quality, deployed state or GSC proof.",
+  "html_files": 1089,
+  "families": {
+    "(root)": 28,
+    "Earl": 1,
+    "Jackson": 1,
+    "acls": 7,
+    "admin": 22,
+    "aha-renewal": 1,
+    "analytics-preferences": 1,
+    "arc": 109,
+    "bls": 110,
+    "certificate-submit": 1,
+    "classes": 209,
+    "control-center": 11,
+    "corp": 4,
+    "course-at-city": 3,
+    "courses": 36,
+    "drafts": 1,
+    "events": 1,
+    "family_cpr": 109,
+    "faq": 2,
+    "go": 1,
+    "group3": 1,
+    "heartsaver": 110,
+    "hsi": 109,
+    "internal": 2,
+    "locations": 1,
+    "next": 1,
+    "pals": 6,
+    "pay": 3,
+    "register": 3,
+    "topics": 13,
+    "topics-year": 64,
+    "uscg-hsi": 1,
+    "uscg_first_aid_cpr_aed": 109,
+    "years": 8
+  },
+  "sitemaps": [
+    {
+      "path": "docs/sitemap.xml",
+      "kind": "urlset",
+      "entries": 60,
+      "bytes": 5194,
+      "duplicate_entries": 0
+    }
+  ],
+  "missing_sitemap_targets": [],
+  "persistent_evidence": "BUILT only; acquisition end-to-end proof not established by this audit."
+}
