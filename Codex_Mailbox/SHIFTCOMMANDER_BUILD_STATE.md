@@ -38,6 +38,16 @@ Every ShiftCommander work session that makes meaningful progress, encounters a b
 - Brian has already approved the initial supervisors (member IDs 159, 186, 188) and the accepted starter roster is sufficient for private-pilot preparation. Missing roster members alone are not a blocker.
 - Connected Cloudflare metadata access was established in the R43 evidence. Do not revive the retired blanket metadata-access blocker without new contradictory evidence.
 
+## Current owner gate override — 2026-10-14
+
+This section supersedes the older September setup directions below. Issue #214 owner acknowledgment at 2026-10-14T11:54:56Z (https://github.com/Brian910cpr/910cpr-class-landers/issues/214#issuecomment-6167750287) requires suppression of setup/auth/preflight/launcher retries until approved outside-Git private settings and trusted-loopback TLS inputs change. No such input-change evidence was established during this dispatch. Do not treat the historical setup sequence below as permission to retry an unchanged path.
+
+- Last known blocker: approved private settings and trusted-loopback TLS certificate/key paths remain gated; bridge-credential disposition and real operational proof also remain outstanding.
+- Last attempted action: bounded read-only issue/dependency review; no installation, auth, preflight or launcher attempt.
+- Observed result: existing ShiftCommander draft #19 remains at b9cc8cfeb3412569fc02ebed878e3124a5d19dee; no merge/deploy or fresh Astra runtime proof. Existing backend assignments preserved.
+- Next exact action: wait for evidence that approved private inputs changed, then resume existing reviewed check-only member flow for IDs 159/186/188. Require controlled workflow, restart, recovery and observer proof before release claims. Keep #214 open and #372 unmerged/undeployed.
+- Owner/account gate: deliver reviewed settings/TLS paths through the approved private local path; never put passwords, signing material or private settings in GitHub/chat. No duplicate owner alert or unchanged retry.
+
 ## Current state
 
 **Overall state:** BUILT WITH SYNTHETIC PRIVATE-PILOT PROOF / PRODUCTION BLOCKED
