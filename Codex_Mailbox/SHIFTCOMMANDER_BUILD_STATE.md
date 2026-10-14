@@ -110,3 +110,11 @@ Then refresh **Last known blocker**, **Last attempted action**, **Observed resul
 ## Receipt rule
 
 When a Codex round is required, use a new unique `Codex_Reply_ShiftCommander...R<n>.md` receipt. Never overwrite an earlier receipt. The receipt should summarize that round; this file is the continuing cross-round state. ChatGPT, not Codex, performs any `Codex_Read_*` acknowledgement in the transport repository after genuine review.
+
+### 2026-10-14 00:32 UTC - Issue 214 gate checkpoint
+- Current authoritative gate supersedes older installation-preparation wording above: reviewed private settings and trusted loopback TLS PEM paths must change before setup/auth/preflight/launcher retries.
+- Read current owner issue evidence and existing draft #19 at b9cc8cfeb3412569fc02ebed878e3124a5d19dee; no changed inputs established. No retry performed.
+- Queue reviewed; backend PR assignments retained and #373 Studio dependency honored. No safe unassigned narrow repair established.
+- BLOCKED; prior BUILT/synthetic evidence only. No fresh Astra, real workflow/recovery/observer proof, merge or deployment.
+- Next: approved private settings/TLS inputs, existing reviewed check-only IDs 159/186/188, then intended-user hidden prompts and controlled workflow/recovery proof.
+- Unique root receipt: Codex_Reply_Issue214_OwnerGate_20261014T003202Z.md on codex/issue-214-gate-20261014T003202Z. Original dirty work and held #372 preserved.
