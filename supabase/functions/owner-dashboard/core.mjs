@@ -41,7 +41,9 @@ export function financeWindow(snapshot, now = Date.now()) {
 export function boardPrompts(cards) {
   // A decision lane or a technical blocker alone is not an instruction for Brian.
   // Production Manager may attach a translated, explicit owner action to a card.
-  return cards.filter(c=>!/(?:^|\b)(done|verified|closed|completed)(?:\b|$)/i.test(c.implementation_status||''))
+  if (!Array.isArray(cards)) return [];
+  return cards.filter(c=>c && typeof c==='object' && !Array.isArray(c))
+    .filter(c=>!/(?:^|\b)(done|verified|closed|completed)(?:\b|$)/i.test(c.implementation_status||''))
     .flatMap(c=>{
       const a=c.context_manifest?.owner_action;
       if(!a || !['action','where','look_for','reply_with','do_not_touch','why'].every(k=>typeof a[k]==='string'&&a[k].trim())) return [];

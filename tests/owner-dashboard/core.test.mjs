@@ -13,6 +13,20 @@ test('only a translated owner action reaches the Brian list',()=>{
   assert.equal(prompts[0].steps.look_for,'HOT_SYNC_ADMIN_KEY');
 });
 
+test('malformed board input cannot interrupt valid owner prompts or invent tasks',()=>{
+  for (const value of [undefined, null, false, 7, 'board', {}]) {
+    assert.deepEqual(boardPrompts(value),[]);
+  }
+  const valid={id:'real',updated_at:'2026-10-14T00:00:00Z',context_manifest:{owner_action:{
+    action:'Check one setting',where:'Existing admin page',look_for:'Exact label',
+    reply_with:'YES or NO',do_not_touch:'Other settings',why:'Diagnosis can resume'
+  }}};
+  const invalid=[null,false,7,'card',[],{}, {lane:'decision',title:'Technical blocker'}];
+  assert.deepEqual(boardPrompts(invalid),[]);
+  assert.deepEqual(boardPrompts([...invalid,valid]),boardPrompts([valid]));
+  assert.equal(boardPrompts([...invalid,valid])[0].href,'/admin/production.html?card=real');
+});
+
 test('old green report remains stale and a missing report remains unavailable',()=>{
   const entries=reportDigest([
     {path:'debug/a.json',label:'Old',max_age_hours:24,document:{generated_at:'2026-09-01T00:00:00Z',status:'completed'}},
