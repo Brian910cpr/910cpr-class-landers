@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createInteractionClient} from '../docs/admin/customer-interaction-client.mjs';
-import {createFollowUpTaskWrite} from '../docs/admin/customer-interaction-task.mjs';
+import {createFollowUpTaskWrite,createFollowUpTaskDisposition} from '../docs/admin/customer-interaction-task.mjs';
 import {createHandler} from '../supabase/functions/customer-interactions/handler.ts';
 const input=()=>({id:crypto.randomUUID(),case_id:crypto.randomUUID(),interaction_id:crypto.randomUUID(),expected_version:0,source_key:'manual:'+crypto.randomUUID(),title:'Synthetic promised callback',status:'pending',provenance:{evidence:'Synthetic owner note',detail:{b:2,a:1}},due_at:'2026-10-15T12:30:00.123456Z'});
 function fixture(respond){
@@ -72,7 +72,7 @@ test('coordinator + transport + actual handler + SQL preserve completion after l
     }},{enabled:true});
     const created=await createFollowUpTaskWrite(client,source).send();assert.equal(created.version,1);
     const completion={...source,expected_version:created.version,status:'complete',completion_evidence:'Synthetic owner confirms callback completed'};
-    const pending=createFollowUpTaskWrite(client,completion);lose=true;await assert.rejects(pending.send(),/lost response/);assert.equal(pending.canLeave(),false);
+    const pending=createFollowUpTaskDisposition(client,created,{status:'complete',evidence:completion.completion_evidence});lose=true;await assert.rejects(pending.send(),/lost response/);assert.equal(pending.canLeave(),false);
     // The DB committed but navigation still waits for a validated matching receipt.
     assert.equal((await db.query('select status from customer_follow_up_tasks where id=$1',[source.id])).rows[0].status,'complete');
     const completed=await pending.send();assert.equal(completed.version,2);assert.equal(pending.canLeave(),true);assert.equal(bodies.at(-1),bodies.at(-2));
@@ -83,4 +83,38 @@ test('coordinator + transport + actual handler + SQL preserve completion after l
     const invalid=createFollowUpTaskWrite(client,{...completion,expected_version:2,completion_evidence:''});await assert.rejects(invalid.send(),{status:400});assert.equal(invalid.canLeave(),false);
     assert.equal((await db.query('select version from customer_follow_up_tasks where id=$1',[source.id])).rows[0].version,2);
   }finally{await db.close()}
+});
+
+// Disposition preparation is independent of UI rollout and performs no fetch
+// until send. The server remains authoritative for versions and transitions.
+test('status-only preparation preserves fetched identity/evidence and requires owner confirmation',async()=>{
+  const {createFollowUpTaskDisposition}=await import('../docs/admin/customer-interaction-task.mjs');
+  const f=fixture(async body=>Response.json(receipt(body)));
+  const record={...input(),version:7};
+  const change=createFollowUpTaskDisposition(f.client,record,{status:'complete',evidence:' Owner confirms callback made '});
+  record.title='later mutation';record.provenance.evidence='later mutation';
+  assert.equal(f.calls.length,0);assert.equal(change.canLeave(),false);
+  const draft=change.view().input;
+  assert.equal(draft.expected_version,7);assert.equal(draft.title,'Synthetic promised callback');
+  assert.equal(draft.provenance.evidence,'Synthetic owner note');
+  assert.equal(draft.completion_evidence,'Owner confirms callback made');
+  assert.equal(draft.disposition_evidence,draft.completion_evidence);
+  await change.send();assert.equal(change.canLeave(),true);
+});
+
+test('disposition rejects incomplete records, silent completion, no-op and invalid snooze without sending',async()=>{
+  const {createFollowUpTaskDisposition}=await import('../docs/admin/customer-interaction-task.mjs');
+  const f=fixture(async body=>Response.json(receipt(body))),record={...input(),version:1};
+  for(const value of [null,{...record,version:0},{...record,version:'1'},{...record,case_id:''},{...record,provenance:{}}])
+    assert.throws(()=>createFollowUpTaskDisposition(f.client,value,{status:'complete',evidence:'Confirmed'}));
+  for(const options of [{status:'complete'},{status:'complete',evidence:' '},{status:'pending',evidence:'Confirmed'},{status:'bogus',evidence:'Confirmed'},{status:'snoozed',evidence:'Defer'},{status:'snoozed',evidence:'Defer',dueAt:'invalid'}])
+    assert.throws(()=>createFollowUpTaskDisposition(f.client,record,options));
+  assert.equal(f.calls.length,0);
+  const snooze=createFollowUpTaskDisposition(f.client,record,{status:'snoozed',evidence:'Owner defers',dueAt:'2026-10-18T09:00:00-04:00'});
+  assert.equal(snooze.view().input.due_at,'2026-10-18T09:00:00-04:00');
+  assert.equal(Object.hasOwn(snooze.view().input,'completion_evidence'),false);
+  await snooze.send();assert.equal(snooze.canLeave(),true);
+  const reopen=createFollowUpTaskDisposition(f.client,{...record,status:'complete'},{status:'pending',evidence:'Owner reopens'});
+  assert.equal(reopen.view().input.disposition_evidence,'Owner reopens');
+  assert.equal(Object.hasOwn(reopen.view().input,'completion_evidence'),false);
 });
