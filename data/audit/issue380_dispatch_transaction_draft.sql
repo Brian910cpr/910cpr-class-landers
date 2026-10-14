@@ -47,7 +47,10 @@ alter table public.production_board_dispatch_intake enable row level security;
 alter table public.production_board_dispatch_decisions enable row level security;
 revoke all on public.production_board_dispatch_intake, public.production_board_dispatch_decisions
   from public, anon, authenticated, service_role;
-grant select,insert,update,delete on public.production_board_dispatch_intake to service_role;
+-- Canonical identity must survive routine caller writes. Publication updates in
+-- place; DELETE/reinsert would bypass UPDATE identity checks. No retention or
+-- administrative identity-replacement protocol is authorized by this draft.
+grant select,insert,update on public.production_board_dispatch_intake to service_role;
 grant select,insert on public.production_board_dispatch_decisions to service_role;
 revoke all on function public.production_board_dispatch_intake_changed() from public,anon,authenticated;
 
