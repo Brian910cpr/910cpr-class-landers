@@ -15,6 +15,24 @@ create table public.production_board_dispatch_intake (
   provenance text not null default 'owner_assertion'
     check (provenance in ('owner_assertion','authoritative_observation'))
 );
+-- Quarantine until a separately authenticated collector protocol is reviewed.
+-- Routine writers may record assertions, never mint or refresh observations.
+-- Table-owner administration remains trusted and is NOT collector attestation.
+create function public.production_board_intake_observation_guard() returns trigger
+language plpgsql security invoker set search_path = '' as $$
+begin
+  if new.provenance='authoritative_observation'
+    and current_user <> pg_get_userbyid((select relowner from pg_class
+      where oid='public.production_board_dispatch_intake'::regclass)) then
+    raise exception 'authoritative_collector_required';
+  end if;
+  return new;
+end $$;
+create trigger intake_observation_guard before insert or update
+on public.production_board_dispatch_intake for each row
+execute function public.production_board_intake_observation_guard();
+revoke all on function public.production_board_intake_observation_guard() from public,anon,authenticated;
+
 create function public.production_board_dispatch_intake_changed() returns trigger
 language plpgsql security invoker set search_path = '' as $$
 begin

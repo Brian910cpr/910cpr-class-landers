@@ -175,7 +175,7 @@ class DispatchTransaction(foundation.ResolutionContention):
                 pending = pool.submit(decide)
                 try:
                     self.wait_for_lock(dispatcher, pending)
-                    writer.execute('update production_board_dispatch_intake set blocked=true where card_id=%s', (args[0],))
+                    writer.execute("update production_board_dispatch_intake set blocked=true, provenance='owner_assertion' where card_id=%s", (args[0],))
                     writer.commit()
                     result = pending.result(timeout=10)
                     self.assertEqual(result['reason'], 'stale_card_version')
@@ -193,7 +193,7 @@ class DispatchTransaction(foundation.ResolutionContention):
                 conn.commit()
             self.assertEqual(dispatcher.execute(CALL, args).fetchone()[0]['decision'], 'reserved')
             def change():
-                writer.execute('update production_board_dispatch_intake set blocked=true where card_id=%s', (args[0],))
+                writer.execute("update production_board_dispatch_intake set blocked=true, provenance='owner_assertion' where card_id=%s", (args[0],))
                 writer.commit()
             with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
                 pending = pool.submit(change)
