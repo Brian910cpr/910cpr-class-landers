@@ -40,6 +40,14 @@ export function createInteractionClient(auth,{enabled=false,uuid=()=>crypto.rand
         if(operation==='save'&&(data.interaction.id!==expected.id||
           !Number.isInteger(data.interaction.version)||data.interaction.version<=expected.expected_version))
           throw Error('Invalid checkpoint identity/version; preserve draft and retry the same request.');
+        if(operation==='save'&&expected.document?.disposition){
+          const record=data.interaction;
+          if(!['id','case_id','status','kind','source','source_id'].every(key=>record[key]===expected[key])||
+            record.version!==expected.expected_version+1||
+            (record.person_id??null)!==(expected.person_id??null)||
+            JSON.stringify(canonical(record.document))!==JSON.stringify(canonical(expected.document)))
+            throw Error('Invalid disposition receipt; preserve draft and retry the same request.');
+        }
         if(operation==='save_task'){
           const task=data.task;
           const due=value=>{

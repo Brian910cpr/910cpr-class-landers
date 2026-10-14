@@ -51,5 +51,12 @@ export function createInteractionCheckpoint(client, initial, {confirmed=false}={
     revision++;state='unsaved';return view();
   }
   function canLeave(){return !pending&&revision===savedRevision&&state==='saved';}
-  return Object.freeze({view,edit,save,load,reconcile,canLeave});
+  function disposition(status,evidence){
+    if(!canLeave())throw blocked();
+    if(!['in_progress','resolved','follow_up_due','awaiting_data','awaiting_approval'].includes(status)||!evidence?.trim())
+      throw Error('Choose a disposition and provide original owner evidence.');
+    draft.status=status;
+    return edit({...draft.document,disposition:{status,evidence:evidence.trim(),source:'owner_studio'}});
+  }
+  return Object.freeze({view,edit,save,load,reconcile,canLeave,disposition});
 }

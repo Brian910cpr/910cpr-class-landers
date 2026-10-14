@@ -443,6 +443,91 @@ class StudioBrowserTests(unittest.TestCase):
         self.saved()
         self.assertEqual(self.errors, [])
 
+    def next_candidate(self, status='new', kind='email'):
+        row = json.loads(json.dumps(next(iter(self.rows.values()))))
+        row.update(id='00000000-0000-4000-8000-000000000099', case_id='00000000-0000-4000-8000-000000000098', version=1, status=status, kind=kind)
+        row['document']['callNotes'] = 'Synthetic NEXT candidate'
+        self.rows[row['id']] = row
+        return row
+
+    def finish_evidence(self):
+        self.page.fill('#interactionDispositionEvidence', 'Owner confirms internal resolution; no reply needed')
+
+    def test_finish_uncertain_receipt_retries_identically_before_next(self):
+        self.visit()
+        self.create()
+        current = next(iter(self.rows))
+        candidate = self.next_candidate()
+        self.finish_evidence()
+        self.fail_next = True
+        self.page.click('#finish')
+        self.page.wait_for_function("document.getElementById('storageStatus').textContent.startsWith('Save not confirmed')")
+        self.assertEqual(self.page.input_value('#callNotes'), 'Synthetic inbound email')
+        self.assertTrue(self.page.locator('#finish').is_disabled())
+        self.assertTrue(self.page.locator('#callNotes').is_disabled())
+        self.page.click('#retryCheckpoint')
+        self.page.wait_for_function("document.getElementById('callNotes').value==='Synthetic NEXT candidate'")
+        self.assertEqual(self.writes[-1], self.writes[-2])
+        self.assertEqual(self.rows[current]['status'], 'resolved')
+        self.assertEqual(self.rows[candidate['id']]['status'], 'new')
+        self.assertEqual(self.rows[current]['document']['disposition']['evidence'], 'Owner confirms internal resolution; no reply needed')
+        self.assertEqual(self.errors, [])
+
+    def test_finish_read_failure_retries_selection_without_second_write(self):
+        self.visit()
+        self.create()
+        self.next_candidate()
+        self.finish_evidence()
+        self.fail_task_read = True
+        self.page.click('#finish')
+        self.page.wait_for_function("document.getElementById('storageStatus').textContent.startsWith('Disposition saved; NEXT unavailable')")
+        count = len(self.writes)
+        self.fail_task_read = False
+        self.page.click('#retryNext')
+        self.page.wait_for_function("document.getElementById('callNotes').value==='Synthetic NEXT candidate'")
+        self.assertEqual(len(self.writes), count)
+        self.assertEqual(self.errors, [])
+
+    def test_finish_conflict_retains_disposition_export_without_advancing(self):
+        self.visit()
+        self.create()
+        self.next_candidate()
+        self.finish_evidence()
+        self.conflict_next = True
+        self.page.click('#finish')
+        self.page.wait_for_function("document.getElementById('storageStatus').textContent.startsWith('Conflict')")
+        self.assertEqual(self.page.input_value('#callNotes'), 'Synthetic inbound email')
+        self.assertTrue(self.page.locator('#retryNext').is_disabled())
+        with self.page.expect_download() as pending:
+            self.page.click('#downloadCase')
+        data = json.loads(Path(pending.value.path()).read_text())
+        self.assertEqual(data['current']['status'], 'resolved')
+        self.assertIn('internal resolution', data['interactionDisposition']['evidence'])
+        self.page.evaluate("window.dispatchEvent(new CustomEvent('admin-auth-lock'))")
+        self.assertEqual(self.page.input_value('#interactionDispositionEvidence'), '')
+        self.assertEqual(self.errors, [])
+
+    def test_finish_requires_confirmed_tasks_and_preserves_blocked_queue(self):
+        self.visit()
+        self.create()
+        self.next_candidate('awaiting_approval')
+        self.assertTrue(self.page.locator('#finish').is_disabled())
+        self.follow_up()
+        self.finish_evidence()
+        self.assertTrue(self.page.locator('#finish').is_disabled())
+        self.page.fill('#followUpTitle', '')
+        self.page.fill('#followUpEvidence', '')
+        self.page.click('#finish')
+        self.page.wait_for_function("document.getElementById('storageStatus').textContent.startsWith('Disposition saved. No eligible NEXT')")
+        self.assertEqual(sum(r['status']=='awaiting_approval' for r in self.rows.values()), 1)
+        self.page.select_option('#interactionDisposition', 'in_progress')
+        self.finish_evidence()
+        self.page.click('#finish')
+        self.page.wait_for_function("document.getElementById('storageStatus').textContent.startsWith('Disposition saved. No eligible NEXT')")
+        self.assertEqual(next(iter(self.rows.values()))['status'], 'in_progress')
+        self.assertEqual(self.page.input_value('#callNotes'), 'Synthetic inbound email')
+        self.assertEqual(self.errors, [])
+
     def test_autosave_recovers_after_closing_the_tab(self):
         self.visit()
         self.page.click('#newEmail')
