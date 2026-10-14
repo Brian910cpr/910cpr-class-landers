@@ -120,3 +120,14 @@ Then refresh **Last known blocker**, **Last attempted action**, **Observed resul
 ## Receipt rule
 
 When a Codex round is required, use a new unique `Codex_Reply_ShiftCommander...R<n>.md` receipt. Never overwrite an earlier receipt. The receipt should summarize that round; this file is the continuing cross-round state. ChatGPT, not Codex, performs any `Codex_Read_*` acknowledgement in the transport repository after genuine review.
+
+### 2026-10-14 14:34 UTC - Owner-gate continuation
+- Starting blocker: approved private settings/trusted-loopback TLS inputs remain gated by the latest owner acknowledgment; no evidence of approved input change.
+- Evidence inspected: issue #214 body/current owner instructions, full dispatch artifact, durable checkpoint and previous receipt; both repository AGENTS.md; handoff/proof protocols; current draft #19/#372 metadata and backend queue/PRs.
+- Action attempted: read-only dependency/eligibility assessment; actual execution acknowledged before changes. No setup/auth/preflight/launcher retry or secret access.
+- Result: BLOCKED. Target draft #19 remains b9cc8cfeb3412569fc02ebed878e3124a5d19dee; courier #372 remains draft/open and untouched. No independently verified Astra runtime.
+- New/unchanged root cause: approved private input gate unchanged; credential-incident disposition and real operational proof remain outstanding.
+- Tests/checks run: documentation scope/whitespace checks; no source changes, tests, build or generator. Backend #389/#388/#381 already have partial repair PRs; #373 depends on Studio foundation; #392 requires coordinated deep work. No safe unassigned narrow repair established.
+- Commit/PR/branch: codex/issue-214-gate-20261014T143431Z; existing ShiftCommander PR #19 reused as target, no new application PR.
+- Owner/account gate: privately reviewed settings/TLS paths must change through approved local channel; intended user supplies passwords only through later hidden local prompts. No duplicate owner alert.
+- Next exact action: suppress unchanged retries; after approved inputs change resume reviewed check-only IDs 159/186/188, then controlled workflow/restart/recovery/observer proof. Preserve all assignments and held #372. Evidence remains BUILT/prior synthetic only.
