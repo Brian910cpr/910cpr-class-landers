@@ -10,6 +10,42 @@ import board_resolution_contention as foundation
 
 
 class IntakeTrustBoundary(publication.IntakePublication):
+    def test_nonadmin_login_cannot_bypass_observation_guard(self):
+        # A separate login avoids the administrative session's SET ROLE rights.
+        from psycopg import sql
+        login = 'issue380_probe_' + uuid.uuid4().hex
+        owner = self.admin.execute("select pg_get_userbyid(relowner) from pg_class where oid='production_board_dispatch_intake'::regclass").fetchone()[0]
+        self.admin.execute(sql.SQL('create role {} login nosuperuser nocreatedb nocreaterole noreplication nobypassrls in role service_role').format(sql.Identifier(login)))
+        args = self.publication()
+        self.publish(args)
+        try:
+            with self.pg.connect(foundation.DSN, user=login, autocommit=True) as conn:
+                self.assertEqual(conn.execute('select session_user').fetchone()[0], login)
+                conn.execute('set role service_role')
+                attempts = [
+                    sql.SQL('set role {}').format(sql.Identifier(owner)),
+                    sql.SQL('set session authorization {}').format(sql.Identifier(owner)),
+                    "set session_replication_role='replica'",
+                    'alter table production_board_dispatch_intake disable trigger intake_observation_guard',
+                    'alter table production_board_dispatch_intake disable row level security',
+                    'alter function production_board_intake_observation_guard() security definer',
+                ]
+                for statement in attempts:
+                    with self.subTest(statement=str(statement)):
+                        with self.assertRaises(self.pg.errors.InsufficientPrivilege):
+                            conn.execute(statement)
+                        self.assertEqual(conn.execute('select current_user').fetchone()[0], 'service_role')
+                with self.assertRaisesRegex(self.pg.Error, 'authoritative_collector_required'):
+                    conn.execute("update production_board_dispatch_intake set provenance='authoritative_observation' where card_id=%s", (args[0],))
+                changed = (*args[:2], 2, uuid.uuid4(), False, *args[5:])
+                result = conn.execute(publication.PUBLISH, changed).fetchone()[0]
+                self.assertEqual(result['version'], '3')
+                self.assertFalse(result['can_execute'])
+            self.assertEqual(self.admin.execute('select provenance from production_board_dispatch_intake where card_id=%s', (args[0],)).fetchone()[0], 'owner_assertion')
+            print('DENIED: six privilege bypasses and promotion from nonadmin login', flush=True)
+        finally:
+            self.admin.execute(sql.SQL('drop role {}').format(sql.Identifier(login)))
+
     def test_routine_observation_writes_denied_atomically(self):
         for attack in ('insert', 'promote', 'refresh'):
             with self.subTest(attack=attack):
