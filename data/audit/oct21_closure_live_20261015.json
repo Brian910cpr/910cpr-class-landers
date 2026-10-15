@@ -1,0 +1,70 @@
+{
+  "checked_at": "2026-10-15T19:49:46.315204+00:00",
+  "deployment_commit": "8f0692d3ce7f3ce3768d9428ac247ab32cf1accf",
+  "deployment_run": 38796672472,
+  "feeds": {
+    "bls": {
+      "oct21_dates": 0,
+      "closure_ids": [
+        "owner-oct21-20261015"
+      ],
+      "choice_count": 3468
+    },
+    "heartsaver": {
+      "oct21_dates": 0,
+      "closure_ids": [
+        "owner-oct21-20261015"
+      ],
+      "choice_count": 7230
+    },
+    "acls": {
+      "oct21_dates": 0,
+      "closure_ids": [
+        "owner-oct21-20261015"
+      ],
+      "choice_count": 8
+    },
+    "pals": {
+      "oct21_dates": 0,
+      "closure_ids": [
+        "owner-oct21-20261015"
+      ],
+      "choice_count": 6
+    },
+    "arc": {
+      "oct21_dates": 0,
+      "closure_ids": [
+        "owner-oct21-20261015"
+      ],
+      "choice_count": 3463
+    },
+    "hsi": {
+      "oct21_dates": 0,
+      "closure_ids": [
+        "owner-oct21-20261015"
+      ],
+      "choice_count": 2385
+    },
+    "family_cpr": {
+      "oct21_dates": 0,
+      "closure_ids": [
+        "owner-oct21-20261015"
+      ],
+      "choice_count": 1078
+    },
+    "uscg_first_aid_cpr_aed": {
+      "oct21_dates": 0,
+      "closure_ids": [
+        "owner-oct21-20261015"
+      ],
+      "choice_count": 2387
+    }
+  },
+  "native_read_only_check": {
+    "path": "public-registration/session/14721759",
+    "http_status": 200,
+    "ok": true,
+    "registration_submitted": false,
+    "meaning": "session lookup still open; checkout rejection not established"
+  }
+}
