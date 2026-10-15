@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "public-registration-closures.v1",
+  "closures": [
+    {
+      "id": "owner-oct21-20261015",
+      "startsAt": "2026-10-21T04:00:00Z",
+      "endsAt": "2026-10-22T04:00:00Z",
+      "timezone": "America/New_York",
+      "reason": "Registration is closed for October 21.",
+      "scope": "all_new_registrations",
+      "preserveExisting": true
+    }
+  ]
+}
