@@ -26,7 +26,19 @@ the test administrator. The login must be able to apply the pending migrations,
 set role service_role, and observe blocking PIDs. Use synthetic credentials only.
 This runner creates no cluster roles and installs nothing. It refuses non-loopback,
 hostaddr/service overrides, missing consent flag, and nonempty public schemas.
-Do not configure libpq environment/service settings that redirect connections.
+The runner now rejects nonempty PGHOSTADDR, PGSERVICE, PGSERVICEFILE and PGOPTIONS
+before connection, as well as DSN hostaddr/service/options overrides. An explicit
+host alone does not neutralize libpq's inherited hostaddr/service defaults.
+Run ordinary Python: -O, -OO and PYTHONOPTIMIZE are refused before driver import
+because proof assertions must remain active. Empty-schema/function checks also
+use unconditional exceptions rather than assertions.
+
+No-network guard regression:
+`python -B -m unittest discover -s tests -p test_customer_interaction_concurrency_safety.py -v`
+Seven tests cover opt-in, optimized interpreters, loopback/database validation,
+environment and DSN overrides, secret-free refusal, and no writes when existing
+public objects/functions are found. They use mocks/subprocess refusal only and
+do not establish independent-session concurrency or clear any release gate.
 
 ```powershell
 # Supply synthetic local connection settings through the environment, never GitHub.
@@ -66,3 +78,5 @@ References consulted read-only: PostgreSQL explicit locking documentation
 https://www.postgresql.org/docs/current/explicit-locking.html and Supabase changelog
 https://supabase.com/changelog.md on 2026-10-14. The HTTP TLS cipher deprecation
 does not change this local PostgreSQL test contract. No platform API changed.
+
+Runner safety references checked 2026-10-15: https://www.postgresql.org/docs/current/libpq-envars.html and https://supabase.com/changelog.md. No Supabase API/schema convention changed.

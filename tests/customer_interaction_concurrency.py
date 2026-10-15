@@ -7,6 +7,7 @@ import argparse
 from concurrent.futures import ThreadPoolExecutor
 import json
 import os
+import sys
 from pathlib import Path
 import time
 import uuid
@@ -88,11 +89,25 @@ def race(psycopg, dsn, observer, first, second, expected_error=None):
         return first_result, second_result
 
 
+def validate_local_settings(params, environ):
+    """Fail closed before connect; libpq hostaddr/service defaults can reroute host."""
+    if any(environ.get(key) for key in ("PGHOSTADDR", "PGSERVICE", "PGSERVICEFILE", "PGOPTIONS")):
+        raise ValueError("libpq routing/session environment overrides forbidden; no database contacted")
+    if (params.get("host") not in ("127.0.0.1", "::1")
+            or not params.get("dbname", "").startswith("issue371_")
+            or any(params.get(key) for key in ("hostaddr", "service", "options"))):
+        raise ValueError("explicit loopback host and issue371_* database without overrides required; no database contacted")
+
+
 def run(psycopg, dsn):
+    if sys.flags.optimize:
+        raise RuntimeError("optimized Python disables proof assertions; no database contacted")
     root = Path(__file__).resolve().parents[1]
     with psycopg.connect(dsn, autocommit=True) as observer:
-        assert observer.execute("select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public'").fetchone()[0] == 0, "public schema must be empty"
-        assert observer.execute("select count(*) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public'").fetchone()[0] == 0, "public functions must be absent"
+        if observer.execute("select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public'").fetchone()[0] != 0:
+            raise RuntimeError("public schema must be empty")
+        if observer.execute("select count(*) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public'").fetchone()[0] != 0:
+            raise RuntimeError("public functions must be absent")
         # Roles are provisioned separately, never silently created in a shared cluster.
         for name in ("anon", "authenticated", "service_role"):
             assert observer.execute("select count(*) from pg_roles where rolname=%s", (name,)).fetchone()[0] == 1, f"missing role {name}"
@@ -161,6 +176,8 @@ def main():
     args = parser.parse_args()
     if not args.apply_to_empty_local:
         parser.error("requires --apply-to-empty-local; no database contacted")
+    if sys.flags.optimize:
+        parser.error("optimized Python disables proof assertions; no database contacted")
     try:
         import psycopg
         from psycopg.conninfo import conninfo_to_dict
@@ -171,8 +188,10 @@ def main():
         params = conninfo_to_dict(dsn)
     except Exception:
         parser.error("invalid local connection settings; no database contacted")
-    if params.get("host") not in ("127.0.0.1", "::1") or not params.get("dbname", "").startswith("issue371_") or params.get("hostaddr") or params.get("service"):
-        parser.error("explicit loopback host and issue371_* database required; no database contacted")
+    try:
+        validate_local_settings(params, os.environ)
+    except ValueError as exc:
+        parser.error(str(exc))
     try:
         run(psycopg, dsn)
     except Exception as exc:
