@@ -538,13 +538,32 @@ def finalize_selector_payload(payload: dict[str, Any], sessions: list[dict[str, 
     resolved, _ = resolve_canonical_demand(sessions, rows)
     anchors = promote_seated_sessions(resolved)
     original = [item for day in payload.get("dates", []) for slot in day.get("startTimes", []) for item in slot.get("courses", [])]
+    traced = [item for item in original if item.get("blockEdge")]
+    legacy = [item for item in original if not item.get("blockEdge")]
+    payload = apply_selector_policy(_rebuild_dates(deepcopy(payload), legacy), anchors, policy)
     if payload.get("occupiedBlockEdges", {}).get("schemaVersion") == public_block_edges.VERSION:
-        retained_edges = public_block_edges.retain_validated_roles(payload, payload.get("fullFamilyGroups", {}))
-        payload = _rebuild_dates(deepcopy(payload), retained_edges)
-        payload["anchor_policy"] = {"version": public_block_edges.VERSION, "one_course_type_per_calendar_day": False,
-            "barnacle_positions": sum(x.get("schedule_role") == "barnacle" for x in retained_edges)}
-    else:
-        payload = apply_selector_policy(deepcopy(payload), anchors, policy)
+        # Revalidate attachment identity and exact occupied geometry against
+        # current reconciled anchors, then retain the incumbent final guards.
+        trace = payload["occupiedBlockEdges"]
+        fresh_blocks = []
+        for block in trace.get("blocks", []):
+            matching = [anchor for anchor in anchors if text(anchor.get("session_id")) in
+                        {text(source.get("id")) for source in block.get("sources", [])}
+                        and course_id(anchor) == "209809"]
+            if len(matching) != 1:
+                continue
+            anchor = matching[0]
+            start, end = dt(anchor.get("start_at")), dt(anchor.get("end_at"))
+            if (start and end and start.replace(tzinfo=None).isoformat() == block.get("start")
+                and (end.replace(tzinfo=None) + timedelta(minutes=30)).isoformat() == block.get("end")
+                and public_block_edges.key(anchor.get("instructor")) == public_block_edges.key(block.get("instructor"))
+                and public_block_edges.key(anchor.get("location")) == public_block_edges.key(block.get("location"))):
+                fresh_blocks.append(block)
+        edge_payload = _rebuild_dates(deepcopy(payload), traced)
+        edge_payload["occupiedBlockEdges"] = {**trace, "blocks": fresh_blocks}
+        retained_edges = public_block_edges.retain_validated_roles(edge_payload, payload.get("fullFamilyGroups", {}))
+        current = [item for day in payload.get("dates", []) for slot in day.get("startTimes", []) for item in slot.get("courses", [])]
+        payload = _rebuild_dates(payload, current + retained_edges)
     blocked_dates = {item["date"] for item in issues if item["blocksSynthesis"]}
     occupied_dates = {item_date(a) for a in anchors}
     occupied_dates.update(item_date(row) for row in rows

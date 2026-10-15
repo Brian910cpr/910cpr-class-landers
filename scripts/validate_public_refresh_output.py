@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from scripts.canonical_scheduling_demand import load_publication_demand, resolve_canonical_demand
+from scripts import public_block_edges
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -126,6 +127,13 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
                     require(day["date"] not in occupied or (
                         (course.get("schedule_role") or course.get("scheduleRole")) == "barnacle" and course.get("attached_to_session_id")
                     ), f"{page_key}: orphan synthetic offer on occupied date {day['date']}")
+                    if course.get("blockEdge"):
+                        require(course.get("attached_to_session_id") in public_session_ids,
+                                f"{page_key}: stale block-edge attachment")
+                        for field in ("durationProvenance", "bufferProvenance", "schedulerConsumptionMinutes"):
+                            require(course.get(field), f"{page_key}: edge lacks {field}")
+                        require(public_block_edges.valid_edge(course, payload.get("occupiedBlockEdges", {})),
+                                f"{page_key}: invalid block-edge geometry")
                     # matchedContainerId is an internal planning field and is omitted
                     # from the compact public selector contract.
                     for field in ("appointmentDayId", "appointmentUrl", "availabilityBlockId"):

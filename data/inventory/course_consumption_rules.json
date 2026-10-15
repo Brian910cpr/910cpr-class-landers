@@ -308,7 +308,7 @@
       "anchor_eligible": false,
       "post_anchor_eligible": true,
       "public_priority": 62,
-      "minimum_reservation_block_minutes": 150,
+      "minimum_reservation_block_minutes": 120,
       "maximum_parallel_sessions": 1,
       "max_public_candidates_per_block": 1,
       "default_capacity": 10,
@@ -323,11 +323,7 @@
       ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
-      "minimum_anchor_strength": 1,
-      "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 30,
-      "edge_offer_kind": "full",
-      "edge_eligible": true
+      "minimum_anchor_strength": 1
     },
     {
       "course_id": "252737",
@@ -342,7 +338,7 @@
       "anchor_eligible": false,
       "post_anchor_eligible": true,
       "public_priority": 58,
-      "minimum_reservation_block_minutes": 150,
+      "minimum_reservation_block_minutes": 120,
       "maximum_parallel_sessions": 1,
       "max_public_candidates_per_block": 1,
       "default_capacity": 10,
@@ -358,17 +354,13 @@
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
       "minimum_anchor_strength": 1,
-      "policy_note": "Normal public offer rotation fallback. Barnacle-only anchor suppression is not implemented in the current selector path.",
-      "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 30,
-      "edge_offer_kind": "full",
-      "edge_eligible": true
+      "policy_note": "Normal public offer rotation fallback. Barnacle-only anchor suppression is not implemented in the current selector path."
     },
     {
       "course_id": "209809",
       "clean_course_name": "AHA Heartsaver First Aid CPR AED",
       "course_family": "Heartsaver",
-      "duration_minutes": 120,
+      "duration_minutes": 150,
       "duration_bucket": "150",
       "requires_contiguous_block": true,
       "fragmentation_tolerant": true,
@@ -392,17 +384,13 @@
       ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
-      "minimum_anchor_strength": 1,
-      "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 30,
-      "edge_offer_kind": "full",
-      "edge_eligible": true
+      "minimum_anchor_strength": 1
     },
     {
       "course_id": "251545",
       "clean_course_name": "AHA Heartsaver Pediatric First Aid CPR AED",
       "course_family": "Heartsaver",
-      "duration_minutes": 45,
+      "duration_minutes": 120,
       "duration_bucket": "120",
       "requires_contiguous_block": true,
       "fragmentation_tolerant": true,
@@ -411,7 +399,7 @@
       "anchor_eligible": false,
       "post_anchor_eligible": true,
       "public_priority": 65,
-      "minimum_reservation_block_minutes": 60,
+      "minimum_reservation_block_minutes": 120,
       "maximum_parallel_sessions": 1,
       "max_public_candidates_per_block": 1,
       "default_capacity": 10,
@@ -426,17 +414,13 @@
       ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
-      "minimum_anchor_strength": 1,
-      "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 15,
-      "edge_offer_kind": "skills",
-      "edge_eligible": true
+      "minimum_anchor_strength": 1
     },
     {
       "course_id": "209808",
       "clean_course_name": "AHA Heartsaver CPR AED Online",
       "course_family": "Heartsaver",
-      "duration_minutes": 45,
+      "duration_minutes": 120,
       "duration_bucket": "120",
       "requires_contiguous_block": true,
       "fragmentation_tolerant": true,
@@ -445,7 +429,7 @@
       "anchor_eligible": false,
       "post_anchor_eligible": true,
       "public_priority": 60,
-      "minimum_reservation_block_minutes": 60,
+      "minimum_reservation_block_minutes": 120,
       "maximum_parallel_sessions": 1,
       "max_public_candidates_per_block": 1,
       "default_capacity": 10,
@@ -460,17 +444,13 @@
       ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
-      "minimum_anchor_strength": 1,
-      "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 15,
-      "edge_offer_kind": "skills",
-      "edge_eligible": true
+      "minimum_anchor_strength": 1
     },
     {
       "course_id": "329495",
       "clean_course_name": "AHA Heartsaver First Aid CPR AED - Blended",
       "course_family": "Heartsaver",
-      "duration_minutes": 45,
+      "duration_minutes": 120,
       "duration_bucket": "120",
       "requires_contiguous_block": true,
       "fragmentation_tolerant": true,
@@ -479,7 +459,7 @@
       "anchor_eligible": false,
       "post_anchor_eligible": true,
       "public_priority": 63,
-      "minimum_reservation_block_minutes": 60,
+      "minimum_reservation_block_minutes": 120,
       "maximum_parallel_sessions": 1,
       "max_public_candidates_per_block": 1,
       "default_capacity": 10,
@@ -494,17 +474,13 @@
       ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
-      "minimum_anchor_strength": 1,
-      "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 15,
-      "edge_offer_kind": "skills",
-      "edge_eligible": true
+      "minimum_anchor_strength": 1
     },
     {
       "course_id": "351632",
       "clean_course_name": "AHA Heartsaver Pediatric First Aid / CPR / AED",
       "course_family": "Heartsaver",
-      "duration_minutes": 120,
+      "duration_minutes": 150,
       "duration_bucket": "150",
       "requires_contiguous_block": true,
       "fragmentation_tolerant": true,
@@ -528,11 +504,7 @@
       ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
-      "minimum_anchor_strength": 1,
-      "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 30,
-      "edge_offer_kind": "full",
-      "edge_eligible": true
+      "minimum_anchor_strength": 1
     },
     {
       "course_id": "253768",
@@ -631,7 +603,7 @@
       "anchor_eligible": false,
       "post_anchor_eligible": true,
       "public_priority": 50,
-      "minimum_reservation_block_minutes": 150,
+      "minimum_reservation_block_minutes": 120,
       "maximum_parallel_sessions": 1,
       "max_public_candidates_per_block": 1,
       "default_capacity": 6,
@@ -647,11 +619,7 @@
       ],
       "suppresses_when_empty": false,
       "can_ride_existing_momentum": false,
-      "minimum_anchor_strength": 0,
-      "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 30,
-      "edge_offer_kind": "full",
-      "edge_eligible": true
+      "minimum_anchor_strength": 0
     },
     {
       "course_id": "372258",
@@ -666,7 +634,7 @@
       "anchor_eligible": false,
       "post_anchor_eligible": true,
       "public_priority": 55,
-      "minimum_reservation_block_minutes": 60,
+      "minimum_reservation_block_minutes": 45,
       "maximum_parallel_sessions": 1,
       "max_public_candidates_per_block": 1,
       "default_capacity": 5,
@@ -678,17 +646,13 @@
       "compatible_with": [],
       "suppresses_when_empty": false,
       "can_ride_existing_momentum": false,
-      "minimum_anchor_strength": 0,
-      "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 15,
-      "edge_offer_kind": "skills",
-      "edge_eligible": true
+      "minimum_anchor_strength": 0
     },
     {
       "course_id": "369209",
       "clean_course_name": "ARC Adult and Pediatric First Aid/CPR/AED",
       "course_family": "ARC",
-      "duration_minutes": 120,
+      "duration_minutes": 150,
       "duration_bucket": "150",
       "requires_contiguous_block": true,
       "fragmentation_tolerant": true,
@@ -709,11 +673,7 @@
       "compatible_with": [],
       "suppresses_when_empty": false,
       "can_ride_existing_momentum": false,
-      "minimum_anchor_strength": 0,
-      "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 30,
-      "edge_offer_kind": "full",
-      "edge_eligible": true
+      "minimum_anchor_strength": 0
     },
     {
       "course_id": "445670",
@@ -728,7 +688,7 @@
       "anchor_eligible": false,
       "post_anchor_eligible": true,
       "public_priority": 65,
-      "minimum_reservation_block_minutes": 60,
+      "minimum_reservation_block_minutes": 45,
       "maximum_parallel_sessions": 1,
       "max_public_candidates_per_block": 1,
       "default_capacity": 12,
@@ -745,17 +705,13 @@
       ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
-      "minimum_anchor_strength": 1,
-      "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 15,
-      "edge_offer_kind": "skills",
-      "edge_eligible": true
+      "minimum_anchor_strength": 1
     },
     {
       "course_id": "463743",
       "clean_course_name": "HSI BLS Challenge",
       "course_family": "BLS",
-      "duration_minutes": 120,
+      "duration_minutes": 60,
       "duration_bucket": "60",
       "requires_contiguous_block": true,
       "fragmentation_tolerant": true,
@@ -764,7 +720,7 @@
       "anchor_eligible": false,
       "post_anchor_eligible": true,
       "public_priority": 50,
-      "minimum_reservation_block_minutes": 150,
+      "minimum_reservation_block_minutes": 60,
       "maximum_parallel_sessions": 1,
       "max_public_candidates_per_block": 1,
       "default_capacity": 6,
@@ -779,11 +735,7 @@
       ],
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
-      "minimum_anchor_strength": 1,
-      "setup_buffer_minutes": 0,
-      "cleanup_buffer_minutes": 30,
-      "edge_offer_kind": "full",
-      "edge_eligible": true
+      "minimum_anchor_strength": 1
     }
   ]
 }

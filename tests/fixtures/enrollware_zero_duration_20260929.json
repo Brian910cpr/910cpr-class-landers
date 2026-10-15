@@ -13,7 +13,7 @@
     "dtstart": "2026-09-30T17:30:00-04:00",
     "dtend": "2026-09-30T17:30:00-04:00",
     "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-    "expected_minutes": 120
+    "expected_minutes": 150
   },
   {
     "uid": "14495100",
@@ -29,7 +29,7 @@
     "dtstart": "2026-10-02T10:45:00-04:00",
     "dtend": "2026-10-02T10:45:00-04:00",
     "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-    "expected_minutes": 120
+    "expected_minutes": 150
   },
   {
     "uid": "14501248",
@@ -37,7 +37,7 @@
     "dtstart": "2026-10-02T12:45:00-04:00",
     "dtend": "2026-10-02T12:45:00-04:00",
     "location": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
-    "expected_minutes": 120
+    "expected_minutes": 150
   },
   {
     "uid": "14186226",

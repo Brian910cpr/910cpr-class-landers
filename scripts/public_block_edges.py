@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 import hashlib
 
 VERSION = 'occupied-block-edges.v1'
+BLS_COURSE_IDS = {'209806', '359474', '210549'}
+BRIDGE_ANCHOR_ID = 'lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9'
 
 def key(value):
     return ' '.join(str(value or '').lower().split())
@@ -38,7 +40,8 @@ def plan_starts(ws, we, instructor, location, minutes, blocks, occupancy):
             for side, instant in [('left', b['start']), ('right', b['end'])]:
                 start = instant-consume if side == 'left' else instant
                 result.append({'start': start, 'mode': 'barnacle', 'geometryReasons': [] if key(b['location']) == key(location) else ['OFFSITE_EDGE_LOCATION'],
-                               'edge': {'blockId': b['id'], 'side': side, 'time': instant.isoformat()}})
+                               'edge': {'blockId': b['id'], 'side': side, 'time': instant.isoformat()},
+                               'attached_to_session_id': b['sources'][0].get('id')})
         return result
     free = [(ws, we)]
     for busy in occupancy:
@@ -64,9 +67,22 @@ def plan_starts(ws, we, instructor, location, minutes, blocks, occupancy):
     return result
 
 def valid_edge(offer, trace):
+    try:
+        return _valid_edge(offer, trace)
+    except (ValueError, TypeError, KeyError, OverflowError):
+        return False
+
+
+def _valid_edge(offer, trace):
     edge = offer.get('blockEdge') or {}
     block = next((b for b in trace.get('blocks', []) if b['id'] == edge.get('blockId')), None)
     if not block or not block.get('sources'): return False
+    if str(offer.get('courseId')) not in {'209806', '359474', '210549'}: return False
+    duration, cleanup = (45, 15) if str(offer['courseId']) == '210549' else (120, 30)
+    if (offer.get('durationMinutes'), offer.get('cleanupBufferMinutes'), offer.get('setupBufferMinutes'), offer.get('schedulerConsumptionMinutes')) != (duration, cleanup, 0, duration+cleanup): return False
+    if offer.get('attached_to_session_id') != BRIDGE_ANCHOR_ID: return False
+    if not any(source.get('id') == offer['attached_to_session_id'] and str(source.get('courseId')) == '209809' for source in block['sources']): return False
+    if edge.get('side') not in {'left', 'right'}: return False
     if key(block['instructor']) != key(offer.get('instructor')) or key(block['location']) != key(offer.get('location')): return False
     start = datetime.fromisoformat(offer['date']+'T'+offer['startTime'])
     end = start+timedelta(minutes=int(offer['schedulerConsumptionMinutes']))

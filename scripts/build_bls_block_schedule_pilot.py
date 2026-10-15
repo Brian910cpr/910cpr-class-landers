@@ -57,6 +57,11 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "deliveryMode": course.get("deliveryMode"),
                     "displayStartTime": course.get("displayStartTime") or slot.get("displayStartTime"),
                     "durationMinutes": course.get("durationMinutes"),
+                    "blockEdge": course.get("blockEdge"),
+                    "setupBufferMinutes": course.get("setupBufferMinutes"),
+                    "cleanupBufferMinutes": course.get("cleanupBufferMinutes"),
+                    "durationProvenance": course.get("durationProvenance"),
+                    "bufferProvenance": course.get("bufferProvenance"),
                     "schedulerConsumptionMinutes": course.get("schedulerConsumptionMinutes"),
                     "appointmentDayId": course.get("appointmentDayId"),
                     "appointmentUrl": course.get("appointmentUrl"),
@@ -111,6 +116,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
         "synthesisBlockedDates": payload.get("synthesisBlockedDates", []),
         "occupiedDates": payload.get("occupiedDates", []),
         "reconciliationIssues": payload.get("reconciliationIssues", []),
+        "occupiedBlockEdges": payload.get("occupiedBlockEdges", {}),
         "dates": compact_dates,
     }
 

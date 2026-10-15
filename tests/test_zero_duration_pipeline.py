@@ -76,7 +76,11 @@ class ZeroDurationPipelineTests(unittest.TestCase):
                     self.assertEqual(end, public["end_at"])
                     blocks = build_occupancy({"schedule_future": {"sessions": [public]}}, self.rules)
                     minimum_end = datetime.fromisoformat(event["dtstart"]) + timedelta(minutes=event["expected_minutes"])
-                    self.assertEqual(max(datetime.fromisoformat(end), minimum_end).replace(tzinfo=None), blocks[0]["end"])
+                    # Explicit source end is teaching time; inferred source end already
+                    # contains consumption. Only approved BLS rules add cleanup.
+                    cleanup = self.rules[public["course_id"]]["cleanup_buffer_minutes"]
+                    instruction_plus_cleanup = datetime.fromisoformat(end) + timedelta(minutes=cleanup)
+                    self.assertEqual(max(instruction_plus_cleanup, minimum_end).replace(tzinfo=None), blocks[0]["end"])
 
     def test_offer_generation_filters_occupied_windows_before_returning_candidates(self):
         catalog = json.loads((ROOT / "data/config/course_catalog.json").read_text())

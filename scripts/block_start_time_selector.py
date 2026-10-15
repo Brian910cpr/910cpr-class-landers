@@ -611,7 +611,9 @@ def occupancy_duration_overrides(payload: Any, course_rules: dict[str, dict[str,
         canonical_end = parse_dt(session.get("consumption_end_at"))
         minimum_end = start + timedelta(minutes=int(rule["scheduler_consumption_minutes"]))
         instruction_end = end
-        if end and end > start and not session.get("inferred_scheduler_consumption_minutes"):
+        if (end and end > start and not canonical_end
+            and not (session.get("inferred_scheduler_consumption_minutes")
+                     or (session.get("timing") or {}).get("inferred_scheduler_consumption_minutes"))):
             instruction_end = end + timedelta(minutes=int(rule.get("cleanup_buffer_minutes") or 0))
         required_end = max(value for value in (instruction_end, canonical_end, minimum_end) if value is not None)
         if end and end >= required_end:
@@ -730,11 +732,17 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
         block["is_training"] = True
         matches = [row for payload in (loaded.get("sessions_current"), loaded.get("schedule_future"), loaded.get("canonical_demand"))
                    for row in (payload or {}).get("sessions", [])
-                   if parse_dt(row.get("start_at")) == block.get("start")
+                   if parse_dt(row.get("start_at") or row.get("start")) == block.get("start")
                    and clean_text(row.get("course_name")) == clean_text(block.get("course_title"))]
         if matches:
             block["course_id"] = session_course_id(matches[0])
             block["source_event_id"] = matches[0].get("session_id") or matches[0].get("canonical_session_id")
+            if block["course_id"] == "209809" and block["source_event_id"] == public_block_edges.BRIDGE_ANCHOR_ID:
+                row = matches[0]
+                teaching_end = parse_dt(row.get("end_at") or row.get("end"))
+                inferred = row.get("inferred_scheduler_consumption_minutes") or (row.get("timing") or {}).get("inferred_scheduler_consumption_minutes")
+                if teaching_end and not inferred:
+                    block["end"] = max(block["end"], teaching_end + timedelta(minutes=30))
         if not block.get("start") or not block.get("end") or block["end"] <= block["start"]:
             raise BlockSelectorInputError("Real class occupancy has unresolved duration")
     occupancy = sessions_current + schedule_future + calendar_blocks + canonical
@@ -1127,7 +1135,11 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     windows, availability_stats = selected_public_page_live_windows(live_availability_snapshot, loaded["location_resource_map"])
     occupancy = build_occupancy(loaded, course_rules)
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy)
-    occupied_blocks = public_block_edges.merged_blocks(occupancy)
+    # The approved bridge is only BLS around the existing 209809 anchor.
+    # Keep every other course and clear-day grid on the incumbent path.
+    occupied_blocks = public_block_edges.merged_blocks([
+        block for block in occupancy if block.get("course_id") == "209809"
+        and block.get("source_event_id") == public_block_edges.BRIDGE_ANCHOR_ID])
     reference_now = selector_reference_datetime()
     anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
     same_day_anchors = seated_family_anchors(
@@ -1186,6 +1198,10 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         for course in selected_courses:
             starts = public_block_edges.plan_starts(window_start, window_end, instructor_name, location,
                 int(course["scheduler_consumption_minutes"]), occupied_blocks, occupancy)
+            if str(course["course_id"]) not in {"209806", "359474", "210549"} or not any(
+                item["mode"] == "barnacle" for item in starts
+            ):
+                starts = [{"start": value, "mode": "legacy"} for value in candidate_starts(window_start, window_end)]
             for geometry in starts:
                 start = geometry["start"]
                 course_id = str(course["course_id"])
@@ -1318,9 +1334,12 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     "appointmentUrl": url,
                     "publicSelectable": True,
                     "offerKind": course.get("edge_offer_kind"),
-                    "schedule_role": "barnacle" if geometry["mode"] == "barnacle" else "free_day",
-                    "scheduleRole": "barnacle" if geometry["mode"] == "barnacle" else "free_day",
+                    "schedule_role": "barnacle" if geometry["mode"] == "barnacle" else None,
+                    "scheduleRole": "barnacle" if geometry["mode"] == "barnacle" else None,
                     "blockEdge": geometry.get("edge"),
+                    "attached_to_session_id": geometry.get("attached_to_session_id"),
+                    "durationProvenance": "data/inventory/course_consumption_rules.json:" + course_id if geometry["mode"] == "barnacle" else None,
+                    "bufferProvenance": "issue338:BLS-only-approved-cleanup" if geometry["mode"] == "barnacle" else None,
                     "freeInterval": geometry.get("freeInterval"),
                 })
 
