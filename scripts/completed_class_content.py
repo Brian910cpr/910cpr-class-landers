@@ -7,17 +7,23 @@ from html import escape
 from pathlib import PurePosixPath
 
 
-def calendar_context(course_id: str, pages: dict) -> dict | None:
+def calendar_context(course_id: str, pages: dict, *,
+                     verified_page_key: str | None = None) -> dict | None:
     """Resolve an exact legacy course ID using the existing selector catalog.
 
     Unknown and ambiguous IDs fail closed; family membership alone does not
     establish equivalent delivery, eligibility, or payment requirements.
+    A caller may supply a page key established by authoritative source context
+    to disambiguate a shared ID. It must not come from a visitor query parameter
+    or a title guess; the selected page must still contain the exact course ID.
     """
     course_id = str(course_id or "").strip()
     if not course_id:
         return None
     matches = []
     for key, page in pages.get("pages", {}).items():
+        if verified_page_key is not None and key != verified_page_key:
+            continue
         options = [option for option in page.get("course_options", [])
                    if str(option.get("course_id", "")) == course_id]
         if not options:
