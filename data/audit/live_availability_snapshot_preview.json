@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-15T21:33:45.328010+00:00",
+  "generated_at": "2026-10-15T21:49:21.284524+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -23,13 +23,13 @@
       }
     ],
     "blocks_generated": 359,
-    "blocks_blocked": 21,
+    "blocks_blocked": 20,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 21
+      "inverse_gap_shorter_than_minimum_consumption": 20
     },
     "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 21
+      "inverse_gap_shorter_than_minimum_consumption": 20
     },
     "source_type_counts": {
       "google_calendar": 2,
@@ -10003,10 +10003,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-10-15T21:33:44.244772+00:00",
-      "end": "2027-01-13T21:33:44.244772+00:00",
-      "observed_at": "2026-10-15T21:33:45.249273+00:00",
-      "valid_until": "2026-10-15T21:48:45.249273+00:00",
+      "start": "2026-10-15T21:49:20.400336+00:00",
+      "end": "2027-01-13T21:49:20.400336+00:00",
+      "observed_at": "2026-10-15T21:49:21.153295+00:00",
+      "valid_until": "2026-10-15T22:04:21.153295+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
@@ -10015,14 +10015,6 @@
     }
   ],
   "blocked_or_placeholder_sources": [
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-10-15T17:45:00",
-      "end_datetime": "2026-10-15T18:00:00"
-    },
     {
       "calendar_source_key": "brian_do_not_schedule",
       "source_type": "inverse_google_calendar",
@@ -10181,7 +10173,7 @@
       "reason_code": "inverse_gap_shorter_than_minimum_consumption",
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
       "start_datetime": "2027-01-13T17:30:00",
-      "end_datetime": "2027-01-13T17:45:00"
+      "end_datetime": "2027-01-13T18:00:00"
     }
   ]
 }
