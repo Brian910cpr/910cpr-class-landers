@@ -1,0 +1,53 @@
+{
+  "checked_at": "2026-10-15T20:00:17.080895+00:00",
+  "requests": [
+    {
+      "route": "session/14721759",
+      "status": 409,
+      "error": "registration_date_closed",
+      "method": "GET",
+      "registration_submitted": false
+    }
+  ],
+  "edge_version": 19,
+  "database_migration": "20261015195848_enforce_owner_oct21_registration_closure",
+  "guarded_native_entrypoints": 6,
+  "workspace_only_guard_probe": "Jessica workspace ID rejected by pure read-only SQL helper",
+  "external_provider_class_urls": [
+    "https://coastalcprtraining.enrollware.com/enroll?id=13895152",
+    "https://coastalcprtraining.enrollware.com/enroll?id=13895154",
+    "https://coastalcprtraining.enrollware.com/enroll?id=13895155",
+    "https://coastalcprtraining.enrollware.com/enroll?id=14721759"
+  ],
+  "previously_published_external_appointment_urls": [
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=10%3A15%20AM&courseId=344085",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=11%3A00%20AM&courseId=209808",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=11%3A00%20AM&courseId=210549",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=11%3A00%20AM&courseId=251545",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=11%3A00%20AM&courseId=329495",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=11%3A00%20AM&courseId=372258",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=11%3A00%20AM&courseId=445670",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=2%3A00%20PM&courseId=209808",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=2%3A00%20PM&courseId=210549",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=2%3A00%20PM&courseId=251545",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=2%3A00%20PM&courseId=329495",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=2%3A00%20PM&courseId=372258",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=2%3A00%20PM&courseId=445670",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=9%3A30%20AM&courseId=209809",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=9%3A30%20AM&courseId=248288",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=9%3A30%20AM&courseId=252737",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=9%3A30%20AM&courseId=351632",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=9%3A30%20AM&courseId=359474",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=9%3A30%20AM&courseId=369209",
+    "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260792&startTime=9%3A30%20AM&courseId=463743",
+    "https://coastalcprtraining.enrollware.com/enroll?id=14721759"
+  ],
+  "provider_state": "not independently closed; HTTP403 prevents supported access",
+  "existing_paid_orders": "paid completion excluded from new-registration closure gate",
+  "other_day_lookup": {
+    "session_id": "14377157",
+    "status": 200,
+    "error": null,
+    "method": "GET"
+  }
+}
