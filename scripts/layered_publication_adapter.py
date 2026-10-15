@@ -290,4 +290,5 @@ def finalize(payload, now=None):
             result.setdefault("rejectedCourseStartTimes", []).append(dict(offer,reasons=["expired_or_missing_scoped_lease"]))
     result["validUntil"] = max((o["validUntil"] for o in kept if o.get("offerType")!="seated_class"),default=now.isoformat())
     result["anchor_policy"] = dict(mode=SCHEMA,finalized=True)
-    return _rebuild_dates(result,kept)
+    from scripts.public_registration_closures import apply_closures
+    return apply_closures(_rebuild_dates(result,kept))[0]
