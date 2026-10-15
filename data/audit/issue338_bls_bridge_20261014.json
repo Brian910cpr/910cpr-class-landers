@@ -1,0 +1,112 @@
+{
+  "issue": 338,
+  "code_commit": "a0f5a0d487b2153b357872c9f82b001c47f1b108",
+  "main_config_comparison": "8b6c598000410afb67c7915b3b7f0d321d7ae292",
+  "evidence": "BUILT; controlled-source local proof only",
+  "configuration_proof": {
+    "data/config/course_catalog.json": {
+      "non_bls_entries_byte_equal_after_canonical_serialization": true,
+      "sha256": "b1c48a7cb3eafaefc22dfa63716121596e2cf929fd72bc940405e370112141f1",
+      "entry_count": 69
+    },
+    "data/inventory/course_consumption_rules.json": {
+      "non_bls_entries_byte_equal_after_canonical_serialization": true,
+      "sha256": "232930aa42d2c9f71f55813c01c291b5a9259894e9b14039975dc987c38c86f7",
+      "entry_count": 21
+    }
+  },
+  "candidate_offers": [
+    {
+      "courseId": "209806",
+      "startTime": "11:30",
+      "schedulerConsumptionMinutes": 150,
+      "attached_to_session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "offerType": null
+    },
+    {
+      "courseId": "209806",
+      "startTime": "17:00",
+      "schedulerConsumptionMinutes": 150,
+      "attached_to_session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "offerType": null
+    },
+    {
+      "courseId": "359474",
+      "startTime": "11:30",
+      "schedulerConsumptionMinutes": 150,
+      "attached_to_session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "offerType": null
+    },
+    {
+      "courseId": "359474",
+      "startTime": "17:00",
+      "schedulerConsumptionMinutes": 150,
+      "attached_to_session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "offerType": null
+    },
+    {
+      "courseId": "210549",
+      "startTime": "13:00",
+      "schedulerConsumptionMinutes": 60,
+      "attached_to_session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "offerType": null
+    },
+    {
+      "courseId": "210549",
+      "startTime": "17:00",
+      "schedulerConsumptionMinutes": 60,
+      "attached_to_session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "offerType": null
+    }
+  ],
+  "final_offers": [
+    {
+      "courseId": "209806",
+      "startTime": "11:30",
+      "schedulerConsumptionMinutes": 150,
+      "attached_to_session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "offerType": null
+    },
+    {
+      "courseId": "359474",
+      "startTime": "11:30",
+      "schedulerConsumptionMinutes": 150,
+      "attached_to_session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "offerType": null
+    },
+    {
+      "courseId": "210549",
+      "startTime": "13:00",
+      "schedulerConsumptionMinutes": 60,
+      "attached_to_session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "offerType": null
+    },
+    {
+      "courseId": "209809",
+      "startTime": "14:00",
+      "schedulerConsumptionMinutes": 150,
+      "attached_to_session_id": null,
+      "offerType": "seated_class"
+    },
+    {
+      "courseId": "210549",
+      "startTime": "17:00",
+      "schedulerConsumptionMinutes": 60,
+      "attached_to_session_id": "lw-b48b53c7-df11-409f-a8f0-61b72a7f17e9",
+      "offerType": null
+    }
+  ],
+  "candidate_count": 6,
+  "final_dynamic_count": 4,
+  "real_heartsaver_count": 1,
+  "availability_blocks_in_controlled_builder": 1,
+  "rejection_counts": {
+    "full_family_limit": 2
+  },
+  "unverified": [
+    "fresh authenticated source replay",
+    "current-main integration",
+    "customer-facing browser and deployment proof"
+  ],
+  "public_output_generated": false
+}
