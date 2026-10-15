@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-15T11:59:24.630438-04:00",
+  "generated_at": "2026-10-15T12:09:16.374783-04:00",
   "source": "enrollware_ical",
-  "ical_events_read": 234,
-  "public_sessions_created": 234,
+  "ical_events_read": 235,
+  "public_sessions_created": 235,
   "skipped_events": 0,
   "registration_unavailable_sessions_marked_not_direct_bookable": 200,
   "unmapped_sessions": 6,
   "prior_sessions_read": 0,
-  "sessions_added_compared_with_prior_source": 234,
+  "sessions_added_compared_with_prior_source": 235,
   "classes_removed_compared_with_prior_source": 0,
   "stale_zapier_sheet_sessions_excluded": 0,
   "stale_manual_class_report_sessions_excluded": 0,
@@ -993,6 +993,15 @@
       "source_end": "2026-10-26T13:00:00-04:00",
       "end_at": "2026-10-26T14:00:00-04:00",
       "occupied_minutes": 60,
+      "rule_source": "data/inventory/course_consumption_rules.json"
+    },
+    {
+      "session_id": "14733598",
+      "course_id": "209809",
+      "start_at": "2026-10-18T13:00:00-04:00",
+      "source_end": "2026-10-18T13:00:00-04:00",
+      "end_at": "2026-10-18T15:30:00-04:00",
+      "occupied_minutes": 150,
       "rule_source": "data/inventory/course_consumption_rules.json"
     }
   ]
