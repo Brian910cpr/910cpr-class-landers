@@ -137,3 +137,50 @@ test('saved resolution survives restart with immutable receipts and rejects late
   await rm(directory,{recursive:true,force:true});
  }
 });
+
+test('synthetic archive restores into a fresh database with receipts, obligations and privacy intact',async()=>{
+ const directory=await mkdtemp(join(tmpdir(),'crm-archive-'));
+ let source,restored;
+ try {
+  source=new PGlite(join(directory,'source'));
+  await source.exec('create role anon; create role authenticated; create role service_role bypassrls; create table landerware_people(id uuid primary key)');
+  for(const name of ['20261010210607_customer_interaction_storage.sql','20261010211804_customer_interaction_interruptions.sql','20261010212019_customer_follow_up_task_mutations.sql'])
+   await source.exec(readFileSync(new URL('../supabase/migrations/'+name,import.meta.url),'utf8'));
+  await source.exec('set role service_role');
+  const id=crypto.randomUUID(),interaction={id,case_id:crypto.randomUUID(),expected_version:0,kind:'phone',status:'follow_up_due',source:'manual',source_id:id,document:{notes:'Synthetic archive obligation'}};
+  const request=crypto.randomUUID();
+  const receipt=(await source.query('select save_customer_interaction($1,$2,$3) r',[request,'synthetic-owner',interaction])).rows[0].r;
+  const task={id:crypto.randomUUID(),case_id:interaction.case_id,interaction_id:id,source_key:'synthetic:'+id,title:'Synthetic callback',status:'pending',expected_version:0,provenance:{evidence:'Synthetic promise'}};
+  const taskRequest=crypto.randomUUID();
+  const taskReceipt=(await source.query('select save_customer_follow_up_task($1,$2,$3) r',[taskRequest,'synthetic-owner',task])).rows[0].r;
+  // Persist the archive, shut down the source, then restore from bytes alone.
+  const {writeFile,readFile}=await import('node:fs/promises');
+  const archive=await source.dumpDataDir();
+  const archivePath=join(directory,'synthetic-backup.tar');
+  await writeFile(archivePath,new Uint8Array(await archive.arrayBuffer()));
+  await source.close();source=null;
+  restored=new PGlite(join(directory,'restored'),{loadDataDir:new Blob([await readFile(archivePath)])});
+  await restored.exec('set role service_role');
+  assert.deepEqual((await restored.query('select save_customer_interaction($1,$2,$3) r',[request,'synthetic-owner',interaction])).rows[0].r,receipt);
+  assert.deepEqual((await restored.query('select save_customer_follow_up_task($1,$2,$3) r',[taskRequest,'synthetic-owner',task])).rows[0].r,taskReceipt);
+  const row=(await restored.query('select * from customer_interactions where id=$1',[id])).rows[0];
+  assert.equal(row.status,'follow_up_due');assert.equal(row.version,1);assert.deepEqual(row.document,interaction.document);
+  const stored=(await restored.query('select * from customer_follow_up_tasks where id=$1',[task.id])).rows[0];
+  assert.equal(stored.status,'pending');assert.equal(stored.version,1);assert.deepEqual(stored.provenance,task.provenance);
+  await assert.rejects(restored.query('select save_customer_interaction($1,$2,$3)',[crypto.randomUUID(),'synthetic-owner',{...interaction,expected_version:1,status:'resolved'}]),/conflict/);
+  await assert.rejects(restored.query('select save_customer_interaction($1,$2,$3)',[request,'other-owner',interaction]),/idempotency_conflict/);
+  assert.equal((await restored.query('select count(*)::int n from customer_interaction_events')).rows[0].n,1);
+  assert.equal((await restored.query('select count(*)::int n from customer_task_events')).rows[0].n,1);
+  await assert.rejects(restored.query('delete from customer_task_events'),/permission denied/);
+  for(const role of ['anon','authenticated']){
+   await restored.exec('reset role; set role '+role);
+   await assert.rejects(restored.query('select * from customer_interactions'),/permission denied/);
+   await assert.rejects(restored.query('select * from customer_follow_up_tasks'),/permission denied/);
+   await assert.rejects(restored.query('select save_customer_interaction($1,$2,$3)',[request,'synthetic-owner',interaction]),/permission denied/);
+  }
+ } finally {
+  if(source)await source.close();
+  if(restored)await restored.close();
+  await rm(directory,{recursive:true,force:true});
+ }
+});
