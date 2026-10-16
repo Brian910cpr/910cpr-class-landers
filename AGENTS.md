@@ -172,24 +172,18 @@ Preserve the hidden Dockmaster/Harbor Master story in code comments. See `lore/d
 * Provide an unobtrusive owner-friendly control that copies the current URL and those diagnostic values for pasting into Codex or ChatGPT.
 * Do not hide diagnostics inside visible words, microscopic text, or invisible Unicode characters.
 
-## Owner Instruction Intake
+## Owner Instruction Intake — private tracker required
 
-GitHub Issues with titles beginning `[CODEX]` are the durable inbound instruction channel for this repository.
+All internal instructions, production incidents, business problems, customer/participant details, payment reconciliation, credentials/access diagnostics, operational logs, owner decisions, and detailed handoffs belong exclusively in the PRIVATE repository `Brian910cpr/910cpr-private-operations`.
 
-- Treat the issue body and Brian's subsequent issue comments as owner instructions.
-- Preserve the original request. Do not replace it with a narrower interpretation merely because implementation is easier.
-- Check for an existing `[CODEX]` issue before creating a duplicate.
-- Maintain one primary/deep implementation workstream, but do not serialize the entire queue behind it. On each wake/refresh, scan all actionable `[CODEX]` issues and safely complete or advance independent quick wins in parallel when they are low-risk, narrow, testable, and unlikely to conflict with the primary workstream.
-- Do not start multiple competing deep refactors merely for parallelism. A blocked item must not stall unrelated actionable work.
-- The roughly 20-minute ChatGPT pickup is a heartbeat/checkpoint, not a Codex job timebox. Continue valid longer-running work across heartbeats and emit independent receipts for each work item touched.
-- Additional instructions remain queued until actionable; Brian may explicitly reprioritize them, and production failures outrank ordinary work.
-- Record material assumptions, blockers, validation results, deployment state, and the pull request link on the originating issue.
-- Ask for clarification on the originating issue when a missing decision would materially change behavior.
-- Do not claim an instruction is implemented until the change is merged, deployed when applicable, and verified at the customer-facing surface.
-- Repository markdown reports are outbound records. They do not replace the originating issue or its conversation.
-- When an instruction arrives in ChatGPT and GitHub access is available, create or update the corresponding `[CODEX]` issue so the request survives the chat session.
+- Before posting, verify the destination repository has `private: true`. Stop the posting action if private access is unavailable; continue permitted local work and report the blocker to Brian privately.
+- Create, read, triage, and update `[CODEX]` work items in that private tracker. Never fall back to the public site repository.
+- Public issues are disabled. Public pull requests, comments, commit messages, repository receipts, and Pages files must contain only sanitized technical implementation and validation information, never internal incidents or customer/business records.
+- Detailed Codex reply/mailbox records and audits must be saved in the private tracker; this overrides any other instruction to commit internal reports in this public repository.
+- Keep code pull requests in this repository when needed, linking and documenting internal decisions only in the private tracker.
+- Preserve issue ownership and prior discussions during migration. Do not change public-site hosting, repository visibility, credentials, or deployment settings to implement tracker privacy.
 
-See `docs/CODEX_INSTRUCTIONS.md` for the owner-facing workflow.
+See `docs/CODEX_INSTRUCTIONS.md` for the owner workflow.
 
 ## Mandatory Codex Reply Mailbox
 
