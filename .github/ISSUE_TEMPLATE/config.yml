@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Private owner work tracker
+    url: https://github.com/Brian910cpr/910cpr-private-operations/issues
+    about: Internal owner requests and operational records require private access.
