@@ -1,7 +1,11 @@
 import copy
+import json
+from pathlib import Path
+import tempfile
 import unittest
+from unittest.mock import patch
 from datetime import datetime, timezone, timedelta
-from scripts.enrollware_roster_reconciliation import prepare_snapshot
+from scripts.enrollware_roster_reconciliation import prepare_snapshot, reconcile_snapshot
 from scripts.audit_enrollware_reconciliation import audit
 
 
@@ -27,6 +31,33 @@ class CompleteRosterContract(unittest.TestCase):
         self.assertEqual(first,self.prepare(self.row))
         second=self.prepare({**self.row,'source_observed_at':(self.now-timedelta(seconds=1)).isoformat()})
         self.assertNotEqual(first['p_source_sha256'],second['p_source_sha256'])
+    def test_masked_contact_batch_is_rejected_before_rpc_payload(self):
+        good={'external_registration_id':'9','first_name':'Alex','last_name':'Example',
+              'email':'alex@example.test','phone':'910-555-0100'}
+        for field,value in [('email','<redacted>'),('email','[MASKED]'),
+                            ('phone','***-***-0100'),('first_name','<masked>'),
+                            ('email','not-an-email'),('email',42)]:
+            with self.subTest(field=field,value=value):
+                row={**self.row,'roster_count':1,'registrations':[{**good,field:value}]}
+                with self.assertRaises(ValueError):self.prepare(row)
+        row={**self.row,'roster_count':2,'registrations':[good,{**good,'external_registration_id':'10','email':'<redacted>'}]}
+        with self.assertRaises(ValueError):self.prepare(row)
+    def test_actual_contacts_preserved_and_existing_id_can_omit_contacts(self):
+        good={'external_registration_id':'9','first_name':'Alex','last_name':'Example',
+              'email':'alex@example.test','phone':'910-555-0100'}
+        row={**self.row,'roster_count':1,'registrations':[good]}
+        self.assertEqual(self.prepare(row)['p_rows'][0]['registrations'][0],good)
+        row['registrations']=[{'external_registration_id':'9'}]
+        self.assertEqual(self.prepare(row)['p_rows'][0]['registrations'][0],{'external_registration_id':'9'})
+    def test_masked_snapshot_never_reaches_apply_transport(self):
+        row={**self.row,'source_observed_at':datetime.now(timezone.utc).isoformat(),
+             'roster_count':1,'registrations':[{'external_registration_id':'9','email':'<redacted>'}]}
+        with tempfile.TemporaryDirectory() as directory, patch('scripts.enrollware_roster_reconciliation.urlopen') as transport:
+            path=Path(directory)/'snapshot.json'
+            path.write_text(json.dumps({'schema_version':'enrollware-complete-roster.v1','sessions':[row]}),encoding='utf-8')
+            with self.assertRaisesRegex(ValueError,'masked'):
+                reconcile_snapshot(path,apply=True)
+            transport.assert_not_called()
     def test_new_projected_class_alarms_without_becoming_zero(self):
         health={'sessions':[{'external_class_id':'100','canonical_session_id':'s','status':'stale_reconciliation'}]}
         result=audit(health,{'sessions':[{'session_id':'100'},{'session_id':'200'}]})

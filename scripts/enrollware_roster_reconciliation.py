@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -34,10 +35,24 @@ def prepare_snapshot(payload: dict, now: datetime | None = None) -> dict:
         if type(row.get("roster_count")) is not int or row["roster_count"] != len(members):
             raise ValueError(f"source completeness mismatch for {external}")
         for member in members:
+            if not isinstance(member, dict):
+                raise ValueError("invalid registration source record")
             identity = str(member.get("external_registration_id", ""))
             if not identity.isdigit() or identity in registrations:
                 raise ValueError("missing/duplicate exact external_registration_id")
             registrations.add(identity)
+            # Browser privacy masking is not customer contact evidence. Reject
+            # the entire batch before any RPC can create placeholder customers.
+            for field in ("first_name", "last_name", "email", "phone"):
+                value = member.get(field)
+                if value is None or value == "":
+                    continue  # Existing exact identities may omit contact fields.
+                if not isinstance(value, str) or re.search(
+                    r"(?i)<(?:redacted|masked)>|\[(?:redacted|masked)\]|\*{3,}|[•●]{3,}", value
+                ):
+                    raise ValueError(f"masked or invalid registration {field}")
+                if field == "email" and not re.fullmatch(r"[^\s<>@]+@[^\s<>@]+\.[^\s<>@]+", value.strip()):
+                    raise ValueError("invalid registration email")
     # Source time is part of the immutable batch identity. Replaying old data
     # cannot refresh its source watermark.
     encoded = json.dumps(rows, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
