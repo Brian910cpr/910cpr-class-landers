@@ -1,0 +1,31 @@
+{
+  "issue": 371,
+  "repository": "Brian910cpr/910cpr-class-landers",
+  "observed_at": "2026-10-10T21:12:28.1132700Z",
+  "session_id": "01a127a2-d6b7-7411-977b-fb746dafefde",
+  "event_types": [
+    "thread.started",
+    "turn.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.started",
+    "item.completed",
+    "item.completed",
+    "turn.completed"
+  ],
+  "final_response": "- Issue **#371**: **[CODEX] P1 — Customer Interaction Studio: CRM, email learning, call handling**\n- Author verified: **Brian910cpr**\n- Existing PR: **#372**, retained by the separate authorized session.\n- Next storage milestone: durable owner-authorized Supabase storage/endpoints for interactions/cases, interruption/resume, notes, and NEXT status, with idempotency, provenance, and audit.\n\n[Posted one bounded-proof acknowledgment](https://github.com/Brian910cpr/910cpr-class-landers/issues/371#issuecomment-6102175393). No files changed, commits, implementation, or deployment. Reply-file opt-out honored.",
+  "acknowledgment_url": "https://github.com/Brian910cpr/910cpr-class-landers/issues/371#issuecomment-6102175393",
+  "exit_code": 0,
+  "loop_pid": 27964,
+  "loop_first_repaired_check": "2026-10-10T17:10:37.1735316-04:00",
+  "cadence_minutes": 15,
+  "evidence_state": "PROVEN",
+  "observer_health": "Unproven: current heartbeat is local",
+  "raw_local_events": "C:\\Users\\ten77\\AppData\\Local\\910CPR\\CodexWake\\run-20261010T210545361Z.jsonl",
+  "no_production_crm_mutations": true
+}
