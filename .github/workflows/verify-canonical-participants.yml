@@ -133,7 +133,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      issues: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -151,23 +150,22 @@ jobs:
         with:
           name: reconciliation-health
           path: ${{ runner.temp }}/reconciliation-health.json
-      - name: Notify existing issue 297 only when the condition changes
+      - name: Evaluate reconciliation health without public incident fallback
         if: always()
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
             const file = process.env.RUNNER_TEMP + '/reconciliation-health.json';
-            const report = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,'utf8')) : {healthy:false,signature:'observer-query-failed',gaps:[]};
-            const marker = '<!-- enrollware-reconciliation-health -->';
-            const comments = await github.paginate(github.rest.issues.listComments,{...context.repo,issue_number:297,per_page:100});
-            const previous = comments.filter(c=>c.user.login==='github-actions[bot]' && c.body.includes(marker)).at(-1);
-            if (!previous?.body.includes('signature: '+report.signature)) {
-              const lines = report.gaps.map(g=>'- '+g.external_class_id+': '+g.status);
-              const body = marker+'\n#297 reconciliation observer: '+(report.healthy?'current':'ACTION REQUIRED')+'\n\n'+
-                (report.checked_at ? 'Checked '+report.checked_at+'. Complete roster freshness window: 60 minutes.\n\n' : 'Protected source query failed; current state is unknown.\n\n')+
-                lines.join('\n')+'\n\nRecovery: re-run the existing complete-roster import from an authenticated current source; resolve listed canonical identity gaps. No customer booking changes.\n\n'+
-                '[Observer run]('+context.serverUrl+'/'+context.repo.owner+'/'+context.repo.repo+'/actions/runs/'+context.runId+')\n\nsignature: '+report.signature;
-              await github.rest.issues.createComment({...context.repo,issue_number:297,body});
+            const report = fs.existsSync(file)
+              ? JSON.parse(fs.readFileSync(file, 'utf8'))
+              : {healthy: false, signature: 'observer-query-failed'};
+            await core.summary
+              .addHeading('Canonical reconciliation observer')
+              .addRaw(report.healthy
+                ? 'Healthy. Durable incident routing is maintained in the verified private operations tracker.'
+                : 'Unhealthy. Evidence is preserved in the reconciliation-health artifact; durable incident routing is maintained in the verified private operations tracker.')
+              .write();
+            if (!report.healthy) {
+              core.setFailed('Canonical reconciliation is unknown, stale, or incomplete; see the verified private operations tracker.');
             }
-            if (!report.healthy) core.setFailed('Canonical reconciliation is unknown, stale, or incomplete; see existing issue #297.');
