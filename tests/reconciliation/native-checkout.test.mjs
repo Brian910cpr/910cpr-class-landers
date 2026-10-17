@@ -57,6 +57,23 @@ test('wrong course, duplicate students and arbitrary invoice/free codes cannot r
  await assert.rejects(h.create(st,randomUUID(),{p_billing_code:'invoice'}),/billing_approval_required/);
  assert.equal((await h.seats()).holds,0);
 }));
+
+test('unavailable manuals, duplicate options and non-single quantities fail before a hold; valid options keep server pricing',()=>withDb(async h=>{
+ await h.db.exec(`update public.landerware_registration_catalog set addons='[{"key":"emanual","unit_amount":2000,"active":true}]' where course_id='359474'`);
+ const student=h.students(1)[0];
+ await assert.rejects(h.create([{...student,manualChoice:'physical'}]),/physical_manual_unavailable/);
+ await assert.rejects(h.create([{...student,addons:[{key:'emanual'},{key:'emanual'}]}]),/duplicate_addon/);
+ for(const quantity of [0,2,1.5,'1',null]){
+   await assert.rejects(h.create([{...student,addons:[{key:'emanual',quantity}]}]),/invalid_addon_quantity/);
+ }
+ await assert.rejects(h.create([{...student,addons:{key:'emanual'}}]),/invalid_addon/);
+ await assert.rejects(h.create([{...student,addons:[{}]}]),/invalid_addon/);
+ assert.equal((await h.seats()).holds,0);
+ const result=await h.create([{...student,manualChoice:'ebook',addons:[{key:'emanual',quantity:1}]}]);
+ assert.equal(result.total,9500);
+ const order=await h.bind(result.orderId);assert.equal((await h.finalize(order)).status,'paid');
+ assert.equal((await h.seats()).registered,1);
+}));
 test('invalid payment evidence cannot finalize; confirmation enqueue failure rolls back the whole transaction',()=>withDb(async h=>{
  const a=await h.create(),o=await h.bind(a.orderId);
  await assert.rejects(h.rpc('landerware_finalize_public_order',{p_order_id:o.id,p_stripe_payment_intent_id:'pi_test',p_evidence:{...h.evidence(o),amount_total:1}}),/payment_evidence_mismatch/);

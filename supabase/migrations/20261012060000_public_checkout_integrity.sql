@@ -66,6 +66,16 @@ begin
  if (seats->>'remaining')::integer<v_requested then raise exception 'insufficient_seats'; end if;
  for st in select value from jsonb_array_elements(p_students) loop
    if nullif(trim(st->>'firstName'),'') is null or nullif(trim(st->>'lastName'),'') is null or coalesce(st->>'email','') !~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$' or nullif(trim(st->>'phone'),'') is null then raise exception 'required_registration_field_missing'; end if;
+   if st->>'manualChoice'='physical' then raise exception 'physical_manual_unavailable'; end if;
+   if jsonb_typeof(coalesce(st->'addons','[]'::jsonb)) is distinct from 'array' then raise exception 'invalid_addon'; end if;
+   if exists(select 1 from jsonb_array_elements(coalesce(st->'addons','[]'::jsonb)) choice(value)
+       where jsonb_typeof(choice.value) is distinct from 'object' or nullif(trim(choice.value->>'key'),'') is null) then raise exception 'invalid_addon'; end if;
+   if (select count(distinct choice.value->>'key') from jsonb_array_elements(coalesce(st->'addons','[]'::jsonb)) choice(value))
+       <>jsonb_array_length(coalesce(st->'addons','[]'::jsonb)) then raise exception 'duplicate_addon'; end if;
+   -- Source registration options are per-student choices, never bulk quantities.
+   if exists(select 1 from jsonb_array_elements(coalesce(st->'addons','[]'::jsonb)) choice(value)
+       where choice.value ? 'quantity' and (jsonb_typeof(choice.value->'quantity') is distinct from 'number'
+         or choice.value->'quantity'<>'1'::jsonb)) then raise exception 'invalid_addon_quantity'; end if;
    if exists(select 1 from public.registrations r join public.customers p on p.id=r.customer_id where r.class_session_id=s.id and lower(trim(p.email))=lower(trim(st->>'email')) and r.status in ('registered','confirmed','completed','active')) then raise exception 'already_registered'; end if;
    if exists(select 1 from public.landerware_public_order_students os join public.landerware_public_orders oo on oo.id=os.order_id where oo.class_session_id=s.id and oo.status in ('held','checkout_open') and oo.hold_expires_at>now() and os.email=lower(trim(st->>'email'))) then raise exception 'student_already_held'; end if;
  end loop;
