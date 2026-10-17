@@ -1,0 +1,121 @@
+{
+  "run_id": 39076409560,
+  "observed_at": "2026-10-17T18:47:02.718209-04:00",
+  "published": false,
+  "calculation_completed": true,
+  "release_passed": true,
+  "families": [
+    {
+      "family": "bls",
+      "counts": {
+        "publicSelectableDateCount": 88,
+        "publicSelectableStartTimeCount": 1366,
+        "publicSelectableOfferCount": 3566,
+        "input_sources": 441,
+        "normalized_sources": 441,
+        "input_windows": 193,
+        "evaluated_windows": 193,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      }
+    },
+    {
+      "family": "acls",
+      "counts": {
+        "publicSelectableDateCount": 5,
+        "publicSelectableStartTimeCount": 5,
+        "publicSelectableOfferCount": 8,
+        "input_sources": 441,
+        "normalized_sources": 441,
+        "input_windows": 193,
+        "evaluated_windows": 193,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      }
+    },
+    {
+      "family": "pals",
+      "counts": {
+        "publicSelectableDateCount": 3,
+        "publicSelectableStartTimeCount": 3,
+        "publicSelectableOfferCount": 6,
+        "input_sources": 441,
+        "normalized_sources": 441,
+        "input_windows": 193,
+        "evaluated_windows": 193,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      }
+    },
+    {
+      "family": "heartsaver",
+      "counts": {
+        "publicSelectableDateCount": 88,
+        "publicSelectableStartTimeCount": 1370,
+        "publicSelectableOfferCount": 7438,
+        "input_sources": 441,
+        "normalized_sources": 441,
+        "input_windows": 193,
+        "evaluated_windows": 193,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      }
+    },
+    {
+      "family": "uscg_first_aid_cpr_aed",
+      "counts": {
+        "publicSelectableDateCount": 88,
+        "publicSelectableStartTimeCount": 1358,
+        "publicSelectableOfferCount": 2455,
+        "input_sources": 441,
+        "normalized_sources": 441,
+        "input_windows": 193,
+        "evaluated_windows": 193,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      }
+    },
+    {
+      "family": "hsi",
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1356,
+        "publicSelectableOfferCount": 2454,
+        "input_sources": 441,
+        "normalized_sources": 441,
+        "input_windows": 193,
+        "evaluated_windows": 193,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      }
+    },
+    {
+      "family": "arc",
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1356,
+        "publicSelectableOfferCount": 3562,
+        "input_sources": 441,
+        "normalized_sources": 441,
+        "input_windows": 193,
+        "evaluated_windows": 193,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      }
+    },
+    {
+      "family": "family_cpr",
+      "counts": {
+        "publicSelectableDateCount": 85,
+        "publicSelectableStartTimeCount": 1108,
+        "publicSelectableOfferCount": 1108,
+        "input_sources": 441,
+        "normalized_sources": 441,
+        "input_windows": 193,
+        "evaluated_windows": 193,
+        "failed_windows": 0,
+        "uncertainty_issues": 0
+      }
+    }
+  ]
+}
