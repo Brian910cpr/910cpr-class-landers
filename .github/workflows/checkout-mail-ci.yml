@@ -37,6 +37,7 @@ jobs:
           tests/checkout_confirmation_worker.test.mjs
           tests/crm_messages.test.cjs
           tests/reconciliation/native-checkout.test.mjs
+          tests/reconciliation/bls-options.test.mjs
           tests/reconciliation/checkout-confirmation.test.mjs
           tests/reconciliation/message-operational-links.test.mjs
           tests/reconciliation/checkout-reminders.test.mjs

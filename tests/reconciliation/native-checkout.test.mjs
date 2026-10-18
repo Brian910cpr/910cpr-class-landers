@@ -59,17 +59,17 @@ test('wrong course, duplicate students and arbitrary invoice/free codes cannot r
 }));
 
 test('unavailable manuals, duplicate options and non-single quantities fail before a hold; valid options keep server pricing',()=>withDb(async h=>{
- await h.db.exec(`update public.landerware_registration_catalog set addons='[{"key":"emanual","unit_amount":2000,"active":true}]' where course_id='359474'`);
+ await h.db.exec(`update public.landerware_registration_catalog set addons='[{"key":"aha_bls_provider_manual_ebook","unit_amount":2000,"active":true}]' where course_id='359474'`);
  const student=h.students(1)[0];
  await assert.rejects(h.create([{...student,manualChoice:'physical'}]),/physical_manual_unavailable/);
- await assert.rejects(h.create([{...student,addons:[{key:'emanual'},{key:'emanual'}]}]),/duplicate_addon/);
+ await assert.rejects(h.create([{...student,addons:[{key:'aha_bls_provider_manual_ebook'},{key:'aha_bls_provider_manual_ebook'}]}]),/duplicate_addon/);
  for(const quantity of [0,2,1.5,'1',null]){
-   await assert.rejects(h.create([{...student,addons:[{key:'emanual',quantity}]}]),/invalid_addon_quantity/);
+   await assert.rejects(h.create([{...student,addons:[{key:'aha_bls_provider_manual_ebook',quantity}]}]),/invalid_addon_quantity/);
  }
- await assert.rejects(h.create([{...student,addons:{key:'emanual'}}]),/invalid_addon/);
+ await assert.rejects(h.create([{...student,addons:{key:'aha_bls_provider_manual_ebook'}}]),/invalid_addon/);
  await assert.rejects(h.create([{...student,addons:[{}]}]),/invalid_addon/);
  assert.equal((await h.seats()).holds,0);
- const result=await h.create([{...student,manualChoice:'ebook',addons:[{key:'emanual',quantity:1}]}]);
+ const result=await h.create([{...student,manualChoice:'ebook',addons:[{key:'aha_bls_provider_manual_ebook',quantity:1}]}]);
  assert.equal(result.total,9500);
  const order=await h.bind(result.orderId);assert.equal((await h.finalize(order)).status,'paid');
  assert.equal((await h.seats()).registered,1);
@@ -106,4 +106,26 @@ test('signed webhook executes the real PostgreSQL public finalizer and replay co
  assert.equal((await h.seats()).registered,1);assert.equal((await h.db.query('select * from public.landerware_messages')).rows.length,1);
  await deliver({...event,type:'checkout.session.async_payment_failed',data:{object:{...event.data.object,payment_status:'unpaid'}}});
  assert.equal((await h.order(o.id)).status,'paid');
+}));
+
+test('purchased eOptions retain server product identity and price after the catalog changes',()=>withDb(async h=>{
+ await h.db.exec(`update public.landerware_registration_catalog set addons='[{"key":"current-book","display_name":"Current edition eManual","unit_amount":2000,"product_key":"current-edition","active":true}]' where course_id='359474'`);
+ const student={...h.students(1)[0],addons:[{key:'current-book',quantity:1,unit_amount:1,product_key:'untrusted-client-product'}]};
+ const a=await h.create([student]),o=await h.bind(a.orderId);assert.equal(o.total,9500);
+ const stored=(await h.db.query('select selected_addons from public.landerware_public_order_students where order_id=$1',[o.id])).rows[0].selected_addons[0];
+ assert.equal(stored.unit_amount,2000);assert.equal(stored.product_key,'current-edition');assert.equal(stored.quantity,1);
+ await h.db.exec(`update public.landerware_registration_catalog set addons='[]' where course_id='359474'`);
+ assert.equal((await h.finalize(o)).status,'paid');
+}));
+
+test('unknown or nonpositive eOption prices cannot become free purchases',()=>withDb(async h=>{
+ for(const price of [0,-1,1.5,null,'unknown']){
+  await h.db.query('update public.landerware_registration_catalog set addons=$1 where course_id=$2',[JSON.stringify([{key:'unpriced',unit_amount:price,active:true}]),'359474']);
+  await assert.rejects(h.create([{...h.students(1)[0],addons:[{key:'unpriced',quantity:1}]}]),/invalid_addon_price/);
+ }
+}));
+
+test('a native-looking source label cannot bypass external roster proof for an Enrollware class number',()=>withDb(async h=>{
+ await h.db.query("update public.class_sessions set source='landerware_public_offer',registration_backend='landerware',external_class_id='123456' where id=$1",[h.id]);
+ await assert.rejects(h.seats(),/external_reconciliation_required/);
 }));

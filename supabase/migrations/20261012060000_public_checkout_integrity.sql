@@ -17,7 +17,10 @@ begin
   if v_capacity is null or v_capacity<1 then raise exception 'unverified_capacity'; end if;
   select count(*) into v_registered from public.registrations where class_session_id=s.id and status in ('registered','confirmed','completed','active');
   -- Only genuinely native sessions are independent of external roster evidence.
-  if s.registration_backend='enrollware' or (s.external_class_id ~ '^\d+$' and s.source not in ('landerware_public_offer','landerware_event')) then
+  if s.registration_backend='enrollware' or s.external_class_id ~ '^\d+$'
+    or exists(select 1 from public.registrations r where r.class_session_id=s.id
+      and r.status in ('registered','confirmed','completed','active')
+      and (r.external_registration_id is not null or r.registration_source in ('enrollware','enrollware_history','enrollware_reconciled','gmail_enrollware','enrollware_owner_reconciliation'))) then
     proof:=coalesce(s.external_reconciliation,'{}'::jsonb);
     observed:=nullif(proof->>'source_observed_at','')::timestamptz;
     if coalesce((proof->>'complete')::boolean,false) is not true or observed is null or observed<now()-interval '1 hour' or observed>now()+interval '5 minutes'
@@ -42,7 +45,7 @@ create or replace function public.landerware_create_public_order(
 ) returns jsonb language plpgsql security definer set search_path='' as $$
 declare o public.landerware_public_orders; s public.class_sessions; c public.landerware_registration_catalog;
  st jsonb; a jsonb; ac jsonb; bc jsonb; v_code text; v_amount integer; v_discount integer; v_subtotal integer:=0; v_discounts integer:=0;
- v_requested integer; v_fingerprint text; seats jsonb; v_course text;
+ v_requested integer; v_fingerprint text; seats jsonb; v_course text; v_addons jsonb;
 begin
  if nullif(trim(p_idempotency_key),'') is null or jsonb_typeof(p_students) is distinct from 'array' then raise exception 'invalid_order'; end if;
  v_requested:=jsonb_array_length(p_students);
@@ -62,11 +65,12 @@ begin
  if v_course is distinct from trim(p_course_id) then raise exception 'course_session_mismatch'; end if;
  select * into c from public.landerware_registration_catalog where course_id=trim(p_course_id) and active;
  if c.course_id is null then raise exception 'price_catalog_missing'; end if;
+ if c.unit_amount is null or c.unit_amount<=0 then raise exception 'price_catalog_missing'; end if;
  seats:=public.landerware_public_seat_state(s.id);
  if (seats->>'remaining')::integer<v_requested then raise exception 'insufficient_seats'; end if;
  for st in select value from jsonb_array_elements(p_students) loop
    if nullif(trim(st->>'firstName'),'') is null or nullif(trim(st->>'lastName'),'') is null or coalesce(st->>'email','') !~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$' or nullif(trim(st->>'phone'),'') is null then raise exception 'required_registration_field_missing'; end if;
-   if st->>'manualChoice'='physical' then raise exception 'physical_manual_unavailable'; end if;
+   if st->>'manualChoice'='physical' or st->>'firstAidManualChoice'='physical' then raise exception 'physical_manual_unavailable'; end if;
    if jsonb_typeof(coalesce(st->'addons','[]'::jsonb)) is distinct from 'array' then raise exception 'invalid_addon'; end if;
    if exists(select 1 from jsonb_array_elements(coalesce(st->'addons','[]'::jsonb)) choice(value)
        where jsonb_typeof(choice.value) is distinct from 'object' or nullif(trim(choice.value->>'key'),'') is null) then raise exception 'invalid_addon'; end if;
@@ -76,17 +80,48 @@ begin
    if exists(select 1 from jsonb_array_elements(coalesce(st->'addons','[]'::jsonb)) choice(value)
        where choice.value ? 'quantity' and (jsonb_typeof(choice.value->'quantity') is distinct from 'number'
          or choice.value->'quantity'<>'1'::jsonb)) then raise exception 'invalid_addon_quantity'; end if;
+   if c.course_id in ('209806','359474') then
+     if coalesce(st->>'manualChoice','own-copy') not in ('own-copy','ebook')
+       or (coalesce(st->>'manualChoice','own-copy')='ebook') is distinct from
+          exists(select 1 from jsonb_array_elements(coalesce(st->'addons','[]')) option_choice(value) where option_choice.value->>'key'='aha_bls_provider_manual_ebook')
+       then raise exception 'invalid_course_option'; end if;
+   end if;
+   if c.course_id='210549' then
+     if coalesce(st->>'learningPath','') not in ('skills-only','online-and-skills')
+       or (st->>'learningPath'='online-and-skills') is distinct from
+          exists(select 1 from jsonb_array_elements(coalesce(st->'addons','[]')) option_choice(value) where option_choice.value->>'key'='aha_heartcode_bls_online')
+       then raise exception 'invalid_course_option'; end if;
+     if st->'onlineCompletionAcknowledged' is distinct from 'true'::jsonb then raise exception 'online_completion_ack_required'; end if;
+   end if;
+   if c.course_id in ('209806','359474','210549') then
+     if coalesce(st->>'firstAidChoice','none') not in ('none','in-person','online')
+       or (coalesce(st->>'firstAidChoice','none')='in-person') is distinct from
+          exists(select 1 from jsonb_array_elements(coalesce(st->'addons','[]')) option_choice(value) where option_choice.value->>'key'='aha_heartsaver_first_aid_in_person')
+       or (coalesce(st->>'firstAidChoice','none')='online') is distinct from
+          exists(select 1 from jsonb_array_elements(coalesce(st->'addons','[]')) option_choice(value) where option_choice.value->>'key'='aha_heartsaver_first_aid_online')
+       then raise exception 'invalid_course_option'; end if;
+     if coalesce(st->>'firstAidChoice','none')='in-person' and coalesce(st->>'firstAidManualChoice','own-copy') not in ('own-copy','ebook') then raise exception 'invalid_course_option'; end if;
+     if (coalesce(st->>'firstAidChoice','none')='in-person' and coalesce(st->>'firstAidManualChoice','own-copy')='ebook') is distinct from
+        exists(select 1 from jsonb_array_elements(coalesce(st->'addons','[]')) option_choice(value) where option_choice.value->>'key'='aha_heartsaver_first_aid_manual_ebook')
+       then raise exception 'invalid_course_option'; end if;
+   end if;
    if exists(select 1 from public.registrations r join public.customers p on p.id=r.customer_id where r.class_session_id=s.id and lower(trim(p.email))=lower(trim(st->>'email')) and r.status in ('registered','confirmed','completed','active')) then raise exception 'already_registered'; end if;
    if exists(select 1 from public.landerware_public_order_students os join public.landerware_public_orders oo on oo.id=os.order_id where oo.class_session_id=s.id and oo.status in ('held','checkout_open') and oo.hold_expires_at>now() and os.email=lower(trim(st->>'email'))) then raise exception 'student_already_held'; end if;
  end loop;
  insert into public.landerware_public_orders(idempotency_key,request_fingerprint,external_class_id,class_session_id,course_id,payer_email,payer_phone,billing_code,currency,hold_expires_at)
  values(trim(p_idempotency_key),v_fingerprint,trim(p_external_class_id),s.id,c.course_id,lower(trim(p_payer_email)),trim(p_payer_phone),nullif(trim(p_billing_code),''),c.currency,now()+interval '30 minutes') returning * into o;
  for st in select value from jsonb_array_elements(p_students) loop
-   v_amount:=c.unit_amount; v_discount:=0;
+   v_amount:=c.unit_amount; v_discount:=0; v_addons:='[]'::jsonb;
    for a in select value from jsonb_array_elements(coalesce(st->'addons','[]')) loop
      select value into ac from jsonb_array_elements(c.addons) where value->>'key'=a->>'key' and coalesce((value->>'active')::boolean,true);
      if ac is null or coalesce((a->>'quantity')::integer,1) not between 1 and 10 then raise exception 'invalid_addon'; end if;
+     if jsonb_typeof(ac->'unit_amount') is distinct from 'number' then raise exception 'invalid_addon_price'; end if;
+     if (ac->>'unit_amount')::numeric<=0 or trunc((ac->>'unit_amount')::numeric)<>(ac->>'unit_amount')::numeric then raise exception 'invalid_addon_price'; end if;
      v_amount:=v_amount+(ac->>'unit_amount')::integer*coalesce((a->>'quantity')::integer,1);
+     v_addons:=v_addons||jsonb_build_array(jsonb_strip_nulls(jsonb_build_object(
+       'key',ac->>'key','quantity',1,'unit_amount',(ac->>'unit_amount')::integer,
+       'display_name',coalesce(ac->>'display_name',ac->>'key'),'product_key',ac->>'product_key',
+       'fulfillment_mode',coalesce(ac->>'fulfillment_mode','manual'))));
    end loop;
    v_code:=coalesce(nullif(trim(st->>'billingCode'),''),nullif(trim(p_billing_code),''));
    if v_code is not null then
@@ -97,7 +132,7 @@ begin
      if v_discount<0 or v_discount>v_amount then raise exception 'invalid_billing_code'; end if;
    end if;
    insert into public.landerware_public_order_students(order_id,first_name,last_name,email,phone,unit_amount,selected_addons,billing_code,discount,selected_options)
-   values(o.id,trim(st->>'firstName'),trim(st->>'lastName'),lower(trim(st->>'email')),trim(st->>'phone'),v_amount,coalesce(st->'addons','[]'),v_code,v_discount,jsonb_build_object('manualChoice',coalesce(st->>'manualChoice','own-copy'),'firstAidChoice',coalesce(st->>'firstAidChoice','none')));
+   values(o.id,trim(st->>'firstName'),trim(st->>'lastName'),lower(trim(st->>'email')),trim(st->>'phone'),v_amount,v_addons,v_code,v_discount,jsonb_build_object('manualChoice',coalesce(st->>'manualChoice','own-copy'),'firstAidChoice',coalesce(st->>'firstAidChoice','none'),'learningPath',st->>'learningPath','firstAidManualChoice',st->>'firstAidManualChoice','onlineCompletionAcknowledged',st->'onlineCompletionAcknowledged'));
    v_subtotal:=v_subtotal+v_amount; v_discounts:=v_discounts+v_discount;
  end loop;
  if v_subtotal-v_discounts<=0 then raise exception 'billing_approval_required'; end if;

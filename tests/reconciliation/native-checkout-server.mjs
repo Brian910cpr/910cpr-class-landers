@@ -18,6 +18,7 @@ const deliveryToken=process.env.CHECKOUT_PROOF_TOKEN||'';
 if(deliveryToken){
  await h.db.exec(`alter table public.landerware_messages add column if not exists created_at timestamptz default now(),add column if not exists provider_message_id text,add column if not exists sent_at timestamptz,add column if not exists failed_at timestamptz,add column if not exists failure_detail text;`);
  await h.db.exec(read('supabase/migrations/20261017080000_checkout_confirmation_delivery.sql'));
+ for(const file of ['20261017200000_message_operational_links.sql','20261017203000_checkout_email_reminders.sql','20261017210000_email_delivery_events.sql'])await h.db.exec(read('supabase/migrations/'+file));
  await h.db.query("update public.landerware_checkout_delivery_config set enabled=true,token_sha256=encode(sha256(convert_to($1,'UTF8')),'hex')",[deliveryToken]);
 }
 const response=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json'}});
@@ -72,7 +73,7 @@ http.createServer(async(req,res)=>{try{
  }catch(e){return send(res,response({error:e.message},500))}}).listen(8791,'127.0.0.1');
 // Public tunnel can reach only this signature-verified test webhook, never controls.
 http.createServer(async(req,res)=>{
- if(req.method==='POST'&&/^\/rest\/v1\/rpc\/landerware_(?:claim_checkout_confirmation|settle_checkout_confirmation|checkout_confirmation_health)$/.test(req.url||'')){
+ if(req.method==='POST'&&/^\/rest\/v1\/rpc\/landerware_(?:claim_checkout_confirmation|settle_checkout_confirmation|checkout_confirmation_health|prepare_checkout_reminders|record_email_delivery_event)$/.test(req.url||'')){
   try{const args=JSON.parse(await bytes(req));if(!deliveryToken||args.p_token!==deliveryToken)return send(res,response({error:'unauthorized'},401));return send(res,response(await h.rpc(req.url.split('/').at(-1),args)))}catch{return send(res,response({error:'proof_queue_error'},500))}
  }
  if(req.method!=='POST'||req.url!=='/webhook'){res.writeHead(404);res.end();return}try{const raw=await bytes(req),r=await webhookHandler(new Request('https://isolated.test/webhook',{method:'POST',headers:req.headers,body:raw}));deliveries.push({at:new Date().toISOString(),status:r.status,eventId:JSON.parse(raw).id});await send(res,r)}catch(e){res.writeHead(500);res.end('test_webhook_error')}}).listen(8793,'127.0.0.1');
