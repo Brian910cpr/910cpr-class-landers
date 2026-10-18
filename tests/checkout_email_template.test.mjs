@@ -19,3 +19,8 @@ test('only purchased online access or eManual produces fulfillment wording; skil
  const ebook=renderCheckoutEmail({...sample,selectedOptions:[{key:'aha_bls_provider_manual_ebook',display_name:'BLS eManual'}]});assert.match(ebook.text,/provided? |provide the purchased/);assert.doesNotMatch(ebook.text,/Have your current/);
  const reminder=renderCheckoutEmail({...sample,kind:'reminder'});assert.match(reminder.subject,/Class reminder/);assert.doesNotMatch(reminder.text,/Payment received/);
 });
+test('recovery has a bounded canonical checkout link and never claims payment or confirmation',()=>{
+ const data={...sample,kind:'recovery',recoveryUrl:'https://www.910cpr.com/register/?recover=00000000-0000-4000-8000-000000000001',holdExpiresAt:'2026-10-24T13:30:00Z'};
+ const r=renderCheckoutEmail(data);assert.match(r.subject,/Finish your registration/);assert.match(r.html,/Return to checkout/);assert.match(r.text,/9:30 AM Eastern/);assert.doesNotMatch(r.text,/Payment received|You’re registered/);
+ assert.throws(()=>renderCheckoutEmail({...data,recoveryUrl:'https://evil.example/register/?recover=00000000-0000-4000-8000-000000000001'}),/recovery_data_invalid/);
+});

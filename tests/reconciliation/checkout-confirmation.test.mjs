@@ -84,3 +84,11 @@ test('paid material fulfillment is leased only to the owner with exact purchased
  assert.match(owner.body,/2025 AHA BLS Student Manual eBook/);assert.match(owner.body,/25-3102/);assert.match(owner.body,/Manual fulfillment required/);
  assert.equal((await claim(h)).empty,true);
 }));
+test('unpaid recovery leases once to the payer; paid and expired orders cannot produce recovery',()=>fixture(async h=>{
+ await h.db.exec('update public.landerware_checkout_delivery_config set enabled=true');const a=await h.create();
+ await h.db.query("insert into public.landerware_messages(template_key,recipient,subject,body_text,delivery_provider,delivery_status,idempotency_key) select 'retail-checkout-recovery-v2',payer_email,'Recovery','Legacy recovery','cloudflare','pending','public-order-recovery:'||id from public.landerware_public_orders where id=$1",[a.orderId]);
+ assert.equal((await h.rpc('landerware_checkout_confirmation_health',{p_token:token})).queued,1);
+ const j=await claim(h);assert.equal(j.customerTemplate,true);assert.equal(j.confirmation.kind,'recovery');assert.match(j.confirmation.recoveryUrl,/^https:\/\/www\.910cpr\.com\/register\/\?recover=/);assert.equal((await claim(h)).empty,true);
+ await h.db.query('delete from public.landerware_checkout_delivery_attempts where message_id=$1',[j.messageId]);
+ await h.db.query("update public.landerware_public_orders set hold_expires_at=now()-interval '1 second' where id=$1",[a.orderId]);assert.equal((await claim(h)).empty,true);
+}));
