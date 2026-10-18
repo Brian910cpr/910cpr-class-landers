@@ -12,7 +12,14 @@ const root=new URL('../../',import.meta.url),read=p=>fs.readFileSync(new URL(p,r
 const local='http://127.0.0.1:8791';
 const h=await setup(12),pending=new Map(),deliveries=[];let webhookSecret='';
 // Clone the actual validated Renewal offer into the isolated test database only.
-await h.db.query("update public.class_sessions set start_at='2026-10-14T19:30:00-04:00',end_at='2026-10-14T21:30:00-04:00',consumption_start_at='2026-10-14T19:30:00-04:00',consumption_end_at='2026-10-14T22:00:00-04:00' where id=$1",[h.id]);
+const proofStart=new Date(Date.now()+7*86400000),proofEnd=new Date(proofStart.getTime()+120*60000),proofOccupiedEnd=new Date(proofStart.getTime()+150*60000);
+await h.db.query('update public.class_sessions set start_at=$2,end_at=$3,consumption_start_at=$2,consumption_end_at=$4 where id=$1',[h.id,proofStart.toISOString(),proofEnd.toISOString(),proofOccupiedEnd.toISOString()]);
+const deliveryToken=process.env.CHECKOUT_PROOF_TOKEN||'';
+if(deliveryToken){
+ await h.db.exec(`alter table public.landerware_messages add column if not exists created_at timestamptz default now(),add column if not exists provider_message_id text,add column if not exists sent_at timestamptz,add column if not exists failed_at timestamptz,add column if not exists failure_detail text;`);
+ await h.db.exec(read('supabase/migrations/20261017080000_checkout_confirmation_delivery.sql'));
+ await h.db.query("update public.landerware_checkout_delivery_config set enabled=true,token_sha256=encode(sha256(convert_to($1,'UTF8')),'hex')",[deliveryToken]);
+}
 const response=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json'}});
 async function fixtureFetch(url,init={}){
  const u=new URL(String(url));
@@ -24,6 +31,8 @@ async function fixtureFetch(url,init={}){
  if(u.hostname!=='fixture-db.test')throw Error('External fetch forbidden in isolated proof');
  try{
   const table=u.pathname.split('/').at(-1),body=init.body?JSON.parse(init.body):{},id=(u.searchParams.get('id')||'').replace(/^eq\./,'');
+  // Only synthetic local sessions are used; this stub is not production calendar proof.
+  if(table==='assert_public_registration_open')return response(true);
   if(u.pathname.includes('/rpc/'))return response(await h.rpc(table,body));
   if(table==='class_sessions')return response((await h.db.query(`select s.*,jsonb_build_object('enrollware_course_id',c.enrollware_course_id,'name',c.name) courses,jsonb_build_object('name',l.name) locations,jsonb_build_object('display_name',p.display_name) people from public.class_sessions s join public.courses c on c.id=s.course_id join public.locations l on l.id=s.location_id join public.people p on p.id=s.lead_instructor_id where s.external_class_id=$1`,[(u.searchParams.get('external_class_id')||'').replace(/^eq\./,'')])).rows);
   if(table==='landerware_registration_catalog')return response((await h.db.query('select * from public.landerware_registration_catalog where course_id=$1',[(u.searchParams.get('course_id')||'').replace(/^eq\./,'')])).rows);
@@ -56,10 +65,15 @@ http.createServer(async(req,res)=>{try{
  if(u.pathname==='/control/secret'){webhookSecret=JSON.parse(raw).secret;return send(res,response({ok:true}))}
  if(u.pathname==='/control/state')return send(res,response(await state()));
  if(u.pathname.startsWith('/public-registration'))return send(res,await publicHandler(new Request(local+u.pathname+u.search,{method:req.method,headers:req.headers,...(raw.length?{body:raw}:{} )})));
+ if(u.pathname==='/proof/')return send(res,new Response(`<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script src="/assets/inline-registration.js" defer></script><style>body{font:16px Arial;background:#f5f8fa;padding:20px}main{max-width:960px;margin:auto}.course{padding:20px;border:1px solid #d9e0e8;border-radius:12px;background:white}.register-link{display:inline-block;padding:12px 24px;background:#d64045;color:white;border-radius:8px}</style></head><body><main><p>STRIPE TEST MODE — synthetic class; no real charge or enrollment.</p><div id="course-list"><article class="course"><h1>AHA BLS Provider Renewal</h1><p>${proofStart.toLocaleString('en-US',{timeZone:'America/New_York'})}</p><p>910CPR test location</p><a class="register-link" href="/register/?session=${h.external}">Register</a></article></div></main></body></html>`,{headers:{'content-type':'text/html'}}));
  if(u.pathname==='/register/'||u.pathname==='/')return send(res,new Response(read('docs/register/index.html').replace('https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/public-registration',local+'/public-registration'),{headers:{'content-type':'text/html'}}));
  if(/^\/(assets|images)\/[a-zA-Z0-9_./-]+$/.test(u.pathname)&&!u.pathname.includes('..')){const file=new URL('docs'+u.pathname,root);if(fs.existsSync(file))return send(res,new Response(fs.readFileSync(file),{headers:{'content-type':u.pathname.endsWith('.css')?'text/css':u.pathname.endsWith('.js')?'text/javascript':'image/png'}}))}
  return send(res,response({error:'not_found'},404));
  }catch(e){return send(res,response({error:e.message},500))}}).listen(8791,'127.0.0.1');
 // Public tunnel can reach only this signature-verified test webhook, never controls.
-http.createServer(async(req,res)=>{if(req.method!=='POST'||req.url!=='/webhook'){res.writeHead(404);res.end();return}try{const raw=await bytes(req),r=await webhookHandler(new Request('https://isolated.test/webhook',{method:'POST',headers:req.headers,body:raw}));deliveries.push({at:new Date().toISOString(),status:r.status,eventId:JSON.parse(raw).id});await send(res,r)}catch(e){res.writeHead(500);res.end('test_webhook_error')}}).listen(8792,'127.0.0.1');
-console.log(JSON.stringify({mode:'isolated_stripe_test',url:`${local}/register/?session=${h.external}`,canonicalSessionId:h.id,emailDelivery:'disabled',webhookPort:8792}));
+http.createServer(async(req,res)=>{
+ if(req.method==='POST'&&/^\/rest\/v1\/rpc\/landerware_(?:claim_checkout_confirmation|settle_checkout_confirmation|checkout_confirmation_health)$/.test(req.url||'')){
+  try{const args=JSON.parse(await bytes(req));if(!deliveryToken||args.p_token!==deliveryToken)return send(res,response({error:'unauthorized'},401));return send(res,response(await h.rpc(req.url.split('/').at(-1),args)))}catch{return send(res,response({error:'proof_queue_error'},500))}
+ }
+ if(req.method!=='POST'||req.url!=='/webhook'){res.writeHead(404);res.end();return}try{const raw=await bytes(req),r=await webhookHandler(new Request('https://isolated.test/webhook',{method:'POST',headers:req.headers,body:raw}));deliveries.push({at:new Date().toISOString(),status:r.status,eventId:JSON.parse(raw).id});await send(res,r)}catch(e){res.writeHead(500);res.end('test_webhook_error')}}).listen(8793,'127.0.0.1');
+console.log(JSON.stringify({mode:'isolated_stripe_test',url:`${local}/register/?session=${h.external}`,canonicalSessionId:h.id,emailDelivery:'disabled',webhookPort:8793}));

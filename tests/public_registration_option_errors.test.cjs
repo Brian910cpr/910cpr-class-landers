@@ -21,3 +21,14 @@ for(const error of ['physical_manual_unavailable','duplicate_addon','invalid_add
    assert.deepEqual(await response.json(),{error});
  });
 }
+test('asynchronous checkout failures retain current-main validation and date closure responses',async()=>{
+ for(const [error,status] of [['invalid_addon',400],['registration_date_closed',409]]){
+  let handler;
+  const context=vm.createContext({URL,Response,Error,Set,ALLOWED:new Set(['https://www.910cpr.com']),
+    start:async()=>{await Promise.resolve();throw new Error(error)},
+    json:(_origin,payload,status=200)=>new Response(JSON.stringify(payload),{status}),Deno:{serve:fn=>{handler=fn}}});
+  vm.runInContext(stripTypeScriptTypes(entry),context);
+  const response=await handler(new Request('https://local.test/public-registration/start',{method:'POST'}));
+  assert.equal(response.status,status);assert.deepEqual(await response.json(),{error});
+ }
+});
