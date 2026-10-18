@@ -1,4 +1,5 @@
 import {registrationProof} from '../_shared/external-roster-proof.ts';
+import {messageHistory} from './messages.ts';
 import {localDate, localMidnight} from '../_shared/scheduling-clock.ts';
 import {authorizedOwner as authorized} from '../_shared/owner-auth.ts';
 import {storeIntake, validId, viewDocument} from './class-record.ts';
@@ -157,6 +158,7 @@ Deno.serve(async (req) => {
     const requestUrl = new URL(req.url);
     const sessionId = requestUrl.searchParams.get("session_id") || "";
     const action = requestUrl.searchParams.get("action") || "";
+    if (req.method === "GET" && action === "messages") return reply(origin, await messageHistory(requestUrl.searchParams, rest));
     if (req.method === "GET" && action === "person") return reply(origin, await personDetail(requestUrl.searchParams.get("customer_id") || ""));
     if (req.method === "GET" && action === "document") return reply(origin, {document: await viewDocument(sessionId, requestUrl.searchParams.get("document_id") || "", rest, env)});
     if (req.method === "GET" && sessionId) return reply(origin, await sessionDetail(sessionId));
@@ -196,7 +198,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error(JSON.stringify({ event: "canonical_session_workspace_error", message: String(error) }));
     const code = error instanceof Error ? error.message : "server_error";
-    const statuses: Record<string, number> = {not_found: 404, session_not_found: 404, person_not_found: 404, document_not_found: 404, file_required: 400, unsupported_file_type: 400, file_size_limit: 400, document_unavailable: 503};
+    const statuses: Record<string, number> = {invalid_message_filter: 400, not_found: 404, session_not_found: 404, person_not_found: 404, document_not_found: 404, file_required: 400, unsupported_file_type: 400, file_size_limit: 400, document_unavailable: 503};
     return reply(origin, { error: code in statuses ? code : "Canonical Session Workspace is temporarily unavailable" }, statuses[code] || Number((error as any)?.status) || 500);
   }
 });
