@@ -1136,7 +1136,7 @@ def render_html(payload: dict[str, Any]) -> str:
             "startTimes": start_times,
         })
     page_key = str(payload.get("pageKey") or page_config.get("page_key") or "selector")
-    inline_checkout_script = '\n  <script src="/assets/inline-registration.js?v=20261017.1" defer></script>' if page_key == "bls" else ""
+    inline_checkout_script = '\n  <script src="/assets/inline-registration.js?v=20261017.2" defer></script>' if page_key == "bls" else ""
     availability_version = str(payload.get("generatedAt") or datetime.now().astimezone().isoformat())
     availability_url = (
         "/"
