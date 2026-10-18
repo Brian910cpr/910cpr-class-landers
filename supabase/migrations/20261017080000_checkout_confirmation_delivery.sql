@@ -33,6 +33,28 @@ begin
 end $$;
 revoke all on function public.landerware_check_checkout_delivery_token(text) from public,anon,authenticated;
 
+-- Whitelist customer-facing class facts; operational IDs stay in private queue keys.
+create or replace function public.landerware_checkout_email_data(p_message_id uuid)
+returns jsonb language sql stable set search_path='' as $$
+ select jsonb_build_object('kind',case when m.template_key='retail-class-reminder-24h-v1' then 'reminder' else 'confirmation' end,
+   'firstName',st.first_name,'course',c.name,'courseId',o.course_id,
+   'startsAt',s.start_at,'endsAt',s.end_at,'venue',l.name,
+   'address',concat_ws(', ',nullif(l.address_line1,''),nullif(l.address_line2,''),nullif(l.city,''),nullif(l.state,''),nullif(l.postal_code,'')),
+   'selectedOptions',st.selected_addons,'selections',st.selected_options)
+ from public.landerware_messages m
+ join public.landerware_public_order_students st on
+   (m.idempotency_key='public-order-paid:'||st.order_id::text||':'||st.email
+    or (m.template_key='retail-class-reminder-24h-v1' and to_jsonb(m)->>'operational_registration_id'=st.registration_id::text))
+ join public.landerware_public_orders o on o.id=st.order_id
+ join public.registrations r on r.id=st.registration_id
+ join public.class_sessions s on s.id=r.class_session_id
+ join public.courses c on c.id=s.course_id left join public.locations l on l.id=s.location_id
+ where m.id=p_message_id and o.status='paid' and o.payment_evidence->>'payment_status'='paid'
+   and r.status in ('registered','confirmed') and s.status in ('scheduled','active')
+ limit 1;
+$$;
+revoke all on function public.landerware_checkout_email_data(uuid) from public,anon,authenticated;
+
 create or replace function public.landerware_claim_checkout_confirmation(p_token text)
 returns jsonb language plpgsql security definer set search_path='' as $$
 declare cfg public.landerware_checkout_delivery_config%rowtype; msg public.landerware_messages%rowtype; ticket uuid;
@@ -41,13 +63,17 @@ begin
  update public.landerware_checkout_delivery_config set last_poll_at=now() where id returning * into cfg;
  if not cfg.enabled then return jsonb_build_object('disabled',true); end if;
  select m.* into msg from public.landerware_messages m
- join public.landerware_public_order_students st on m.idempotency_key='public-order-paid:'||st.order_id::text||':'||st.email
+ join public.landerware_public_order_students st on (m.idempotency_key='public-order-paid:'||st.order_id::text||':'||st.email or m.idempotency_key='public-order-fulfillment:'||st.order_id::text)
  join public.landerware_public_orders o on o.id=st.order_id
+ join public.registrations r on r.id=st.registration_id
+ join public.class_sessions s on s.id=r.class_session_id
  left join public.landerware_checkout_delivery_attempts a on a.message_id=m.id
- where m.template_key='retail-paid-confirmation-v3' and m.recipient=st.email
+ where ((m.template_key='retail-paid-confirmation-v3' and m.recipient=st.email)
+   or (m.template_key='retail-addon-fulfillment-v2' and m.recipient='brian@910cpr.com'))
    and m.created_at>=cfg.not_before and o.status='paid' and o.course_id=any(cfg.course_ids)
    and o.payment_evidence->>'payment_status'='paid'
    and st.registration_id is not null
+   and r.status in ('registered','confirmed') and s.status in ('scheduled','active')
    and ((m.delivery_status='pending' and a.message_id is null)
      or (m.delivery_status='failed' and a.state='rejected' and a.attempts<5 and a.retry_at<=now()))
  order by m.created_at,m.id for update of m skip locked limit 1;
@@ -58,7 +84,8 @@ begin
  set lease=excluded.lease,state='processing',attempts=landerware_checkout_delivery_attempts.attempts+1,
  claimed_at=now(),retry_at=null,error_code=null;
  update public.landerware_messages set delivery_provider='cloudflare' where id=msg.id;
- return jsonb_build_object('messageId',msg.id,'lease',ticket,'recipient',msg.recipient,'subject',msg.subject,'body',msg.body_text);
+ return jsonb_build_object('messageId',msg.id,'lease',ticket,'recipient',msg.recipient,'subject',msg.subject,'body',msg.body_text,
+   'customerTemplate',msg.template_key='retail-paid-confirmation-v3','confirmation',public.landerware_checkout_email_data(msg.id));
 end $$;
 
 create or replace function public.landerware_settle_checkout_confirmation(

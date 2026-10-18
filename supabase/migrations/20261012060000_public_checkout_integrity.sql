@@ -121,6 +121,10 @@ begin
      v_addons:=v_addons||jsonb_build_array(jsonb_strip_nulls(jsonb_build_object(
        'key',ac->>'key','quantity',1,'unit_amount',(ac->>'unit_amount')::integer,
        'display_name',coalesce(ac->>'display_name',ac->>'key'),'product_key',ac->>'product_key',
+       'manufacturer_sku',ac->>'manufacturer_sku',
+       'component_skus',ac->'component_skus',
+       'includes_online_program',ac->'includes_online_program','includes_student_ebook',ac->'includes_student_ebook',
+       'includes_skills_testing',ac->'includes_skills_testing',
        'fulfillment_mode',coalesce(ac->>'fulfillment_mode','manual'))));
    end loop;
    v_code:=coalesce(nullif(trim(st->>'billingCode'),''),nullif(trim(p_billing_code),''));
@@ -177,7 +181,7 @@ begin
    return jsonb_build_object('orderId',o.id,'status','payment_review','reason',v_error);
  end if;
  select name into v_name from public.courses where id=s.course_id;
- select name into v_location from public.locations where id=s.location_id;
+ select concat_ws(E'\n',name,nullif(concat_ws(', ',nullif(address_line1,''),nullif(address_line2,''),nullif(city,''),nullif(state,''),nullif(postal_code,'')),'')) into v_location from public.locations where id=s.location_id;
  -- Deterministic identity lock ordering also protects concurrent different classes.
  for st in select * from public.landerware_public_order_students where order_id=o.id order by email loop
    perform pg_advisory_xact_lock(hashtextextended('public-person|'||st.email,0));
@@ -194,12 +198,22 @@ begin
    -- not an invalid cross-model FK. Operational registration provenance is in body/key.
    insert into public.landerware_messages(template_key,recipient,subject,body_text,delivery_provider,delivery_status,idempotency_key)
    values('retail-paid-confirmation-v3',st.email,'Registration confirmed — '||v_name,
-     'Your registration is confirmed for '||v_name||E'.\n'||to_char(s.start_at at time zone 'America/New_York','FMMonth DD, YYYY HH12:MI AM')||E' America/New_York\n'||coalesce(v_location,'')||E'\nOrder: '||o.id||E'\nRegistration: '||reg.id||E'\nPayment received. Your Stripe payment receipt is separate.\nA current BLS Provider Manual must be available for class. Official purchase link: https://shopcpr.heart.org/all-products?associated_course=49&format=84',
-     'gmail','pending','public-order-paid:'||o.id||':'||st.email) on conflict(idempotency_key) do nothing;
+     'Hi '||st.first_name||E',\n\nYou are registered for '||v_name||E'.\n'||to_char(s.start_at at time zone 'America/New_York','FMDay, FMMonth FMDD, YYYY')||E'\n'||to_char(s.start_at at time zone 'America/New_York','FMHH12:MI AM')||' Eastern'||E'\n'||coalesce(v_location,'Contact 910CPR to confirm your class location.')||E'\n\nPayment received. Your Stripe payment receipt is separate.\n'||
+     case when o.course_id in ('209806','359474') then
+       case when exists(select 1 from jsonb_array_elements(st.selected_addons) a where a->>'key'='aha_bls_provider_manual_ebook') then E'Your purchased BLS eManual will be provided separately by 910CPR.\n' else E'Have your current 2025 AHA BLS Student Manual available for class.\n' end
+       else '' end||E'\nQuestions, changes or cancellation? Reply to this email or call 910-395-5193. Please include your name and class date.\n\n910CPR',
+     'cloudflare','pending','public-order-paid:'||o.id||':'||st.email) on conflict(idempotency_key) do nothing;
  end loop;
  if exists(select 1 from public.landerware_public_order_students where order_id=o.id and selected_addons<>'[]'::jsonb) then
    insert into public.landerware_messages(template_key,recipient,subject,body_text,delivery_provider,delivery_status,idempotency_key)
-   values('retail-addon-fulfillment-v2','brian@910cpr.com','Paid add-ons require fulfillment — '||v_name,'Order '||o.id||' is paid. Do not auto-release codes or materials. Review the stored student add-ons.','gmail','pending','public-order-fulfillment:'||o.id) on conflict(idempotency_key) do nothing;
+   values('retail-addon-fulfillment-v2','brian@910cpr.com','Paid add-ons require fulfillment — '||v_name,
+     'Order '||o.id||E' is paid. Manual fulfillment required; do not auto-release codes or materials.\n'||
+     (select string_agg(os.first_name||' '||os.last_name||': '||coalesce(a->>'display_name',a->>'key')||
+       coalesce(' [SKU '||nullif(a->>'manufacturer_sku','')||']','')||
+       case when a->>'includes_student_ebook'='true' then ' (student eBook included)' else '' end||
+       case when jsonb_typeof(a->'component_skus')='array' then ' [component SKUs: '||(select string_agg(v.value,', ') from jsonb_array_elements_text(a->'component_skus') v(value))||']' else '' end,E'\n' order by os.email,a->>'key')
+      from public.landerware_public_order_students os cross join lateral jsonb_array_elements(os.selected_addons) a where os.order_id=o.id),
+     'cloudflare','pending','public-order-fulfillment:'||o.id) on conflict(idempotency_key) do nothing;
  end if;
  update public.landerware_public_orders set status='paid',paid_at=now(),stripe_payment_intent_id=p_stripe_payment_intent_id,payment_evidence=p_evidence,reconciliation_error=null,updated_at=now() where id=o.id;
  return jsonb_build_object('orderId',o.id,'status','paid','registrations',v_needed,'idempotentReplay',false);

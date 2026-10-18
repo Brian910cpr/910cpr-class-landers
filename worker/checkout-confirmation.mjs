@@ -1,5 +1,6 @@
 // Dispatch only verified paid-order confirmations from the canonical message queue.
-const BUILD = 'checkout-confirmation-20261017.1';
+import {renderCheckoutEmail} from './checkout-email-template.mjs';
+const BUILD = 'checkout-confirmation-20261018.1';
 const reply = (data, status = 200) => new Response(JSON.stringify(data), {
   status, headers: {'content-type':'application/json', 'cache-control':'no-store'}
 });
@@ -26,11 +27,13 @@ export async function dispatch(env) {
   for (let i=0;i<10;i++) {
     const job = await rpc(env,'landerware_claim_checkout_confirmation');
     if (!job?.messageId) break;
+    if (job.customerTemplate && !job.confirmation) throw Error('confirmation_class_data_missing');
+    const content = job.confirmation ? renderCheckoutEmail(job.confirmation) : {subject:job.subject,text:job.body};
     let result;
     try {
       result = await env.EMAIL.send({from:{email:env.FROM_EMAIL,name:'910CPR'},
         ...(env.REPLY_TO_EMAIL ? {replyTo:env.REPLY_TO_EMAIL} : {}),
-        to:job.recipient,subject:job.subject,text:job.body});
+        to:job.recipient,...content});
     } catch (error) {
       // Only explicit pre-send rejection codes may retry. Other outcomes are unknown.
       const known = ['E_SENDER_NOT_VERIFIED','E_RATE_LIMIT_EXCEEDED'].includes(error?.code);

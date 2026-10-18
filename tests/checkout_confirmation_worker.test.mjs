@@ -12,8 +12,18 @@ function fixture(t,{send=async()=>({messageId:'provider-test-id'}),settleFails=f
    if(url.endsWith('/landerware_checkout_confirmation_health'))return Response.json({healthy:false,observerFresh:false});
    throw Error('unexpected endpoint');
  });
- return{calls,env:{SUPABASE_URL:'https://database.example.test',SUPABASE_PUBLISHABLE_KEY:'public-test',CHECKOUT_DELIVERY_TOKEN:token,FROM_EMAIL:'sender@example.test',EMAIL:{send}}};
+ return{calls,jobs,env:{SUPABASE_URL:'https://database.example.test',SUPABASE_PUBLISHABLE_KEY:'public-test',CHECKOUT_DELIVERY_TOKEN:token,FROM_EMAIL:'sender@example.test',EMAIL:{send}}};
 }
+test('customer delivery renders canonical HTML and text instead of the legacy body or internal IDs',async t=>{
+ const sent=[];const h=fixture(t,{send:async m=>{sent.push(m);return {messageId:'provider-test-id'}}});
+ h.jobs[0].body='Order: internal-private-id';h.jobs[0].customerTemplate=true;
+ h.jobs[0].confirmation={firstName:'Synthetic',course:'BLS Renewal',courseId:'359474',startsAt:'2026-10-24T14:00:00Z',endsAt:'2026-10-24T16:00:00Z',venue:'Recorded venue',address:'Recorded address',selectedOptions:[]};
+ await dispatch(h.env);assert.match(sent[0].html,/Get directions/);assert.match(sent[0].text,/10:00 AM/);assert.doesNotMatch(sent[0].text+sent[0].html,/internal-private-id/);
+});
+test('missing authoritative customer data fails closed without sending the legacy template',async t=>{
+ let sends=0;const h=fixture(t,{send:async()=>{sends++;return {messageId:'test'}}});h.jobs[0].customerTemplate=true;
+ await assert.rejects(dispatch(h.env),/confirmation_class_data_missing/);assert.equal(sends,0);
+});
 test('records provider acceptance and one send for the claimed message',async t=>{
  const sent=[];const h=fixture(t,{send:async m=>{sent.push(m);return{messageId:'provider-test-id'}}});
  assert.deepEqual(await dispatch(h.env),{sent:1,failed:0});assert.equal(sent.length,1);

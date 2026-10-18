@@ -12,7 +12,9 @@ const root=new URL('../../',import.meta.url),read=p=>fs.readFileSync(new URL(p,r
 const local='http://127.0.0.1:8791';
 const h=await setup(12),pending=new Map(),deliveries=[];let webhookSecret='';
 // Clone the actual validated Renewal offer into the isolated test database only.
-const proofStart=new Date(Date.now()+7*86400000),proofEnd=new Date(proofStart.getTime()+120*60000),proofOccupiedEnd=new Date(proofStart.getTime()+150*60000);
+// Synthetic daytime fixture, not a production class or a time copied from execution.
+const proofStart=new Date(Date.now()+7*86400000);proofStart.setUTCHours(14,0,0,0);
+const proofEnd=new Date(proofStart.getTime()+120*60000),proofOccupiedEnd=new Date(proofStart.getTime()+150*60000);
 await h.db.query('update public.class_sessions set start_at=$2,end_at=$3,consumption_start_at=$2,consumption_end_at=$4 where id=$1',[h.id,proofStart.toISOString(),proofEnd.toISOString(),proofOccupiedEnd.toISOString()]);
 const deliveryToken=process.env.CHECKOUT_PROOF_TOKEN||'';
 if(deliveryToken){

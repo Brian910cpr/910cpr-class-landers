@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'worker/checkout-confirmation.mjs'
+      - 'worker/checkout-email-template.mjs'
+      - 'tests/checkout_email_template.test.mjs'
       - 'supabase/functions/public-registration/**'
       - 'supabase/functions/stripe-registration-webhook/**'
       - 'supabase/functions/canonical-session-workspace/**'
@@ -35,6 +37,7 @@ jobs:
           tests/public_registration_option_errors.test.cjs
           tests/stripe_registration_webhook.test.cjs
           tests/checkout_confirmation_worker.test.mjs
+          tests/checkout_email_template.test.mjs
           tests/crm_messages.test.cjs
           tests/reconciliation/native-checkout.test.mjs
           tests/reconciliation/bls-options.test.mjs

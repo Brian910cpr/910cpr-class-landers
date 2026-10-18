@@ -14,6 +14,15 @@ async function fixture(fn){const h=await setup();try{
  const claim=()=>h.rpc('landerware_claim_checkout_confirmation',{p_token:token});
  await fn(h,prepare,claim);
  }finally{await h.db.close()}}
+
+test('paid or expired checkout recovery messages are suppressed rather than left queued',()=>fixture(async(h,prepare)=>{
+ const held=await h.create();
+ await h.db.query("update public.landerware_public_orders set hold_expires_at=now()-interval '1 minute' where id=$1",[held.orderId]);
+ await h.db.exec("insert into public.landerware_messages(template_key,recipient,subject,body_text,delivery_provider,delivery_status,idempotency_key) select 'retail-checkout-recovery-v2',payer_email,'Recovery','Synthetic recovery','cloudflare','pending','public-order-recovery:'||id from public.landerware_public_orders");
+ await prepare();const rows=(await h.db.query("select suppressed_at,suppression_reason from public.landerware_messages where template_key='retail-checkout-recovery-v2'")).rows;
+ assert.equal(rows.length,2);assert.ok(rows.every(r=>r.suppressed_at&&r.suppression_reason.includes('Checkout paid')));
+ await prepare();assert.equal((await h.db.query("select count(*) n from public.landerware_messages where template_key='retail-checkout-recovery-v2' and suppressed_at is not null")).rows[0].n,2);
+}));
 test('one reminder is scheduled 24 hours before class and cannot send early',()=>fixture(async(h,prepare,claim)=>{
  assert.equal((await prepare()).scheduled,1);assert.equal((await prepare()).scheduled,0);assert.equal((await claim()).empty,true);
  assert.equal((await h.rpc('landerware_checkout_confirmation_health',{p_token:token})).queued,0);

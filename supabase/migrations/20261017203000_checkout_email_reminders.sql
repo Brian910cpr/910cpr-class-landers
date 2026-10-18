@@ -12,6 +12,13 @@ begin
  perform public.landerware_check_checkout_delivery_token(p_token);
  select * into cfg from public.landerware_checkout_delivery_config where id;
  if not cfg.enabled then return jsonb_build_object('disabled',true); end if;
+ -- Do not leave obsolete recovery requests appearing ready to send forever.
+ update public.landerware_messages m set suppressed_at=now(),suppression_reason='Checkout paid, closed, or hold expired'
+ from public.landerware_public_orders o
+ where m.template_key='retail-checkout-recovery-v2' and m.idempotency_key='public-order-recovery:'||o.id::text
+   and m.created_at>=cfg.not_before and m.suppressed_at is null and m.delivery_status in ('pending','failed')
+   and (o.status not in ('held','checkout_open') or o.hold_expires_at<=now())
+   and not exists(select 1 from public.landerware_checkout_delivery_attempts a where a.message_id=m.id and a.state in ('processing','sent','ambiguous'));
  update public.landerware_messages m set suppressed_at=now(),suppression_reason='Registration canceled, class changed, or class started'
  from public.registrations r join public.class_sessions s on s.id=r.class_session_id
  where m.operational_registration_id=r.id and m.template_key='retail-class-reminder-24h-v1'
@@ -52,13 +59,14 @@ begin
  update public.landerware_checkout_delivery_config set last_poll_at=now() where id returning * into cfg;
  if not cfg.enabled then return jsonb_build_object('disabled',true); end if;
  select m.* into msg from public.landerware_messages m
- join public.landerware_public_order_students st on (m.idempotency_key='public-order-paid:'||st.order_id::text||':'||st.email or (m.template_key='retail-class-reminder-24h-v1' and m.operational_registration_id=st.registration_id))
+ join public.landerware_public_order_students st on (m.idempotency_key='public-order-paid:'||st.order_id::text||':'||st.email or m.idempotency_key='public-order-fulfillment:'||st.order_id::text or (m.template_key='retail-class-reminder-24h-v1' and m.operational_registration_id=st.registration_id))
  join public.landerware_public_orders o on o.id=st.order_id
  join public.registrations r on r.id=st.registration_id join public.class_sessions s on s.id=r.class_session_id left join public.landerware_checkout_delivery_attempts a on a.message_id=m.id
- where m.template_key in ('retail-paid-confirmation-v3','retail-class-reminder-24h-v1') and m.recipient=st.email and m.suppressed_at is null and (m.scheduled_for is null or m.scheduled_for<=now()) and (m.template_key='retail-paid-confirmation-v3' or (r.status in ('registered','confirmed') and s.status in ('scheduled','active') and s.start_at>now() and m.scheduled_for=s.start_at-interval '24 hours' and r.created_at<=m.scheduled_for))
+ where ((m.template_key in ('retail-paid-confirmation-v3','retail-class-reminder-24h-v1') and m.recipient=st.email) or (m.template_key='retail-addon-fulfillment-v2' and m.recipient='brian@910cpr.com')) and m.suppressed_at is null and (m.scheduled_for is null or m.scheduled_for<=now()) and (m.template_key in ('retail-paid-confirmation-v3','retail-addon-fulfillment-v2') or (r.status in ('registered','confirmed') and s.status in ('scheduled','active') and s.start_at>now() and m.scheduled_for=s.start_at-interval '24 hours' and r.created_at<=m.scheduled_for))
    and m.created_at>=cfg.not_before and o.status='paid' and o.course_id=any(cfg.course_ids)
    and o.payment_evidence->>'payment_status'='paid'
    and st.registration_id is not null
+   and r.status in ('registered','confirmed') and s.status in ('scheduled','active')
    and ((m.delivery_status='pending' and a.message_id is null)
      or (m.delivery_status='failed' and a.state='rejected' and a.attempts<5 and a.retry_at<=now()))
  order by m.created_at,m.id for update of m skip locked limit 1;
@@ -69,7 +77,8 @@ begin
  set lease=excluded.lease,state='processing',attempts=landerware_checkout_delivery_attempts.attempts+1,
  claimed_at=now(),retry_at=null,error_code=null;
  update public.landerware_messages set delivery_provider='cloudflare' where id=msg.id;
- return jsonb_build_object('messageId',msg.id,'lease',ticket,'recipient',msg.recipient,'subject',msg.subject,'body',msg.body_text);
+ return jsonb_build_object('messageId',msg.id,'lease',ticket,'recipient',msg.recipient,'subject',msg.subject,'body',msg.body_text,
+   'customerTemplate',msg.template_key<>'retail-addon-fulfillment-v2','confirmation',public.landerware_checkout_email_data(msg.id));
 end $$;
 
 create or replace function public.landerware_checkout_confirmation_health(p_token text)
@@ -84,9 +93,9 @@ begin
  from public.landerware_checkout_delivery_attempts;
  select count(*),count(*) filter(where coalesce(m.scheduled_for,m.created_at)<now()-interval '10 minutes') into queued,late
  from public.landerware_messages m
- join public.landerware_public_order_students st on (m.idempotency_key='public-order-paid:'||st.order_id::text||':'||st.email or (m.template_key='retail-class-reminder-24h-v1' and m.operational_registration_id=st.registration_id))
+ join public.landerware_public_order_students st on (m.idempotency_key='public-order-paid:'||st.order_id::text||':'||st.email or m.idempotency_key='public-order-fulfillment:'||st.order_id::text or (m.template_key='retail-class-reminder-24h-v1' and m.operational_registration_id=st.registration_id))
  join public.landerware_public_orders o on o.id=st.order_id
- where m.template_key in ('retail-paid-confirmation-v3','retail-class-reminder-24h-v1') and m.recipient=st.email and m.suppressed_at is null and (m.scheduled_for is null or m.scheduled_for<=now())
+ where ((m.template_key in ('retail-paid-confirmation-v3','retail-class-reminder-24h-v1') and m.recipient=st.email) or (m.template_key='retail-addon-fulfillment-v2' and m.recipient='brian@910cpr.com')) and m.suppressed_at is null and (m.scheduled_for is null or m.scheduled_for<=now())
    and m.created_at>=cfg.not_before and o.status='paid' and o.course_id=any(cfg.course_ids)
    and o.payment_evidence->>'payment_status'='paid' and st.registration_id is not null
    and m.delivery_status in ('pending','failed');

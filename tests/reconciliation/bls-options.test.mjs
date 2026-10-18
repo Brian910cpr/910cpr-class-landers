@@ -15,6 +15,9 @@ test('First Aid uses approved prices, includes online skills, and preserves the 
   assert.equal(online.includes_student_ebook,true); assert.equal(online.additional_onsite_minutes,0);
   const onlineOrder=await h.create([{...h.students(1)[0],firstAidChoice:'online',addons:[{key:online.key,quantity:1}]}]);
   assert.equal(onlineOrder.total,12500);
+  const savedOnline=(await h.db.query('select selected_addons from public.landerware_public_order_students where order_id=$1',[onlineOrder.orderId])).rows[0].selected_addons[0];
+  assert.equal(savedOnline.includes_student_ebook,true);assert.equal(savedOnline.includes_skills_testing,true);
+  assert.deepEqual(savedOnline.component_skus,['25-1402','25-3149']);
   const inPerson=await h.create([{...h.students(1)[0],firstAidChoice:'in-person',firstAidManualChoice:'own-copy',addons:[{key:'aha_heartsaver_first_aid_in_person',quantity:1}]}]);
   assert.equal(inPerson.total,13500);
   await assert.rejects(h.create([{...h.students(1)[0],firstAidChoice:'online',addons:[{key:online.key},{key:'aha_heartsaver_first_aid_manual_ebook'}]}]),/invalid_course_option/);
@@ -40,4 +43,16 @@ test('HeartCode requires an explicit path and completion acknowledgement, chargi
   const bundle=await create({...h.students(1)[0],learningPath:'online-and-skills',onlineCompletionAcknowledged:true,addons:[{key:'aha_heartcode_bls_online',quantity:1}]});
   assert.equal(bundle.total,9600);
  } finally {await h.db.close()}
+});
+test('current BLS product identities retain established store prices and snapshot their manufacturer SKU',async()=>{
+ const h=await setup();try{
+  await h.db.exec("insert into public.landerware_registration_catalog(course_id,course_name,unit_amount,addons) values('210549','HeartCode BLS',5500,'[]') on conflict do nothing");
+  const migration=fs.readFileSync(new URL('../../supabase/migrations/20261017220000_bls_first_aid_options.sql',import.meta.url),'utf8');await h.db.exec(migration);
+  const rows=(await h.db.query("select course_id,addons from public.landerware_registration_catalog where course_id in ('359474','210549')")).rows;
+  const book=rows.find(r=>r.course_id==='359474').addons.find(a=>a.key==='aha_bls_provider_manual_ebook');assert.equal(book.manufacturer_sku,'25-3102');assert.equal(book.unit_amount,1749);
+  const online=rows.find(r=>r.course_id==='210549').addons.find(a=>a.key==='aha_heartcode_bls_online');assert.equal(online.manufacturer_sku,'25-3553');assert.equal(online.unit_amount,4100);
+  const order=await h.create([{...h.students(1)[0],manualChoice:'ebook',addons:[{key:book.key}]}]);assert.equal(order.total,9249);
+  const selected=(await h.db.query('select selected_addons from public.landerware_public_order_students where order_id=$1',[order.orderId])).rows[0].selected_addons;assert.equal(selected[0].manufacturer_sku,'25-3102');
+  await h.db.exec(migration);const again=(await h.db.query("select addons from public.landerware_registration_catalog where course_id='359474'")).rows[0].addons;assert.equal(again.filter(a=>a.key===book.key).length,1);
+ }finally{await h.db.close()}
 });

@@ -61,3 +61,26 @@ test('queue tables and token checker are inaccessible to anonymous readers',()=>
  await assert.rejects(h.db.exec("select public.landerware_check_checkout_delivery_token('bad')"),/permission denied/);
  await h.db.exec('reset role');
 }));
+test('canonical confirmation payload excludes operational IDs and keeps purchased option snapshots',()=>fixture(async h=>{
+ await h.db.exec('update public.landerware_checkout_delivery_config set enabled=true');const o=await paid(h);
+ const j=await claim(h);assert.equal(j.customerTemplate,true);assert.equal(j.confirmation.courseId,'359474');
+ assert.ok(j.confirmation.startsAt);assert.equal(j.confirmation.course,'AHA BLS Provider Renewal');
+ assert.doesNotMatch(JSON.stringify(j.confirmation),new RegExp(o.id));
+ const body=(await h.db.query('select body_text from public.landerware_messages where id=$1',[j.messageId])).rows[0].body_text;
+ assert.doesNotMatch(body,/Order:|Registration:|America\/New_York/);
+ await h.db.exec('set role anon');await assert.rejects(h.db.query('select public.landerware_checkout_email_data($1)',[j.messageId]),/permission denied/);await h.db.exec('reset role');
+}));
+test('cancelled registrations and refunded orders cannot send a stale paid confirmation',()=>fixture(async h=>{
+ await h.db.exec('update public.landerware_checkout_delivery_config set enabled=true');const o=await paid(h);
+ await h.db.query("update public.registrations set status='cancelled' where class_session_id=$1",[h.id]);assert.equal((await claim(h)).empty,true);
+ await h.db.query("update public.registrations set status='registered' where class_session_id=$1",[h.id]);
+ await h.db.query("update public.landerware_public_orders set status='refunded' where id=$1",[o.id]);assert.equal((await claim(h)).empty,true);
+}));
+test('paid material fulfillment is leased only to the owner with exact purchased products',()=>fixture(async h=>{
+ await h.db.exec(fs.readFileSync(new URL('../../supabase/migrations/20261017220000_bls_first_aid_options.sql',import.meta.url),'utf8'));
+ await h.db.exec('update public.landerware_checkout_delivery_config set enabled=true');
+ const a=await h.create([{...h.students(1)[0],manualChoice:'ebook',addons:[{key:'aha_bls_provider_manual_ebook'}]}]);const o=await h.bind(a.orderId);await h.finalize(o);
+ const jobs=[await claim(h),await claim(h)];const owner=jobs.find(j=>j.recipient==='brian@910cpr.com');assert.ok(owner);assert.equal(owner.customerTemplate,false);
+ assert.match(owner.body,/2025 AHA BLS Student Manual eBook/);assert.match(owner.body,/25-3102/);assert.match(owner.body,/Manual fulfillment required/);
+ assert.equal((await claim(h)).empty,true);
+}));
