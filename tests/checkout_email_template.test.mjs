@@ -24,3 +24,18 @@ test('recovery has a bounded canonical checkout link and never claims payment or
  const r=renderCheckoutEmail(data);assert.match(r.subject,/Finish your registration/);assert.match(r.html,/Return to checkout/);assert.match(r.text,/9:30 AM Eastern/);assert.doesNotMatch(r.text,/Payment received|You’re registered/);
  assert.throws(()=>renderCheckoutEmail({...data,recoveryUrl:'https://evil.example/register/?recover=00000000-0000-4000-8000-000000000001'}),/recovery_data_invalid/);
 });
+
+ test('completion eCards, optional purchases and reschedule calendar stay distinct',()=>{
+ const base=renderCheckoutEmail(sample);
+ assert.match(base.text,/American Heart Association BLS Provider eCard/);
+ assert.match(base.text,/after successful completion/);
+ assert.match(base.html,/https:\/\/www.910cpr.com\/bls.html#date-list/);
+ assert.match(base.text,/Do not register or pay again/);
+ assert.doesNotMatch(base.html,/Options you selected|Heartsaver First Aid eCard/);
+ const extra=renderCheckoutEmail({...sample,selectedOptions:[{key:'aha_bls_provider_manual_ebook',display_name:'BLS eManual'},{key:'aha_heartsaver_first_aid_online',display_name:'Online First Aid'}]});
+ assert.match(extra.html,/Options you selected — optional purchases/);
+ assert.match(extra.text,/Heartsaver First Aid eCard/);
+ assert.doesNotMatch(extra.html,/Included with your registration/);
+ const unknown=renderCheckoutEmail({...sample,courseId:'unknown'});
+ assert.doesNotMatch(unknown.html,/BLS Provider eCard|View reschedule calendar/);
+ });
