@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="same-origin">
+<meta name="landerware-build" content="messages-20261017.1"><meta name="landerware-page" content="admin-messages">
+<title>Registration Messages | LanderWare</title>
+<link rel="stylesheet" href="/assets/site-theme.css?v=20260818.5">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#edf2f6;color:#172133;font:15px/1.5 Arial,sans-serif}header{background:#13263a;color:white;padding:22px}h1{margin:0;font-size:26px}main{max-width:1100px;margin:auto;padding:18px}.panel,article{background:white;border:1px solid #d9e0e8;border-radius:12px;padding:16px;margin:12px 0}.toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}button,select{font:inherit;padding:8px;border:1px solid #b8c4ce;border-radius:7px;background:white;color:#172133}button{cursor:pointer}.muted{color:#687386}.state{font-weight:bold}.failed,.bounced{color:#9c2328}.sent,.delivered{color:#167654}summary{cursor:pointer}pre{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere}a{color:#12638e}.meta{display:flex;gap:14px;flex-wrap:wrap;font-size:13px}.empty{padding:30px;text-align:center}#status{overflow-wrap:anywhere}[hidden]{display:none!important}@media(prefers-color-scheme:dark){body{background:#101923;color:#e8eef6}.panel,article{background:#172435;border-color:#39495d}.muted{color:#b9c6d5}a{color:#8acef0}}
+</style>
+<script defer src="/admin/admin-auth.js?v=20261017.1"></script>
+<script defer src="/admin/admin-nav.js?v=20261017.2"></script>
+<script defer src="/admin/messages.js?v=20261017.1"></script>
+</head><body><div id="adminNav"></div>
+<header><h1>Registration Messages</h1><div>Confirmations · reminders · failures</div></header>
+<main><section class="panel"><div class="toolbar">
+<label>Status <select id="filter"><option value="">All statuses</option><option value="pending">Queued</option><option value="sent">Accepted by provider</option><option value="delivered">Delivered</option><option value="failed">Failed / needs review</option><option value="bounced">Bounced</option><option value="scheduled">Scheduled</option><option value="suppressed">Suppressed</option></select></label>
+<button id="refresh" type="button">Refresh</button><a href="/admin/access.html?next=/admin/messages.html">Owner sign-in</a></div>
+<p id="status" role="status" aria-live="polite">Loading message history…</p>
+<p class="muted">Accepted by provider means the sending service accepted the email. Delivery is shown only when recorded separately. This view does not send or retry messages.</p></section>
+<section id="messages" aria-label="Message history"></section>
+<div class="toolbar"><button id="previous" type="button" disabled>Previous</button><button id="next" type="button" disabled>Next</button></div>
+</main></body></html>
