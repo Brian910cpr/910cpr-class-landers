@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-18T13:10:17.356890+00:00",
+  "generated_at": "2026-10-18T13:16:19.289069+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,13 +22,15 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 361,
-    "blocks_blocked": 19,
+    "blocks_generated": 359,
+    "blocks_blocked": 20,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
+      "event_missing_parseable_start_or_end": 1,
       "inverse_gap_shorter_than_minimum_consumption": 19
     },
     "blocked_all_reason_counts": {
+      "event_missing_parseable_start_or_end": 1,
       "inverse_gap_shorter_than_minimum_consumption": 19
     },
     "source_type_counts": {
@@ -36,11 +38,11 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 166,
+      "blocked": 164,
       "available": 195
     },
     "inverse_generated_availability_blocks": 195,
-    "inverse_blocking_event_blocks": 166,
+    "inverse_blocking_event_blocks": 164,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
@@ -205,54 +207,6 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "2ataqlbabvbitq3ef94461hvdg@google.com",
       "summary": "Jonah – Browning Orthodontics",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-20T01:30:00",
-      "end_datetime": "2026-10-20T22:30:00",
-      "date": "2026-10-20",
-      "end_date": "2026-10-20",
-      "start_time": "01:30",
-      "end_time": "22:30",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "7n7cukq80sbffcrq00r4tkii1a@google.com",
-      "summary": "Travel Blocker",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-20T06:30:00",
-      "end_datetime": "2026-10-20T07:45:00",
-      "date": "2026-10-20",
-      "end_date": "2026-10-20",
-      "start_time": "06:30",
-      "end_time": "07:45",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com:20261020T0630000400",
-      "summary": "CFA Drop Off",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -4031,11 +3985,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-18T09:15:00",
+      "start_datetime": "2026-10-18T09:30:00",
       "end_datetime": "2026-10-18T17:00:00",
       "date": "2026-10-18",
       "end_date": "2026-10-18",
-      "start_time": "09:15",
+      "start_time": "09:30",
       "end_time": "17:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -4125,11 +4079,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-20T00:00:00",
-      "end_datetime": "2026-10-20T01:30:00",
+      "end_datetime": "2026-10-20T13:45:00",
       "date": "2026-10-20",
       "end_date": "2026-10-20",
       "start_time": "00:00",
-      "end_time": "01:30",
+      "end_time": "13:45",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -4155,11 +4109,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-20T22:30:00",
+      "start_datetime": "2026-10-20T20:00:00",
       "end_datetime": "2026-10-21T00:00:00",
       "date": "2026-10-20",
       "end_date": "2026-10-21",
-      "start_time": "22:30",
+      "start_time": "20:00",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10046,11 +10000,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-16T00:00:00",
-      "end_datetime": "2027-01-16T09:15:00",
+      "end_datetime": "2027-01-16T09:30:00",
       "date": "2027-01-16",
       "end_date": "2027-01-16",
       "start_time": "00:00",
-      "end_time": "09:15",
+      "end_time": "09:30",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -10074,23 +10028,18 @@
       ]
     }
   ],
-  "layered_commitment_coverage": [
-    {
-      "status": "known_complete",
-      "instructor": "Brian Ennis",
-      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-10-18T13:10:16.288710+00:00",
-      "end": "2027-01-16T13:10:16.288710+00:00",
-      "observed_at": "2026-10-18T13:10:17.274641+00:00",
-      "valid_until": "2026-10-18T13:25:17.274641+00:00",
-      "freshness_minutes": 15,
-      "source": "configured_calendar_exports",
-      "source_ids": [
-        "brian_do_not_schedule"
-      ]
-    }
-  ],
+  "layered_commitment_coverage": [],
   "blocked_or_placeholder_sources": [
+    {
+      "calendar_source_key": "brian_do_not_schedule",
+      "source_event_id": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
+      "source_type": "inverse_google_calendar",
+      "reason_code": "event_missing_parseable_start_or_end",
+      "all_reason_codes": [
+        "event_missing_parseable_start_or_end"
+      ],
+      "message": "Calendar event was not usable as an inverse blocking interval."
+    },
     {
       "calendar_source_key": "brian_do_not_schedule",
       "source_type": "inverse_google_calendar",
