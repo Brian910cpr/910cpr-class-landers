@@ -4,12 +4,18 @@ on:
     paths:
       - 'supabase/functions/registration-reschedule/**'
       - 'tests/reschedule.test.mjs'
+      - 'tests/reschedule-dynamic*'
+      - 'tests/helpers/reschedule-*.sql'
+      - 'supabase/migrations/20261019225039_registration_reschedule_dynamic_offers.sql'
       - '.github/workflows/verify-registration-reschedule.yml'
   push:
     branches: [main]
     paths:
       - 'supabase/functions/registration-reschedule/**'
       - 'tests/reschedule.test.mjs'
+      - 'tests/reschedule-dynamic*'
+      - 'tests/helpers/reschedule-*.sql'
+      - 'supabase/migrations/20261019225039_registration_reschedule_dynamic_offers.sql'
 permissions:
   contents: read
 jobs:
@@ -21,3 +27,37 @@ jobs:
         with:
           node-version: '24'
       - run: node --test tests/reschedule.test.mjs
+  registration-reschedule-transaction:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: reschedule_test
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Compile and verify synthetic rollback transactions
+        run: |
+          psql -h 127.0.0.1 -U postgres -d reschedule_test -v ON_ERROR_STOP=1 \
+            -f tests/helpers/reschedule-production-schema.sql \
+            -f supabase/migrations/20261019175346_registration_self_service_rescheduling.sql \
+            -f supabase/migrations/20261019175522_reschedule_confirmation_provider.sql \
+            -f supabase/migrations/20261019225039_registration_reschedule_dynamic_offers.sql -f tests/reschedule-dynamic-transaction.sql
+      - name: Verify simultaneous overlapping and identical choices
+        env:
+          RESCHEDULE_TEST_DATABASE: reschedule_concurrency_test
+          RESCHEDULE_TEST_PORT: '5432'
+        run: |
+          psql -h 127.0.0.1 -U postgres -d postgres -v ON_ERROR_STOP=1 -c 'create database reschedule_concurrency_test'
+          psql -h 127.0.0.1 -U postgres -d reschedule_concurrency_test -v ON_ERROR_STOP=1 \
+            -f tests/helpers/reschedule-production-schema.sql \
+            -f supabase/migrations/20261019175346_registration_self_service_rescheduling.sql \
+            -f supabase/migrations/20261019175522_reschedule_confirmation_provider.sql \
+            -f supabase/migrations/20261019225039_registration_reschedule_dynamic_offers.sql
+          node tests/reschedule-dynamic-concurrency.mjs
