@@ -1,0 +1,3 @@
+[functions.registration-reschedule]
+# The handler validates an expiring private capability, or an existing owner session.
+verify_jwt = false
