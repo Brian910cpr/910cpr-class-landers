@@ -71,11 +71,10 @@ export async function handler(req){
     const customers=await ownerRest(`customers?email=ilike.${encodeURIComponent(email.replace(/_/g,'\\_'))}&select=id,first_name,last_name&limit=10`);
     const registrations=[];
     for(const c of customers){
-     const rows=await ownerRest(`registrations?customer_id=eq.${c.id}&status=in.(active,registered,confirmed)&select=id,class_session_id&limit=100`);
-     for(const r of rows){const sessions=await ownerRest(`class_sessions?id=eq.${r.class_session_id}&start_at=gt.${encodeURIComponent(new Date().toISOString())}&select=id,start_at,course_id&limit=1`);if(!sessions.length)continue;
-      const course=await ownerRest(`courses?id=eq.${sessions[0].course_id}&select=name&limit=1`);
-      registrations.push({id:r.id,name:`${c.first_name} ${c.last_name}`,course:course[0]?.name||'',startsAt:sessions[0].start_at});
-     }
+     const rows=await ownerRest(`registrations?customer_id=eq.${c.id}&status=in.(active,registered,confirmed)&select=id,registration_orders(id),session:class_sessions!inner(start_at,course_id,external_class_id,course:courses(name))&session.start_at=gt.${encodeURIComponent(new Date().toISOString())}&limit=100`);
+     const grouped=new Map();
+     for(const r of rows){const s=r.session,key=s.course_id+'|'+s.start_at,score=(r.registration_orders?.length?2:0)+(/^\d+$/.test(s.external_class_id)?1:0);if(!grouped.has(key)||score>grouped.get(key).score)grouped.set(key,{id:r.id,name:`${c.first_name} ${c.last_name}`,course:s.course?.name||'',startsAt:s.start_at,score});}
+     registrations.push(...[...grouped.values()].map(({score,...r})=>r));
     }
     return json(origin,{registrations});
    }

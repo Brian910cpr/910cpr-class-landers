@@ -11,3 +11,25 @@ globalThis.Deno={env:{get:()=>undefined}};
 const {handler}=await import('../supabase/functions/registration-reschedule/index.ts');
 test('untrusted origins and missing capability cannot access registration data',async()=>{assert.equal((await handler(new Request('https://test/context',{method:'POST',headers:{origin:'https://evil.example'},body:'{}'}))).status,403);assert.equal((await handler(new Request('https://test/context',{method:'POST',body:'{}'}))).status,401);assert.equal((await handler(new Request('https://test/issue',{method:'POST',body:'{}'}))).status,401);});
 test('GET requests cannot move a registration',async()=>{assert.equal((await handler(new Request('https://test/confirm'))).status,405);});
+test('confirmation uses server publication and survives an email provider failure',async()=>{
+ const originalFetch=globalThis.fetch;const calls=[];const now=Date.now();
+ const selected={id:'11111111-1111-4111-8111-111111111111',course:'AHA BLS Provider',startsAt:'2026-10-25T14:00:00Z'};
+ Deno.env.get=name=>({SUPABASE_URL:'https://database.test',SUPABASE_SERVICE_ROLE_KEY:'test-only',RESEND_API_KEY:'test-only'}[name]);
+ globalThis.fetch=async(url,init={})=>{calls.push({url:String(url),body:init.body&&JSON.parse(init.body)});const path=String(url);
+  let result=[];
+  if(path.endsWith('/rpc/registration_reschedule_context'))result={status:'pending',course:selected.course,courseNumber:'209806',options:[selected]};
+  else if(path.includes('block-selector-availability'))result=publication({generatedAt:new Date(now).toISOString(),validUntil:new Date(now+60000).toISOString()});
+  else if(path.includes('/class_sessions?'))result=[{id:selected.id,external_class_id:'123456'}];
+  else if(path.endsWith('/rpc/confirm_registration_reschedule'))result={...selected,registrationId:'22222222-2222-4222-8222-222222222222'};
+  else if(path.endsWith('/rpc/claim_reschedule_confirmations'))result=[{id:'33333333-3333-4333-8333-333333333333',recipient:'test@example.invalid',subject:'Test',body:'Test'}];
+  else if(path==='https://api.resend.com/emails')return new Response('{}',{status:503});
+  return new Response(JSON.stringify(result),{status:200,headers:{'content-type':'application/json'}});
+ };
+ try{
+  const response=await handler(new Request('https://test/confirm',{method:'POST',headers:{'x-reschedule-token':'lw_r_'+'a'.repeat(64),'content-type':'application/json'},body:JSON.stringify({sessionId:selected.id,publishedIds:['attacker-controlled']})}));
+  assert.equal(response.status,200);assert.equal((await response.json()).confirmationStatus,'pending');
+  const move=calls.find(c=>c.url.endsWith('/rpc/confirm_registration_reschedule'));
+  assert.deepEqual(move.body.p_published_ids,['123456']);
+  assert.ok(calls.some(c=>c.url.includes('registration_reschedule_deliveries?')&&c.body?.status==='failed'));
+ }finally{globalThis.fetch=originalFetch;Deno.env.get=()=>undefined;}
+});
