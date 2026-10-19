@@ -18,14 +18,20 @@ async function choices(hash){
  const response=await fetch(`${SITE}/data/block-selector-availability/${familyPath(context.course)}.json`,{cache:'no-store',redirect:'error',signal:AbortSignal.timeout(15000)});
  if(!response.ok)throw Error('calendar_refresh_required');
  const offers=publishedOffers(await response.json(),context.courseNumber);
- const ids=[...new Set(offers.map(o=>o.externalId))];
+ const ids=[...new Set(offers.filter(o=>o.externalId).map(o=>o.externalId))];
  const current=await rpc('registration_reschedule_context',{p_token_sha256:hash,p_published_ids:ids});
  if(current.status==='confirmed')return current;
  // Match publication time to canonical time as well as external identity.
  const sessionIds=current.options.map(o=>o.id);
  const sessions=sessionIds.length?await ownerRest(`class_sessions?id=in.(${sessionIds.join(',')})&select=id,external_class_id`):[];
  current.options=current.options.filter(o=>offers.some(p=>p.externalId===sessions.find(s=>s.id===o.id)?.external_class_id&&p.localStart===localStart(o.startsAt)));
- return {...current,publishedIds:ids};
+ const dynamicOffers=offers.filter(o=>o.kind==='dynamic');
+ if(dynamicOffers.length){
+  const dynamic=await rpc('registration_reschedule_dynamic_targets',{p_token_sha256:hash,p_offers:dynamicOffers});
+  current.options.push(...dynamic);
+ }
+ current.options.sort((a,b)=>Date.parse(a.startsAt)-Date.parse(b.startsAt));
+ return {...current,publishedIds:ids,dynamicOffers};
 }
 const PUBLIC_ERRORS=new Set(['invalid_or_expired_link','registration_not_reschedulable','registration_email_missing','invalid_link_policy','session_not_available','already_registered_for_target','link_already_used','duplicate_financial_record_requires_review','duplicate_completion_requires_review','registration_date_closed','calendar_refresh_required','course_calendar_unavailable','invalid_help_message']);
 export async function deliverConfirmations(registrationId=null){
@@ -106,13 +112,15 @@ export async function handler(req){
   if(route==='help'){const body=await req.json();const result=await rpc('request_registration_reschedule_help',{p_token_sha256:hash,p_message:body.message});try{await deliverConfirmations();}catch{}return json(origin,result);}
   if(route!=='context'&&route!=='confirm')return json(origin,{error:'not_found'},404);
   const current=await choices(hash);
-  if(route==='context'){delete current.publishedIds;if(current.status==='confirmed')current.result=await confirmationStatus(current.result);return json(origin,current);}
+  if(route==='context'){delete current.publishedIds;delete current.dynamicOffers;if(current.status==='confirmed')current.result=await confirmationStatus(current.result);return json(origin,current);}
   const body=await req.json();
   if(current.status==='confirmed'){
-   if(current.result.sessionId!==body.sessionId)throw Error('link_already_used');
+   if((current.result.selectionId||current.result.sessionId)!==body.sessionId)throw Error('link_already_used');
    return json(origin,await confirmationStatus({...current.result,idempotentReplay:true}));
   }
   if(!current.options.some(o=>o.id===body.sessionId))throw Error('session_not_available');
+  const offer=current.dynamicOffers?.find(o=>o.selectionId===body.sessionId);
+  if(offer)return json(origin,await confirmationStatus(await rpc('confirm_registration_reschedule_dynamic',{p_token_sha256:hash,p_offer:offer})));
   return json(origin,await confirmationStatus(await rpc('confirm_registration_reschedule',{p_token_sha256:hash,p_target_session_id:body.sessionId,p_published_ids:current.publishedIds})));
  }catch(error){
   const message=error instanceof Error?error.message:'';
