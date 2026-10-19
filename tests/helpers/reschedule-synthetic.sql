@@ -1,4 +1,5 @@
 -- Only load into an empty, disposable localhost database. Contains synthetic records only.
+set app.location_status_reason='Synthetic local test fixture';
 create schema if not exists reschedule_test_fixture;
 create table if not exists reschedule_test_fixture.local_only(marker text primary key);
 insert into reschedule_test_fixture.local_only values('synthetic localhost fixture') on conflict do nothing;
