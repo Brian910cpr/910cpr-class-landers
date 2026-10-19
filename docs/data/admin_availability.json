@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-10-19T19:25:04.399654+00:00",
+  "generated_at": "2026-10-19T19:30:20.973705+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-19T19:25:03.788035+00:00",
+      "generated_at": "2026-10-19T19:30:20.364605+00:00",
       "event_count": 0
     },
     {
@@ -16,30 +16,19 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-19T19:25:04.399654+00:00",
-      "event_count": 159
+      "generated_at": "2026-10-19T19:30:20.973705+00:00",
+      "event_count": 158
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-10-19T19:25:04.020345+00:00",
+      "generated_at": "2026-10-19T19:30:20.599405+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Jonah – Browning Orthodontics",
-      "start": "2026-10-19T19:30:00+00:00",
-      "end": "2026-10-19T21:15:00+00:00",
-      "location": "",
-      "status": "CONFIRMED"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",

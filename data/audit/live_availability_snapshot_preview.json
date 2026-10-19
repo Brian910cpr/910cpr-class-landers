@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-19T19:25:04.493352+00:00",
+  "generated_at": "2026-10-19T19:30:21.091595+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 352,
+    "blocks_generated": 351,
     "blocks_blocked": 20,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -38,38 +38,14 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 158,
+      "blocked": 157,
       "available": 194
     },
     "inverse_generated_availability_blocks": 194,
-    "inverse_blocking_event_blocks": 158,
+    "inverse_blocking_event_blocks": 157,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-19T15:30:00",
-      "end_datetime": "2026-10-19T17:15:00",
-      "date": "2026-10-19",
-      "end_date": "2026-10-19",
-      "start_time": "15:30",
-      "end_time": "17:15",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "UNKNOWN",
-      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "2ataqlbabvbitq3ef94461hvdg@google.com",
-      "summary": "Jonah – Browning Orthodontics",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -3841,11 +3817,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-19T17:15:00",
+      "start_datetime": "2026-10-19T15:45:00",
       "end_datetime": "2026-10-20T00:00:00",
       "date": "2026-10-19",
       "end_date": "2026-10-20",
-      "start_time": "17:15",
+      "start_time": "15:45",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -9825,11 +9801,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-17T00:00:00",
-      "end_datetime": "2027-01-17T15:30:00",
+      "end_datetime": "2027-01-17T15:45:00",
       "date": "2027-01-17",
       "end_date": "2027-01-17",
       "start_time": "00:00",
-      "end_time": "15:30",
+      "end_time": "15:45",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
