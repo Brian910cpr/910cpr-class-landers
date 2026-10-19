@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-19T04:36:03.600457+00:00",
+  "generated_at": "2026-10-19T04:45:08.852425+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -3913,11 +3913,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-19T00:45:00",
+      "start_datetime": "2026-10-19T01:00:00",
       "end_datetime": "2026-10-19T06:30:00",
       "date": "2026-10-19",
       "end_date": "2026-10-19",
-      "start_time": "00:45",
+      "start_time": "01:00",
       "end_time": "06:30",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -10134,7 +10134,7 @@
       "reason_code": "inverse_gap_shorter_than_minimum_consumption",
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
       "start_datetime": "2027-01-17T00:00:00",
-      "end_datetime": "2027-01-17T00:45:00"
+      "end_datetime": "2027-01-17T01:00:00"
     }
   ]
 }
