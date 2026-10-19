@@ -1,0 +1,32 @@
+name: Rescheduling confirmation delivery
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '4,14,24,34,44,54 * * * *'
+permissions:
+  contents: read
+concurrency:
+  group: reschedule-confirmations
+  cancel-in-progress: false
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Retry confirmation mail and report stuck deliveries
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        shell: python
+        run: |
+          import json, os, urllib.request
+          key = os.environ.get('HOT_SYNC_ADMIN_KEY')
+          if not key:
+              raise SystemExit('Confirmation observer has no owner automation credential')
+          req = urllib.request.Request(
+              'https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/registration-reschedule/retry-confirmations',
+              data=b'{}', headers={'content-type':'application/json','x-hot-sync-admin-key':key}, method='POST')
+          with urllib.request.urlopen(req, timeout=90) as response:
+              result = json.load(response)
+          print(json.dumps(result))
+          if not result.get('configured') or result.get('failed') or result.get('pendingFailures'):
+              raise SystemExit('Confirmation delivery requires recovery')
