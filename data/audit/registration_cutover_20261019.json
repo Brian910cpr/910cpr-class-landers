@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "observed_date": "2026-10-19",
+  "timezone": "America/New_York",
+  "production_reads_only": true,
+  "code_base": {
+    "pull_request": 416,
+    "commit": "22f311bbba6bc33bd2cf805de3218e0561552c62"
+  },
+  "public_schedule": {
+    "url": "https://www.910cpr.com/data/schedule_future.json",
+    "published_sessions": 26,
+    "future_sessions": 26,
+    "enrollware_registration_urls": 25,
+    "native_registration_urls": 1
+  },
+  "public_bls_page": {
+    "url": "https://www.910cpr.com/bls.html",
+    "http_status": 200,
+    "contains_inline_registration_asset": false,
+    "contains_native_register_route": false
+  },
+  "database": {
+    "project_ref": "wktwgcnwdvbebcobgyey",
+    "verified_seat_state_function": false,
+    "payment_evidence_column": false,
+    "checkout_delivery_config": false,
+    "checkout_confirmation_health": false,
+    "email_delivery_events": false,
+    "future_operational_sessions": [
+      {
+        "registration_backend": "enrollware",
+        "total": 34,
+        "public_open": 0
+      },
+      {
+        "registration_backend": "landerware",
+        "total": 5,
+        "public_open": 1
+      },
+      {
+        "registration_backend": "manual",
+        "total": 2,
+        "public_open": 0
+      }
+    ]
+  },
+  "deployed_functions": {
+    "public-registration": {
+      "version": 19,
+      "native_ready_check": false,
+      "passes_payment_evidence": false
+    },
+    "stripe-registration-webhook": {
+      "version": 10,
+      "public_order_finalizer_route": false,
+      "retail_order_finalizer_route": true,
+      "five_minute_signature_window": false
+    }
+  },
+  "native_candidate": {
+    "external_class_id": "lw-dfa08088-1266-4dd6-ad7d-14856b7f845a",
+    "course_id": "359474",
+    "start_at": "2026-11-03T12:00:00-05:00",
+    "end_at": "2026-11-03T14:00:00-05:00",
+    "max_students": 20,
+    "has_location": true,
+    "has_instructor": true,
+    "registration_backend": "landerware",
+    "visibility": "public",
+    "registration_status": "open",
+    "get_session_http_status": 200,
+    "get_session_price": 75,
+    "get_session_currency": "usd",
+    "get_session_exposes_seat_proof": false,
+    "release_approval": false
+  },
+  "account_blockers": {
+    "stripe_connector": "UNAUTHORIZED: reauthentication required",
+    "cloudflare_cli": "9109: saved token cannot be used from current network location",
+    "github_issue_cli": "repository has disabled issues"
+  },
+  "local_proof": {
+    "baseline_tests": 78,
+    "new_regression_tests": 2,
+    "regressions_failed_before_fix": 2,
+    "provider_event_suite_after_fix_passed": 5,
+    "worker_dry_run": "PASS; no upload",
+    "full_suite_after_fix_passed": 80
+  },
+  "production_mutations": 0,
+  "new_resources": 0,
+  "new_schedulers": 0,
+  "new_crm_systems": 0,
+  "can_leave_enrollware": false,
+  "integration_blockers": [
+    "PR416 merge conflict against main; compare shows 363 newer commits, primarily scheduling/public projections",
+    "Git fetch main timed out at network transfer; no reset, merge or force push attempted"
+  ]
+}

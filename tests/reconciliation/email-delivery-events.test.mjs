@@ -30,3 +30,27 @@ test('untrusted source, wrong token and anonymous history access are rejected',(
  await assert.rejects(h.rpc('landerware_record_email_delivery_event',{p_token:'bad',p_event:event('delivered')}),/delivery_unauthorized/);
  await h.db.exec('set role anon');await assert.rejects(h.db.exec('select * from public.landerware_message_history'),/permission denied/);await h.db.exec('reset role');
 }));
+
+test('checkout health rejects a bounced or complained confirmation despite provider acceptance',()=>fixture(async(h,msg,event,record)=>{
+ await h.db.exec('update public.landerware_checkout_delivery_config set enabled=true');
+ const job=await h.rpc('landerware_claim_checkout_confirmation',{p_token:token});assert.equal(job.messageId,msg.id);
+ await h.rpc('landerware_settle_checkout_confirmation',{p_token:token,p_message_id:msg.id,p_lease:job.lease,p_outcome:'sent',p_provider_id:'provider-test',p_error:null});
+ const health=()=>h.rpc('landerware_checkout_confirmation_health',{p_token:token});
+ await record(event('bounced'));assert.equal((await health()).healthy,false);assert.equal((await health()).deliveryFailures,1);
+ await record(event('delivered','later-delivery'));assert.equal((await health()).deliveryFailures,0);
+ await record(event('complained'));assert.equal((await health()).healthy,false);assert.equal((await health()).deliveryFailures,1);
+ assert.equal((await h.rpc('landerware_claim_checkout_confirmation',{p_token:token})).empty,true);
+}));
+
+test('checkout health flags overdue missing delivery receipts and recovers only on matching evidence',()=>fixture(async(h,msg,event,record)=>{
+ await h.db.exec('update public.landerware_checkout_delivery_config set enabled=true');
+ const job=await h.rpc('landerware_claim_checkout_confirmation',{p_token:token});
+ await h.rpc('landerware_settle_checkout_confirmation',{p_token:token,p_message_id:msg.id,p_lease:job.lease,p_outcome:'sent',p_provider_id:'provider-test',p_error:null});
+ await h.db.query("update public.landerware_messages set sent_at=now()-interval '11 minutes' where id=$1",[msg.id]);
+ const health=()=>h.rpc('landerware_checkout_confirmation_health',{p_token:token});
+ assert.equal((await health()).healthy,false);assert.equal((await health()).deliveryUnconfirmed,1);
+ const unrelated=event('delivered','wrong-recipient');unrelated.payload.recipient='other@example.test';await record(unrelated);
+ assert.equal((await health()).deliveryUnconfirmed,1);
+ await record(event('delivered'));assert.equal((await health()).deliveryUnconfirmed,0);assert.equal((await health()).healthy,true);
+ await h.db.exec('set role anon');await assert.rejects(h.rpc('landerware_checkout_confirmation_health',{p_token:'bad'}),/delivery_unauthorized/);await h.db.exec('reset role');
+}));
