@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "observed_date": "2026-10-19",
+  "timezone": "America/New_York",
+  "method": "connected Supabase list_projects and list_branches; read-only",
+  "organization_id": "kukukymsnhicxzwsvxgo",
+  "organization_selected_by_user": false,
+  "projects": [
+    {"id":"wktwgcnwdvbebcobgyey","name":"LanderWare","status":"ACTIVE_HEALTHY","region":"us-east-1","branches":[],"eligible_existing_preview":false,"reason":"known production"},
+    {"id":"cskcgwjvgsgawxwncjrf","name":"ShiftCommander","status":"ACTIVE_HEALTHY","region":"us-east-1","branches":[],"eligible_existing_preview":false,"reason":"separate application; not established disposable"}
+  ],
+  "recommendation":{"type":"new dedicated project","name":"landerware-issue371-preview","region":"us-east-1","project_ref":null,"provisioned":false},
+  "cost_quote":null,
+  "cost_approved":false,
+  "production_mutations":0,
+  "application_data_reads":0,
+  "secret_requests":0,
+  "github_issue_status":"gh reports repository issues disabled",
+  "pull_request":372,
+  "implementation_base":"67585b94a9b4bae246d2cc3089d2ca546ba9197f",
+  "routing_blockers":["CRM client production endpoint","admin-auth production service/session lifecycle","owner-auth production origin restriction","handler production CORS restriction"],
+  "proof_state":"READ_ONLY_DISCOVERY; NO_PREVIEW_OPERATIONAL_PROOF",
+  "next_action":"User selects billing organization, then obtain exact get_cost quote before creation"
+}
