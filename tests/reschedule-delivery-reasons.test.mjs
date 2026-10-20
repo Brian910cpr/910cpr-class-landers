@@ -1,0 +1,5 @@
+import {providerFailure,deliveryFailure} from '../supabase/functions/registration-reschedule/delivery-errors.mjs';
+import test from 'node:test';import assert from 'node:assert/strict';
+test('domain failure retains only a fixed safe reason',()=>{const e=providerFailure(403,{name:'validation_error',message:'The notify.910cpr.com domain is not verified; secret unrelated details'});assert.equal(deliveryFailure('provider_response',e),'provider_http_403:validation_error:sender_domain_unverified');});
+test('testing sender restriction has a distinct safe reason',()=>{assert.equal(providerFailure(403,{name:'validation_error',message:'You can only send testing emails to your own email address'}).deliveryCode,'provider_http_403:validation_error:test_sender_only');});
+test('provider messages and unknown names are not persisted',()=>{assert.equal(providerFailure(403,{name:'private-user-data',message:'secret'}).deliveryCode,'provider_http_403:unclassified');assert.equal(deliveryFailure('provider_response',{deliveryCode:'secret@example.com'}),'provider_response_failed');});

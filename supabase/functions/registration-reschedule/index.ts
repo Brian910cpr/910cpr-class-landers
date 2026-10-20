@@ -43,7 +43,7 @@ export async function deliverConfirmations(registrationId=null){
  for(const m of messages){
   let stage='provider_request';
   try{
-   const response=await fetch('https://api.resend.com/emails',{method:'POST',signal:AbortSignal.timeout(12000),headers:{authorization:`Bearer ${key}`,'content-type':'application/json','idempotency-key':`reschedule-${m.id}`},body:JSON.stringify({from:Deno.env.get('RESEND_FROM_EMAIL')||'910CPR <registration@notify.910cpr.com>',reply_to:'brian@910cpr.com',to:[m.recipient],subject:m.subject,text:m.body})});
+   const response=await fetch('https://api.resend.com/emails',{method:'POST',signal:AbortSignal.timeout(12000),headers:{authorization:`Bearer ${key}`,'content-type':'application/json','idempotency-key':`reschedule-${m.id}`},body:JSON.stringify({from:Deno.env.get('RESEND_FROM_EMAIL')||Deno.env.get('REQUIREMENT_FROM_EMAIL')||'910CPR <brian@910cpr.com>',reply_to:'brian@910cpr.com',to:[m.recipient],subject:m.subject,text:m.body})});
    stage='provider_response';
    let result;
    try{result=await response.json();}catch{throw providerFailure(response.status,null);}
