@@ -1,3 +1,4 @@
+import {providerFailure,deliveryFailure} from './delivery-errors.mjs';
 import {authorizedOwner} from '../_shared/owner-auth.ts';
 import {ownerRest,tokenHash,newToken} from '../_shared/owner-session.ts';
 import {SITE,familyPath,publishedOffers,localStart,validToken} from './policy.mjs';
@@ -40,14 +41,21 @@ export async function deliverConfirmations(registrationId=null){
  const messages=await rpc('claim_reschedule_confirmations',{p_registration_id:registrationId});
  let sent=0,failed=0;
  for(const m of messages){
+  let stage='provider_request';
   try{
    const response=await fetch('https://api.resend.com/emails',{method:'POST',signal:AbortSignal.timeout(12000),headers:{authorization:`Bearer ${key}`,'content-type':'application/json','idempotency-key':`reschedule-${m.id}`},body:JSON.stringify({from:Deno.env.get('RESEND_FROM_EMAIL')||'910CPR <registration@notify.910cpr.com>',reply_to:'brian@910cpr.com',to:[m.recipient],subject:m.subject,text:m.body})});
-   const result=await response.json();
-   if(!response.ok||!result.id)throw Error('provider_rejected');
+   stage='provider_response';
+   let result;
+   try{result=await response.json();}catch{throw providerFailure(response.status,null);}
+   if(!response.ok||!result?.id)throw providerFailure(response.status,result);
+   stage='message_record';
    await ownerRest(`landerware_messages?id=eq.${m.id}`,{method:'PATCH',body:JSON.stringify({delivery_provider:'resend',delivery_status:'sent',provider_message_id:result.id,sent_at:new Date().toISOString(),failure_detail:null})});
+   stage='queue_record';
    await ownerRest(`registration_reschedule_deliveries?message_id=eq.${m.id}`,{method:'PATCH',body:JSON.stringify({status:'sent',last_error:null})});sent++;
-  }catch{
-   await ownerRest(`registration_reschedule_deliveries?message_id=eq.${m.id}`,{method:'PATCH',body:JSON.stringify({status:'failed',last_error:'delivery_failed',next_attempt_at:new Date(Date.now()+5*60000).toISOString()})});failed++;
+  }catch(error){
+   const code=deliveryFailure(stage,error);
+   console.error(JSON.stringify({event:'reschedule_delivery_failed',messageId:m.id,code}));
+   await ownerRest(`registration_reschedule_deliveries?message_id=eq.${m.id}`,{method:'PATCH',body:JSON.stringify({status:'failed',last_error:code,next_attempt_at:new Date(Date.now()+5*60000).toISOString()})});failed++;
   }
  }
  return {configured:true,sent,failed};
