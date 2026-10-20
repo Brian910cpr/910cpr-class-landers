@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#16313c"><title>Choose your new class time | 910CPR</title><link rel="stylesheet" href="/reschedule/style.css?v=2"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#16313c"><title>Choose your new class time | 910CPR</title><link rel="stylesheet" href="/reschedule/style.css?v=3"></head>
 <body>
 <main>
  <header class="site-header"><a class="brand" href="/" aria-label="910CPR home">910<span>CPR</span><i aria-hidden="true">+</i></a><span class="service-label">STUDENT SERVICES</span></header>
@@ -10,8 +10,8 @@
   <section id="chooser" hidden>
    <section class="booking" aria-label="Your original booking"><div class="booking-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v5m8-5v5M4 11h16m-11 4h2m3 0h2"/></svg></div><div><p class="booking-label">YOUR ORIGINAL BOOKING</p><strong id="course"></strong><p id="current"></p></div></section>
    <p class="carry-forward"><span aria-hidden="true">✓</span> Your registration, payments, and selected materials carry forward.</p>
-   <section class="choice-step"><div class="step-heading"><h2><span class="step-number" aria-hidden="true">1</span>Choose a date</h2><span class="timezone">Eastern time</span></div><div id="dates" class="dates" role="group" aria-label="Available dates"></div></section>
-   <section class="choice-step time-step"><h2 id="time-heading" hidden><span class="step-number" aria-hidden="true">2</span>Choose a time</h2><div id="times" class="times" role="group" aria-label="Available times"></div></section>
+   <section class="choice-step"><div class="step-heading"><h2><span class="step-number" aria-hidden="true">1</span>Choose a date</h2><span class="timezone">Eastern time</span></div><div class="calendar-shell"><div class="calendar-navigation"><button id="previous-month" type="button" aria-label="Previous month">&#8249;</button><h3 id="calendar-month" aria-live="polite"></h3><button id="next-month" type="button" aria-label="Next month">&#8250;</button></div><div class="calendar-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div id="dates" class="calendar-days" role="group" aria-labelledby="calendar-month" aria-describedby="calendar-hint"></div></div><p class="calendar-legend">Highlighted dates have available times.</p><p id="calendar-status" role="status"></p><p id="calendar-hint" class="visually-hidden">Use arrow keys to move between available dates. Home and End move to the first and last available dates. Page Up and Page Down change months. Press Enter to choose a date.</p></section>
+   <section class="choice-step time-step"><h2 id="time-heading" hidden><span class="step-number" aria-hidden="true">2</span>Choose a time</h2><p id="selected-day" class="selected-day"></p><div id="times" class="times" role="group" aria-label="Available times"></div></section>
    <section id="review" class="review" hidden><p class="eyebrow">YOUR NEW CLASS</p><h2>Ready to make the change?</h2><p id="selection"></p><p class="no-payment"><span aria-hidden="true">✓</span> No new registration or payment is needed.</p><div class="review-actions"><button id="confirm" class="primary">Confirm this change</button><button id="back" class="secondary">Choose another time</button></div></section>
   </section>
   <section id="success" class="success" hidden tabindex="-1"><div class="success-mark" aria-hidden="true">✓</div><p class="eyebrow">CHANGE CONFIRMED</p><h2>You’re all set.</h2><p id="result"></p><p id="email-status"></p></section>
@@ -19,5 +19,5 @@
   <footer><strong>We’re here to help.</strong><div class="contact-links"><a href="tel:9103955193">910-395-5193</a><span aria-hidden="true">·</span><a href="mailto:brian@910cpr.com">Email Brian</a></div><p>910CPR · 4018 Shipyard Blvd, Room B<br>Wilmington, NC · All class times are Eastern.</p></footer>
  </div>
 </main>
-<script type="module" src="/reschedule/app.js?v=1"></script>
+<script type="module" src="/reschedule/app.js?v=2"></script>
 </body></html>
