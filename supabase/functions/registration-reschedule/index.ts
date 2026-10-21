@@ -1,4 +1,5 @@
 import {providerFailure,deliveryFailure} from './delivery-errors.mjs';
+import {unresolvedCommitments} from './commitment-lookup.mjs';
 import {authorizedOwner} from '../_shared/owner-auth.ts';
 import {ownerRest,tokenHash,newToken} from '../_shared/owner-session.ts';
 import {SITE,familyPath,publishedOffers,localStart,validToken} from './policy.mjs';
@@ -90,7 +91,8 @@ export async function handler(req){
      for(const r of rows){const s=r.session,key=s.course_id+'|'+s.start_at,score=(r.registration_orders?.length?2:0)+(/^\d+$/.test(s.external_class_id)?1:0);if(!grouped.has(key)||score>grouped.get(key).score)grouped.set(key,{id:r.id,name:`${c.first_name} ${c.last_name}`,course:s.course?.name||'',startsAt:s.start_at,score});}
      registrations.push(...[...grouped.values()].map(({score,...r})=>r));
     }
-    return json(origin,{registrations});
+    const unresolved=await unresolvedCommitments(email,ownerRest);
+    return json(origin,{registrations,unresolved,reconciliationRequired:unresolved.length>0});
    }
    if(route==='retry-confirmations'){
     const delivery=await deliverConfirmations();
