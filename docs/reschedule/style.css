@@ -35,3 +35,14 @@ html[data-theme="dark"] body :is(#dates,#times) button[aria-pressed=true]{backgr
 html[data-theme="dark"] body .primary{background:#087984!important;color:#fff!important;border-color:#90dce7!important}
 html[data-theme="dark"] #status:not(:empty){background:#352b19;color:#ffe1a2;border-color:#967744}
 @media(max-width:600px){.calendar-grid{gap:4px}#dates .calendar-grid button{font-size:13px;min-height:44px;padding:8px 0}.calendar-navigation{margin-bottom:8px}}
+
+/* Reuse the full calendar filter with readable, touch-friendly controls. */
+#availability-filters{--accent:#006674;--surface:#fff;margin:24px 0 12px;font-size:16px}
+#availability-filters .calendar-timing-pill{padding:18px;border-radius:12px}
+#availability-filters .calendar-availability-heading{font-size:22px;display:block;letter-spacing:normal}
+#availability-filters .calendar-time-item label{min-height:44px}
+#availability-filters .calendar-time-item input{width:20px;height:20px}
+#availability-filters .calendar-time-smart input{font-size:16px;padding:12px;max-width:100%}
+#availability-filters .calendar-time-smart button{min-height:44px}
+#availability-filters :is(.calendar-time-hint,.calendar-time-status,.calendar-filter-attention-hint){font-size:14px}
+#filter-results{font-size:14px;color:var(--muted)}
