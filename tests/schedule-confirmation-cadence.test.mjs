@@ -20,9 +20,17 @@ test('confirmation, owner receipt, 48h due time, replay, cancellation and retry 
  insert into class_sessions(id,course_id,start_at,end_at,status) values('33333333-3333-4333-8333-333333333333','22222222-2222-4222-8222-222222222222',now()+interval '5 days',now()+interval '5 days 2 hours','scheduled');
  insert into registrations values('44444444-4444-4444-8444-444444444444','11111111-1111-4111-8111-111111111111','33333333-3333-4333-8333-333333333333','registered');`);
  await db.exec(readFileSync(new URL('../supabase/migrations/20261021141044_schedule_confirmation_cadence.sql',import.meta.url),'utf8'));
+ await db.exec(`create schema extensions;
+ create function extensions.gen_random_bytes(n integer) returns bytea language sql as 'select decode(replace(gen_random_uuid()::text||gen_random_uuid()::text,''-'',''''),''hex'')';
+ create function extensions.digest(t text,algo text) returns bytea language sql as 'select decode(md5(t)||md5(t),''hex'')';
+ create table test_tokens(hash text primary key,registration_id uuid);
+ create function public.issue_registration_reschedule_link(r uuid,h text,e timestamptz,reason text) returns jsonb language plpgsql as $$ begin insert into public.test_tokens values(h,r);return '{}'::jsonb;end $$;`);
+ await db.exec(readFileSync(new URL('../supabase/migrations/20261021141709_confirmation_personal_link.sql',import.meta.url),'utf8'));
  const insert=`insert into landerware_messages(customer_id,operational_registration_id,template_key,recipient,idempotency_key,delivery_status) values('11111111-1111-4111-8111-111111111111','44444444-4444-4444-8444-444444444444','registration-rescheduled-v1','student@example.invalid','test-confirmation','pending') on conflict(idempotency_key) do nothing`;
  await db.exec(insert);await db.exec(insert);
  let rows=(await db.query('select * from landerware_messages')).rows;
+ assert.equal((await db.query('select count(*) n from test_tokens')).rows[0].n,1,'replayed confirmation must not mint another private token');
+ assert.ok(rows[0].body_text.includes('https://www.910cpr.com/reschedule/#lw_r_'));
  assert.equal(rows.length,3);assert.ok(rows.every(x=>!x.body_text.includes('has been rescheduled')));
  assert.ok(rows.find(x=>x.template_key==='course-owner-confirmation-v1'));
  assert.equal((await db.query("select extract(epoch from(s.start_at-d.next_attempt_at))/3600 hours from registration_reschedule_deliveries d join landerware_messages m on m.id=d.message_id join class_sessions s on s.id=d.snapshot_class_session_id where m.template_key='course-two-day-confirmation-v1'")).rows[0].hours,'48.0000000000000000');
