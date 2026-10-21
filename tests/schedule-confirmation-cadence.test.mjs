@@ -1,0 +1,40 @@
+import {createRequire} from 'node:module';
+const {PGlite}=createRequire(new URL('./reconciliation/package.json',import.meta.url))('@electric-sql/pglite');
+import {readFileSync} from 'node:fs';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+test('confirmation, owner receipt, 48h due time, replay, cancellation and retry window',async()=>{
+ const db=new PGlite();
+ try{
+ await db.exec(`create role anon;create role authenticated;create role service_role;
+ create table customers(id uuid primary key,first_name text,email text);
+ create table courses(id uuid primary key,name text);
+ create table locations(id uuid primary key,name text);
+ create table people(id uuid primary key,display_name text);
+ create table class_sessions(id uuid primary key,course_id uuid,location_id uuid,lead_instructor_id uuid,start_at timestamptz,end_at timestamptz,status text,source_location_label text,source_instructor_label text);
+ create table registrations(id uuid primary key,customer_id uuid,class_session_id uuid,status text);
+ create table landerware_messages(id uuid primary key default gen_random_uuid(),customer_id uuid,operational_registration_id uuid,template_key text,channel text,recipient text,subject text,body_text text,delivery_provider text,delivery_status text,idempotency_key text unique);
+ create table registration_reschedule_deliveries(message_id uuid primary key references landerware_messages(id),status text default 'pending' constraint registration_reschedule_deliveries_status_check check(status in ('pending','sending','sent','failed','needs_review')),attempts int default 0,locked_at timestamptz,next_attempt_at timestamptz default now(),last_error text,created_at timestamptz default now());
+ insert into customers values('11111111-1111-4111-8111-111111111111','Student','student@example.invalid');
+ insert into courses values('22222222-2222-4222-8222-222222222222','Synthetic course');
+ insert into class_sessions(id,course_id,start_at,end_at,status) values('33333333-3333-4333-8333-333333333333','22222222-2222-4222-8222-222222222222',now()+interval '5 days',now()+interval '5 days 2 hours','scheduled');
+ insert into registrations values('44444444-4444-4444-8444-444444444444','11111111-1111-4111-8111-111111111111','33333333-3333-4333-8333-333333333333','registered');`);
+ await db.exec(readFileSync(new URL('../supabase/migrations/20261021141044_schedule_confirmation_cadence.sql',import.meta.url),'utf8'));
+ const insert=`insert into landerware_messages(customer_id,operational_registration_id,template_key,recipient,idempotency_key,delivery_status) values('11111111-1111-4111-8111-111111111111','44444444-4444-4444-8444-444444444444','registration-rescheduled-v1','student@example.invalid','test-confirmation','pending') on conflict(idempotency_key) do nothing`;
+ await db.exec(insert);await db.exec(insert);
+ let rows=(await db.query('select * from landerware_messages')).rows;
+ assert.equal(rows.length,3);assert.ok(rows.every(x=>!x.body_text.includes('has been rescheduled')));
+ assert.ok(rows.find(x=>x.template_key==='course-owner-confirmation-v1'));
+ assert.equal((await db.query("select extract(epoch from(s.start_at-d.next_attempt_at))/3600 hours from registration_reschedule_deliveries d join landerware_messages m on m.id=d.message_id join class_sessions s on s.id=d.snapshot_class_session_id where m.template_key='course-two-day-confirmation-v1'")).rows[0].hours,'48.0000000000000000');
+ let claimed=(await db.query('select claim_reschedule_confirmations() result')).rows[0].result;
+ assert.equal(claimed.length,2,'only immediate student and owner due');
+ await db.exec("update registration_reschedule_deliveries set status='sent' where status='sending';update registration_reschedule_deliveries set next_attempt_at=now(),created_at=now()-interval '4 days' where status='pending'");
+ claimed=(await db.query('select claim_reschedule_confirmations() result')).rows[0].result;
+ assert.equal(claimed.length,1,'future reminder does not expire before first attempt');
+ await db.exec("update registrations set status='rescheduled'");
+ assert.equal((await db.query('select claim_reschedule_confirmations() result')).rows[0].result.length,0);
+ assert.equal((await db.query("select count(*) n from registration_reschedule_deliveries where status='cancelled'")).rows[0].n,1);
+ await db.exec("update registrations set status='registered';update class_sessions set start_at=now()+interval '1 day';delete from registration_reschedule_deliveries;delete from landerware_messages");
+ await db.exec(insert);assert.equal((await db.query('select count(*) n from landerware_messages')).rows[0].n,2,'inside 48h only immediate student and owner');
+ }finally{await db.close();}
+});
