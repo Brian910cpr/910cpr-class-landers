@@ -12,3 +12,26 @@ details{margin-top:30px;border-top:1px solid var(--line);border-bottom:1px solid
 @media(prefers-reduced-motion:reduce){button{transition:none}}
 @media(max-width:600px){body{padding:16px 12px 30px}main{border-radius:16px}.site-header{padding:22px 23px}.page-content{padding:28px 23px 24px}.brand{font-size:28px}.service-label{font-size:8px;letter-spacing:1.3px}h1{font-size:36px;letter-spacing:-1.35px}#intro{font-size:14px;margin-bottom:23px}.booking{padding:17px 15px;gap:12px}.booking-icon{width:34px;height:34px;border-radius:8px}.booking-icon svg{width:21px;height:21px}#course{font-size:15px}#current{font-size:12px}.carry-forward{font-size:11px;margin-bottom:27px}.dates{grid-template-columns:1fr 1fr;gap:9px}.dates button{font-size:12px;gap:8px;padding:15px 10px;white-space:normal;line-height:1.55;min-height:63px}.dates button::before{width:13px;height:13px}.dates button[aria-pressed=true]::before{border-width:4px}.timezone{font-size:9px;padding:4px 7px}h2{font-size:17px}.review{padding:21px 18px}.review h2{font-size:19px}.review #selection{font-size:13px}.no-payment{font-size:11px}.times button{font-size:12px;min-width:104px}.success{padding:25px 21px}}
 @media(max-width:350px){.dates{grid-template-columns:1fr}.service-label{max-width:72px;text-align:right}.page-content{padding-left:18px;padding-right:18px}h1{font-size:32px}}
+
+/* Calendar stays in month order; only server-returned days can be selected. */
+#dates{display:block;max-height:none;overflow:visible;padding:0;margin:0}
+.calendar-navigation{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:12px}
+#dates .calendar-navigation button{display:block;min-height:44px;min-width:44px;padding:4px;font-size:25px;text-align:center}
+#dates button::before{content:none}
+.calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.weekday{text-align:center;font-size:12px;font-weight:700;color:var(--muted);padding:8px 0}
+#dates .calendar-grid button{display:block;min-width:0;min-height:44px;padding:10px 0;text-align:center;font-size:14px;white-space:normal}
+#dates button:disabled{opacity:1;cursor:default;color:#687780;background:#f0f3f5;border-color:transparent}
+#dates button[aria-current=date]{text-decoration:underline;text-underline-offset:4px}
+.calendar-note{font-size:12px;color:var(--muted);margin:12px 0 0}
+/* Shared theme colors text globally; match every local surface to that theme. */
+html[data-theme="dark"] main{background:#111a27;color:#e8eef6;border-color:#39495d}
+html[data-theme="dark"] :is(.booking,.review,.success){background:#172435;border-color:#53657a}
+html[data-theme="dark"] :is(.booking-icon,.step-number,.success-mark){background:#203c48;color:#90dce7}
+html[data-theme="dark"] .eyebrow{background:transparent!important;color:#90dce7!important}
+html[data-theme="dark"] :is(.brand,.service-label,.timezone,.carry-forward span,.no-payment span){color:#90dce7}
+html[data-theme="dark"] body #dates button:disabled{background:#111a27!important;color:#91a0b2!important;border-color:transparent!important}
+html[data-theme="dark"] body :is(#dates,#times) button[aria-pressed=true]{background:#075b65!important;color:#fff!important;border-color:#94e5ed!important;box-shadow:0 0 0 1px #94e5ed}
+html[data-theme="dark"] body .primary{background:#087984!important;color:#fff!important;border-color:#90dce7!important}
+html[data-theme="dark"] #status:not(:empty){background:#352b19;color:#ffe1a2;border-color:#967744}
+@media(max-width:600px){.calendar-grid{gap:4px}#dates .calendar-grid button{font-size:13px;min-height:44px;padding:8px 0}.calendar-navigation{margin-bottom:8px}}
