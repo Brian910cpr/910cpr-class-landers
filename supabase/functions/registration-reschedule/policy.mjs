@@ -26,7 +26,7 @@ export function publishedOffers(payload, courseNumber, now=Date.now()) {
     // The public selector owns availability, qualifications, resource and travel rules.
     // Retain its exact offer; displaying it must never materialize a class.
     if (course.offerType!=='dynamic_appointment' || course.publicSelectable===false ||
-        !['209806','359474','209809'].includes(String(courseNumber)) ||
+        !['209806','359474','209809','329495'].includes(String(courseNumber)) ||
         url.origin!=='https://coastalcprtraining.enrollware.com' || url.pathname!=='/enroll' ||
         url.searchParams.get('courseId')!==String(courseNumber) ||
         !/^\d+$/.test(url.searchParams.get('appointmentDayId')||'') ||
