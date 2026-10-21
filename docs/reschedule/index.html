@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light" data-page-id="student-reschedule" data-build-id="reschedule-light-20261021.2">
+<html lang="en" data-theme="light" data-page-id="student-reschedule" data-build-id="reschedule-filters-20261021.3">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#16313c"><title>Choose your new class time | 910CPR</title><!-- Google Tag Manager -->
 <script>
 (function(w,d,s,l,i,m){
@@ -17,7 +17,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta name="color-scheme" content="light">
 <style>:root{color-scheme:only light}</style>
 <!-- Keep this transactional page in light mode for consistent contrast. -->
-<link rel="stylesheet" href="/reschedule/style.css?v=20261021.1">
+<link rel="stylesheet" href="/assets/calendar-time-filters.css?v=20261013.1">
+<link rel="stylesheet" href="/reschedule/style.css?v=20261021.3">
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -33,6 +34,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <section id="chooser" hidden>
    <section class="booking" aria-label="Your original booking"><div class="booking-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v5m8-5v5M4 11h16m-11 4h2m3 0h2"/></svg></div><div><p class="booking-label">YOUR ORIGINAL BOOKING</p><strong id="course"></strong><p id="current"></p></div></section>
    <p class="carry-forward"><span aria-hidden="true">✓</span> Your registration, payments, and selected materials carry forward.</p>
+   <div id="availability-filters"></div><p id="filter-results" role="status" aria-live="polite"></p>
    <section class="choice-step"><div class="step-heading"><h2><span class="step-number" aria-hidden="true">1</span>Choose a date</h2><span class="timezone">Eastern time</span></div><div id="dates" class="dates" role="group" aria-label="Available dates"></div></section>
    <section class="choice-step time-step"><h2 id="time-heading" hidden><span class="step-number" aria-hidden="true">2</span>Choose a time</h2><div id="times" class="times" role="group" aria-label="Available times"></div></section>
    <section id="review" class="review" hidden><p class="eyebrow">YOUR NEW CLASS</p><h2>Ready to make the change?</h2><p id="selection"></p><p class="no-payment"><span aria-hidden="true">✓</span> No new registration or payment is needed.</p><div class="review-actions"><button id="confirm" class="primary">Confirm this change</button><button id="back" class="secondary">Choose another time</button></div></section>
@@ -42,5 +44,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <footer><strong>We’re here to help.</strong><div class="contact-links"><a href="tel:9103955193">910-395-5193</a><span aria-hidden="true">·</span><a href="mailto:brian@910cpr.com">Email Brian</a></div><p>910CPR · 4018 Shipyard Blvd, Room B<br>Wilmington, NC · All class times are Eastern.</p></footer>
  </div>
 </main>
-<script type="module" src="/reschedule/app.js?v=20261021.1"></script>
+<script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
+<script type="module" src="/reschedule/app.js?v=20261021.3"></script>
 </body></html>

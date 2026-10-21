@@ -4,23 +4,37 @@ const token=location.hash.slice(1);
 history.replaceState(null,'',location.pathname+'#'+encodeURIComponent(token));
 const el=id=>document.getElementById(id);
 let options=[],selected=null,busy=false,calendarMonth="",selectedDay="";
+function filteredOptions(){
+ const grouped=new Map();
+ for(const option of options){const key=day(option.startsAt);if(!grouped.has(key))grouped.set(key,[]);const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'America/New_York',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(option.startsAt));grouped.get(key).push({startTime:parts,option});}
+ return CalendarTimeFilters.filterDates([...grouped].map(([date,startTimes])=>({date,startTimes})),filters.constraints).flatMap(d=>d.startTimes.map(s=>s.option));
+}
+function applyFilters(){
+ selected=null;selectedDay='';el('review').hidden=true;el('times').replaceChildren();el('time-heading').hidden=true;
+ const visible=filteredOptions(),months=[...new Set(visible.map(o=>day(o.startsAt).slice(0,7)))].sort();
+ if(!months.includes(calendarMonth))calendarMonth=months[0]||'';
+ renderCalendar();
+ if(!visible.length)el('dates').textContent=options.length?'No times match your filters. Clear or adjust your preferences to see more dates.':'There are no available replacement dates for your course right now. Use “Need a different time?” below and Brian will help.';
+ el('filter-results').textContent=options.length?`${visible.length} of ${options.length} available times match your preferences.`:'';
+}
 const date=iso=>new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',month:'short',day:'numeric',year:'numeric'}).format(new Date(iso));
 const time=iso=>new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit'}).format(new Date(iso));
 const day=iso=>new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(iso));
+const filters=CalendarTimeFilters.mount(el('availability-filters'),{today:()=>day(new Date().toISOString()),onChange:applyFilters});
 function description(o){return `${o.course} — ${date(o.startsAt)}, ${time(o.startsAt)} Eastern. ${o.location}${o.address?' · '+o.address:''}`;}
 const messages={invalid_or_expired_link:'This private link has expired or been replaced. Please contact Brian for a new link.',registration_not_reschedulable:'This registration has changed. Please contact Brian for help.',session_not_available:'That time is no longer available. Please choose another time.',calendar_refresh_required:'The calendar is refreshing. Please try again shortly, or request another time below.',link_already_used:'This link has already confirmed a change. Please reopen it to see your confirmed class.'};
 async function call(route,body={}){const r=await fetch(`${API}/${route}`,{method:'POST',headers:{'content-type':'application/json','x-reschedule-token':token},body:JSON.stringify(body),cache:'no-store'});const p=await r.json();if(!r.ok)throw Error(p.error||'service_unavailable');return p;}
 function error(e){el('status').textContent=messages[e.message]||'We could not complete that request. Your registration has not been changed. Please try again or contact Brian.';}
 function renderTimes(key){
  selected=null;el('review').hidden=true;el('times').replaceChildren();el('time-heading').hidden=false;
- for(const option of options.filter(o=>day(o.startsAt)===key)){
+ for(const option of filteredOptions().filter(o=>day(o.startsAt)===key)){
   const b=document.createElement('button');b.type='button';b.textContent=time(option.startsAt);b.setAttribute('aria-pressed','false');
   b.onclick=()=>{if(busy)return;for(const sibling of el('times').children)sibling.setAttribute('aria-pressed','false');b.setAttribute('aria-pressed','true');selected=option;el('selection').textContent=description(option);el('review').hidden=false;el('confirm').focus();};el('times').append(b);
  }
 }
 function renderCalendar(){
- const root=el('dates');root.replaceChildren();if(!options.length)return;
- const keys=new Set(options.map(o=>day(o.startsAt))),months=[...new Set([...keys].map(k=>k.slice(0,7)))].sort();
+ const root=el('dates');root.replaceChildren();const visible=filteredOptions();if(!visible.length)return;
+ const keys=new Set(visible.map(o=>day(o.startsAt))),months=[...new Set([...keys].map(k=>k.slice(0,7)))].sort();
  const [year,month]=calendarMonth.split('-').map(Number),first=new Date(Date.UTC(year,month-1,1)),count=new Date(Date.UTC(year,month,0)).getUTCDate();
  const heading=document.createElement('div');heading.className='calendar-navigation';
  const title=document.createElement('strong');title.id='calendar-month';title.setAttribute('aria-live','polite');title.textContent=new Intl.DateTimeFormat('en-US',{month:'long',year:'numeric',timeZone:'UTC'}).format(first);
@@ -48,7 +62,7 @@ async function load(){
  try{const p=await call('context');if(p.status==='confirmed'){confirmed(p.result);return;}
  el('intro').textContent=`Hi ${p.firstName}. Choose a new time for your class, then confirm the change.`;el('course').textContent=p.course;el('current').textContent=`Original class: ${date(p.currentStartsAt)} at ${time(p.currentStartsAt)} Eastern.`;options=p.options||[];el('dates').replaceChildren();el('times').replaceChildren();el('time-heading').hidden=true;el('review').hidden=true;
  selectedDay='';calendarMonth=options.length?[...new Set(options.map(o=>day(o.startsAt)))].sort()[0].slice(0,7):'';
- renderCalendar();
+ applyFilters();
  if(!options.length)el('dates').textContent='There are no available replacement dates for your course right now. Use “Request another time” below and Brian will help.';
  el('chooser').hidden=false;
  }catch(e){error(e);}
