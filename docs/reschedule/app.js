@@ -58,8 +58,8 @@ function confirmed(result){el('chooser').hidden=true;el('help').hidden=true;el('
 async function load(){
  el('status').textContent='';
  if(!/^lw_r_[0-9a-f]{64}$/.test(token)){el('intro').textContent='Open the private rescheduling link in your email to choose a new time.';return;}
- el('help').hidden=false;
- try{const p=await call('context');if(p.status==='confirmed'){confirmed(p.result);return;}
+ el('help').hidden=false;el('status').textContent='Please give me a moment to load available dates…';
+ try{const p=await call('context');el('status').textContent='';if(p.status==='confirmed'){confirmed(p.result);return;}
  el('intro').textContent=`Hi ${p.firstName}. Choose a new time for your class, then confirm the change.`;el('course').textContent=p.course;el('current').textContent=`Original class: ${date(p.currentStartsAt)} at ${time(p.currentStartsAt)} Eastern.`;options=p.options||[];el('dates').replaceChildren();el('times').replaceChildren();el('time-heading').hidden=true;el('review').hidden=true;
  selectedDay='';calendarMonth=options.length?[...new Set(options.map(o=>day(o.startsAt)))].sort()[0].slice(0,7):'';
  applyFilters();
