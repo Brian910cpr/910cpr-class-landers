@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T21:35:57.944582+00:00",
+  "generated_at": "2026-10-21T21:45:40.638302+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,25 +22,25 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 413,
-    "blocks_blocked": 20,
+    "blocks_generated": 414,
+    "blocks_blocked": 21,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 20
+      "inverse_gap_shorter_than_minimum_consumption": 21
     },
     "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 20
+      "inverse_gap_shorter_than_minimum_consumption": 21
     },
     "source_type_counts": {
       "google_calendar": 2,
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 219,
+      "blocked": 220,
       "available": 194
     },
     "inverse_generated_availability_blocks": 194,
-    "inverse_blocking_event_blocks": 219,
+    "inverse_blocking_event_blocks": 220,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
@@ -277,6 +277,30 @@
       "source_calendar_id": "brian_do_not_schedule",
       "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261023T1500000400",
       "summary": "CFA Pickup",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-10-23T13:00:00",
+      "end_datetime": "2026-10-23T13:45:00",
+      "date": "2026-10-23",
+      "end_date": "2026-10-23",
+      "start_time": "13:00",
+      "end_time": "13:45",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "ccsj4e1lc9hj6bb66hj32b9kcgp66bb170qj0b9g74sjce9j69j3acppck@google.com",
+      "summary": "Norma",
       "source_type": "inverse_google_calendar",
       "reasons": [
         "read_only_preview",
@@ -5303,11 +5327,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-10-21T17:45:00",
+      "start_datetime": "2026-10-21T18:00:00",
       "end_datetime": "2026-10-22T00:00:00",
       "date": "2026-10-21",
       "end_date": "2026-10-22",
-      "start_time": "17:45",
+      "start_time": "18:00",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -5428,11 +5452,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2026-10-23T07:45:00",
-      "end_datetime": "2026-10-23T15:00:00",
+      "end_datetime": "2026-10-23T13:00:00",
       "date": "2026-10-23",
       "end_date": "2026-10-23",
       "start_time": "07:45",
-      "end_time": "15:00",
+      "end_time": "13:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -11320,10 +11344,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-10-21T21:35:56.739665+00:00",
-      "end": "2027-01-19T21:35:56.739665+00:00",
-      "observed_at": "2026-10-21T21:35:57.808425+00:00",
-      "valid_until": "2026-10-21T21:50:57.808425+00:00",
+      "start": "2026-10-21T21:45:39.472723+00:00",
+      "end": "2027-01-19T21:45:39.472723+00:00",
+      "observed_at": "2026-10-21T21:45:40.521578+00:00",
+      "valid_until": "2026-10-21T22:00:40.521578+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
@@ -11332,6 +11356,14 @@
     }
   ],
   "blocked_or_placeholder_sources": [
+    {
+      "calendar_source_key": "brian_do_not_schedule",
+      "source_type": "inverse_google_calendar",
+      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
+      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
+      "start_datetime": "2026-10-23T13:45:00",
+      "end_datetime": "2026-10-23T15:00:00"
+    },
     {
       "calendar_source_key": "brian_do_not_schedule",
       "source_type": "inverse_google_calendar",
@@ -11490,7 +11522,7 @@
       "reason_code": "inverse_gap_shorter_than_minimum_consumption",
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
       "start_datetime": "2027-01-19T17:30:00",
-      "end_datetime": "2027-01-19T17:45:00"
+      "end_datetime": "2027-01-19T18:00:00"
     }
   ]
 }
