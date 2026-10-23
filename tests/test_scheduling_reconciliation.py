@@ -177,5 +177,49 @@ class SchedulingReconciliationTests(unittest.TestCase):
         self.assertEqual({"ORPHAN_SYNTHETIC_OFFER","HARD_BLOCK_COLLISION"},
                          {r["code"] for r in publication_contradictions([cell],truth)})
 
+    def test_barnacle_classification_precedes_final_collision_guard(self):
+        anchor = {
+            "session_id": "real-bls",
+            "course_id": "359474",
+            "start_at": "2026-10-02T10:45:00-04:00",
+            "end_at": "2026-10-02T12:45:00-04:00",
+            "location": "Room B",
+            "instructor": "Brian Ennis",
+            "registration_url": "https://example.test/real-bls",
+            "promotion_reason": "committed_public_session",
+            "cluster_id": "real-bls-cluster",
+        }
+        candidate = {
+            "date": "2026-10-02",
+            "displayDate": "Friday",
+            "startTime": "12:45",
+            "displayStartTime": "12:45 PM",
+            "courseId": "210549",
+            "courseName": "HeartCode BLS",
+            "durationMinutes": 60,
+            "schedulerConsumptionEnd": "13:45",
+            "location": "Room B",
+            "instructor": "Brian Ennis",
+            "appointmentUrl": "https://example.test/heartcode-1245",
+        }
+        payload = {
+            "dates": [{"date": "2026-10-02", "displayDate": "Friday",
+                       "startTimes": [{"startTime": "12:45", "displayStartTime": "12:45 PM",
+                                       "courses": [candidate]}]}],
+            "counts": {},
+        }
+        policy = {
+            "mode": "daily_anchor_stack_v1",
+            "compact_paid_days": True,
+            "barnacle_course_pairs": [["359474", "210549"]],
+        }
+        result = apply_selector_policy(payload, [anchor], policy)
+        rendered = [c for d in result["dates"] for s in d["startTimes"] for c in s["courses"]]
+        self.assertEqual(len(rendered), 1)
+        self.assertEqual(rendered[0]["schedule_role"], "barnacle")
+        self.assertEqual(rendered[0]["barnacle_direction"], "post")
+        self.assertEqual(rendered[0]["attached_to_session_id"], "real-bls")
+
+
 if __name__=="__main__":
     unittest.main()

@@ -139,6 +139,43 @@ class AnchorStateTests(unittest.TestCase):
             "Barnacle retention is an invariant, not an exact-course configuration switch",
         )
 
+    def test_real_open_public_class_is_anchor_when_roster_freshness_is_unknown(self):
+        session = {
+            "session_id": "14501248",
+            "course_id": "209806",
+            "start_at": "2026-10-02T12:45:00-04:00",
+            "end_at": "2026-10-02T14:45:00-04:00",
+            "location_name": "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office",
+            "lead_instructor_name": "Brian Ennis",
+            "active_registration_count": None,
+            "demand_basis": "unknown",
+            "demand_status": "stale_reconciliation",
+            "public_direct_booking": True,
+            "registration_status": "open",
+            "session_status": "active",
+            "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14501248",
+        }
+        anchors = promote_seated_sessions([session])
+        self.assertEqual(len(anchors), 1)
+        self.assertEqual(anchors[0]["promotion_reason"], "committed_public_session")
+
+    def test_ambiguous_public_class_does_not_promote(self):
+        session = {
+            "session_id": "ambiguous",
+            "course_id": "209806",
+            "start_at": "2026-10-02T12:45:00-04:00",
+            "end_at": "2026-10-02T14:45:00-04:00",
+            "location_name": "Room B",
+            "lead_instructor_name": "Brian Ennis",
+            "demand_status": "ambiguous",
+            "public_direct_booking": True,
+            "registration_status": "open",
+            "session_status": "active",
+            "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=14501248",
+        }
+        self.assertEqual(promote_seated_sessions([session]), [])
+
+
 
 if __name__ == "__main__":
     unittest.main()

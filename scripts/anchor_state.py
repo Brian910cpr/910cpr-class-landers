@@ -28,13 +28,27 @@ def _count(session: dict[str, Any]) -> int | None:
 
 
 def _promotion_reason(session: dict[str, Any], count: int | None) -> str:
-    if session.get("demand_status") in {"stale_anchor", "ambiguous"}:
+    if session.get("demand_status") == "ambiguous":
         return ""
     if count is not None and count > 0 and _text(session.get("demand_basis")) == "canonical_active_registrations":
         return "canonical_active_registration"
     explicit = _text(session.get("anchor_basis") or session.get("promotion_reason")).lower()
     if explicit in {"committed_public_session", "manual_override"}:
         return explicit
+
+    # A real, open, directly bookable public class is a planted class even when
+    # roster freshness is temporarily unknown. Roster freshness may affect
+    # displayed participant counts, but it must not erase the class's anchor role.
+    status = _text(session.get("session_status") or session.get("status")).lower()
+    registration_status = _text(session.get("registration_status")).lower()
+    registration_url = _text(session.get("registration_url") or session.get("enrollment_url"))
+    if (
+        session.get("public_direct_booking") is not False
+        and status in {"active", "scheduled"}
+        and registration_status not in {"closed", "full", "cancelled", "canceled"}
+        and registration_url
+    ):
+        return "committed_public_session"
     return ""
 
 

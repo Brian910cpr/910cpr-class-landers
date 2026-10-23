@@ -1388,8 +1388,10 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             )
         )
 
-    offers, hard_rejections, hard_issues = veto_calendar_collisions(offers, live_availability_snapshot)
-    rejections.extend(hard_rejections)
+    # Do not run the hard-collision guard yet. Barnacle classification happens
+    # in resolve_selector_payload(); rejecting candidates before that point can
+    # erase the exact pre/post offers that should become legitimate barnacles.
+    hard_issues = []
     grouped_dates: dict[str, dict[str, Any]] = {}
     for offer in offers:
         date_group = grouped_dates.setdefault(
@@ -1486,4 +1488,65 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         "reconciliationIssues": hard_issues,
         "rejectionReasonCounts": dict(rejected_counts.most_common()),
     }
-    return resolve_selector_payload(payload)
+    resolved = resolve_selector_payload(payload)
+
+    # Final hard guard runs after anchor/barnacle classification. At this point
+    # legitimate barnacles are labeled, orphan synthetic offers have already
+    # been removed, and the guard can reject only the remaining bad starts.
+    resolved_offers = list(resolved.get("offers", []))
+    guarded, hard_rejections, hard_issues = veto_calendar_collisions(resolved_offers, live_availability_snapshot)
+
+    # Real seated classes are source truth. A contradictory busy block should
+    # be reported for reconciliation, but must not erase the planted class.
+    rejected_real_keys = {
+        (str(item.get("date")), str(item.get("startTime")), str(item.get("courseId")))
+        for item in hard_rejections if item.get("offerType") == "seated_class"
+    }
+    if rejected_real_keys:
+        for item in resolved_offers:
+            key = (str(item.get("date")), str(item.get("startTime")), str(item.get("courseId")))
+            if key in rejected_real_keys and item.get("offerType") == "seated_class":
+                guarded.append(item)
+        hard_rejections = [item for item in hard_rejections if item.get("offerType") != "seated_class"]
+
+    grouped_dates: dict[str, dict[str, Any]] = {}
+    for offer in guarded:
+        date_group = grouped_dates.setdefault(
+            offer["date"],
+            {"date": offer["date"], "displayDate": offer["displayDate"], "startTimes": {}},
+        )
+        start_group = date_group["startTimes"].setdefault(
+            offer["startTime"],
+            {"startTime": offer["startTime"], "displayStartTime": offer["displayStartTime"], "courses": []},
+        )
+        start_group["courses"].append(offer)
+
+    dates = []
+    for date_group in grouped_dates.values():
+        start_times = list(date_group["startTimes"].values())
+        for start_group in start_times:
+            start_group["courses"].sort(
+                key=lambda item: (
+                    allowed_course_ids.index(item["courseId"]) if item["courseId"] in allowed_course_ids else 999,
+                    item["courseName"],
+                )
+            )
+        start_times.sort(key=lambda item: item["startTime"])
+        dates.append({**date_group, "startTimes": start_times})
+    dates.sort(key=lambda item: item["date"])
+
+    resolved["offers"] = guarded
+    resolved["dates"] = dates
+    resolved.setdefault("rejectedCourseStartTimes", []).extend(hard_rejections)
+    resolved.setdefault("reconciliationIssues", []).extend(hard_issues)
+    resolved.setdefault("counts", {})["publicSelectableOfferCount"] = len(guarded)
+    resolved["counts"]["publicSelectableDateCount"] = len(dates)
+    resolved["counts"]["publicSelectableStartTimeCount"] = sum(len(day["startTimes"]) for day in dates)
+    resolved["counts"]["rejectedOfferCount"] = len(resolved.get("rejectedCourseStartTimes", []))
+    reason_counts = Counter(
+        reason
+        for item in resolved.get("rejectedCourseStartTimes", [])
+        for reason in item.get("reasons", [])
+    )
+    resolved["rejectionReasonCounts"] = dict(reason_counts.most_common())
+    return resolved
