@@ -901,7 +901,10 @@
         "challenge_reserved_minutes": 45,
         "challenge_only_arrival_allowed": true,
         "failure_customer_policy": "Purchase the appropriate online/blended course and return later to complete certification."
-      }
+      },
+      "certification_identity": "hsi_bls",
+      "catalog_identity_namespace": "enrollware",
+      "external_hsi_product_id": "UNKNOWN"
     },
     {
       "course_id": "445670",
@@ -2314,10 +2317,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-FA-25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -2328,7 +2331,9 @@
       "hsi_discounted_cost_usd": 11.6,
       "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_first_aid",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-CHALLENGE",
@@ -2374,10 +2379,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCFA-25",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -2399,7 +2404,9 @@
       "hsi_discounted_cost_usd": 8.22,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_first_aid",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-CPR-AED-BLENDED-SKILLS",
@@ -2445,10 +2452,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-CPR-A25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -2459,7 +2466,9 @@
       "hsi_discounted_cost_usd": 11.6,
       "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-CPR-AED-CHALLENGE",
@@ -2505,10 +2514,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCCPR-25A",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -2530,7 +2539,9 @@
       "hsi_discounted_cost_usd": 8.22,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-CHILD-CPR-AED-BLENDED-SKILLS",
@@ -2576,10 +2587,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-CPR-AC25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -2590,7 +2601,9 @@
       "hsi_discounted_cost_usd": 11.6,
       "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_child_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-CHILD-CPR-AED-CHALLENGE",
@@ -2636,10 +2649,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCCPR-25AC",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -2661,7 +2674,9 @@
       "hsi_discounted_cost_usd": 8.22,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_child_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-INFANT-CPR-AED-BLENDED-SKILLS",
@@ -2707,10 +2722,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-CPR-AI25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -2721,7 +2736,9 @@
       "hsi_discounted_cost_usd": 11.6,
       "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_infant_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-INFANT-CPR-AED-CHALLENGE",
@@ -2767,10 +2784,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCCPR-25AI",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -2792,7 +2809,9 @@
       "hsi_discounted_cost_usd": 8.22,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_infant_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-CHILD-INFANT-CPR-AED-BLENDED-SKILLS",
@@ -2838,10 +2857,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-CPR-25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -2852,7 +2871,9 @@
       "hsi_discounted_cost_usd": 11.6,
       "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_child_infant_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-CHILD-INFANT-CPR-AED-CHALLENGE",
@@ -2898,10 +2919,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCCPR-25",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -2923,7 +2944,9 @@
       "hsi_discounted_cost_usd": 8.22,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_child_infant_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CPR-AED-BLENDED-SKILLS",
@@ -2969,10 +2992,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-COMBO-A25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -2983,7 +3006,9 @@
       "hsi_discounted_cost_usd": 16.27,
       "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_first_aid_adult_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CPR-AED-CHALLENGE",
@@ -3029,10 +3054,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCCOMBO-25A",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -3054,7 +3079,9 @@
       "hsi_discounted_cost_usd": 14.14,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_first_aid_adult_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CHILD-CPR-AED-BLENDED-SKILLS",
@@ -3100,10 +3127,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-COMBO-AC25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -3114,7 +3141,9 @@
       "hsi_discounted_cost_usd": 16.27,
       "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_first_aid_adult_child_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CHILD-CPR-AED-CHALLENGE",
@@ -3160,10 +3189,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCCOMBO-25AC",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -3185,7 +3214,9 @@
       "hsi_discounted_cost_usd": 14.14,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_first_aid_adult_child_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-INFANT-CPR-AED-BLENDED-SKILLS",
@@ -3231,10 +3262,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-COMBO-AI25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -3245,7 +3276,9 @@
       "hsi_discounted_cost_usd": 16.27,
       "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_first_aid_adult_infant_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-INFANT-CPR-AED-CHALLENGE",
@@ -3291,10 +3324,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCCOMBO-25AI",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -3316,7 +3349,9 @@
       "hsi_discounted_cost_usd": 14.14,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_first_aid_adult_infant_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CHILD-INFANT-CPR-AED-BLENDED-SKILLS",
@@ -3362,10 +3397,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-COMBO-25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -3376,7 +3411,9 @@
       "hsi_discounted_cost_usd": 16.27,
       "hsi_fulfillment_product_type": "BLENDED_DIGITAL_CERTIFICATION",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_first_aid_adult_child_infant_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-ADULT-CHILD-INFANT-CPR-AED-CHALLENGE",
@@ -3422,10 +3459,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCCOMBO-25",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -3447,7 +3484,9 @@
       "hsi_discounted_cost_usd": 14.14,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_adult_first_aid_adult_child_infant_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-BLENDED-SKILLS",
@@ -3493,10 +3532,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-PEDFA-25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -3513,9 +3552,14 @@
           "product_code": "HRSV-PEDFA25",
           "list_price_usd": 15.03,
           "discounted_cost_usd": 14.73,
-          "mode": "RSV"
+          "mode": "RSV",
+          "requires_separate_delivery_path": true,
+          "substitutable_for_in_person_skills": false,
+          "product_role": "remote_skills_verification"
         }
-      ]
+      ],
+      "certification_identity": "hsi_pediatric_first_aid",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHALLENGE",
@@ -3561,10 +3605,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCPEDFA-25",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -3586,7 +3630,9 @@
       "hsi_discounted_cost_usd": 8.22,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_pediatric_first_aid",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-CHILD-INFANT-CPR-AED-BLENDED-SKILLS",
@@ -3632,10 +3678,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-PEDCPR-CI25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -3652,15 +3698,23 @@
           "product_code": "HRSV-PEDCPR-CI25",
           "list_price_usd": 18.8,
           "discounted_cost_usd": 18.24,
-          "mode": "RSV"
+          "mode": "RSV",
+          "requires_separate_delivery_path": true,
+          "substitutable_for_in_person_skills": false,
+          "product_role": "remote_skills_verification"
         },
         {
           "product_code": "HRSVM-PEDCPR-CI25",
           "list_price_usd": 74.97,
           "discounted_cost_usd": 74.57,
-          "mode": "RSV_WITH_LOANER_MANIKIN"
+          "mode": "RSV_WITH_LOANER_MANIKIN",
+          "requires_separate_delivery_path": true,
+          "substitutable_for_in_person_skills": false,
+          "product_role": "loaner_manikin_logistics"
         }
-      ]
+      ],
+      "certification_identity": "hsi_child_infant_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-CHILD-INFANT-CPR-AED-CHALLENGE",
@@ -3706,10 +3760,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCPEDCPR-25CI",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -3731,7 +3785,9 @@
       "hsi_discounted_cost_usd": 8.22,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_child_infant_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-CHILD-INFANT-ADULT-CPR-AED-BLENDED-SKILLS",
@@ -3777,10 +3833,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-PEDCPR-25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -3797,15 +3853,23 @@
           "product_code": "HRSV-PEDCPR25",
           "list_price_usd": 18.8,
           "discounted_cost_usd": 18.24,
-          "mode": "RSV"
+          "mode": "RSV",
+          "requires_separate_delivery_path": true,
+          "substitutable_for_in_person_skills": false,
+          "product_role": "remote_skills_verification"
         },
         {
           "product_code": "HRSVM-PEDCPR25",
           "list_price_usd": 74.97,
           "discounted_cost_usd": 74.57,
-          "mode": "RSV_WITH_LOANER_MANIKIN"
+          "mode": "RSV_WITH_LOANER_MANIKIN",
+          "requires_separate_delivery_path": true,
+          "substitutable_for_in_person_skills": false,
+          "product_role": "loaner_manikin_logistics"
         }
-      ]
+      ],
+      "certification_identity": "hsi_child_infant_adult_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-CHILD-INFANT-ADULT-CPR-AED-CHALLENGE",
@@ -3851,10 +3915,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCPEDCPR-25",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -3876,7 +3940,9 @@
       "hsi_discounted_cost_usd": 8.22,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_child_infant_adult_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHILD-INFANT-CPR-AED-BLENDED-SKILLS",
@@ -3922,10 +3988,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-PEDCOMBO-CI25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -3942,15 +4008,23 @@
           "product_code": "HRSV-PED-CI25",
           "list_price_usd": 18.8,
           "discounted_cost_usd": "UNKNOWN",
-          "mode": "RSV"
+          "mode": "RSV",
+          "requires_separate_delivery_path": true,
+          "substitutable_for_in_person_skills": false,
+          "product_role": "remote_skills_verification"
         },
         {
           "product_code": "HRSVM-PED-CI25",
           "list_price_usd": 74.97,
           "discounted_cost_usd": 74.6,
-          "mode": "RSV_WITH_LOANER_MANIKIN"
+          "mode": "RSV_WITH_LOANER_MANIKIN",
+          "requires_separate_delivery_path": true,
+          "substitutable_for_in_person_skills": false,
+          "product_role": "loaner_manikin_logistics"
         }
-      ]
+      ],
+      "certification_identity": "hsi_pediatric_first_aid_child_infant_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHILD-INFANT-CPR-AED-CHALLENGE",
@@ -3996,10 +4070,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCPEDCOMBO-25CI",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -4021,7 +4095,9 @@
       "hsi_discounted_cost_usd": 14.14,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_pediatric_first_aid_child_infant_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHILD-INFANT-ADULT-CPR-AED-BLENDED-SKILLS",
@@ -4067,10 +4143,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "HBL-PEDCOMBO-25",
       "customer_delivery_modes": [
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
@@ -4087,15 +4163,23 @@
           "product_code": "HRSV-PED25",
           "list_price_usd": 18.8,
           "discounted_cost_usd": 18.24,
-          "mode": "RSV"
+          "mode": "RSV",
+          "requires_separate_delivery_path": true,
+          "substitutable_for_in_person_skills": false,
+          "product_role": "remote_skills_verification"
         },
         {
           "product_code": "HRSVM-PED-25",
           "list_price_usd": 74.97,
           "discounted_cost_usd": 74.6,
-          "mode": "RSV_WITH_LOANER_MANIKIN"
+          "mode": "RSV_WITH_LOANER_MANIKIN",
+          "requires_separate_delivery_path": true,
+          "substitutable_for_in_person_skills": false,
+          "product_role": "loaner_manikin_logistics"
         }
-      ]
+      ],
+      "certification_identity": "hsi_pediatric_first_aid_child_infant_adult_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-PEDIATRIC-FIRST-AID-CHILD-INFANT-ADULT-CPR-AED-CHALLENGE",
@@ -4141,10 +4225,10 @@
         "identity_source": "HSI program configuration / owner-approved catalog expansion",
         "scheduling_rule_source": "Owner-approved generic LanderWare skills/challenge template",
         "appointment_container_source": "LanderWare shared skills/challenge capacity",
-        "external_hsi_product_id_source": "UNKNOWN - no external HSI SKU/product ID supplied",
+        "external_hsi_product_id_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
         "unknown_policy": "UNKNOWN means the value was not explicitly represented in supplied HSI materials or current local config."
       },
-      "external_hsi_product_id": "UNKNOWN",
+      "external_hsi_product_id": "DCPEDCOMBO-25",
       "customer_delivery_modes": [
         "CHALLENGE_ONLY",
         "OPTIONAL_REVIEW_PLUS_CHALLENGE"
@@ -4166,7 +4250,9 @@
       "hsi_discounted_cost_usd": 14.14,
       "hsi_fulfillment_product_type": "DIGITAL_CERTIFICATION_CARD",
       "hsi_generation": "G25",
-      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07"
+      "hsi_price_source": "Owner-supplied HSI Training Center store pricing, 2026-10-07",
+      "certification_identity": "hsi_pediatric_first_aid_child_infant_adult_cpr_aed",
+      "catalog_identity_namespace": "landerware"
     },
     {
       "course_id": "LW-HSI-BLS-BLENDED-SKILLS",
@@ -4220,7 +4306,9 @@
         "BLENDED_ONLINE_PLUS_SKILLS",
         "SKILLS_SESSION_ONLY"
       ],
-      "online_component_required": true
+      "online_component_required": true,
+      "certification_identity": "hsi_bls",
+      "catalog_identity_namespace": "landerware"
     }
   ],
   "updated_at": "2026-10-07",
@@ -4237,6 +4325,48 @@
     "safety_note": "Only scheduler-critical reviewed fields were imported by course_id."
   },
   "arc_2027_catalog_note": "ARC r.25 blended and skills products added from owner-supplied 2027 Training Provider Course and Price List. ARC skills/BLS session capacity is 4 per session; unrelated provider capacities unchanged.",
-  "hsi_challenge_catalog_note": "Expanded HSI Level 3 First Aid/CPR/AED, Pediatric, and BLS catalog with blended/skills and Challenge delivery identities. Challenge review is modeled as a separate optional non-certifying event. External HSI SKUs were not invented.",
-  "hsi_g25_price_note": "HSI G25 digital-card, blended, pediatric RSV and related product pricing enriched from owner-supplied HSI Training Center store data. List and discounted costs are preserved separately; missing discounted cost remains UNKNOWN."
+  "hsi_challenge_catalog_note": "Expanded HSI Level 3 First Aid/CPR/AED, Pediatric, and BLS catalog with blended/skills and Challenge delivery identities. Challenge review is modeled as a separate optional non-certifying event. External HSI SKUs were not invented. certification_identity names the credential configuration independently of delivery_type. Legacy broad Enrollware titles remain unresolved; do not infer age coverage or alias them to an exact configuration. RSV references are separate delivery paths, never substitute fulfillment for in-person skills. This catalog does not authorize scheduling or public activation.",
+  "hsi_g25_price_note": "HSI G25 digital-card, blended, pediatric RSV and related product pricing enriched from owner-supplied HSI Training Center store data. List and discounted costs are preserved separately; missing discounted cost remains UNKNOWN.",
+  "hsi_support_products": [
+    {
+      "product_code": "PCPEDCPR-25",
+      "description": "Pediatric CPR AED print certification cards",
+      "list_price_usd": 45.77,
+      "discounted_cost_usd": 44.4,
+      "pack_quantity": 5,
+      "product_role": "inventory_support",
+      "default_certification_fulfillment": false,
+      "source": "https://github.com/Brian910cpr/910cpr-class-landers/issues/363#issuecomment-6045709776"
+    },
+    {
+      "product_code": "PCPEDFA-25",
+      "description": "Pediatric First Aid print certification cards",
+      "list_price_usd": 45.77,
+      "discounted_cost_usd": 44.4,
+      "pack_quantity": 5,
+      "product_role": "inventory_support",
+      "default_certification_fulfillment": false,
+      "source": "https://github.com/Brian910cpr/910cpr-class-landers/issues/363#issuecomment-6045709776"
+    },
+    {
+      "product_code": "PCPEDCOMBO-25",
+      "description": "Pediatric Combo print certification cards",
+      "list_price_usd": 78.0,
+      "discounted_cost_usd": 75.66,
+      "pack_quantity": 5,
+      "product_role": "inventory_support",
+      "default_certification_fulfillment": false,
+      "source": "https://github.com/Brian910cpr/910cpr-class-landers/issues/363#issuecomment-6045709776"
+    },
+    {
+      "product_code": "SKILL-PED25",
+      "description": "Pediatric First Aid | CPR AED Skill Guide",
+      "list_price_usd": 89.0,
+      "discounted_cost_usd": 86.33,
+      "pack_quantity": 5,
+      "product_role": "inventory_support",
+      "default_certification_fulfillment": false,
+      "source": "https://github.com/Brian910cpr/910cpr-class-landers/issues/363#issuecomment-6045709776"
+    }
+  ]
 }
