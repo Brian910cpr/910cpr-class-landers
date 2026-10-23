@@ -1,0 +1,2364 @@
+{
+  "as_of": "2026-09-14T00:00:00-04:00",
+  "current_commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+  "identity_overlap": {
+    "current_archive_registration_ids_not_in_historical": 53,
+    "historical_registration_ids_in_current_archive": 19655,
+    "historical_registration_ids_not_in_current_archive": 6510
+  },
+  "limits": [
+    "Candidate is not public-safe approval or evidence the class was taught; enrollment is not completion.",
+    "JSON-only sources lack independent workbook reconciliation; candidate counts are provisional.",
+    "Snapshots overlap. Union IDs are inventory identities, not a deduplicated current canonical class registry.",
+    "Client and non-public locations require separate review; no numerical pilot cap is imposed.",
+    "No participant, client, instructor, location, raw course label, registration URL or row is emitted.",
+    "No HTML content/privacy audit, live HTTP check, archive generation, deployment or GSC submission occurred.",
+    "Current options require #228 canonical projection and #140 occupancy/freshness proof before publication."
+  ],
+  "publication_authorized_count": null,
+  "recovered_assets": [
+    {
+      "blob": "2f46e37490c110e325b381f09449f8d0affe6a8c",
+      "commit": "f523c364ccbb29fffdf96fec1b4a915421f682bd",
+      "path": "scripts/build_landers.py"
+    },
+    {
+      "blob": "c72c163df93ad014949849bf8f7413016ddf6123",
+      "commit": "f523c364ccbb29fffdf96fec1b4a915421f682bd",
+      "path": "scripts/build_schedule.py"
+    },
+    {
+      "blob": "1de6140075b0b863f1c7e0211d1cd7c78d2f3c36",
+      "commit": "f523c364ccbb29fffdf96fec1b4a915421f682bd",
+      "path": "scripts/build_index_and_sitemap.py"
+    },
+    {
+      "blob": "2ace6a5d80a1e96fc21cd95cb305c7ffb401ba8a",
+      "commit": "f523c364ccbb29fffdf96fec1b4a915421f682bd",
+      "path": "data/schedule.json"
+    },
+    {
+      "blob": "da4697ed200511a1caeea94a416d53952a00865a",
+      "commit": "a7ff508d070ee7c23db0c955c04f05d03c4ef576",
+      "path": "scripts/build_landers.py"
+    },
+    {
+      "blob": "3c08cf2589e1036bc23fd6588135c865dc3eb4fb",
+      "commit": "a7ff508d070ee7c23db0c955c04f05d03c4ef576",
+      "path": "scripts/build_schedule.py"
+    },
+    {
+      "blob": "64eb109ea46e2eebc9dc4333995151c973736d0b",
+      "commit": "a7ff508d070ee7c23db0c955c04f05d03c4ef576",
+      "path": "scripts/build_index_and_sitemap.py"
+    },
+    {
+      "blob": "c5465df12ffcdad43b7930e12fb5b99a608f9fed",
+      "commit": "a7ff508d070ee7c23db0c955c04f05d03c4ef576",
+      "path": "data/schedule.json"
+    },
+    {
+      "blob": "c323ca9fbba666867fae456ecdbeaeffcfef6590",
+      "commit": "a7ff508d070ee7c23db0c955c04f05d03c4ef576",
+      "path": "raw/Class Report.xlsx"
+    },
+    {
+      "blob": "4fde747079b7935855d10f8a32f4aa8cb1a4540c",
+      "commit": "d02a7a6fe7a398112cf71595e62fa3cc1d351745",
+      "path": "scripts/build_landers.py"
+    },
+    {
+      "blob": "d8fe49a12e31842a0d79c450d37deb5b6e2f7ed9",
+      "commit": "d02a7a6fe7a398112cf71595e62fa3cc1d351745",
+      "path": "scripts/build_schedule.py"
+    },
+    {
+      "blob": "e755ecd57a4a68334efdaf9dc81515e64ca0d57c",
+      "commit": "d02a7a6fe7a398112cf71595e62fa3cc1d351745",
+      "path": "scripts/build_index_and_sitemap.py"
+    },
+    {
+      "blob": "34a6e32515a04ab8d0c7fc68c3bedaeaa963b72e",
+      "commit": "d02a7a6fe7a398112cf71595e62fa3cc1d351745",
+      "path": "scripts/public_class_eligibility.py"
+    },
+    {
+      "blob": "d3a5a3b4c00b16d74e32bacf099f6b4bdf4ba50d",
+      "commit": "d02a7a6fe7a398112cf71595e62fa3cc1d351745",
+      "path": "docs/data/schedule_future.json"
+    },
+    {
+      "blob": "64ac75700c9e3e30d346754f54d67aead7d0bef5",
+      "commit": "269e9fd7015128fd7652d57864623da1aaa2fd4a",
+      "path": "scripts/build_landers.py"
+    },
+    {
+      "blob": "d8fe49a12e31842a0d79c450d37deb5b6e2f7ed9",
+      "commit": "269e9fd7015128fd7652d57864623da1aaa2fd4a",
+      "path": "scripts/build_schedule.py"
+    },
+    {
+      "blob": "1cf73e07d643db578a7ae3ac930c55bb76a6ba20",
+      "commit": "269e9fd7015128fd7652d57864623da1aaa2fd4a",
+      "path": "scripts/build_index_and_sitemap.py"
+    },
+    {
+      "blob": "34a6e32515a04ab8d0c7fc68c3bedaeaa963b72e",
+      "commit": "269e9fd7015128fd7652d57864623da1aaa2fd4a",
+      "path": "scripts/public_class_eligibility.py"
+    },
+    {
+      "blob": "286399e5ef7bc492c8709c66189f4632904affc8",
+      "commit": "269e9fd7015128fd7652d57864623da1aaa2fd4a",
+      "path": "docs/data/schedule_future.json"
+    },
+    {
+      "blob": "dd212619786c9eece258077022d29a01f95134d6",
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "path": "scripts/build_landers.py"
+    },
+    {
+      "blob": "f67225433e5718964fd231f5867b45df6d75a361",
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "path": "scripts/build_schedule.py"
+    },
+    {
+      "blob": "12ed2a2115686bfb97f40e6a69515a95e0d7131c",
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "path": "scripts/build_index_and_sitemap.py"
+    },
+    {
+      "blob": "34a6e32515a04ab8d0c7fc68c3bedaeaa963b72e",
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "path": "scripts/public_class_eligibility.py"
+    },
+    {
+      "blob": "ef77fd21e1db6becdb19b7f28abcdaf44eb08aaf",
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "path": "data/schedule_all.json"
+    },
+    {
+      "blob": "dd212619786c9eece258077022d29a01f95134d6",
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "path": "scripts/build_landers.py"
+    },
+    {
+      "blob": "f67225433e5718964fd231f5867b45df6d75a361",
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "path": "scripts/build_schedule.py"
+    },
+    {
+      "blob": "12ed2a2115686bfb97f40e6a69515a95e0d7131c",
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "path": "scripts/build_index_and_sitemap.py"
+    },
+    {
+      "blob": "34a6e32515a04ab8d0c7fc68c3bedaeaa963b72e",
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "path": "scripts/public_class_eligibility.py"
+    },
+    {
+      "blob": "16bdde296890134f2e34fb7f3f97dc4c781d9df8",
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "path": "docs/data/schedule_future.json"
+    }
+  ],
+  "schema_version": 1,
+  "sources": {
+    "current_archive_source": {
+      "blob": "ef77fd21e1db6becdb19b7f28abcdaf44eb08aaf",
+      "by_course_label_sha256": {
+        "00e95b476fe14e4f5a3caa685e6e4f3f27d8ecc8997290107f0d4e438a3011f2": {
+          "by_year": {
+            "2024": 6,
+            "2025": 6
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "non_public_location_review": 12
+          },
+          "source_rows": 12
+        },
+        "0c9c5db2b2bf3a2ac2d0ee6f0e24d11cd1c3bb59afecc8c27f084e39506b8f45": {
+          "by_year": {
+            "2024": 1
+          },
+          "family_bucket": "First Aid",
+          "reasons": {
+            "non_public_location_review": 1
+          },
+          "source_rows": 1
+        },
+        "1d15857a797ad3a23e482307089ddb7915a2eb44a27e1cd33a87164b8a20a329": {
+          "by_year": {
+            "2024": 8,
+            "2025": 8
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "non_public_location_review": 16
+          },
+          "source_rows": 16
+        },
+        "204a6a9d8628b8c251c8916faada8f888b1d36198e63bdc1ec54fbbf42c16238": {
+          "by_year": {
+            "2020": 60,
+            "2021": 2049,
+            "2022": 202,
+            "2023": 258,
+            "2024": 300,
+            "2025": 172,
+            "2026": 135
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "client_present_review": 1,
+            "invalid_or_ambiguous_timing": 4,
+            "non_public_location_review": 4,
+            "not_elapsed_at_cutoff": 47,
+            "preliminary_public_candidate_requires_review": 3120
+          },
+          "source_rows": 3176
+        },
+        "21cfac2d8ac2763eb3a46f228d6f7d8910544d6cef5c73eb8a4968cf1d7cccff": {
+          "by_year": {
+            "2024": 2
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "non_public_location_review": 2
+          },
+          "source_rows": 2
+        },
+        "3400823501aabcd8424fe60692f69a80af3a89230aff0cdfa93d6f57c91795ee": {
+          "by_year": {
+            "2021": 7,
+            "2022": 5,
+            "2023": 167,
+            "2025": 21,
+            "2026": 45
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "non_public_location_review": 3,
+            "not_elapsed_at_cutoff": 16,
+            "preliminary_public_candidate_requires_review": 226
+          },
+          "source_rows": 245
+        },
+        "365a0ee1c17d4944f3aa6e0f36d29cca396aff941709a556c182aca87fc79df7": {
+          "by_year": {
+            "2020": 61,
+            "2021": 722,
+            "2022": 241,
+            "2023": 241,
+            "2024": 217,
+            "2025": 232,
+            "2026": 182
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "client_present_review": 111,
+            "invalid_or_ambiguous_timing": 12,
+            "non_public_location_review": 116,
+            "not_elapsed_at_cutoff": 63,
+            "preliminary_public_candidate_requires_review": 1594
+          },
+          "source_rows": 1896
+        },
+        "3baa766c817fbbad89aa7edd0e9ede248cb0283939e129e405817416d3c3d753": {
+          "by_year": {
+            "2024": 1
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "non_public_location_review": 1
+          },
+          "source_rows": 1
+        },
+        "3ee3f6b83fa03e770b84fa7c5ed6c6dafe473345f92d2468a8c714743d22583b": {
+          "by_year": {
+            "2021": 214,
+            "2022": 51,
+            "2023": 14,
+            "2024": 160,
+            "2025": 93,
+            "2026": 18
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "client_present_review": 4,
+            "invalid_or_ambiguous_timing": 2,
+            "non_public_location_review": 3,
+            "preliminary_public_candidate_requires_review": 541
+          },
+          "source_rows": 550
+        },
+        "43ffb82fee72c9dcd4a2413090fce92af1aa524088492f5a1d5eb5357a5f2bf1": {
+          "by_year": {
+            "2025": 4
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "non_public_location_review": 4
+          },
+          "source_rows": 4
+        },
+        "53e43608dc29fe89963b1f4b61a6213524d3201c7179f0d2e4a445c21f5e1e40": {
+          "by_year": {
+            "2024": 5
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "non_public_location_review": 5
+          },
+          "source_rows": 5
+        },
+        "553778f1f945cafdaa7c54f8b154505cdbd8816b445115db75f9e7fa8fa99104": {
+          "by_year": {
+            "2024": 10,
+            "2025": 6
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "non_public_location_review": 16
+          },
+          "source_rows": 16
+        },
+        "55686063bb1e3e9b0e5c0aa59d4fcef10c858edc8a0e879b08cdea645bb84762": {
+          "by_year": {
+            "2020": 533,
+            "2021": 1626,
+            "2022": 266,
+            "2023": 465,
+            "2024": 455,
+            "2025": 368,
+            "2026": 323
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "client_present_review": 6,
+            "invalid_or_ambiguous_timing": 37,
+            "non_public_location_review": 178,
+            "not_elapsed_at_cutoff": 110,
+            "preliminary_public_candidate_requires_review": 3705
+          },
+          "source_rows": 4036
+        },
+        "5ad2ab5a3a52fa875b16496e0095be35004dfd3cb7ca01e947114d12de543f88": {
+          "by_year": {
+            "2023": 176,
+            "2024": 539,
+            "2025": 470,
+            "2026": 413
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "client_present_review": 49,
+            "invalid_or_ambiguous_timing": 7,
+            "non_public_location_review": 50,
+            "not_elapsed_at_cutoff": 124,
+            "preliminary_public_candidate_requires_review": 1368
+          },
+          "source_rows": 1598
+        },
+        "5b11123a2f53098bf8d6aae0026c483d6e4d553fe76a12a5b7c2fa054fcc12bf": {
+          "by_year": {
+            "2021": 2,
+            "2024": 17,
+            "2025": 67,
+            "2026": 8
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "client_present_review": 4,
+            "invalid_or_ambiguous_timing": 2,
+            "preliminary_public_candidate_requires_review": 88
+          },
+          "source_rows": 94
+        },
+        "65a8d11d7a8d2af92a67b921738e57bf0d7092cd1b6c7d3b13cf37967d863af1": {
+          "by_year": {
+            "2020": 688,
+            "2021": 2760,
+            "2022": 342,
+            "2023": 487,
+            "2024": 370,
+            "2025": 349,
+            "2026": 358
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "client_present_review": 59,
+            "invalid_or_ambiguous_timing": 158,
+            "non_public_location_review": 239,
+            "not_elapsed_at_cutoff": 124,
+            "preliminary_public_candidate_requires_review": 4774
+          },
+          "source_rows": 5354
+        },
+        "7165d4eef6e8c7696752872d111871ece69c44ad974816f703de2140964220a1": {
+          "by_year": {
+            "2025": 6
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "non_public_location_review": 6
+          },
+          "source_rows": 6
+        },
+        "a64ac4d3ba7ce31c88725fe67319b75fbaba306e89383cc60100e94da3e74da7": {
+          "by_year": {
+            "2024": 1,
+            "2025": 3
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "non_public_location_review": 4
+          },
+          "source_rows": 4
+        },
+        "a6a105eef056f233072004c40a2858c7a8acf850b6088a59938661ceb56fd506": {
+          "by_year": {
+            "2024": 1,
+            "2025": 5
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "non_public_location_review": 6
+          },
+          "source_rows": 6
+        },
+        "b6ea9c2b9e72f40cb99fbdcdcad546fb114975e79e7262bbdded44dcc77a8aa7": {
+          "by_year": {
+            "2020": 3,
+            "2021": 8,
+            "2024": 16,
+            "2025": 64,
+            "2026": 9
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "client_present_review": 1,
+            "invalid_or_ambiguous_timing": 1,
+            "non_public_location_review": 1,
+            "preliminary_public_candidate_requires_review": 97
+          },
+          "source_rows": 100
+        },
+        "b7c729b2e8b1f5b86ac8c056f6519418f1fc8d61817cddbad2324f2d207b8293": {
+          "by_year": {
+            "2023": 117,
+            "2024": 331,
+            "2025": 191,
+            "2026": 6
+          },
+          "family_bucket": "USCG",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 645
+          },
+          "source_rows": 645
+        },
+        "d199d82fd34c66d9a77a0f759af7cb846e24b7ff3b774ddece35219aa764a620": {
+          "by_year": {
+            "2021": 9,
+            "2022": 6,
+            "2023": 5,
+            "2024": 203,
+            "2025": 71,
+            "2026": 12
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "client_present_review": 2,
+            "invalid_or_ambiguous_timing": 1,
+            "non_public_location_review": 1,
+            "preliminary_public_candidate_requires_review": 302
+          },
+          "source_rows": 306
+        },
+        "dcb7a24d224692b58aaba8f2806959d08d3cc7f761cb23b50bb04201da6dae78": {
+          "by_year": {
+            "2020": 8,
+            "2021": 12,
+            "2023": 88,
+            "2024": 154,
+            "2025": 128,
+            "2026": 88
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "not_elapsed_at_cutoff": 31,
+            "preliminary_public_candidate_requires_review": 447
+          },
+          "source_rows": 478
+        },
+        "e52bcf75319e620f07ffe952ad7afede013c1ac49492862e0e0643c0e02e53ee": {
+          "by_year": {
+            "2024": 3,
+            "2025": 3
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "non_public_location_review": 6
+          },
+          "source_rows": 6
+        },
+        "e924419615cb919c4f58e711ca45eb444acfd41961207069aca66f8ace38365b": {
+          "by_year": {
+            "2022": 72,
+            "2023": 257,
+            "2024": 307,
+            "2025": 192,
+            "2026": 323
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "client_present_review": 7,
+            "invalid_or_ambiguous_timing": 1,
+            "non_public_location_review": 1,
+            "not_elapsed_at_cutoff": 125,
+            "preliminary_public_candidate_requires_review": 1017
+          },
+          "source_rows": 1151
+        }
+      },
+      "by_year": {
+        "2020": {
+          "client_present_review": 4,
+          "invalid_or_ambiguous_timing": 35,
+          "non_public_location_review": 297,
+          "preliminary_public_candidate_requires_review": 1017,
+          "source_rows": 1353
+        },
+        "2021": {
+          "client_present_review": 13,
+          "invalid_or_ambiguous_timing": 99,
+          "non_public_location_review": 83,
+          "preliminary_public_candidate_requires_review": 7214,
+          "source_rows": 7409
+        },
+        "2022": {
+          "client_present_review": 42,
+          "invalid_or_ambiguous_timing": 18,
+          "non_public_location_review": 67,
+          "preliminary_public_candidate_requires_review": 1058,
+          "source_rows": 1185
+        },
+        "2023": {
+          "client_present_review": 52,
+          "invalid_or_ambiguous_timing": 53,
+          "non_public_location_review": 67,
+          "preliminary_public_candidate_requires_review": 2103,
+          "source_rows": 2275
+        },
+        "2024": {
+          "client_present_review": 55,
+          "invalid_or_ambiguous_timing": 1,
+          "non_public_location_review": 73,
+          "preliminary_public_candidate_requires_review": 2978,
+          "source_rows": 3107
+        },
+        "2025": {
+          "client_present_review": 59,
+          "invalid_or_ambiguous_timing": 7,
+          "non_public_location_review": 79,
+          "preliminary_public_candidate_requires_review": 2314,
+          "source_rows": 2459
+        },
+        "2026": {
+          "client_present_review": 19,
+          "invalid_or_ambiguous_timing": 12,
+          "non_public_location_review": 9,
+          "not_elapsed_at_cutoff": 640,
+          "preliminary_public_candidate_requires_review": 1240,
+          "source_rows": 1920
+        }
+      },
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "exclusive_classification": {
+        "client_present_review": 244,
+        "invalid_or_ambiguous_timing": 225,
+        "non_public_location_review": 675,
+        "not_elapsed_at_cutoff": 640,
+        "preliminary_public_candidate_requires_review": 17924
+      },
+      "overlapping_flags": {
+        "client_present": 250,
+        "json_only_provenance": 19708,
+        "missing_registration_identity": 0,
+        "negative_enrollment": 0,
+        "positive_enrollment": 4143,
+        "public_location_marker": 18790,
+        "zero_enrollment": 15565
+      },
+      "path": "data/schedule_all.json",
+      "registration_ids_with_multiple_session_ids": 0,
+      "source_rows": 19708,
+      "unique_registration_ids": 19708,
+      "unique_session_ids": 19708,
+      "urls": {
+        "legacy_html_without_source_id": 115,
+        "legacy_numeric_html_count": 115,
+        "legacy_paths_in_current_tree": 115,
+        "preservable_legacy_url_percent": 0.0,
+        "source_ids_with_legacy_html": 0,
+        "source_ids_without_legacy_html": 19708
+      },
+      "workbook_path": null
+    },
+    "current_public": {
+      "blob": "16bdde296890134f2e34fb7f3f97dc4c781d9df8",
+      "by_course_label_sha256": {
+        "18b885241a4b8f3e3730789eed013fe3f373128d5ad6b42b6518ac48c6849abe": {
+          "by_year": {
+            "2026": 2
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 2
+          },
+          "source_rows": 2
+        },
+        "24bdba04c23507bb446fff39bf37b4386d5144b979f5330ce82eab610c246bfb": {
+          "by_year": {
+            "2026": 4
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 2,
+            "preliminary_public_candidate_requires_review": 2
+          },
+          "source_rows": 4
+        },
+        "35674c787a09b01dcfcc223d9d5900d4ed945ccf88e108f9e8729ca5a8f473e7": {
+          "by_year": {
+            "2026": 4
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 4
+          },
+          "source_rows": 4
+        },
+        "512db5f94a6b13c69cc0bc6d22823dbecd7fda9269f8a1cb8c7fb07fdaf09ab7": {
+          "by_year": {
+            "2026": 1
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 1
+          },
+          "source_rows": 1
+        },
+        "6e3e958837ad217bf1a6362f49bc851cc9ab0c7af16bc5bd75a07844c6e09004": {
+          "by_year": {
+            "2026": 3
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 3
+          },
+          "source_rows": 3
+        },
+        "708539c3971a15bd3e508c90380477d32d244cd995e423a5ad92a5f5443b7931": {
+          "by_year": {
+            "2026": 1
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 1
+        },
+        "78d6b72f5570d648eefcc6a3373bd8cd03652a8fa079cec03a953d87f02d4005": {
+          "by_year": {
+            "2026": 3
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 3
+          },
+          "source_rows": 3
+        },
+        "8567fac9e6e3268405fc7f992ecacacc54de3a8f8ca917b71c69fb0e7a86aaa5": {
+          "by_year": {
+            "2026": 1
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "not_elapsed_at_cutoff": 1
+          },
+          "source_rows": 1
+        },
+        "883c07279f86a246e3498c4e85d10b581a8600fb4bd40761563216121eb82cc0": {
+          "by_year": {
+            "2026": 2
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 2
+          },
+          "source_rows": 2
+        },
+        "8f1eeae3e98c4ae94538749cf335fefbede6084228d8a31e347c04b2712182f2": {
+          "by_year": {
+            "2026": 4
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 4
+          },
+          "source_rows": 4
+        }
+      },
+      "by_year": {
+        "2026": {
+          "not_elapsed_at_cutoff": 22,
+          "preliminary_public_candidate_requires_review": 3,
+          "source_rows": 25
+        }
+      },
+      "commit": "abc7e9b1dd2d03039437721f80fe294190060c8a",
+      "exclusive_classification": {
+        "not_elapsed_at_cutoff": 22,
+        "preliminary_public_candidate_requires_review": 3
+      },
+      "overlapping_flags": {
+        "client_present": 0,
+        "json_only_provenance": 25,
+        "missing_registration_identity": 0,
+        "public_location_marker": 25,
+        "unknown_enrollment": 25
+      },
+      "path": "docs/data/schedule_future.json",
+      "registration_ids_with_multiple_session_ids": 0,
+      "source_rows": 25,
+      "unique_registration_ids": 25,
+      "unique_session_ids": 25,
+      "urls": {
+        "legacy_html_without_source_id": 90,
+        "legacy_numeric_html_count": 115,
+        "legacy_paths_in_current_tree": 115,
+        "preservable_legacy_url_percent": 21.7391,
+        "source_ids_with_legacy_html": 25,
+        "source_ids_without_legacy_html": 0
+      },
+      "workbook_path": null
+    },
+    "historical_corpus": {
+      "blob": "c5465df12ffcdad43b7930e12fb5b99a608f9fed",
+      "by_course_label_sha256": {
+        "020b44528baaf320e3bfd18047bbc806fdb7e11096c7b4a1afa972fc5406601f": {
+          "by_year": {
+            "2023": 13,
+            "2025": 59
+          },
+          "family_bucket": "First Aid",
+          "reasons": {
+            "client_present_review": 13,
+            "preliminary_public_candidate_requires_review": 59
+          },
+          "source_rows": 72
+        },
+        "060cb8a8072304b926c90d2b1904c9957d5930d05b9f5f7c996dd852bcdccec4": {
+          "by_year": {
+            "2021": 7,
+            "2022": 5,
+            "2023": 167,
+            "2025": 21,
+            "2026": 49
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "non_public_location_review": 3,
+            "not_elapsed_at_cutoff": 16,
+            "preliminary_public_candidate_requires_review": 230
+          },
+          "source_rows": 249
+        },
+        "077f4d3c1f64206e1039bcb23d6aa99a78fabc1d6907dbe9b42d801c13bad397": {
+          "by_year": {
+            "2026": 4
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 4
+          },
+          "source_rows": 4
+        },
+        "0da874ea1010377235a57482d6f7f360426b3839639dc6355641162f4bd5d8d2": {
+          "by_year": {
+            "2025": 1,
+            "2026": 4
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "client_present_review": 1,
+            "non_public_location_review": 1,
+            "preliminary_public_candidate_requires_review": 3
+          },
+          "source_rows": 5
+        },
+        "0eec63ed7f4a3398f318aa3738ff67fb62c803025cf1184cbe004af000c49e48": {
+          "by_year": {
+            "2025": 177
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 1,
+            "preliminary_public_candidate_requires_review": 176
+          },
+          "source_rows": 177
+        },
+        "149d77db82a7d3cc8a22ef237a0c7d3160bb0f0aa0c7401317f10843dc6061f1": {
+          "by_year": {
+            "2024": 6
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "client_present_review": 5,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 6
+        },
+        "18ece95730e6a362f21c5763370822c0f4d831fc1d1ecd8e3e3e0f9c3c512a70": {
+          "by_year": {
+            "2024": 1
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 1
+        },
+        "1e28e605a956752d1af3ebd28d03ffe858bf31729c0cdc4d68ad5d1c7a368292": {
+          "by_year": {
+            "2021": 2,
+            "2024": 17,
+            "2025": 71,
+            "2026": 6
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "client_present_review": 4,
+            "invalid_or_ambiguous_timing": 1,
+            "preliminary_public_candidate_requires_review": 91
+          },
+          "source_rows": 96
+        },
+        "1ee175e205ec10c17670bd9a1a0602530338eb59f6f61fa43e747e25b2e27c2e": {
+          "by_year": {
+            "2024": 1
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "workbook_provenance_unresolved": 1
+          },
+          "source_rows": 1
+        },
+        "1fac1bbd7b3499ce8127953800e4b3a811995ccce3c6dd43219bcc0a0a8460e1": {
+          "by_year": {
+            "2022": 15,
+            "2023": 2
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 5,
+            "preliminary_public_candidate_requires_review": 12
+          },
+          "source_rows": 17
+        },
+        "2060760664d8fc337623ec6af19957303fcf1076d37952862b55a466578cdc38": {
+          "by_year": {
+            "2025": 3
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "non_public_location_review": 2,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 3
+        },
+        "25723f42132bea61427f265de9588d5efdd9e8ac188559ee1026ea851b18e3d7": {
+          "by_year": {
+            "2020": 8,
+            "2021": 12,
+            "2023": 88,
+            "2024": 155,
+            "2025": 128,
+            "2026": 93
+          },
+          "family_bucket": "First Aid",
+          "reasons": {
+            "non_public_location_review": 1,
+            "not_elapsed_at_cutoff": 31,
+            "preliminary_public_candidate_requires_review": 452
+          },
+          "source_rows": 484
+        },
+        "2a917171db5a3f64d4a08ad585b75e37f1c259d99a494ded206dabe0dc311163": {
+          "by_year": {
+            "2025": 1
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "non_public_location_review": 1
+          },
+          "source_rows": 1
+        },
+        "2ba71cda308294da033bf828730477796fa5f47a00928d6505bbfb79206c0d56": {
+          "by_year": {
+            "2021": 1,
+            "2022": 1,
+            "2023": 103,
+            "2024": 34,
+            "2025": 12
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "client_present_review": 62,
+            "invalid_or_ambiguous_timing": 15,
+            "non_public_location_review": 74
+          },
+          "source_rows": 151
+        },
+        "2d77df4562fed48517e952370b16ffaec2520a5352445fc9a92d4a2e1c74ba9e": {
+          "by_year": {
+            "2020": 1,
+            "2021": 1
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "non_public_location_review": 1,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 2
+        },
+        "32ef056434b55afb7a3f0342101fac215b06095a0adc59c5147b0f8223665567": {
+          "by_year": {
+            "2023": 117,
+            "2024": 331,
+            "2025": 192,
+            "2026": 6
+          },
+          "family_bucket": "First Aid",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 646
+          },
+          "source_rows": 646
+        },
+        "32fcc5c277ed6cdc24b7794f4eea6e377f23d876752294a3741c5625139f8aab": {
+          "by_year": {
+            "2020": 6,
+            "2021": 9,
+            "2022": 11,
+            "2023": 97,
+            "2024": 132,
+            "2025": 65,
+            "2026": 2
+          },
+          "family_bucket": "CPR",
+          "reasons": {
+            "client_present_review": 2,
+            "invalid_or_ambiguous_timing": 3,
+            "non_public_location_review": 21,
+            "preliminary_public_candidate_requires_review": 296
+          },
+          "source_rows": 322
+        },
+        "33c9f4f3da540708bba8bda14cb929e73cd236b4d6d55605f408e2d652587335": {
+          "by_year": {
+            "2020": 1
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 1
+        },
+        "3ad0ca15bac1318786638f0d2f47fe7272eaece50af2d3c7e3df40224ef6f6cf": {
+          "by_year": {
+            "2025": 1
+          },
+          "family_bucket": "CPR",
+          "reasons": {
+            "client_present_review": 1
+          },
+          "source_rows": 1
+        },
+        "3eb2a87b9cfccff3a7dfb0a2ea99f46ed2ae7f48c05de07afde599d17b089e75": {
+          "by_year": {
+            "2023": 1,
+            "2024": 9,
+            "2025": 98
+          },
+          "family_bucket": "First Aid",
+          "reasons": {
+            "client_present_review": 11,
+            "invalid_or_ambiguous_timing": 1,
+            "preliminary_public_candidate_requires_review": 96
+          },
+          "source_rows": 108
+        },
+        "42c449ccb95f06bbf5c38cd84c143f068dcc1841255db5db62efd62f6474bc1d": {
+          "by_year": {
+            "2021": 1
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "non_public_location_review": 1
+          },
+          "source_rows": 1
+        },
+        "432dbc0c487f15676022539d74631ff672e24d1511b5957f546968fc95417b2e": {
+          "by_year": {
+            "2024": 15,
+            "2025": 1
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "client_present_review": 6,
+            "non_public_location_review": 10
+          },
+          "source_rows": 16
+        },
+        "43f19fe4919cff0edd039dc17a5efd6c37e2385e3e04bf6db4c406a8451a520a": {
+          "by_year": {
+            "2024": 2,
+            "2025": 17,
+            "2026": 2
+          },
+          "family_bucket": "First Aid",
+          "reasons": {
+            "client_present_review": 12,
+            "invalid_or_ambiguous_timing": 1,
+            "non_public_location_review": 6,
+            "preliminary_public_candidate_requires_review": 2
+          },
+          "source_rows": 21
+        },
+        "4689370d9d08be27496af2002c5ded932d45bc8b8b66c69cfec042fe48f15700": {
+          "by_year": {
+            "2022": 37,
+            "2023": 4,
+            "2024": 34,
+            "2025": 3,
+            "2026": 3
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "client_present_review": 59,
+            "non_public_location_review": 22
+          },
+          "source_rows": 81
+        },
+        "4797682cbc02f3a89c0a27f04c1f6179dd0ab7a713e0499db1597efc421d8838": {
+          "by_year": {
+            "2025": 1
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "client_present_review": 1
+          },
+          "source_rows": 1
+        },
+        "4a2304bf636e9d1566abdcd9b18693295c1f6fa4c2a0cdf0884b6ef43a4cd1eb": {
+          "by_year": {
+            "2024": 1
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "non_public_location_review": 1
+          },
+          "source_rows": 1
+        },
+        "4c6857f73c3bcb808a0a3a7577b1ab1891124601759f558771c167af40c1d161": {
+          "by_year": {
+            "2023": 130,
+            "2024": 160,
+            "2025": 135,
+            "2026": 11
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "client_present_review": 3,
+            "non_public_location_review": 9,
+            "preliminary_public_candidate_requires_review": 424
+          },
+          "source_rows": 436
+        },
+        "4d814fb43c37bce64f97f255abb4acd42e7c0b1f9767c2857b3f9feeca128e82": {
+          "by_year": {
+            "2020": 688,
+            "2021": 2760,
+            "2022": 342,
+            "2023": 487,
+            "2024": 380,
+            "2025": 357,
+            "2026": 388
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "client_present_review": 62,
+            "invalid_or_ambiguous_timing": 157,
+            "non_public_location_review": 163,
+            "not_elapsed_at_cutoff": 124,
+            "preliminary_public_candidate_requires_review": 4803,
+            "workbook_provenance_unresolved": 93
+          },
+          "source_rows": 5402
+        },
+        "561b7ccefad213bc90a0c05f19ddfc8e66f0f08d824af3b5c33efdef7384076d": {
+          "by_year": {
+            "2021": 102,
+            "2022": 59,
+            "2023": 53,
+            "2024": 43,
+            "2025": 29,
+            "2026": 5
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "client_present_review": 239,
+            "invalid_or_ambiguous_timing": 52
+          },
+          "source_rows": 291
+        },
+        "58bf5fb5ad1c9b50c5bdc4254ebe8b866108d93439df0af037a6db73fb1fa36b": {
+          "by_year": {
+            "2023": 21,
+            "2024": 168,
+            "2025": 116
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 305
+          },
+          "source_rows": 305
+        },
+        "5a5646863af3842707955406ccaf8b4cacde195d9e055148e2fc47d5c46d8236": {
+          "by_year": {
+            "2020": 48,
+            "2021": 17,
+            "2022": 7,
+            "2023": 325,
+            "2024": 356,
+            "2025": 305
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 62,
+            "preliminary_public_candidate_requires_review": 996
+          },
+          "source_rows": 1058
+        },
+        "5b1d7a9788b8b2610cc05bb53c8e5b16efd56b49fb60024de66459db834d13d7": {
+          "by_year": {
+            "2020": 4,
+            "2021": 231,
+            "2022": 41,
+            "2023": 13,
+            "2024": 52,
+            "2025": 6,
+            "2026": 2
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "client_present_review": 8,
+            "invalid_or_ambiguous_timing": 4,
+            "non_public_location_review": 7,
+            "preliminary_public_candidate_requires_review": 330
+          },
+          "source_rows": 349
+        },
+        "66499acf31bce0aa9414a41eccba39c8a30dac9a6fd9312454b83a1878f8c9f2": {
+          "by_year": {
+            "2020": 13
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 1,
+            "non_public_location_review": 12
+          },
+          "source_rows": 13
+        },
+        "681c2e4f878fd16ee8478748114e53c09c1258033dd93ae3d58fce96b6cebb71": {
+          "by_year": {
+            "2021": 1
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 1
+          },
+          "source_rows": 1
+        },
+        "7441da4a57b172a72d87c4deb9120586b30ce8f73113ff636ba0465a53f2ebaa": {
+          "by_year": {
+            "2023": 1,
+            "2024": 1,
+            "2025": 1
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "client_present_review": 2,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 3
+        },
+        "766ab9280504c935c0f40dc9e86e964efd731634663efcdde52cf7f4b44eebae": {
+          "by_year": {
+            "2021": 5
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "non_public_location_review": 4,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 5
+        },
+        "774a1792ca0f6a98b50d37b19ef6eccfc150acee0cd0d35371b20a275d6fc244": {
+          "by_year": {
+            "2020": 19,
+            "2021": 13,
+            "2022": 2,
+            "2023": 162
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 1,
+            "non_public_location_review": 1,
+            "preliminary_public_candidate_requires_review": 194
+          },
+          "source_rows": 196
+        },
+        "79d6d0556b1af0a5d8e114471c0c4b2d06707181742fa6f8c26e9c7b7bf16fd7": {
+          "by_year": {
+            "2023": 50,
+            "2024": 337,
+            "2025": 197
+          },
+          "family_bucket": "CPR",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 584
+          },
+          "source_rows": 584
+        },
+        "7b5ac1d3b13ad9a51574406d14b2b599c7e33dcf2837f18154a1dad8bf89b30c": {
+          "by_year": {
+            "2024": 2
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "client_present_review": 1,
+            "non_public_location_review": 1
+          },
+          "source_rows": 2
+        },
+        "7cc30e752f59b2c668b0b0989ea3b53dc29bacc8890b025f55b4df34cf056090": {
+          "by_year": {
+            "2023": 1,
+            "2024": 1
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 2
+          },
+          "source_rows": 2
+        },
+        "7e7bc564be5d9b2879a97436fd5fc8ef5c2a7cfdfdb8cc50c4538b3f57ed7539": {
+          "by_year": {
+            "2026": 1
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 1
+          },
+          "source_rows": 1
+        },
+        "859df77309388c7dfcec664ca534e27f34061923888478539400b5f6ed88e9f7": {
+          "by_year": {
+            "2020": 1
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 1
+        },
+        "8760a69497d11ffebf57acc5f3472ab39f65e03c0453332f4a391cf25638716c": {
+          "by_year": {
+            "2023": 1,
+            "2024": 3
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 1,
+            "preliminary_public_candidate_requires_review": 3
+          },
+          "source_rows": 4
+        },
+        "87f93956a1b467d42da5e12e152166206ac54124d79bca8ae7f8de7e9501952a": {
+          "by_year": {
+            "2025": 38
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 38
+          },
+          "source_rows": 38
+        },
+        "88651e004fdbcab2ef7622904284c1526a97aab6fbe9cb13536e93af55713d77": {
+          "by_year": {
+            "2021": 1,
+            "2022": 3,
+            "2023": 38,
+            "2024": 10,
+            "2025": 31
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "client_present_review": 4,
+            "invalid_or_ambiguous_timing": 12,
+            "non_public_location_review": 50,
+            "preliminary_public_candidate_requires_review": 10,
+            "workbook_provenance_unresolved": 7
+          },
+          "source_rows": 83
+        },
+        "8fdc4aadbbdcfea0dfedd2d1683050b96a4230f8541ad71ca4d47d2393f61f31": {
+          "by_year": {
+            "2026": 1
+          },
+          "family_bucket": "First Aid",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 1
+        },
+        "924189bdb58d93a48c2b3dbefe5e37ba7ae4f4b6768e5b35586ec9eb35c5f633": {
+          "by_year": {
+            "2023": 11,
+            "2024": 9,
+            "2025": 9,
+            "2026": 3
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "client_present_review": 17,
+            "non_public_location_review": 15
+          },
+          "source_rows": 32
+        },
+        "93569e96f598b1c112ee0386b6ae904cea09187651b444c2a75e1b152a5bc4e0": {
+          "by_year": {
+            "2021": 9,
+            "2022": 6,
+            "2023": 5,
+            "2024": 204,
+            "2025": 74,
+            "2026": 10
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "client_present_review": 1,
+            "non_public_location_review": 1,
+            "preliminary_public_candidate_requires_review": 306
+          },
+          "source_rows": 308
+        },
+        "95bff55b1ea1dafb427a6174355ebfcffd2862d093b3a4699cbeede0cac3f45f": {
+          "by_year": {
+            "2023": 147,
+            "2024": 316,
+            "2025": 224
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 1,
+            "preliminary_public_candidate_requires_review": 686
+          },
+          "source_rows": 687
+        },
+        "95fd074249a475c73c44b1ee516f4e75d5fb291a0da5fabca93ffbff42ee9eda": {
+          "by_year": {
+            "2023": 176,
+            "2024": 547,
+            "2025": 478,
+            "2026": 428
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "client_present_review": 46,
+            "invalid_or_ambiguous_timing": 4,
+            "non_public_location_review": 49,
+            "not_elapsed_at_cutoff": 124,
+            "preliminary_public_candidate_requires_review": 1406
+          },
+          "source_rows": 1629
+        },
+        "9cc22c27ef1becbf5f2a5c0aff418f33eafeaeefbbcd9f4bd3e3f74357f602a0": {
+          "by_year": {
+            "2025": 2
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "non_public_location_review": 1,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 2
+        },
+        "a5bd514532ca05d5da619d25610127edf415d8abec5f3e88cf4c7cdd31d2ee4a": {
+          "by_year": {
+            "2024": 1,
+            "2025": 17,
+            "2026": 5
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 12,
+            "preliminary_public_candidate_requires_review": 11
+          },
+          "source_rows": 23
+        },
+        "a72bd47c2dcbe7504446e3cb2a77ae17e2068c19244287871916395d546e7ee0": {
+          "by_year": {
+            "2021": 2
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "non_public_location_review": 2
+          },
+          "source_rows": 2
+        },
+        "ad26fac1c7d7281fcd1beda0751db512997773bb7a9ff0e48feda78013a24521": {
+          "by_year": {
+            "2023": 11,
+            "2024": 2,
+            "2025": 5,
+            "2026": 3
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "client_present_review": 9,
+            "invalid_or_ambiguous_timing": 1,
+            "preliminary_public_candidate_requires_review": 11
+          },
+          "source_rows": 21
+        },
+        "b32c0ec474f656481dfd0196e25fcc52f97fd1f4c508f5bff9e0f0c048574689": {
+          "by_year": {
+            "2023": 1,
+            "2025": 3
+          },
+          "family_bucket": "CPR",
+          "reasons": {
+            "client_present_review": 1,
+            "preliminary_public_candidate_requires_review": 3
+          },
+          "source_rows": 4
+        },
+        "b5220459a50477bd50cbeade5b9858e280f153b129b4971d439171c20a102d60": {
+          "by_year": {
+            "2023": 1,
+            "2024": 2,
+            "2025": 2
+          },
+          "family_bucket": "CPR",
+          "reasons": {
+            "client_present_review": 3,
+            "non_public_location_review": 1,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 5
+        },
+        "bd767d6a5a8e8fd59fdc7f18e319c45dd55678484b4ddd1a2cca5a2429601cdf": {
+          "by_year": {
+            "2025": 2
+          },
+          "family_bucket": "First Aid",
+          "reasons": {
+            "client_present_review": 1,
+            "invalid_or_ambiguous_timing": 1
+          },
+          "source_rows": 2
+        },
+        "c9bb6906221a01bf854b3ac1751e6643afb4dfa5e1409741a15638c7586944fc": {
+          "by_year": {
+            "2025": 2
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 1,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 2
+        },
+        "cb12f9982e01b50bb699eb8ec8cf28528131da718cee3d18d1a614dfcb6faef0": {
+          "by_year": {
+            "2024": 72,
+            "2025": 157
+          },
+          "family_bucket": "First Aid",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 229
+          },
+          "source_rows": 229
+        },
+        "d241b24f1db820a58eea6f8735c29c5bb4437e45069665f445c8539933d418bd": {
+          "by_year": {
+            "2020": 2,
+            "2023": 1
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "client_present_review": 1,
+            "non_public_location_review": 1,
+            "workbook_provenance_unresolved": 1
+          },
+          "source_rows": 3
+        },
+        "d3fcbbd8b8bc229554f72d18842c9003a2a8a39c0e25aa46310712a72ebf4d59": {
+          "by_year": {
+            "2020": 61,
+            "2021": 722,
+            "2022": 241,
+            "2023": 241,
+            "2024": 222,
+            "2025": 232,
+            "2026": 197
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "client_present_review": 111,
+            "invalid_or_ambiguous_timing": 12,
+            "non_public_location_review": 100,
+            "not_elapsed_at_cutoff": 63,
+            "preliminary_public_candidate_requires_review": 1614,
+            "workbook_provenance_unresolved": 16
+          },
+          "source_rows": 1916
+        },
+        "d97dd7c53d51ee9d460cf19e7bd3c19dcfab2106eeaa849934b6a4ff6437bce8": {
+          "by_year": {
+            "2020": 26,
+            "2021": 147,
+            "2022": 50
+          },
+          "family_bucket": "CPR",
+          "reasons": {
+            "client_present_review": 12,
+            "preliminary_public_candidate_requires_review": 210,
+            "workbook_provenance_unresolved": 1
+          },
+          "source_rows": 223
+        },
+        "e035675274f84f5a89a6cd65f1cbc953c10fd44fb19d374a7084bae01e6fe2e9": {
+          "by_year": {
+            "2025": 34
+          },
+          "family_bucket": "First Aid",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 34
+          },
+          "source_rows": 34
+        },
+        "e0db900e6f2c58b4c50bedd1302354c69d60e66ac8878db7e9dc50aeac6e2447": {
+          "by_year": {
+            "2020": 3,
+            "2021": 8,
+            "2024": 17,
+            "2025": 70,
+            "2026": 6
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "client_present_review": 1,
+            "non_public_location_review": 3,
+            "preliminary_public_candidate_requires_review": 100
+          },
+          "source_rows": 104
+        },
+        "e17b34c73fb560824477e34960152a675438d9d4684dc4ccabc2d60c44a713f8": {
+          "by_year": {
+            "2025": 1
+          },
+          "family_bucket": "CPR",
+          "reasons": {
+            "client_present_review": 1
+          },
+          "source_rows": 1
+        },
+        "e5967247c34624b1a021b3385897f5f67d3c2bc5a9f84ffd60c1763cf06d7a26": {
+          "by_year": {
+            "2022": 72,
+            "2023": 257,
+            "2024": 308,
+            "2025": 192,
+            "2026": 363
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "client_present_review": 6,
+            "invalid_or_ambiguous_timing": 1,
+            "not_elapsed_at_cutoff": 125,
+            "preliminary_public_candidate_requires_review": 1060
+          },
+          "source_rows": 1192
+        },
+        "e5ce14a7a78a323e2f8d162fb9eea317ba560a267d32d904ef1c33196f0c83f1": {
+          "by_year": {
+            "2020": 533,
+            "2021": 1626,
+            "2022": 266,
+            "2023": 465,
+            "2024": 461,
+            "2025": 374,
+            "2026": 360
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "client_present_review": 6,
+            "invalid_or_ambiguous_timing": 37,
+            "non_public_location_review": 65,
+            "not_elapsed_at_cutoff": 110,
+            "preliminary_public_candidate_requires_review": 3728,
+            "workbook_provenance_unresolved": 139
+          },
+          "source_rows": 4085
+        },
+        "ecfee654be9ea56397e8fbc0bca781f0c569815e9fa2923337f17f653adf385f": {
+          "by_year": {
+            "2021": 214,
+            "2022": 51,
+            "2023": 14,
+            "2024": 160,
+            "2025": 99,
+            "2026": 14
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "client_present_review": 4,
+            "invalid_or_ambiguous_timing": 1,
+            "non_public_location_review": 3,
+            "preliminary_public_candidate_requires_review": 544
+          },
+          "source_rows": 552
+        },
+        "ed7420625be4f3464f231f1d995cbcf1abdeba92a433bcc1578ab15ea8a1ebf9": {
+          "by_year": {
+            "2021": 4,
+            "2022": 1
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 1,
+            "non_public_location_review": 3,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 5
+        },
+        "eefa7898c25ea50475063ca882526601a535db9b540e62b96479a145564fd427": {
+          "by_year": {
+            "2020": 60,
+            "2021": 2049,
+            "2022": 202,
+            "2023": 258,
+            "2024": 303,
+            "2025": 175,
+            "2026": 143
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "client_present_review": 1,
+            "invalid_or_ambiguous_timing": 4,
+            "non_public_location_review": 3,
+            "not_elapsed_at_cutoff": 47,
+            "preliminary_public_candidate_requires_review": 3132,
+            "workbook_provenance_unresolved": 3
+          },
+          "source_rows": 3190
+        },
+        "efde69b557308a7ec93ae26cf18245be42f70aa009764d243b0df4cc4eb29b2d": {
+          "by_year": {
+            "2020": 54,
+            "2021": 90,
+            "2022": 25,
+            "2023": 115,
+            "2024": 77,
+            "2025": 50,
+            "2026": 2
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "client_present_review": 1,
+            "invalid_or_ambiguous_timing": 7,
+            "non_public_location_review": 2,
+            "preliminary_public_candidate_requires_review": 402,
+            "workbook_provenance_unresolved": 1
+          },
+          "source_rows": 413
+        },
+        "f4dde67454181454e9900c3a6086d75b09fb98ae3d8e7bb768dfc6f76c5ac480": {
+          "by_year": {
+            "2020": 1,
+            "2021": 5,
+            "2022": 1,
+            "2023": 117
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "client_present_review": 4,
+            "preliminary_public_candidate_requires_review": 119,
+            "workbook_provenance_unresolved": 1
+          },
+          "source_rows": 124
+        },
+        "f87f19717eb22b26c8dff51a72c980afc3583718686f3b6709b65b5ede3a3967": {
+          "by_year": {
+            "2025": 115,
+            "2026": 10
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "client_present_review": 1,
+            "invalid_or_ambiguous_timing": 1,
+            "preliminary_public_candidate_requires_review": 123
+          },
+          "source_rows": 125
+        },
+        "fbf81c9e7808443b3352db1ec5eebc66cede2ebeb6dedb89c196d3598d0daf28": {
+          "by_year": {
+            "2023": 1,
+            "2024": 5,
+            "2025": 2
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "client_present_review": 1,
+            "invalid_or_ambiguous_timing": 2,
+            "non_public_location_review": 1,
+            "preliminary_public_candidate_requires_review": 4
+          },
+          "source_rows": 8
+        },
+        "ff25ebf8100ea9d7903cc022cb9ea941d759793b65183078d825eaa3ed052965": {
+          "by_year": {
+            "2021": 1
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 1
+        }
+      },
+      "by_year": {
+        "2020": {
+          "client_present_review": 5,
+          "invalid_or_ambiguous_timing": 67,
+          "non_public_location_review": 110,
+          "preliminary_public_candidate_requires_review": 1093,
+          "source_rows": 1529,
+          "workbook_provenance_unresolved": 254
+        },
+        "2021": {
+          "client_present_review": 85,
+          "invalid_or_ambiguous_timing": 159,
+          "non_public_location_review": 104,
+          "preliminary_public_candidate_requires_review": 7691,
+          "source_rows": 8040,
+          "workbook_provenance_unresolved": 1
+        },
+        "2022": {
+          "client_present_review": 143,
+          "invalid_or_ambiguous_timing": 26,
+          "non_public_location_review": 70,
+          "preliminary_public_candidate_requires_review": 1198,
+          "source_rows": 1438,
+          "workbook_provenance_unresolved": 1
+        },
+        "2023": {
+          "client_present_review": 176,
+          "invalid_or_ambiguous_timing": 96,
+          "non_public_location_review": 164,
+          "preliminary_public_candidate_requires_review": 3254,
+          "source_rows": 3695,
+          "workbook_provenance_unresolved": 5
+        },
+        "2024": {
+          "client_present_review": 150,
+          "invalid_or_ambiguous_timing": 19,
+          "non_public_location_review": 99,
+          "preliminary_public_candidate_requires_review": 4687,
+          "source_rows": 4957,
+          "workbook_provenance_unresolved": 2
+        },
+        "2025": {
+          "client_present_review": 136,
+          "invalid_or_ambiguous_timing": 25,
+          "non_public_location_review": 82,
+          "preliminary_public_candidate_requires_review": 4142,
+          "source_rows": 4385
+        },
+        "2026": {
+          "client_present_review": 29,
+          "invalid_or_ambiguous_timing": 17,
+          "non_public_location_review": 12,
+          "not_elapsed_at_cutoff": 640,
+          "preliminary_public_candidate_requires_review": 1423,
+          "source_rows": 2121
+        }
+      },
+      "commit": "a7ff508d070ee7c23db0c955c04f05d03c4ef576",
+      "exclusive_classification": {
+        "client_present_review": 724,
+        "invalid_or_ambiguous_timing": 409,
+        "non_public_location_review": 641,
+        "not_elapsed_at_cutoff": 640,
+        "preliminary_public_candidate_requires_review": 23488,
+        "workbook_provenance_unresolved": 263
+      },
+      "overlapping_flags": {
+        "client_present": 812,
+        "missing_registration_identity": 0,
+        "negative_enrollment": 0,
+        "positive_enrollment": 4603,
+        "public_location_marker": 24479,
+        "workbook_matched": 25897,
+        "workbook_mismatch": 268,
+        "workbook_mismatch_course": 0,
+        "workbook_mismatch_end": 0,
+        "workbook_mismatch_external_id": 0,
+        "workbook_mismatch_location": 268,
+        "workbook_mismatch_start": 0,
+        "zero_enrollment": 21562
+      },
+      "path": "data/schedule.json",
+      "registration_ids_with_multiple_session_ids": 0,
+      "source_rows": 26165,
+      "unique_registration_ids": 26165,
+      "unique_session_ids": 26165,
+      "urls": {
+        "legacy_html_without_source_id": 7,
+        "legacy_numeric_html_count": 26171,
+        "legacy_paths_in_current_tree": 0,
+        "preservable_legacy_url_percent": 99.9733,
+        "source_ids_with_legacy_html": 26164,
+        "source_ids_without_legacy_html": 1
+      },
+      "workbook_path": "raw/Class Report.xlsx"
+    },
+    "original_pattern": {
+      "blob": "2ace6a5d80a1e96fc21cd95cb305c7ffb401ba8a",
+      "by_course_label_sha256": {
+        "060cb8a8072304b926c90d2b1904c9957d5930d05b9f5f7c996dd852bcdccec4": {
+          "by_year": {
+            "2026": 44
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "non_public_location_review": 28,
+            "not_elapsed_at_cutoff": 16
+          },
+          "source_rows": 44
+        },
+        "077f4d3c1f64206e1039bcb23d6aa99a78fabc1d6907dbe9b42d801c13bad397": {
+          "by_year": {
+            "2026": 4
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 4
+          },
+          "source_rows": 4
+        },
+        "0da874ea1010377235a57482d6f7f360426b3839639dc6355641162f4bd5d8d2": {
+          "by_year": {
+            "2026": 2
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "non_public_location_review": 2
+          },
+          "source_rows": 2
+        },
+        "1e28e605a956752d1af3ebd28d03ffe858bf31729c0cdc4d68ad5d1c7a368292": {
+          "by_year": {
+            "2026": 6
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "non_public_location_review": 6
+          },
+          "source_rows": 6
+        },
+        "25723f42132bea61427f265de9588d5efdd9e8ac188559ee1026ea851b18e3d7": {
+          "by_year": {
+            "2026": 85
+          },
+          "family_bucket": "First Aid",
+          "reasons": {
+            "non_public_location_review": 54,
+            "not_elapsed_at_cutoff": 31
+          },
+          "source_rows": 85
+        },
+        "32fcc5c277ed6cdc24b7794f4eea6e377f23d876752294a3741c5625139f8aab": {
+          "by_year": {
+            "2026": 1
+          },
+          "family_bucket": "CPR",
+          "reasons": {
+            "non_public_location_review": 1
+          },
+          "source_rows": 1
+        },
+        "4c6857f73c3bcb808a0a3a7577b1ab1891124601759f558771c167af40c1d161": {
+          "by_year": {
+            "2026": 2
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "non_public_location_review": 2
+          },
+          "source_rows": 2
+        },
+        "4d814fb43c37bce64f97f255abb4acd42e7c0b1f9767c2857b3f9feeca128e82": {
+          "by_year": {
+            "2026": 354
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 2,
+            "non_public_location_review": 228,
+            "not_elapsed_at_cutoff": 124
+          },
+          "source_rows": 354
+        },
+        "561b7ccefad213bc90a0c05f19ddfc8e66f0f08d824af3b5c33efdef7384076d": {
+          "by_year": {
+            "2026": 2
+          },
+          "family_bucket": "Unclassified",
+          "reasons": {
+            "non_public_location_review": 2
+          },
+          "source_rows": 2
+        },
+        "93569e96f598b1c112ee0386b6ae904cea09187651b444c2a75e1b152a5bc4e0": {
+          "by_year": {
+            "2026": 7
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "non_public_location_review": 7
+          },
+          "source_rows": 7
+        },
+        "95fd074249a475c73c44b1ee516f4e75d5fb291a0da5fabca93ffbff42ee9eda": {
+          "by_year": {
+            "2026": 345
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "non_public_location_review": 221,
+            "not_elapsed_at_cutoff": 124
+          },
+          "source_rows": 345
+        },
+        "a5bd514532ca05d5da619d25610127edf415d8abec5f3e88cf4c7cdd31d2ee4a": {
+          "by_year": {
+            "2026": 3
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "invalid_or_ambiguous_timing": 3
+          },
+          "source_rows": 3
+        },
+        "d3fcbbd8b8bc229554f72d18842c9003a2a8a39c0e25aa46310712a72ebf4d59": {
+          "by_year": {
+            "2026": 171
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "non_public_location_review": 108,
+            "not_elapsed_at_cutoff": 63
+          },
+          "source_rows": 171
+        },
+        "e0db900e6f2c58b4c50bedd1302354c69d60e66ac8878db7e9dc50aeac6e2447": {
+          "by_year": {
+            "2026": 6
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "non_public_location_review": 6
+          },
+          "source_rows": 6
+        },
+        "e5967247c34624b1a021b3385897f5f67d3c2bc5a9f84ffd60c1763cf06d7a26": {
+          "by_year": {
+            "2026": 346
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "non_public_location_review": 221,
+            "not_elapsed_at_cutoff": 125
+          },
+          "source_rows": 346
+        },
+        "e5ce14a7a78a323e2f8d162fb9eea317ba560a267d32d904ef1c33196f0c83f1": {
+          "by_year": {
+            "2026": 299
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "non_public_location_review": 189,
+            "not_elapsed_at_cutoff": 110
+          },
+          "source_rows": 299
+        },
+        "ecfee654be9ea56397e8fbc0bca781f0c569815e9fa2923337f17f653adf385f": {
+          "by_year": {
+            "2026": 7
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "non_public_location_review": 7
+          },
+          "source_rows": 7
+        },
+        "eefa7898c25ea50475063ca882526601a535db9b540e62b96479a145564fd427": {
+          "by_year": {
+            "2026": 128
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "non_public_location_review": 81,
+            "not_elapsed_at_cutoff": 47
+          },
+          "source_rows": 128
+        }
+      },
+      "by_year": {
+        "2026": {
+          "invalid_or_ambiguous_timing": 9,
+          "non_public_location_review": 1163,
+          "not_elapsed_at_cutoff": 640,
+          "source_rows": 1812
+        }
+      },
+      "commit": "f523c364ccbb29fffdf96fec1b4a915421f682bd",
+      "exclusive_classification": {
+        "invalid_or_ambiguous_timing": 9,
+        "non_public_location_review": 1163,
+        "not_elapsed_at_cutoff": 640
+      },
+      "overlapping_flags": {
+        "client_present": 0,
+        "json_only_provenance": 1812,
+        "missing_registration_identity": 0,
+        "negative_enrollment": 0,
+        "positive_enrollment": 31,
+        "public_location_marker": 0,
+        "zero_enrollment": 1781
+      },
+      "path": "data/schedule.json",
+      "registration_ids_with_multiple_session_ids": 0,
+      "source_rows": 1812,
+      "unique_registration_ids": 1812,
+      "unique_session_ids": 1812,
+      "urls": {
+        "legacy_html_without_source_id": 0,
+        "legacy_numeric_html_count": 1812,
+        "legacy_paths_in_current_tree": 0,
+        "preservable_legacy_url_percent": 100.0,
+        "source_ids_with_legacy_html": 1812,
+        "source_ids_without_legacy_html": 0
+      },
+      "workbook_path": null
+    },
+    "seo_core": {
+      "blob": "d3a5a3b4c00b16d74e32bacf099f6b4bdf4ba50d",
+      "by_course_label_sha256": {
+        "18b885241a4b8f3e3730789eed013fe3f373128d5ad6b42b6518ac48c6849abe": {
+          "by_year": {
+            "2026": 6
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 6
+          },
+          "source_rows": 6
+        },
+        "24bdba04c23507bb446fff39bf37b4386d5144b979f5330ce82eab610c246bfb": {
+          "by_year": {
+            "2026": 4
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 1,
+            "preliminary_public_candidate_requires_review": 3
+          },
+          "source_rows": 4
+        },
+        "35674c787a09b01dcfcc223d9d5900d4ed945ccf88e108f9e8729ca5a8f473e7": {
+          "by_year": {
+            "2026": 2
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 1,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 2
+        },
+        "512db5f94a6b13c69cc0bc6d22823dbecd7fda9269f8a1cb8c7fb07fdaf09ab7": {
+          "by_year": {
+            "2026": 5
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 5
+          },
+          "source_rows": 5
+        },
+        "6e3e958837ad217bf1a6362f49bc851cc9ab0c7af16bc5bd75a07844c6e09004": {
+          "by_year": {
+            "2026": 3
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 1,
+            "preliminary_public_candidate_requires_review": 2
+          },
+          "source_rows": 3
+        },
+        "78d6b72f5570d648eefcc6a3373bd8cd03652a8fa079cec03a953d87f02d4005": {
+          "by_year": {
+            "2026": 6
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 5,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 6
+        },
+        "8567fac9e6e3268405fc7f992ecacacc54de3a8f8ca917b71c69fb0e7a86aaa5": {
+          "by_year": {
+            "2026": 2
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 2
+          },
+          "source_rows": 2
+        },
+        "883c07279f86a246e3498c4e85d10b581a8600fb4bd40761563216121eb82cc0": {
+          "by_year": {
+            "2026": 5
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 5
+          },
+          "source_rows": 5
+        },
+        "8f1eeae3e98c4ae94538749cf335fefbede6084228d8a31e347c04b2712182f2": {
+          "by_year": {
+            "2026": 2
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 1,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 2
+        }
+      },
+      "by_year": {
+        "2026": {
+          "not_elapsed_at_cutoff": 25,
+          "preliminary_public_candidate_requires_review": 10,
+          "source_rows": 35
+        }
+      },
+      "commit": "d02a7a6fe7a398112cf71595e62fa3cc1d351745",
+      "exclusive_classification": {
+        "not_elapsed_at_cutoff": 25,
+        "preliminary_public_candidate_requires_review": 10
+      },
+      "overlapping_flags": {
+        "client_present": 0,
+        "json_only_provenance": 35,
+        "missing_registration_identity": 0,
+        "public_location_marker": 35,
+        "unknown_enrollment": 35
+      },
+      "path": "docs/data/schedule_future.json",
+      "registration_ids_with_multiple_session_ids": 0,
+      "source_rows": 35,
+      "unique_registration_ids": 35,
+      "unique_session_ids": 35,
+      "urls": {
+        "legacy_html_without_source_id": 64,
+        "legacy_numeric_html_count": 99,
+        "legacy_paths_in_current_tree": 99,
+        "preservable_legacy_url_percent": 35.3535,
+        "source_ids_with_legacy_html": 35,
+        "source_ids_without_legacy_html": 0
+      },
+      "workbook_path": null
+    },
+    "seo_final": {
+      "blob": "286399e5ef7bc492c8709c66189f4632904affc8",
+      "by_course_label_sha256": {
+        "18b885241a4b8f3e3730789eed013fe3f373128d5ad6b42b6518ac48c6849abe": {
+          "by_year": {
+            "2026": 4
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 4
+          },
+          "source_rows": 4
+        },
+        "24bdba04c23507bb446fff39bf37b4386d5144b979f5330ce82eab610c246bfb": {
+          "by_year": {
+            "2026": 2
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 1,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 2
+        },
+        "35674c787a09b01dcfcc223d9d5900d4ed945ccf88e108f9e8729ca5a8f473e7": {
+          "by_year": {
+            "2026": 1
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 1
+        },
+        "512db5f94a6b13c69cc0bc6d22823dbecd7fda9269f8a1cb8c7fb07fdaf09ab7": {
+          "by_year": {
+            "2026": 3
+          },
+          "family_bucket": "PALS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 3
+          },
+          "source_rows": 3
+        },
+        "6e3e958837ad217bf1a6362f49bc851cc9ab0c7af16bc5bd75a07844c6e09004": {
+          "by_year": {
+            "2026": 2
+          },
+          "family_bucket": "BLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 2
+          },
+          "source_rows": 2
+        },
+        "78d6b72f5570d648eefcc6a3373bd8cd03652a8fa079cec03a953d87f02d4005": {
+          "by_year": {
+            "2026": 4
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 3,
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 4
+        },
+        "8567fac9e6e3268405fc7f992ecacacc54de3a8f8ca917b71c69fb0e7a86aaa5": {
+          "by_year": {
+            "2026": 1
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 1
+        },
+        "883c07279f86a246e3498c4e85d10b581a8600fb4bd40761563216121eb82cc0": {
+          "by_year": {
+            "2026": 4
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "not_elapsed_at_cutoff": 4
+          },
+          "source_rows": 4
+        },
+        "8f1eeae3e98c4ae94538749cf335fefbede6084228d8a31e347c04b2712182f2": {
+          "by_year": {
+            "2026": 1
+          },
+          "family_bucket": "ACLS",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 1
+        },
+        "a16d6e6292963dff2f8f19ec5f8362619f6b1af70191a91d999932979074e0f5": {
+          "by_year": {
+            "2026": 1
+          },
+          "family_bucket": "Heartsaver",
+          "reasons": {
+            "preliminary_public_candidate_requires_review": 1
+          },
+          "source_rows": 1
+        }
+      },
+      "by_year": {
+        "2026": {
+          "not_elapsed_at_cutoff": 17,
+          "preliminary_public_candidate_requires_review": 6,
+          "source_rows": 23
+        }
+      },
+      "commit": "269e9fd7015128fd7652d57864623da1aaa2fd4a",
+      "exclusive_classification": {
+        "not_elapsed_at_cutoff": 17,
+        "preliminary_public_candidate_requires_review": 6
+      },
+      "overlapping_flags": {
+        "client_present": 0,
+        "json_only_provenance": 23,
+        "missing_registration_identity": 0,
+        "public_location_marker": 23,
+        "unknown_enrollment": 23
+      },
+      "path": "docs/data/schedule_future.json",
+      "registration_ids_with_multiple_session_ids": 0,
+      "source_rows": 23,
+      "unique_registration_ids": 23,
+      "unique_session_ids": 23,
+      "urls": {
+        "legacy_html_without_source_id": 80,
+        "legacy_numeric_html_count": 103,
+        "legacy_paths_in_current_tree": 103,
+        "preservable_legacy_url_percent": 22.3301,
+        "source_ids_with_legacy_html": 23,
+        "source_ids_without_legacy_html": 0
+      },
+      "workbook_path": null
+    }
+  },
+  "union": {
+    "legacy_numeric_urls": 26286,
+    "legacy_urls_with_any_source_id": 26220,
+    "legacy_urls_without_any_source_id": 66,
+    "registration_ids": 26274,
+    "session_ids": 45929
+  }
+}
