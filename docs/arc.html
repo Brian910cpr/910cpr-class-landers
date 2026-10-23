@@ -603,6 +603,7 @@
       font-weight: 700;
     }
     .register-link:hover { background: var(--accent-dark); }
+    .register-link.registration-unavailable { background: #f3f4f6; border-color: #d1d5db; color: #6b7280; cursor: not-allowed; }
     .empty {
       border: 1px dashed var(--line);
       border-radius: 8px;
@@ -767,6 +768,28 @@
         width: 100%;
       }
     }
+    /* Inline registration workspace: calendar stays put while times collapse above intake. */
+    .registration-columns { display: grid; grid-template-columns: minmax(210px, .8fr) minmax(280px, 1fr); gap: 16px; align-items: start; min-width: 0; }
+    .registration-columns > * { min-width: 0; }
+    .selector-grid { grid-template-columns: minmax(340px, 1.35fr) minmax(0, 1.8fr); }
+    .times-disclosure { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; border: 0; padding: 0; min-height: 36px; }
+    .times-disclosure strong { display: block; font-size: 1.25rem; }
+    .times-disclosure small { display: block; font-size: .82rem; color: var(--accent-dark); font-weight: 700; }
+    .times-chevron { font-size: 1.6rem; transition: transform .2s ease; }
+    .times-disclosure[aria-expanded="false"] .times-chevron { transform: rotate(-90deg); }
+    .times-panel #start-list[hidden] { display: none; }
+    .registration-columns.is-registering .times-panel { grid-column: 1 / -1; }
+    .registration-columns.is-registering .register-panel { display: none; }
+    .intake-panel:not([hidden]) { display: block; grid-column: 1 / -1; }
+    .intake-heading { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+    .intake-heading h2 { margin-bottom: 4px; }
+    .intake-heading p { margin: 0 0 12px; }
+    .intake-close { flex: none; min-height: 36px; }
+    #intake-frame { display: block; width: 100%; height: 640px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .intake-fallback { margin: 10px 0 0; }
+    .intake-fallback a { color: var(--accent-dark); font-weight: 700; }
+    @media (max-width: 1100px) { .selector-grid { grid-template-columns: minmax(270px, 1fr) minmax(0, 1.35fr); } .registration-columns { grid-template-columns: 1fr; } .registration-columns.is-registering .times-panel { grid-column: 1; } }
+    @media (max-width: 820px) { .selector-grid { grid-template-columns: 1fr; } .registration-columns { grid-template-columns: 1fr; } .intake-panel:not([hidden]) { grid-column: 1; } #intake-frame { height: 700px; } }
     </style>
   <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Course", "name": "American Red Cross Basic Life Support", "description": "Red Cross BLS classroom option.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "99.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/arc.html?course=248288"}}, {"@type": "Course", "name": "American Red Cross Adult CPR/AED", "description": "Red Cross Adult CPR/AED skills option.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "90.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/arc.html?course=372258"}}, {"@type": "Course", "name": "American Red Cross First Aid/CPR/AED", "description": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "110.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/arc.html?course=369209"}}]}</script>
   <!-- Google Tag Manager -->
@@ -835,19 +858,33 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
       <div id="calendar-time-filters"></div>
-      <div class="selector-grid">
-        <div class="panel">
+      <div class="selector-grid" id="registration-workspace">
+        <div class="panel calendar-column">
           <h2>Calendar</h2>
           <div id="date-list" class="month-stack"></div>
         </div>
-        <div class="panel">
-          <h2>Start Times</h2>
-          <div id="start-list" class="button-list"></div>
-        </div>
-        <div class="panel">
-          <h2>Register</h2>
-          <p class="register-note">Times shown are start times. Please allow enough time for the course you selected.</p>
-          <div id="course-list" class="course-list"></div>
+        <div class="registration-columns">
+          <section class="panel times-panel" aria-label="Available start times">
+            <button id="start-times-toggle" type="button" class="times-disclosure" aria-expanded="true" aria-controls="start-list">
+              <span><strong>Start Times</strong><small id="selected-time-caption">Choose a time</small></span>
+              <span class="times-chevron" aria-hidden="true">⌄</span>
+            </button>
+            <div id="start-list" class="button-list"></div>
+          </section>
+          <section class="panel register-panel" aria-label="Register for class">
+            <h2>Register</h2>
+            <p class="register-note">Times shown are start times. Please allow enough time for the course you selected.</p>
+            <div id="course-list" class="course-list"></div>
+          </section>
+          <section id="registration-intake" class="panel intake-panel" hidden aria-label="Registration intake">
+            <div class="intake-heading">
+              <div><h2>Complete registration</h2><p id="intake-selection" class="muted"></p></div>
+              <button type="button" id="intake-close" class="intake-close">Close ×</button>
+            </div>
+            <p class="register-note">Complete your registration using the 910CPR LanderWare intake form below.</p>
+            <iframe id="intake-frame" title="Secure 910CPR registration" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            <p class="intake-fallback"><a id="intake-direct-link" target="_blank" rel="noopener noreferrer">Open registration in a new tab ↗</a></p>
+          </section>
         </div>
       </div>
     </section>
@@ -1602,6 +1639,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           if (isPastStart(day, slot)) {
             return;
           }
+          if (intakeOpen && selectedStart !== slot.startTime) {
+            intakeOpen = false;
+            timesExpanded = true;
+            byId('intake-frame').removeAttribute('src');
+            activeIntakeUrl = '';
+          }
           selectedStart = slot.startTime;
           window.LanderWareMotion?.progress(button, byId('course-list'));
           renderAll();
@@ -1612,6 +1655,56 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         host.appendChild(group);
       });
     }
+
+    let intakeOpen = false;
+    let timesExpanded = true;
+    let activeIntakeUrl = '';
+    function syncRegistrationWorkspace() {
+      const group = document.querySelector('.registration-columns');
+      const intake = byId('registration-intake');
+      const list = byId('start-list');
+      const toggle = byId('start-times-toggle');
+      if (!group || !intake || !toggle || !list) return;
+      group.classList.toggle('is-registering', intakeOpen);
+      intake.hidden = !intakeOpen;
+      list.hidden = !timesExpanded;
+      toggle.setAttribute('aria-expanded', String(timesExpanded));
+      const day = filteredDates().find(item => item.date === selectedDate);
+      const slot = day?.startTimes.find(item => item.startTime === selectedStart);
+      byId('selected-time-caption').textContent = slot ? slot.displayStartTime + ' · Change time' : 'Choose a time';
+    }
+    // Only LanderWare-native session identities may start registration.
+    // Legacy Enrollware appointment URLs are deliberately ignored and never embedded.
+    function landerwareSessionId(course) {
+      const raw = course.sessionId || course.session_id || course.landerwareSessionId
+        || course.landerware_session_id || course.session?.id || '';
+      const value = String(raw).trim();
+      return /^(?:\d+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/i.test(value) ? value : '';
+    }
+    function openRegistrationIntake(course, day, slot) {
+      const id = landerwareSessionId(course);
+      if (!id) return;
+      intakeOpen = true;
+      timesExpanded = false;
+      activeIntakeUrl = '/register/?session=' + encodeURIComponent(id);
+      byId('intake-selection').textContent = course.courseName + ' · ' + selectedDateLabel() + ' · ' + course.displayStartTime;
+      byId('intake-direct-link').href = activeIntakeUrl;
+      const frame = byId('intake-frame');
+      if (frame.getAttribute('src') !== activeIntakeUrl) frame.setAttribute('src', activeIntakeUrl);
+      syncRegistrationWorkspace();
+      byId('registration-intake').scrollIntoView({behavior: 'smooth', block: 'nearest'});
+    }
+    byId('start-times-toggle').addEventListener('click', () => {
+      timesExpanded = !timesExpanded;
+      syncRegistrationWorkspace();
+    });
+    byId('intake-close').addEventListener('click', () => {
+      intakeOpen = false;
+      timesExpanded = true;
+      byId('intake-frame').removeAttribute('src');
+      activeIntakeUrl = '';
+      syncRegistrationWorkspace();
+    });
 
     function renderCourses() {
       const host = byId('course-list');
@@ -1659,13 +1752,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         badge.textContent = deliveryLabel(course.deliveryMode);
         const link = document.createElement('a');
         link.className = 'register-link';
-        link.href = course.appointmentUrl;
-        link.textContent = 'Register';
+        const nativeSessionId = landerwareSessionId(course);
+        link.textContent = nativeSessionId ? 'Register' : 'Registration unavailable';
+        link.href = nativeSessionId ? '/register/?session=' + encodeURIComponent(nativeSessionId) : '#';
+        link.setAttribute('aria-disabled', String(!nativeSessionId));
+        if (!nativeSessionId) {
+          link.classList.add('registration-unavailable');
+          link.title = 'LanderWare session ID is required; legacy appointment links are not supported.';
+        }
         link.addEventListener('click', event => {
           if (isPastStart(day, slot)) {
             event.preventDefault();
             loadResolvedAvailability();
+            return;
           }
+          event.preventDefault();
+          if (!nativeSessionId) return;
+          openRegistrationIntake(course, day, slot);
         });
         item.append(summary, badge, link);
         host.appendChild(item);
@@ -1684,6 +1787,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       renderDates();
       renderStarts();
       renderCourses();
+      syncRegistrationWorkspace();
     }
 
     const compareToggle = byId('compare-toggle');
