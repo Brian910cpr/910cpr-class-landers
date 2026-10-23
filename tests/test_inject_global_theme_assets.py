@@ -35,3 +35,21 @@ class GlobalThemeInjectionTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_inject_html_adds_and_refreshes_build_signature():
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    from scripts.inject_global_theme_assets import inject_html
+
+    first = datetime(2026, 10, 1, 14, 3, tzinfo=ZoneInfo("America/New_York"))
+    second = datetime(2026, 10, 1, 14, 9, tzinfo=ZoneInfo("America/New_York"))
+    html = "<html><head></head><body><main>hello</main></body></html>"
+    stamped, changed = inject_html(html, now=first)
+    assert changed is True
+    assert 'class="page-build-signature"' in stamped
+    assert "✦ Page build 2026-10-01 14:03 EDT" in stamped
+    refreshed, changed_again = inject_html(stamped, now=second)
+    assert changed_again is True
+    assert refreshed.count('class="page-build-signature"') == 1
+    assert "✦ Page build 2026-10-01 14:09 EDT" in refreshed
