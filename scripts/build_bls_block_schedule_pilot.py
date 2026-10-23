@@ -1136,6 +1136,7 @@ def render_html(payload: dict[str, Any]) -> str:
             "startTimes": start_times,
         })
     page_key = str(payload.get("pageKey") or page_config.get("page_key") or "selector")
+    inline_checkout_script = '\n  <script src="/assets/inline-registration.js?v=20261017.2" defer></script>' if page_key == "bls" else ""
     availability_version = str(payload.get("generatedAt") or datetime.now().astimezone().isoformat())
     availability_url = (
         "/"
@@ -1450,7 +1451,7 @@ def render_html(payload: dict[str, Any]) -> str:
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20261001-reconciliation-1"></script>
-  <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
+  <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>{inline_checkout_script}
   <script>
     const embeddedScheduleDates = {data_json};
     const availabilityUrl = {availability_url_json};

@@ -1,0 +1,47 @@
+name: Checkout and message delivery
+on:
+  pull_request:
+    paths:
+      - 'worker/checkout-confirmation.mjs'
+      - 'worker/checkout-email-template.mjs'
+      - 'tests/checkout_email_template.test.mjs'
+      - 'supabase/functions/public-registration/**'
+      - 'supabase/functions/stripe-registration-webhook/**'
+      - 'supabase/functions/canonical-session-workspace/**'
+      - 'supabase/migrations/*checkout*.sql'
+      - 'supabase/migrations/*email_delivery*.sql'
+      - 'supabase/migrations/*message_operational*.sql'
+      - 'tests/*registration*.cjs'
+      - 'tests/*confirmation*.mjs'
+      - 'tests/crm_messages.test.cjs'
+      - 'tests/reconciliation/**'
+      - '.github/workflows/checkout-mail-ci.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  checkout-mail:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --prefix tests/reconciliation --ignore-scripts --no-audit --no-fund
+      - name: Validate payment, queue, CRM access and provider evidence
+        run: >-
+          node --test --test-concurrency=1
+          tests/inline_registration.test.cjs
+          tests/embedded_registration_payment.test.cjs
+          tests/public_registration_option_errors.test.cjs
+          tests/stripe_registration_webhook.test.cjs
+          tests/checkout_confirmation_worker.test.mjs
+          tests/checkout_email_template.test.mjs
+          tests/crm_messages.test.cjs
+          tests/reconciliation/native-checkout.test.mjs
+          tests/reconciliation/bls-options.test.mjs
+          tests/reconciliation/checkout-confirmation.test.mjs
+          tests/reconciliation/message-operational-links.test.mjs
+          tests/reconciliation/checkout-reminders.test.mjs
+          tests/reconciliation/email-delivery-events.test.mjs

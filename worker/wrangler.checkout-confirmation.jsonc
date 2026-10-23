@@ -1,0 +1,43 @@
+{
+  "name": "910cpr-checkout-confirmation",
+  "main": "checkout-confirmation.mjs",
+  "compatibility_date": "2026-10-17",
+  "workers_dev": true,
+  "triggers": {
+    "crons": [
+      "* * * * *"
+    ]
+  },
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "allowed_sender_addresses": [
+        "registration@notify.910cpr.com"
+      ]
+    }
+  ],
+  "vars": {
+    "SUPABASE_URL": "https://wktwgcnwdvbebcobgyey.supabase.co",
+    "FROM_EMAIL": "registration@notify.910cpr.com",
+    "REPLY_TO_EMAIL": "info@910cpr.com"
+  },
+  "limits": {
+    "cpu_ms": 10000
+  },
+  "observability": {
+    "enabled": true,
+    "traces": {
+      "enabled": true
+    }
+  },
+  "queues": {
+    "consumers": [
+      {
+        "dead_letter_queue": "910cpr-email-delivery-events-dlq",
+        "max_retries": 5,
+        "queue": "910cpr-email-delivery-events",
+        "max_batch_size": 10
+      }
+    ]
+  }
+}
