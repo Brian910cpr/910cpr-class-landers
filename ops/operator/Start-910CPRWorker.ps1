@@ -165,14 +165,24 @@ function Invoke-GitHubQueue {
         $issueNumber = [int]$issue.number
         $resultFile = Get-ResultPath -JobId $jobId
 
-        $viewJson = & gh issue view $issueNumber --repo $RepoSlug --json comments 2>&1
+        $viewJson = & gh issue view $issueNumber --repo $RepoSlug --json author,comments 2>&1
         if ($LASTEXITCODE -ne 0) {
             Write-WorkerLog "GitHub issue view failed for #$issueNumber"
             continue
         }
         $view = ConvertFrom-Json -InputObject ($viewJson -join [Environment]::NewLine)
+        # A typed title is routing data, not authorization. Only the repository
+        # owner's jobs are accepted by this bounded v1 queue. Collaborator status
+        # and third-party comments do not delegate the owner's authority.
+        $ownerLogin = ($RepoSlug -split '/')[0]
+        if (-not $view.author -or [string]$view.author.login -ne $ownerLogin) {
+            Write-WorkerLog "Ignoring unauthorized worker issue #$issueNumber"
+            continue
+        }
         $resultMarker = "910CPR_WORKER_RESULT worker_id=$($Identity.worker_id) job_id=$jobId"
-        $alreadyReceipted = @($view.comments | Where-Object { [string]$_.body -like "$resultMarker*" }).Count -gt 0
+        $alreadyReceipted = @($view.comments | Where-Object {
+            $_.author -and [string]$_.author.login -eq $ownerLogin -and [string]$_.body -like "$resultMarker*"
+        }).Count -gt 0
         if ($alreadyReceipted) {
             Write-WorkerLog "GitHub receipt already present; skipping #$issueNumber / $jobId"
             continue
