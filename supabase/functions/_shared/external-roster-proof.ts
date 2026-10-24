@@ -5,7 +5,8 @@ export function registrationProof(row: any, now = new Date()) {
   // Native events use a local slug in this legacy column; the Enrollware
   // reconciliation contract accepts numeric external class IDs only.
   const localEvent = row.source === 'landerware_event' && !/^\d+$/.test(String(row.external_class_id || ''));
-  const native = ['landerware','manual'].includes(row.registration_backend) && (!row.external_class_id || localEvent);
+  const localOffer = row.source === 'landerware_public_offer' && /^lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(String(row.external_class_id || ''));
+  const native = ['landerware','manual'].includes(row.registration_backend) && (!row.external_class_id || localEvent || localOffer);
   const proof = row.external_reconciliation || {};
   const observed = Date.parse(proof.source_observed_at || '');
   let status = 'external_reconciliation_required';
