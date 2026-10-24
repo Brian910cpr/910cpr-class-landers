@@ -59,7 +59,7 @@ Deno.serve(async (req:Request) => {
     const since = new Date();
     since.setUTCDate(since.getUTCDate() - 90);
 
-    const select = "id,external_session_id,course_id,course_name,starts_at,ends_at,location_name,instructor_name,lifecycle_state,provenance,updated_at";
+    const select = "id,class_session_id,external_session_id,course_id,course_name,starts_at,ends_at,location_name,instructor_name,lifecycle_state,provenance,updated_at";
     const sessions = await rest(`landerware_sessions?starts_at=gte.${encodeURIComponent(since.toISOString())}&select=${select}&order=starts_at.asc&limit=2000`);
     const real = (Array.isArray(sessions) ? sessions : []).filter((s:any) =>
       s.starts_at && !EXCLUDED.has(String(s.lifecycle_state || "").toLowerCase())
@@ -67,12 +67,26 @@ Deno.serve(async (req:Request) => {
 
     const counts = new Map<string,number>();
     for (let i=0;i<real.length;i+=100) {
-      const ids = real.slice(i,i+100).map((s:any)=>s.id).filter(Boolean);
-      if (!ids.length) continue;
-      const rows = await rest(`landerware_registrations?session_id=in.(${ids.join(",")})&select=session_id,status&limit=5000`);
-      for (const r of (Array.isArray(rows) ? rows : [])) {
-        if (EXCLUDED.has(String(r.status || "").toLowerCase())) continue;
-        counts.set(r.session_id, (counts.get(r.session_id) || 0) + 1);
+      const batch = real.slice(i,i+100);
+      // Canonical sessions must use the same registrations as the roster and
+      // self-service rescheduler. Never add workspace mirrors to this count.
+      for (const canonical of [true, false]) {
+        const selected = batch.filter((s:any) => Boolean(s.class_session_id) === canonical);
+        const ids = selected.map((s:any) => canonical ? s.class_session_id : s.id);
+        if (!ids.length) continue;
+        const table = canonical ? "registrations" : "landerware_registrations";
+        const field = canonical ? "class_session_id" : "session_id";
+        const statuses = canonical ? "registered,confirmed,completed" : "active,registered,confirmed,completed";
+        for (let offset=0;;) {
+          const rows = await rest(`${table}?${field}=in.(${ids.join(",")})&status=in.(${statuses})&select=id,${field}&order=id.asc&limit=500&offset=${offset}`);
+          if (!Array.isArray(rows)) throw new Error("registration_rows_unavailable");
+          for (const r of rows) {
+            const session = selected.find((s:any) => (canonical ? s.class_session_id : s.id) === r[field]);
+            if (session) counts.set(session.id, (counts.get(session.id) || 0) + 1);
+          }
+          if (rows.length < 500) break;
+          offset += rows.length;
+        }
       }
     }
 
@@ -107,7 +121,7 @@ Deno.serve(async (req:Request) => {
       lines.push(
         "BEGIN:VEVENT",
         `UID:landerware-${esc(s.id)}@910cpr.com`,
-        `DTSTAMP:${dt(s.updated_at || new Date().toISOString())}`,
+        `DTSTAMP:${dt(new Date().toISOString())}`,
         `DTSTART:${start}`,
         `DTEND:${end}`,
         `SUMMARY:${esc(s.course_name || s.course_id || "910CPR Session")}`,
