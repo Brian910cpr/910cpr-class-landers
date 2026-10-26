@@ -1,9 +1,9 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-10-26T10:28:43.558216-04:00`
+- Generated at: `2026-10-26T10:34:24.760232-04:00`
 - Source: `enrollware_ical`
-- iCal events read: `217`
-- Public sessions created: `217`
+- iCal events read: `216`
+- Public sessions created: `216`
 - Skipped events: `0`
 - Registration unavailable sessions marked not direct-bookable: `175`
 - Unmapped sessions: `6`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `13826530` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-07-28T14:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `12774596` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-07-29T18:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13823700` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-07-30T11:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13849824` | enrollware_registration_closed | AHA Heartsaver® CPR AED | 2026-07-30T16:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `13870561` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-08-14T12:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13872968` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-08-14T15:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13898786` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-15T08:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `13909641` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-16T08:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
