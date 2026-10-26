@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-26T21:40:24.873106+00:00",
+  "generated_at": "2026-10-26T21:51:50.358618+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -23,13 +23,13 @@
       }
     ],
     "blocks_generated": 409,
-    "blocks_blocked": 22,
+    "blocks_blocked": 21,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 22
+      "inverse_gap_shorter_than_minimum_consumption": 21
     },
     "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 22
+      "inverse_gap_shorter_than_minimum_consumption": 21
     },
     "source_type_counts": {
       "google_calendar": 2,
@@ -11205,11 +11205,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-01-24T00:00:00",
-      "end_datetime": "2027-01-24T17:45:00",
+      "end_datetime": "2027-01-24T18:00:00",
       "date": "2027-01-24",
       "end_date": "2027-01-24",
       "start_time": "00:00",
-      "end_time": "17:45",
+      "end_time": "18:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -11238,10 +11238,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-10-26T21:40:23.707286+00:00",
-      "end": "2027-01-24T21:40:23.707286+00:00",
-      "observed_at": "2026-10-26T21:40:24.768933+00:00",
-      "valid_until": "2026-10-26T21:55:24.768933+00:00",
+      "start": "2026-10-26T21:51:49.143439+00:00",
+      "end": "2027-01-24T21:51:49.143439+00:00",
+      "observed_at": "2026-10-26T21:51:50.220293+00:00",
+      "valid_until": "2026-10-26T22:06:50.220293+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
@@ -11250,14 +11250,6 @@
     }
   ],
   "blocked_or_placeholder_sources": [
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-10-26T17:45:00",
-      "end_datetime": "2026-10-26T18:00:00"
-    },
     {
       "calendar_source_key": "brian_do_not_schedule",
       "source_type": "inverse_google_calendar",
