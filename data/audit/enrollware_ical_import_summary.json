@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-29T14:26:55.761911-04:00",
+  "generated_at": "2026-10-29T14:44:06.513814-04:00",
   "source": "enrollware_ical",
-  "ical_events_read": 211,
-  "public_sessions_created": 211,
+  "ical_events_read": 212,
+  "public_sessions_created": 212,
   "skipped_events": 0,
   "registration_unavailable_sessions_marked_not_direct_bookable": 177,
   "unmapped_sessions": 6,
   "prior_sessions_read": 0,
-  "sessions_added_compared_with_prior_source": 211,
+  "sessions_added_compared_with_prior_source": 212,
   "classes_removed_compared_with_prior_source": 0,
   "stale_zapier_sheet_sessions_excluded": 0,
   "stale_manual_class_report_sessions_excluded": 0,
@@ -699,15 +699,6 @@
       "rule_source": "data/inventory/course_consumption_rules.json"
     },
     {
-      "session_id": "14612057",
-      "course_id": "210549",
-      "start_at": "2026-11-12T11:15:00-05:00",
-      "source_end": "2026-11-12T11:15:00-05:00",
-      "end_at": "2026-11-12T12:15:00-05:00",
-      "occupied_minutes": 60,
-      "rule_source": "data/inventory/course_consumption_rules.json"
-    },
-    {
       "session_id": "14651686",
       "course_id": "359474",
       "start_at": "2026-10-11T17:00:00-04:00",
@@ -951,6 +942,15 @@
       "rule_source": "data/inventory/course_consumption_rules.json"
     },
     {
+      "session_id": "14817927",
+      "course_id": "209806",
+      "start_at": "2026-11-03T09:30:00-05:00",
+      "source_end": "2026-11-03T09:30:00-05:00",
+      "end_at": "2026-11-03T11:30:00-05:00",
+      "occupied_minutes": 120,
+      "rule_source": "data/inventory/course_consumption_rules.json"
+    },
+    {
       "session_id": "14114232",
       "course_id": "209809",
       "start_at": "2026-12-08T10:15:00-05:00",
@@ -966,6 +966,15 @@
       "source_end": "2026-12-07T17:30:00-05:00",
       "end_at": "2026-12-07T19:30:00-05:00",
       "occupied_minutes": 120,
+      "rule_source": "data/inventory/course_consumption_rules.json"
+    },
+    {
+      "session_id": "14612057",
+      "course_id": "210549",
+      "start_at": "2026-11-12T11:15:00-05:00",
+      "source_end": "2026-11-12T11:15:00-05:00",
+      "end_at": "2026-11-12T12:15:00-05:00",
+      "occupied_minutes": 60,
       "rule_source": "data/inventory/course_consumption_rules.json"
     },
     {
