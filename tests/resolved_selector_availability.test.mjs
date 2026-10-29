@@ -9,6 +9,42 @@ const root = path.resolve(import.meta.dirname, "..");
 const shared = require(path.join(root, "docs", "assets", "resolved-selector-availability.js"));
 const timing = require(path.join(root, "docs", "assets", "calendar-time-filters.js"));
 
+test('publication request retries a transient failure without changing inventory', async () => {
+  let calls = 0;
+  const data = {schemaVersion: 'selector-resolved-availability.v1', dates: []};
+  const result = await shared.fetchPublication('/feed', {request: async (_url, options) => {
+    assert.equal(options.cache, 'no-store');
+    if (++calls === 1) throw Error('temporary network failure');
+    return {ok: true, json: async () => data};
+  }});
+  assert.equal(calls, 2);
+  assert.equal(result, data);
+});
+
+test('publication timeout bounds both hanging fetches and hanging response bodies', async () => {
+  for (const bodyHangs of [false, true]) {
+    let calls = 0;
+    const signals = [];
+    await assert.rejects(shared.fetchPublication('/feed', {timeoutMs: 5, request: async (_url, options) => {
+      calls++;
+      signals.push(options.signal);
+      if (bodyHangs) return {ok: true, json: () => new Promise(() => {})};
+      return new Promise(() => {});
+    }}), /timed out/);
+    assert.equal(calls, 2);
+    assert.ok(signals.every(signal => signal.aborted));
+  }
+});
+
+test('malformed publication is rejected after a bounded retry', async () => {
+  let calls = 0;
+  await assert.rejects(shared.fetchPublication('/feed', {request: async () => {
+    calls++;
+    return {ok: true, json: async () => ({dates: []})};
+  }}), /unexpected shape/);
+  assert.equal(calls, 2);
+});
+
 function payload(key) {
   return JSON.parse(fs.readFileSync(
     path.join(root, "docs", "data", "block-selector-availability", `${key}.json`),
