@@ -1227,6 +1227,13 @@ def render_html(payload: dict[str, Any]) -> str:
     canonical_url = html.escape(f"https://www.910cpr.com/{output_path}", quote=True)
     subtitle = html.escape(str(page_config.get("subtitle") or ""))
     intro = html.escape(str(page_config.get("intro") or "Select a course, date, and start time."))
+    certification_notice = page_config.get("certification_notice") or {}
+    certification_html = ""
+    if certification_notice:
+        certification_title = html.escape(str(certification_notice.get("title") or "Certification"))
+        certification_body = html.escape(str(certification_notice.get("body") or ""))
+        certification_link = '<p><a href="/bls.html">Choose AHA BLS Provider training</a></p>' if page_config.get("page_key") in {"heartsaver", "arc", "hsi"} else ""
+        certification_html = f'<section class="page-note" aria-label="Certification details"><h2>{certification_title}</h2><p>{certification_body}</p>{certification_link}</section>'
     explanation = html.escape(str(page_config.get("explanation") or ""))
     documentation_note = page_config.get("documentation_note", {})
     student_note = html.escape(str(page_config.get("student_note") or ""))
@@ -1402,6 +1409,7 @@ def render_html(payload: dict[str, Any]) -> str:
     </div>
   </header>
   <main>
+    {certification_html}
     <section class="selector-shell" aria-label="Block-based schedule selector">
       <div class="panel course-selector-panel">
         <div class="course-selector-top">

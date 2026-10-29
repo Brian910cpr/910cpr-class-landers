@@ -130,6 +130,10 @@
         "url": "/images/characters/BLS-1.webp",
         "alt": "Anjla pointing toward the BLS class choices with her Schedule it reminder.",
         "variant": "character"
+      },
+      "certification_notice": {
+        "title": "Does this meet an AHA BLS requirement?",
+        "body": "Yes. Successfully complete BLS Provider, BLS Renewal, or HeartCode BLS with the required hands-on skills session to receive an American Heart Association (AHA) BLS Provider eCard. Choose one of the AHA BLS options below when your employer or school requires AHA BLS."
       }
     },
     "acls": {
@@ -263,6 +267,10 @@
           "ACLS-2": "Approved ACLS paramedic character: I am the designated adult? Yikes.",
           "ACLS-3": "Approved ACLS emergency department pharmacist character with an imposter-syndrome reminder."
         }
+      },
+      "certification_notice": {
+        "title": "American Heart Association (AHA) ACLS certification",
+        "body": "The ACLS options on this page provide an American Heart Association ACLS Provider eCard after successful completion. HeartCode ACLS requires both the online coursework and an in-person skills session. If you also need BLS, book the required BLS course separately."
       }
     },
     "pals": {
@@ -398,6 +406,10 @@
           "PALS-4": "Respiratory therapy team in blue scrubs at a critical-care bedside.",
           "PALS-5": "Respiratory therapy team together in a critical-care setting."
         }
+      },
+      "certification_notice": {
+        "title": "American Heart Association (AHA) PALS certification",
+        "body": "The PALS options on this page provide an American Heart Association PALS Provider eCard after successful completion. HeartCode PALS requires both the online coursework and an in-person skills session. If you also need BLS, book the required BLS course separately."
       }
     },
     "heartsaver": {
@@ -587,6 +599,10 @@
         "url": "/images/heartsaver_general.png",
         "alt": "American Heart Association Heartsaver CPR and First Aid course artwork.",
         "variant": "course-art"
+      },
+      "certification_notice": {
+        "title": "American Heart Association (AHA) Heartsaver certification",
+        "body": "Choose the Heartsaver course that matches your First Aid, CPR, and AED requirement. Successful completion provides the AHA Heartsaver eCard for the course selected. If your employer or school requires AHA BLS Provider, choose our AHA BLS course instead."
       }
     },
     "uscg-first-aid-cpr-aed": {
@@ -778,13 +794,17 @@
         "url": "/images/0hsi.png",
         "alt": "HSI training artwork.",
         "variant": "course-art"
+      },
+      "certification_notice": {
+        "title": "HSI certification",
+        "body": "The courses on this page provide HSI certification after successful completion of the selected course and its required skills assessment. If your employer or school specifically requires American Heart Association (AHA) BLS, choose our AHA BLS course instead."
       }
     },
     "arc": {
       "page_key": "arc",
       "family": "ARC",
       "certifying_body": "ARC",
-      "title": "Red Cross CPR & BLS Classes",
+      "title": "American Red Cross CPR, First Aid & BLS Classes",
       "meta_description": "Choose American Red Cross BLS, CPR/AED, or First Aid/CPR/AED, then select an available Wilmington date and time.",
       "intro": "Use this page when your employer, school, or program specifically requires or accepts Red Cross training. Pick the course name that matches your requirement.",
       "output_path": "docs/arc.html",
@@ -864,6 +884,10 @@
         "url": "/images/0arc.png",
         "alt": "American Red Cross training artwork.",
         "variant": "course-art"
+      },
+      "certification_notice": {
+        "title": "American Red Cross certification",
+        "body": "The courses on this page provide American Red Cross certification after successful completion of the selected course and its required skills assessment. If your employer or school specifically requires American Heart Association (AHA) BLS, choose our AHA BLS course instead."
       }
     },
     "family_cpr": {
