@@ -15,9 +15,12 @@ on:
           - reconciliation-health
   push:
     branches:
+      - main
       - codex/canonical-participant-rosters
     paths:
       - 'supabase/functions/canonical-session-workspace/**'
+      - 'supabase/functions/canonical-scheduling-demand/**'
+      - 'supabase/functions/_shared/external-roster-proof.ts'
       - 'docs/admin/**'
       - 'scripts/publish_admin_schedule.py'
       - '.github/workflows/verify-canonical-participants.yml'
@@ -38,7 +41,8 @@ jobs:
             "$WATCHDOG_HEALTH_URL"
 
   verify-production:
-    if: github.event_name != 'schedule' && github.event.inputs.projection != 'canonical-demand' && github.event.inputs.projection != 'reconciliation-health'
+    # These read-only checks are independent of external reconciliation health.
+    if: github.event_name == 'schedule' || (github.event.inputs.projection != 'canonical-demand' && github.event.inputs.projection != 'reconciliation-health')
     runs-on: ubuntu-latest
     steps:
       - name: Query protected canonical workspace
@@ -48,7 +52,7 @@ jobs:
           test -n "$HOT_SYNC_ADMIN_KEY"
           curl --fail-with-body --silent --show-error \
             -H "X-Hot-Sync-Admin-Key: $HOT_SYNC_ADMIN_KEY" \
-            "https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/canonical-session-workspace?from=2026-09-06&to=2027-09-06" \
+            "https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/canonical-session-workspace" \
             --output "$RUNNER_TEMP/canonical-sessions.json"
 
       - name: Prove canonical counts without logging participant PII
@@ -73,7 +77,7 @@ jobs:
           PY
 
   verify-demand:
-    if: github.event.inputs.projection == 'canonical-demand'
+    if: github.event_name == 'schedule' || github.event.inputs.projection == 'canonical-demand'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

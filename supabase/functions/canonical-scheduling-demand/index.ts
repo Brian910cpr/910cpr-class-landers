@@ -78,7 +78,7 @@ export function projectDemand(row: any) {
 export async function loadDemand(start: string, stop: string) {
   const { url, key } = serviceConfig();
   const select = [
-    "id", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
+    "id", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "external_session_evidence", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
     "consumption_start_at", "consumption_end_at", "source_location_label", "source_instructor_label", "visibility", "registration_status",
     "courses!class_sessions_course_id_fkey(course_key,name)",
     "locations!class_sessions_location_id_fkey(name)",

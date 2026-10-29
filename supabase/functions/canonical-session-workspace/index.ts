@@ -98,7 +98,7 @@ export function summarizeSession(row: any) {
 async function canonicalSessions(from: string, to: string) {
   const { url, key } = config();
   const select = [
-    "id", "external_class_id", "registration_backend", "external_reconciliation", "source", "status", "start_at", "end_at",
+    "id", "external_class_id", "registration_backend", "external_reconciliation", "external_session_evidence", "source", "status", "start_at", "end_at",
     "courses!class_sessions_course_id_fkey(name,course_key)",
     "locations!class_sessions_location_id_fkey(name)",
     "organizations!class_sessions_organization_id_fkey(name)",
@@ -122,7 +122,7 @@ async function canonicalSessions(from: string, to: string) {
 
 async function sessionDetail(id: string) {
   validId(id);
-  const sessions = await rest(`class_sessions?id=eq.${id}&record_scope=eq.operational&select=id,external_class_id,registration_backend,external_reconciliation,source,status,start_at,end_at,courses!class_sessions_course_id_fkey(name,course_key),locations!class_sessions_location_id_fkey(name),organizations!class_sessions_organization_id_fkey(name),registrations!registrations_class_session_id_fkey(id,customer_id,status,external_registration_id,registration_source,historical_ecard_code,customers!registrations_customer_id_fkey(id,first_name,last_name,email,phone))&limit=1`);
+  const sessions = await rest(`class_sessions?id=eq.${id}&record_scope=eq.operational&select=id,external_class_id,registration_backend,external_reconciliation,external_session_evidence,source,status,start_at,end_at,courses!class_sessions_course_id_fkey(name,course_key),locations!class_sessions_location_id_fkey(name),organizations!class_sessions_organization_id_fkey(name),registrations!registrations_class_session_id_fkey(id,customer_id,status,external_registration_id,registration_source,historical_ecard_code,customers!registrations_customer_id_fkey(id,first_name,last_name,email,phone))&limit=1`);
   if (!sessions?.length) throw Error("session_not_found");
   const session = summarizeSession(sessions[0]);
   const [credentials, documents] = await Promise.all([
