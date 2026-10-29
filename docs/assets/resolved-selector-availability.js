@@ -112,6 +112,40 @@
     ].join("|");
   }
 
+  // Bound the complete request, including a stalled response body. A transient
+  // network failure must not strand the calendar in its loading state.
+  async function fetchPublication(url, { request = fetch, timeoutMs = 15000, attempts = 2 } = {}) {
+    let lastError;
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+      const controller = new AbortController();
+      let timer;
+      try {
+        return await Promise.race([
+          (async () => {
+            const response = await request(url, { cache: 'no-store', signal: controller.signal });
+            if (!response.ok) throw new Error(`availability fetch failed: ${response.status}`);
+            const payload = await response.json();
+            if (!payload || payload.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(payload.dates)) {
+              throw new Error('availability payload has an unexpected shape');
+            }
+            return payload;
+          })(),
+          new Promise((_, reject) => {
+            timer = setTimeout(() => {
+              controller.abort();
+              reject(new Error('availability request timed out'));
+            }, timeoutMs);
+          }),
+        ]);
+      } catch (error) {
+        lastError = error;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+    throw lastError;
+  }
+
   return {
     schemaVersion: "selector-resolved-availability.v1",
     businessNow,
@@ -125,6 +159,7 @@
     isSelectableDate,
     filterDatesByCourse,
     slotKey,
+    fetchPublication,
   };
 });
 
