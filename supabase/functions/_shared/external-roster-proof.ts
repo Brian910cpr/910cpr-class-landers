@@ -6,7 +6,16 @@ export function registrationProof(row: any, now = new Date()) {
   // reconciliation contract accepts numeric external class IDs only.
   const localEvent = row.source === 'landerware_event' && !/^\d+$/.test(String(row.external_class_id || ''));
   const localOffer = row.source === 'landerware_public_offer' && /^lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(String(row.external_class_id || ''));
-  const native = ['landerware','manual'].includes(row.registration_backend) && (!row.external_class_id || localEvent || localOffer);
+  // An accepted intake is owned by the canonical workspace. The legacy
+  // registration backend still describes checkout, not roster ownership.
+  // Require exact provenance; a synthetic-looking ID alone proves nothing.
+  const evidence = row.external_session_evidence || {};
+  const acceptedIntake = ['manual','gmail_registration_reconciliation'].includes(row.source)
+    && evidence.source === 'gmail_registration_reconciliation'
+    && evidence.verified_assignment === true
+    && /^[0-9a-f]{16}$/.test(String(evidence.gmail_message_id || ''))
+    && row.external_class_id === `lw-gmail:${evidence.gmail_message_id}`;
+  const native = acceptedIntake || (['landerware','manual'].includes(row.registration_backend) && (!row.external_class_id || localEvent || localOffer));
   const proof = row.external_reconciliation || {};
   const observed = Date.parse(proof.source_observed_at || '');
   let status = 'external_reconciliation_required';

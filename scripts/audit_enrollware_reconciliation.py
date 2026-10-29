@@ -2,6 +2,7 @@
 import hashlib
 import json
 import os
+from collections import Counter
 from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -22,7 +23,11 @@ def audit(health, projection):
             gaps.append({'external_class_id':identity,'status':'committed_projection_without_canonical_session'})
     gaps.sort(key=lambda x:(x['external_class_id'],x['status']))
     signature=hashlib.sha256(json.dumps([(x['external_class_id'],x['status']) for x in gaps]).encode()).hexdigest()
+    breakdown = dict(sorted(Counter(gap['status'] for gap in gaps).items()))
     return {'checked_at':health.get('checked_at'),'freshness_minutes':60,'healthy':not gaps,
+            'gap_breakdown':breakdown,
+            'stale_source_checks':breakdown.get('stale_reconciliation',0),
+            'record_integrity_gaps':sum(count for status,count in breakdown.items() if status != 'stale_reconciliation'),
             'canonical_external_sessions':len(known),'non_session_sources':non_sessions,'gaps':gaps,'signature':signature}
 
 
