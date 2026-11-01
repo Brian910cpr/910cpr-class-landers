@@ -5,6 +5,7 @@ from pathlib import Path
 from datetime import timedelta
 from tests.test_layered_publication_adapter import LayeredPublicationTests
 from scripts.layered_day_cache import cached_calculate, pack
+from scripts.layered_selector_adapter import aware
 
 
 class DayCacheTests(unittest.TestCase):
@@ -48,6 +49,19 @@ class DayCacheTests(unittest.TestCase):
         self.run_cache()
         for path in Path(self.directory.name).glob('*.json'):path.write_text('broken')
         self.assertEqual(self.run_cache()['incremental_cache']['hits'],0)
+
+    def test_fall_back_cache_does_not_reuse_expired_proof_in_second_hour(self):
+        f=self.f
+        f.windows=f.windows[:1];f.coverage=f.coverage[:1]
+        f.windows[0].update(start='2026-11-03T09:00:00-05:00',end='2026-11-03T15:00:00-05:00')
+        f.coverage[0].update(start=f.windows[0]['start'],end=f.windows[0]['end'],
+            observed_at='2026-11-01T05:40:00Z',valid_until='2026-11-01T05:55:00Z',freshness_minutes=15)
+        f.now=aware('2026-11-01T01:45:00-04:00')
+        self.assertTrue(self.run_cache()['reports'][0]['accepted'])
+        f.now=aware('2026-11-01T01:05:00-05:00')
+        result=self.run_cache()
+        self.assertEqual(result['incremental_cache']['hits'],0)
+        self.assertFalse(result['reports'][0]['accepted'])
 
     def test_booking_moved_to_another_day_rebuilds_both_days(self):
         f=self.f;f.add(11,'12:00','13:00',count=1);self.run_cache()

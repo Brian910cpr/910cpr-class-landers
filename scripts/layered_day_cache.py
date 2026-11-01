@@ -3,7 +3,7 @@
 Cache resource windows rather than rewriting the existing scheduling engine.
 Booking removals/moves invalidate old and new scopes through input fingerprints.
 """
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from pathlib import Path
 import hashlib
@@ -67,7 +67,8 @@ def scoped_sources(rows, start, end, travel):
 
 def cached_calculate(windows, occupancy, courses, policy, resources, now, interval,
                      qualified, coverage, travel_minutes=None, *, cache_dir, horizon_days=90):
-    now=aware(now)
+    # Cache expiry is an instant; repeated local-clock hours must not extend it.
+    now=aware(now).astimezone(timezone.utc)
     horizon_start=now.astimezone(ZONE).replace(hour=0,minute=0,second=0,microsecond=0)
     horizon_end=horizon_start+timedelta(days=horizon_days)
     if not 1 <= horizon_days <= 90: raise ValueError('cache horizon must be 1..90 days')
