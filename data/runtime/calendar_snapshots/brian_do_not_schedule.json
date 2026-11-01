@@ -1,14 +1,14 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-11-01T14:16:43.257840+00:00",
+  "generated_at": "2026-11-01T14:32:25.235939+00:00",
   "read_only_snapshot": true,
   "calendar_source_id": "brian_do_not_schedule",
   "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
   "source_type": "inverse_google_calendar",
   "source_display_name": "910CPR - Brian DoNotSchedule",
   "date_range": {
-    "start": "2026-11-01T14:16:42.488155+00:00",
-    "end": "2027-01-30T14:16:42.488155+00:00",
+    "start": "2026-11-01T14:32:24.445029+00:00",
+    "end": "2027-01-30T14:32:24.445029+00:00",
     "days": 90
   },
   "export_status": "ok",
@@ -19,7 +19,7 @@
       "raw_properties": {
         "DTSTART": "20261101T230000Z",
         "DTEND": "20261102T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "copm2pb374omcbb1c8p38b9k68s6cbb16opjib9o6phm6e34c9hj4ohj6k@google.com",
         "CREATED": "20261029T164348Z",
         "DESCRIPTION": "EMT",
@@ -63,7 +63,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -120,7 +120,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -198,7 +198,7 @@
       "raw_properties": {
         "DTSTART": "20261102T093000Z",
         "DTEND": "20261102T223000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75j34p35chj30b9n6gpm6b9k70o3gbb16cq62bb36ss38pj66kp64c1lc8@google.com",
         "CREATED": "20261101T141544Z",
         "LAST-MODIFIED": "20261101T141601Z",
@@ -239,8 +239,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -253,9 +253,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -280,6 +277,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -319,7 +319,7 @@
       "raw_properties": {
         "DTSTART": "20261102T230000Z",
         "DTEND": "20261103T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "ccpjaor16co3ib9h64p6ab9kcor3ebb26lhjib9p6oqjicpgc8o36e32cc@google.com",
         "CREATED": "20261029T164349Z",
         "DESCRIPTION": "EMT",
@@ -363,7 +363,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -420,7 +420,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -499,8 +499,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -513,9 +513,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -540,6 +537,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -581,7 +581,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -638,7 +638,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -717,8 +717,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -731,9 +731,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -758,6 +755,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -799,7 +799,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -856,7 +856,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -935,8 +935,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -949,9 +949,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -976,6 +973,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -1017,7 +1017,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -1074,7 +1074,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -1153,8 +1153,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -1167,9 +1167,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -1194,6 +1191,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -1233,7 +1233,7 @@
       "raw_properties": {
         "DTSTART": "20261106T230000Z",
         "DTEND": "20261107T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "c5ijgc1l6sojebb3cosm6b9k74p30bb26hhj4bb574o30ob670rjao9icc@google.com",
         "CREATED": "20261029T164349Z",
         "DESCRIPTION": "EMT",
@@ -1275,7 +1275,7 @@
       "raw_properties": {
         "DTSTART": "20261107T213000Z",
         "DTEND": "20261108T004500Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "cdhjip9jc8q68b9m6co66b9k6thj8b9p61gm4bb165hjephjccpj8o9m64@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/cwc-ufgh-hcp",
         "CREATED": "20261027T234204Z",
@@ -1318,7 +1318,7 @@
       "raw_properties": {
         "DTSTART": "20261108T230000Z",
         "DTEND": "20261109T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "6gq38cj6cdj66b9n65im6b9kclj38b9o6cr68bb1chh32opkchij8p9gck@google.com",
         "CREATED": "20261029T164350Z",
         "DESCRIPTION": "EMT",
@@ -1362,7 +1362,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -1419,7 +1419,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -1498,8 +1498,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -1512,9 +1512,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -1539,6 +1536,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -1578,7 +1578,7 @@
       "raw_properties": {
         "DTSTART": "20261109T230000Z",
         "DTEND": "20261110T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70smcpj36csj4bb2c5gjeb9kc5h38bb171j30b9jccpm6db2c5i3icpi60@google.com",
         "CREATED": "20261029T164350Z",
         "DESCRIPTION": "EMT",
@@ -1622,7 +1622,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -1679,7 +1679,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -1758,8 +1758,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -1772,9 +1772,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -1799,6 +1796,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -1840,7 +1840,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -1897,7 +1897,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -1976,8 +1976,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -1990,9 +1990,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -2017,6 +2014,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -2058,7 +2058,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -2115,7 +2115,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -2194,8 +2194,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -2208,9 +2208,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -2235,6 +2232,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -2276,7 +2276,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -2333,7 +2333,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -2412,8 +2412,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -2426,9 +2426,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -2453,6 +2450,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -2492,7 +2492,7 @@
       "raw_properties": {
         "DTSTART": "20261113T230000Z",
         "DTEND": "20261114T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "cdh6cd1n6pj3gbb56tj3eb9k60s3ib9p6oqj0b9ncdhjaor5chhjgcpi70@google.com",
         "CREATED": "20261029T164351Z",
         "DESCRIPTION": "EMT",
@@ -2534,7 +2534,7 @@
       "raw_properties": {
         "DTSTART": "20261115T230000Z",
         "DTEND": "20261116T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "ccqjed1o75h6ab9k70p68b9k6dgm2b9pccp68b9k70pj6dhn6sqjgcj1cc@google.com",
         "CREATED": "20261029T164351Z",
         "DESCRIPTION": "EMT",
@@ -2578,7 +2578,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -2635,7 +2635,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -2714,8 +2714,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -2728,9 +2728,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -2755,6 +2752,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -2794,7 +2794,7 @@
       "raw_properties": {
         "DTSTART": "20261116T230000Z",
         "DTEND": "20261117T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "69i66db2ckrmcbb270qj2b9k6tij2b9o69gj6bb46ss38d9nclhmcopic8@google.com",
         "CREATED": "20261029T164352Z",
         "DESCRIPTION": "EMT",
@@ -2838,7 +2838,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -2895,7 +2895,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -2974,8 +2974,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -2988,9 +2988,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -3015,6 +3012,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -3056,7 +3056,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -3113,7 +3113,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -3192,8 +3192,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -3206,9 +3206,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -3233,6 +3230,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -3274,7 +3274,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -3331,7 +3331,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -3410,8 +3410,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -3424,9 +3424,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -3451,6 +3448,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -3492,7 +3492,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -3549,7 +3549,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -3628,8 +3628,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -3642,9 +3642,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -3669,6 +3666,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -3708,7 +3708,7 @@
       "raw_properties": {
         "DTSTART": "20261120T230000Z",
         "DTEND": "20261121T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "ckp38c1ickp3ib9n75hjgb9k6hgjebb174q34b9p70s66p346dgj4e356g@google.com",
         "CREATED": "20261029T164353Z",
         "DESCRIPTION": "EMT",
@@ -3750,7 +3750,7 @@
       "raw_properties": {
         "DTSTART": "20261122T230000Z",
         "DTEND": "20261123T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "6lh32p9kckoj0bb6c8q64b9kcopm2b9pcgomcb9h6ssmadhp6ks34ohh6c@google.com",
         "CREATED": "20261029T164354Z",
         "DESCRIPTION": "EMT",
@@ -3794,7 +3794,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -3851,7 +3851,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -3930,8 +3930,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -3944,9 +3944,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -3971,6 +3968,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -4010,7 +4010,7 @@
       "raw_properties": {
         "DTSTART": "20261123T230000Z",
         "DTEND": "20261124T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "6sr36cpm6ks3gbb16pim6b9k70q3abb1cph3cb9mc8q34c9ocdij0dj36k@google.com",
         "CREATED": "20261029T164353Z",
         "DESCRIPTION": "EMT",
@@ -4054,7 +4054,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -4111,7 +4111,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -4190,8 +4190,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -4204,9 +4204,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -4231,6 +4228,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -4272,7 +4272,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -4329,7 +4329,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -4408,8 +4408,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -4422,9 +4422,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -4449,6 +4446,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -4490,7 +4490,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -4547,7 +4547,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -4626,8 +4626,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -4640,9 +4640,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -4667,6 +4664,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -4708,7 +4708,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -4765,7 +4765,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -4844,8 +4844,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -4858,9 +4858,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -4885,6 +4882,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -4924,7 +4924,7 @@
       "raw_properties": {
         "DTSTART": "20261127T230000Z",
         "DTEND": "20261128T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "64o32d1i68rmabb36sq3ab9kchj6ab9o6cr36b9o60pm8cpi6ooj0e33ck@google.com",
         "CREATED": "20261029T164354Z",
         "DESCRIPTION": "EMT",
@@ -4966,7 +4966,7 @@
       "raw_properties": {
         "DTSTART": "20261129T230000Z",
         "DTEND": "20261130T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "cdh66cpoclij2b9ochh3eb9k69h3eb9o6csmcb9hckpm6c1o71j3aoj5ck@google.com",
         "CREATED": "20261029T164355Z",
         "DESCRIPTION": "EMT",
@@ -5010,7 +5010,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -5067,7 +5067,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -5146,8 +5146,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -5160,9 +5160,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -5187,6 +5184,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -5226,7 +5226,7 @@
       "raw_properties": {
         "DTSTART": "20261130T230000Z",
         "DTEND": "20261201T110000Z",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "6cqj2c336gsj8b9ic8p3gb9k64s32b9p75im8bb2cks62c9o65ij6cb6cc@google.com",
         "CREATED": "20261029T164356Z",
         "DESCRIPTION": "EMT",
@@ -5270,7 +5270,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -5327,7 +5327,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -5406,8 +5406,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -5420,9 +5420,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -5447,6 +5444,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -5488,7 +5488,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -5545,7 +5545,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -5624,8 +5624,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -5638,9 +5638,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -5665,6 +5662,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -5706,7 +5706,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -5763,7 +5763,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -5842,8 +5842,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -5856,9 +5856,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -5883,6 +5880,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -5924,7 +5924,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -5981,7 +5981,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -6060,8 +6060,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -6074,9 +6074,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -6101,6 +6098,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -6142,7 +6142,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -6199,7 +6199,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -6278,8 +6278,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -6292,9 +6292,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -6319,6 +6316,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -6360,7 +6360,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -6417,7 +6417,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -6496,8 +6496,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -6510,9 +6510,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -6537,6 +6534,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -6578,7 +6578,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -6635,7 +6635,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -6714,8 +6714,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -6728,9 +6728,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -6755,6 +6752,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -6796,7 +6796,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -6853,7 +6853,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -6932,8 +6932,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -6946,9 +6946,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -6973,6 +6970,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -7014,7 +7014,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -7071,7 +7071,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -7150,8 +7150,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -7164,9 +7164,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -7191,6 +7188,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -7232,7 +7232,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -7289,7 +7289,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -7368,8 +7368,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -7382,9 +7382,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -7409,6 +7406,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -7450,7 +7450,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -7507,7 +7507,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -7586,8 +7586,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -7600,9 +7600,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -7627,6 +7624,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -7668,7 +7668,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -7725,7 +7725,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -7804,8 +7804,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -7818,9 +7818,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -7845,6 +7842,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -7886,7 +7886,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -7943,7 +7943,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -8022,8 +8022,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -8036,9 +8036,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -8063,6 +8060,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -8104,7 +8104,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -8161,7 +8161,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -8240,8 +8240,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -8254,9 +8254,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -8281,6 +8278,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -8322,7 +8322,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -8379,7 +8379,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -8458,8 +8458,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -8472,9 +8472,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -8499,6 +8496,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -8540,7 +8540,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -8597,7 +8597,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -8676,8 +8676,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -8690,9 +8690,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -8717,6 +8714,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -8758,7 +8758,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -8815,7 +8815,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -8894,8 +8894,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -8908,9 +8908,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -8935,6 +8932,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -8976,7 +8976,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -9033,7 +9033,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -9112,8 +9112,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -9126,9 +9126,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -9153,6 +9150,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -9194,7 +9194,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -9251,7 +9251,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -9330,8 +9330,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -9344,9 +9344,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -9371,6 +9368,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -9412,7 +9412,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -9469,7 +9469,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -9548,8 +9548,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -9562,9 +9562,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -9589,6 +9586,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -9630,7 +9630,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -9687,7 +9687,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -9766,8 +9766,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -9780,9 +9780,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -9807,6 +9804,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -9848,7 +9848,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -9905,7 +9905,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -9984,8 +9984,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -9998,9 +9998,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -10025,6 +10022,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -10066,7 +10066,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -10123,7 +10123,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -10202,8 +10202,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -10216,9 +10216,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -10243,6 +10240,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -10284,7 +10284,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -10341,7 +10341,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -10420,8 +10420,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -10434,9 +10434,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -10461,6 +10458,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -10502,7 +10502,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -10559,7 +10559,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -10638,8 +10638,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -10652,9 +10652,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -10679,6 +10676,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -10720,7 +10720,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -10777,7 +10777,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -10856,8 +10856,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -10870,9 +10870,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -10897,6 +10894,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -10938,7 +10938,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -10995,7 +10995,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -11074,8 +11074,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -11088,9 +11088,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -11115,6 +11112,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -11156,7 +11156,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -11213,7 +11213,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -11292,8 +11292,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -11306,9 +11306,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -11333,6 +11330,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -11374,7 +11374,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -11431,7 +11431,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -11510,8 +11510,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -11524,9 +11524,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -11551,6 +11548,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -11592,7 +11592,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -11649,7 +11649,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -11728,8 +11728,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -11742,9 +11742,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -11769,6 +11766,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -11810,7 +11810,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -11867,7 +11867,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -11946,8 +11946,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -11960,9 +11960,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -11987,6 +11984,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -12028,7 +12028,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -12085,7 +12085,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -12164,8 +12164,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -12178,9 +12178,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -12205,6 +12202,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -12246,7 +12246,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -12303,7 +12303,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -12382,8 +12382,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -12396,9 +12396,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -12423,6 +12420,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -12464,7 +12464,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -12521,7 +12521,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -12600,8 +12600,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -12614,9 +12614,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -12641,6 +12638,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -12682,7 +12682,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -12739,7 +12739,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -12818,8 +12818,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -12832,9 +12832,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -12859,6 +12856,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -12900,7 +12900,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -12957,7 +12957,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -13036,8 +13036,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -13050,9 +13050,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -13077,6 +13074,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -13118,7 +13118,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -13175,7 +13175,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -13254,8 +13254,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -13268,9 +13268,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -13295,6 +13292,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -13336,7 +13336,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -13393,7 +13393,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -13472,8 +13472,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -13486,9 +13486,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -13513,6 +13510,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -13554,7 +13554,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -13611,7 +13611,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -13690,8 +13690,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -13704,9 +13704,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -13731,6 +13728,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -13772,7 +13772,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -13829,7 +13829,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -13908,8 +13908,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -13922,9 +13922,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -13949,6 +13946,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -13990,7 +13990,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -14047,7 +14047,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -14126,8 +14126,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -14140,9 +14140,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -14167,6 +14164,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -14208,7 +14208,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -14265,7 +14265,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -14344,8 +14344,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -14358,9 +14358,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -14385,6 +14382,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -14426,7 +14426,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -14483,7 +14483,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -14562,8 +14562,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -14576,9 +14576,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -14603,6 +14600,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
@@ -14644,7 +14644,7 @@
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
         "LAST-MODIFIED": "20261019T204822Z",
@@ -14701,7 +14701,7 @@
         "DTEND": "20260819T074500",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270528T035959Z;BYDAY=FR,MO,TH,TU,WE",
         "EXDATE": "20261014T063000",
-        "DTSTAMP": "20261101T141643Z",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "7sn8eqmuo6hl9l816f3nnug7ig@google.com",
         "X-GOOGLE-CONFERENCE": "https://meet.google.com/qff-qwmq-qmc",
         "CREATED": "20260605T190959Z",
@@ -14780,8 +14780,8 @@
         "DTSTART": "20260820T150000",
         "DTEND": "20260820T173000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR",
-        "EXDATE": "20261002T150000",
-        "DTSTAMP": "20261101T141643Z",
+        "EXDATE": "20261005T150000",
+        "DTSTAMP": "20261101T143225Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "CREATED": "20260605T191527Z",
         "LAST-MODIFIED": "20261018T131858Z",
@@ -14794,9 +14794,6 @@
       "recurrence": [
         {
           "rrule": "FREQ=WEEKLY;WKST=SU;UNTIL=20270527T035959Z;BYDAY=WE,MO,TU,TH,FR"
-        },
-        {
-          "exdate": "20261005T150000"
         },
         {
           "exdate": "20261009T150000"
@@ -14821,6 +14818,9 @@
         },
         {
           "exdate": "20261002T150000"
+        },
+        {
+          "exdate": "20261005T150000"
         }
       ],
       "start_raw": "20260820T150000",
