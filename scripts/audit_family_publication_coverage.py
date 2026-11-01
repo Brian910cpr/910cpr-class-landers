@@ -43,6 +43,20 @@ def summarize(payload, day, now=None):
     }
 
 
+def continuity_incident(feeds):
+    """Remaining seated classes do not downgrade lost appointment availability."""
+    failures = []
+    for family, feed in feeds.items():
+        if family in ('bls', 'heartsaver') and feed['dynamicOffers'] == 0:
+            failures.append(dict(family=family, reason='missing_dynamic_appointments'))
+        elif feed['dynamicOffers'] > 0 and feed['publicationExpired']:
+            failures.append(dict(family=family, reason='expired_dynamic_appointments'))
+    return dict(priority='P0', status='active_booking_outage', failures=failures,
+        recovery_owner='Codex',
+        next_action='Begin immediate source/lease/publication recovery; refresh or restore a validated release, '
+                    'preserve occupancy and safety rules, then verify rendered appointment choices and booking links.') if failures else None
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--live', action='store_true')
@@ -59,11 +73,13 @@ def main():
         return family, dict(summarize(json.loads(raw), args.day), sha256=hashlib.sha256(raw).hexdigest())
     with ThreadPoolExecutor(max_workers=4) as pool:
         feeds = dict(pool.map(read, FAMILIES))
+    incident = continuity_incident(feeds) if args.continuity else None
     path = 'data/admin/scheduling_landscape.json'
     raw = (urlopen(f'https://www.910cpr.com/{path}?coverage={stamp}', timeout=30).read()
            if args.live else (ROOT / 'docs' / path).read_bytes())
     landscape = json.loads(raw)
     report = dict(observedAt=stamp, mode='live-read-only' if args.live else 'local-pinned', families=feeds,
+        incident=incident,
         landscape=dict(buildId=landscape.get('buildId'), builtAt=landscape.get('builtAt'),
             sha256=hashlib.sha256(raw).hexdigest(),
             dayCellResults=dict(Counter(c['result'] for c in landscape['cells'] if c['date'] == args.day)),
@@ -76,11 +92,11 @@ def main():
     args.output.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     print(json.dumps({k:{f:v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','coverageAlert')}
         for k,v in feeds.items()}, indent=2))
-    continuity_alert = args.continuity and any(
-        (v['publicationExpired'] and v['dynamicOffers'] > 0) or
-        (family in ('bls', 'heartsaver') and v['dynamicOffers'] == 0)
-        for family, v in feeds.items())
-    return int(any(v['coverageAlert'] for v in feeds.values()) or continuity_alert)
+    if incident:
+        print('::error title=P0 public booking outage::' +
+              ', '.join(f"{f['family']}: {f['reason']}" for f in incident['failures']) +
+              '. Immediate recovery required; remaining seated classes do not resolve this failure.')
+    return int(any(v['coverageAlert'] for v in feeds.values()) or bool(incident))
 
 
 if __name__ == '__main__':
