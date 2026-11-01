@@ -6,7 +6,7 @@ missing bounds close the affected resource horizon. Existing records are immutab
 """
 from copy import deepcopy
 from collections import Counter
-from datetime import timedelta
+from datetime import timedelta, timezone
 from scripts.layered_selector_adapter import aware, build_shadow
 from scripts.layered_scheduling_engine import encode as encode_value
 import json
@@ -61,7 +61,9 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
     """
     if not active(policy):
         raise ValueError("V2 requires explicit active_local_v2 configuration")
-    now = aware(now)
+    # Leases measure elapsed time, not Eastern wall time. During the fall-back
+    # hour, ZoneInfo comparisons ignore fold when both operands share a zone.
+    now = aware(now).astimezone(timezone.utc)
     metadata = {str(c["course_id"]): c for c in courses}
     projected = project_sources(occupancy, metadata)
     projected.sort(key=lambda row: row.get("source_file") != "canonical_class_sessions")
@@ -130,9 +132,9 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
                     continue
                 for field in ("start", "end", "observed_at", "valid_until"):
                     stamp(proof[field])  # Proof bounds must explicitly carry timezone.
-                observed = aware(proof["observed_at"])
+                observed = aware(proof["observed_at"]).astimezone(timezone.utc)
                 freshness = timedelta(minutes=proof.get("freshness_minutes", 60))
-                lease = min(aware(proof["valid_until"]), observed+freshness)
+                lease = min(aware(proof["valid_until"]).astimezone(timezone.utc), observed+freshness)
                 if observed > now or freshness.total_seconds() <= 0 or lease <= now:
                     continue
                 fresh.append(dict(proof,valid_until=lease.isoformat()))
@@ -151,7 +153,7 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             # Coverage lease must survive both publication and browser rendering.
             matched = [p for p in fresh if p.get("instructor") == window["instructor_name"]
                 and p.get("location") == room and aware(p["start"]) <= ws and we <= aware(p["end"])]
-            report["valid_until"] = min((aware(p["valid_until"]) for p in matched), default=now)
+            report["valid_until"] = min((aware(p["valid_until"]).astimezone(timezone.utc) for p in matched), default=now)
             reports.append(report)
         except ValueError as error:
             issues.append(dict(reason=str(error), instructor=window.get("instructor_name"),
@@ -166,7 +168,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             seated_offers=()):
     """Translate accepted calculations to the existing URL/feed/renderer contract."""
     from scripts.apply_anchor_policy import _rebuild_dates
-    now = aware(now)
+    now = aware(now).astimezone(timezone.utc)
     catalog = {str(c["course_id"]): c for c in courses}
     origins = {str(w.get("source_availability_window", i)): w for i, w in enumerate(windows)}
     accepted, rejected = [], []
@@ -283,7 +285,7 @@ def finalize(payload, now=None):
     """Shared V2 finalizer: enforce leases without reapplying V1 date suppression."""
     from scripts.apply_anchor_policy import _rebuild_dates
     from datetime import datetime, timezone
-    now=aware(now or datetime.now(timezone.utc))
+    now=aware(now or datetime.now(timezone.utc)).astimezone(timezone.utc)
     result=deepcopy(payload)
     original=result.get("offers", [])
     kept=[]

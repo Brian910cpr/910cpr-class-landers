@@ -324,5 +324,35 @@ class LayeredPublicationTests(unittest.TestCase):
         self.policy['mode']='shadow'
         with self.assertRaisesRegex(ValueError,'explicit'):self.calculation()
 
+    def test_fall_back_lease_survives_repeated_hour_then_expires(self):
+        self.windows[0].update(start='2026-11-03T09:00:00-05:00',
+                               end='2026-11-03T15:00:00-05:00')
+        self.now=aware('2026-11-01T01:56:29-04:00')
+        self.coverage[0].update(start=self.windows[0]['start'],end=self.windows[0]['end'],
+            observed_at='2026-11-01T05:56:28Z',valid_until='2026-11-01T06:11:28Z',
+            freshness_minutes=15)
+        payload=self.payload()
+        self.assertTrue(payload['offers'])
+        self.assertEqual(payload['validUntil'],'2026-11-01T06:11:28+00:00')
+        # 01:05 EST follows 01:56 EDT despite its smaller wall-clock value.
+        self.now=aware('2026-11-01T01:05:00-05:00')
+        self.assertTrue(self.payload()['offers'])
+        self.assertTrue(finalize(payload,self.now)['offers'])
+        # 01:50 EST is later than expiry despite the earlier 01:56 EDT capture.
+        self.now=aware('2026-11-01T01:50:00-05:00')
+        self.assertFalse(self.payload()['offers'])
+        self.assertFalse(finalize(payload,self.now)['offers'])
+
+    def test_spring_forward_lease_uses_elapsed_minutes(self):
+        self.windows[0].update(start='2027-03-15T09:00:00-04:00',
+                               end='2027-03-15T15:00:00-04:00')
+        self.coverage[0].update(start=self.windows[0]['start'],end=self.windows[0]['end'],
+            observed_at='2027-03-14T06:55:00Z',valid_until='2027-03-14T07:10:00Z',
+            freshness_minutes=15)
+        self.now=aware('2027-03-14T03:05:00-04:00')
+        self.assertTrue(self.payload()['offers'])
+        self.now=aware('2027-03-14T03:10:00-04:00')
+        self.assertFalse(self.payload()['offers'])
+
 
 if __name__=='__main__':unittest.main()
