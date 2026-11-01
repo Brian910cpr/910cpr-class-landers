@@ -1,9 +1,28 @@
 import unittest
 from datetime import datetime, timezone
-from scripts.audit_family_publication_coverage import summarize
+from scripts.audit_family_publication_coverage import summarize, continuity_incident
 
 
 class CoverageCheckpointTests(unittest.TestCase):
+    def test_remaining_seated_classes_do_not_downgrade_missing_appointments(self):
+        feeds={family:summarize({'dates':[{'date':'2026-11-03','startTimes':[
+            {'startTime':'09:30','courses':[{'courseId':'existing','offerType':'seated_class'}]}]}]},'2026-11-03')
+            for family in ('bls','heartsaver')}
+        incident=continuity_incident(feeds)
+        self.assertEqual(incident['priority'],'P0')
+        self.assertEqual({f['family'] for f in incident['failures']},{'bls','heartsaver'})
+        self.assertEqual(incident['recovery_owner'],'Codex')
+
+    def test_expired_dynamic_inventory_is_p0_but_other_empty_families_are_not(self):
+        now=datetime(2026,11,1,6,tzinfo=timezone.utc)
+        payload={'validUntil':'2026-11-01T05:59:00Z','dates':[{'date':'2026-11-03',
+            'startTimes':[{'startTime':'09:30','courses':[{'courseId':'skills','offerType':'dynamic_appointment'}]}]}]}
+        incident=continuity_incident({'bls':summarize(payload,'2026-11-03',now)})
+        self.assertEqual(incident['failures'][0]['reason'],'expired_dynamic_appointments')
+        payload['validUntil']='2026-11-01T06:15:00Z'
+        self.assertIsNone(continuity_incident({'bls':summarize(payload,'2026-11-03',now),
+            'arc':summarize({},'2026-11-03',now)}))
+
     def test_expired_feed_is_detected_while_seated_counts_remain_separate(self):
         now=datetime(2026,10,12,3,tzinfo=timezone.utc)
         payload={'validUntil':'2026-10-12T02:59:59Z','dates':[{'date':'2026-10-14',
