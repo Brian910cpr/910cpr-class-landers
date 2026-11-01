@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-01T20:57:03.015780+00:00",
+  "generated_at": "2026-11-01T21:06:10.552982+00:00",
   "read_only_snapshot_export": true,
   "calendar_sources_path": "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/config/calendar_sources.json",
   "people_catalog_path": "/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/config/people_catalog.json",
@@ -14,8 +14,8 @@
     "brian_do_not_schedule": 211
   },
   "date_range": {
-    "start": "2026-11-01T20:57:02.058883+00:00",
-    "end": "2027-01-30T20:57:02.058883+00:00",
+    "start": "2026-11-01T21:06:09.086339+00:00",
+    "end": "2027-01-30T21:06:09.086339+00:00",
     "days": 90
   },
   "sources": [
