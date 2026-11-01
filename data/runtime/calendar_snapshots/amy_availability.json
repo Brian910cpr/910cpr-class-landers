@@ -1,14 +1,14 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-11-01T09:46:34.020402+00:00",
+  "generated_at": "2026-11-01T09:55:23.307804+00:00",
   "read_only_snapshot": true,
   "calendar_source_id": "amy_availability",
   "calendar_id": "c_94724071aa31a0063fbc48be80fdc73d76e604cad5043ff088156eb97e50be97@group.calendar.google.com",
   "source_type": "google_calendar",
   "source_display_name": "910CPR - Amy Availability",
   "date_range": {
-    "start": "2026-11-01T09:46:33.816733+00:00",
-    "end": "2027-01-30T09:46:33.816733+00:00",
+    "start": "2026-11-01T09:55:23.143719+00:00",
+    "end": "2027-01-30T09:55:23.143719+00:00",
     "days": 90
   },
   "export_status": "ok",
