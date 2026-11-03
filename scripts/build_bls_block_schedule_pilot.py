@@ -2316,7 +2316,7 @@ def render_html(payload: dict[str, Any]) -> str:
 
     async function loadResolvedAvailability() {{
       availabilityState = 'checking';
-      setAvailabilityMessage('Checking current class timesΓÇª');
+      setAvailabilityMessage('Checking current class times...');
       renderAll();
       try {{
         const response = await fetch(availabilityUrl, {{ cache: 'no-store' }});
