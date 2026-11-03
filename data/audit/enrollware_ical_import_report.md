@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-11-03T07:21:32.619129-05:00`
+- Generated at: `2026-11-03T07:31:36.823465-05:00`
 - Source: `enrollware_ical`
-- iCal events read: `205`
-- Public sessions created: `205`
+- iCal events read: `204`
+- Public sessions created: `204`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `173`
+- Registration unavailable sessions marked not direct-bookable: `172`
 - Unmapped sessions: `6`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `13869457` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-08-05T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13818252` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-08-05T13:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13787687` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-05T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13843367` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-08-06T09:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `13909459` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-08-19T10:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13956873` | enrollware_registration_closed | BLS Provider (NHCSO) | 2026-08-19T13:00:00-04:00 | New Hanover County Sheriff’s Office |
 | `13945163` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-19T15:15:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `13962033` | enrollware_registration_closed | AHA Heartsaver® Pediatric First Aid / CPR / AED | 2026-08-19T17:00:00-04:00 | CT - Colchester Town Hall, 127 Norwich Ave |
 
 ## Unmapped Examples
 
