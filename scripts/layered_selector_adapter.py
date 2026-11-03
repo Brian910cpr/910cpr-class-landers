@@ -115,6 +115,9 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         instructor = busy.get("instructor") or "unassigned"
         if len(brian_names) == 1 and instructor.casefold().strip() in {"brian", "brian ennis"}:
             instructor = next(iter(brian_names))
+        # Owner-confirmed 2026-10-15: required turnaround belongs in these
+        # supplied consumption bounds before publication. Do not append another
+        # cleanup veto at the right edge; a touching class is allowed there.
         # Preserve real physical occupancy; source-provided travel buffers are
         # separate commitments and cannot move the paid block's actual edges.
         key = (instructor, location, start, end)

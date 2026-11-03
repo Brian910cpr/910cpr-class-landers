@@ -71,6 +71,7 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    layered = payload.get("schedulingModel") == "layered-publication.v2"
     compact_dates: list[dict[str, Any]] = []
     for day in payload.get("dates", []):
         compact_slots: list[dict[str, Any]] = []
@@ -132,10 +133,18 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
             "publicScheduleFuture": "docs/data/schedule_future.json",
             "liveAvailabilitySnapshot": payload.get("inputFiles", {}).get("liveAvailabilitySnapshot"),
             "courseConsumptionRules": payload.get("inputFiles", {}).get("courseConsumptionRules"),
+            **({"activeSchedulingPolicy": "data/config/layered_scheduling_policy.json"} if layered else {}),
         },
         "authority": {
             "name": "block_start_time_selector.build_block_schedule_page",
             "description": (
+                "Resolved by layered_publication_adapter and layered_scheduling_engine. "
+                "Existing commitments retain their supplied occupied intervals; course cleanup is "
+                "included in new candidate consumption, without appending it again to existing intervals. "
+                "Touching occupied boundaries are permitted; overlapping instructor or room occupancy is rejected. "
+                "Appointment links go to Enrollware; this feed does not prove its checkout-time validation. "
+                "Browsers consume this result and do not run an independent conflict engine."
+                if layered else
                 "Resolved selector availability generated server-side from the same Work Order 1B "
                 "occupancy, conflict, course-consumption, public-location, and public-offer rules. "
                 "Browsers consume this result and do not run an independent conflict engine."
