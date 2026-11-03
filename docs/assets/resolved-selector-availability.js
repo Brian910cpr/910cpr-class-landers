@@ -21,7 +21,6 @@
     const hour = Number(parts.hour === "24" ? "0" : parts.hour);
     return {
       dateKey: `${parts.year}-${parts.month}-${parts.day}`,
-      instant: now.getTime(),
       minutes: (hour * 60) + Number(parts.minute),
     };
   }
@@ -40,41 +39,8 @@
     return (hour * 60) + minute;
   }
 
-  function isSeatedCourse(course) {
-    return String(course?.offerType || "").trim().toLowerCase() === "seated_class";
-  }
-
-  function publicationExpired(validUntil, nowInstant = Date.now()) {
-    if (!validUntil) return true;
-    const expires = Date.parse(validUntil);
-    return !Number.isFinite(expires) || expires <= nowInstant;
-  }
-
-  function courseLeaseExpired(course, nowInstant = Date.now()) {
-    if (!course?.validUntil) return false;
-    const expires = Date.parse(course.validUntil);
-    return !Number.isFinite(expires) || expires <= nowInstant;
-  }
-
-  function datesForPublication(dates, validUntil, nowInstant = Date.now()) {
-    const stalePublication = publicationExpired(validUntil, nowInstant);
-    return (Array.isArray(dates) ? dates : []).map((day) => {
-      const startTimes = (day.startTimes || []).map((slot) => {
-        const courses = (slot.courses || []).filter((course) => (
-          isSeatedCourse(course)
-          || (!stalePublication && !courseLeaseExpired(course, nowInstant))
-        ));
-        return { ...slot, courses };
-      }).filter((slot) => slot.courses.length);
-      return { ...day, startTimes };
-    }).filter((day) => day.startTimes.length);
-  }
-
   function isPastStart(day, slot, now) {
     if (!day || !slot) return true;
-    if (slot.courses?.length && slot.courses.every(course => (
-      !isSeatedCourse(course) && courseLeaseExpired(course, now.instant ?? Date.now())
-    ))) return true;
     if (day.date < now.dateKey) return true;
     if (day.date > now.dateKey) return false;
     const minutes = startMinutes(slot.startTime);
@@ -112,54 +78,15 @@
     ].join("|");
   }
 
-  // Bound the complete request, including a stalled response body. A transient
-  // network failure must not strand the calendar in its loading state.
-  async function fetchPublication(url, { request = fetch, timeoutMs = 15000, attempts = 2 } = {}) {
-    let lastError;
-    for (let attempt = 0; attempt < attempts; attempt += 1) {
-      const controller = new AbortController();
-      let timer;
-      try {
-        return await Promise.race([
-          (async () => {
-            const response = await request(url, { cache: 'no-store', signal: controller.signal });
-            if (!response.ok) throw new Error(`availability fetch failed: ${response.status}`);
-            const payload = await response.json();
-            if (!payload || payload.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(payload.dates)) {
-              throw new Error('availability payload has an unexpected shape');
-            }
-            return payload;
-          })(),
-          new Promise((_, reject) => {
-            timer = setTimeout(() => {
-              controller.abort();
-              reject(new Error('availability request timed out'));
-            }, timeoutMs);
-          }),
-        ]);
-      } catch (error) {
-        lastError = error;
-      } finally {
-        clearTimeout(timer);
-      }
-    }
-    throw lastError;
-  }
-
   return {
     schemaVersion: "selector-resolved-availability.v1",
     businessNow,
     startMinutes,
-    isSeatedCourse,
-    publicationExpired,
-    courseLeaseExpired,
-    datesForPublication,
     isPastStart,
     selectableStartTimes,
     isSelectableDate,
     filterDatesByCourse,
     slotKey,
-    fetchPublication,
   };
 });
 
