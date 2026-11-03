@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-03T19:33:23.347813+00:00",
+  "generated_at": "2026-11-03T20:32:16.483256+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -23,13 +23,13 @@
       }
     ],
     "blocks_generated": 408,
-    "blocks_blocked": 17,
+    "blocks_blocked": 16,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 17
+      "inverse_gap_shorter_than_minimum_consumption": 16
     },
     "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 17
+      "inverse_gap_shorter_than_minimum_consumption": 16
     },
     "source_type_counts": {
       "google_calendar": 2,
@@ -44,30 +44,6 @@
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-11-03T15:00:00",
-      "end_datetime": "2026-11-03T17:30:00",
-      "date": "2026-11-03",
-      "end_date": "2026-11-03",
-      "start_time": "15:00",
-      "end_time": "17:30",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20261103T1500000500",
-      "summary": "CFA Pickup",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -4967,11 +4943,35 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-11-03T17:30:00",
+      "start_datetime": "2027-02-01T15:00:00",
+      "end_datetime": "2027-02-01T17:30:00",
+      "date": "2027-02-01",
+      "end_date": "2027-02-01",
+      "start_time": "15:00",
+      "end_time": "17:30",
+      "availability_status": "blocked",
+      "availability_location_mode": "instructor_time_only",
+      "source_location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "location_name": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "allowed_course_families": [],
+      "source_calendar_id": "brian_do_not_schedule",
+      "source_event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com:20270201T1500000500",
+      "summary": "CFA Pickup",
+      "source_type": "inverse_google_calendar",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "inverse_calendar_blocking_event"
+      ]
+    },
+    {
+      "instructor_name": "Brian Ennis",
+      "person_id": "instructor_24057895173",
+      "start_datetime": "2026-11-03T15:45:00",
       "end_datetime": "2026-11-04T00:00:00",
       "date": "2026-11-03",
       "end_date": "2026-11-04",
-      "start_time": "17:30",
+      "start_time": "15:45",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -11230,11 +11230,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-02-01T07:45:00",
-      "end_datetime": "2027-02-01T14:45:00",
+      "end_datetime": "2027-02-01T15:00:00",
       "date": "2027-02-01",
       "end_date": "2027-02-01",
       "start_time": "07:45",
-      "end_time": "14:45",
+      "end_time": "15:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -11263,10 +11263,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-11-03T19:33:22.206324+00:00",
-      "end": "2027-02-01T19:33:22.206324+00:00",
-      "observed_at": "2026-11-03T19:33:23.219606+00:00",
-      "valid_until": "2026-11-03T19:48:23.219606+00:00",
+      "start": "2026-11-03T20:32:15.382648+00:00",
+      "end": "2027-02-01T20:32:15.382648+00:00",
+      "observed_at": "2026-11-03T20:32:16.388435+00:00",
+      "valid_until": "2026-11-03T20:47:16.388435+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
@@ -11275,14 +11275,6 @@
     }
   ],
   "blocked_or_placeholder_sources": [
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-11-03T14:45:00",
-      "end_datetime": "2026-11-03T15:00:00"
-    },
     {
       "calendar_source_key": "brian_do_not_schedule",
       "source_type": "inverse_google_calendar",
