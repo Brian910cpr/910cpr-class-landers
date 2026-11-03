@@ -1457,7 +1457,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261029-calendar-recovery-1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261103-selector-rollback-1"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
@@ -2314,64 +2314,31 @@ def render_html(payload: dict[str, Any]) -> str:
       setTimeout(focusDeepLinkedElement, 0);
     }});
 
-    let availabilityLoading = false;
-    let availabilityRefreshTimer;
-    let publicationExpiryTimer;
-
-    function applyResolvedPublication() {{
-      const payload = resolvedAvailability;
-      const nowInstant = Date.now();
-      const stalePublication = ResolvedSelectorAvailability.publicationExpired(payload.validUntil, nowInstant);
-      scheduleDates = ResolvedSelectorAvailability.datesForPublication(payload.dates, payload.validUntil, nowInstant);
-      availabilityState = 'ready';
-      setAvailabilityMessage(stalePublication
-        ? 'Additional appointment times are refreshing. Scheduled classes remain available.'
-        : '');
-      renderAll();
-    }}
-
     async function loadResolvedAvailability() {{
-      if (availabilityLoading) return;
-      availabilityLoading = true;
-      clearTimeout(availabilityRefreshTimer);
-      // Keep the existing, lease-checked calendar usable during a background
-      // refresh. Only the first request needs a blocking loading placeholder.
-      if (resolvedAvailability) {{
-        applyResolvedPublication();
-      }} else {{
-        availabilityState = 'checking';
-        setAvailabilityMessage('Checking current class times…');
-        renderAll();
-      }}
-      let retryDelay = 5 * 60 * 1000;
+      availabilityState = 'checking';
+      setAvailabilityMessage('Checking current class times...');
+      renderAll();
       try {{
-        const payload = await ResolvedSelectorAvailability.fetchPublication(availabilityUrl);
-        resolvedAvailability = payload;
-        applyResolvedPublication();
-        clearTimeout(publicationExpiryTimer);
-        const remaining = Date.parse(payload.validUntil) - Date.now();
-        if (remaining > 0) {{
-          publicationExpiryTimer = setTimeout(() => {{
-            applyResolvedPublication();
-            loadResolvedAvailability();
-          }}, remaining + 1);
-        }} else if (payload.dates.some(day => day.startTimes.some(slot => slot.courses.some(course => course.offerType !== 'seated_class')))) {{
-          retryDelay = 30 * 1000;
+        const response = await fetch(availabilityUrl, {{ cache: 'no-store' }});
+        if (!response.ok) {{
+          throw new Error(`availability fetch failed: ${{response.status}}`);
         }}
+        const payload = await response.json();
+        if (!payload || payload.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(payload.dates)) {{
+          throw new Error('availability payload has an unexpected shape');
+        }}
+        resolvedAvailability = payload;
+        scheduleDates = payload.dates;
+        availabilityState = 'ready';
+        setAvailabilityMessage('');
+        renderAll();
       }} catch (error) {{
         console.error(error);
-        retryDelay = 30 * 1000;
-        if (resolvedAvailability) {{
-          applyResolvedPublication();
-        }} else {{
-          scheduleDates = [];
-          availabilityState = 'failed';
-        }}
-        setAvailabilityMessage('Current class times could not refresh. Retrying automatically; only verified times are shown.');
+        resolvedAvailability = null;
+        scheduleDates = [];
+        availabilityState = 'failed';
+        setAvailabilityMessage('Current class times are temporarily unavailable. Please retry in a moment or contact 910CPR.');
         renderAll();
-      }} finally {{
-        availabilityLoading = false;
-        availabilityRefreshTimer = setTimeout(loadResolvedAvailability, retryDelay);
       }}
     }}
 
