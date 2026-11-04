@@ -1,0 +1,9 @@
+# Event landing pages for Cloudflare Pages
+/pool /pool.html 200
+/pool/ /pool.html 200
+/poolbls /poolbls.html 200
+/poolbls/ /poolbls.html 200
+/earl /earl.html 200
+/earl/ /earl.html 200
+/jackson /jackson.html 200
+/jackson/ /jackson.html 200
