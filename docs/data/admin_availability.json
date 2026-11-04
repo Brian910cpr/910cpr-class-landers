@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-11-04T14:15:07.038745+00:00",
+  "generated_at": "2026-11-04T14:22:32.337678+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-04T14:15:06.343007+00:00",
+      "generated_at": "2026-11-04T14:22:31.755627+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-04T14:15:07.038745+00:00",
-      "event_count": 141
+      "generated_at": "2026-11-04T14:22:32.337678+00:00",
+      "event_count": 142
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-04T14:15:06.580852+00:00",
+      "generated_at": "2026-11-04T14:22:31.963487+00:00",
       "event_count": 0
     }
   ],
@@ -665,6 +665,17 @@
       "start": "2026-12-04T15:00:00-05:00",
       "end": "2026-12-04T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "F&F 1-3pm CarBch PT",
+      "start": "2026-12-06T12:30:00+00:00",
+      "end": "2026-12-06T23:00:00+00:00",
+      "location": "",
       "status": "CONFIRMED"
     },
     {
