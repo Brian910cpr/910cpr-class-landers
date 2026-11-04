@@ -7,15 +7,15 @@ This is a read-only scaffold. It did not call Google Calendar, call Enrollware, 
 - Configured calendar sources found: 3
 - Local snapshot found: /home/runner/work/910cpr-class-landers/910cpr-class-landers/data/runtime/calendar_snapshots
 - Instructors mapped: 2
-- Blocks generated: 347
-- Blocks blocked/placeheld: 16
-- Inverse-generated availability blocks: 205
-- Inverse blocking event blocks: 142
+- Blocks generated: 350
+- Blocks blocked/placeheld: 6
+- Inverse-generated availability blocks: 215
+- Inverse blocking event blocks: 135
 - DNS markers found: 0
 
 ## Blocked Reason Counts
 
-- `inverse_gap_shorter_than_minimum_consumption`: 16
+- `inverse_gap_shorter_than_minimum_consumption`: 6
 
 ## Missing Calendar Source Config / Snapshots
 
@@ -25,16 +25,6 @@ This is a read-only scaffold. It did not call Google Calendar, call Enrollware, 
 
 | Source | Type | Reason | Message |
 | --- | --- | --- | --- |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
-| brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
 | brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
 | brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
 | brian_do_not_schedule | inverse_google_calendar | `inverse_gap_shorter_than_minimum_consumption` | Inverse-generated open gap is shorter than the configured minimum course consumption window. |
