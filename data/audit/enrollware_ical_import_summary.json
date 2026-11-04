@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-11-04T11:30:22.785909-05:00",
+  "generated_at": "2026-11-04T11:46:08.736226-05:00",
   "source": "enrollware_ical",
-  "ical_events_read": 200,
-  "public_sessions_created": 200,
+  "ical_events_read": 201,
+  "public_sessions_created": 201,
   "skipped_events": 0,
   "registration_unavailable_sessions_marked_not_direct_bookable": 168,
   "unmapped_sessions": 6,
   "prior_sessions_read": 0,
-  "sessions_added_compared_with_prior_source": 200,
+  "sessions_added_compared_with_prior_source": 201,
   "classes_removed_compared_with_prior_source": 0,
   "stale_zapier_sheet_sessions_excluded": 0,
   "stale_manual_class_report_sessions_excluded": 0,
@@ -911,6 +911,15 @@
       "start_at": "2026-11-05T18:00:00-05:00",
       "source_end": "2026-11-05T18:00:00-05:00",
       "end_at": "2026-11-05T20:00:00-05:00",
+      "occupied_minutes": 120,
+      "rule_source": "data/inventory/course_consumption_rules.json"
+    },
+    {
+      "session_id": "14843237",
+      "course_id": "359474",
+      "start_at": "2026-11-11T10:30:00-05:00",
+      "source_end": "2026-11-11T10:30:00-05:00",
+      "end_at": "2026-11-11T12:30:00-05:00",
       "occupied_minutes": 120,
       "rule_source": "data/inventory/course_consumption_rules.json"
     },
