@@ -66,6 +66,16 @@ class CBPTLandingTests(unittest.TestCase):
         self.assertIn('/cbpt /cbpt.html 200', redirects)
         self.assertIn('/carolinabeachpt /cbpt 301', redirects)
 
+    def test_inviting_graphic_share_actions(self):
+        self.assertEqual(self.html.count('<h2>SHARE!</h2>'), 2)
+        self.assertEqual(self.html.count('class="share-actions"'), 2)
+        for label in ('Share on Facebook', 'Text a friend', 'Send an invite', 'Copy class link'):
+            self.assertEqual(self.html.count('>' + label + '<'), 2)
+        for group in re.findall(r'<div class="share-actions">(.*?)</div>', self.html, re.S):
+            self.assertEqual(group.count('<svg '), 5)
+            self.assertIn('class="share-status"', group)
+        self.assertIn('@media(prefers-reduced-motion:reduce)', self.html)
+
 
 if __name__ == '__main__':
     unittest.main()
