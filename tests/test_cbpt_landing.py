@@ -82,7 +82,7 @@ class CBPTLandingTests(unittest.TestCase):
         for channel in ('native', 'facebook', 'text', 'email', 'copy'):
             self.assertEqual(sum(a.get('data-share') == channel for _, a in self.tags), 2)
         config = [a for tag, a in self.tags if tag == 'meta' and a.get('name') == 'cbpt-facebook-event-url']
-        self.assertEqual(config, [{'name': 'cbpt-facebook-event-url', 'content': ''}])
+        self.assertEqual(config, [{'name': 'cbpt-facebook-event-url', 'content': 'https://www.facebook.com/events/1794030655134860/'}])
         self.assertIn('/assets/cbpt-share.js?v=20261105-1', self.html)
         self.assertEqual(self.html.count('/assets/analytics-attribution.js?'), 1)
         self.assertTrue((ROOT / 'docs/assets/cbpt-share.js').is_file())

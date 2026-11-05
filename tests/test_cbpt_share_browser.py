@@ -5,6 +5,7 @@ Requires Playwright and its Chromium browser.
 """
 import json
 from pathlib import Path
+import re
 import unittest
 
 from playwright.sync_api import sync_playwright
@@ -24,14 +25,15 @@ class CBPTShareBrowserTests(unittest.TestCase):
         cls.playwright.stop()
 
     def open_page(self, *, native="absent", clipboard="success", prompt="value",
-                  cookie="", path="/cbpt", event_url="", blocked_storage=False):
+                  cookie="", path="/cbpt", event_url=None, blocked_storage=False):
         context = self.browser.new_context()
         self.addCleanup(context.close)
         if cookie:
             context.add_cookies([{"name": cookie, "value": "1", "url": "https://www.910cpr.com"}])
         html = (ROOT / "docs/cbpt.html").read_text(encoding="utf-8")
-        html = html.replace('name="cbpt-facebook-event-url" content=""',
-                            'name="cbpt-facebook-event-url" content="' + event_url + '"')
+        if event_url is not None:
+            html = re.sub(r'name="cbpt-facebook-event-url" content="[^"]*"',
+                          'name="cbpt-facebook-event-url" content="' + event_url + '"', html)
 
         def serve(route):
             from urllib.parse import urlparse
@@ -168,6 +170,18 @@ class CBPTShareBrowserTests(unittest.TestCase):
         self.assertEqual(len(self.events(page)), 1)  # Diagnostics are not a share activation.
 
     def test_verified_event_configuration_and_invalid_value_fallback(self):
+        page = self.open_page()
+        for placement in ("top", "bottom"):
+            control = self.control(page, placement, "facebook")
+            self.assertEqual(control.get_attribute("href"), "https://www.facebook.com/events/1794030655134860/")
+            with page.expect_popup() as popup:
+                control.focus()
+                control.press("Enter")
+            popup.value.wait_for_url("https://www.facebook.com/events/1794030655134860/")
+            self.assertEqual(popup.value.url, "https://www.facebook.com/events/1794030655134860/")
+            popup.value.close()
+            self.assertEqual(self.events(page)[-1]["share_target"], "facebook_event")
+        self.assertEqual(len(self.events(page)), 2)
         for configured, expected in (("", "class_page"), ("https://www.facebook.com/events/123456789/", "facebook_event"),
                                      ("https://example.test/events/123/", "class_page"),
                                      ("https://www.facebook.com/events/123/?name=private", "class_page")):
