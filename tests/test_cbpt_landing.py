@@ -50,9 +50,10 @@ class CBPTLandingTests(unittest.TestCase):
 
     def test_partner_links_and_share_targets(self):
         links = [a for tag, a in self.tags if tag == 'a']
-        for label in ('Carolina Beach Physical Therapy Facebook', 'The Mobile Mermaid Facebook', 'NC Mobile IV Medics Facebook'):
+        for label in ('Carolina Beach Physical Therapy Facebook', 'The Mobile Mermaid Facebook', 'NC Mobile IV Medics Facebook', '910CPR LLC Facebook'):
             self.assertTrue(any(a.get('aria-label') == label and a['href'].startswith('https://www.facebook.com/') for a in links))
-        self.assertIn('Facebook link awaiting verification', self.html)
+        self.assertNotIn('Facebook link awaiting verification', self.html)
+        self.assertTrue(any(a.get('aria-label') == '910CPR LLC Facebook' and a['href'] == 'https://www.facebook.com/910cpr' for a in links))
         for a in links:
             if a['href'].startswith(('sms:', 'mailto:?subject=', 'https://www.facebook.com/sharer')):
                 self.assertIn('%2Fcbpt', a['href'])
