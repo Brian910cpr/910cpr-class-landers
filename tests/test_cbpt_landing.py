@@ -76,6 +76,17 @@ class CBPTLandingTests(unittest.TestCase):
             self.assertIn('class="share-status"', group)
         self.assertIn('@media(prefers-reduced-motion:reduce)', self.html)
 
+    def test_share_tracking_hooks_and_versioned_asset(self):
+        sections = [a for tag, a in self.tags if tag == 'section' and 'data-share-placement' in a]
+        self.assertEqual([a['data-share-placement'] for a in sections], ['top', 'bottom'])
+        for channel in ('native', 'facebook', 'text', 'email', 'copy'):
+            self.assertEqual(sum(a.get('data-share') == channel for _, a in self.tags), 2)
+        config = [a for tag, a in self.tags if tag == 'meta' and a.get('name') == 'cbpt-facebook-event-url']
+        self.assertEqual(config, [{'name': 'cbpt-facebook-event-url', 'content': 'https://www.facebook.com/events/1794030655134860/'}])
+        self.assertIn('/assets/cbpt-share.js?v=20261105-1', self.html)
+        self.assertEqual(self.html.count('/assets/analytics-attribution.js?'), 1)
+        self.assertTrue((ROOT / 'docs/assets/cbpt-share.js').is_file())
+
 
 if __name__ == '__main__':
     unittest.main()
