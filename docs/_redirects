@@ -7,5 +7,8 @@
 /earl/ /earl.html 200
 /jackson /jackson.html 200
 /jackson/ /jackson.html 200
-/carolinabeachpt /carolinabeachpt.html 200
-/carolinabeachpt/ /carolinabeachpt.html 200
+/cbpt /cbpt.html 200
+/cbpt/ /cbpt.html 200
+/carolinabeachpt /cbpt 301
+/carolinabeachpt/ /cbpt 301
+/carolinabeachpt.html /cbpt 301
