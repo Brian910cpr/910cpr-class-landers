@@ -20,15 +20,16 @@ class PoolShareBrowserTests(unittest.TestCase):
         cls.browser.close()
         cls.runtime.stop()
 
-    def open(self, identity, native="absent", clipboard="success", prompt="value", cookie="", event_url="", path=None):
+    def open(self, identity, native="absent", clipboard="success", prompt="value", cookie="", event_url=None, path=None):
         path = path or '/' + identity
         context = self.browser.new_context(viewport={"width": 390, "height": 844})
         self.addCleanup(context.close)
         if cookie:
             context.add_cookies([{"name": cookie, "value": "1", "url": "https://www.910cpr.com"}])
         html = (ROOT / f'docs/{identity}.html').read_text(encoding='utf-8')
-        html = html.replace('name="community-facebook-event-url" content=""',
-                            'name="community-facebook-event-url" content="' + event_url + '"')
+        if event_url is not None:
+            html = re.sub(r'name="community-facebook-event-url" content="[^"]*"',
+                          'name="community-facebook-event-url" content="' + event_url + '"', html)
         self.requests = []
 
         def serve(route):
@@ -75,14 +76,21 @@ class PoolShareBrowserTests(unittest.TestCase):
                 for channel in ('native', 'facebook', 'sms', 'email', 'copy'):
                     control = self.control(page, placement, channel)
                     if channel == 'facebook':
+                        expected = {'pool':'https://www.facebook.com/events/3023534924674805/',
+                                    'poolbls':'https://www.facebook.com/events/1039252512546187/'}[identity]
+                        self.assertEqual(control.get_attribute('href'), expected)
                         with page.expect_popup() as popup:
                             control.locator('svg').click()
+                        popup.value.wait_for_url(expected)
+                        self.assertEqual(popup.value.url, expected)
                         popup.value.close()
                     else:
                         control.locator('svg').click()
                     event = self.events(page, identity)[-1]
                     self.assertEqual((event['page_id'], event['share_placement'], event['share_channel']),
                                      (identity, placement, 'text' if channel == 'sms' else channel))
+                    if channel == 'facebook':
+                        self.assertEqual(event['share_target'], 'facebook_event')
                     if channel in ('facebook', 'sms', 'email'):
                         self.assertFalse(page.evaluate('window.navigationPrevented'))
             button = self.control(page, 'bottom', 'copy')
