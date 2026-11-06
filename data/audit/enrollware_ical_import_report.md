@@ -1,12 +1,12 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-11-05T19:17:38.599859-05:00`
+- Generated at: `2026-11-05T19:26:48.277678-05:00`
 - Source: `enrollware_ical`
 - iCal events read: `201`
 - Public sessions created: `201`
 - Skipped events: `0`
 - Registration unavailable sessions marked not direct-bookable: `169`
-- Unmapped sessions: `7`
+- Unmapped sessions: `6`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
 - Stale manual/Class Report sessions excluded: `0`
@@ -82,4 +82,3 @@ They remain separate registration-signal/audit inputs only.
 - `11341058`: AHA - BLS Instructor Renewal (2026-12-01T00:00:00-05:00)
 - `13415738`: HSI Adult/Child/Infant CPR AED | Blended Learning (2026-09-01T05:30:00-04:00)
 - `14344219`: AHA Heartsaver First Aid CPR AED In-person training for workplace, OSHA, and general public certification (2026-09-23T17:00:00-04:00)
-- `14850638`: XXX AHA - BLS Provider - Renewal (2026-11-04T03:00:00-05:00)
