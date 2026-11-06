@@ -1,0 +1,17 @@
+.sharewrap{background:#fff3c7;padding:38px 0;border-block:1px solid #e7d792}
+.share{display:grid;grid-template-columns:minmax(190px,.85fr) minmax(0,2fr);gap:24px;align-items:center}
+.share-intro h2{font-size:clamp(2.7rem,5vw,4rem);line-height:1;letter-spacing:-.05em;margin:0 0 10px;color:#08263e}
+.share-intro p{margin:0;font-size:1.05rem;line-height:1.5;color:#345367;max-width:28ch}
+.share-actions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.share a,.share button{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;min-height:116px;padding:15px 8px;border:0;border-radius:14px;background:#fff;color:#123c53;font:800 .85rem/1.25 system-ui,sans-serif;text-align:center;text-decoration:none;box-shadow:0 4px 0 #08263e16;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.share a:hover,.share button:hover{transform:translateY(-3px);box-shadow:0 7px 0 #08263e16}
+.share .share-facebook{background:#0866d9;color:white}.share .share-text{background:#00756f;color:white}
+.share .share-native{background:#08263e;color:white}.share .icon{width:34px;height:34px;stroke-width:1.8}
+.share-status{grid-column:1/-1;font-size:.85rem;min-height:1.25em;text-align:center}
+@media(max-width:790px){.share{grid-template-columns:1fr;gap:20px}.share-intro p{max-width:none}}
+@media(max-width:520px){.sharewrap{padding:30px 0}.share-actions{grid-template-columns:repeat(2,minmax(0,1fr))}.share .share-native{grid-column:1/-1;flex-direction:row;min-height:64px}.share a,.share button{min-height:106px}}
+@media(prefers-reduced-motion:reduce){.share a,.share button{transition:none}.share a:hover,.share button:hover{transform:none}}
+
+.share .icon{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.share-status{display:block;width:100%}
+a:focus-visible,button:focus-visible{outline:3px solid #d07c00;outline-offset:4px}
