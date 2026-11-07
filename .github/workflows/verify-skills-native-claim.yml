@@ -1,0 +1,40 @@
+name: Verify native skills reservation
+on:
+  workflow_dispatch:
+  pull_request:
+    paths: ['supabase/functions/skills-session-reservation/**','supabase/migrations/*skills_session_native_claim.sql','tests/skills-native*','tests/helpers/skills-native*','docs/assets/skills-reservation-client.js']
+permissions:
+  contents: read
+jobs:
+  skills-claim:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: skills_claim_test
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install openpyxl python-dateutil tzdata
+      - run: npm install --no-save --ignore-scripts @electric-sql/pglite@0.5.15
+      - run: node --experimental-strip-types --test tests/skills-native-handler.test.mjs tests/skills-native-adapter.test.mjs tests/skills-native-sql.test.mjs
+      - name: Verify real concurrent claims in isolated PostgreSQL
+        env:
+          SKILLS_TEST_DATABASE: skills_claim_test
+        run: |
+          psql -h 127.0.0.1 -U postgres -d skills_claim_test -v ON_ERROR_STOP=1 \
+            -f tests/helpers/reschedule-production-schema.sql \
+            -f supabase/migrations/20261019175346_registration_self_service_rescheduling.sql \
+            -f supabase/migrations/20261019175522_reschedule_confirmation_provider.sql \
+            -f supabase/migrations/20261019225039_registration_reschedule_dynamic_offers.sql \
+            -f supabase/migrations/20261106180848_skills_session_native_claim.sql
+          node tests/skills-native-concurrency.mjs

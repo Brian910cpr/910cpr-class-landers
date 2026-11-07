@@ -4221,6 +4221,47 @@
         "SKILLS_SESSION_ONLY"
       ],
       "online_component_required": true
+    },
+    {
+      "course_id": "509474",
+      "course_key": "skills_session_only",
+      "official_title": "Skills Session - $55 (AHA, ARC, HSI Blended Courses' In-person Session)",
+      "short_title": "Skills Session Only",
+      "provider": "910CPR",
+      "family": "Skills",
+      "subtype": "Skills Session Only",
+      "delivery_type": "BL",
+      "renewal_or_initial": "UNKNOWN",
+      "blended_classroom_skills": "skills",
+      "duration_minutes": 45,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "default_capacity": 2,
+      "minimum_capacity": 1,
+      "maximum_capacity": 2,
+      "appointment_allowed": true,
+      "deterministic_url_supported": false,
+      "appointment_container_required": false,
+      "known_appointmentDayId_range": [],
+      "manual_only": "UNKNOWN",
+      "online_only": "UNKNOWN",
+      "classroom_only": false,
+      "required_instructor_certifications": [],
+      "required_resources": [
+        "UNKNOWN"
+      ],
+      "relationships": {
+        "compatible_with": "UNKNOWN",
+        "occupancy_pool": "UNKNOWN",
+        "escalation_tier": "UNKNOWN"
+      },
+      "source_trace": {
+        "identity_source": "Owner supplied Enrollware 509474; admin course inspected 2026-11-06",
+        "scheduling_rule_source": "data/config/layered_scheduling_policy.json",
+        "qualification_source": "Page scheduling_template_course_id; no global qualification inferred"
+      },
+      "kind": "skills",
+      "price": 55
     }
   ],
   "updated_at": "2026-10-07",
