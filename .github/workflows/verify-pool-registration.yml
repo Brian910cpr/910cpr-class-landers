@@ -1,0 +1,30 @@
+name: Verify pool registration
+on:
+  workflow_dispatch:
+  pull_request:
+    paths: ['.github/workflows/verify-pool-registration.yml', 'docs/pool.html', 'docs/poolbls.html', 'docs/assets/pool-registration.*', 'docs/assets/community-share.*', 'supabase/functions/public-event-registration/**', 'supabase/functions/stripe-registration-webhook/**', 'supabase/migrations/*pool*.sql', 'tests/pool*', 'tests/test_pool*']
+  push:
+    branches: [main]
+    paths: ['.github/workflows/verify-pool-registration.yml', 'docs/pool.html', 'docs/poolbls.html', 'docs/assets/pool-registration.*', 'docs/assets/community-share.*', 'supabase/functions/public-event-registration/**', 'supabase/functions/stripe-registration-webhook/**', 'supabase/migrations/*pool*.sql', 'tests/pool*', 'tests/test_pool*']
+permissions:
+  contents: read
+jobs:
+  registration-contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm install --no-save --ignore-scripts @electric-sql/pglite@0.5.15
+      - run: python -m pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Verify checkout, atomic database and email lifecycle contracts
+        env:
+          POOL_PGLITE_MODULE: ${{ github.workspace }}/node_modules/@electric-sql/pglite/dist/index.js
+        run: node --experimental-strip-types --test tests/pool_backend.test.mjs tests/pool-event-emails.test.mjs
+      - name: Verify mobile and desktop forms without external requests
+        run: python -m unittest discover -s tests -p 'test_pool*_browser.py' -v
