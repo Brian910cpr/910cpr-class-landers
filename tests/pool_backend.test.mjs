@@ -84,6 +84,11 @@ test('no-session expiry requires Stripe evidence and only within idempotency ret
   assert.ok(m.calls.some(c=>c[0]==='expire_pool_registration'&&c[1].p_checkout_session_id===null));
   const stale=mock({clockOffset:25*60*60000});const sr=await stale.handler(post({action:'status',event:BLS,requestId}));assert.equal(sr.status,409);assert.ok(!stale.calls.some(c=>c[0]==='fetch'||c[0]==='expire_pool_registration'));
 });
+test('local hold expiry never releases an open provider checkout',async()=>{
+  const m=mock({checkoutId:'cs_test',clockOffset:36*60000});const r=await m.handler(post({action:'status',event:BLS,requestId}));
+  const result=await r.json();assert.equal(result.paymentPending,true);assert.equal(result.processing,true);assert.notEqual(result.expired,true);
+  assert.ok(!m.calls.some(c=>c[0]==='expire_pool_registration'));
+});
 
 test('isolated PostgreSQL executes atomic group, retry, price, capacity and rollback invariants',async(t)=>{
   if(!process.env.POOL_PGLITE_MODULE){t.skip('Set POOL_PGLITE_MODULE to an installed @electric-sql/pglite dist/index.js');return;}

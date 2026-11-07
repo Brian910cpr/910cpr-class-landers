@@ -125,7 +125,7 @@ export function createHandler(deps: Dependencies) {
           return createHandler(deps)(new Request(req.url,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({event:slug,action:"status",requestId})}));
         }
       }
-      if (new Date(survey.holdExpiresAt).getTime() <= deps.now()) return json({...common,confirmed:false,paymentPending:false,expired:true,event:await capacity()});
+      if (new Date(survey.holdExpiresAt).getTime() <= deps.now()) return json({...common,confirmed:false,paymentPending:true,processing:true,holdExpiresAt:survey.holdExpiresAt,event:await confirmedCapacity()});
       if (!checkout.url?.startsWith("https://checkout.stripe.com/")) throw new ServiceError("Secure checkout is temporarily unavailable.");
       return json({...common,confirmed:false,paymentPending:true,orderId:order.id,checkoutUrl:checkout.url,holdExpiresAt:survey.holdExpiresAt,event:await capacity()});
     } catch (error) {
