@@ -26,6 +26,7 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install openpyxl python-dateutil tzdata
       - run: python -m unittest tests.test_skills_session_509474.SkillsOnlyTests tests.test_layered_publication_adapter.LayeredPublicationTests tests.test_layered_selector_adapter.LayeredAdapterTests
+      - run: python -m unittest tests.test_validate_public_refresh_output
       - run: npm install --no-save --ignore-scripts @electric-sql/pglite@0.5.15
       - run: node --experimental-strip-types --test tests/skills-native-handler.test.mjs tests/skills-native-adapter.test.mjs tests/skills-native-sql.test.mjs
       - name: Verify real concurrent claims in isolated PostgreSQL
@@ -64,10 +65,13 @@ jobs:
           from pathlib import Path
           from datetime import datetime, timezone
           from scripts.build_bls_block_schedule_pilot import run_page
+          from scripts.validate_public_refresh_output import validate_selector, session_rows
           p=Path('data/config/native_skills_activation.json')
           p.write_text(json.dumps({'schemaVersion':'native-skills-activation.v1','enabled':True,'canonicalVerifiedAt':datetime.now(timezone.utc).isoformat(),'evidence':'isolated-review-preview'}))
           for key in ['heartsaver','arc','hsi']:
               result=run_page(key)
+              session_ids={str(s.get('session_id') or s.get('sessionId') or s.get('id')) for s in session_rows(json.loads(Path('docs/data/schedule_future.json').read_text()))}
+              validate_selector(key,session_ids)
               print(key, {k:v for k,v in result.items() if k!='output_paths'})
               data=json.loads(Path(f'docs/data/block-selector-availability/{key}.json').read_text())
               offers=[o for d in data['dates'] for t in d['startTimes'] for o in t['courses'] if o['courseId']=='509474']
