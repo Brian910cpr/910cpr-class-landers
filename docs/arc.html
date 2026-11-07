@@ -441,6 +441,12 @@
     .course-family-choice strong { color: var(--ink); }
     .course-family-choice span { color: var(--muted); font-size: .82rem; line-height: 1.3; }
     .course-family-choice .course-price { color: var(--accent-dark); font-size: 1rem; font-weight: 900; }
+    .course-family-choices .skills-session-choice { margin-top: 8px; border-top: 2px solid var(--accent); }
+    .skills-option-list { display: grid; margin: 4px 52px 0; gap: 10px; }
+    .skills-option-list button { width: 100%; display: grid; gap: 5px; padding: 16px; background: var(--band); }
+    .skills-option-list button span { color: var(--muted); }
+    .skills-option-list button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    @media (max-width: 700px) { .skills-option-list { margin-inline: 0; } }
     .month-stack { display: grid; gap: 14px; }
     .month-nav {
       display: none;
@@ -768,7 +774,7 @@
       }
     }
     </style>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Course", "name": "American Red Cross Basic Life Support", "description": "Red Cross BLS classroom option.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "99.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/arc.html?course=248288"}}, {"@type": "Course", "name": "American Red Cross Adult CPR/AED", "description": "Red Cross Adult CPR/AED skills option.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "90.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/arc.html?course=372258"}}, {"@type": "Course", "name": "American Red Cross First Aid/CPR/AED", "description": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "110.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/arc.html?course=369209"}}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Course", "name": "American Red Cross Basic Life Support", "description": "Red Cross BLS classroom option.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "99.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/arc.html?course=248288"}}, {"@type": "Course", "name": "American Red Cross Adult CPR/AED", "description": "Red Cross Adult CPR/AED skills option.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "90.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/arc.html?course=372258"}}, {"@type": "Course", "name": "American Red Cross First Aid/CPR/AED", "description": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "110.00", "priceCurrency": "USD", "availability": "https://schema.org/InStock", "url": "https://www.910cpr.com/arc.html?course=369209"}}, {"@type": "Course", "name": "Skills Session Only", "description": "Already completed your online portion? Choose your in-person skills date. Online coursework is not included.", "provider": {"@type": "Organization", "name": "910CPR", "url": "https://www.910cpr.com/"}, "offers": {"@type": "Offer", "price": "55.00", "priceCurrency": "USD", "url": "https://www.910cpr.com/arc.html?course=509474"}}]}</script>
   <!-- Google Tag Manager -->
 <script>
 (function(w,d,s,l,i,m){
@@ -830,11 +836,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
         <div class="course-rail" data-course-rail>
           <button type="button" class="rail-arrow previous" data-course-rail-prev aria-label="Previous course options">‹</button>
-          <span id="bls" class="deep-link-anchor" aria-hidden="true"></span><span id="cpr-aed" class="deep-link-anchor" aria-hidden="true"></span><span id="first-aid-cpr-aed" class="deep-link-anchor" aria-hidden="true"></span>
+          <span id="509474" class="deep-link-anchor" aria-hidden="true"></span><span id="bls" class="deep-link-anchor" aria-hidden="true"></span><span id="cpr-aed" class="deep-link-anchor" aria-hidden="true"></span><span id="first-aid-cpr-aed" class="deep-link-anchor" aria-hidden="true"></span><span id="skills-only" class="deep-link-anchor" aria-hidden="true"></span><span id="skills-session-only" class="deep-link-anchor" aria-hidden="true"></span>
           <div id="course-option-list" class="choice-list" tabindex="0" aria-label="Course options"></div>
           <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
         </div>
       </div>
+      <div id="skills-course-option-list" class="skills-option-list" aria-label="Skills session only"></div>
       <div id="calendar-time-filters"></div>
       <div class="selector-grid">
         <div class="panel">
@@ -889,13 +896,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </main>
   <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261103-selector-rollback-1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261107-skills-compat-1"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/arc.json?v=2026-11-07T11%3A31%3A38.698196%2B00%3A00";
-    const courseOptions = [{"courseId": "248288", "courseName": "American Red Cross Basic Life Support", "family": "ARC", "variant": "bls", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["bls"], "iconLabel": "ARC", "imageUrl": "/images/arc-in-person-training.png", "imageFit": "cover", "imageAlt": "American Red Cross Basic Life Support course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross BLS classroom option.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 99, "details": {"course_key": "arc_bls", "title": "American Red Cross Basic Life Support", "certifying_body": "ARC", "family": "BLS", "short_description": "Red Cross BLS option for healthcare students and providers whose requirement specifically accepts ARC.", "who_this_is_for": "Students whose employer, school, or program asks for American Red Cross BLS.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Course materials as assigned for the selected Red Cross class format."], "certification_issued": "American Red Cross certificate after successful completion.", "compliance_acceptance_notes": ["Use ARC only when your requirement accepts or requests Red Cross certification."], "full_course_page": "/arc.html"}}, {"courseId": "372258", "courseName": "American Red Cross Adult CPR/AED", "family": "ARC", "variant": "cpr-aed", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["cpr-aed"], "iconLabel": "CPR", "imageUrl": "/images/arc-blended-training.png", "imageFit": "cover", "imageAlt": "American Red Cross Adult CPR AED course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "Red Cross Adult CPR/AED skills option.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 90, "details": {}}, {"courseId": "369209", "courseName": "American Red Cross First Aid/CPR/AED", "family": "ARC", "variant": "first-aid-cpr-aed", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/arc-in-person-training.png", "imageFit": "cover", "imageAlt": "American Red Cross First Aid CPR AED course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 110, "details": {}}];
-    const optionGroups = {"ARC": {"family": "ARC", "label": "All Red Cross options", "courseIds": ["248288", "372258", "369209"]}};
+    const availabilityUrl = "/data/block-selector-availability/arc.json?v=2026-11-07T11%3A29%3A14.438064%2B00%3A00";
+    const courseOptions = [{"courseId": "248288", "courseName": "American Red Cross Basic Life Support", "family": "ARC", "variant": "bls", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["bls"], "iconLabel": "ARC", "imageUrl": "/images/arc-in-person-training.png", "imageFit": "cover", "imageAlt": "American Red Cross Basic Life Support course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross BLS classroom option.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 99, "fullWidth": false, "skillsContexts": [], "details": {"course_key": "arc_bls", "title": "American Red Cross Basic Life Support", "certifying_body": "ARC", "family": "BLS", "short_description": "Red Cross BLS option for healthcare students and providers whose requirement specifically accepts ARC.", "who_this_is_for": "Students whose employer, school, or program asks for American Red Cross BLS.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Course materials as assigned for the selected Red Cross class format."], "certification_issued": "American Red Cross certificate after successful completion.", "compliance_acceptance_notes": ["Use ARC only when your requirement accepts or requests Red Cross certification."], "full_course_page": "/arc.html"}}, {"courseId": "372258", "courseName": "American Red Cross Adult CPR/AED", "family": "ARC", "variant": "cpr-aed", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["cpr-aed"], "iconLabel": "CPR", "imageUrl": "/images/arc-blended-training.png", "imageFit": "cover", "imageAlt": "American Red Cross Adult CPR AED course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "Red Cross Adult CPR/AED skills option.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 90, "fullWidth": false, "skillsContexts": [], "details": {}}, {"courseId": "369209", "courseName": "American Red Cross First Aid/CPR/AED", "family": "ARC", "variant": "first-aid-cpr-aed", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/arc-in-person-training.png", "imageFit": "cover", "imageAlt": "American Red Cross First Aid CPR AED course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 110, "fullWidth": false, "skillsContexts": [], "details": {}}, {"courseId": "509474", "courseName": "Skills Session Only", "family": "ARC", "variant": "skills-session-only", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["skills-session-only", "skills-only", "509474"], "iconLabel": "ARC", "imageUrl": "/images/ARCLTP.png", "imageFit": "contain", "imageAlt": "Skills Session Only course option", "deliveryBadge": "SKILLS SESSION ONLY", "clarification": "Already completed your online portion? Choose your in-person skills date. Online coursework is not included.", "familyGroup": "", "familyLabel": "", "optionLabel": "Skills Session Only — $55", "price": 55, "fullWidth": true, "skillsContexts": [{"key": "arc-blended", "label": "Red Cross", "template_course_id": "372258"}], "details": {}}];
+    const optionGroups = {"ARC": {"family": "ARC", "label": "All Red Cross options", "courseIds": ["248288", "372258", "369209", "509474"]}};
     const asapOptionLabel = "All Red Cross options";
     const unsupportedOptions = [];
     const groupCourseOptions = false;
@@ -904,6 +911,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     let availabilityMessage = 'Checking current class times…';
     let resolvedAvailability = null;
     let selectedCourseId = "372258";
+    let selectedSkillsContext = "";
     let showAllOptions = false;
     let compareMode = false;
     let selectedDate = '';
@@ -1122,7 +1130,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (!selected) {
         return new Set();
       }
-      if (compareMode) {
+      if (compareMode && !selected.fullWidth) {
         const group = Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId));
         const groupIds = group?.courseIds || optionGroups[selected.family]?.courseIds || [selectedCourseId];
         return new Set(groupIds.filter(courseId => {
@@ -1248,10 +1256,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function renderCourseOptions() {
       const host = byId('course-option-list');
       host.innerHTML = '';
+      const skillsHost = byId('skills-course-option-list');
+      skillsHost.innerHTML = '';
+      function skillsButton(course, context) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'course-family-choice skills-session-choice';
+        button.dataset.courseId = course.courseId;
+        button.dataset.skillsContext = context.key;
+        button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId && context.key === selectedSkillsContext));
+        const label = document.createElement('strong');
+        label.textContent = context.label + ' Skills Session Only — $55';
+        const help = document.createElement('span');
+        help.textContent = course.clarification;
+        button.append(label, help);
+        button.addEventListener('click', () => {
+          selectedCourseId = course.courseId;
+          selectedSkillsContext = context.key;
+          compareMode = false;
+          const compare = byId('compare-toggle');
+          if (compare) compare.checked = false;
+          renderAll();
+          document.querySelector('[data-skills-context="' + context.key + '"]')?.focus();
+        });
+        return button;
+      }
+      if (!groupCourseOptions) {
+        visibleCourseOptions().filter(course => course.fullWidth).forEach(course => {
+          (course.skillsContexts || []).forEach(context => skillsHost.appendChild(skillsButton(course, context)));
+        });
+      }
       if (groupCourseOptions) {
         host.classList.add('course-family-grid');
         const families = new Map();
-        visibleCourseOptions().forEach(course => {
+        visibleCourseOptions().filter(course => !course.fullWidth).forEach(course => {
           const key = course.familyGroup || course.courseId;
           if (!families.has(key)) families.set(key, []);
           families.get(key).push(course);
@@ -1294,6 +1332,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             });
             choices.appendChild(button);
           });
+          visibleCourseOptions().filter(course => course.fullWidth).forEach(course => {
+            (course.skillsContexts || []).filter(context => context.key === courses[0].familyGroup)
+              .forEach(context => choices.appendChild(skillsButton(course, context)));
+          });
           family.append(icon, heading, choices);
           host.appendChild(family);
         });
@@ -1301,7 +1343,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return;
       }
       host.classList.remove('course-family-grid');
-      visibleCourseOptions().forEach(course => {
+      visibleCourseOptions().filter(course => !course.fullWidth).forEach(course => {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'course-card';
@@ -1621,6 +1663,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         renderAvailabilityPlaceholder();
         return;
       }
+      const selectedOption = courseOptions.find(option => option.courseId === selectedCourseId);
+      if (selectedOption?.fullWidth && selectedOption.skillsContexts?.length > 1 &&
+          !selectedOption.skillsContexts.some(context => context.key === selectedSkillsContext)) {
+        host.innerHTML = '<div class="empty">Choose the CPR AED or First Aid CPR AED skills option above.</div>';
+        return;
+      }
       const day = filteredDates().find(item => item.date === selectedDate);
       const slot = day?.startTimes.find(item => item.startTime === selectedStart);
       if (!slot || isPastStart(day, slot) || !slot.courses.length) {
@@ -1657,11 +1705,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         summary.append(title, dateRow, timeRow, locationRow);
         const badge = document.createElement('div');
         badge.className = 'delivery-badge';
-        badge.textContent = deliveryLabel(course.deliveryMode);
+        badge.textContent = course.courseId === '509474' ? 'SKILLS SESSION ONLY' : deliveryLabel(course.deliveryMode);
         const link = document.createElement('a');
         link.className = 'register-link';
+        const config = courseOptions.find(option => option.courseId === course.courseId);
         link.href = course.appointmentUrl;
-        link.textContent = 'Register';
+        if (config?.fullWidth) {
+          const selection = new URLSearchParams({course: course.courseId, date: selectedDate,
+            startTime: slot.startTime, location: course.location,
+            instructor: course.instructor || '', skillsContext: selectedSkillsContext || config.skillsContexts?.[0]?.key || '', context: "arc"});
+          link.href = '/register/skills-session/?' + selection;
+          link.textContent = 'Schedule skills session';
+        }
+        if (!config?.fullWidth) link.textContent = 'Register';
         link.addEventListener('click', event => {
           if (isPastStart(day, slot)) {
             event.preventDefault();

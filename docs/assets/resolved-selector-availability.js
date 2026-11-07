@@ -41,6 +41,9 @@
 
   function isPastStart(day, slot, now) {
     if (!day || !slot) return true;
+    if (Number.isFinite(now.instant) && slot.courses?.length &&
+        slot.courses.every(course => course.offerType !== 'seated_class' &&
+          course.validUntil && Date.parse(course.validUntil) <= now.instant)) return true;
     if (day.date < now.dateKey) return true;
     if (day.date > now.dateKey) return false;
     const minutes = startMinutes(slot.startTime);
@@ -78,6 +81,43 @@
     ].join("|");
   }
 
+  // Compatibility helpers for consumers that opt in to bounded fetching and
+  // publication leases. Existing business-clock-only callers retain their API.
+  async function fetchPublication(url, {request = fetch, timeoutMs = 10000} = {}) {
+    let lastError;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const controller = new AbortController();
+      let timer;
+      try {
+        return await Promise.race([
+          (async () => {
+            const response = await request(url, {cache: 'no-store', signal: controller.signal});
+            if (!response.ok) throw Error('Publication request failed');
+            const data = await response.json();
+            if (data?.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(data.dates))
+              throw Error('Publication has unexpected shape');
+            return data;
+          })(),
+          new Promise((_, reject) => {
+            timer = setTimeout(() => { controller.abort(); reject(Error('Publication request timed out')); }, timeoutMs);
+          }),
+        ]);
+      } catch (error) { lastError = error; }
+      finally { clearTimeout(timer); }
+    }
+    throw lastError;
+  }
+
+  function datesForPublication(dates, validUntil, instant = Date.now()) {
+    const live = value => Number.isFinite(Date.parse(value)) && Date.parse(value) > instant;
+    return (Array.isArray(dates) ? dates : []).map(day => ({...day,
+      startTimes: (day.startTimes || []).map(slot => ({...slot,
+        courses: (slot.courses || []).filter(course => course.offerType === 'seated_class' ||
+          (live(validUntil) && (!course.validUntil || live(course.validUntil)))),
+      })).filter(slot => slot.courses.length),
+    })).filter(day => day.startTimes.length);
+  }
+
   return {
     schemaVersion: "selector-resolved-availability.v1",
     businessNow,
@@ -87,6 +127,8 @@
     isSelectableDate,
     filterDatesByCourse,
     slotKey,
+    fetchPublication,
+    datesForPublication,
   };
 });
 

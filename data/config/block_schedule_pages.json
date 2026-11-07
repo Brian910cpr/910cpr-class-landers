@@ -571,6 +571,35 @@
           "image_url": "/images/HS-PEDI-FA-CPR-AED.jpeg",
           "image_alt": "AHA Heartsaver Pediatric First Aid CPR AED Online course option",
           "delivery_badge": "BLENDED"
+        },
+        {
+          "course_id": "509474",
+          "display_label": "Skills Session Only",
+          "option_label": "Skills Session Only — $55",
+          "price": 55,
+          "delivery_mode": "skills-session",
+          "variant": "skills-session-only",
+          "deep_link_aliases": [
+            "skills-only",
+            "509474"
+          ],
+          "clarification": "Already completed your online portion? Choose your in-person skills date. Online coursework is not included.",
+          "delivery_badge": "SKILLS SESSION ONLY",
+          "full_width": true,
+          "scheduling_template_course_id": "329495",
+          "native_registration_path": "/register/skills-session/",
+          "skills_contexts": [
+            {
+              "key": "cpr-aed",
+              "label": "CPR AED",
+              "template_course_id": "209808"
+            },
+            {
+              "key": "first-aid-cpr-aed",
+              "label": "First Aid CPR AED",
+              "template_course_id": "329495"
+            }
+          ]
         }
       ],
       "course_id_notes": {
@@ -774,6 +803,30 @@
           "image_url": "/images/Health_and_Safety_Institute_Logo.jpg",
           "image_alt": "HSI BLS + Adult First Aid course option",
           "delivery_badge": "BLENDED"
+        },
+        {
+          "course_id": "509474",
+          "display_label": "Skills Session Only",
+          "option_label": "Skills Session Only — $55",
+          "price": 55,
+          "delivery_mode": "skills-session",
+          "variant": "skills-session-only",
+          "deep_link_aliases": [
+            "skills-only",
+            "509474"
+          ],
+          "clarification": "Already completed your online portion? Choose your in-person skills date. Online coursework is not included.",
+          "delivery_badge": "SKILLS SESSION ONLY",
+          "full_width": true,
+          "scheduling_template_course_id": "445670",
+          "native_registration_path": "/register/skills-session/",
+          "skills_contexts": [
+            {
+              "key": "hsi-blended",
+              "label": "HSI",
+              "template_course_id": "445670"
+            }
+          ]
         }
       ],
       "back_link_label": "Back to Find Your Class",
@@ -874,6 +927,30 @@
           "image_fit": "cover",
           "image_alt": "American Red Cross First Aid CPR AED course option",
           "delivery_badge": "IN-PERSON"
+        },
+        {
+          "course_id": "509474",
+          "display_label": "Skills Session Only",
+          "option_label": "Skills Session Only — $55",
+          "price": 55,
+          "delivery_mode": "skills-session",
+          "variant": "skills-session-only",
+          "deep_link_aliases": [
+            "skills-only",
+            "509474"
+          ],
+          "clarification": "Already completed your online portion? Choose your in-person skills date. Online coursework is not included.",
+          "delivery_badge": "SKILLS SESSION ONLY",
+          "full_width": true,
+          "scheduling_template_course_id": "372258",
+          "native_registration_path": "/register/skills-session/",
+          "skills_contexts": [
+            {
+              "key": "arc-blended",
+              "label": "Red Cross",
+              "template_course_id": "372258"
+            }
+          ]
         }
       ],
       "back_link_label": "Back to Find Your Class",

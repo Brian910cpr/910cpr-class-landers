@@ -1,0 +1,6 @@
+{
+  "schemaVersion": "native-skills-activation.v1",
+  "enabled": true,
+  "canonicalVerifiedAt": "2026-11-07 11:39:19.957743+00",
+  "evidence": "skills-session-policy.v1; PostgreSQL16 concurrency and canonical workspace verification"
+}

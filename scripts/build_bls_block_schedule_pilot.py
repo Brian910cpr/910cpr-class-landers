@@ -79,6 +79,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
             for course in slot.get("courses", []):
                 compact_course = {
                     "courseId": course.get("courseId"),
+                    **({"publicSelectable": course.get("publicSelectable")} if course.get("courseId") == "509474" else {}),
                     "courseName": course.get("courseName"),
                     "courseFamily": course.get("courseFamily"),
                     "deliveryMode": course.get("deliveryMode"),
@@ -676,6 +677,12 @@ def css() -> str:
     .course-family-choice strong { color: var(--ink); }
     .course-family-choice span { color: var(--muted); font-size: .82rem; line-height: 1.3; }
     .course-family-choice .course-price { color: var(--accent-dark); font-size: 1rem; font-weight: 900; }
+    .course-family-choices .skills-session-choice { margin-top: 8px; border-top: 2px solid var(--accent); }
+    .skills-option-list { display: grid; margin: 4px 52px 0; gap: 10px; }
+    .skills-option-list button { width: 100%; display: grid; gap: 5px; padding: 16px; background: var(--band); }
+    .skills-option-list button span { color: var(--muted); }
+    .skills-option-list button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    @media (max-width: 700px) { .skills-option-list { margin-inline: 0; } }
     .month-stack { display: grid; gap: 14px; }
     .month-nav {
       display: none;
@@ -1037,6 +1044,8 @@ def render_html(payload: dict[str, Any]) -> str:
             "familyLabel": option.get("family_label") or "",
             "optionLabel": option.get("option_label") or "",
             "price": option.get("price"),
+            "fullWidth": option.get("full_width") is True,
+            "skillsContexts": option.get("skills_contexts", []),
             "details": course_descriptions.get(course_id, {}),
         }
         for course_id, option in configured_options.items()
@@ -1166,7 +1175,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     "@type": "Offer",
                     "price": f"{float(option['price']):.2f}",
                     "priceCurrency": "USD",
-                    "availability": "https://schema.org/InStock",
+                    **({"availability": "https://schema.org/InStock"} if not option.get("fullWidth") else {}),
                     "url": f"{public_page_url}?course={quote(str(option.get('courseId') or ''))}",
                 },
             }
@@ -1429,6 +1438,7 @@ def render_html(payload: dict[str, Any]) -> str:
           <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
         </div>
       </div>
+      <div id="skills-course-option-list" class="skills-option-list" aria-label="Skills session only"></div>
       <div id="calendar-time-filters"></div>
       <div class="selector-grid">
         <div class="panel">
@@ -1457,7 +1467,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261103-selector-rollback-1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261107-skills-compat-1"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
@@ -1472,6 +1482,7 @@ def render_html(payload: dict[str, Any]) -> str:
     let availabilityMessage = 'Checking current class times…';
     let resolvedAvailability = null;
     let selectedCourseId = {json.dumps(first_course)};
+    let selectedSkillsContext = "";
     let showAllOptions = false;
     let compareMode = false;
     let selectedDate = '';
@@ -1690,7 +1701,7 @@ def render_html(payload: dict[str, Any]) -> str:
       if (!selected) {{
         return new Set();
       }}
-      if (compareMode) {{
+      if (compareMode && !selected.fullWidth) {{
         const group = Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId));
         const groupIds = group?.courseIds || optionGroups[selected.family]?.courseIds || [selectedCourseId];
         return new Set(groupIds.filter(courseId => {{
@@ -1816,10 +1827,40 @@ def render_html(payload: dict[str, Any]) -> str:
     function renderCourseOptions() {{
       const host = byId('course-option-list');
       host.innerHTML = '';
+      const skillsHost = byId('skills-course-option-list');
+      skillsHost.innerHTML = '';
+      function skillsButton(course, context) {{
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'course-family-choice skills-session-choice';
+        button.dataset.courseId = course.courseId;
+        button.dataset.skillsContext = context.key;
+        button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId && context.key === selectedSkillsContext));
+        const label = document.createElement('strong');
+        label.textContent = context.label + ' Skills Session Only — $55';
+        const help = document.createElement('span');
+        help.textContent = course.clarification;
+        button.append(label, help);
+        button.addEventListener('click', () => {{
+          selectedCourseId = course.courseId;
+          selectedSkillsContext = context.key;
+          compareMode = false;
+          const compare = byId('compare-toggle');
+          if (compare) compare.checked = false;
+          renderAll();
+          document.querySelector('[data-skills-context="' + context.key + '"]')?.focus();
+        }});
+        return button;
+      }}
+      if (!groupCourseOptions) {{
+        visibleCourseOptions().filter(course => course.fullWidth).forEach(course => {{
+          (course.skillsContexts || []).forEach(context => skillsHost.appendChild(skillsButton(course, context)));
+        }});
+      }}
       if (groupCourseOptions) {{
         host.classList.add('course-family-grid');
         const families = new Map();
-        visibleCourseOptions().forEach(course => {{
+        visibleCourseOptions().filter(course => !course.fullWidth).forEach(course => {{
           const key = course.familyGroup || course.courseId;
           if (!families.has(key)) families.set(key, []);
           families.get(key).push(course);
@@ -1862,6 +1903,10 @@ def render_html(payload: dict[str, Any]) -> str:
             }});
             choices.appendChild(button);
           }});
+          visibleCourseOptions().filter(course => course.fullWidth).forEach(course => {{
+            (course.skillsContexts || []).filter(context => context.key === courses[0].familyGroup)
+              .forEach(context => choices.appendChild(skillsButton(course, context)));
+          }});
           family.append(icon, heading, choices);
           host.appendChild(family);
         }});
@@ -1869,7 +1914,7 @@ def render_html(payload: dict[str, Any]) -> str:
         return;
       }}
       host.classList.remove('course-family-grid');
-      visibleCourseOptions().forEach(course => {{
+      visibleCourseOptions().filter(course => !course.fullWidth).forEach(course => {{
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'course-card';
@@ -2189,6 +2234,12 @@ def render_html(payload: dict[str, Any]) -> str:
         renderAvailabilityPlaceholder();
         return;
       }}
+      const selectedOption = courseOptions.find(option => option.courseId === selectedCourseId);
+      if (selectedOption?.fullWidth && selectedOption.skillsContexts?.length > 1 &&
+          !selectedOption.skillsContexts.some(context => context.key === selectedSkillsContext)) {{
+        host.innerHTML = '<div class="empty">Choose the CPR AED or First Aid CPR AED skills option above.</div>';
+        return;
+      }}
       const day = filteredDates().find(item => item.date === selectedDate);
       const slot = day?.startTimes.find(item => item.startTime === selectedStart);
       if (!slot || isPastStart(day, slot) || !slot.courses.length) {{
@@ -2225,11 +2276,19 @@ def render_html(payload: dict[str, Any]) -> str:
         summary.append(title, dateRow, timeRow, locationRow);
         const badge = document.createElement('div');
         badge.className = 'delivery-badge';
-        badge.textContent = deliveryLabel(course.deliveryMode);
+        badge.textContent = course.courseId === '509474' ? 'SKILLS SESSION ONLY' : deliveryLabel(course.deliveryMode);
         const link = document.createElement('a');
         link.className = 'register-link';
+        const config = courseOptions.find(option => option.courseId === course.courseId);
         link.href = course.appointmentUrl;
-        link.textContent = 'Register';
+        if (config?.fullWidth) {{
+          const selection = new URLSearchParams({{course: course.courseId, date: selectedDate,
+            startTime: slot.startTime, location: course.location,
+            instructor: course.instructor || '', skillsContext: selectedSkillsContext || config.skillsContexts?.[0]?.key || '', context: {json.dumps(str(payload.get("pageKey") or page_config.get("page_key") or ""))}}});
+          link.href = '/register/skills-session/?' + selection;
+          link.textContent = 'Schedule skills session';
+        }}
+        if (!config?.fullWidth) link.textContent = 'Register';
         link.addEventListener('click', event => {{
           if (isPastStart(day, slot)) {{
             event.preventDefault();

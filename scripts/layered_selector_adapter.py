@@ -90,13 +90,15 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             fixture["commitment_coverage"].append(dict(status="known_complete", instructor=instructor,
             location=primary, start=start.isoformat(), end=end.isoformat(),
             basis="selected declared instructor calendar interval; separate publication guards required"))
-        eligible = {str(c["course_id"]) for c in courses if qualified(window, c)}
+        eligible = {str(c["course_id"]) for c in courses if qualified(window, c)
+                    and (str(c["course_id"]) != "509474" or str(window.get("person_id")) == policy["brian_person_id"])}
         fixture["capabilities"].setdefault(instructor, [])
         fixture["capabilities"][instructor] = sorted(set(fixture["capabilities"][instructor]) | eligible)
         if str(window.get("person_id")) == policy["brian_person_id"]:
             brian_names.add(instructor)
             fixture["policy"]["instructor_family_eligibility"][instructor] = dict(
-                mode="all_except_families", excluded_families=policy["brian_excluded_families"])
+                mode="all_except_families", excluded_families=policy["brian_excluded_families"],
+                all_skills=True)
     if commitment_coverage is not None:
         fixture["commitment_coverage"] = commitment_coverage
     source_keys = set()
