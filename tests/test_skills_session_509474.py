@@ -68,9 +68,12 @@ class SkillsOnlyTests(unittest.TestCase):
     def test_unconfigured_native_reservation_never_publishes_a_bookable_offer(self):
         from scripts.layered_publication_adapter import publish
         case=self.case()
-        result=publish(case.calculation(),self.pages['heartsaver'],case.courses,case.windows,case.now,
-            lambda w,s,c:(None,None,'/register/skills-session/',None),
-            lambda s,c:selector.native_reservation_reasons(c))
+        report=case.calculation()
+        with tempfile.TemporaryDirectory(prefix='native_skills_disabled_',dir=ROOT.parent) as directory:
+            with patch.object(selector,'ROOT',Path(directory)):
+                result=publish(report,self.pages['heartsaver'],case.courses,case.windows,case.now,
+                    lambda w,s,c:(None,None,'/register/skills-session/',None),
+                    lambda s,c:selector.native_reservation_reasons(c))
         self.assertFalse(any(o['courseId']=='509474' for o in result['offers']))
         self.assertTrue(any('native_reservation_not_configured' in o.get('reasons',[]) for o in result['rejectedCourseStartTimes']))
 
