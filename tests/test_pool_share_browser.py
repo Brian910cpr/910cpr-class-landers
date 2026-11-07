@@ -37,7 +37,7 @@ class PoolShareBrowserTests(unittest.TestCase):
             target = urlparse(route.request.url).path
             if target == path:
                 route.fulfill(content_type='text/html', body=html)
-            elif target in ('/assets/community-share.js', '/assets/community-share.css', '/assets/analytics-attribution.js'):
+            elif target in ('/assets/community-share.js', '/assets/community-share.css', '/assets/analytics-attribution.js', '/assets/pool-registration.js', '/assets/pool-registration.css'):
                 route.fulfill(content_type='text/css' if target.endswith('.css') else 'application/javascript',
                               body=(ROOT / 'docs' / target.lstrip('/')).read_text(encoding='utf-8'))
             else:
@@ -70,7 +70,9 @@ class PoolShareBrowserTests(unittest.TestCase):
     def test_both_pages_all_controls_mobile_keyboard_and_registration_preserved(self):
         for identity in ('pool', 'poolbls'):
             page = self.open(identity)
+            page.wait_for_function("!document.getElementById('seatLabel').textContent.includes('Checking')")
             before = page.locator('#registration').inner_html()
+            request_count = len(self.requests)
             for placement in ('top', 'bottom'):
                 self.assertEqual(page.locator(f'[data-share-placement="{placement}"] svg').count(), 5)
                 for channel in ('native', 'facebook', 'sms', 'email', 'copy'):
@@ -97,7 +99,7 @@ class PoolShareBrowserTests(unittest.TestCase):
             button.focus(); button.press('Enter'); button.press('Space'); button.click()
             self.assertEqual(len(self.events(page, identity)), 13)
             self.assertEqual(page.locator('#registration').inner_html(), before)
-            self.assertFalse(any('public-event-registration' in url for url in self.requests))
+            self.assertFalse(any('public-event-registration' in url for url in self.requests[request_count:]))
             self.assertTrue(page.evaluate('document.documentElement.scrollWidth <= innerWidth'))
             self.assertTrue(all(value == 'https://www.910cpr.com/' + identity for value in page.evaluate('window.copies')))
             for event in self.events(page, identity) + self.events(page, identity, 'result'):
