@@ -1,0 +1,48 @@
+import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import test from 'node:test';
+import assert from 'node:assert/strict';
+const {PGlite}=createRequire(import.meta.url)('@electric-sql/pglite');
+const load=name=>readFileSync(new URL('../supabase/migrations/'+name,import.meta.url),'utf8');
+const FAMILY='nseaswim-pool-family-2027-02-15',BLS='nseaswim-pool-bls-2027-02-15';
+test('atomic pool groups produce exactly two lifecycle emails only after free completion or verified payment',async()=>{
+ const db=new PGlite();try{
+ await db.exec(`create role anon;create role authenticated;create role service_role;
+ create table customers(id uuid primary key default gen_random_uuid(),first_name text,last_name text,email text,phone text);
+ create table courses(id uuid primary key,name text);create table locations(id uuid primary key,name text);create table people(id uuid primary key,display_name text);
+ create table class_sessions(id uuid primary key default gen_random_uuid(),external_class_id text unique,registration_backend text,registration_status text,visibility text,public_notes text,course_id uuid,location_id uuid,lead_instructor_id uuid,start_at timestamptz,end_at timestamptz,status text,source_location_label text,source_instructor_label text);
+ create table registrations(id uuid primary key default gen_random_uuid(),customer_id uuid references customers,class_session_id uuid references class_sessions,status text,registration_source text,optional_survey jsonb default '{}',idempotency_key text unique,canceled_at timestamptz,created_at timestamptz default now(),updated_at timestamptz default now(),unique(customer_id,class_session_id));
+ create table products(id uuid primary key default gen_random_uuid(),product_key text,active boolean);
+ create table registration_orders(id uuid primary key default gen_random_uuid(),registration_id uuid unique references registrations,status text,currency text,course_amount numeric,materials_amount numeric,total_amount numeric,stripe_checkout_session_id text,stripe_payment_intent_id text,paid_at timestamptz,updated_at timestamptz default now());
+ create table registration_order_items(id uuid primary key default gen_random_uuid(),order_id uuid references registration_orders,item_type text,product_id uuid references products,description text,quantity integer check(quantity>0),unit_amount numeric,fulfillment_status text,updated_at timestamptz default now());
+ create table landerware_messages(id uuid primary key default gen_random_uuid(),customer_id uuid,operational_registration_id uuid,template_key text,channel text,recipient text,subject text,body_text text,delivery_provider text,delivery_status text,idempotency_key text unique);
+ create table registration_reschedule_deliveries(message_id uuid primary key references landerware_messages(id),status text default 'pending' constraint registration_reschedule_deliveries_status_check check(status in ('pending','sending','sent','failed','needs_review')),attempts int default 0,locked_at timestamptz,next_attempt_at timestamptz default now(),last_error text,created_at timestamptz default now());
+ insert into class_sessions(external_class_id,registration_backend,registration_status,visibility,start_at,end_at,status) values('${FAMILY}','landerware','open','public','2027-02-15T16:00Z','2027-02-15T19:00Z','active'),('${BLS}','landerware','open','unlisted','2027-02-15T16:00Z','2027-02-15T19:00Z','active');
+ insert into products(product_key,active) values('aha-bls-2025-emanual',true);`);
+ for(const m of ['20261021141044_schedule_confirmation_cadence.sql','20261107121724_pool_event_email_cadence.sql','20261107122020_pool_registration_atomic_checkout.sql'])await db.exec(load(m));
+ const scalar=async(sql,args=[])=>Object.values((await db.query(sql,args)).rows[0])[0];
+ const payload={firstName:'Synthetic',lastName:'Registrant',email:'free@example.invalid',phone:'',attendeeCount:2,guestNames:['Synthetic Guest'],ebookQty:0};
+ const freeKey=crypto.randomUUID(),blsKey=crypto.randomUUID();
+ const reserve=(slug,key,input)=>scalar('select reserve_pool_registration($1,$2,$3,$4::jsonb)',[slug,key,'fixture',JSON.stringify(input)]);
+ const free=await reserve(FAMILY,freeKey,payload);assert.equal(free.ok,true);
+ assert.equal(await scalar('select count(*)::int from landerware_messages'),2);
+ assert.equal(await scalar('select count(*)::int from registrations'),2);
+ assert.match(await scalar("select body_text from landerware_messages where template_key='pool-confirmation-v1'"),/Places reserved: 2/);
+ await reserve(FAMILY,freeKey,payload);assert.equal(await scalar('select count(*)::int from landerware_messages'),2,'free retry creates no extra messages');
+ const paid=await reserve(BLS,blsKey,{...payload,email:'paid@example.invalid',ebookQty:1});assert.equal(paid.ok,true);
+ assert.equal(await scalar('select count(*)::int from landerware_messages'),2,'unpaid BLS creates no message');
+ await db.query('select bind_pool_checkout($1,$2,$3)',[paid.registrationId,blsKey,'cs_synthetic']);
+ await assert.rejects(db.query("select confirm_pool_registration_payment($1,'cs_synthetic',1,'usd','pi_synthetic')",[paid.registrationId]),/pool_payment_mismatch/);
+ assert.equal(await scalar('select count(*)::int from landerware_messages'),2,'mismatched payment creates no message');
+ await db.query("select confirm_pool_registration_payment($1,'cs_synthetic',6851,'usd','pi_synthetic')",[paid.registrationId]);
+ assert.equal(await scalar('select count(*)::int from landerware_messages'),4);
+ assert.equal(await scalar('select count(*)::int from landerware_messages where operational_registration_id=$1',[paid.registrationId]),2);
+ await db.query("select confirm_pool_registration_payment($1,'cs_synthetic',6851,'usd','pi_synthetic')",[paid.registrationId]);
+ assert.equal(await scalar('select count(*)::int from landerware_messages'),4,'payment retry creates no extra messages');
+ assert.equal((await scalar('select claim_reschedule_confirmations()')).length,0,'one-minute delay honored for all');
+ await db.exec("create function reject_integration_guest() returns trigger language plpgsql as $$ begin if new.first_name='Reject' then raise exception 'synthetic_rollback';end if;return new;end $$;create trigger reject_integration_guest before insert on customers for each row execute function reject_integration_guest();");
+ await assert.rejects(reserve(FAMILY,crypto.randomUUID(),{...payload,email:'rollback@example.invalid',guestNames:['Reject Guest']}),/synthetic_rollback/);
+ assert.equal(await scalar('select count(*)::int from landerware_messages'),4,'a failed group transaction rolls back its email too');
+ assert.equal(await scalar('select count(*)::int from registrations'),4);
+ }finally{await db.close();}
+});
