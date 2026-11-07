@@ -2,10 +2,10 @@ name: Verify pool registration
 on:
   workflow_dispatch:
   pull_request:
-    paths: ['.github/workflows/verify-pool-registration.yml', 'docs/pool.html', 'docs/poolbls.html', 'docs/assets/pool-registration.*', 'docs/assets/community-share.*', 'supabase/functions/public-event-registration/**', 'supabase/functions/stripe-registration-webhook/**', 'supabase/migrations/*pool*.sql', 'tests/pool*', 'tests/test_pool*']
+    paths: ['.github/workflows/verify-pool-registration.yml', 'docs/pool.html', 'docs/poolbls.html', 'docs/assets/pool-registration.*', 'docs/assets/community-share.*', 'supabase/functions/public-event-registration/**', 'supabase/functions/stripe-registration-webhook/**', 'supabase/migrations/*pool*.sql', 'tests/pool*', 'tests/test_pool*', 'worker/*watchdog.mjs', 'tests/*watchdog.test.mjs']
   push:
     branches: [main]
-    paths: ['.github/workflows/verify-pool-registration.yml', 'docs/pool.html', 'docs/poolbls.html', 'docs/assets/pool-registration.*', 'docs/assets/community-share.*', 'supabase/functions/public-event-registration/**', 'supabase/functions/stripe-registration-webhook/**', 'supabase/migrations/*pool*.sql', 'tests/pool*', 'tests/test_pool*']
+    paths: ['.github/workflows/verify-pool-registration.yml', 'docs/pool.html', 'docs/poolbls.html', 'docs/assets/pool-registration.*', 'docs/assets/community-share.*', 'supabase/functions/public-event-registration/**', 'supabase/functions/stripe-registration-webhook/**', 'supabase/migrations/*pool*.sql', 'tests/pool*', 'tests/test_pool*', 'worker/*watchdog.mjs', 'tests/*watchdog.test.mjs']
 permissions:
   contents: read
 jobs:
@@ -25,6 +25,6 @@ jobs:
       - name: Verify checkout, atomic database and email lifecycle contracts
         env:
           POOL_PGLITE_MODULE: ${{ github.workspace }}/node_modules/@electric-sql/pglite/dist/index.js
-        run: node --experimental-strip-types --test tests/pool_backend.test.mjs tests/pool-event-emails.test.mjs tests/pool_registration_email_integration.test.mjs
+        run: node --experimental-strip-types --test tests/pool_backend.test.mjs tests/pool-event-emails.test.mjs tests/pool_registration_email_integration.test.mjs tests/mail-delivery-watchdog.test.mjs tests/availability_refresh_watchdog.test.mjs
       - name: Verify mobile and desktop forms without external requests
         run: python -m unittest discover -s tests -p 'test_pool*_browser.py' -v

@@ -104,7 +104,7 @@ test('isolated PostgreSQL executes atomic group, retry, price, capacity and roll
       create table public.registration_order_items(id uuid primary key default gen_random_uuid(),order_id uuid references registration_orders,item_type text,product_id uuid references products,description text,quantity integer check(quantity>0),unit_amount numeric,fulfillment_status text,updated_at timestamptz default now());
       insert into public.class_sessions(external_class_id,registration_backend,registration_status,visibility,start_at) values ('${FAMILY}','landerware','open','public','2027-02-15T16:00Z'),('${BLS}','landerware','open','unlisted','2027-02-15T16:00Z');
       insert into public.products(product_key,active) values ('aha-bls-2025-emanual',true);`);
-    try { await db.exec(await readFile(new URL('../supabase/migrations/20261107122020_pool_registration_atomic_checkout.sql',import.meta.url),'utf8')); }
+    try { await db.exec(await readFile(new URL('../supabase/migrations/20261107125340_pool_registration_atomic_checkout.sql',import.meta.url),'utf8')); }
     catch (error) { console.error({position:error.position,internalPosition:error.internalPosition,internalQuery:error.internalQuery,where:error.where}); throw error; }
     const reserve=async(event,key,payload,hash='fingerprint')=>(await db.query('select public.reserve_pool_registration($1,$2,$3,$4::jsonb) as result',[event,key,hash,JSON.stringify(payload)])).rows[0].result;
     const first=await reserve(BLS,requestId,input);assert.equal(first.ok,true);
