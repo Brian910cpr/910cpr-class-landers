@@ -25,6 +25,6 @@ jobs:
       - name: Verify checkout, atomic database and email lifecycle contracts
         env:
           POOL_PGLITE_MODULE: ${{ github.workspace }}/node_modules/@electric-sql/pglite/dist/index.js
-        run: node --experimental-strip-types --test tests/pool_backend.test.mjs tests/pool-event-emails.test.mjs
+        run: node --experimental-strip-types --test tests/pool_backend.test.mjs tests/pool-event-emails.test.mjs tests/pool_registration_email_integration.test.mjs
       - name: Verify mobile and desktop forms without external requests
         run: python -m unittest discover -s tests -p 'test_pool*_browser.py' -v
