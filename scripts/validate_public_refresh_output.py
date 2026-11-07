@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from urllib.parse import urlsplit, parse_qs
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from typing import Any
 from scripts.canonical_scheduling_demand import load_publication_demand, resolve_canonical_demand
@@ -140,8 +142,11 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
                     ), f"{page_key}: orphan synthetic offer on occupied date {day['date']}")
                     # matchedContainerId is an internal planning field and is omitted
                     # from the compact public selector contract.
-                    for field in ("appointmentDayId", "appointmentUrl", "availabilityBlockId"):
-                        require(course.get(field) not in (None, ""), f"{page_key}: dynamic offer lacks {field}")
+                    if str(course.get('courseId')) == '509474':
+                        validate_native_skills_offer(course, page_key, day['date'], slot['startTime'])
+                    else:
+                        for field in ("appointmentDayId", "appointmentUrl", "availabilityBlockId"):
+                            require(course.get(field) not in (None, ""), f"{page_key}: dynamic offer lacks {field}")
 
     counts = payload.get("counts") or {}
     require(counts.get("publicSelectableDateCount") == date_count, f"{page_key}: date count mismatch")
@@ -149,6 +154,35 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
     require(counts.get("publicSelectableOfferCount") == offer_count, f"{page_key}: offer count mismatch")
     # A correctly closed feed must replace stale inventory even when it has no offers.
     return {"dates": date_count, "starts": start_count, "offers": offer_count}
+
+
+def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: str) -> None:
+    """Native skills use a leased canonical selection, never an Enrollware container."""
+    require(page_key in {'heartsaver', 'arc', 'hsi'}, 'native skills: invalid page context')
+    require(course.get('publicSelectable') is True, 'native skills: not selectable')
+    for key, value in {'durationMinutes':45, 'schedulerConsumptionMinutes':60,
+                       'cleanupBufferMinutes':15, 'setupBufferMinutes':0}.items():
+        require(type(course.get(key)) is int and course[key] == value, 'native skills: invalid '+key)
+    require(course.get('instructor') == 'Brian Ennis' and
+            course.get('resource') == ':: Wilmington; Shipyard Blvd - B' and
+            course.get('location') == ':: Wilmington; Shipyard Blvd', 'native skills: invalid resource or instructor')
+    require(bool(course.get('availabilityBlockId')) and isinstance(course.get('sourceSessionIds'), list),
+            'native skills: missing source trace')
+    require(course.get('date') == day and course.get('startTime') == clock, 'native skills: inconsistent date or time')
+    lease = datetime.fromisoformat(str(course.get('validUntil') or '').replace('Z', '+00:00'))
+    require(lease.tzinfo is not None and lease > datetime.now(timezone.utc), 'native skills: expired lease')
+    start = datetime.fromisoformat(day+'T'+clock).replace(tzinfo=ZoneInfo('America/New_York')).astimezone(timezone.utc)
+    end = datetime.fromisoformat(str(course.get('occupiedUntil') or '').replace('Z', '+00:00'))
+    require(end.tzinfo is not None and end == start+timedelta(minutes=60), 'native skills: invalid occupied interval')
+    url = urlsplit(str(course.get('registrationUrl') or course.get('appointmentUrl') or ''))
+    query = parse_qs(url.query)
+    require(not url.scheme and not url.netloc and not url.fragment and url.path == '/register/skills-session/',
+            'native skills: invalid native destination')
+    for key, value in {'course':'509474', 'date':day, 'startTime':clock,
+                       'instructor':course['instructor'], 'location':course['location']}.items():
+        require(query.get(key) == [value], 'native skills: mismatched URL '+key)
+    require(not course.get('appointmentDayId') and 'appointmentDayId' not in query,
+            'native skills: unexpected Enrollware container')
 
 
 def validate_non_session_publication(root: Path, demand: dict[str, Any]) -> None:
