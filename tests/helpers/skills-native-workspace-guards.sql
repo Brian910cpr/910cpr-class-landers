@@ -115,4 +115,3 @@ $function$;
 
 CREATE TRIGGER enforce_canonical_workspace_schedule_trg BEFORE INSERT OR UPDATE OR DELETE ON public.landerware_sessions FOR EACH ROW EXECUTE FUNCTION public.enforce_canonical_workspace_schedule();
 CREATE TRIGGER trg_sync_enrollware_class_session_to_landerware AFTER INSERT OR UPDATE OR DELETE ON public.class_sessions FOR EACH ROW EXECUTE FUNCTION public.sync_enrollware_class_session_to_landerware();
-
