@@ -1,3 +1,4 @@
+import {checkMailDelivery,mailHealth,MAIL_STATE_KEY} from './mail-delivery-watchdog.mjs';
 // Refresh the existing publisher before its public BLS publication expires.
 // This timer never generates inventory or changes scheduling/roster policy.
 export const FEED = 'https://www.910cpr.com/data/block-selector-availability/bls.json';
@@ -104,11 +105,12 @@ export function health(state, now = Date.now()) {
 }
 
 export default {
-  async scheduled(_event, env) { await checkAndRefresh(env); },
+  async scheduled(_event, env) { const results=await Promise.allSettled([checkAndRefresh(env),checkMailDelivery(env)]); if(results.some(r=>r.status==="rejected"))throw Error("watchdog_state_write_failed"); },
   async fetch(request, env) {
-    if (request.method !== 'GET' || new URL(request.url).pathname !== '/health') return new Response('Not found', { status: 404 });
+    const path=new URL(request.url).pathname;
+    if (request.method !== 'GET' || !['/health','/email-health'].includes(path)) return new Response('Not found', { status: 404 });
     try {
-      const result = health(await env.STATE.get(STATE_KEY, 'json'));
+      const result = path==='/email-health' ? mailHealth(await env.STATE.get(MAIL_STATE_KEY,'json')) : health(await env.STATE.get(STATE_KEY, 'json'));
       return Response.json(result, { status: result.ok ? 200 : 503, headers: { 'Cache-Control': 'no-store' } });
     } catch { return Response.json({ ok: false, error: 'health_state_unavailable' }, { status: 503 }); }
   },
