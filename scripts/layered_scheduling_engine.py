@@ -64,7 +64,7 @@ def instructor_course_eligible(fixture, instructor, course, layered=False):
         meta = fixture['courses'][course]
         family = str(meta.get('eligibility_family') or meta.get('family') or '').strip().upper()
         excluded = {str(value).strip().upper() for value in rule['excluded_families']}
-        return bool(family) and family not in excluded
+        return (rule.get('all_skills') is True and meta.get('kind') == 'skills') or (bool(family) and family not in excluded)
     return course in fixture['capabilities'].get(instructor, [])
 
 

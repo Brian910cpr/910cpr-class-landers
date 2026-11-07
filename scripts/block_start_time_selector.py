@@ -988,6 +988,8 @@ def seated_class_selector_offers(
             continue
         course = courses_by_id.get(course_id, {})
         rule = course_rules.get(course_id, {})
+        if course_id == "509474" and native_reservation_reasons(course):
+            continue
         scheduler_minutes = int(rule.get("scheduler_consumption_minutes") or max(1, int((end - start).total_seconds() // 60)))
         consumption_end = max(end, start + timedelta(minutes=scheduler_minutes),
                               parse_dt(session.get("consumption_end_at")) or end)
@@ -1026,6 +1028,11 @@ def seated_class_selector_offers(
             "location": clean_text(session.get("location_name") or session.get("location_display") or UNKNOWN),
             "offerType": "seated_class",
             "publicSelectable": True,
+            **({"session_id": clean_text(session.get("session_id")),
+                "resource": ":: Wilmington; Shipyard Blvd - B",
+                "sourceSessionIds": [clean_text(session.get("session_id"))],
+                "occupiedUntil": consumption_end.replace(tzinfo=PUBLIC_TZ).isoformat()}
+               if course_id == "509474" else {}),
         })
     return offers
 
@@ -1056,6 +1063,13 @@ def find_url(
     containers: list[dict[str, Any]],
     location_resource_map: Any,
 ) -> tuple[int | None, str | None, str | None, str | None]:
+    if course_id == "509474":
+        # Native date review has no Enrollware transfer or claimed reservation.
+        from urllib.parse import urlencode
+        query = urlencode({"course": course_id, "date": start.date().isoformat(),
+            "startTime": start.strftime("%H:%M"), "location": window.get("location_name") or "",
+            "instructor": window.get("instructor_name") or ""})
+        return None, None, "/register/skills-session/?" + query, None
     seed = {
         "date": start.date().isoformat(),
         "start_time": start.strftime("%H:%M"),
@@ -1103,6 +1117,43 @@ def load_block_schedule_page_configs() -> dict[str, dict[str, Any]]:
             "allowed_course_ids": allowed_course_ids,
         }
     return normalized
+
+
+def native_reservation_reasons(course):
+    if course.get("schedule_page_option", {}).get("native_registration_path"):
+        # The service independently checks canonical readiness at atomic claim.
+        path = ROOT / "data/config/native_skills_activation.json"
+        try:
+            activation = json.loads(path.read_text(encoding="utf-8"))
+            verified = parse_dt(activation.get("canonicalVerifiedAt"))
+            now = selector_reference_datetime()
+            ready = (activation.get("schemaVersion") == "native-skills-activation.v1"
+                and activation.get("enabled") is True and bool(activation.get("evidence"))
+                and verified is not None and verified <= now)
+        except (OSError, ValueError, TypeError):
+            ready = False
+        return [] if ready else ["native_reservation_not_configured"]
+    return []
+
+
+def contextual_course(course_id, option, catalog, rules):
+    """Reuse the selected provider's established skills qualification/family policy."""
+    course = {**catalog[course_id], **rules[course_id]}
+    template_id = option.get("scheduling_template_course_id")
+    if template_id:
+        if template_id not in catalog or template_id not in rules:
+            raise BlockSelectorInputError("missing scheduling template: " + template_id)
+        template = {**catalog[template_id], **rules[template_id]}
+        for field in ("family", "course_family", "provider", "brand", "required_instructor_certifications",
+                      "occupancy_pool", "compatible_with", "default_capacity", "maximum_parallel_sessions",
+                      "max_public_candidates_per_block", "public_priority", "economic_priority",
+                      "brand_mix_weight", "escalation_tier", "suppresses_when_empty",
+                      "can_ride_existing_momentum", "minimum_anchor_strength"):
+            if field in template:
+                course[field] = template[field]
+    if str(course_id) == "509474":
+        course["default_capacity"] = 2
+    return {**course, "schedule_page_option": option}
 
 
 def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
@@ -1178,11 +1229,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             raise BlockSelectorInputError(f"Block schedule page {page_key} course {course_id} is missing from {COURSE_RULES_PATH}")
         if course_id not in course_catalog:
             raise BlockSelectorInputError(f"Block schedule page {page_key} course {course_id} is missing from {COURSE_CATALOG_PATH}")
-        selected_courses.append({
-            **course_catalog[course_id],
-            **course_rules[course_id],
-            "schedule_page_option": config_course_options.get(course_id, {}),
-        })
+        selected_courses.append(contextual_course(course_id,
+            config_course_options.get(course_id, {}), course_catalog, course_rules))
 
     # V2 remains opt-in. Room hours alone never establish calendar coverage.
     if layered_active(layered_policy):
@@ -1216,6 +1264,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             reasons = public_policy_reasons(start, str(course["course_id"]),
                 str(course.get("course_family") or course.get("family") or ""),
                 public_offer_policy, set(allowed_course_ids), reference_now=reference_now)
+            reasons.extend(native_reservation_reasons(course))
             if course.get("appointment_eligible") is not True or course.get("appointment_allowed") is not True:
                 reasons.append("course_not_appointment_eligible")
             return reasons
@@ -1341,6 +1390,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                     set(allowed_course_ids),
                     reference_now=reference_now,
                 )
+                public_reasons.extend(native_reservation_reasons(course))
                 if reasons or public_reasons:
                     diagnostic_reasons = reasons + public_reasons
                     rejection_counts_by_date[context["date"]].update(reasons + public_reasons)

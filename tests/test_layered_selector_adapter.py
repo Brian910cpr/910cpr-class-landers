@@ -74,7 +74,14 @@ class LayeredAdapterTests(unittest.TestCase):
         self.add('14:00','16:30','209809',active_registration_count=1)
         for cid in ['210549','209808']:
             self.assertEqual(self.starts(self.report(),cid),{'13:00','16:30'})
-        self.assertFalse(self.starts(self.report(),'209818'))
+        self.assertEqual(self.starts(self.report(),'209818'),{'13:00','16:30'})
+
+    def test_brian_all_skills_keeps_advanced_full_courses_excluded(self):
+        self.courses.extend([dict(course_id='advanced-full',course_family='PALS',kind='full'),
+                             dict(course_id='pals-skills',course_family='PALS',kind='skills')])
+        self.add('12:00','13:00',active_registration_count=1)
+        self.assertEqual(self.starts(self.report(),'pals-skills'),{'11:00','13:00'})
+        self.assertFalse(self.starts(self.report(),'advanced-full'))
 
     def test_empty_day_includes_midnight_and_tight_intervals(self):
         self.assertIn('00:00',self.starts(self.report()))

@@ -724,6 +724,37 @@
       "suppresses_when_empty": true,
       "can_ride_existing_momentum": true,
       "minimum_anchor_strength": 1
+    },
+    {
+      "course_id": "509474",
+      "clean_course_name": "Skills Session Only",
+      "course_family": "Skills",
+      "duration_minutes": 45,
+      "duration_bucket": "45",
+      "requires_contiguous_block": true,
+      "fragmentation_tolerant": true,
+      "overlapping_allowed": false,
+      "appointment_eligible": true,
+      "anchor_eligible": false,
+      "post_anchor_eligible": true,
+      "public_priority": 70,
+      "minimum_reservation_block_minutes": 60,
+      "maximum_parallel_sessions": 1,
+      "max_public_candidates_per_block": 2,
+      "default_capacity": null,
+      "brand": "910CPR",
+      "economic_priority": 55,
+      "brand_mix_weight": 1.0,
+      "occupancy_pool": null,
+      "escalation_tier": 2,
+      "compatible_with": [],
+      "suppresses_when_empty": true,
+      "can_ride_existing_momentum": true,
+      "minimum_anchor_strength": 1,
+      "setup_buffer_minutes": 0,
+      "cleanup_buffer_minutes": 15,
+      "kind": "skills",
+      "rule_evidence": "data/config/layered_scheduling_policy.json: skills_instruction_minutes + skills_cleanup_minutes; page-specific existing skills template supplies qualifications and family"
     }
   ]
 }
