@@ -1,9 +1,9 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-11-06T21:09:58.141452-05:00`
+- Generated at: `2026-11-06T21:20:20.113049-05:00`
 - Source: `enrollware_ical`
-- iCal events read: `202`
-- Public sessions created: `202`
+- iCal events read: `203`
+- Public sessions created: `203`
 - Skipped events: `0`
 - Registration unavailable sessions marked not direct-bookable: `170`
 - Unmapped sessions: `6`
