@@ -181,7 +181,7 @@
     catch (_) { $("page-details-status").textContent = "Copy unavailable"; }
   });
   restore(lastPayload); renderGuests(); refresh();
-  if (requestId) { pending = true; checkStatus(); }
+  if (requestId) { remember(); pending = true; checkStatus(); }
   else if (query.has("paid") || query.has("session_id")) message("Payment cannot be confirmed from this link alone. Please call 910-395-5193 if you already paid.", "error");
   else if (query.has("checkout_cancelled")) message("Checkout was canceled. No payment has been confirmed.");
   load();
