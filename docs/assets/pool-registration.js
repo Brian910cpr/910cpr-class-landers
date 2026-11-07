@@ -6,7 +6,7 @@
   const event = form.dataset.event, bls = form.dataset.course === "bls";
   const $ = id => document.getElementById(id);
   const count = $("count"), guests = $("guests"), submit = $("submit"), status = $("status"), resume = $("resume-checkout");
-  const key = "pool-checkout:" + event, query = new URLSearchParams(location.search);
+  const key = "pool-checkout:" + event, query = new URLSearchParams(window.poolCheckoutReturn || location.search);
   const uuid = value => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value || "");
   const money = cents => new Intl.NumberFormat("en-US", {style:"currency",currency:"USD"}).format(cents / 100);
   let busy = false, pending = false, confirmed = false, available = false, remaining = 0;

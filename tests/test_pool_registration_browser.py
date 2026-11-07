@@ -111,6 +111,7 @@ class PoolRegistrationTests(unittest.TestCase):
         page=self.open('poolbls',post=post,storage=False,query='?request_id='+REQUEST_ID+'&session_id=cs_test_mock')
         page.locator('#confirmation').wait_for(state='visible')
         self.assertEqual(self.posts[0]['checkoutSessionId'],'cs_test_mock');self.assertIn('Payment confirmed',page.locator('#status').inner_text())
+        self.assertNotIn('request_id',page.url);self.assertNotIn('session_id',page.url)
     def test_lost_response_retries_original_key(self):
         attempts=[]
         def post(route,body):
