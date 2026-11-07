@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-11-07T04:07:14.790365+00:00",
+  "generated_at": "2026-11-07T04:16:31.466797+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-07T04:07:14.090535+00:00",
+      "generated_at": "2026-11-07T04:16:30.739688+00:00",
       "event_count": 0
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-07T04:07:14.790365+00:00",
-      "event_count": 153
+      "generated_at": "2026-11-07T04:16:31.466797+00:00",
+      "event_count": 104
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-07T04:07:14.320615+00:00",
+      "generated_at": "2026-11-07T04:16:31.031802+00:00",
       "event_count": 0
     }
   ],
@@ -78,11 +78,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-09T15:00:00-05:00",
-      "end": "2026-11-09T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2026-11-09T22:30:00+00:00",
+      "end": "2026-11-09T22:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -111,11 +111,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-10T15:00:00-05:00",
-      "end": "2026-11-10T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2026-11-10T22:30:00+00:00",
+      "end": "2026-11-10T22:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -125,17 +125,6 @@
       "title": "CFA Drop Off",
       "start": "2026-11-11T06:30:00-05:00",
       "end": "2026-11-11T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-11T15:00:00-05:00",
-      "end": "2026-11-11T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -155,11 +144,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-12T15:00:00-05:00",
-      "end": "2026-11-12T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2026-11-12T22:30:00+00:00",
+      "end": "2026-11-12T22:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -169,17 +158,6 @@
       "title": "CFA Drop Off",
       "start": "2026-11-13T06:30:00-05:00",
       "end": "2026-11-13T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-13T15:00:00-05:00",
-      "end": "2026-11-13T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -221,11 +199,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-16T15:00:00-05:00",
-      "end": "2026-11-16T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2026-11-16T22:30:00+00:00",
+      "end": "2026-11-16T22:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -254,17 +232,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-17T15:00:00-05:00",
-      "end": "2026-11-17T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-11-18T06:30:00-05:00",
       "end": "2026-11-18T07:30:00-05:00",
@@ -276,11 +243,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-18T15:00:00-05:00",
-      "end": "2026-11-18T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2026-11-18T22:30:00+00:00",
+      "end": "2026-11-18T22:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -298,31 +265,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-19T15:00:00-05:00",
-      "end": "2026-11-19T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-11-20T06:30:00-05:00",
       "end": "2026-11-20T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-20T15:00:00-05:00",
-      "end": "2026-11-20T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -364,17 +309,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-23T15:00:00-05:00",
-      "end": "2026-11-23T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "Shift: ADR",
       "start": "2026-11-23T23:00:00+00:00",
       "end": "2026-11-24T11:00:00+00:00",
@@ -397,31 +331,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-24T15:00:00-05:00",
-      "end": "2026-11-24T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-11-25T06:30:00-05:00",
       "end": "2026-11-25T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-25T15:00:00-05:00",
-      "end": "2026-11-25T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -441,31 +353,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-26T15:00:00-05:00",
-      "end": "2026-11-26T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-11-27T06:30:00-05:00",
       "end": "2026-11-27T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-27T15:00:00-05:00",
-      "end": "2026-11-27T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -507,11 +397,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-11-30T15:00:00-05:00",
-      "end": "2026-11-30T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2026-11-30T22:30:00+00:00",
+      "end": "2026-11-30T22:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -540,31 +430,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-01T15:00:00-05:00",
-      "end": "2026-12-01T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-12-02T06:30:00-05:00",
       "end": "2026-12-02T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-02T15:00:00-05:00",
-      "end": "2026-12-02T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -584,11 +452,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-03T15:00:00-05:00",
-      "end": "2026-12-03T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2026-12-03T22:30:00+00:00",
+      "end": "2026-12-03T22:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -598,17 +466,6 @@
       "title": "CFA Drop Off",
       "start": "2026-12-04T06:30:00-05:00",
       "end": "2026-12-04T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-04T15:00:00-05:00",
-      "end": "2026-12-04T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -661,11 +518,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-07T15:00:00-05:00",
-      "end": "2026-12-07T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2026-12-07T21:30:00+00:00",
+      "end": "2026-12-07T21:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -694,17 +551,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-08T15:00:00-05:00",
-      "end": "2026-12-08T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-12-09T06:30:00-05:00",
       "end": "2026-12-09T07:30:00-05:00",
@@ -716,11 +562,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-09T15:00:00-05:00",
-      "end": "2026-12-09T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2026-12-09T21:30:00+00:00",
+      "end": "2026-12-09T21:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -738,11 +584,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-10T15:00:00-05:00",
-      "end": "2026-12-10T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2026-12-10T22:30:00+00:00",
+      "end": "2026-12-10T22:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -752,17 +598,6 @@
       "title": "CFA Drop Off",
       "start": "2026-12-11T06:30:00-05:00",
       "end": "2026-12-11T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-11T15:00:00-05:00",
-      "end": "2026-12-11T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -804,17 +639,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-14T15:00:00-05:00",
-      "end": "2026-12-14T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "Shift: ADR",
       "start": "2026-12-14T23:00:00+00:00",
       "end": "2026-12-15T11:00:00+00:00",
@@ -837,31 +661,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-15T15:00:00-05:00",
-      "end": "2026-12-15T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-12-16T06:30:00-05:00",
       "end": "2026-12-16T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-16T15:00:00-05:00",
-      "end": "2026-12-16T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -881,31 +683,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-17T15:00:00-05:00",
-      "end": "2026-12-17T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-12-18T06:30:00-05:00",
       "end": "2026-12-18T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-18T15:00:00-05:00",
-      "end": "2026-12-18T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -936,17 +716,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-21T15:00:00-05:00",
-      "end": "2026-12-21T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "Shift: ADR",
       "start": "2026-12-21T23:00:00+00:00",
       "end": "2026-12-22T11:00:00+00:00",
@@ -961,17 +730,6 @@
       "title": "CFA Drop Off",
       "start": "2026-12-22T06:30:00-05:00",
       "end": "2026-12-22T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-22T15:00:00-05:00",
-      "end": "2026-12-22T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1002,17 +760,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-23T15:00:00-05:00",
-      "end": "2026-12-23T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-12-24T06:30:00-05:00",
       "end": "2026-12-24T07:30:00-05:00",
@@ -1024,31 +771,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-24T15:00:00-05:00",
-      "end": "2026-12-24T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-12-25T06:30:00-05:00",
       "end": "2026-12-25T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-25T15:00:00-05:00",
-      "end": "2026-12-25T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1079,17 +804,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-28T15:00:00-05:00",
-      "end": "2026-12-28T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "Shift: ADR",
       "start": "2026-12-28T23:00:00+00:00",
       "end": "2026-12-29T11:00:00+00:00",
@@ -1112,31 +826,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-29T15:00:00-05:00",
-      "end": "2026-12-29T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-12-30T06:30:00-05:00",
       "end": "2026-12-30T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-30T15:00:00-05:00",
-      "end": "2026-12-30T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1156,31 +848,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2026-12-31T15:00:00-05:00",
-      "end": "2026-12-31T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2027-01-01T06:30:00-05:00",
       "end": "2027-01-01T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-01T15:00:00-05:00",
-      "end": "2027-01-01T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1200,31 +870,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-04T15:00:00-05:00",
-      "end": "2027-01-04T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2027-01-05T06:30:00-05:00",
       "end": "2027-01-05T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-05T15:00:00-05:00",
-      "end": "2027-01-05T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1244,11 +892,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-06T15:00:00-05:00",
-      "end": "2027-01-06T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2027-01-06T22:30:00+00:00",
+      "end": "2027-01-06T22:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -1258,17 +906,6 @@
       "title": "CFA Drop Off",
       "start": "2027-01-07T06:30:00-05:00",
       "end": "2027-01-07T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-07T15:00:00-05:00",
-      "end": "2027-01-07T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1288,31 +925,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-08T15:00:00-05:00",
-      "end": "2027-01-08T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2027-01-11T06:30:00-05:00",
       "end": "2027-01-11T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-11T15:00:00-05:00",
-      "end": "2027-01-11T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1332,31 +947,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-12T15:00:00-05:00",
-      "end": "2027-01-12T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2027-01-13T06:30:00-05:00",
       "end": "2027-01-13T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-13T15:00:00-05:00",
-      "end": "2027-01-13T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1376,11 +969,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-14T15:00:00-05:00",
-      "end": "2027-01-14T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2027-01-14T21:30:00+00:00",
+      "end": "2027-01-14T21:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -1390,17 +983,6 @@
       "title": "CFA Drop Off",
       "start": "2027-01-15T06:30:00-05:00",
       "end": "2027-01-15T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-15T15:00:00-05:00",
-      "end": "2027-01-15T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1420,31 +1002,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-18T15:00:00-05:00",
-      "end": "2027-01-18T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2027-01-19T06:30:00-05:00",
       "end": "2027-01-19T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-19T15:00:00-05:00",
-      "end": "2027-01-19T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1464,11 +1024,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-20T15:00:00-05:00",
-      "end": "2027-01-20T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2027-01-20T22:30:00+00:00",
+      "end": "2027-01-20T22:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -1478,17 +1038,6 @@
       "title": "CFA Drop Off",
       "start": "2027-01-21T06:30:00-05:00",
       "end": "2027-01-21T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-21T15:00:00-05:00",
-      "end": "2027-01-21T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1508,17 +1057,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-22T15:00:00-05:00",
-      "end": "2027-01-22T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2027-01-25T06:30:00-05:00",
       "end": "2027-01-25T07:30:00-05:00",
@@ -1530,11 +1068,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-25T15:00:00-05:00",
-      "end": "2027-01-25T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2027-01-25T22:30:00+00:00",
+      "end": "2027-01-25T22:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -1544,17 +1082,6 @@
       "title": "CFA Drop Off",
       "start": "2027-01-26T06:30:00-05:00",
       "end": "2027-01-26T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-26T15:00:00-05:00",
-      "end": "2027-01-26T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1574,11 +1101,11 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-27T15:00:00-05:00",
-      "end": "2027-01-27T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
+      "title": "Busy",
+      "start": "2027-01-27T21:30:00+00:00",
+      "end": "2027-01-27T21:45:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -1588,17 +1115,6 @@
       "title": "CFA Drop Off",
       "start": "2027-01-28T06:30:00-05:00",
       "end": "2027-01-28T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-28T15:00:00-05:00",
-      "end": "2027-01-28T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1618,31 +1134,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-01-29T15:00:00-05:00",
-      "end": "2027-01-29T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2027-02-01T06:30:00-05:00",
       "end": "2027-02-01T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-02-01T15:00:00-05:00",
-      "end": "2027-02-01T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     },
@@ -1662,17 +1156,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-02-02T15:00:00-05:00",
-      "end": "2027-02-02T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2027-02-03T06:30:00-05:00",
       "end": "2027-02-03T07:30:00-05:00",
@@ -1684,31 +1167,9 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-02-03T15:00:00-05:00",
-      "end": "2027-02-03T17:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2027-02-04T06:30:00-05:00",
       "end": "2027-02-04T07:30:00-05:00",
-      "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "CFA Pickup",
-      "start": "2027-02-04T15:00:00-05:00",
-      "end": "2027-02-04T17:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
     }
