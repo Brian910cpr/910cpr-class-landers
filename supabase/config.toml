@@ -5,4 +5,4 @@ verify_jwt = false
 [functions.skills-session-reservation]
 # New anonymous bookings use a server-fetched leased offer, service-only atomic
 # claim, explicit canonical context configuration, and a default-off activation gate.
-verify_jwt = false
+verify_jwt = true

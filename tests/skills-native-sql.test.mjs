@@ -19,6 +19,7 @@ test('actual PostgreSQL transaction: default-off, canonical claim, capacity, rol
       await db.exec(load('supabase/migrations/'+name));
     const migration=readdirSync(new URL('supabase/migrations/',root)).find(name=>name.endsWith('_skills_session_native_claim.sql'));
     await db.exec(load('supabase/migrations/'+migration));
+    await db.exec(load('tests/helpers/skills-native-workspace-guards.sql'));
     const query=async(sql,args=[])=> (await db.query(sql,args)).rows;
     const scalar=async(sql,args=[])=>Object.values((await query(sql,args))[0])[0];
     const ids=await query(`insert into courses(course_key,name,enrollware_course_id,duration_minutes,cleanup_buffer_minutes,max_students_default,base_price)

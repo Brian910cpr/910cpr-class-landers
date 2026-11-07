@@ -18,6 +18,7 @@
 </section></main><script>
 window.addEventListener('DOMContentLoaded',async()=>{
   const API='https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/skills-session-reservation';
+  const PUBLIC_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndrdHdnY253ZHZiZWJjb2JneWV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ1Njg0NDcsImV4cCI6MjEwMDE0NDQ0N30.UdjRtCNY9PbAC569s9KG0FRKSbZqykgi0XDMgPsY05I';
   const selected=Object.fromEntries(new URLSearchParams(location.search));
   const pages={heartsaver:'/heartsaver.html',arc:'/arc.html',hsi:'/hsi.html'};
   const contexts={'cpr-aed':'heartsaver','first-aid-cpr-aed':'heartsaver','arc-blended':'arc','hsi-blended':'hsi'};
@@ -30,7 +31,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
   if(!pages[selected.context]||contexts[selected.skillsContext]!==selected.context){host.textContent='Please choose a skills session from the class calendar.';return;}
   document.getElementById('back').href=pages[selected.context];
   try{
-    const response=await fetch(API+'/choices',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({context:selected.skillsContext,selection:{localStart:selected.date+'T'+selected.startTime,location:selected.location,instructor:selected.instructor||''}})});
+    const response=await fetch(API+'/choices',{method:'POST',headers:{authorization:'Bearer '+PUBLIC_ANON,apikey:PUBLIC_ANON,'content-type':'application/json'},body:JSON.stringify({context:selected.skillsContext,selection:{localStart:selected.date+'T'+selected.startTime,location:selected.location,instructor:selected.instructor||''}})});
     const result=await response.json();
     if(!response.ok||!result.ok)throw Error('unavailable');
     offer=result.offers.find(o=>local(o.startsAt)===selected.date+'T'+selected.startTime&&o.location===selected.location&&(o.instructor||'')===(selected.instructor||''));
@@ -48,7 +49,7 @@ window.addEventListener('DOMContentLoaded',async()=>{
     event.preventDefault();button.disabled=true;status.textContent='Reserving your selected date...';
     try{
       const fields=new FormData(form),student=Object.fromEntries(fields);student.onlineCompleted=fields.has('onlineCompleted');
-      const response=await fetch(API+'/reserve',{method:'POST',headers:{'content-type':'application/json','idempotency-key':key},body:JSON.stringify({context:selected.skillsContext,selectionId:offer.selectionId,student})});
+      const response=await fetch(API+'/reserve',{method:'POST',headers:{authorization:'Bearer '+PUBLIC_ANON,apikey:PUBLIC_ANON,'content-type':'application/json','idempotency-key':key},body:JSON.stringify({context:selected.skillsContext,selectionId:offer.selectionId,student})});
       const body=await response.json(),state=SkillsReservationClient.reservationState(body,response.ok);
       status.textContent=state.message;
       if(state.state==='reserved'){form.hidden=true;return;}

@@ -178,10 +178,10 @@ begin
  -- Never overwrite a different existing identity/timing to manufacture proof.
  if exists(select 1 from public.landerware_sessions w where (w.class_session_id=target or w.external_session_id=option->>'externalId')
    and (w.class_session_id is distinct from target or w.external_session_id is distinct from option->>'externalId'
-    or w.course_id is distinct from '509474' or w.starts_at is distinct from (option->>'startsAt')::timestamptz
+    or w.course_id is distinct from (select course_key from public.courses where id=(option->>'courseId')::uuid) or w.starts_at is distinct from (option->>'startsAt')::timestamptz
     or w.ends_at is distinct from (option->>'endsAt')::timestamptz)) then raise exception 'session_not_available'; end if;
  insert into public.landerware_sessions(external_session_id,class_session_id,course_id,course_name,starts_at,ends_at,location_name,instructor_name,provenance,requirements_manifest)
- values(option->>'externalId',target,'509474',option->>'course',(option->>'startsAt')::timestamptz,(option->>'endsAt')::timestamptz,
+ values(option->>'externalId',target,(select course_key from public.courses where id=(option->>'courseId')::uuid),option->>'course',(option->>'startsAt')::timestamptz,(option->>'endsAt')::timestamptz,
   p_offer->>'location',p_offer->>'instructor','skills_session_native:'||p_idempotency_key,'{}'::jsonb)
  on conflict(external_session_id,course_id,starts_at) do nothing;
  if (select count(*) from public.landerware_sessions where class_session_id=target)<>1 then raise exception 'session_not_available'; end if;

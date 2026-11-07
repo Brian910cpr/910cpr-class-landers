@@ -5,7 +5,7 @@ export function createHandler({publication,rpc,enabled=()=>false,now=()=>Date.no
   return async req=>{
     const origin=req.headers.get('origin')||'';
     const headers={'content-type':'application/json','cache-control':'no-store','access-control-allow-origin':ALLOWED.has(origin)?origin:SITE,
-      'access-control-allow-headers':'content-type,idempotency-key','access-control-allow-methods':'POST,OPTIONS',vary:'Origin'};
+      'access-control-allow-headers':'content-type,idempotency-key,authorization,apikey','access-control-allow-methods':'POST,OPTIONS',vary:'Origin'};
     const json=(body,status=200)=>new Response(JSON.stringify(body),{status,headers});
     if(origin&&!ALLOWED.has(origin))return json({error:'origin_not_allowed'},403);
     if(req.method==='OPTIONS')return new Response(null,{status:204,headers});
