@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07T21:27:31.038837+00:00",
+  "generated_at": "2026-11-07T21:37:50.760322+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,7 +22,7 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 255,
+    "blocks_generated": 254,
     "blocks_blocked": 20,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
@@ -36,38 +36,14 @@
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 105,
+      "blocked": 104,
       "available": 150
     },
     "inverse_generated_availability_blocks": 150,
-    "inverse_blocking_event_blocks": 105,
+    "inverse_blocking_event_blocks": 104,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
-    {
-      "instructor_name": "Brian Ennis",
-      "person_id": "instructor_24057895173",
-      "start_datetime": "2026-11-07T16:30:00",
-      "end_datetime": "2026-11-07T19:45:00",
-      "date": "2026-11-07",
-      "end_date": "2026-11-07",
-      "start_time": "16:30",
-      "end_time": "19:45",
-      "availability_status": "blocked",
-      "availability_location_mode": "instructor_time_only",
-      "source_location": "420 Windchime Dr\\, Wilmington\\, NC 28412\\, USA",
-      "location_name": "420 Windchime Dr\\, Wilmington\\, NC 28412\\, USA",
-      "allowed_course_families": [],
-      "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "cdhjip9jc8q68b9m6co66b9k6thj8b9p61gm4bb165hjephjccpj8o9m64@google.com",
-      "summary": "Dinner @ Beya",
-      "source_type": "inverse_google_calendar",
-      "reasons": [
-        "read_only_preview",
-        "local_calendar_snapshot",
-        "inverse_calendar_blocking_event"
-      ]
-    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -2567,11 +2543,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-11-07T19:45:00",
+      "start_datetime": "2026-11-07T16:45:00",
       "end_datetime": "2026-11-08T00:00:00",
       "date": "2026-11-07",
       "end_date": "2026-11-08",
-      "start_time": "19:45",
+      "start_time": "16:45",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -7187,11 +7163,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-02-05T07:30:00",
-      "end_datetime": "2027-02-05T16:30:00",
+      "end_datetime": "2027-02-05T16:45:00",
       "date": "2027-02-05",
       "end_date": "2027-02-05",
       "start_time": "07:30",
-      "end_time": "16:30",
+      "end_time": "16:45",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -7220,10 +7196,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-11-07T21:27:30.289279+00:00",
-      "end": "2027-02-05T21:27:30.289279+00:00",
-      "observed_at": "2026-11-07T21:27:30.951663+00:00",
-      "valid_until": "2026-11-07T21:42:30.951663+00:00",
+      "start": "2026-11-07T21:37:49.713411+00:00",
+      "end": "2027-02-05T21:37:49.713411+00:00",
+      "observed_at": "2026-11-07T21:37:50.667344+00:00",
+      "valid_until": "2026-11-07T21:52:50.667344+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
