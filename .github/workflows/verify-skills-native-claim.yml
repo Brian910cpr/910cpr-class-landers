@@ -2,7 +2,7 @@ name: Verify native skills reservation
 on:
   workflow_dispatch:
   pull_request:
-    paths: ['supabase/functions/skills-session-reservation/**','supabase/migrations/*skills_session_native_claim.sql','tests/skills-native*','tests/helpers/skills-native*','docs/assets/skills-reservation-client.js']
+    paths: ['.github/workflows/verify-skills-native-claim.yml','scripts/validate_public_refresh_output.py','tests/test_validate_public_refresh_output.py','supabase/functions/skills-session-reservation/**','supabase/migrations/*skills_session_native_claim.sql','tests/skills-native*','tests/helpers/skills-native*','docs/assets/skills-reservation-client.js']
 permissions:
   contents: read
 jobs:
