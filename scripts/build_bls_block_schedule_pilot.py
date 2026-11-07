@@ -2276,7 +2276,7 @@ def render_html(payload: dict[str, Any]) -> str:
         summary.append(title, dateRow, timeRow, locationRow);
         const badge = document.createElement('div');
         badge.className = 'delivery-badge';
-        badge.textContent = deliveryLabel(course.deliveryMode);
+        badge.textContent = course.courseId === '509474' ? 'SKILLS SESSION ONLY' : deliveryLabel(course.deliveryMode);
         const link = document.createElement('a');
         link.className = 'register-link';
         const config = courseOptions.find(option => option.courseId === course.courseId);
