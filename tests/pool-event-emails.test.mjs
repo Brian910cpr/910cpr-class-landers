@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 const {PGlite}=createRequire(import.meta.url)('@electric-sql/pglite');
 const load=name=>readFileSync(new URL('../supabase/migrations/'+name,import.meta.url),'utf8');
-const migration='20261107121724_pool_event_email_cadence.sql';
+const migration='20261107122543_pool_event_email_cadence.sql';
 const FREE='nseaswim-pool-family-2027-02-15',BLS='nseaswim-pool-bls-2027-02-15';
 async function fixture(){
  const db=new PGlite();

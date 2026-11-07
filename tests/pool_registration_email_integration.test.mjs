@@ -19,7 +19,7 @@ test('atomic pool groups produce exactly two lifecycle emails only after free co
  create table registration_reschedule_deliveries(message_id uuid primary key references landerware_messages(id),status text default 'pending' constraint registration_reschedule_deliveries_status_check check(status in ('pending','sending','sent','failed','needs_review')),attempts int default 0,locked_at timestamptz,next_attempt_at timestamptz default now(),last_error text,created_at timestamptz default now());
  insert into class_sessions(external_class_id,registration_backend,registration_status,visibility,start_at,end_at,status) values('${FAMILY}','landerware','open','public','2027-02-15T16:00Z','2027-02-15T19:00Z','active'),('${BLS}','landerware','open','unlisted','2027-02-15T16:00Z','2027-02-15T19:00Z','active');
  insert into products(product_key,active) values('aha-bls-2025-emanual',true);`);
- for(const m of ['20261021141044_schedule_confirmation_cadence.sql','20261107121724_pool_event_email_cadence.sql','20261107122020_pool_registration_atomic_checkout.sql'])await db.exec(load(m));
+ for(const m of ['20261021141044_schedule_confirmation_cadence.sql','20261107122543_pool_event_email_cadence.sql','20261107122020_pool_registration_atomic_checkout.sql'])await db.exec(load(m));
  const scalar=async(sql,args=[])=>Object.values((await db.query(sql,args)).rows[0])[0];
  const payload={firstName:'Synthetic',lastName:'Registrant',email:'free@example.invalid',phone:'',attendeeCount:2,guestNames:['Synthetic Guest'],ebookQty:0};
  const freeKey=crypto.randomUUID(),blsKey=crypto.randomUUID();
