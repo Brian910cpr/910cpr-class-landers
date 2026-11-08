@@ -23,7 +23,8 @@
     } catch (_) { /* A failed browser store never blocks checkout. */ }
   }
   function message(text, kind = "") { status.textContent = text; status.className = "msg" + (kind ? " " + kind : ""); }
-  function bookSelected() { return bls && form.querySelector('[name="manual"]:checked')?.value === "ebook"; }
+  function bookSelected() { return bls && $("withBook").getAttribute("aria-pressed") === "true"; }
+  function chooseManual(value) { form.querySelectorAll("[data-manual]").forEach(el => { const selected = el.dataset.manual === value; el.classList.toggle("active", selected); el.setAttribute("aria-pressed", String(selected)); }); }
   function lockFields(locked) { $("registration-fields").querySelectorAll("input,select,button").forEach(el => el.disabled = locked); }
   function captureGuests() {
     guests.querySelectorAll(".checkout-guest").forEach((row, i) => {
@@ -35,15 +36,15 @@
     const needed = Number(count.value) - 1;
     while (guests.children.length > needed) guests.lastElementChild.remove();
     for (let i = guests.children.length; i < needed; i++) {
-      const row = document.createElement("div"); row.className = "checkout-guest";
-      const title = document.createElement("h4"); title.textContent = "Attendee " + (i + 2); row.append(title);
-      const fields = document.createElement("div"); fields.className = "fields";
+      const row = document.createElement("div"); row.className = "checkout-guest attendee-entry";
+      const title = document.createElement("strong"); title.textContent = "Attendee " + (i + 2); row.append(title);
+      const fields = document.createElement("div"); fields.className = "attendee-fields";
       for (const part of ["first","last"]) {
-        const field = document.createElement("div"); field.className = "field";
+        const field = document.createElement("div"); field.className = "guest-field";
         const input = document.createElement("input"), label = document.createElement("label");
         input.id = "guest-" + i + "-" + part; input.dataset[part] = ""; input.required = true;
         input.maxLength = 60; input.autocomplete = "off"; input.value = guestCache[i]?.[part] || "";
-        label.htmlFor = input.id; label.textContent = part === "first" ? "First name" : "Last name";
+        label.className = "field"; label.htmlFor = input.id; label.textContent = part === "first" ? "First name" : "Last name";
         field.append(label, input); fields.append(field);
       }
       row.append(fields); guests.append(row);
@@ -55,13 +56,13 @@
     $("total").textContent = bls ? money(total) : "FREE";
     if (confirmed) { submit.hidden = true; return; }
     submit.disabled = busy || (!pending && (!available || n > remaining));
-    submit.textContent = busy ? "Please wait…" : pending ? "Check registration status" : !available ? (remaining === 0 ? "Registration unavailable" : "Checking availability…") : bls ? "Continue to secure checkout · " + money(total) : "Reserve " + (n === 1 ? "my free spot" : n + " free spots");
+    submit.textContent = busy ? "Please wait…" : pending ? "Check registration status" : !available ? (remaining === 0 ? "Registration unavailable" : "Checking availability…") : bls ? "Continue to Stripe · " + money(total) : "Reserve " + (n === 1 ? "my free spot" : n + " free spots");
   }
   function restore(payload) {
     if (!payload) return;
     count.value = String(payload.attendeeCount || 1);
     for (const [id, field] of [["first","firstName"],["last","lastName"],["email","email"],["phone","phone"]]) $(id).value = payload[field] || "";
-    if (bls) form.querySelector('[name="manual"][value="' + (payload.ebookQty > 0 ? "ebook" : "none") + '"]').checked = true;
+    if (bls) chooseManual(payload.ebookQty > 0 ? "ebook" : "none");
     (payload.guestNames || []).forEach((name, i) => {
       const parts = name.trim().split(/\s+/); guestCache[i] = {first:parts.shift() || "", last:parts.join(" ")};
     });
@@ -150,7 +151,7 @@
     } finally { busy = false; refresh(); }
   }
   count.addEventListener("change", () => { renderGuests(); refresh(); });
-  form.querySelectorAll('[name="manual"]').forEach(el => el.addEventListener("change", refresh));
+  form.querySelectorAll("[data-manual]").forEach(el => el.addEventListener("click", () => { chooseManual(el.dataset.manual); refresh(); }));
   form.addEventListener("submit", async e => {
     e.preventDefault();
     if (busy || confirmed) return;
