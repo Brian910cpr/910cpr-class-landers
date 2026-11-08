@@ -1,6 +1,17 @@
 (function () {
   "use strict";
 
+  // Refresh the shared CSS even on older generated pages, without rebuilding
+  // inventory or changing their content. Keep in sync with the injector.
+  const themeVersion = "20261108.1";
+  document.querySelectorAll('link[rel="stylesheet"][href*="/assets/site-theme.css"]').forEach(function (link) {
+    const url = new URL(link.href, document.baseURI);
+    if (url.origin === location.origin && url.pathname === "/assets/site-theme.css") {
+      url.searchParams.set("v", themeVersion);
+      link.href = url.href;
+    }
+  });
+
   const storageKey = "910cpr-color-theme";
   const root = document.documentElement;
   const media = window.matchMedia("(prefers-color-scheme: dark)");
