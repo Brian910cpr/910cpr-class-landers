@@ -18,8 +18,8 @@ class PoolRegistrationTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.browser.close(); cls.runtime.stop()
-    def open(self, page_id='pool', width=390, remaining=30, post=None, query='', saved=None, storage=True):
-        context = self.browser.new_context(viewport={'width':width,'height':844})
+    def open(self, page_id='pool', width=390, remaining=30, post=None, query='', saved=None, storage=True, theme='light'):
+        context = self.browser.new_context(viewport={'width':width,'height':844}, color_scheme=theme)
         self.addCleanup(context.close)
         self.posts=[]; self.errors=[]
         event='nseaswim-pool-'+('bls' if page_id=='poolbls' else 'family')+'-2027-02-15'
@@ -142,5 +142,19 @@ class PoolRegistrationTests(unittest.TestCase):
         page=self.open('poolbls',post=post);self.fill(page);page.locator('#submit').click()
         page.wait_for_function("document.getElementById('submit').textContent==='Check registration status'")
         self.assertTrue(page.locator('#resume-checkout').is_hidden());self.assertIn('/poolbls',page.url)
+
+    def test_dark_theme_checkout_text_has_accessible_contrast(self):
+        import re
+        def lum(color):
+            channels=[int(x)/255 for x in re.findall(r"\d+",color)[:3]]
+            linear=[v/12.92 if v<=0.04045 else ((v+0.055)/1.055)**2.4 for v in channels]
+            return sum(v*w for v,w in zip(linear,[0.2126,0.7152,0.0722]))
+        for page_id in ['pool','poolbls']:
+            page=self.open(page_id,theme='dark')
+            self.assertEqual(page.locator('html').get_attribute('data-theme'),'dark')
+            styles=page.locator('.registration h3,.registration label,.checkout-options legend,.checkout-choice strong,.checkout-choice b,.checkout-choice small,.checkout-capacity,.checkout-switch,.summary,#submit').evaluate_all("""els=>els.filter(el=>el.getClientRects().length).map(el=>{let p=el,bg;while(p){bg=getComputedStyle(p).backgroundColor;if(bg!=='rgba(0, 0, 0, 0)')break;p=p.parentElement;}return [el.textContent.trim(),getComputedStyle(el).color,bg];})""")
+            for text,color,bg in styles:
+                light,dark=sorted([lum(color),lum(bg)],reverse=True)
+                self.assertGreaterEqual((light+0.05)/(dark+0.05),4.5,text)
 
 if __name__=='__main__':unittest.main()
