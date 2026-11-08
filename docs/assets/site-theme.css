@@ -29,6 +29,7 @@ html[data-theme="dark"] body {
 }
 
 html[data-theme="dark"] :is(
+  section:not([class]), article:not([class]), fieldset,
   .wrap, .page-shell, .card, .panel, .section-box, .selector-panel,
   .finder-card, .trust-badge, .course-card, .session-card, .meta-card,
   .class-card, .review-snippet, .google-review-card, .request-option-card,
@@ -59,6 +60,23 @@ html[data-theme="dark"] :is(input, select, textarea, button:not(.site-theme-togg
   background: #172334 !important;
   color: #eef5fc !important;
   border-color: #53657a !important;
+}
+
+/* Match text and surface colors for semantic form feedback, including the
+   registration pages that do not use the status-pill class family. */
+html[data-theme="dark"] body :is(.success, .error, [role="alert"]) {
+  background: #111a27 !important;
+  border-color: #53667c !important;
+}
+html[data-theme="dark"] body .success { color: #9ce1c2 !important; }
+html[data-theme="dark"] body :is(.error, [role="alert"]) { color: #ffb4b8 !important; }
+html[data-theme="dark"] :is(input, textarea)::placeholder {
+  color: #b9c6d5;
+  opacity: 1;
+}
+html[data-theme="dark"] :is(input, select, textarea, button, a):focus-visible {
+  outline: 3px solid #ffd166 !important;
+  outline-offset: 3px !important;
 }
 
 /* Legacy pages use light gradients and hard-coded white cards rather than the
