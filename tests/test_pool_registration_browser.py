@@ -102,7 +102,7 @@ class PoolRegistrationTests(unittest.TestCase):
         payload={'attendeeCount':2,'firstName':'Local','lastName':'Test','email':'local@example.invalid','guestNames':['Guest Test'],'guestEmails':['guest@example.invalid'],'ebookQty':2}
         def post(route,body): route.fulfill(json={'ok':True,'paymentPending':True,'checkoutUrl':CHECKOUT})
         page=self.open('poolbls',post=post,query='?checkout_cancelled=1',saved={'requestId':REQUEST_ID,'payload':payload})
-        page.locator('#resume-checkout').wait_for(state='visible')
+        page.locator('#resume-checkout').wait_for(state='visible');self.assertEqual(page.locator('#resume-checkout').get_attribute('href'),CHECKOUT)
         self.assertEqual(page.locator('#first').input_value(),'Local');self.assertEqual(page.locator('#guest-0-last').input_value(),'Test');self.assertEqual(page.locator('#guest-0-email').input_value(),'guest@example.invalid')
         self.assertTrue(page.locator('#first').is_disabled());self.assertEqual(self.posts[0]['action'],'status')
         self.assertEqual(self.posts[0]['requestId'],REQUEST_ID)
@@ -190,5 +190,12 @@ class PoolRegistrationTests(unittest.TestCase):
         self.assertEqual(page.locator('#ownBook').get_attribute('aria-pressed'),'true')
         self.assertEqual(page.locator('#total').inner_text(),'$25')
         page.locator('#withBook').click();self.assertEqual(page.locator('#total').inner_text(),'$45')
+
+    def test_hidden_checkout_recovery_has_valid_local_fallback(self):
+        for name in ['pool','poolbls']:
+            page=self.open(name)
+            self.assertEqual(page.locator('#resume-checkout').get_attribute('href'),'#registration')
+            self.assertTrue(page.locator('#resume-checkout').is_hidden())
+            self.assertEqual(page.locator('#registration').count(),1)
 
 if __name__=='__main__':unittest.main()
