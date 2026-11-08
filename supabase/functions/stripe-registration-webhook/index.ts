@@ -36,6 +36,28 @@ Deno.serve(async(request)=>{
 
   const registrationId=String(session.client_reference_id||"").trim();
   if(!registrationId)return reply({ok:true,ignored:"No registration reference"});
+  // Pool payments use one atomic confirmation with exact order/session binding.
+  // Keep this before generic failure/paid mutations; metadata alone cannot route
+  // a pool registration into the less restrictive legacy path.
+  const {data:poolPrimary,error:poolLookupError}=await db.from("registrations")
+    .select("id,idempotency_key").eq("id",registrationId).maybeSingle();
+  if(poolLookupError)return reply({ok:false,error:"Registration lookup failed"},500);
+  if(poolPrimary?.idempotency_key?.startsWith("pool2027:")){
+    if(event.type==="checkout.session.expired"){
+      const {error}=await db.rpc("expire_pool_registration",{p_registration_id:registrationId,p_checkout_session_id:session.id||null});
+      if(error)return reply({ok:false,error:"Pool checkout expiry reconciliation failed"},500);
+      return reply({ok:true,status:"expired"});
+    }
+    if(!paid)return reply({ok:true,ignored:"Pool checkout not paid"});
+    if(session.mode!=="payment"||session.payment_status!=="paid")return reply({ok:false,error:"Pool checkout payment evidence missing"},400);
+    const {data,error}=await db.rpc("confirm_pool_registration_payment",{
+      p_registration_id:registrationId,p_checkout_session_id:session.id||null,
+      p_amount_total:session.amount_total??null,p_currency:session.currency||null,
+      p_payment_intent_id:typeof session.payment_intent==="string"?session.payment_intent:null
+    });
+    if(error||!data?.ok)return reply({ok:false,error:"Pool payment reconciliation failed"},500);
+    return reply({ok:true,status:"paid",...data});
+  }
   if(event.type==="checkout.session.async_payment_failed"){
     await db.from("registration_orders").update({status:"payment_failed",stripe_checkout_session_id:session.id||null,stripe_payment_intent_id:session.payment_intent||null,updated_at:new Date().toISOString()}).eq("registration_id",registrationId);
     return reply({ok:true,status:"payment_failed"});
