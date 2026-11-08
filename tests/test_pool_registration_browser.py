@@ -70,17 +70,17 @@ class PoolRegistrationTests(unittest.TestCase):
     def test_bls_exact_prices_and_guest_names_survive_choices(self):
         page=self.open('poolbls');self.fill(page,3)
         self.assertEqual(page.locator('#total').inner_text(),'$75.00')
-        page.locator('[name=manual][value=ebook]').check()
+        page.locator('#withBook').click()
         self.assertEqual(page.locator('#total').inner_text(),'$130.53')
         self.assertEqual(page.locator('#guest-1-first').input_value(),'Guest2')
         page.locator('#count').select_option('2');page.locator('#count').select_option('3')
         self.assertEqual(page.locator('#guest-1-first').input_value(),'Guest2')
-        page.locator('[name=manual][value=none]').check()
+        page.locator('#ownBook').click()
         self.assertEqual(page.locator('#total').inner_text(),'$75.00')
-        self.assertFalse(page.locator('[name=manual][value=ebook]').is_checked())
+        self.assertEqual(page.locator('#withBook').get_attribute('aria-pressed'),'false')
     def test_bls_checkout_mock_no_live_payment(self):
         def post(route,body): route.fulfill(json={'ok':True,'paymentPending':True,'checkoutUrl':CHECKOUT})
-        page=self.open('poolbls',post=post);self.fill(page,2);page.locator('[name=manual][value=ebook]').check()
+        page=self.open('poolbls',post=post);self.fill(page,2);page.locator('#withBook').click()
         page.locator('#submit').click();page.wait_for_url(CHECKOUT)
         self.assertEqual(self.posts[0]['ebookQty'],2);self.assertEqual(self.posts[0]['attendeeCount'],2)
     def test_double_submit_sends_once(self):
@@ -152,9 +152,23 @@ class PoolRegistrationTests(unittest.TestCase):
         for page_id in ['pool','poolbls']:
             page=self.open(page_id,theme='dark')
             self.assertEqual(page.locator('html').get_attribute('data-theme'),'dark')
-            styles=page.locator('.registration h3,.registration label,.checkout-options legend,.checkout-choice strong,.checkout-choice b,.checkout-choice small,.checkout-capacity,.checkout-switch,.summary,#submit').evaluate_all("""els=>els.filter(el=>el.getClientRects().length).map(el=>{let p=el,bg;while(p){bg=getComputedStyle(p).backgroundColor;if(bg!=='rgba(0, 0, 0, 0)')break;p=p.parentElement;}return [el.textContent.trim(),getComputedStyle(el).color,bg];})""")
+            styles=page.locator('.registration h2,.registration label,.price-choice strong,.price-choice .amount,.price-choice small,.price-choice .breakdown,.checkout-capacity,.checkout-switch,.summary,#submit').evaluate_all("""els=>els.filter(el=>el.getClientRects().length).map(el=>{let p=el,bg;while(p){bg=getComputedStyle(p).backgroundColor;if(bg!=='rgba(0, 0, 0, 0)')break;p=p.parentElement;}return [el.textContent.trim(),getComputedStyle(el).color,bg];})""")
             for text,color,bg in styles:
                 light,dark=sorted([lum(color),lum(bg)],reverse=True)
                 self.assertGreaterEqual((light+0.05)/(dark+0.05),4.5,text)
+
+    def test_earl_jackson_template_structure_and_responsive_order(self):
+        for width in [390,1280]:
+            page=self.open('poolbls',width=width)
+            self.assertEqual(page.locator('#registration > .card').count(),1)
+            self.assertEqual(page.locator('.price-choices button.price-choice').count(),2)
+            self.assertEqual(page.locator('.row label.field .req').count(),4)
+            self.assertEqual(page.locator('#ownBook').get_attribute('aria-pressed'),'true')
+            choices=page.locator('.price-choices').bounding_box()['y'];contact=page.locator('#first').bounding_box()['y']
+            self.assertLess(choices,contact) if width==390 else self.assertGreater(choices,contact)
+            page=self.open('pool',width=width)
+            self.assertEqual(page.locator('#registration > .card').count(),1)
+            self.assertLess(page.locator('#count').bounding_box()['y'],page.locator('#first').bounding_box()['y'])
+            self.assertEqual(page.locator('#registration .survey-body select').count(),4)
 
 if __name__=='__main__':unittest.main()
