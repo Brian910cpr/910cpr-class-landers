@@ -565,7 +565,7 @@ def css() -> str:
       padding: 9px 11px;
       cursor: pointer;
     }
-    button[aria-pressed="true"] {
+    button[aria-pressed="true"]:where(:not(.site-theme-toggle)) {
       border-color: var(--accent);
       box-shadow: inset 3px 0 0 var(--accent);
       background: #eef7fc;
