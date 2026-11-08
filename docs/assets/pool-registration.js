@@ -8,9 +8,9 @@
   const count = $("count"), guests = $("guests"), submit = $("submit"), status = $("status"), resume = $("resume-checkout");
   const key = "pool-checkout:" + event, query = new URLSearchParams(window.poolCheckoutReturn || location.search);
   const uuid = value => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value || "");
-  const money = cents => new Intl.NumberFormat("en-US", {style:"currency",currency:"USD"}).format(cents / 100);
+  const money = cents => new Intl.NumberFormat("en-US", {style:"currency",currency:"USD",minimumFractionDigits:cents % 100 === 0 ? 0 : 2,maximumFractionDigits:2}).format(cents / 100);
   let busy = false, pending = false, confirmed = false, available = false, remaining = 0;
-  let courseCents = bls ? 2500 : 0, ebookCents = 1851, saved = null, lastPayload = null;
+  let courseCents = bls ? 2500 : 0, ebookCents = 2000, saved = null, lastPayload = null;
   try { saved = JSON.parse(sessionStorage.getItem(key)); } catch (_) { /* Storage is optional. */ }
   let requestId = uuid(query.get("request_id")) ? query.get("request_id") : uuid(saved?.requestId) ? saved.requestId : null;
   let submitted = !!requestId;
@@ -28,7 +28,7 @@
   function lockFields(locked) { $("registration-fields").querySelectorAll("input,select,button").forEach(el => el.disabled = locked); }
   function captureGuests() {
     guests.querySelectorAll(".checkout-guest").forEach((row, i) => {
-      guestCache[i] = {first:row.querySelector("[data-first]").value,last:row.querySelector("[data-last]").value};
+      guestCache[i] = {first:row.querySelector("[data-first]").value,last:row.querySelector("[data-last]").value,email:row.querySelector("[data-email]").value};
     });
   }
   function renderGuests() {
@@ -39,12 +39,12 @@
       const row = document.createElement("div"); row.className = "checkout-guest attendee-entry";
       const title = document.createElement("strong"); title.textContent = "Attendee " + (i + 2); row.append(title);
       const fields = document.createElement("div"); fields.className = "attendee-fields";
-      for (const part of ["first","last"]) {
-        const field = document.createElement("div"); field.className = "guest-field";
+      for (const part of ["first","last","email"]) {
+        const field = document.createElement("div"); field.className = "guest-field" + (part === "email" ? " full" : "");
         const input = document.createElement("input"), label = document.createElement("label");
         input.id = "guest-" + i + "-" + part; input.dataset[part] = ""; input.required = true;
-        input.maxLength = 60; input.autocomplete = "off"; input.value = guestCache[i]?.[part] || "";
-        label.className = "field"; label.htmlFor = input.id; label.textContent = part === "first" ? "First name" : "Last name";
+        input.type = part === "email" ? "email" : "text"; input.maxLength = part === "email" ? 160 : 60; input.autocomplete = "off"; input.value = guestCache[i]?.[part] || "";
+        label.className = "field"; label.htmlFor = input.id; label.textContent = part === "first" ? "First name " : part === "last" ? "Last name " : "Email "; const required = document.createElement("span"); required.className = "req"; required.textContent = "REQUIRED"; label.append(required);
         field.append(label, input); fields.append(field);
       }
       row.append(fields); guests.append(row);
@@ -64,7 +64,7 @@
     for (const [id, field] of [["first","firstName"],["last","lastName"],["email","email"],["phone","phone"]]) $(id).value = payload[field] || "";
     if (bls) chooseManual(payload.ebookQty > 0 ? "ebook" : "none");
     (payload.guestNames || []).forEach((name, i) => {
-      const parts = name.trim().split(/\s+/); guestCache[i] = {first:parts.shift() || "", last:parts.join(" ")};
+      const parts = name.trim().split(/\s+/); guestCache[i] = {first:parts.shift() || "", last:parts.join(" "),email:payload.guestEmails?.[i] || ""};
     });
     renderGuests();
     form.querySelectorAll("[data-survey]").forEach(el => el.value = payload.survey?.[el.dataset.survey] || "");
@@ -161,7 +161,7 @@
     const n = Number(count.value);
     if (n > remaining) { message("There are not enough hands-on spots for this group.", "error"); return; }
     requestId = crypto.randomUUID(); submitted = true;
-    lastPayload = {firstName:$("first").value.trim(),lastName:$("last").value.trim(),email:$("email").value.trim(),phone:$("phone").value.trim(),company:$("company").value.trim(),attendeeCount:n,guestNames:guestCache.slice(0,n-1).map(x => (x.first.trim() + " " + x.last.trim()).trim()),ebookQty:bookSelected() ? n : 0,survey:Object.fromEntries(Array.from(form.querySelectorAll("[data-survey]")).map(el => [el.dataset.survey,el.value]))};
+    lastPayload = {firstName:$("first").value.trim(),lastName:$("last").value.trim(),email:$("email").value.trim(),phone:$("phone").value.trim(),company:$("company").value.trim(),attendeeCount:n,guestNames:guestCache.slice(0,n-1).map(x => (x.first.trim() + " " + x.last.trim()).trim()),guestEmails:guestCache.slice(0,n-1).map(x => x.email.trim()),ebookQty:bookSelected() ? n : 0,survey:Object.fromEntries(Array.from(form.querySelectorAll("[data-survey]")).map(el => [el.dataset.survey,el.value]))};
     remember(); busy = true; lockFields(true); refresh(); message(bls ? "Saving your registration and opening secure checkout…" : "Reserving your free spots…");
     try { await handle(await api({...lastPayload,requestId}), bls); }
     catch (error) {

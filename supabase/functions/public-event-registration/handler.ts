@@ -52,7 +52,7 @@ export function createHandler(deps: Dependencies) {
         if (session.registration_backend!=="landerware" || session.registration_status!=="open" || session.visibility!==(slug===FAMILY?"public":"unlisted") || new Date(session.start_at).getTime() <= deps.now()) throw new ServiceError("Registration is not open.",409,"registration_closed");
         const input = normalizeInput(body, slug);
         if (slug === BLS && !deps.stripeKey()) throw new ServiceError("Secure checkout is temporarily unavailable. Please try again.");
-        const {data,error} = await db.rpc("reserve_pool_registration", {p_event:slug,p_request_id:requestId,p_fingerprint:await fingerprint(input,slug),p_input:input});
+        const {data,error} = await db.rpc("reserve_pool_registration", {p_event:slug,p_request_id:requestId,p_fingerprint:await fingerprint(input,slug),p_input:{...input,contractVersion:2}});
         if (error) throw new ServiceError("Unable to save registration. Retry with this same form.");
         if (!data?.ok) return json(data, data?.code === "invalid_input" ? 400 : 409);
       }
@@ -62,7 +62,7 @@ export function createHandler(deps: Dependencies) {
       const survey = registration.optional_survey;
       const common = {ok:true,requestId,registrationId:registration.id,groupRegistrationIds:survey.groupRegistrationIds,attendeeCount:survey.attendeeCount,ebookQty:survey.ebookQty??0};
       if (slug === FAMILY) return json({...common,confirmed:registration.status==="registered",event:await confirmedCapacity()});
-      const {data:order,error:oe} = await db.from("registration_orders").select("id,status,total_amount,currency,stripe_checkout_session_id").eq("registration_id",registration.id).single();
+      const {data:order,error:oe} = await db.from("registration_orders").select("id,status,course_amount,materials_amount,total_amount,currency,stripe_checkout_session_id").eq("registration_id",registration.id).single();
       if (oe || !order) throw new ServiceError("Unable to check payment. Please retry this same registration.");
       if (body.checkoutSessionId && body.checkoutSessionId !== order.stripe_checkout_session_id) throw new ServiceError("That checkout does not match this registration.",409,"checkout_mismatch");
       if (order.status === "paid" && registration.status === "registered") return json({...common,confirmed:true,paymentPending:false,event:await confirmedCapacity()});
@@ -95,12 +95,19 @@ export function createHandler(deps: Dependencies) {
         if (deps.now() > expiresAt*1000 + 22*60*60*1000) throw new ServiceError("Please contact 910CPR to reconcile this older checkout before registering again.",409,"payment_unavailable");
         const params = new URLSearchParams({mode:"payment",client_reference_id:registration.id,customer_email:survey.contactEmail,success_url:`https://www.910cpr.com/poolbls?session_id={CHECKOUT_SESSION_ID}&request_id=${requestId}`,cancel_url:`https://www.910cpr.com/poolbls?checkout_cancelled=1&request_id=${requestId}`,expires_at:String(expiresAt),"payment_method_types[0]":"card","metadata[pool_event]":slug,"metadata[order_id]":order.id,"metadata[registration_id]":registration.id});
         params.set("line_items[0][price_data][currency]","usd");
-        params.set("line_items[0][price_data][unit_amount]",String(COURSE_CENTS));
+        // Honor the durable quote, including retries started before a price change.
+        const courseCents = Math.round(Number(order.course_amount) * 100);
+        const materialsCents = Math.round(Number(order.materials_amount) * 100);
+        if (!Number.isSafeInteger(courseCents) || courseCents < 0 || !Number.isSafeInteger(materialsCents) || materialsCents < 0 ||
+            !Number.isInteger(survey.attendeeCount) || survey.attendeeCount < 1 || courseCents % survey.attendeeCount !== 0 ||
+            (survey.ebookQty > 0 ? materialsCents % survey.ebookQty !== 0 : materialsCents !== 0) ||
+            courseCents + materialsCents !== Math.round(Number(order.total_amount) * 100)) throw new ServiceError("The saved payment quote could not be verified. Please contact 910CPR.");
+        params.set("line_items[0][price_data][unit_amount]",String(courseCents / survey.attendeeCount));
         params.set("line_items[0][price_data][product_data][name]","AHA BLS Provider - February 15 community event");
         params.set("line_items[0][quantity]",String(survey.attendeeCount));
         if (survey.ebookQty > 0) {
           params.set("line_items[1][price_data][currency]","usd");
-          params.set("line_items[1][price_data][unit_amount]",String(EBOOK_CENTS));
+          params.set("line_items[1][price_data][unit_amount]",String(materialsCents / survey.ebookQty));
           params.set("line_items[1][price_data][product_data][name]","Optional 2025 AHA BLS Provider eManual");
           params.set("line_items[1][quantity]",String(survey.ebookQty));
         }

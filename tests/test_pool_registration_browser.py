@@ -37,7 +37,7 @@ class PoolRegistrationTests(unittest.TestCase):
                 else:
                     if remaining is None:
                         route.fulfill(status=503,json={'ok':False,'error':'Unavailable'});return
-                    route.fulfill(json={'ok':True,'pricing':{'courseUnitCents':2500 if page_id=='poolbls' else 0,'ebookUnitCents':1851},'event':{'remaining':remaining,'handsOnCapacity':30,'start_at':'2027-02-15T16:00:00Z','registration_status':'open'}})
+                    route.fulfill(json={'ok':True,'pricing':{'courseUnitCents':2500 if page_id=='poolbls' else 0,'ebookUnitCents':2000},'event':{'remaining':remaining,'handsOnCapacity':30,'start_at':'2027-02-15T16:00:00Z','registration_status':'open'}})
             elif url.startswith(CHECKOUT): route.fulfill(body='<h1>Mock checkout only</h1>',content_type='text/html')
             elif path=='/'+page_id: route.fulfill(path=str(ROOT/'docs'/f'{page_id}.html'),content_type='text/html')
             elif path.startswith('/assets/') and (ROOT/'docs'/path.lstrip('/')).is_file():
@@ -54,13 +54,13 @@ class PoolRegistrationTests(unittest.TestCase):
         page.locator('#first').fill('Local');page.locator('#last').fill('Test')
         page.locator('#email').fill('local@example.invalid')
         for i in range(count-1):
-            page.locator(f'#guest-{i}-first').fill('Guest'+str(i+1));page.locator(f'#guest-{i}-last').fill('Test')
+            page.locator(f'#guest-{i}-first').fill('Guest'+str(i+1));page.locator(f'#guest-{i}-last').fill('Test');page.locator(f'#guest-{i}-email').fill('guest'+str(i+1)+'@example.invalid')
     def test_free_group_confirmation_mobile_and_desktop(self):
         for width in (390,1280):
             page=self.open(width=width);self.fill(page,3);page.locator('#submit').click()
             page.locator('#confirmation').wait_for(state='visible')
             self.assertEqual(len(self.posts),1);payload=self.posts[0]
-            self.assertEqual(payload['guestNames'],['Guest1 Test','Guest2 Test'])
+            self.assertEqual(payload['guestNames'],['Guest1 Test','Guest2 Test']);self.assertEqual(payload['guestEmails'],['guest1@example.invalid','guest2@example.invalid'])
             self.assertEqual(payload['ebookQty'],0);self.assertTrue(payload['requestId'])
             self.assertIn('3 hands-on spots',page.locator('#confirmation').inner_text())
             self.assertTrue(page.locator('#submit').is_hidden());self.assertEqual(self.errors,[])
@@ -69,20 +69,20 @@ class PoolRegistrationTests(unittest.TestCase):
             self.assertEqual(len(self.posts),1)
     def test_bls_exact_prices_and_guest_names_survive_choices(self):
         page=self.open('poolbls');self.fill(page,3)
-        self.assertEqual(page.locator('#total').inner_text(),'$75.00')
+        self.assertEqual(page.locator('#total').inner_text(),'$75')
         page.locator('#withBook').click()
-        self.assertEqual(page.locator('#total').inner_text(),'$130.53')
-        self.assertEqual(page.locator('#guest-1-first').input_value(),'Guest2')
+        self.assertEqual(page.locator('#total').inner_text(),'$135')
+        self.assertEqual(page.locator('#guest-1-first').input_value(),'Guest2');self.assertEqual(page.locator('#guest-1-email').input_value(),'guest2@example.invalid')
         page.locator('#count').select_option('2');page.locator('#count').select_option('3')
-        self.assertEqual(page.locator('#guest-1-first').input_value(),'Guest2')
+        self.assertEqual(page.locator('#guest-1-first').input_value(),'Guest2');self.assertEqual(page.locator('#guest-1-email').input_value(),'guest2@example.invalid')
         page.locator('#ownBook').click()
-        self.assertEqual(page.locator('#total').inner_text(),'$75.00')
+        self.assertEqual(page.locator('#total').inner_text(),'$75')
         self.assertEqual(page.locator('#withBook').get_attribute('aria-pressed'),'false')
     def test_bls_checkout_mock_no_live_payment(self):
         def post(route,body): route.fulfill(json={'ok':True,'paymentPending':True,'checkoutUrl':CHECKOUT})
         page=self.open('poolbls',post=post);self.fill(page,2);page.locator('#withBook').click()
         page.locator('#submit').click();page.wait_for_url(CHECKOUT)
-        self.assertEqual(self.posts[0]['ebookQty'],2);self.assertEqual(self.posts[0]['attendeeCount'],2)
+        self.assertEqual(self.posts[0]['ebookQty'],2);self.assertEqual(self.posts[0]['attendeeCount'],2);self.assertEqual(self.posts[0]['guestEmails'],['guest1@example.invalid'])
     def test_double_submit_sends_once(self):
         page=self.open();self.fill(page)
         page.evaluate("for(let i=0;i<5;i++)document.getElementById('registration').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))")
@@ -99,11 +99,11 @@ class PoolRegistrationTests(unittest.TestCase):
         page=self.open('poolbls',query='?paid=1')
         self.assertTrue(page.locator('#confirmation').is_hidden());self.assertIn('cannot be confirmed',page.locator('#status').inner_text())
     def test_cancel_return_restores_and_resumes_same_request(self):
-        payload={'attendeeCount':2,'firstName':'Local','lastName':'Test','email':'local@example.invalid','guestNames':['Guest Test'],'ebookQty':2}
+        payload={'attendeeCount':2,'firstName':'Local','lastName':'Test','email':'local@example.invalid','guestNames':['Guest Test'],'guestEmails':['guest@example.invalid'],'ebookQty':2}
         def post(route,body): route.fulfill(json={'ok':True,'paymentPending':True,'checkoutUrl':CHECKOUT})
         page=self.open('poolbls',post=post,query='?checkout_cancelled=1',saved={'requestId':REQUEST_ID,'payload':payload})
-        page.locator('#resume-checkout').wait_for(state='visible')
-        self.assertEqual(page.locator('#first').input_value(),'Local');self.assertEqual(page.locator('#guest-0-last').input_value(),'Test')
+        page.locator('#resume-checkout').wait_for(state='visible');self.assertEqual(page.locator('#resume-checkout').get_attribute('href'),CHECKOUT)
+        self.assertEqual(page.locator('#first').input_value(),'Local');self.assertEqual(page.locator('#guest-0-last').input_value(),'Test');self.assertEqual(page.locator('#guest-0-email').input_value(),'guest@example.invalid')
         self.assertTrue(page.locator('#first').is_disabled());self.assertEqual(self.posts[0]['action'],'status')
         self.assertEqual(self.posts[0]['requestId'],REQUEST_ID)
     def test_verified_return_without_storage(self):
@@ -170,5 +170,32 @@ class PoolRegistrationTests(unittest.TestCase):
             self.assertEqual(page.locator('#registration > .card').count(),1)
             self.assertLess(page.locator('#count').bounding_box()['y'],page.locator('#first').bounding_box()['y'])
             self.assertEqual(page.locator('#registration .survey-body select').count(),4)
+
+    def test_every_attendee_email_required_on_both_forms(self):
+        for name in ['pool','poolbls']:
+            page=self.open(name);self.fill(page,3)
+            self.assertEqual(page.locator('#guests input[type=email][required]').count(),2)
+            page.locator('#guest-1-email').fill('');page.locator('#submit').click()
+            self.assertEqual(self.posts,[])
+            page.locator('#guest-1-email').fill('not-an-email');page.locator('#submit').click()
+            self.assertEqual(self.posts,[])
+            page.locator('#guest-1-email').fill('guest2@example.invalid');page.locator('#submit').click()
+            page.locator('#confirmation').wait_for(state='visible')
+            self.assertEqual(self.posts[0]['guestEmails'],['guest1@example.invalid','guest2@example.invalid'])
+    def test_simple_book_price_and_optional_default(self):
+        page=self.open('poolbls')
+        self.assertEqual(page.locator('#withBook .amount').inner_text(),'$45')
+        self.assertIn('$25 BLS class + $20 eManual',page.locator('#withBook').inner_text())
+        self.assertEqual(page.locator('#ownBook .amount').inner_text(),'$25')
+        self.assertEqual(page.locator('#ownBook').get_attribute('aria-pressed'),'true')
+        self.assertEqual(page.locator('#total').inner_text(),'$25')
+        page.locator('#withBook').click();self.assertEqual(page.locator('#total').inner_text(),'$45')
+
+    def test_hidden_checkout_recovery_has_valid_local_fallback(self):
+        for name in ['pool','poolbls']:
+            page=self.open(name)
+            self.assertEqual(page.locator('#resume-checkout').get_attribute('href'),'#registration')
+            self.assertTrue(page.locator('#resume-checkout').is_hidden())
+            self.assertEqual(page.locator('#registration').count(),1)
 
 if __name__=='__main__':unittest.main()
