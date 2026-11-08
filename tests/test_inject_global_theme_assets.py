@@ -1,11 +1,46 @@
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
+from unittest.mock import patch
 
 from scripts.inject_global_theme_assets import THEME_VERSION, inject_html
 
 
 class GlobalThemeInjectionTests(unittest.TestCase):
+    def test_published_family_pages_and_case_aliases_load_theme(self):
+        from scripts.block_start_time_selector import load_block_schedule_page_configs
+
+        root = Path(__file__).resolve().parents[1]
+        for config in load_block_schedule_page_configs().values():
+            if config.get("render_html") is False:
+                continue
+            for name in [config["output_path"], *config.get("alias_output_paths", [])]:
+                with self.subTest(path=name):
+                    rendered = (root / name).read_text(encoding="utf-8")
+                    self.assertEqual(rendered.count('/assets/site-theme.js'), 1)
+                    self.assertIn(f'/assets/site-theme.css?v={THEME_VERSION}', rendered)
+
+    def test_every_family_render_keeps_shared_theme_after_rebuild(self):
+        from scripts.block_start_time_selector import load_block_schedule_page_configs
+        from scripts.build_bls_block_schedule_pilot import render_html
+
+        for key, config in load_block_schedule_page_configs().items():
+            with self.subTest(family=key), patch(
+                "scripts.build_bls_block_schedule_pilot.load_course_descriptions", return_value={}
+            ), patch(
+                "scripts.build_bls_block_schedule_pilot.asset_url", side_effect=lambda path: path
+            ), patch(
+                "scripts.build_bls_block_schedule_pilot.hero_markup", return_value=""
+            ), patch(
+                "scripts.build_bls_block_schedule_pilot.render_from_schedule", return_value=""
+            ):
+                rendered = render_html({"pageKey": key, "pageConfig": config, "dates": [], "counts": {}})
+                self.assertEqual(rendered.count('/assets/site-theme.js'), 1)
+                self.assertEqual(rendered.count(f'/assets/site-theme.css?v={THEME_VERSION}'), 1)
+                self.assertLess(rendered.index('/assets/site-theme.js'), rendered.index('</head>'))
+                self.assertLess(rendered.index('</style>'), rendered.index('/assets/site-theme.css'))
+
     def test_injects_assets_before_head_end(self):
         updated, changed = inject_html("<html><head><title>X</title></head><body></body></html>")
         self.assertTrue(changed)

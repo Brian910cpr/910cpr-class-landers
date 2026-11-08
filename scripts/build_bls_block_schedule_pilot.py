@@ -19,6 +19,7 @@ from scripts.block_start_time_selector import (
 from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
 from scripts.static_public_inventory_projection import render_from_schedule
 from scripts.family_course_art import asset_url, hero_markup
+from scripts.inject_global_theme_assets import THEME_TAGS
 
 
 REPORT_JSON_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
@@ -1396,6 +1397,7 @@ def render_html(payload: dict[str, Any]) -> str:
   {commerce_schema_html}
   {GTM_HEAD_SNIPPET}
   {ATTRIBUTION_SCRIPT_SNIPPET}
+  {THEME_TAGS}
 </head>
 <body>
   {GTM_NOSCRIPT_SNIPPET}
