@@ -8,8 +8,8 @@ Private event descriptions are stored only inside the local runtime snapshot JSO
 
 - Calendar sources found: 3
 - Snapshots written: 3
-- Total events exported: 105
-- Date range exported: 2026-11-07T11:31:23.461010+00:00 through 2027-02-05T11:31:23.461010+00:00
+- Total events exported: 104
+- Date range exported: 2026-11-08T02:04:40.335463+00:00 through 2027-02-06T02:04:40.335463+00:00
 - Private calendar secrets loaded: False
 
 ## Events Exported Per Source
@@ -18,7 +18,7 @@ Private event descriptions are stored only inside the local runtime snapshot JSO
 | --- | --- | --- | --- | --- | --- | --- | ---: | --- | ---: |
 | amy_availability | True | https://calendar.google.com/...m/public/basic.ics | derived_public_ics_from_calendar_id | google_calendar | ok |  | 0 | `/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/runtime/calendar_snapshots/amy_availability.json` | 0 |
 | nick_availability | True | https://calendar.google.com/...m/public/basic.ics | derived_public_ics_from_calendar_id | google_calendar | ok |  | 0 | `/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/runtime/calendar_snapshots/nick_availability.json` | 0 |
-| brian_do_not_schedule | True | https://calendar.google.com/...m/public/basic.ics | derived_public_ics_from_calendar_id | inverse_google_calendar | ok |  | 105 | `/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/runtime/calendar_snapshots/brian_do_not_schedule.json` | 0 |
+| brian_do_not_schedule | True | https://calendar.google.com/...m/public/basic.ics | derived_public_ics_from_calendar_id | inverse_google_calendar | ok |  | 104 | `/home/runner/work/910cpr-class-landers/910cpr-class-landers/data/runtime/calendar_snapshots/brian_do_not_schedule.json` | 0 |
 
 ## Warnings
 

@@ -441,6 +441,12 @@
     .course-family-choice strong { color: var(--ink); }
     .course-family-choice span { color: var(--muted); font-size: .82rem; line-height: 1.3; }
     .course-family-choice .course-price { color: var(--accent-dark); font-size: 1rem; font-weight: 900; }
+    .course-family-choices .skills-session-choice { margin-top: 8px; border-top: 2px solid var(--accent); }
+    .skills-option-list { display: grid; margin: 4px 52px 0; gap: 10px; }
+    .skills-option-list button { width: 100%; display: grid; gap: 5px; padding: 16px; background: var(--band); }
+    .skills-option-list button span { color: var(--muted); }
+    .skills-option-list button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    @media (max-width: 700px) { .skills-option-list { margin-inline: 0; } }
     .month-stack { display: grid; gap: 14px; }
     .month-nav {
       display: none;
@@ -835,6 +841,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <button type="button" class="rail-arrow next" data-course-rail-next aria-label="More course options">›</button>
         </div>
       </div>
+      <div id="skills-course-option-list" class="skills-option-list" aria-label="Skills session only"></div>
       <div id="calendar-time-filters"></div>
       <div class="selector-grid">
         <div class="panel">
@@ -877,12 +884,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </main>
   <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261103-selector-rollback-1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261107-skills-compat-1"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/family_cpr.json?v=2026-11-07T11%3A31%3A41.146646%2B00%3A00";
-    const courseOptions = [{"courseId": "252737", "courseName": "Family & Friends CPR", "family": "Heartsaver", "variant": "family-cpr", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["family-cpr", "family", "family-friends", "family-and-friends", "friends"], "iconLabel": "CPR", "imageUrl": "/images/FF-CPR-2.jpg", "imageFit": "contain", "imageAlt": "Family CPR practice with an infant CPR manikin", "deliveryBadge": "IN-PERSON", "clarification": "Relaxed, hands-on CPR practice for families and community members. No certification card is included.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 45, "details": {}}];
+    const availabilityUrl = "/data/block-selector-availability/family_cpr.json?v=2026-11-08T02%3A04%3A55.525838%2B00%3A00";
+    const courseOptions = [{"courseId": "252737", "courseName": "Family & Friends CPR", "family": "Heartsaver", "variant": "family-cpr", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["family-cpr", "family", "family-friends", "family-and-friends", "friends"], "iconLabel": "CPR", "imageUrl": "/images/FF-CPR-2.jpg", "imageFit": "contain", "imageAlt": "Family CPR practice with an infant CPR manikin", "deliveryBadge": "IN-PERSON", "clarification": "Relaxed, hands-on CPR practice for families and community members. No certification card is included.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 45, "fullWidth": false, "skillsContexts": [], "details": {}}];
     const optionGroups = {"Heartsaver": {"family": "Heartsaver", "label": "Family & Friends CPR", "courseIds": ["252737"]}};
     const asapOptionLabel = "Family & Friends CPR";
     const unsupportedOptions = [];
@@ -892,6 +899,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     let availabilityMessage = 'Checking current class times…';
     let resolvedAvailability = null;
     let selectedCourseId = "252737";
+    let selectedSkillsContext = "";
     let showAllOptions = false;
     let compareMode = false;
     let selectedDate = '';
@@ -1110,7 +1118,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (!selected) {
         return new Set();
       }
-      if (compareMode) {
+      if (compareMode && !selected.fullWidth) {
         const group = Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId));
         const groupIds = group?.courseIds || optionGroups[selected.family]?.courseIds || [selectedCourseId];
         return new Set(groupIds.filter(courseId => {
@@ -1236,10 +1244,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     function renderCourseOptions() {
       const host = byId('course-option-list');
       host.innerHTML = '';
+      const skillsHost = byId('skills-course-option-list');
+      skillsHost.innerHTML = '';
+      function skillsButton(course, context) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'course-family-choice skills-session-choice';
+        button.dataset.courseId = course.courseId;
+        button.dataset.skillsContext = context.key;
+        button.setAttribute('aria-pressed', String(course.courseId === selectedCourseId && context.key === selectedSkillsContext));
+        const label = document.createElement('strong');
+        label.textContent = context.label + ' Skills Session Only — $55';
+        const help = document.createElement('span');
+        help.textContent = course.clarification;
+        button.append(label, help);
+        button.addEventListener('click', () => {
+          selectedCourseId = course.courseId;
+          selectedSkillsContext = context.key;
+          compareMode = false;
+          const compare = byId('compare-toggle');
+          if (compare) compare.checked = false;
+          renderAll();
+          document.querySelector('[data-skills-context="' + context.key + '"]')?.focus();
+        });
+        return button;
+      }
+      if (!groupCourseOptions) {
+        visibleCourseOptions().filter(course => course.fullWidth).forEach(course => {
+          (course.skillsContexts || []).forEach(context => skillsHost.appendChild(skillsButton(course, context)));
+        });
+      }
       if (groupCourseOptions) {
         host.classList.add('course-family-grid');
         const families = new Map();
-        visibleCourseOptions().forEach(course => {
+        visibleCourseOptions().filter(course => !course.fullWidth).forEach(course => {
           const key = course.familyGroup || course.courseId;
           if (!families.has(key)) families.set(key, []);
           families.get(key).push(course);
@@ -1282,6 +1320,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             });
             choices.appendChild(button);
           });
+          visibleCourseOptions().filter(course => course.fullWidth).forEach(course => {
+            (course.skillsContexts || []).filter(context => context.key === courses[0].familyGroup)
+              .forEach(context => choices.appendChild(skillsButton(course, context)));
+          });
           family.append(icon, heading, choices);
           host.appendChild(family);
         });
@@ -1289,7 +1331,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return;
       }
       host.classList.remove('course-family-grid');
-      visibleCourseOptions().forEach(course => {
+      visibleCourseOptions().filter(course => !course.fullWidth).forEach(course => {
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'course-card';
@@ -1609,6 +1651,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         renderAvailabilityPlaceholder();
         return;
       }
+      const selectedOption = courseOptions.find(option => option.courseId === selectedCourseId);
+      if (selectedOption?.fullWidth && selectedOption.skillsContexts?.length > 1 &&
+          !selectedOption.skillsContexts.some(context => context.key === selectedSkillsContext)) {
+        host.innerHTML = '<div class="empty">Choose the CPR AED or First Aid CPR AED skills option above.</div>';
+        return;
+      }
       const day = filteredDates().find(item => item.date === selectedDate);
       const slot = day?.startTimes.find(item => item.startTime === selectedStart);
       if (!slot || isPastStart(day, slot) || !slot.courses.length) {
@@ -1645,11 +1693,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         summary.append(title, dateRow, timeRow, locationRow);
         const badge = document.createElement('div');
         badge.className = 'delivery-badge';
-        badge.textContent = deliveryLabel(course.deliveryMode);
+        badge.textContent = course.courseId === '509474' ? 'SKILLS SESSION ONLY' : deliveryLabel(course.deliveryMode);
         const link = document.createElement('a');
         link.className = 'register-link';
+        const config = courseOptions.find(option => option.courseId === course.courseId);
         link.href = course.appointmentUrl;
-        link.textContent = 'Register';
+        if (config?.fullWidth) {
+          const selection = new URLSearchParams({course: course.courseId, date: selectedDate,
+            startTime: slot.startTime, location: course.location,
+            instructor: course.instructor || '', skillsContext: selectedSkillsContext || config.skillsContexts?.[0]?.key || '', context: "family_cpr"});
+          link.href = '/register/skills-session/?' + selection;
+          link.textContent = 'Schedule skills session';
+        }
+        if (!config?.fullWidth) link.textContent = 'Register';
         link.addEventListener('click', event => {
           if (isPastStart(day, slot)) {
             event.preventDefault();

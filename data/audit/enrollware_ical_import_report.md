@@ -1,9 +1,9 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-11-07T06:30:45.887081-05:00`
+- Generated at: `2026-11-07T21:04:15.282184-05:00`
 - Source: `enrollware_ical`
-- iCal events read: `203`
-- Public sessions created: `203`
+- iCal events read: `202`
+- Public sessions created: `202`
 - Skipped events: `0`
 - Registration unavailable sessions marked not direct-bookable: `170`
 - Unmapped sessions: `6`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `13905068` | enrollware_registration_closed | AHA - Heartsaver® CPR AED - In-person ?? | 2026-08-09T18:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13880764` | enrollware_registration_closed | ARC Adult CPR AED - Blended | 2026-08-10T09:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13870579` | enrollware_registration_closed | AHA BLS HeartCode® | 2026-08-10T11:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13906705` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-08-10T12:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `13946607` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-08-22T09:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13947666` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-22T13:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13945181` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-08-23T10:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `13975991` | enrollware_registration_closed | AHA Heartsaver® Pediatric First Aid CPR AED Online | 2026-08-23T13:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
