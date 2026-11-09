@@ -463,7 +463,15 @@ def expand_inverse_availability(
                 open_intervals.append((open_start, open_end))
         cursor_day += timedelta(days=1)
 
-    gaps = subtract_intervals(open_intervals, blocking_intervals)
+    # Adjacent covered days are one continuous availability interval. Midnight
+    # is not occupancy; retain actual clock/container/horizon gaps as boundaries.
+    continuous_open: list[tuple[datetime, datetime]] = []
+    for start, end in open_intervals:
+        if continuous_open and continuous_open[-1][1] == start:
+            continuous_open[-1] = (continuous_open[-1][0], end)
+        else:
+            continuous_open.append((start, end))
+    gaps = subtract_intervals(continuous_open, blocking_intervals)
     gap_index = 0
     for gap_start, gap_end in gaps:
         gap_start = ceil_to_increment(gap_start)
