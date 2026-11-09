@@ -9,8 +9,8 @@ This is a read-only scaffold. It did not call Google Calendar, call Enrollware, 
 - Instructors mapped: 2
 - Blocks generated: 253
 - Blocks blocked/placeheld: 20
-- Inverse-generated availability blocks: 150
-- Inverse blocking event blocks: 103
+- Inverse-generated availability blocks: 151
+- Inverse blocking event blocks: 102
 - DNS markers found: 0
 
 ## Blocked Reason Counts
