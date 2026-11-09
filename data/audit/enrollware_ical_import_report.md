@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-11-09T13:45:39.549228-05:00`
+- Generated at: `2026-11-09T14:00:05.146715-05:00`
 - Source: `enrollware_ical`
 - iCal events read: `198`
 - Public sessions created: `198`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `165`
+- Registration unavailable sessions marked not direct-bookable: `164`
 - Unmapped sessions: `6`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `13865036` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-11T19:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13900100` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-12T10:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13901730` | enrollware_registration_closed | BLS Provider (NHCSO) | 2026-08-12T13:00:00-04:00 | New Hanover County Sheriff’s Office |
 | `13828438` | enrollware_registration_closed | AHA ACLS Provider (Initial) | 2026-08-12T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,12 +72,13 @@ They remain separate registration-signal/audit inputs only.
 | `13910051` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-08-24T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13828449` | enrollware_registration_closed | AHA ACLS Provider (Renewal) | 2026-08-26T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13989619` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-27T16:00:00-04:00 | Surf City Police Department |
+| `13990775` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-08-27T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
 - `13901730`: BLS Provider (NHCSO) (2026-08-12T13:00:00-04:00)
 - `13929405`: AHA Heartsaver K-12 - In-person ?? (2026-08-14T08:00:00-04:00)
 - `13956873`: BLS Provider (NHCSO) (2026-08-19T13:00:00-04:00)
-- `11341058`: AHA - BLS Instructor Renewal (2026-12-01T00:00:00-05:00)
 - `13415738`: HSI Adult/Child/Infant CPR AED | Blended Learning (2026-09-01T05:30:00-04:00)
+- `11341058`: AHA - BLS Instructor Renewal (2026-12-01T00:00:00-05:00)
 - `14344219`: AHA Heartsaver First Aid CPR AED In-person training for workplace, OSHA, and general public certification (2026-09-23T17:00:00-04:00)
