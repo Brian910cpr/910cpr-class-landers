@@ -6,7 +6,7 @@ const compat='supabase/migrations/'+readdirSync(new URL('../supabase/migrations/
 test('additive native runtime preserves actual hosted legacy overloads and shares capacity/closure safeguards without accepting payment guesses',async()=>{
  const db=new PGlite();try{
  for(const f of preProfileFiles)await db.exec(load(f));await db.exec(load(profileMigration));await db.exec(load(profileRuntime));await db.exec(load(profileRuntime));await db.exec(load('supabase/migrations/20261110213130_native_skills_payment_adapter_only.sql'));
- await db.exec(load('tests/helpers/native-checkout-legacy-hosted-functions.sql'));
+ await db.exec(load('tests/helpers/native-checkout-legacy-hosted-functions.sql'));await db.exec(load('tests/helpers/native-skills-legacy-hosted-function.sql'));
  const baseline=async()=> (await db.query("select proname,pg_get_function_identity_arguments(p.oid) args,prosrc,prosecdef,proacl::text acl from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('landerware_create_public_order','landerware_finalize_public_order') and (p.proname='landerware_create_public_order' or p.pronargs=2) order by proname,args")).rows;
  const before=await baseline();await db.exec(load(compat));await db.exec(load(compat));
  const normalize=rows=>rows.map(r=>({...r,prosrc:r.prosrc.replaceAll("(/* native_paid_hold_reader_v1 */ o.hold_expires_at>now() or (o.payment_evidence->>'payment_status'='paid' and o.payment_evidence->>'seat_hold_protected'='true'))",'o.hold_expires_at>now()')}));

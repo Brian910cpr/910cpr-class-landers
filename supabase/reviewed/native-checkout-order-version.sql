@@ -51,12 +51,15 @@ end $versions$;
 -- receipt must not race a new order into two independent ledgers.
 do $receipts$ declare definition text; old_text text; new_text text;
 begin
+ -- A standalone public-order installation has no legacy skills caller.
+ if to_regprocedure('public.reserve_skills_session_native(text,text,jsonb,jsonb)') is not null then
  definition:=pg_get_functiondef('public.reserve_skills_session_native(text,text,jsonb,jsonb)'::regprocedure);
  if position('native_checkout_legacy_nonce_v1' in definition)=0 then
   old_text:='if p_offer->>''startsAt'' is null then return jsonb_build_object(''ok'',false,''status'',''offer_required''); end if;';
   new_text:='-- native_checkout_legacy_nonce_v1'||E'\n if exists(select 1 from public.landerware_public_orders where idempotency_key=''public-order:''||p_idempotency_key) then raise exception ''generic_checkout_required''; end if;'||E'\n if exists(select 1 from public.skills_session_context_config cfg join public.courses c on c.id=cfg.course_id where cfg.context_key=p_context and c.registration_profile_key is not null) then raise exception ''generic_checkout_required''; end if;'||E'\n '||old_text;
   if (length(definition)-length(replace(definition,old_text,'')))/length(old_text)<>1 then raise exception 'unsupported_legacy_receipt_contract'; end if;
   execute replace(definition,old_text,new_text);
+ end if;
  end if;
  if to_regprocedure('public.reserve_native_checkout_order(text,text,integer,text,text,jsonb,jsonb,jsonb,integer)') is not null then
   definition:=pg_get_functiondef('public.reserve_native_checkout_order(text,text,integer,text,text,jsonb,jsonb,jsonb,integer)'::regprocedure);
