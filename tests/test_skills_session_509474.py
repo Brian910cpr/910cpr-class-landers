@@ -103,7 +103,7 @@ class SkillsOnlyTests(unittest.TestCase):
         pediatric=[o for o in self.pages['heartsaver']['course_options'] if o.get('family_group')=='pediatric-first-aid-cpr-aed']
         self.assertEqual({o['course_id'] for o in pediatric},{'351632','251545'})
         page=(ROOT/'docs/register/skills-session/index.html').read_text(encoding='utf-8')
-        self.assertIn("const destination='/register/'+location.search",page)
+        self.assertIn("const destination='/register/checkout/'+location.search",page)
         self.assertIn('location.replace(destination)',page)
         shared=(ROOT/'docs/register/index.html').read_text(encoding='utf-8')
         self.assertIn('/assets/generic-checkout.js',shared)
