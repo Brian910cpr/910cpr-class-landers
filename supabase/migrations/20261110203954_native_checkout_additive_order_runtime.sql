@@ -1,5 +1,7 @@
 -- Additive native mutation namespace. Existing legacy creator/finalizer overloads are not replaced.
 begin;
+set local lock_timeout='2s';
+set local statement_timeout='30s';
 create table if not exists public.landerware_bls_bundle_policy(
  id boolean primary key default true check(id),enabled boolean not null default false,
  verified boolean not null default false,course_id text not null default '509474' check(course_id='509474'),
