@@ -46,7 +46,7 @@ function harness({legacyURL=null,course='fixture-course',profileReady=true,invoi
    if(rpc==='native_checkout_payment_allowed')return Response.json(!required);
    if(rpc==='native_checkout_begin_upload'){
     assert.equal(body.p_key,key);assert.equal(body.p_student_index,0);assert.equal(body.p_requirement_key,'completion');assert.match(body.p_sha,/^[a-f0-9]{64}$/);
-    return Response.json({id:'fixture-intent',state:'pending_storage',storage_bucket:'class-session-documents',storage_path:`fixture-class/checkout/fixture-student/completion/${body.p_sha}.pdf`});
+    return Response.json({id:'fixture-intent',state:'pending_storage',storage_bucket:'class-session-docs',storage_path:`fixture-class/checkout/fixture-student/completion/${body.p_sha}.pdf`});
    }
    if(rpc==='native_checkout_finish_upload'){finishCount++;return Response.json({ok:true,evidenceStatus:'received',approved:false});}
    if(rpc==='reserve_native_checkout_order'){
@@ -93,7 +93,7 @@ test('actual upload HTTP handler scopes synthetic bytes privately, retries stora
  h.storageFailure(false);const retry=await h.send('upload',body);assert.equal(retry.status,200);
  const result=await retry.json();assert.equal(result.evidenceStatus,'received');assert.equal(result.approved,false);assert.equal(h.finishedUploads(),1);
  const stored=h.calls.filter(c=>c.url.includes('/storage/v1/object/'));assert.equal(stored.length,2);assert.equal(stored[0].url,stored[1].url);
- assert.match(stored[0].url,/\/class-session-documents\/fixture-class\/checkout\/fixture-student\/completion\/[a-f0-9]{64}\.pdf$/);
+ assert.match(stored[0].url,/\/class-session-docs\/fixture-class\/checkout\/fixture-student\/completion\/[a-f0-9]{64}\.pdf$/);
  assert.doesNotMatch(JSON.stringify(result),/server-only-fixture|storage_path|fixture@example|SYNTHETIC/);
  const before=h.calls.length;assert.equal((await h.send('upload',{...body,studentIndex:1})).status,400);assert.equal(h.calls.slice(before).some(c=>c.url.includes('/storage/v1/object/')),false);
  assert.equal(h.calls.some(c=>c.url.startsWith('https://api.stripe.com/')),false,'file receipt neither initiates payment nor confirms registration');
