@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-11-10T22:26:39.022258+00:00",
+  "generated_at": "2026-11-10T22:35:41.696041+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-10T22:26:38.439110+00:00",
+      "generated_at": "2026-11-10T22:35:40.927627+00:00",
       "event_count": 0
     },
     {
@@ -16,30 +16,19 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-10T22:26:39.022258+00:00",
-      "event_count": 101
+      "generated_at": "2026-11-10T22:35:41.696041+00:00",
+      "event_count": 100
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-10T22:26:38.612316+00:00",
+      "generated_at": "2026-11-10T22:35:41.233774+00:00",
       "event_count": 0
     }
   ],
   "events": [
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Busy",
-      "start": "2026-11-10T22:30:00+00:00",
-      "end": "2026-11-10T22:45:00+00:00",
-      "location": "",
-      "status": "UNKNOWN"
-    },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
