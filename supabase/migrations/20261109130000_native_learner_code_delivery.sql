@@ -58,7 +58,15 @@ begin
  values(u.id,st.id,lower(trim(st.email)),'processing',ticket)
  on conflict(unit_id) do update set state='processing',lease=ticket,attempts=public.native_learner_code_delivery.attempts+1,
  prepared_at=null,claimed_at=now(),retry_at=null,error_code=null
+ -- A concurrent statement may have observed a missing job before another
+ -- claimer committed. Never replace a live lease using that stale join.
+ where public.native_learner_code_delivery.state='rejected'
+   and public.native_learner_code_delivery.attempts<5
+   and public.native_learner_code_delivery.retry_at<=now()
+   and public.native_learner_code_delivery.student_id=excluded.student_id
+   and public.native_learner_code_delivery.recipient=excluded.recipient
  returning * into d;
+ if d.id is null then return jsonb_build_object('empty',true); end if;
  return jsonb_build_object('deliveryId',d.id,'lease',ticket);
 end $$;
 

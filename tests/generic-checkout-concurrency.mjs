@@ -65,12 +65,12 @@ console.log('PASS isolated PostgreSQL: full-course materialization replay, disti
 
 const deliveryToken='SYNTHETIC-LOCAL-CODE-DELIVERY-TOKEN-123456789';
 assert.equal((await run(`update landerware_checkout_delivery_config set enabled=true,token_sha256=encode(sha256(convert_to('${deliveryToken}','UTF8')),'hex');update native_code_delivery_policy set enabled=true;`)).code,0);
-const codeClaims=(await Promise.all([run(`select landerware_claim_learner_code('${deliveryToken}')`),run(`select landerware_claim_learner_code('${deliveryToken}')`)])).map(json);
+const codeClaims=(await Promise.all(Array.from({length:12},()=>run(`select landerware_claim_learner_code('${deliveryToken}')`)))).map(json);
 assert.equal(codeClaims.filter(x=>x.deliveryId).length,1);const codeJob=codeClaims.find(x=>x.deliveryId);
 const preparation=await Promise.all([1,2].map(()=>run(`select landerware_prepare_learner_code('${deliveryToken}','${codeJob.deliveryId}','${codeJob.lease}')`)));
 assert.equal(preparation.filter(x=>x.code===0).length,1);assert.match(preparation.find(x=>x.code!==0).error,/invalid_delivery_lease/);
 // Do not print the synthetic secret; actual sending is never part of this harness.
-console.log('PASS isolated PostgreSQL: only one code claim and one private preparation succeed for the same assigned paid unit.');
+console.log('PASS isolated PostgreSQL: twelve claimers yield one code lease and one private preparation for the same assigned paid unit.');
 
 
 // Exact canonical identities, synthetic sessions/attendees, disposable database only.
