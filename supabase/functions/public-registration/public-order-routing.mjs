@@ -7,6 +7,7 @@ export function publicOrderVersion(order){
  if(profile?.form_schema?.schemaVersion==='native-checkout.form.v1'&&typeof profile.profile_key==='string'&&Number.isInteger(profile.version)&&profile.version>0)return 'native-v1';
  throw Error('unsupported_order_version');
 }
+export const publicOrderReturnPath=order=>publicOrderVersion(order)==='native-v1'?'/register/checkout/':'/register/';
 export async function settlePublicOrder(rpc,order,session,evidence){
  const version=publicOrderVersion(order);
  if(session?.mode!=='payment'||session.payment_status!=='paid'||session.id!==order.stripe_checkout_session_id||!order.stripe_checkout_session_id

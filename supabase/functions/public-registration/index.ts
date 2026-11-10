@@ -1,4 +1,4 @@
-import {publicOrderVersion,settlePublicOrder} from "./public-order-routing.mjs";
+import {publicOrderVersion,publicOrderReturnPath,settlePublicOrder} from "./public-order-routing.mjs";
 import {genericCheckout,boundedCheckoutJSON,fullAppointmentSession} from "./generic.mjs";
 import {skillsCheckout} from "../skills-session-reservation/checkout.mjs";
 
@@ -29,7 +29,7 @@ function stripeKey(){const k=Deno.env.get("STRIPE_SECRET_KEY");if(!k)throw Error
 async function stripe(path:string,params:URLSearchParams,idempotencyKey:string){const r=await fetch(`${STRIPE_API}/${path}`,{method:"POST",redirect:"error",signal:AbortSignal.timeout(15000),headers:{authorization:`Bearer ${stripeKey()}`,"content-type":"application/x-www-form-urlencoded","idempotency-key":idempotencyKey},body:params}),p=await r.json().catch(()=>({}));if(!r.ok)throw Error(p?.error?.message||`stripe_${r.status}`);return p}
 async function stripeGet(path:string){const r=await fetch(`${STRIPE_API}/${path}`,{redirect:"error",signal:AbortSignal.timeout(15000),headers:{authorization:`Bearer ${stripeKey()}`}}),p=await r.json().catch(()=>({}));if(!r.ok)throw Error(p?.error?.message||`stripe_${r.status}`);return p}
 async function order(id:string){const rows=await db(`landerware_public_orders?id=eq.${encodeURIComponent(id)}&select=*,landerware_public_order_students(*)&limit=1`);if(!rows[0])throw Error("order_not_found");return rows[0]}
-function checkoutParams(o:any,c:any){const p=new URLSearchParams();p.set("line_items[0][price_data][currency]",o.currency);p.set("line_items[0][price_data][product_data][name]",`${o.registration_profile_snapshot?.profile?.display_name||c.course_name} registration (${o.landerware_public_order_students.length} students)`);p.set("line_items[0][price_data][unit_amount]",String(o.total));p.set("line_items[0][quantity]","1");p.set("mode","payment");p.set("customer_email",o.payer_email);p.set("payment_intent_data[receipt_email]",o.payer_email);p.set("success_url",`${ORIGIN}/register/?recover=${o.recovery_token}&paid=1`);p.set("cancel_url",`${ORIGIN}/register/?recover=${o.recovery_token}&cancelled=1`);
+function checkoutParams(o:any,c:any){const p=new URLSearchParams();p.set("line_items[0][price_data][currency]",o.currency);p.set("line_items[0][price_data][product_data][name]",`${o.registration_profile_snapshot?.profile?.display_name||c.course_name} registration (${o.landerware_public_order_students.length} students)`);p.set("line_items[0][price_data][unit_amount]",String(o.total));p.set("line_items[0][quantity]","1");p.set("mode","payment");p.set("customer_email",o.payer_email);p.set("payment_intent_data[receipt_email]",o.payer_email);p.set("success_url",`${ORIGIN}${publicOrderReturnPath(o)}?recover=${o.recovery_token}&paid=1`);p.set("cancel_url",`${ORIGIN}${publicOrderReturnPath(o)}?recover=${o.recovery_token}&cancelled=1`);
  // Stable across retries, including time spent uploading. Stripe requires at
  // least 30 minutes from Checkout creation, so expire 31 minutes after the
  // immutable SQL hold deadline. The seat hold stays 30 minutes; late payment
@@ -37,9 +37,12 @@ function checkoutParams(o:any,c:any){const p=new URLSearchParams();p.set("line_i
  // https://docs.stripe.com/api/checkout/sessions/create#expires_at
  p.set("expires_at",String(Math.floor(Date.parse(o.hold_expires_at)/1000)+31*60));p.set("metadata[landerware_order_id]",o.id);p.set("metadata[landerware_order_type]","public");p.set("integration_identifier",`910cpr_public_${o.id.replace(/[^a-z]/g,"").slice(0,8).padEnd(8,"x")}`);return p}
 async function createCheckout(o:any,c:any){
- if(o.status==="paid")return {url:`${ORIGIN}/register/?order=${o.id}&paid=1`};
+ if(o.status==="paid")return {url:`${ORIGIN}${publicOrderReturnPath(o)}?recover=${o.recovery_token}&paid=1`};
  if(o.reconciliation_error)throw Error("payment_reconciliation_required");
  if(!["held","checkout_open"].includes(o.status)||Date.parse(o.hold_expires_at)<=Date.now())throw Error("hold_expired");
+ // A closure published after the hold must still block a new payment path.
+ // Already-paid recovery is handled above, preserving existing paid bookings.
+ await rpc("assert_public_registration_open",{p_start:null,p_end:null,p_external_id:o.external_class_id});
  if(o.registration_profile_snapshot?.profile&&!await rpc("native_checkout_payment_allowed",{p_key:o.idempotency_key.replace(/^public-order:/,"")}))throw Error("required_document_missing");
  const checkout=o.stripe_checkout_session_id?await stripeGet(`checkout/sessions/${encodeURIComponent(o.stripe_checkout_session_id)}`):await stripe("checkout/sessions",checkoutParams(o,c),`landerware-public-${o.id}`);
  const expectedLive=!stripeKey().startsWith("sk_test_")&&!stripeKey().startsWith("rk_test_");

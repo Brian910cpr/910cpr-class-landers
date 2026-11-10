@@ -3,16 +3,22 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const {stripTypeScriptTypes} = require('node:module');
-const policy = JSON.parse(fs.readFileSync('docs/data/public-registration-closures.json','utf8'));
+// Same actual owner policy used by the SQL fixture; no generated-site data is
+// required in a sparse source checkout.
+const policySQL=fs.readFileSync('tests/helpers/native-checkout-closure-contract.sql','utf8');
+const policy=JSON.parse(policySQL.match(/select '(\{.*?\})'::jsonb;/s)[1].replaceAll("''", "'"));
+const {genericCheckout,boundedCheckoutJSON,fullAppointmentSession}=require('../supabase/functions/public-registration/generic.mjs');
+const {publicOrderVersion,publicOrderReturnPath,settlePublicOrder}=require('../supabase/functions/public-registration/public-order-routing.mjs');
 
 function endpoint({start='2026-10-21T12:00:00-04:00',end='2026-10-21T14:00:00-04:00',id='14721759',paid=false}={}) {
   const calls=[];let handler;
   const source=fs.readFileSync('supabase/functions/public-registration/index.ts','utf8').replace(/^import .*;\r?\n/gm,'');
   const fetch=async(url,init={})=>{
     url=String(url);calls.push({url,method:init.method||'GET'});
+    if(url.includes('/class_sessions?'))return Response.json([]);
     if(url.endsWith('/data/schedule_future.json'))return Response.json({sessions:[{session_id:id,course_id:'209806',start_at:start,end_at:end,public_direct_booking:true,registration_status:'open'}]});
     if(url.includes('/rpc/assert_public_registration_open')){
-      const p=JSON.parse(init.body),a=Date.parse(p.p_start),b=Math.max(Date.parse(p.p_end||p.p_start),a+1);
+      const p=JSON.parse(init.body),a=Date.parse(p.p_start||start),b=Math.max(Date.parse(p.p_end||p.p_start||end),a+1);
       if(policy.closures.some(c=>a<Date.parse(c.endsAt)&&b>Date.parse(c.startsAt)))return Response.json({message:'registration_date_closed'},{status:400});
       return Response.json(null);
     }
@@ -20,7 +26,7 @@ function endpoint({start='2026-10-21T12:00:00-04:00',end='2026-10-21T14:00:00-04
     if(url.includes('landerware_public_orders?'))return Response.json([{id:'00000000-0000-4000-8000-000000000001',external_class_id:id,status:paid?'paid':'held',hold_expires_at:'2030-01-01T00:00:00Z'}]);
     throw Error('Unexpected side effect or request: '+url);
   };
-  const context=vm.createContext({URL,URLSearchParams,Date,Request,Response,crypto:globalThis.crypto,fetch,console,
+  const context=vm.createContext({genericCheckout,boundedCheckoutJSON,fullAppointmentSession,publicOrderVersion,publicOrderReturnPath,settlePublicOrder,AbortSignal,URL,URLSearchParams,Date,Request,Response,crypto:globalThis.crypto,fetch,console,
     Deno:{serve(fn){handler=fn},env:{get:key=>({SUPABASE_URL:'https://fixture.test',SUPABASE_SERVICE_ROLE_KEY:'fixture-only'})[key]}}});
   vm.runInContext(stripTypeScriptTypes(source),context);
   const call=(path,method='GET',body)=>handler(new Request('https://fixture.test/functions/v1/public-registration/'+path,{method,headers:{Origin:'https://www.910cpr.com','content-type':'application/json','idempotency-key':'fixture-only'},...(body?{body:JSON.stringify(body)}:{})}));
@@ -37,8 +43,8 @@ test('closed POST start cannot create person, registration, hold or Stripe check
   const e=endpoint();const r=await e.call('start','POST',{sessionId:'14721759',students:[]});
   assert.equal(r.status,409);assert.equal(e.writes().length,0);
 });
-test('workspace-only Jessica uses the same pre-write closure check',async()=>{
-  const id='lw-1c863087-7bc5-4012-8286-503e61bc7d37',e=endpoint({id});
+test('workspace-only native session uses the same pre-write closure check',async()=>{
+  const id='lw-11111111-2222-4333-8444-555555555555',e=endpoint({id});
   const r=await e.call('start','POST',{sessionId:id,students:[]});assert.equal(r.status,409);assert.equal(e.writes().length,0);
 });
 test('other-day lookups remain available',async()=>{
