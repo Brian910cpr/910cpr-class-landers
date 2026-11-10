@@ -43,6 +43,8 @@ async function createCheckout(o:any,c:any){
  // A closure published after the hold must still block a new payment path.
  // Already-paid recovery is handled above, preserving existing paid bookings.
  await rpc("assert_public_registration_open",{p_start:null,p_end:null,p_external_id:o.external_class_id});
+ const current=await db(`class_sessions?id=eq.${encodeURIComponent(o.class_session_id)}&select=id,status,registration_status,start_at,record_scope&limit=1`);
+ if(current.length!==1||current[0].record_scope!=="operational"||!["scheduled","active"].includes(current[0].status)||current[0].registration_status!=="open"||Date.parse(current[0].start_at)<=Date.now())throw Error("session_not_open");
  if(o.registration_profile_snapshot?.profile&&!await rpc("native_checkout_payment_allowed",{p_key:o.idempotency_key.replace(/^public-order:/,"")}))throw Error("required_document_missing");
  const checkout=o.stripe_checkout_session_id?await stripeGet(`checkout/sessions/${encodeURIComponent(o.stripe_checkout_session_id)}`):await stripe("checkout/sessions",checkoutParams(o,c),`landerware-public-${o.id}`);
  const expectedLive=!stripeKey().startsWith("sk_test_")&&!stripeKey().startsWith("rk_test_");
@@ -60,6 +62,14 @@ async function start(req:Request,origin:string){
  const b=await req.json(),id=String(b.sessionId||"").trim(),s=await scheduleSession(id);
  if(!s.nativeReady)throw Error("native_registration_unavailable");
  const c=await catalog(String(s.course_id||s.course_number||"")),students=Array.isArray(b.students)?b.students:[],key=(req.headers.get("idempotency-key")||"").trim();if(!key||key.length>160)throw Error("invalid_order");stripeKey();
+ const previous=await db(`landerware_public_orders?idempotency_key=eq.${encodeURIComponent('public-order:'+key)}&select=registration_profile_snapshot,recovery_token&limit=1`);
+ if(previous[0]&&publicOrderVersion(previous[0])==='native-v1')return json(origin,{error:'generic_checkout_required',nativeCheckoutUrl:`${ORIGIN}/register/checkout/?recover=${previous[0].recovery_token}`},409);
+ if(!previous[0]){
+  let configured=false;
+  try{await rpc('native_checkout_profile',{p_public_course_id:c.course_id,p_context:null});configured=true;}
+  catch(error){if(!(error instanceof Error)||error.message!=='native_profile_not_configured')throw error;}
+  if(configured)return json(origin,{error:'generic_checkout_required',nativeCheckoutUrl:`${ORIGIN}/register/checkout/?session=${encodeURIComponent(id)}`},409);
+ }
  const result=await rpc("landerware_create_public_order",{p_idempotency_key:`public-order:${key}`,p_external_class_id:id,p_course_id:c.course_id,p_payer_email:String(b.payerEmail||students[0]?.email||""),p_payer_phone:String(b.payerPhone||students[0]?.phone||""),p_students:students,p_billing_code:String(b.billingCode||"")||null,p_offer:materializedOffer(s,id)}),o=await order(result.orderId);
  if(o.status!=="paid"&&(!["held","checkout_open"].includes(o.status)||Date.parse(o.hold_expires_at)<=Date.now()))throw Error("hold_expired");
  const checkout=await createCheckout(o,c);
