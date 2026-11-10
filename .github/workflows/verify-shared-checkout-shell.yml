@@ -1,0 +1,22 @@
+name: Verify shared checkout shell
+on:
+  workflow_dispatch:
+  pull_request:
+    paths: ['docs/register/checkout/**','docs/assets/generic-checkout.js','docs/assets/checkout-profile.js','docs/assets/checkout-receipt.js','supabase/functions/_shared/checkout-profile.mjs','tests/skills-checkout-form.test.mjs','.github/workflows/verify-shared-checkout-shell.yml']
+  push:
+    branches: [main]
+    paths: ['docs/register/checkout/**','docs/assets/generic-checkout.js','docs/assets/checkout-profile.js','docs/assets/checkout-receipt.js','supabase/functions/_shared/checkout-profile.mjs','tests/skills-checkout-form.test.mjs','.github/workflows/verify-shared-checkout-shell.yml']
+permissions:
+  contents: read
+jobs:
+  shared-form:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: node --check docs/assets/generic-checkout.js
+      - run: node --check docs/assets/checkout-receipt.js
+      - run: node --test tests/skills-checkout-form.test.mjs
