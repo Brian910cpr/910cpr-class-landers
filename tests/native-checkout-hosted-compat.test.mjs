@@ -5,7 +5,7 @@ const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const compat='supabase/migrations/'+readdirSync(new URL('../supabase/migrations/',import.meta.url)).find(f=>f.endsWith('_native_checkout_additive_order_runtime.sql'));
 test('additive native runtime preserves actual hosted legacy overloads and shares capacity/closure safeguards without accepting payment guesses',async()=>{
  const db=new PGlite();try{
- for(const f of preProfileFiles)await db.exec(load(f));await db.exec(load(profileMigration));await db.exec(load(profileRuntime));await db.exec(load(profileRuntime));await db.exec(load('supabase/reviewed/native-skills-payment-adapter.sql'));
+ for(const f of preProfileFiles)await db.exec(load(f));await db.exec(load(profileMigration));await db.exec(load(profileRuntime));await db.exec(load(profileRuntime));await db.exec(load('supabase/migrations/20261110213130_native_skills_payment_adapter_only.sql'));
  await db.exec(load('tests/helpers/native-checkout-legacy-hosted-functions.sql'));
  const baseline=async()=> (await db.query("select proname,pg_get_function_identity_arguments(p.oid) args,prosrc,prosecdef,proacl::text acl from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('landerware_create_public_order','landerware_finalize_public_order') and (p.proname='landerware_create_public_order' or p.pronargs=2) order by proname,args")).rows;
  const before=await baseline();await db.exec(load(compat));await db.exec(load(compat));
@@ -46,5 +46,18 @@ test('additive native runtime preserves actual hosted legacy overloads and share
  await db.query("update landerware_public_orders set status='refunded' where id=$1",[legacy.orderId]);
  assert.equal((await db.query("select native_checkout_finalize_legacy_order($1,'pi_legacy',$2::jsonb) r",[legacy.orderId,JSON.stringify(legacyEvidence)])).rows[0].r.status,'refunded');
  const privileges=(await db.query("select has_function_privilege('anon','native_checkout_create_order(text,text,text,text,text,jsonb,text,jsonb)','EXECUTE') a,has_function_privilege('authenticated','native_checkout_finalize_order(uuid,text,jsonb)','EXECUTE') u,has_function_privilege('service_role','native_checkout_record_payment(uuid,text,jsonb)','EXECUTE') s")).rows[0];assert.deepEqual(privileges,{a:false,u:false,s:true});
+ }finally{await db.close();}
+});
+
+test('plain skills draft is inactive and unbound, idempotent, and never overwrites existing course policy',async()=>{
+ const db=new PGlite();try{
+ for(const f of preProfileFiles)await db.exec(load(f));await db.exec(load(profileRuntime));
+ // Existing source-approved disabled template is a FK prerequisite, not a sender.
+ await db.exec("insert into landerware_confirmation_templates(template_key,subject_template,body_template,delivery_provider,active) values('native-checkout-profile-v1','Fixture','Fixture','cloudflare',false)");
+ const draft=load('supabase/migrations/20261110213818_native_plain_skills_profile_draft_only.sql');await db.exec(draft);await db.exec(draft);
+ assert.equal((await db.query("select active from landerware_registration_profiles where profile_key='native_skills_shared'")).rows[0].active,false);
+ assert.equal((await db.query("select count(*)::int n from courses where registration_profile_key is not null")).rows[0].n,0);
+ await db.exec("update landerware_registration_catalog set unit_amount=9900,active=false where course_id='509474'");await db.exec(draft);
+ assert.deepEqual((await db.query("select unit_amount,active from landerware_registration_catalog where course_id='509474'")).rows[0],{unit_amount:9900,active:false});
  }finally{await db.close();}
 });

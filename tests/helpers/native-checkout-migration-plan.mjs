@@ -27,4 +27,4 @@ export const codeDeliveryMigration='supabase/migrations/20261109130000_native_le
 
 export const codeEventMigration='supabase/migrations/20261109140000_native_code_delivery_events.sql';
 
-export const profileRuntime='supabase/reviewed/native-checkout-profile-runtime.sql';
+export const profileRuntime='supabase/migrations/20261110213124_native_checkout_profile_runtime_only.sql';

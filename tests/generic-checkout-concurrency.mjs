@@ -17,7 +17,7 @@ for(const file of preProfileFiles){const r=await run(readFileSync(new URL('../'+
 assert.equal((await run("update courses set course_key='skills-session-only' where enrollware_course_id='509474'")).code,0);
 const migrated=await run(readFileSync(new URL('../'+profileMigration,import.meta.url),'utf8'));assert.equal(migrated.code,0,migrated.error);
 const profileRuntimeApplied=await run(readFileSync(new URL('../'+profileRuntime,import.meta.url),'utf8'));assert.equal(profileRuntimeApplied.code,0,profileRuntimeApplied.error);
-const legacySkillsAdapter=await run(readFileSync(new URL('../supabase/reviewed/native-skills-payment-adapter.sql',import.meta.url),'utf8'));assert.equal(legacySkillsAdapter.code,0,legacySkillsAdapter.error);
+const legacySkillsAdapter=await run(readFileSync(new URL('../supabase/migrations/20261110213130_native_skills_payment_adapter_only.sql',import.meta.url),'utf8'));assert.equal(legacySkillsAdapter.code,0,legacySkillsAdapter.error);
 const fullMigrated=await run(readFileSync(new URL('../'+fullCourseMigration,import.meta.url),'utf8'));assert.equal(fullMigrated.code,0,fullMigrated.error);
 const codesMigrated=await run(readFileSync(new URL('../'+codeDeliveryMigration,import.meta.url),'utf8'));assert.equal(codesMigrated.code,0,codesMigrated.error);
 const eventMigrated=await run(readFileSync(new URL('../'+codeEventMigration,import.meta.url),'utf8'));assert.equal(eventMigrated.code,0,eventMigrated.error);
