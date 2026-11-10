@@ -1,4 +1,5 @@
 import {conditionApplies,checkoutSelection,escapeCheckoutText as esc} from './checkout-profile.js';
+import {legacySkillsReceipt} from './checkout-receipt.js';
 
 const API='https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/public-registration/generic';
 const app=document.getElementById('app'),params=new URLSearchParams(location.search);
@@ -15,7 +16,7 @@ async function request(action,body,query={}){
  const r=await fetch(url,{method:body?'POST':'GET',headers:{...(body?{'content-type':'application/json'}:{}),...(key?{'idempotency-key':key}:{})},...(body?{body:JSON.stringify(body)}:{}),redirect:'error',signal:AbortSignal.timeout(30000)});
  const p=await r.json();if(!r.ok||p.ok===false)throw Error(p.error||'service_unavailable');return p;
 }
-const errors={session_not_available:'This time is no longer available. Please choose another time.',calendar_refresh_required:'Please return to the calendar and select a current time.',profile_changed:'Course options changed. Reload this page before continuing.',hold_expired:'Your reservation hold expired. Please select a time again.',required_document_missing:'Upload the required document before proceeding.',document_storage_pending:'The file was not received. Retry the upload. For optional files, you may remove the file and bring it to class.',invalid_document:'Choose a supported file within the displayed size limit.',option_unavailable:'That option is currently unavailable. Please choose another.',insufficient_seats:'There are not enough seats for this selection.',idempotency_conflict:'This saved reservation has different details. Return to the calendar to make another selection.',payment_processing:'Payment is processing. Check payment status before trying again.',payment_reconciliation_required:'Payment needs review. Please contact 910CPR before trying again.',payment_unavailable:'Secure payment is temporarily unavailable. Your saved hold has not been charged.',native_registration_unavailable:'Online checkout is not available for this class yet.'};
+const errors={ambiguous_saved_reservation:'More than one saved registration matches this time. Contact 910CPR before reserving or paying again.',session_not_available:'This time is no longer available. Please choose another time.',calendar_refresh_required:'Please return to the calendar and select a current time.',profile_changed:'Course options changed. Reload this page before continuing.',hold_expired:'Your reservation hold expired. Please select a time again.',required_document_missing:'Upload the required document before proceeding.',document_storage_pending:'The file was not received. Retry the upload. For optional files, you may remove the file and bring it to class.',invalid_document:'Choose a supported file within the displayed size limit.',option_unavailable:'That option is currently unavailable. Please choose another.',insufficient_seats:'There are not enough seats for this selection.',idempotency_conflict:'This saved reservation has different details. Return to the calendar to make another selection.',payment_processing:'Payment is processing. Check payment status before trying again.',payment_reconciliation_required:'Payment needs review. Please contact 910CPR before trying again.',payment_unavailable:'Secure payment is temporarily unavailable. Your saved hold has not been charged.',native_registration_unavailable:'Online checkout is not available for this class yet.'};
 function errorText(e){return errors[e.message]||'We could not complete that step. Your payment is not confirmed. Please retry or contact 910CPR.';}
 function cards(){return [...document.querySelectorAll('.student')];}
 function selected(card){return [...card.querySelectorAll('[data-choice]:checked')].map(el=>el.value);}
@@ -87,6 +88,7 @@ async function init(){
  try{
   const order=params.get('order'),recover=params.get('recover');key=order?stored('native-checkout-order:'+order):stored(selectionKey);
   if(!key&&!order&&!recover)key=stored('skillsCheckout:'+JSON.stringify(['course','date','startTime','location','instructor','skillsContext'].map(k=>params.get(k)||'')));
+  if(!key&&!order&&!recover)key=legacySkillsReceipt(sessionStorage,originalSelection);
   if(recover){key='';model=await request('form',null,{recover});key=model.key;}
   else if(key){try{model=await request('form');}catch(e){if(e.message!=='reservation_not_found')throw e;/* Keep the same nonce if an earlier save is still in flight. */}}
   if(!model)model=await request('form',null,originalSelection);
