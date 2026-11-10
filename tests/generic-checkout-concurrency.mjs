@@ -65,7 +65,14 @@ console.log('PASS isolated PostgreSQL: full-course materialization replay, disti
 
 const deliveryToken='SYNTHETIC-LOCAL-CODE-DELIVERY-TOKEN-123456789';
 assert.equal((await run(`update landerware_checkout_delivery_config set enabled=true,token_sha256=encode(sha256(convert_to('${deliveryToken}','UTF8')),'hex');update native_code_delivery_policy set enabled=true;`)).code,0);
+const eligibleUnits=json(await run("select coalesce(jsonb_agg(jsonb_build_object('unitId',u.id,'studentId',st.id,'orderId',st.order_id)),'[]'::jsonb) from product_inventory_units u join landerware_public_order_students st on st.id=u.public_order_student_id where native_code_delivery_eligible(u.id,st.id,lower(trim(st.email)))"));
+assert.equal(eligibleUnits.length,1,'fixture must contain exactly one eligible assigned unit before claim contention');
 const codeClaims=(await Promise.all(Array.from({length:12},()=>run(`select landerware_claim_learner_code('${deliveryToken}')`)))).map(json);
+const claimIdentity=json(await run("select coalesce(jsonb_agg(jsonb_build_object('deliveryId',id,'unitId',unit_id,'studentId',student_id,'attempts',attempts,'state',state)),'[]'::jsonb) from native_learner_code_delivery"));
+// Synthetic stable identities only: never log code values, recipients, tokens or leases.
+console.log('FIXTURE code-claim identities: '+JSON.stringify({eligibleUnits,returnedDeliveryIds:codeClaims.filter(x=>x.deliveryId).map(x=>x.deliveryId),jobs:claimIdentity}));
+assert.equal(claimIdentity.length,1);assert.equal(claimIdentity[0].unitId,eligibleUnits[0].unitId);assert.equal(claimIdentity[0].studentId,eligibleUnits[0].studentId);
+
 assert.equal(codeClaims.filter(x=>x.deliveryId).length,1);const codeJob=codeClaims.find(x=>x.deliveryId);
 const preparation=await Promise.all([1,2].map(()=>run(`select landerware_prepare_learner_code('${deliveryToken}','${codeJob.deliveryId}','${codeJob.lease}')`)));
 assert.equal(preparation.filter(x=>x.code===0).length,1);assert.match(preparation.find(x=>x.code!==0).error,/invalid_delivery_lease/);
