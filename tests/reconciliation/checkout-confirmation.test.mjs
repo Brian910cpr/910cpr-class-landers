@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {setup} from './native-checkout-harness.mjs';
 import {dispatch} from '../../worker/checkout-confirmation.mjs';
-const migration=fs.readFileSync(new URL('../../supabase/migrations/20261108153759_checkout_confirmation_delivery_gate.sql',import.meta.url),'utf8');
+const migration=fs.readFileSync(new URL('../../supabase/migrations/20261110231615_native_checkout_confirmation_bridge_disabled.sql',import.meta.url),'utf8');
 const token='synthetic-delivery-token-local-only-123456789';
 async function fixture(fn){const h=await setup();try{
  // The older checkout fixture omits delivery columns present in production.
