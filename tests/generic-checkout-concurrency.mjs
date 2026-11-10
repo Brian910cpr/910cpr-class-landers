@@ -108,7 +108,7 @@ console.log('PASS isolated PostgreSQL: both plain Heartsaver profiles serialize 
 
 // Preserve actual hosted legacy API contracts while validating the additive namespace.
 const legacyLoaded=await run(readFileSync(new URL('helpers/native-checkout-legacy-hosted-functions.sql',import.meta.url),'utf8'));assert.equal(legacyLoaded.code,0,legacyLoaded.error);
-const legacyFingerprint=()=>run("select md5(string_agg(proname||pg_get_function_identity_arguments(p.oid)||prosrc||prosecdef::text||coalesce(proacl::text,''),'' order by proname,pg_get_function_identity_arguments(p.oid))) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('landerware_create_public_order','landerware_finalize_public_order')");
+const legacyFingerprint=()=>run("select md5(string_agg(proname||pg_get_function_identity_arguments(p.oid)||replace(prosrc,'(/* native_paid_hold_reader_v1 */ o.hold_expires_at>now() or (o.payment_evidence->>''payment_status''=''paid'' and o.payment_evidence->>''seat_hold_protected''=''true''))','o.hold_expires_at>now()')||prosecdef::text||coalesce(proacl::text,''),'' order by proname,pg_get_function_identity_arguments(p.oid))) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('landerware_create_public_order','landerware_finalize_public_order')");
 const oldAPI=(await legacyFingerprint()).out;
 const additive=await run(readFileSync(new URL('../supabase/migrations/20261110203954_native_checkout_additive_order_runtime.sql',import.meta.url),'utf8'));assert.equal(additive.code,0,additive.error);assert.equal((await legacyFingerprint()).out,oldAPI);
 const compatibilitySetup=await run(`insert into courses(course_key,name,enrollware_course_id,duration_minutes,max_students_default,base_price) values('fixture-compat','Synthetic Compatibility Course','fixture-compat',120,2,75);
@@ -120,10 +120,25 @@ const compatibilityRaces=await Promise.all([run(compatibilityClaim(410,true)),ru
 assert.equal(compatibilityRaces.filter(r=>r.code===0).length,2);assert.match(compatibilityRaces.find(r=>r.code!==0).error,/insufficient_seats/);
 const nativeWinner=compatibilityRaces[1].code===0?411:412,nativeOriginal=json(compatibilityRaces[nativeWinner===411?1:2]);
 const nativeReplays=(await Promise.all([run(compatibilityClaim(nativeWinner)),run(compatibilityClaim(nativeWinner))])).map(json);assert.equal(nativeReplays[0].orderId,nativeOriginal.orderId);assert.equal(nativeReplays[1].orderId,nativeOriginal.orderId);
-console.log('PASS isolated PostgreSQL: actual legacy and additive native order APIs share two-seat contention and replay; legacy function bodies, security and grants remain unchanged.');
+console.log('PASS isolated PostgreSQL: actual legacy and additive native order APIs share two-seat contention and replay; legacy bodies differ only by paid-hold predicate; security and grants remain unchanged.');
 
 assert.equal((await run(`update landerware_public_orders set status='checkout_open',stripe_checkout_session_id='cs_compat_synthetic' where id='${nativeOriginal.orderId}'`)).code,0);
 const compatPayment={id:'cs_compat_synthetic',mode:'payment',payment_status:'paid',amount_total:7500,currency:'usd',metadata:{landerware_order_id:nativeOriginal.orderId}};
 const nativeSettlement=(await Promise.all([1,2].map(()=>run(`select native_checkout_record_payment('${nativeOriginal.orderId}','pi_compat_synthetic','${JSON.stringify(compatPayment)}');select native_checkout_finalize_order('${nativeOriginal.orderId}','pi_compat_synthetic','${JSON.stringify(compatPayment)}')`)))).map(json);
 assert.equal(nativeSettlement[0].status,'paid');assert.equal(nativeSettlement[1].status,'paid');
 console.log('PASS isolated PostgreSQL: additive payment evidence and duplicate finalization serialize with legacy holds preserved; synthetic processor evidence only.');
+
+// Simulate wall-clock expiry AFTER verified receipt, before finalization. Old and
+// new claimers must still compete for only the other seat; no sending involved.
+const paidSession=await run(`insert into class_sessions(source,status,course_id,start_at,end_at,consumption_start_at,consumption_end_at,lead_instructor_id,location_id,max_students,registration_backend,visibility,registration_status,external_class_id,record_scope)
+ select source,status,course_id,start_at+interval '1 day',end_at+interval '1 day',consumption_start_at+interval '1 day',consumption_end_at+interval '1 day',lead_instructor_id,location_id,2,registration_backend,visibility,registration_status,'fixture-paid-expiry','operational' from class_sessions where external_class_id='fixture-compat-session'`);assert.equal(paidSession.code,0,paidSession.error);
+const expiryClaim=(n,legacy=false)=>compatibilityClaim(n,legacy).replaceAll('fixture-compat-session','fixture-paid-expiry');
+const protectedOrder=json(await run(expiryClaim(501)));
+assert.equal((await run(`update landerware_public_orders set stripe_checkout_session_id='cs_expiry' where id='${protectedOrder.orderId}'`)).code,0);
+const expiryEvidence={id:'cs_expiry',mode:'payment',payment_status:'paid',amount_total:7500,currency:'usd',metadata:{landerware_order_id:protectedOrder.orderId}};
+json(await run(`select native_checkout_record_payment('${protectedOrder.orderId}','pi_expiry','${JSON.stringify(expiryEvidence)}')`));
+assert.equal((await run(`update landerware_public_orders set hold_expires_at=now()-interval '1 minute' where id='${protectedOrder.orderId}'`)).code,0);
+const expiredRace=await Promise.all([run(expiryClaim(502,true)),run(expiryClaim(503))]);assert.equal(expiredRace.filter(r=>r.code===0).length,1);assert.match(expiredRace.find(r=>r.code!==0).error,/insufficient_seats/);
+const expiryFinalized=(await Promise.all([1,2].map(()=>run(`select native_checkout_finalize_order('${protectedOrder.orderId}','pi_expiry','${JSON.stringify(expiryEvidence)}')`)))).map(json);assert.ok(expiryFinalized.every(x=>x.status==='paid'));
+assert.equal(json(await run(`select jsonb_build_object('registered',(select count(*) from registrations where class_session_id=(select class_session_id from landerware_public_orders where id='${protectedOrder.orderId}')))`)).registered,1);
+console.log('PASS isolated PostgreSQL: paid receipt survives original hold expiry across old/new competing claims and concurrent finalization replay.');

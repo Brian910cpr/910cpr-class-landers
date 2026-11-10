@@ -96,6 +96,14 @@ async function init(){
    app.innerHTML='<section class="formwrap"><h1>Registration for your selected class</h1><p>This class is still registered through our existing enrollment system. Continue there to register.</p></section>';
    const link=document.createElement('a');link.href=url.href;link.target='_top';link.textContent='Continue to existing registration';app.append(link);announceSize();return;
   }
+  if(model.legacyRecovery){
+   const recovery=model.legacyRecovery;
+   app.innerHTML='<section class="formwrap"><h1>Your saved registration</h1><p id="recovery-status" role="status" aria-live="polite"></p></section>';
+   const messages={paid:'Your registration is confirmed.',processing:'Payment received. Registration is being finalized. Please check again shortly.',payment_review:'Payment received. Your registration needs staff review. Please contact 910CPR.',expired:'Your original seat hold has expired. Please choose an available class.',cancelled:'This registration was canceled.',refunded:'This order was refunded.'};
+   document.getElementById('recovery-status').textContent=messages[recovery.status]||'Your saved registration is ready for payment.';
+   if(recovery.checkoutUrl){const destination=new URL(recovery.checkoutUrl);if(destination.origin!=='https://checkout.stripe.com')throw Error('payment_unavailable');const link=document.createElement('a');link.href=destination.href;link.target='_top';link.textContent='Continue to secure payment';app.querySelector('section').append(link);}
+   announceSize();return;
+  }
   receipt=model.receipt;
   const p=model.profile,date=new Date(model.session.startsAt).toLocaleString('en-US',{timeZone:'America/New_York',dateStyle:'full',timeStyle:'short'});
   const length=model.session.durationMinutes||(Date.parse(model.session.endsAt)-Date.parse(model.session.startsAt))/60000;

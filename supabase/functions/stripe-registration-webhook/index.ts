@@ -1,3 +1,4 @@
+import {settlePublicOrder} from "../public-registration/public-order-routing.mjs";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.56.0";
 
 const enc = new TextEncoder();
@@ -31,19 +32,18 @@ Deno.serve(async(request)=>{
     // Public class orders share the metadata key with retail. Route by the
     // canonical record before invoking either finalizer; never label a class
     // order paid through the retail-only procedure.
-    const {data:publicOrder,error:publicLookupError}=await db.from('landerware_public_orders').select('id').eq('id',retailOrderId).maybeSingle();
+    const {data:publicOrder,error:publicLookupError}=await db.from('landerware_public_orders').select('id,status,total,currency,stripe_checkout_session_id,stripe_payment_intent_id,registration_profile_snapshot').eq('id',retailOrderId).maybeSingle();
     if(publicLookupError)return reply({ok:false,error:'Public payment lookup failed'},500);
     if(publicOrder){
       if(!paid)return reply({ok:true,ignored:'Public checkout not paid'});
       const expectedLive=Deno.env.get('STRIPE_EXPECTED_LIVEMODE')!=='false';
       if(session.mode!=='payment'||session.payment_status!=='paid'||session.livemode!==expectedLive||event.livemode!==expectedLive)return reply({ok:false,error:'Public payment evidence missing'},400);
-      const paymentArgs={p_order_id:publicOrder.id,p_stripe_payment_intent_id:typeof session.payment_intent==='string'?session.payment_intent:null,
-        p_evidence:{id:session.id,mode:session.mode,payment_status:session.payment_status,amount_total:session.amount_total,currency:session.currency,metadata:{landerware_order_id:retailOrderId},livemode:session.livemode,stripeEventId:event.id}};
-      const {error:receiptError}=await db.rpc('landerware_record_public_payment',paymentArgs);
-      if(receiptError)return reply({ok:false,error:'Public payment receipt failed'},500);
-      const {data,error}=await db.rpc('landerware_finalize_public_order',paymentArgs);
-      if(error)return reply({ok:false,error:'Public payment reconciliation failed'},500);
-      return reply({ok:true,orderId:publicOrder.id,status:data?.status});
+      const evidence={id:session.id,mode:session.mode,payment_status:session.payment_status,amount_total:session.amount_total,currency:session.currency,metadata:{landerware_order_id:retailOrderId},livemode:session.livemode,stripeEventId:event.id};
+      try{
+       const result=await settlePublicOrder(async(name:string,args:unknown)=>{const {data,error}=await db.rpc(name,args);if(error)throw Error('payment_rpc_failed');return data;},publicOrder,session,evidence);
+       return reply({ok:true,orderId:publicOrder.id,status:result?.status});
+      }catch{return reply({ok:false,error:'Public payment reconciliation failed'},500);}
+
     }
     if(!paid)return reply({ok:true,ignored:"Retail checkout not paid"});
     const {data,error}=await db.rpc("confirm_retail_payment",{p_order_id:retailOrderId,p_checkout_session_id:session.id||null,p_payment_intent_id:session.payment_intent||null,p_evidence:{stripeEventId:event.id,paymentStatus:session.payment_status}});

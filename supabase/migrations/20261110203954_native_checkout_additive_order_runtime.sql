@@ -409,4 +409,53 @@ revoke all on function public.native_checkout_record_payment(uuid,text,jsonb) fr
 grant execute on function public.native_checkout_record_payment(uuid,text,jsonb) to service_role;
 revoke all on function public.native_checkout_finalize_order(uuid,text,jsonb) from public,anon,authenticated;
 grant execute on function public.native_checkout_finalize_order(uuid,text,jsonb) to service_role;
+-- Preserve old signatures, ownership, grants and closure guards. Only the five
+-- inspected coexisting readers need this predicate compatibility change.
+do $readers$ declare f record; definition text; old_predicate text:='o.hold_expires_at>now()';
+ new_predicate text:='(/* native_paid_hold_reader_v1 */ o.hold_expires_at>now() or (o.payment_evidence->>''payment_status''=''paid'' and o.payment_evidence->>''seat_hold_protected''=''true''))';
+begin
+ for f in select p.oid from pg_proc p join pg_namespace n on n.oid=p.pronamespace
+  where n.nspname='public' and ((p.proname='landerware_create_public_order' and p.pronargs in (7,8))
+   or (p.proname='skills_session_native_option' and p.pronargs=2)
+   or (p.proname in ('registration_reschedule_dynamic_option','registration_reschedule_targets') and p.pronargs=3))
+ loop
+  definition:=pg_get_functiondef(f.oid);
+  if position('native_paid_hold_reader_v1' in definition)>0 or position('seat_hold_protected' in definition)>0 then continue; end if;
+  -- An earlier local schema delegates its seven-argument overload to the
+  -- guarded eight-argument reader; there is no independent predicate there.
+  if position('select public.landerware_create_public_order(p_idempotency_key,p_external_class_id,p_course_id,p_payer_email,p_payer_phone,p_students,p_billing_code,''{}''::jsonb)' in definition)>0 then continue; end if;
+  if (length(definition)-length(replace(definition,old_predicate,'')))/length(old_predicate)<>1 then
+   raise exception 'unsupported_legacy_hold_reader: %',f.oid::regprocedure;
+  end if;
+  execute replace(definition,old_predicate,new_predicate);
+ end loop;
+end $readers$;
+
+-- Verified legacy payments keep their existing finalizer and registration model,
+-- but cannot bypass shared capacity/terminal-state checks on delayed recovery.
+create or replace function public.native_checkout_finalize_legacy_order(p_order_id uuid,p_stripe_payment_intent_id text,p_evidence jsonb)
+returns jsonb language plpgsql security invoker set search_path='' as $$
+declare o public.landerware_public_orders; s public.class_sessions; seats jsonb; needed integer; own_hold integer:=0; reason text;
+begin
+ perform public.native_checkout_record_payment(p_order_id,p_stripe_payment_intent_id,p_evidence);
+ select * into o from public.landerware_public_orders where id=p_order_id for update;
+ if coalesce(o.registration_profile_snapshot,'{}'::jsonb)<>'{}'::jsonb then raise exception 'unsupported_order_version'; end if;
+ if o.status in ('paid','refunded','cancelled') then return jsonb_build_object('orderId',o.id,'status',o.status,'idempotentReplay',true); end if;
+ select * into s from public.class_sessions where id=o.class_session_id for update;
+ select count(*) into needed from public.landerware_public_order_students where order_id=o.id;
+ if o.status not in ('held','checkout_open') then reason:='order_not_payable';
+ elsif s.id is null or s.status not in ('scheduled','active') or s.registration_status<>'open' or s.start_at<=now() then reason:='session_not_open';
+ else
+  begin seats:=public.landerware_public_seat_state(s.id); exception when others then reason:='external_reconciliation_required'; end;
+  if o.hold_expires_at>now() or (o.payment_evidence->>'payment_status'='paid' and o.payment_evidence->>'seat_hold_protected'='true') then own_hold:=needed; end if;
+  if reason is null and (seats->>'remaining')::integer+own_hold<needed then reason:='paid_seat_unavailable'; end if;
+ end if;
+ if reason is not null then
+  update public.landerware_public_orders set reconciliation_error=reason,updated_at=now() where id=o.id;
+  return jsonb_build_object('orderId',o.id,'status','payment_review','reason',reason);
+ end if;
+ return public.landerware_finalize_public_order(o.id,p_stripe_payment_intent_id);
+end $$;
+revoke all on function public.native_checkout_finalize_legacy_order(uuid,text,jsonb) from public,anon,authenticated;
+grant execute on function public.native_checkout_finalize_legacy_order(uuid,text,jsonb) to service_role;
 commit;

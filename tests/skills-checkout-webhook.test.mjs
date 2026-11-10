@@ -1,14 +1,15 @@
+import {publicOrderVersion,settlePublicOrder} from '../supabase/functions/public-registration/public-order-routing.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {stripTypeScriptTypes} from 'node:module';
 import {createHmac,webcrypto} from 'node:crypto';
 import {readFileSync} from 'node:fs';
-const source=readFileSync(new URL('../supabase/functions/stripe-registration-webhook/index.ts',import.meta.url),'utf8').replace(/^import .*;\r?\n/,'');
+const source=readFileSync(new URL('../supabase/functions/stripe-registration-webhook/index.ts',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'');
 test('real webhook handler verifies signature and skills provenance; failures never reach generic paid-state writes',async()=>{
  const calls=[];let handler;
  const db={from(table){assert.ok(['landerware_integration_secrets','skills_session_claim_receipts'].includes(table),'must not reach legacy mutation');const q={select:()=>q,eq:()=>q,maybeSingle:async()=>({data:table==='landerware_integration_secrets'?{secret_value:'fixture-secret'}:{registration_id:'reg'}})};return q;},rpc:async(name,args)=>{calls.push({name,args});return args.p_amount_total===5500?{data:{ok:true}}:{error:'mismatch'};}};
- const context=vm.createContext({createClient:()=>db,TextEncoder,Uint8Array,ArrayBuffer,Date,JSON,Request,Response,crypto:webcrypto,Deno:{serve:fn=>handler=fn,env:{get:()=> 'fixture'}}});
+ const context=vm.createContext({publicOrderVersion,settlePublicOrder,createClient:()=>db,TextEncoder,Uint8Array,ArrayBuffer,Date,JSON,Request,Response,crypto:webcrypto,Deno:{serve:fn=>handler=fn,env:{get:()=> 'fixture'}}});
  vm.runInContext(stripTypeScriptTypes(source),context);
  const send=async(type,overrides={},valid=true)=>{
   const raw=JSON.stringify({id:'evt_fixture',type,data:{object:{id:'cs_fixture',client_reference_id:'reg',mode:'payment',payment_status:'paid',amount_total:5500,currency:'usd',metadata:{skills_session:'509474'},...overrides}}});
@@ -22,4 +23,19 @@ test('real webhook handler verifies signature and skills provenance; failures ne
  assert.equal((await send('checkout.session.completed')).status,200);assert.equal(calls[0].name,'confirm_skills_checkout_payment');
  assert.equal((await send('checkout.session.async_payment_succeeded')).status,200);
  assert.equal((await send('checkout.session.completed',{amount_total:1})).status,500);
+});
+
+test('actual signed public webhook selects stored order version; replay/failure events cannot reach retail or bypass verified receipt',async()=>{
+ const calls=[];let handler,fail=false;
+ const order={id:'11111111-1111-4111-8111-111111111111',status:'held',total:5500,currency:'usd',stripe_checkout_session_id:'cs_public',registration_profile_snapshot:{}};
+ const db={from(table){assert.ok(['landerware_integration_secrets','landerware_public_orders'].includes(table),'no retail or generic mutation');const q={select:()=>q,eq:()=>q,maybeSingle:async()=>({data:table==='landerware_integration_secrets'?{secret_value:'fixture-secret'}:order})};return q;},rpc:async(name,args)=>{calls.push(name);if(name.includes('finalize')&&fail)return{error:'fixture_failure'};return{data:{status:order.status==='refunded'?'refunded':'paid'}};}};
+ const context=vm.createContext({publicOrderVersion,settlePublicOrder,createClient:()=>db,TextEncoder,Uint8Array,ArrayBuffer,Date,JSON,Request,Response,crypto:webcrypto,Deno:{serve:fn=>handler=fn,env:{get:k=>k==='STRIPE_EXPECTED_LIVEMODE'?'false':'fixture'}}});vm.runInContext(stripTypeScriptTypes(source),context);
+ const send=async(type,changes={})=>{const raw=JSON.stringify({id:'evt_public',type,livemode:false,data:{object:{id:'cs_public',mode:'payment',payment_status:'paid',livemode:false,payment_intent:'pi_public',amount_total:5500,currency:'usd',metadata:{landerware_order_id:order.id},...changes}}});const t=String(Math.floor(Date.now()/1000)),v=createHmac('sha256','fixture-secret').update(t+'.'+raw).digest('hex');return handler(new Request('https://fixture.invalid',{method:'POST',headers:{'stripe-signature':`t=${t},v1=${v}`},body:raw}));};
+ assert.equal((await send('checkout.session.completed')).status,200);assert.deepEqual(calls,['native_checkout_record_payment','native_checkout_finalize_legacy_order']);
+ order.registration_profile_snapshot={profile:{profile_key:'fixture',version:1,form_schema:{schemaVersion:'native-checkout.form.v1'}}};calls.length=0;
+ fail=true;assert.equal((await send('checkout.session.completed')).status,500);assert.equal(calls[0],'native_checkout_record_payment');fail=false;
+ assert.equal((await send('checkout.session.async_payment_succeeded')).status,200);assert.equal(calls.at(-1),'native_checkout_finalize_order');
+ calls.length=0;for(const type of ['checkout.session.expired','checkout.session.async_payment_failed'])assert.equal((await send(type)).status,200);assert.equal(calls.length,0);
+ for(const changes of [{amount_total:1},{currency:'eur'},{id:'cs_other'},{livemode:true},{payment_intent:'pi_other',metadata:{landerware_order_id:'other'}}]){assert.ok((await send('checkout.session.completed',changes)).status>=400);assert.equal(calls.length,0);}
+ order.status='refunded';assert.equal((await (await send('checkout.session.completed')).json()).status,'refunded');
 });

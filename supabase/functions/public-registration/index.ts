@@ -1,3 +1,4 @@
+import {publicOrderVersion,settlePublicOrder} from "./public-order-routing.mjs";
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import {genericCheckout,boundedCheckoutJSON,fullAppointmentSession} from "./generic.mjs";
 import {skillsCheckout} from "../skills-session-reservation/checkout.mjs";
@@ -63,18 +64,16 @@ async function start(req:Request,origin:string){
  if(!result.idempotentReplay)try{await sendRecovery(o,s)}catch{console.error(JSON.stringify({orderId:o.id,error:"recovery_message_enqueue_failed"}))}
  return json(origin,{ok:true,orderId:o.id,holdExpiresAt:o.hold_expires_at,checkoutUrl:checkout.url,recoveryUrl:`${ORIGIN}/register/?recover=${o.recovery_token}`});
 }
-async function recover(token:string,origin:string){if(!/^[0-9a-f-]{36}$/i.test(token))throw Error("invalid_recovery_token");const rows=await db(`landerware_public_orders?recovery_token=eq.${encodeURIComponent(token)}&select=*&limit=1`),o=rows[0];if(!o)throw Error("order_not_found");if(o.status==="paid")return json(origin,{ok:true,status:"paid",orderId:o.id});if(o.reconciliation_error)return json(origin,{ok:false,status:"payment_review"},409);if(!["held","checkout_open"].includes(o.status)||Date.parse(o.hold_expires_at)<=Date.now())return json(origin,{ok:false,status:"expired",sessionId:o.external_class_id},409);const c=await catalog(o.course_id),full=await order(o.id),checkout=await createCheckout(full,c);return json(origin,{ok:true,status:o.status,checkoutUrl:checkout.url,holdExpiresAt:o.hold_expires_at})}
+async function recover(token:string,origin:string){if(!/^[0-9a-f-]{36}$/i.test(token))throw Error("invalid_recovery_token");const rows=await db(`landerware_public_orders?recovery_token=eq.${encodeURIComponent(token)}&select=*&limit=1`),o=rows[0];if(!o)throw Error("order_not_found");const version=publicOrderVersion(o);if(o.payment_evidence?.payment_status==="paid"&&o.status!=="paid")return verifyPaid(o.id,origin);if(["cancelled","refunded"].includes(o.status))return json(origin,{ok:false,status:o.status},409);if(version==="native-v1")return json(origin,{ok:true,status:o.status,nativeRecovery:true});if(o.status==="paid")return json(origin,{ok:true,status:"paid",orderId:o.id});if(o.reconciliation_error)return json(origin,{ok:false,status:"payment_review"},409);if(!["held","checkout_open"].includes(o.status)||Date.parse(o.hold_expires_at)<=Date.now())return json(origin,{ok:false,status:"expired",sessionId:o.external_class_id},409);const c=await catalog(o.course_id),full=await order(o.id),checkout=await createCheckout(full,c);return json(origin,{ok:true,status:o.status,checkoutUrl:checkout.url,holdExpiresAt:o.hold_expires_at})}
 async function verifyPaid(id:string,origin:string){
- if(!/^[0-9a-f-]{36}$/i.test(id))throw Error("order_not_found");const o=await order(id);if(o.status==="paid")return json(origin,{ok:true,status:"paid"});
+ if(!/^[0-9a-f-]{36}$/i.test(id))throw Error("order_not_found");const o=await order(id);publicOrderVersion(o);if(["cancelled","refunded"].includes(o.status))return json(origin,{ok:false,status:o.status},409);if(o.status==="paid")return json(origin,{ok:true,status:"paid"});
  if(!o.stripe_checkout_session_id)return json(origin,{ok:false,status:"payment_pending"},409);
  const checkout=await stripeGet(`checkout/sessions/${encodeURIComponent(o.stripe_checkout_session_id)}`);
  if(checkout.payment_status!=="paid")return json(origin,{ok:false,status:"payment_pending"},409);
  const expectedLive=!stripeKey().startsWith("sk_test_")&&!stripeKey().startsWith("rk_test_");
  if(checkout.livemode!==expectedLive)throw Error("stripe_mode_mismatch");
  const evidence={id:checkout.id,mode:checkout.mode,payment_status:checkout.payment_status,amount_total:checkout.amount_total,currency:checkout.currency,metadata:{landerware_order_id:checkout.metadata?.landerware_order_id},livemode:checkout.livemode,verificationSource:"stripe_api_recovery"};
- const paymentArgs={p_order_id:o.id,p_stripe_payment_intent_id:String(checkout.payment_intent||""),p_evidence:evidence};
- await rpc("landerware_record_public_payment",paymentArgs);
- const result=await rpc("landerware_finalize_public_order",paymentArgs);
+ const result=await settlePublicOrder(rpc,o,checkout,evidence);
  return json(origin,{ok:result.status==="paid",status:result.status},result.status==="paid"?200:409);
 }
 
@@ -96,7 +95,7 @@ async function genericRoute(req:Request,route:string[],origin:string){
  const action=route[1],url=new URL(req.url),key=req.headers.get("idempotency-key")||"";
  if(req.method==="GET"&&action==="form"){
   const recoverToken=url.searchParams.get("recover");
-  if(recoverToken){if(!/^[0-9a-f-]{36}$/i.test(recoverToken))throw Error("invalid_recovery_token");const rows=await db(`landerware_public_orders?recovery_token=eq.${recoverToken}&select=idempotency_key&limit=1`);if(!rows[0])throw Error("order_not_found");const recovered=rows[0].idempotency_key.replace(/^public-order:/,"");return json(origin,{...await generic.resume(recovered),key:recovered})}
+  if(recoverToken){if(!/^[0-9a-f-]{36}$/i.test(recoverToken))throw Error("invalid_recovery_token");const rows=await db(`landerware_public_orders?recovery_token=eq.${recoverToken}&select=idempotency_key,registration_profile_snapshot&limit=1`);if(!rows[0])throw Error("order_not_found");if(publicOrderVersion(rows[0])==='legacy'){const response=await recover(recoverToken,origin);return json(origin,{legacyRecovery:await response.json()});}const recovered=rows[0].idempotency_key.replace(/^public-order:/,"");return json(origin,{...await generic.resume(recovered),key:recovered})}
   return json(origin,key&&!url.searchParams.has("session")&&!url.searchParams.has("course")?await generic.resume(key):await generic.model(Object.fromEntries(url.searchParams)));
  }
  if(req.method==="GET"&&action==="status")return json(origin,await generic.status(key));
