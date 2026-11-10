@@ -9,6 +9,7 @@ const migration='supabase/migrations/20261108145719_bls_native_checkout_integrit
 export async function setup(capacity=6){
  const db=new PGlite();
  await db.exec(read('tests/reconciliation/schema.sql'));
+ await db.exec(read('tests/helpers/native-checkout-closure-contract.sql'));
  await db.exec(`create table public.products(id uuid primary key default gen_random_uuid(),product_key text unique,active boolean,product_type text,customer_price numeric,fulfillment_mode text);`);
  await db.exec(`create table public.product_inventory_units(id uuid primary key default gen_random_uuid(),product_id uuid references public.products,secret_value text,status text,reserved_for_registration_id uuid,reserved_at timestamptz,exposed_at timestamptz,fulfilled_at timestamptz,updated_at timestamptz);`);
  await db.exec(`alter table public.class_sessions add column external_reconciliation jsonb not null default '{}';
