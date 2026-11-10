@@ -1,5 +1,4 @@
 import {publicOrderVersion,settlePublicOrder} from "./public-order-routing.mjs";
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import {genericCheckout,boundedCheckoutJSON,fullAppointmentSession} from "./generic.mjs";
 import {skillsCheckout} from "../skills-session-reservation/checkout.mjs";
 

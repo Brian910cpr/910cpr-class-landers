@@ -40,7 +40,7 @@ Deno.serve(async(request)=>{
       if(session.mode!=='payment'||session.payment_status!=='paid'||session.livemode!==expectedLive||event.livemode!==expectedLive)return reply({ok:false,error:'Public payment evidence missing'},400);
       const evidence={id:session.id,mode:session.mode,payment_status:session.payment_status,amount_total:session.amount_total,currency:session.currency,metadata:{landerware_order_id:retailOrderId},livemode:session.livemode,stripeEventId:event.id};
       try{
-       const result=await settlePublicOrder(async(name:string,args:unknown)=>{const {data,error}=await db.rpc(name,args);if(error)throw Error('payment_rpc_failed');return data;},publicOrder,session,evidence);
+       const result=await settlePublicOrder(async(name:string,args:Record<string,unknown>)=>{const {data,error}=await db.rpc(name,args);if(error)throw Error('payment_rpc_failed');return data;},publicOrder,session,evidence);
        return reply({ok:true,orderId:publicOrder.id,status:result?.status});
       }catch{return reply({ok:false,error:'Public payment reconciliation failed'},500);}
 

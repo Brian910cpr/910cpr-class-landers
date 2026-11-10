@@ -3,7 +3,7 @@
 import {spawn} from 'node:child_process';
 import {localPsql,assertLocalTargetServer} from './helpers/local-postgres.mjs';
 import {readFileSync} from 'node:fs';
-import {preProfileFiles,profileMigration,fullCourseMigration,codeDeliveryMigration,codeEventMigration} from './helpers/native-checkout-migration-plan.mjs';
+import {preProfileFiles,profileMigration,profileRuntime,fullCourseMigration,codeDeliveryMigration,codeEventMigration} from './helpers/native-checkout-migration-plan.mjs';
 import assert from 'node:assert/strict';
 const database=process.env.NATIVE_CHECKOUT_TEST_DATABASE;
 if(database!=='native_checkout_test')throw Error('Create an empty localhost native_checkout_test database.');
@@ -16,6 +16,8 @@ const check=await run("select count(*) from information_schema.tables where tabl
 for(const file of preProfileFiles){const r=await run(readFileSync(new URL('../'+file,import.meta.url),'utf8'));assert.equal(r.code,0,file+'\n'+r.error);}
 assert.equal((await run("update courses set course_key='skills-session-only' where enrollware_course_id='509474'")).code,0);
 const migrated=await run(readFileSync(new URL('../'+profileMigration,import.meta.url),'utf8'));assert.equal(migrated.code,0,migrated.error);
+const profileRuntimeApplied=await run(readFileSync(new URL('../'+profileRuntime,import.meta.url),'utf8'));assert.equal(profileRuntimeApplied.code,0,profileRuntimeApplied.error);
+const legacySkillsAdapter=await run(readFileSync(new URL('../supabase/reviewed/native-skills-payment-adapter.sql',import.meta.url),'utf8'));assert.equal(legacySkillsAdapter.code,0,legacySkillsAdapter.error);
 const fullMigrated=await run(readFileSync(new URL('../'+fullCourseMigration,import.meta.url),'utf8'));assert.equal(fullMigrated.code,0,fullMigrated.error);
 const codesMigrated=await run(readFileSync(new URL('../'+codeDeliveryMigration,import.meta.url),'utf8'));assert.equal(codesMigrated.code,0,codesMigrated.error);
 const eventMigrated=await run(readFileSync(new URL('../'+codeEventMigration,import.meta.url),'utf8'));assert.equal(eventMigrated.code,0,eventMigrated.error);
@@ -110,7 +112,7 @@ console.log('PASS isolated PostgreSQL: both plain Heartsaver profiles serialize 
 const legacyLoaded=await run(readFileSync(new URL('helpers/native-checkout-legacy-hosted-functions.sql',import.meta.url),'utf8'));assert.equal(legacyLoaded.code,0,legacyLoaded.error);
 const legacyFingerprint=()=>run("select md5(string_agg(proname||pg_get_function_identity_arguments(p.oid)||replace(prosrc,'(/* native_paid_hold_reader_v1 */ o.hold_expires_at>now() or (o.payment_evidence->>''payment_status''=''paid'' and o.payment_evidence->>''seat_hold_protected''=''true''))','o.hold_expires_at>now()')||prosecdef::text||coalesce(proacl::text,''),'' order by proname,pg_get_function_identity_arguments(p.oid))) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('landerware_create_public_order','landerware_finalize_public_order')");
 const oldAPI=(await legacyFingerprint()).out;
-const additive=await run(readFileSync(new URL('../supabase/migrations/20261110203954_native_checkout_additive_order_runtime.sql',import.meta.url),'utf8'));assert.equal(additive.code,0,additive.error);assert.equal((await legacyFingerprint()).out,oldAPI);
+const additive=await run(readFileSync(new URL('../supabase/migrations/20261110212444_native_checkout_additive_order_runtime.sql',import.meta.url),'utf8'));assert.equal(additive.code,0,additive.error);assert.equal((await legacyFingerprint()).out,oldAPI);
 const compatibilitySetup=await run(`insert into courses(course_key,name,enrollware_course_id,duration_minutes,max_students_default,base_price) values('fixture-compat','Synthetic Compatibility Course','fixture-compat',120,2,75);
  insert into landerware_registration_catalog(course_id,course_name,unit_amount,active) values('fixture-compat','Synthetic Compatibility Course',7500,true);
  insert into class_sessions(source,status,course_id,start_at,end_at,consumption_start_at,consumption_end_at,lead_instructor_id,location_id,max_students,registration_backend,visibility,registration_status,external_class_id,record_scope)

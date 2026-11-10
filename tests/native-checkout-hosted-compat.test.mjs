@@ -1,11 +1,11 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync,readdirSync} from 'node:fs';
-import {preProfileFiles,profileMigration} from './helpers/native-checkout-migration-plan.mjs';
+import {preProfileFiles,profileMigration,profileRuntime} from './helpers/native-checkout-migration-plan.mjs';
 const {PGlite}=await import(process.env.SKILLS_PGLITE_MODULE||'@electric-sql/pglite');
 const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const compat='supabase/migrations/'+readdirSync(new URL('../supabase/migrations/',import.meta.url)).find(f=>f.endsWith('_native_checkout_additive_order_runtime.sql'));
 test('additive native runtime preserves actual hosted legacy overloads and shares capacity/closure safeguards without accepting payment guesses',async()=>{
  const db=new PGlite();try{
- for(const f of preProfileFiles)await db.exec(load(f));await db.exec(load(profileMigration));
+ for(const f of preProfileFiles)await db.exec(load(f));await db.exec(load(profileMigration));await db.exec(load(profileRuntime));await db.exec(load(profileRuntime));await db.exec(load('supabase/reviewed/native-skills-payment-adapter.sql'));
  await db.exec(load('tests/helpers/native-checkout-legacy-hosted-functions.sql'));
  const baseline=async()=> (await db.query("select proname,pg_get_function_identity_arguments(p.oid) args,prosrc,prosecdef,proacl::text acl from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('landerware_create_public_order','landerware_finalize_public_order') and (p.proname='landerware_create_public_order' or p.pronargs=2) order by proname,args")).rows;
  const before=await baseline();await db.exec(load(compat));await db.exec(load(compat));

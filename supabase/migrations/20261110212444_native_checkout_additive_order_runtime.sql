@@ -1,4 +1,5 @@
--- Additive native mutation namespace. Existing legacy creator/finalizer overloads are not replaced.
+-- Additive native mutation namespace. Legacy signatures/grants are preserved;
+-- inspected expiry-only reader predicates gain verified paid-hold protection.
 begin;
 set local lock_timeout='2s';
 set local statement_timeout='30s';

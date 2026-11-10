@@ -125,7 +125,7 @@ test('external occupancy must be complete and fresh and is counted once alongsid
 
 test('signed webhook executes the real PostgreSQL public finalizer and replay confirms exactly once',()=>withDb(async h=>{
  await h.db.exec("alter table landerware_public_orders add column registration_profile_snapshot jsonb not null default '{}'");
- await h.db.exec(read('supabase/migrations/20261110203954_native_checkout_additive_order_runtime.sql'));
+ await h.db.exec(read('supabase/migrations/20261110212444_native_checkout_additive_order_runtime.sql'));
  const a=await h.create();
  await h.db.query("update landerware_public_orders set registration_profile_snapshot=$2 where id=$1",[a.orderId,JSON.stringify({profile:{profile_key:'fixture_native',version:1,form_schema:{schemaVersion:'native-checkout.form.v1'}}})]);
  const o=await h.bind(a.orderId);let handler;
