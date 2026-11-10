@@ -7,6 +7,7 @@ const {PGlite}=await import(process.env.SKILLS_PGLITE_MODULE||'@electric-sql/pgl
 const root=new URL('../',import.meta.url),load=p=>readFileSync(new URL(p,root),'utf8');
 const cfg=JSON.parse(load('data/config/native_heartsaver_course_drafts.json'));
 const columns='supabase/migrations/'+readdirSync(new URL('supabase/migrations/',root)).find(f=>f.endsWith('_native_checkout_profile_columns_only.sql'));
+const inperson='supabase/migrations/'+readdirSync(new URL('supabase/migrations/',root)).find(f=>f.endsWith('_native_heartsaver_inperson_drafts_only.sql'));
 const draft='supabase/migrations/'+readdirSync(new URL('supabase/migrations/',root)).find(f=>f.endsWith('_heartsaver_inactive_checkout_drafts.sql'));
 test('exact Heartsaver drafts are idempotent/private/inactive and use shared profile form only after explicit fixture configuration',async()=>{
  const db=new PGlite();try{
@@ -20,7 +21,7 @@ test('exact Heartsaver drafts are idempotent/private/inactive and use shared pro
  const courseRows=async()=> (await db.query("select * from courses where enrollware_course_id in ('209809','329495','351632') order by enrollware_course_id")).rows;
  await db.query("insert into landerware_registration_catalog(course_id,source,course_name,unit_amount,currency,addons,source_snapshot,active) values('209809','existing_hosted_catalog','Existing reviewed name',9500,'usd','[]','{\"existing\":true}',true)");
  const existingCatalog=(await db.query("select * from landerware_registration_catalog where course_id='209809'")).rows[0];
- const before=await courseRows();await db.exec(load(draft));await db.exec(load(draft));assert.deepEqual(await courseRows(),before);
+ const before=await courseRows();await db.exec(load(inperson));await db.exec(load(inperson));await db.exec(load(draft));await db.exec(load(draft));assert.deepEqual(await courseRows(),before);
  for(const c of cfg.courses){
  const p=(await db.query('select * from landerware_registration_profiles where profile_key=$1',[c.profileKey])).rows[0];
  const cat=(await db.query('select * from landerware_registration_catalog where course_id=$1',[c.externalId])).rows[0];
