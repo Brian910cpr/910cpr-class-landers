@@ -161,3 +161,28 @@ const crossed=await Promise.all([oldCross,newCross]);assert.ok(crossed.some(r=>r
 const crossLedgers=json(await run(`select jsonb_build_object('legacy',(select count(*) from skills_session_claim_receipts where idempotency_key='${crossKey}'),'native',(select count(*) from landerware_public_orders where idempotency_key='public-order:${crossKey}'))`));assert.equal(crossLedgers.legacy+crossLedgers.native,1);
 const crossReplay=json(await run(`select reserve_native_checkout_order('${crossKey}','native_skills_shared',1,'cpr-aed',null,${crossOffer},'${JSON.stringify([crossWire])}','${JSON.stringify([{wire:crossWire,selectedChoices:['skills_only']}])}',5500)`));assert.equal(crossReplay.kind,crossLedgers.legacy?'skills_reservation':'public_order');
 console.log('PASS isolated PostgreSQL: an old/new nonce race across profile activation produces exactly one ledger and recovery retains the winning creator.');
+
+const generatedLifecycle=await run(readFileSync(new URL('../supabase/reviewed/native-checkout-generated-session-lifecycle.sql',import.meta.url),'utf8'));assert.equal(generatedLifecycle.code,0,generatedLifecycle.error);
+const abandoned=json(await run(claim(701,820)));
+const releaseWindow=day=>`select native_checkout_release_abandoned((skills_test.offer('maintenance',${day})->>'startsAt')::timestamptz,(skills_test.offer('maintenance',${day})->>'consumptionEndsAt')::timestamptz)`;
+assert.equal((await run(`update landerware_public_orders set hold_expires_at=now()-interval '1 minute' where id='${abandoned.orderId}'`)).code,0);
+const closedTwice=await Promise.all([run(releaseWindow(820)),run(releaseWindow(820))]);assert.ok(closedTwice.every(r=>r.code===0));assert.equal(closedTwice.reduce((n,r)=>n+Number(r.out.trim()),0),1);
+const reclaimed=(await Promise.all([run(claim(702,820)),run(claim(703,820))])).map(json);assert.ok(reclaimed.every(r=>r.sessionId===abandoned.sessionId));
+const rejectedThird=await run(claim(704,820));assert.notEqual(rejectedThird.code,0);assert.match(rejectedThird.error,/session_not_available|insufficient_seats/);
+assert.equal(json(await run(`select jsonb_build_object('status',status) from landerware_public_orders where id='${abandoned.orderId}'`)).status,'expired');
+console.log('PASS isolated PostgreSQL: concurrent cleanup closes one abandoned automatic session; two fresh claimers reuse original identity and the third is rejected.');
+
+const paidCleanup=json(await run(claim(705,821)));
+assert.equal((await run(`update landerware_public_orders set stripe_checkout_session_id='cs_cleanup_paid' where id='${paidCleanup.orderId}'`)).code,0);
+const cleanupPayment={id:'cs_cleanup_paid',mode:'payment',payment_status:'paid',amount_total:5500,currency:'usd',metadata:{landerware_order_id:paidCleanup.orderId}};
+json(await run(`select native_checkout_record_payment('${paidCleanup.orderId}','pi_cleanup_paid','${JSON.stringify(cleanupPayment)}')`));
+assert.equal((await run(`update landerware_public_orders set hold_expires_at=now()-interval '1 minute' where id='${paidCleanup.orderId}'`)).code,0);
+const paymentMaintenance=await Promise.all([run(releaseWindow(821)),run(`select native_checkout_finalize_order('${paidCleanup.orderId}','pi_cleanup_paid','${JSON.stringify(cleanupPayment)}')`)]);assert.equal(paymentMaintenance[0].code,0,paymentMaintenance[0].error);assert.equal(Number(paymentMaintenance[0].out.trim()),0);assert.equal(json(paymentMaintenance[1]).status,'paid');
+console.log('PASS isolated PostgreSQL: cleanup racing paid-unfinalized recovery never closes or reclaims the paid session.');
+
+const alternateSource=json(await run(claim(706,822)));
+assert.equal((await run(`update landerware_public_orders set hold_expires_at=now()-interval '1 minute' where id='${alternateSource.orderId}'`)).code,0);assert.equal(Number((await run(releaseWindow(822))).out.trim()),1);
+const alternative=claim(707,822,false,30).replaceAll("'bls-skills'","'cpr-aed'").replaceAll('"bls-skills"','"cpr-aed"');
+const crossContext=json(await run(alternative));assert.notEqual(crossContext.sessionId,alternateSource.sessionId);
+const forbiddenReopen=await run(claim(708,822));assert.notEqual(forbiddenReopen.code,0);assert.match(forbiddenReopen.error,/session_not_available/);
+console.log('PASS isolated PostgreSQL: released unpaid interval admits another eligible skills context; surviving new commitment blocks conflicting old-position reopening.');

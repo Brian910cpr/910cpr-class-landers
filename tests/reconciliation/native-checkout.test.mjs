@@ -126,7 +126,7 @@ test('external occupancy must be complete and fresh and is counted once alongsid
 test('signed webhook executes the real PostgreSQL public finalizer and replay confirms exactly once',()=>withDb(async h=>{
  await h.db.exec("alter table landerware_public_orders add column registration_profile_snapshot jsonb not null default '{}'");
  await h.db.exec(read('supabase/migrations/20261110212444_native_checkout_additive_order_runtime.sql'));
- await h.db.exec(read('supabase/reviewed/native-checkout-order-version.sql'));
+ await h.db.exec(read('supabase/migrations/20261110225640_native_checkout_immutable_order_version.sql'));
  const a=await h.rpc('native_checkout_create_order',{p_idempotency_key:randomUUID(),p_external_class_id:h.external,p_course_id:'359474',p_payer_email:'fixture@example.invalid',p_payer_phone:'2025550100',p_students:[{firstName:'Synthetic',lastName:'Fixture',email:'fixture@example.invalid',phone:'2025550100'}],p_billing_code:null,p_offer:{}});
  await h.db.query("update landerware_public_orders set registration_profile_snapshot=$2 where id=$1",[a.orderId,JSON.stringify({profile:{profile_key:'fixture_native',version:1,form_schema:{schemaVersion:'native-checkout.form.v1'}}})]);
  const o=await h.bind(a.orderId);let handler;

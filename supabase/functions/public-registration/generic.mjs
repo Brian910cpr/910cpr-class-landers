@@ -69,12 +69,14 @@ export function genericCheckout(deps){
    const matches=all.filter(o=>selection.selectionId?o.selectionId===selection.selectionId:
     o.localStart===`${selection.date}T${selection.startTime}`&&(!selection.instructor||o.instructor===selection.instructor)&&(!selection.location||o.location===selection.location));
    if(matches.length!==1)throw Error('session_not_available');offer=matches[0];
-   const canonical=await rpc('skills_session_native_option',{p_context:context,p_offer:offer});
+    await rpc('native_checkout_release_abandoned',{p_starts_at:offer.startsAt,p_ends_at:offer.consumptionEndsAt});
+    const canonical=await rpc('skills_session_native_option',{p_context:context,p_offer:offer});
    if(!canonical)throw Error('session_not_available');capacity=canonical.capacity;
    remaining=canonical.targetSessionId?(await rpc('landerware_public_seat_state',{p_session_id:canonical.targetSessionId})).remaining:capacity;
   }else if(packet.profile.form_schema.inventory_kind!=='scheduled_session_v1'||(!session&&!fullOffer))throw Error('invalid_session');
   if(fullOffer){
-   const canonical=await rpc('native_full_course_option',{p_course_number:publicCourse,p_offer:fullOffer});
+    await rpc('native_checkout_release_abandoned',{p_starts_at:fullOffer.startsAt,p_ends_at:fullOffer.consumptionEndsAt});
+    const canonical=await rpc('native_full_course_option',{p_course_number:publicCourse,p_offer:fullOffer});
    if(!canonical)throw Error('session_not_available');capacity=canonical.capacity;
    remaining=canonical.targetSessionId?(await rpc('landerware_public_seat_state',{p_session_id:canonical.targetSessionId})).remaining:capacity;
   }

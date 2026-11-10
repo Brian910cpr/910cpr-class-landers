@@ -14,7 +14,7 @@ export const preProfileFiles=Object.freeze([
  'supabase/migrations/20261108142206_skills_checkout_and_optional_certificate.sql',
  'supabase/migrations/20261108145719_bls_native_checkout_integrity.sql',
  'supabase/migrations/20261110212444_native_checkout_additive_order_runtime.sql',
- 'supabase/reviewed/native-checkout-order-version.sql',
+ 'supabase/migrations/20261110225640_native_checkout_immutable_order_version.sql',
  'supabase/migrations/20261108145720_bls_heartcode_bundle_contract.sql',
  'supabase/migrations/20261108153759_checkout_confirmation_delivery_gate.sql',
  'tests/helpers/native-checkout-profile-schema.sql',
@@ -30,4 +30,4 @@ export const codeEventMigration='supabase/migrations/20261109140000_native_code_
 
 export const profileRuntime='supabase/migrations/20261110213124_native_checkout_profile_runtime_only.sql';
 
-export const orderVersionMigration='supabase/reviewed/native-checkout-order-version.sql';
+export const orderVersionMigration='supabase/migrations/20261110225640_native_checkout_immutable_order_version.sql';

@@ -9,6 +9,7 @@ function fixture(){
  const packet={profile,physicalCourseId:'fixture-course',catalog};
  const deps={now:()=>0,catalog:async()=>({...catalog,addons:catalog.addons.map(a=>({...a,active:!disabled}))}),scheduleSession:async id=>({nativeReady:true,course_id:'fixture-course',start_at:'2031-01-01T14:00:00Z',end_at:'2031-01-01T14:45:00Z',location_name:'Fixture location'}),
   rpc:async(name,args)=>{calls.push({name,args});if(name==='native_checkout_profile')return structuredClone(packet);
+   if(name==='native_checkout_release_abandoned')return 0;
    if(name==='skills_session_native_option')return {capacity:2};
    if(name==='native_checkout_receipt'){if(!receipts.has(args.p_key))throw Error('reservation_not_found');return receipts.get(args.p_key);}
    if(name==='reserve_native_checkout_order'){const r={kind:'public_order',orderId:'fixture-order',status:'held',amountCents:args.p_expected_total,currency:'usd',holdExpiresAt:'2031-01-01T13:00:00Z',students:args.p_students.map(()=>({options:{}})),profileSnapshot:{...structuredClone(packet),context:args.p_context,inputs:args.p_inputs}};receipts.set(args.p_key,r);return r;}
