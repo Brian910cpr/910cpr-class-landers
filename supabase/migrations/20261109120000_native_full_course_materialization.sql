@@ -188,7 +188,7 @@ begin
    (select count(*) from public.class_sessions s where s.external_class_id=p_external_id and s.record_scope='operational' and s.course_id=c.id)<>1 then raise exception 'session_not_open'; end if;
   external_id:=p_external_id;
  end if;
- result:=public.landerware_create_public_order('public-order:'||p_key,external_id,c.enrollware_course_id,lower(trim(p_students->0->>'email')),trim(p_students->0->>'phone'),p_students,null,
+ result:=public.native_checkout_create_order('public-order:'||p_key,external_id,c.enrollware_course_id,lower(trim(p_students->0->>'email')),trim(p_students->0->>'phone'),p_students,null,
   jsonb_build_object('profile_fields_validated',true,'profile_key',p.profile_key,'profile_version',p.version));
  select * into strict o from public.landerware_public_orders where id=(result->>'orderId')::uuid;
  if o.total<=0 then raise exception 'billing_approval_required'; end if;

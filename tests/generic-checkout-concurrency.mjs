@@ -164,6 +164,7 @@ console.log('PASS isolated PostgreSQL: an old/new nonce race across profile acti
 
 const generatedLifecycle=await run(readFileSync(new URL('../supabase/reviewed/native-checkout-generated-session-lifecycle.sql',import.meta.url),'utf8'));assert.equal(generatedLifecycle.code,0,generatedLifecycle.error);
 const abandoned=json(await run(claim(701,820)));
+assert.equal(json(await run(`select jsonb_build_object('version',checkout_runtime_version) from landerware_public_orders where id='${abandoned.orderId}'`)).version,'native-v1','the full-course reserve extension must retain the canonical native creator');
 const releaseWindow=day=>`select native_checkout_release_abandoned((skills_test.offer('maintenance',${day})->>'startsAt')::timestamptz,(skills_test.offer('maintenance',${day})->>'consumptionEndsAt')::timestamptz)`;
 assert.equal((await run(`update landerware_public_orders set hold_expires_at=now()-interval '1 minute' where id='${abandoned.orderId}'`)).code,0);
 const closedTwice=await Promise.all([run(releaseWindow(820)),run(releaseWindow(820))]);assert.ok(closedTwice.every(r=>r.code===0));assert.equal(closedTwice.reduce((n,r)=>n+Number(r.out.trim()),0),1);
