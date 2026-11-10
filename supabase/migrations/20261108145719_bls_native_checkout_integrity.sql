@@ -158,6 +158,8 @@ declare o public.landerware_public_orders; s public.class_sessions; c public.lan
  st jsonb; a jsonb; ac jsonb; bc jsonb; v_code text; v_amount integer; v_discount integer; v_subtotal integer:=0; v_discounts integer:=0;
  v_requested integer; v_fingerprint text; seats jsonb; v_course text; v_addons jsonb; v_student_id uuid;
 begin
+ -- Preserve the installed owner-closure contract before any hold or order write.
+ perform public.assert_public_registration_open(null,null,p_external_class_id);
  if nullif(trim(p_idempotency_key),'') is null or jsonb_typeof(p_students) is distinct from 'array' then raise exception 'invalid_order'; end if;
  v_requested:=jsonb_array_length(p_students);
  if v_requested<1 or v_requested>10 or nullif(trim(p_payer_email),'') is null then raise exception 'invalid_order'; end if;

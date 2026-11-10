@@ -13,6 +13,7 @@ export const preProfileFiles=Object.freeze([
  'tests/helpers/bls-checkout-inventory.sql',
  'supabase/migrations/20261108142206_skills_checkout_and_optional_certificate.sql',
  'supabase/migrations/20261108145719_bls_native_checkout_integrity.sql',
+ 'supabase/migrations/20261110203954_native_checkout_additive_order_runtime.sql',
  'supabase/migrations/20261108145720_bls_heartcode_bundle_contract.sql',
  'supabase/migrations/20261108153759_checkout_confirmation_delivery_gate.sql',
  'tests/helpers/native-checkout-profile-schema.sql',

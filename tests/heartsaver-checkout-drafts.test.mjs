@@ -46,6 +46,13 @@ test('exact Heartsaver drafts are idempotent/private/inactive and use shared pro
   const key=c.canonicalId,selection={session:'fixture-'+c.externalId,course:c.externalId};
   const student={fields:{first_name:'Fixture',last_name:'Learner',email:'fixture-'+c.externalId+'@example.invalid',phone:'2025550100'},selectedChoices:[]};
   const body={selection,profileKey:c.profileKey,profileVersion:1,students:[student]};
+  const oldClosure=(await db.query("select pg_get_functiondef('public.public_registration_closure_policy()'::regprocedure) d")).rows[0].d;
+  const bounds=(await db.query('select start_at,end_at from class_sessions where external_class_id=$1',['fixture-'+c.externalId])).rows[0];
+  const closed=JSON.stringify({closures:[{startsAt:bounds.start_at,endsAt:bounds.end_at}]});
+  await db.exec("create or replace function public.public_registration_closure_policy() returns jsonb language sql as $$ select '"+closed.replaceAll("'","''")+"'::jsonb $$");
+  await assert.rejects(api.reserve(key,body),/registration_date_closed/);
+  assert.equal((await db.query('select count(*)::int n from landerware_public_orders where idempotency_key=$1',['public-order:'+key])).rows[0].n,0);
+  await db.exec(oldClosure);
   const a=await api.reserve(key,body);assert.equal(a.receipt.amountCents,9500);
   const replay=await api.reserve(key,body);assert.equal(replay.receipt.orderId,a.receipt.orderId);
   await assert.rejects(api.reserve(key,{...body,students:[{...student,fields:{...student.fields,email:'changed@example.invalid'}}]}),/idempotency_conflict/);

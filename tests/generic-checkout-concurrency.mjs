@@ -97,3 +97,26 @@ for(const [i,c] of plainHS.entries()){
  assert.equal(replay[0].orderId,original.orderId);assert.equal(replay[1].orderId,original.orderId);
 }
 console.log('PASS isolated PostgreSQL: both plain Heartsaver profiles serialize three claims for two session-override seats and duplicate-key replay; no online stock dependency.');
+
+
+// Preserve actual hosted legacy API contracts while validating the additive namespace.
+const legacyLoaded=await run(readFileSync(new URL('helpers/native-checkout-legacy-hosted-functions.sql',import.meta.url),'utf8'));assert.equal(legacyLoaded.code,0,legacyLoaded.error);
+const legacyFingerprint=()=>run("select md5(string_agg(proname||pg_get_function_identity_arguments(p.oid)||prosrc||prosecdef::text||coalesce(proacl::text,''),'' order by proname,pg_get_function_identity_arguments(p.oid))) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('landerware_create_public_order','landerware_finalize_public_order')");
+const oldAPI=(await legacyFingerprint()).out;
+const additive=await run(readFileSync(new URL('../supabase/migrations/20261110203954_native_checkout_additive_order_runtime.sql',import.meta.url),'utf8'));assert.equal(additive.code,0,additive.error);assert.equal((await legacyFingerprint()).out,oldAPI);
+const compatibilitySetup=await run(`insert into courses(course_key,name,enrollware_course_id,duration_minutes,max_students_default,base_price) values('fixture-compat','Synthetic Compatibility Course','fixture-compat',120,2,75);
+ insert into landerware_registration_catalog(course_id,course_name,unit_amount,active) values('fixture-compat','Synthetic Compatibility Course',7500,true);
+ insert into class_sessions(source,status,course_id,start_at,end_at,consumption_start_at,consumption_end_at,lead_instructor_id,location_id,max_students,registration_backend,visibility,registration_status,external_class_id,record_scope)
+ select 'landerware_event','scheduled',c.id,current_date+333,current_date+333+interval '2 hours',current_date+333,current_date+333+interval '2 hours',p.id,l.id,2,'landerware','public','open','fixture-compat-session','operational' from courses c cross join people p cross join locations l where c.course_key='fixture-compat' and p.person_key='skills-test' and l.location_key='910cpr-office-shipyard';`);assert.equal(compatibilitySetup.code,0,compatibilitySetup.error);
+const compatibilityClaim=(n,legacy=false)=>{const wire={firstName:'Synthetic',lastName:'Fixture',email:`compat-${n}@example.invalid`,phone:'2025550100',addons:[]};return `select ${legacy?'landerware_create_public_order':'native_checkout_create_order'}('compat-${n}','fixture-compat-session','fixture-compat','compat-${n}@example.invalid','2025550100','${JSON.stringify([wire])}',null,'{}')`;};
+const compatibilityRaces=await Promise.all([run(compatibilityClaim(410,true)),run(compatibilityClaim(411)),run(compatibilityClaim(412))]);
+assert.equal(compatibilityRaces.filter(r=>r.code===0).length,2);assert.match(compatibilityRaces.find(r=>r.code!==0).error,/insufficient_seats/);
+const nativeWinner=compatibilityRaces[1].code===0?411:412,nativeOriginal=json(compatibilityRaces[nativeWinner===411?1:2]);
+const nativeReplays=(await Promise.all([run(compatibilityClaim(nativeWinner)),run(compatibilityClaim(nativeWinner))])).map(json);assert.equal(nativeReplays[0].orderId,nativeOriginal.orderId);assert.equal(nativeReplays[1].orderId,nativeOriginal.orderId);
+console.log('PASS isolated PostgreSQL: actual legacy and additive native order APIs share two-seat contention and replay; legacy function bodies, security and grants remain unchanged.');
+
+assert.equal((await run(`update landerware_public_orders set status='checkout_open',stripe_checkout_session_id='cs_compat_synthetic' where id='${nativeOriginal.orderId}'`)).code,0);
+const compatPayment={id:'cs_compat_synthetic',mode:'payment',payment_status:'paid',amount_total:7500,currency:'usd',metadata:{landerware_order_id:nativeOriginal.orderId}};
+const nativeSettlement=(await Promise.all([1,2].map(()=>run(`select native_checkout_record_payment('${nativeOriginal.orderId}','pi_compat_synthetic','${JSON.stringify(compatPayment)}');select native_checkout_finalize_order('${nativeOriginal.orderId}','pi_compat_synthetic','${JSON.stringify(compatPayment)}')`)))).map(json);
+assert.equal(nativeSettlement[0].status,'paid');assert.equal(nativeSettlement[1].status,'paid');
+console.log('PASS isolated PostgreSQL: additive payment evidence and duplicate finalization serialize with legacy holds preserved; synthetic processor evidence only.');
