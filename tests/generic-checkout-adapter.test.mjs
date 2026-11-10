@@ -9,10 +9,11 @@ import {webcrypto} from 'node:crypto';
 import {genericCheckout,boundedCheckoutJSON,fullAppointmentSession} from '../supabase/functions/public-registration/generic.mjs';
 const source=readFileSync(new URL('../supabase/functions/public-registration/index.ts',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'');
 const key='11111111-1111-4111-8111-111111111111';
-function harness({legacyURL=null,course='fixture-course',profileReady=true,invoice=false}={}){
- const calls=[],queued=new Map();let handler,order,receipt,required=false,sessionResponse,currentStatus='scheduled';
+function harness({legacyURL=null,course='fixture-course',profileReady=true,invoice=false,uploads=false}={}){
+ const calls=[],queued=new Map();let handler,order,receipt,required=false,sessionResponse,currentStatus='scheduled',storageFails=false,finishCount=0;
  const profile={profile_key:'fixture_generic',version:1,active:true,course_id:'fixture-course',display_name:'Fixture title',requirements:[],form_schema:{schemaVersion:'native-checkout.form.v1',inventory_kind:'scheduled_session_v1',fields:[{key:'first_name',wire:'firstName',type:'text',required:true},{key:'email',wire:'email',type:'email',required:true}],option_groups:[],driver_rules:[{driver:'native_order'}],default_choices:[]}};
  const catalog={course_id:course,course_name:'Fixture title',unit_amount:7500,currency:'usd',addons:[],billing_codes:[{code:'PRIVATE'}]};
+ if(uploads)profile.requirements=[{key:'completion',type:'online_completion',display_name:'Completion certificate',upload_now:true,required_before_registration:false,upload:{enabled:true,max_bytes:2097152,mime_types:['application/pdf']}}];
  const packet={profile,physicalCourseId:'fixture-course',catalog};
  const ctx=vm.createContext({publicOrderVersion,publicOrderReturnPath,settlePublicOrder,genericCheckout,boundedCheckoutJSON,fullAppointmentSession,URL,URLSearchParams,Request,Response,Headers,Date,Error,Set,Promise,JSON,Object,Array,Number,String,Uint8Array,crypto:webcrypto,AbortSignal,console,
   Deno:{env:{get:k=>({SUPABASE_URL:'https://fixture-db.invalid',SUPABASE_SERVICE_ROLE_KEY:'server-only-fixture',STRIPE_SECRET_KEY:'sk_test_fixture'})[k]},serve:fn=>handler=fn},
@@ -21,6 +22,11 @@ function harness({legacyURL=null,course='fixture-course',profileReady=true,invoi
    if(u.startsWith('https://api.stripe.com/')){const p=new URLSearchParams(init.body);if(init.method==='POST'){assert.equal(p.get('line_items[0][price_data][unit_amount]'),'7500');assert.equal(init.headers['idempotency-key'],'landerware-public-'+order.id);assert.equal(new URL(p.get('success_url')).pathname,publicOrderReturnPath(order));assert.equal(new URL(p.get('cancel_url')).pathname,publicOrderReturnPath(order));assert.ok(+p.get('expires_at')*1000-Date.now()>30*60000,'upload delays must not produce an invalid Stripe expiration');}return Response.json(sessionResponse||{id:'cs_fixture',url:'https://checkout.stripe.com/c/pay/fixture',mode:'payment',status:'open',payment_status:'unpaid',livemode:false,amount_total:7500,currency:'usd',metadata:{landerware_order_id:'fixture-order'}});}
    if(u.endsWith('/data/schedule_future.json'))return Response.json({sessions:[{session_id:'123456',course_id:'209806',start_at:'2031-01-01T14:00:00Z',end_at:'2031-01-01T16:00:00Z',public_direct_booking:true,registration_status:'open',registration_url:legacyURL,location_display:':: Wilmington; Shipyard Blvd'}]});
    assert.equal(init.headers.apikey,'server-only-fixture');
+   if(u.includes('/storage/v1/object/')){
+    assert.equal(init.headers.authorization,'Bearer server-only-fixture');assert.equal(init.headers['x-upsert'],'false');
+    assert.equal(init.headers['content-type'],'application/pdf');assert.ok(init.body instanceof Uint8Array);
+    return storageFails?Response.json({error:'fixture_storage_failure'},{status:503}):Response.json({ok:true});
+   }
    if(u.includes('/class_sessions?')&&legacyURL)return Response.json([]);
    if(u.includes('/class_sessions?')&&u.includes('select=id,status'))return Response.json([{id:'class',record_scope:'operational',status:currentStatus,registration_status:'open',start_at:'2031-01-01T14:00:00Z'}]);
    if(u.includes('/class_sessions?'))return Response.json([{id:'class',registration_backend:'landerware',registration_status:'open',visibility:'public',status:'scheduled',start_at:'2031-01-01T14:00:00Z',end_at:'2031-01-01T16:00:00Z',record_scope:'operational',external_class_id:'123456',courses:{enrollware_course_id:course,name:'Fixture title'},locations:{name:'Fixture location'}}]);
@@ -38,6 +44,11 @@ function harness({legacyURL=null,course='fixture-course',profileReady=true,invoi
    if(rpc==='landerware_public_seat_state')return Response.json({remaining:2});
    if(rpc==='native_checkout_receipt')return receipt?Response.json(receipt):Response.json({message:'reservation_not_found'},{status:400});
    if(rpc==='native_checkout_payment_allowed')return Response.json(!required);
+   if(rpc==='native_checkout_begin_upload'){
+    assert.equal(body.p_key,key);assert.equal(body.p_student_index,0);assert.equal(body.p_requirement_key,'completion');assert.match(body.p_sha,/^[a-f0-9]{64}$/);
+    return Response.json({id:'fixture-intent',state:'pending_storage',storage_bucket:'class-session-documents',storage_path:`fixture-class/checkout/fixture-student/completion/${body.p_sha}.pdf`});
+   }
+   if(rpc==='native_checkout_finish_upload'){finishCount++;return Response.json({ok:true,evidenceStatus:'received',approved:false});}
    if(rpc==='reserve_native_checkout_order'){
     assert.equal(body.p_expected_total,7500);assert.equal(body.p_students[0].amountCents,undefined);
     receipt={kind:'public_order',orderId:'fixture-order',status:'held',amountCents:7500,currency:'usd',holdExpiresAt:'2031-01-01T13:00:00Z',students:[{}],profileSnapshot:{...packet,inputs:body.p_inputs,context:''}};
@@ -46,7 +57,7 @@ function harness({legacyURL=null,course='fixture-course',profileReady=true,invoi
   }});
  vm.runInContext(stripTypeScriptTypes(source),ctx);
  const send=(action,body,origin='https://www.910cpr.com')=>handler(new Request('https://fixture.invalid/public-registration/generic/'+action,{method:body?'POST':'GET',headers:{origin,'content-type':'application/json',...(action.startsWith('form?')?{}:{'idempotency-key':key})},...(body?{body:JSON.stringify(body)}:{})}));
- return {send,messages:()=>[...queued.values()],raw:(path,body)=>handler(new Request('https://fixture.invalid/public-registration/'+path,{method:body?'POST':'GET',headers:{origin:'https://www.910cpr.com','content-type':'application/json','idempotency-key':key},...(body?{body:JSON.stringify(body)}:{})})),calls,currentStatus:v=>currentStatus=v,saved:v=>order=v,required:v=>required=v,stripe:v=>sessionResponse=v};
+ return {send,messages:()=>[...queued.values()],raw:(path,body)=>handler(new Request('https://fixture.invalid/public-registration/'+path,{method:body?'POST':'GET',headers:{origin:'https://www.910cpr.com','content-type':'application/json','idempotency-key':key},...(body?{body:JSON.stringify(body)}:{})})),calls,currentStatus:v=>currentStatus=v,saved:v=>order=v,required:v=>required=v,stripe:v=>sessionResponse=v,storageFailure:v=>storageFails=v,finishedUploads:()=>finishCount};
 }
 test('deployed HTTP form/claim/Stripe adapter keeps service credentials and contact fields private and gates payment',async()=>{
  const h=harness();const form=await h.send('form?session=123456');const m=await form.json();assert.equal(form.status,200,JSON.stringify(m));assert.equal(m.profile.baseCents,7500);assert.equal(JSON.stringify(m).includes('PRIVATE'),false);
@@ -71,6 +82,29 @@ test('native recovery uses the immutable creator marker in the actual database p
  const query=h.calls.find(c=>c.url.includes('recovery_token=eq.')).url;
  assert.ok(new URL(query).searchParams.get('select').split(',').includes('checkout_runtime_version'));
  assert.equal(h.calls.some(c=>c.url.startsWith('https://api.stripe.com/')),false,'opening recovery does not open another payment');
+});
+
+test('actual upload HTTP handler scopes synthetic bytes privately, retries storage failure, and never reports document approval',async()=>{
+ const h=harness({uploads:true});
+ const form=await (await h.send('form?session=123456')).json();assert.equal(form.profile.uploads[0].mode,'optional');
+ const reserved=await h.send('reserve',{selection:{session:'123456'},profileKey:'fixture_generic',profileVersion:1,students:[{fields:{first_name:'Fixture',email:'fixture@example.invalid'},selectedChoices:[]}]});assert.equal(reserved.status,200);
+ const body={studentIndex:0,requirementKey:'completion',file:{type:'application/pdf',base64:Buffer.from('%PDF-1.1\nSYNTHETIC LOCAL QA ONLY - NOT A CERTIFICATE\n%%EOF').toString('base64')}};
+ h.storageFailure(true);const failure=await h.send('upload',body);assert.equal(failure.status,500);assert.equal((await failure.json()).error,'document_storage_pending');assert.equal(h.finishedUploads(),0);
+ h.storageFailure(false);const retry=await h.send('upload',body);assert.equal(retry.status,200);
+ const result=await retry.json();assert.equal(result.evidenceStatus,'received');assert.equal(result.approved,false);assert.equal(h.finishedUploads(),1);
+ const stored=h.calls.filter(c=>c.url.includes('/storage/v1/object/'));assert.equal(stored.length,2);assert.equal(stored[0].url,stored[1].url);
+ assert.match(stored[0].url,/\/class-session-documents\/fixture-class\/checkout\/fixture-student\/completion\/[a-f0-9]{64}\.pdf$/);
+ assert.doesNotMatch(JSON.stringify(result),/server-only-fixture|storage_path|fixture@example|SYNTHETIC/);
+ const before=h.calls.length;assert.equal((await h.send('upload',{...body,studentIndex:1})).status,400);assert.equal(h.calls.slice(before).some(c=>c.url.includes('/storage/v1/object/')),false);
+ assert.equal(h.calls.some(c=>c.url.startsWith('https://api.stripe.com/')),false,'file receipt neither initiates payment nor confirms registration');
+});
+
+test('disabled upload policy rejects synthetic files before an upload intent or storage write',async()=>{
+ const h=harness();
+ await h.send('reserve',{selection:{session:'123456'},profileKey:'fixture_generic',profileVersion:1,students:[{fields:{first_name:'Fixture',email:'fixture@example.invalid'},selectedChoices:[]}]});
+ const response=await h.send('upload',{studentIndex:0,requirementKey:'completion',file:{type:'application/pdf',base64:Buffer.from('%PDF-fixture').toString('base64')}});
+ assert.equal(response.status,400);assert.equal((await response.json()).error,'uploads_disabled');
+ assert.equal(h.calls.some(c=>c.url.includes('native_checkout_begin_upload')||c.url.includes('/storage/v1/object/')),false);
 });
 test('actual fallback contract permits only the published matching concrete-session destination without a native claim',async()=>{
  const legacyURL='https://coastalcprtraining.enrollware.com/enroll?id=123456',h=harness({legacyURL});
