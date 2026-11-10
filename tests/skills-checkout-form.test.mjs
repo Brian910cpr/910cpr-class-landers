@@ -52,7 +52,7 @@ test('paid query alone does not confirm; a saved return uses server status and n
 });
 test('disabled upload configuration renders no upload control and the shared entry uses the configured form',async()=>{
  const h=await harness();assert.equal(h.cards[0].querySelectorAll('[data-upload]').length,0);
- const entry=readFileSync(new URL('../docs/register/checkout/index.html',import.meta.url),'utf8');assert.ok(entry.includes('/assets/generic-checkout.js?v=20261110.1'));assert.equal(entry.includes('<form'),false);
+ const entry=readFileSync(new URL('../docs/register/checkout/index.html',import.meta.url),'utf8');assert.ok(entry.includes('/assets/generic-checkout.js?v=20261110.2'));assert.equal(entry.includes('<form'),false);
  const mirror=readFileSync(new URL('../docs/assets/checkout-profile.js',import.meta.url),'utf8'),server=readFileSync(new URL('../supabase/functions/_shared/checkout-profile.mjs',import.meta.url),'utf8');assert.equal(mirror,server);
 });
 test('saved observed payment hides the payment action and offers status recovery without confirming registration or charging again',async()=>{
