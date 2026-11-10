@@ -36,7 +36,7 @@ function update(){
   for(const el of card.querySelectorAll('[data-choice],.remove'))if(receipt)el.disabled=true;
   total+=model.profile.baseCents+model.profile.optionGroups.flatMap(g=>g.choices).filter(c=>choices.includes(c.key)).reduce((n,c)=>n+c.amountCents,0);
  }
- document.getElementById('total').textContent=receipt?'Saved total: '+money(receipt.amountCents)+(receipt.holdExpiresAt?' · Seat hold ends '+new Date(receipt.holdExpiresAt).toLocaleTimeString('en-US',{timeZone:'America/New_York'})+' Eastern':''):'Estimated total: '+money(total);
+ document.getElementById('total').textContent=receipt?'Saved total: '+money(receipt.amountCents)+(receipt.holdExpiresAt?' - Seat hold ends '+new Date(receipt.holdExpiresAt).toLocaleTimeString('en-US',{timeZone:'America/New_York'})+' Eastern':''):'Estimated total: '+money(total);
  document.getElementById('add-student').disabled=!!receipt||cards().length>=model.profile.maxStudents;
  document.getElementById('pay').hidden=['processing','refunded'].includes(receipt?.status);
  announceSize();

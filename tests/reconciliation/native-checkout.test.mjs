@@ -126,7 +126,8 @@ test('external occupancy must be complete and fresh and is counted once alongsid
 test('signed webhook executes the real PostgreSQL public finalizer and replay confirms exactly once',()=>withDb(async h=>{
  await h.db.exec("alter table landerware_public_orders add column registration_profile_snapshot jsonb not null default '{}'");
  await h.db.exec(read('supabase/migrations/20261110212444_native_checkout_additive_order_runtime.sql'));
- const a=await h.create();
+ await h.db.exec(read('supabase/reviewed/native-checkout-order-version.sql'));
+ const a=await h.rpc('native_checkout_create_order',{p_idempotency_key:randomUUID(),p_external_class_id:h.external,p_course_id:'359474',p_payer_email:'fixture@example.invalid',p_payer_phone:'2025550100',p_students:[{firstName:'Synthetic',lastName:'Fixture',email:'fixture@example.invalid',phone:'2025550100'}],p_billing_code:null,p_offer:{}});
  await h.db.query("update landerware_public_orders set registration_profile_snapshot=$2 where id=$1",[a.orderId,JSON.stringify({profile:{profile_key:'fixture_native',version:1,form_schema:{schemaVersion:'native-checkout.form.v1'}}})]);
  const o=await h.bind(a.orderId);let handler;
  const client={from(table){let id;return {select(){return this},eq(_k,v){id=v;return this},async maybeSingle(){if(table==='landerware_integration_secrets')return {data:{secret_value:secret}};return {data:(await h.db.query(`select * from public.${table} where id=$1`,[id])).rows[0]||null}}}},async rpc(name,args){try{return {data:await h.rpc(name,args)}}catch(e){return {error:{message:e.message}}}}};

@@ -30,7 +30,7 @@ for(const error of ['physical_manual_unavailable','duplicate_addon','invalid_add
    let handler;
    const context=vm.createContext({AbortSignal,genericCheckout:()=>({}),URL,Response,Error,Set,
      ALLOWED:new Set(['https://www.910cpr.com']),
-     scheduleSession:async()=>{throw new Error(error)},
+     publishedSession:async()=>{throw new Error(error)},
      json:(_origin,payload,status=200)=>new Response(JSON.stringify(payload),{status}),
      Deno:{serve:fn=>{handler=fn}}
    });

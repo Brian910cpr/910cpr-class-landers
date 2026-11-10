@@ -3,7 +3,7 @@
 import {spawn} from 'node:child_process';
 import {localPsql,assertLocalTargetServer} from './helpers/local-postgres.mjs';
 import {readFileSync} from 'node:fs';
-import {preProfileFiles,profileMigration,profileRuntime,fullCourseMigration,codeDeliveryMigration,codeEventMigration} from './helpers/native-checkout-migration-plan.mjs';
+import {preProfileFiles,profileMigration,profileRuntime,orderVersionMigration,fullCourseMigration,codeDeliveryMigration,codeEventMigration} from './helpers/native-checkout-migration-plan.mjs';
 import assert from 'node:assert/strict';
 const database=process.env.NATIVE_CHECKOUT_TEST_DATABASE;
 if(database!=='native_checkout_test')throw Error('Create an empty localhost native_checkout_test database.');
@@ -17,6 +17,7 @@ for(const file of preProfileFiles){const r=await run(readFileSync(new URL('../'+
 assert.equal((await run("update courses set course_key='skills-session-only' where enrollware_course_id='509474'")).code,0);
 const migrated=await run(readFileSync(new URL('../'+profileMigration,import.meta.url),'utf8'));assert.equal(migrated.code,0,migrated.error);
 const profileRuntimeApplied=await run(readFileSync(new URL('../'+profileRuntime,import.meta.url),'utf8'));assert.equal(profileRuntimeApplied.code,0,profileRuntimeApplied.error);
+const sharedNonceRuntime=await run(readFileSync(new URL('../'+orderVersionMigration,import.meta.url),'utf8'));assert.equal(sharedNonceRuntime.code,0,sharedNonceRuntime.error);
 const legacySkillsAdapter=await run(readFileSync(new URL('../supabase/migrations/20261110213130_native_skills_payment_adapter_only.sql',import.meta.url),'utf8'));assert.equal(legacySkillsAdapter.code,0,legacySkillsAdapter.error);
 const fullMigrated=await run(readFileSync(new URL('../'+fullCourseMigration,import.meta.url),'utf8'));assert.equal(fullMigrated.code,0,fullMigrated.error);
 const codesMigrated=await run(readFileSync(new URL('../'+codeDeliveryMigration,import.meta.url),'utf8'));assert.equal(codesMigrated.code,0,codesMigrated.error);
@@ -112,7 +113,7 @@ console.log('PASS isolated PostgreSQL: both plain Heartsaver profiles serialize 
 const legacyLoaded=await run(readFileSync(new URL('helpers/native-checkout-legacy-hosted-functions.sql',import.meta.url),'utf8'));assert.equal(legacyLoaded.code,0,legacyLoaded.error);
 const legacyFingerprint=()=>run("select md5(string_agg(proname||pg_get_function_identity_arguments(p.oid)||replace(prosrc,'(/* native_paid_hold_reader_v1 */ o.hold_expires_at>now() or (o.payment_evidence->>''payment_status''=''paid'' and o.payment_evidence->>''seat_hold_protected''=''true''))','o.hold_expires_at>now()')||prosecdef::text||coalesce(proacl::text,''),'' order by proname,pg_get_function_identity_arguments(p.oid))) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('landerware_create_public_order','landerware_finalize_public_order')");
 const oldAPI=(await legacyFingerprint()).out;
-const additive=await run(readFileSync(new URL('../supabase/migrations/20261110212444_native_checkout_additive_order_runtime.sql',import.meta.url),'utf8'));assert.equal(additive.code,0,additive.error);assert.equal((await legacyFingerprint()).out,oldAPI);
+const additive=await run(readFileSync(new URL('../supabase/migrations/20261110212444_native_checkout_additive_order_runtime.sql',import.meta.url),'utf8'));assert.equal(additive.code,0,additive.error);assert.equal((await legacyFingerprint()).out,oldAPI);const versioned=await run(readFileSync(new URL('../'+orderVersionMigration,import.meta.url),'utf8'));assert.equal(versioned.code,0,versioned.error);
 const compatibilitySetup=await run(`insert into courses(course_key,name,enrollware_course_id,duration_minutes,max_students_default,base_price) values('fixture-compat','Synthetic Compatibility Course','fixture-compat',120,2,75);
  insert into landerware_registration_catalog(course_id,course_name,unit_amount,active) values('fixture-compat','Synthetic Compatibility Course',7500,true);
  insert into class_sessions(source,status,course_id,start_at,end_at,consumption_start_at,consumption_end_at,lead_instructor_id,location_id,max_students,registration_backend,visibility,registration_status,external_class_id,record_scope)
@@ -144,3 +145,19 @@ const expiredRace=await Promise.all([run(expiryClaim(502,true)),run(expiryClaim(
 const expiryFinalized=(await Promise.all([1,2].map(()=>run(`select native_checkout_finalize_order('${protectedOrder.orderId}','pi_expiry','${JSON.stringify(expiryEvidence)}')`)))).map(json);assert.ok(expiryFinalized.every(x=>x.status==='paid'));
 assert.equal(json(await run(`select jsonb_build_object('registered',(select count(*) from registrations where class_session_id=(select class_session_id from landerware_public_orders where id='${protectedOrder.orderId}')))`)).registered,1);
 console.log('PASS isolated PostgreSQL: paid receipt survives original hold expiry across old/new competing claims and concurrent finalization replay.');
+
+// Profile recovery is not creator migration. The legacy order still uses the
+// original finalizer and cannot be relabeled by an UPDATE or a processor replay.
+const legacyVersion=json(await run("select jsonb_build_object('legacy',(select checkout_runtime_version from landerware_public_orders where idempotency_key='compat-410'),'native',(select checkout_runtime_version from landerware_public_orders where id='"+nativeOriginal.orderId+"'))"));
+if(compatibilityRaces[0].code===0)assert.equal(legacyVersion.legacy,'legacy');assert.equal(legacyVersion.native,'native-v1');
+const mutation=await run(`update landerware_public_orders set checkout_runtime_version='legacy' where id='${nativeOriginal.orderId}'`);assert.notEqual(mutation.code,0);assert.match(mutation.error,/order_version_immutable/);
+console.log('PASS isolated PostgreSQL: creator version stays distinct for native/legacy orders and cannot change during recovery or replay.');
+
+const crossKey=key(610),crossWire={firstName:'Synthetic',lastName:'Fixture',email:'cross-nonce@example.invalid',phone:'2025550100',onlineCompleted:true,learningPath:'skills-only',skillsContext:'cpr-aed',addons:[]};
+const crossOffer="skills_test.offer('cross-nonce',710)||'{\"context\":\"cpr-aed\"}'::jsonb";
+const oldCross=run(`begin;select pg_advisory_xact_lock(hashtextextended('skills-claim|${crossKey}',0));update courses set registration_profile_key=null where enrollware_course_id='509474';select reserve_skills_session_native('${crossKey}','cpr-aed',${crossOffer},'${JSON.stringify(crossWire)}');update courses set registration_profile_key='native_skills_shared' where enrollware_course_id='509474';commit;`);
+const newCross=run(`select reserve_native_checkout_order('${crossKey}','native_skills_shared',1,'cpr-aed',null,${crossOffer},'${JSON.stringify([crossWire])}','${JSON.stringify([{wire:crossWire,selectedChoices:['skills_only']}])}',5500)`);
+const crossed=await Promise.all([oldCross,newCross]);assert.ok(crossed.some(r=>r.code===0));for(const r of crossed)if(r.code!==0)assert.match(r.error,/generic_checkout_required/);
+const crossLedgers=json(await run(`select jsonb_build_object('legacy',(select count(*) from skills_session_claim_receipts where idempotency_key='${crossKey}'),'native',(select count(*) from landerware_public_orders where idempotency_key='public-order:${crossKey}'))`));assert.equal(crossLedgers.legacy+crossLedgers.native,1);
+const crossReplay=json(await run(`select reserve_native_checkout_order('${crossKey}','native_skills_shared',1,'cpr-aed',null,${crossOffer},'${JSON.stringify([crossWire])}','${JSON.stringify([{wire:crossWire,selectedChoices:['skills_only']}])}',5500)`));assert.equal(crossReplay.kind,crossLedgers.legacy?'skills_reservation':'public_order');
+console.log('PASS isolated PostgreSQL: an old/new nonce race across profile activation produces exactly one ledger and recovery retains the winning creator.');

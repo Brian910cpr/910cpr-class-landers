@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync,readdirSync} from 'node:fs';
-import {preProfileFiles,profileMigration,profileRuntime} from './helpers/native-checkout-migration-plan.mjs';
+import {preProfileFiles,profileMigration,profileRuntime,orderVersionMigration} from './helpers/native-checkout-migration-plan.mjs';
 const {PGlite}=await import(process.env.SKILLS_PGLITE_MODULE||'@electric-sql/pglite');
 const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 const compat='supabase/migrations/'+readdirSync(new URL('../supabase/migrations/',import.meta.url)).find(f=>f.endsWith('_native_checkout_additive_order_runtime.sql'));
@@ -10,7 +10,7 @@ test('additive native runtime preserves actual hosted legacy overloads and share
  const baseline=async()=> (await db.query("select proname,pg_get_function_identity_arguments(p.oid) args,prosrc,prosecdef,proacl::text acl from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('landerware_create_public_order','landerware_finalize_public_order') and (p.proname='landerware_create_public_order' or p.pronargs=2) order by proname,args")).rows;
  const before=await baseline();await db.exec(load(compat));await db.exec(load(compat));
  const normalize=rows=>rows.map(r=>({...r,prosrc:r.prosrc.replaceAll("(/* native_paid_hold_reader_v1 */ o.hold_expires_at>now() or (o.payment_evidence->>'payment_status'='paid' and o.payment_evidence->>'seat_hold_protected'='true'))",'o.hold_expires_at>now()')}));
- assert.deepEqual(normalize(await baseline()),before);
+ assert.deepEqual(normalize(await baseline()),before);await db.exec(load(orderVersionMigration));await db.exec(load(orderVersionMigration));
  await db.exec("insert into courses(course_key,name,enrollware_course_id,duration_minutes,max_students_default,base_price) values('fixture-compat','Synthetic Compatibility Course','fixture-compat',120,2,75);insert into landerware_registration_catalog(course_id,course_name,unit_amount,active) values('fixture-compat','Synthetic Compatibility Course',7500,true);insert into class_sessions(source,status,course_id,start_at,end_at,consumption_start_at,consumption_end_at,lead_instructor_id,location_id,max_students,registration_backend,visibility,registration_status,external_class_id,record_scope) select 'landerware_event','scheduled',c.id,current_date+55,current_date+55+interval '2 hours',current_date+55,current_date+55+interval '2 hours',p.id,l.id,2,'landerware','public','open','fixture-compat-session','operational' from courses c cross join people p cross join locations l where c.course_key='fixture-compat' and p.person_key='skills-test' and l.location_key='910cpr-office-shipyard';");
  const student=n=>JSON.stringify([{firstName:'Synthetic',lastName:'Fixture',email:`compat-${n}@example.invalid`,phone:'2025550100',addons:[]}]);
  const args=n=>[`compat-${n}`,'fixture-compat-session','fixture-compat',`compat-${n}@example.invalid`,'2025550100',student(n)];
@@ -34,10 +34,13 @@ test('additive native runtime preserves actual hosted legacy overloads and share
  assert.equal((await db.query("select (hold_expires_at<now()) expired from landerware_public_orders where id=$1",[native.orderId])).rows[0].expired,true);
  await db.query("update landerware_public_orders set status='cancelled' where id=$1",[native.orderId]);
  assert.ok((await db.query("select landerware_create_public_order($1,$2,$3,$4,$5,$6::jsonb,null,'{}'::jsonb) r",args(5))).rows[0].r.orderId);
- const cancelled=(await db.query("select native_checkout_finalize_legacy_order($1,'pi_compat',$2::jsonb) r",[native.orderId,JSON.stringify(evidence)])).rows[0].r;
- assert.equal(cancelled.status,'cancelled');
+ await assert.rejects(db.query("select native_checkout_finalize_legacy_order($1,'pi_compat',$2::jsonb) r",[native.orderId,JSON.stringify(evidence)]),/unsupported_order_version/);
+ assert.equal((await db.query('select status from landerware_public_orders where id=$1',[native.orderId])).rows[0].status,'cancelled');
  await db.query("update landerware_public_orders set status='cancelled' where idempotency_key='compat-5'");
  await db.query("update landerware_public_orders set stripe_checkout_session_id='cs_legacy' where id=$1",[legacy.orderId]);
+ await db.query("update landerware_public_orders set registration_profile_snapshot=$2 where id=$1",[legacy.orderId,JSON.stringify({profile:{profile_key:'recovered_legacy',version:1,form_schema:{schemaVersion:'native-checkout.form.v1'}}})]);
+ assert.equal((await db.query('select checkout_runtime_version from landerware_public_orders where id=$1',[legacy.orderId])).rows[0].checkout_runtime_version,'legacy');
+ await assert.rejects(db.query("update landerware_public_orders set checkout_runtime_version='native-v1' where id=$1",[legacy.orderId]),/order_version_immutable/);
  const legacyEvidence={...evidence,id:'cs_legacy',metadata:{landerware_order_id:legacy.orderId}};
  await db.query("select native_checkout_record_payment($1,'pi_legacy',$2::jsonb)",[legacy.orderId,JSON.stringify(legacyEvidence)]);
  await db.query("update landerware_public_orders set hold_expires_at=now()-interval '1 minute' where id=$1",[legacy.orderId]);

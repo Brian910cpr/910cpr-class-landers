@@ -1,10 +1,12 @@
-// Version comes only from the stored server-created profile snapshot, never
-// browser parameters or Stripe metadata. Empty historical snapshots stay legacy.
+// Immutable creator lineage comes from the stored order, never form snapshots,
+// browser parameters or Stripe metadata. Legacy recovery can attach a profile.
 export function publicOrderVersion(order){
- const snapshot=order.registration_profile_snapshot;
- if(snapshot==null||(typeof snapshot==='object'&&!Array.isArray(snapshot)&&Object.keys(snapshot).length===0))return 'legacy';
- const profile=snapshot?.profile;
- if(profile?.form_schema?.schemaVersion==='native-checkout.form.v1'&&typeof profile.profile_key==='string'&&Number.isInteger(profile.version)&&profile.version>0)return 'native-v1';
+ const version=order.checkout_runtime_version,snapshot=order.registration_profile_snapshot;
+ if(version==='legacy')return 'legacy';
+ if(version==='native-v1'&&(snapshot==null||Object.keys(snapshot).length===0||(snapshot.profile?.form_schema?.schemaVersion==='native-checkout.form.v1'&&typeof snapshot.profile.profile_key==='string'&&Number.isInteger(snapshot.profile.version))))return 'native-v1';
+ // Old cached projections predate the marker and can only represent an empty
+ // legacy snapshot. Never infer native creator lineage from form metadata.
+ if(version==null&&(snapshot==null||(typeof snapshot==='object'&&!Array.isArray(snapshot)&&Object.keys(snapshot).length===0)))return 'legacy';
  throw Error('unsupported_order_version');
 }
 export const publicOrderReturnPath=order=>publicOrderVersion(order)==='native-v1'?'/register/checkout/':'/register/';

@@ -9,17 +9,17 @@ import {webcrypto} from 'node:crypto';
 import {genericCheckout,boundedCheckoutJSON,fullAppointmentSession} from '../supabase/functions/public-registration/generic.mjs';
 const source=readFileSync(new URL('../supabase/functions/public-registration/index.ts',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'');
 const key='11111111-1111-4111-8111-111111111111';
-function harness({legacyURL=null,course='fixture-course'}={}){
- const calls=[];let handler,order,receipt,required=false,sessionResponse,currentStatus='scheduled';
+function harness({legacyURL=null,course='fixture-course',profileReady=true,invoice=false}={}){
+ const calls=[],queued=new Map();let handler,order,receipt,required=false,sessionResponse,currentStatus='scheduled';
  const profile={profile_key:'fixture_generic',version:1,active:true,course_id:'fixture-course',display_name:'Fixture title',requirements:[],form_schema:{schemaVersion:'native-checkout.form.v1',inventory_kind:'scheduled_session_v1',fields:[{key:'first_name',wire:'firstName',type:'text',required:true},{key:'email',wire:'email',type:'email',required:true}],option_groups:[],driver_rules:[{driver:'native_order'}],default_choices:[]}};
- const catalog={course_id:'fixture-course',course_name:'Fixture title',unit_amount:7500,currency:'usd',addons:[],billing_codes:[{code:'PRIVATE'}]};
+ const catalog={course_id:course,course_name:'Fixture title',unit_amount:7500,currency:'usd',addons:[],billing_codes:[{code:'PRIVATE'}]};
  const packet={profile,physicalCourseId:'fixture-course',catalog};
  const ctx=vm.createContext({publicOrderVersion,publicOrderReturnPath,settlePublicOrder,genericCheckout,boundedCheckoutJSON,fullAppointmentSession,URL,URLSearchParams,Request,Response,Headers,Date,Error,Set,Promise,JSON,Object,Array,Number,String,Uint8Array,crypto:webcrypto,AbortSignal,console,
   Deno:{env:{get:k=>({SUPABASE_URL:'https://fixture-db.invalid',SUPABASE_SERVICE_ROLE_KEY:'server-only-fixture',STRIPE_SECRET_KEY:'sk_test_fixture'})[k]},serve:fn=>handler=fn},
   fetch:async(url,init={})=>{
    const u=String(url),body=init.body&&typeof init.body==='string'?JSON.parse(init.body):null;calls.push({url:u,init});
    if(u.startsWith('https://api.stripe.com/')){const p=new URLSearchParams(init.body);if(init.method==='POST'){assert.equal(p.get('line_items[0][price_data][unit_amount]'),'7500');assert.equal(init.headers['idempotency-key'],'landerware-public-'+order.id);assert.equal(new URL(p.get('success_url')).pathname,publicOrderReturnPath(order));assert.equal(new URL(p.get('cancel_url')).pathname,publicOrderReturnPath(order));assert.ok(+p.get('expires_at')*1000-Date.now()>30*60000,'upload delays must not produce an invalid Stripe expiration');}return Response.json(sessionResponse||{id:'cs_fixture',url:'https://checkout.stripe.com/c/pay/fixture',mode:'payment',status:'open',payment_status:'unpaid',livemode:false,amount_total:7500,currency:'usd',metadata:{landerware_order_id:'fixture-order'}});}
-   if(u.endsWith('/data/schedule_future.json'))return Response.json({sessions:[{session_id:'123456',course_id:'209806',start_at:'2031-01-01T14:00:00Z',end_at:'2031-01-01T16:00:00Z',public_direct_booking:true,registration_status:'open',registration_url:legacyURL}]});
+   if(u.endsWith('/data/schedule_future.json'))return Response.json({sessions:[{session_id:'123456',course_id:'209806',start_at:'2031-01-01T14:00:00Z',end_at:'2031-01-01T16:00:00Z',public_direct_booking:true,registration_status:'open',registration_url:legacyURL,location_display:':: Wilmington; Shipyard Blvd'}]});
    assert.equal(init.headers.apikey,'server-only-fixture');
    if(u.includes('/class_sessions?')&&legacyURL)return Response.json([]);
    if(u.includes('/class_sessions?')&&u.includes('select=id,status'))return Response.json([{id:'class',record_scope:'operational',status:currentStatus,registration_status:'open',start_at:'2031-01-01T14:00:00Z'}]);
@@ -27,9 +27,13 @@ function harness({legacyURL=null,course='fixture-course'}={}){
    if(u.includes('/landerware_registration_catalog?'))return Response.json([catalog]);
    if(u.includes('/landerware_public_orders?')){if(init.method==='PATCH'){Object.assign(order,body);return Response.json([order]);}return Response.json([order]);}
    const rpc=u.split('/rpc/')[1];
+   if(rpc==='landerware_create_public_order'){assert.equal(body.p_offer.kind,'bls_initial_offer');assert.equal(body.p_offer.capacity,6);order={id:'fixture-order',class_session_id:'class',external_class_id:'123456',idempotency_key:body.p_idempotency_key,status:'held',total:invoice?0:7500,currency:'usd',payer_email:'fixture@example.invalid',hold_expires_at:new Date(Date.now()+30*60000).toISOString(),recovery_token:'fixture-recovery',registration_profile_snapshot:{},landerware_public_order_students:[]};return Response.json({orderId:order.id,idempotentReplay:false});}
+   if(rpc==='landerware_finalize_public_order'){assert.equal(body.p_stripe_payment_intent_id,'no_payment_required');order.status='paid';return Response.json({status:'paid'});}
+   if(u.includes('/registrations?'))return Response.json([{id:'44444444-4444-4444-8444-444444444444',status:'registered'}]);
+   if(u.endsWith('/landerware_messages')&&init.method==='POST'){if(!queued.has(body.idempotency_key))queued.set(body.idempotency_key,body);return Response.json([]);}
    if(rpc==='native_checkout_record_payment'){order.payment_evidence=body.p_evidence;return Response.json({recorded:true});}
    if(rpc==='native_checkout_finalize_legacy_order'||rpc==='native_checkout_finalize_order'){order.status='paid';return Response.json({status:'paid'});}
-   if(rpc==='native_checkout_profile')return Response.json(packet);
+   if(rpc==='native_checkout_profile')return profileReady?Response.json(packet):Response.json({message:'native_profile_not_configured'},{status:400});
    if(rpc==='assert_public_registration_open')return Response.json(true);
    if(rpc==='landerware_public_seat_state')return Response.json({remaining:2});
    if(rpc==='native_checkout_receipt')return receipt?Response.json(receipt):Response.json({message:'reservation_not_found'},{status:400});
@@ -37,12 +41,12 @@ function harness({legacyURL=null,course='fixture-course'}={}){
    if(rpc==='reserve_native_checkout_order'){
     assert.equal(body.p_expected_total,7500);assert.equal(body.p_students[0].amountCents,undefined);
     receipt={kind:'public_order',orderId:'fixture-order',status:'held',amountCents:7500,currency:'usd',holdExpiresAt:'2031-01-01T13:00:00Z',students:[{}],profileSnapshot:{...packet,inputs:body.p_inputs,context:''}};
-    order={id:'fixture-order',class_session_id:'class',idempotency_key:'public-order:'+key,status:'held',total:7500,currency:'usd',payer_email:'fixture@example.invalid',hold_expires_at:new Date(Date.now()+5*60000).toISOString(),recovery_token:'fixture-recovery',registration_profile_snapshot:receipt.profileSnapshot,landerware_public_order_students:[{}]};return Response.json(receipt);
+    order={id:'fixture-order',checkout_runtime_version:'native-v1',class_session_id:'class',idempotency_key:'public-order:'+key,status:'held',total:7500,currency:'usd',payer_email:'fixture@example.invalid',hold_expires_at:new Date(Date.now()+5*60000).toISOString(),recovery_token:'fixture-recovery',registration_profile_snapshot:receipt.profileSnapshot,landerware_public_order_students:[{}]};return Response.json(receipt);
    }throw Error('unexpected_fixture_request:'+rpc);
   }});
  vm.runInContext(stripTypeScriptTypes(source),ctx);
  const send=(action,body,origin='https://www.910cpr.com')=>handler(new Request('https://fixture.invalid/public-registration/generic/'+action,{method:body?'POST':'GET',headers:{origin,'content-type':'application/json',...(action.startsWith('form?')?{}:{'idempotency-key':key})},...(body?{body:JSON.stringify(body)}:{})}));
- return {send,raw:(path,body)=>handler(new Request('https://fixture.invalid/public-registration/'+path,{method:'POST',headers:{origin:'https://www.910cpr.com','content-type':'application/json','idempotency-key':key},body:JSON.stringify(body)})),calls,currentStatus:v=>currentStatus=v,saved:v=>order=v,required:v=>required=v,stripe:v=>sessionResponse=v};
+ return {send,messages:()=>[...queued.values()],raw:(path,body)=>handler(new Request('https://fixture.invalid/public-registration/'+path,{method:body?'POST':'GET',headers:{origin:'https://www.910cpr.com','content-type':'application/json','idempotency-key':key},...(body?{body:JSON.stringify(body)}:{})})),calls,currentStatus:v=>currentStatus=v,saved:v=>order=v,required:v=>required=v,stripe:v=>sessionResponse=v};
 }
 test('deployed HTTP form/claim/Stripe adapter keeps service credentials and contact fields private and gates payment',async()=>{
  const h=harness();const form=await h.send('form?session=123456');const m=await form.json();assert.equal(form.status,200,JSON.stringify(m));assert.equal(m.profile.baseCents,7500);assert.equal(JSON.stringify(m).includes('PRIVATE'),false);
@@ -87,9 +91,9 @@ test('stored profile version selects native versus legacy finalizer and rejects 
  const base={id:'order-fixture',total:5500,currency:'usd',stripe_checkout_session_id:'cs_fixture',registration_profile_snapshot:{}};
  const session={id:'cs_fixture',mode:'payment',payment_status:'paid',amount_total:5500,currency:'usd',payment_intent:'pi_fixture',metadata:{landerware_order_id:base.id}};
  const calls=[],rpc=async(name,args)=>{calls.push({name,args});return{status:'paid'};};
- assert.equal(publicOrderVersion(base),'legacy');assert.equal(publicOrderReturnPath(base),'/register/');await settlePublicOrder(rpc,base,session,session);
+ assert.equal(publicOrderVersion({...base,checkout_runtime_version:'legacy',registration_profile_snapshot:{profile:{form_schema:{schemaVersion:'native-checkout.form.v1'}}}}),'legacy','attaching form metadata never upgrades legacy creator lineage');assert.equal(publicOrderVersion(base),'legacy');assert.equal(publicOrderReturnPath(base),'/register/');await settlePublicOrder(rpc,base,session,session);
  assert.deepEqual(calls.map(c=>c.name),['native_checkout_record_payment','native_checkout_finalize_legacy_order']);
- const native={...base,registration_profile_snapshot:{profile:{profile_key:'fixture',version:1,form_schema:{schemaVersion:'native-checkout.form.v1'}}}};
+ const native={...base,checkout_runtime_version:'native-v1',registration_profile_snapshot:{profile:{profile_key:'fixture',version:1,form_schema:{schemaVersion:'native-checkout.form.v1'}}}};
  assert.equal(publicOrderReturnPath(native),'/register/checkout/');calls.length=0;await settlePublicOrder(rpc,native,session,session);assert.deepEqual(calls.map(c=>c.name),['native_checkout_record_payment','native_checkout_finalize_order']);
  for(const change of [{stripe_checkout_session_id:'cs_other'},{total:1},{currency:'eur'},{stripe_payment_intent_id:'pi_other'},{registration_profile_snapshot:{profile:{form_schema:{schemaVersion:'future'}}}}]){calls.length=0;await assert.rejects(settlePublicOrder(rpc,{...native,...change},session,session));assert.equal(calls.length,0);}
  for(const change of [{payment_status:'unpaid'},{id:'cs_other'},{payment_intent:null},{metadata:{landerware_order_id:'other'}},{amount_total:'5500'}]){calls.length=0;await assert.rejects(settlePublicOrder(rpc,native,{...session,...change},session));assert.equal(calls.length,0);}
@@ -119,4 +123,20 @@ test('legacy start cannot bypass a configured native profile or create a hold be
  const h=harness();const response=await h.raw('start',{sessionId:'123456',students:[{firstName:'Fixture',email:'fixture@example.invalid'}]});
  assert.equal(response.status,409);const payload=await response.json();assert.equal(payload.error,'generic_checkout_required');assert.equal(payload.nativeCheckoutUrl,'https://www.910cpr.com/register/checkout/?session=123456');
  assert.equal(h.calls.some(c=>c.url.includes('/rpc/landerware_create_public_order')),false);assert.equal(h.calls.some(c=>c.url.startsWith('https://api.stripe.com')),false);
+});
+
+test('unconverted published BLS starts preserve the exact legacy materialization/checkout contract while new profiles stay gated',async()=>{
+ const h=harness({course:'209806',profileReady:false});const response=await h.raw('start',{sessionId:'123456',students:[{firstName:'Fixture',lastName:'Student',email:'fixture@example.invalid',phone:'2025550100'}]});
+ assert.equal(response.status,200,JSON.stringify(await response.clone().json()));assert.match((await response.json()).checkoutUrl,/checkout.stripe.com/);assert.equal(h.calls.filter(c=>c.url.includes('/rpc/landerware_create_public_order')).length,1);assert.equal(h.calls.some(c=>c.url.includes('/rpc/reserve_native_checkout_order')),false);
+ const invoice=harness({course:'209806',profileReady:false,invoice:true});const billed=await invoice.raw('start',{sessionId:'123456',students:[{firstName:'Fixture',lastName:'Student',email:'fixture@example.invalid',phone:'2025550100'}]});assert.equal(billed.status,200);assert.equal(invoice.calls.some(c=>c.url.startsWith('https://api.stripe.com')),false);assert.ok(invoice.calls.some(c=>c.url.includes('/rpc/landerware_finalize_public_order')));
+});
+
+test('legacy paid recovery queues its original confirmation once, including when the return precedes webhook receipt',async()=>{
+ const h=harness(),id='55555555-5555-4555-8555-555555555555',token='66666666-6666-4666-8666-666666666666';
+ h.saved({id,class_session_id:'class',external_class_id:'123456',idempotency_key:'public-order:'+key,status:'checkout_open',total:7500,currency:'usd',stripe_checkout_session_id:'cs_fixture',hold_expires_at:new Date(Date.now()+30*60000).toISOString(),recovery_token:token,checkout_runtime_version:'legacy',registration_profile_snapshot:{profile:{profile_key:'attached_later',version:1}},landerware_public_order_students:[{registration_id:'44444444-4444-4444-8444-444444444444',first_name:'Synthetic',last_name:'Fixture',email:'fixture@example.invalid',selected_addons:[],selected_options:{}}]});
+ h.stripe({id:'cs_fixture',mode:'payment',payment_status:'paid',payment_intent:'pi_fixture',livemode:false,amount_total:7500,currency:'usd',metadata:{landerware_order_id:id}});
+ const result=await h.raw('recover/'+token);assert.equal(result.status,200,JSON.stringify(await result.clone().json()));assert.equal((await result.json()).status,'paid');
+ assert.equal(h.messages().length,1);assert.equal(h.messages()[0].recipient,'fixture@example.invalid');assert.equal(h.messages()[0].delivery_provider,'gmail');assert.equal(h.messages()[0].idempotency_key,'public-order-paid:'+id+':fixture@example.invalid');
+ assert.equal((await h.raw('order/'+id+'?requireDelivery=1')).status,200);assert.equal(h.messages().length,1);
+ assert.equal(h.calls.some(c=>c.url.endsWith('/rpc/native_checkout_finalize_order')),false);
 });
