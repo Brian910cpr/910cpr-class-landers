@@ -7,6 +7,7 @@ const {PGlite}=await import(process.env.SKILLS_PGLITE_MODULE||'@electric-sql/pgl
 const root=new URL('../',import.meta.url),load=p=>readFileSync(new URL(p,root),'utf8');
 const cfg=JSON.parse(load('data/config/native_heartsaver_course_drafts.json'));
 const columns='supabase/migrations/'+readdirSync(new URL('supabase/migrations/',root)).find(f=>f.endsWith('_native_checkout_profile_columns_only.sql'));
+const reader='supabase/migrations/'+readdirSync(new URL('supabase/migrations/',root)).find(f=>f.endsWith('_native_checkout_profile_reader_only.sql'));
 const inperson='supabase/migrations/'+readdirSync(new URL('supabase/migrations/',root)).find(f=>f.endsWith('_native_heartsaver_inperson_drafts_only.sql'));
 const draft='supabase/migrations/'+readdirSync(new URL('supabase/migrations/',root)).find(f=>f.endsWith('_heartsaver_inactive_checkout_drafts.sql'));
 test('exact Heartsaver drafts are idempotent/private/inactive and use shared profile form only after explicit fixture configuration',async()=>{
@@ -16,6 +17,10 @@ test('exact Heartsaver drafts are idempotent/private/inactive and use shared pro
  await db.exec(load(columns));await db.exec(load(columns));
  assert.deepEqual((await db.query("select proname,prosrc from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' order by proname,prosrc")).rows,oldFunctions);
  assert.equal((await db.query("select count(*)::int n from information_schema.columns where table_schema='public' and (table_name,column_name) in (('courses','registration_profile_key'),('landerware_registration_profiles','form_schema'),('landerware_public_orders','registration_profile_snapshot'),('registrations','native_checkout_profile_snapshot'))")).rows[0].n,4);
+ await db.exec(load(reader));await db.exec(load(reader));
+ assert.equal((await db.query("select has_function_privilege('anon','native_checkout_profile(text,text)','EXECUTE') a,has_function_privilege('authenticated','native_checkout_profile(text,text)','EXECUTE') u,has_function_privilege('service_role','native_checkout_profile(text,text)','EXECUTE') s")).rows[0].a,false);
+ assert.deepEqual((await db.query("select has_function_privilege('authenticated','native_checkout_profile(text,text)','EXECUTE') a,has_function_privilege('service_role','native_checkout_profile(text,text)','EXECUTE') s")).rows[0],{a:false,s:true});
+ await assert.rejects(db.query("select native_checkout_profile('209809',null)"),/native_profile_not_configured/);
  await db.exec(load(profileMigration));
  for(const c of cfg.courses)await db.query(`insert into courses(id,course_key,name,enrollware_course_id,duration_minutes,max_students_default,base_price,visibility_default,registration_backend_default) values($1,$2,$3,$4,$5,$6,null,$7,'manual')`,[c.canonicalId,c.courseKey,c.displayName,c.externalId,c.durationMinutes,c.capacity,c.visibility]);
  const courseRows=async()=> (await db.query("select * from courses where enrollware_course_id in ('209809','329495','351632') order by enrollware_course_id")).rows;
