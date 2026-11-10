@@ -14,6 +14,7 @@ from scripts.hybrid_inventory import (
     sort_by_momentum,
     sort_by_start,
 )
+from scripts.native_bls_routes import course_link as native_bls_course_link, session_link as native_bls_session_link
 from scripts.public_class_eligibility import session_has_public_class_location
 from zoneinfo import ZoneInfo
 
@@ -468,12 +469,13 @@ def hierarchy_pills(course: dict[str, Any], raw_name: str) -> str:
     return '<div class="crumb-row">' + "".join(pills) + "</div>"
 
 
-def session_card(session: dict[str, Any]) -> str:
+def session_card(session: dict[str, Any], course_id="") -> str:
     dt = session.get("_parsed_start")
     date_label = format_date(dt)
     time_label = format_time(dt)
     location_label = human_location(safe_text(session.get("location_display") or session.get("location_name")))
     register_url = safe_text(session.get("registration_url")).strip() or "#"
+    register_url = native_bls_session_link(REPO_ROOT, session.get("course_id") or session.get("course_number") or course_id, session.get("session_id"), register_url)
     enrolled = session_enrolled_count(session)
     momentum = ""
     if enrolled >= 1:
@@ -495,6 +497,8 @@ def build_session_blocks(course: dict[str, Any], sessions: list[dict[str, Any]])
     schedule_url = safe_text(course.get("schedule_url")).strip()
     appointment_url = build_appointment_page_url("101560", safe_text(course.get("course_id")).strip()) if safe_text(course.get("course_id")).strip() else ""
 
+    schedule_url = native_bls_course_link(REPO_ROOT, course.get("course_id"), schedule_url)
+    appointment_url = native_bls_course_link(REPO_ROOT, course.get("course_id"), appointment_url)
     if not sessions:
         if schedule_url:
             return f"""
@@ -520,8 +524,8 @@ def build_session_blocks(course: dict[str, Any], sessions: list[dict[str, Any]])
     visible = remaining[:VISIBLE_SESSION_COUNT]
     curtain = remaining[VISIBLE_SESSION_COUNT:VISIBLE_SESSION_COUNT + CURTAIN_SESSION_COUNT]
 
-    visible_html = "".join(session_card(s) for s in visible)
-    popular_html = "".join(session_card(s) for s in popular)
+    visible_html = "".join(session_card(s, course.get("course_id")) for s in visible)
+    popular_html = "".join(session_card(s, course.get("course_id")) for s in popular)
 
     curtain_html = ""
     if curtain:
@@ -529,7 +533,7 @@ def build_session_blocks(course: dict[str, Any], sessions: list[dict[str, Any]])
         <details class="session-curtain">
           <summary>More upcoming classes</summary>
           <div class="session-grid extra">
-            {''.join(session_card(s) for s in curtain)}
+            {''.join(session_card(s, course.get("course_id")) for s in curtain)}
           </div>
         </details>
         """
@@ -631,6 +635,8 @@ def build_html(course: dict[str, Any], sessions: list[dict[str, Any]]) -> str:
     course_id = safe_text(course.get("course_id")).strip()
     schedule_url = safe_text(course.get("schedule_url")).strip()
     appointment_url = build_appointment_page_url("101560", course_id) if course_id else schedule_url
+    schedule_url = native_bls_course_link(REPO_ROOT, course_id, schedule_url)
+    appointment_url = native_bls_course_link(REPO_ROOT, course_id, appointment_url)
     proposed_html = render_proposed_availability(course, appointment_url)
     review_summary = load_review_summary()
     faq_html, faq_schema = render_faq(title, cert_body)

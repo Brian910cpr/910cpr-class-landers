@@ -1,0 +1,94 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {preProfileFiles,profileMigration,fullCourseMigration,codeDeliveryMigration,codeEventMigration} from './helpers/native-checkout-migration-plan.mjs';
+const {PGlite}=await import(process.env.SKILLS_PGLITE_MODULE||'@electric-sql/pglite');
+const root=new URL('../',import.meta.url),load=p=>readFileSync(new URL(p,root),'utf8');
+test('versioned native profile mapping and per-course private upload intents recover without falsely approving evidence',async()=>{
+ const db=new PGlite();try{
+  for(const file of preProfileFiles)await db.exec(load(file));
+  await db.exec("update courses set course_key='skills-session-only' where enrollware_course_id='509474'");
+  await db.query("select reserve_skills_session_native('55555555-5555-4555-8555-555555555555','cpr-aed',skills_test.offer('profile',55),skills_test.student(5))");
+  await db.exec(load(profileMigration));await db.exec(load(fullCourseMigration));await db.exec(load(codeDeliveryMigration));await db.exec(load(codeEventMigration));
+  const scalar=async(sql,args=[])=>Object.values((await db.query(sql,args)).rows[0])[0];
+  const delivery=await scalar("select jsonb_build_object('enabled',enabled,'courses',course_ids) from landerware_checkout_delivery_config");assert.equal(delivery.enabled,false);assert.deepEqual(delivery.courses,['209806','359474','210549','509474']);
+  const packet=await scalar("select native_checkout_profile('509474','cpr-aed')");assert.equal(packet.profile.profile_key,'native_skills_shared');assert.equal(packet.catalog.unit_amount,5500);
+  assert.equal((await scalar("select native_checkout_profile('210549','bls-skills')")).physicalCourseId,'509474');
+  await db.exec("insert into courses(course_key,name,enrollware_course_id,duration_minutes,cleanup_buffer_minutes,max_students_default,base_price) values('fixture-legacy-heartcode','Legacy fixture','210549',45,15,2,55)");
+  assert.equal((await scalar("select native_checkout_profile('210549','bls-skills')")).physicalCourseId,'509474','explicit profile alias overrides an older same-number course record');
+  await assert.rejects(scalar("select native_checkout_profile('unmapped','bls-skills')"),/native_profile_not_configured/);
+  await assert.rejects(scalar("select reserve_skills_session_native('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','cpr-aed',skills_test.offer('legacy-bypass',60),skills_test.student(99))"),/generic_checkout_required/);
+  const nativeKey='77777777-7777-4777-8777-777777777777';
+  const wire={...await scalar('select skills_test.student(71)'),learningPath:'skills-only',skillsContext:'cpr-aed'};
+  const inputs=[{wire,selectedChoices:['skills_only']}];
+  const offer=await scalar("select skills_test.offer('generic-native',56)");
+  const create=(key=nativeKey,version=1,total=5500,students=[wire],input=inputs)=>scalar(
+   "select reserve_native_checkout_order($1,'native_skills_shared',$2,'cpr-aed',null,$3::jsonb,$4::jsonb,$5::jsonb,$6)",
+   [key,version,JSON.stringify(offer),JSON.stringify(students),JSON.stringify(input),total]);
+  await assert.rejects(create(nativeKey,2),/profile_changed/);
+  await assert.rejects(create(nativeKey,1,1),/profile_price_mismatch/);
+  assert.equal(await scalar('select count(*) from landerware_public_orders'),0,'a tampered total rolls the entire claim back');
+  const native=await create();assert.equal(native.kind,'public_order');assert.equal(native.amountCents,5500);
+  await assert.rejects(scalar("select landerware_create_public_order('bypass',$1,'509474','bypass@example.invalid','2025550100',$2::jsonb,null,'{}')",[native.profileSnapshot.selection.externalId,JSON.stringify([{...wire,email:'bypass@example.invalid'}])]),/generic_checkout_required/);
+  assert.equal(native.profileSnapshot.driver,'native_order');assert.equal(native.students.length,1);
+  assert.equal(await scalar('select native_checkout_payment_allowed($1)',[nativeKey]),true,'optional certificate omission allows payment');
+  assert.equal((await create()).orderId,native.orderId);
+  await assert.rejects(create(nativeKey,1,5500,[wire],[{wire,selectedChoices:['online_and_skills']}]),/idempotency_conflict/);
+  const secondWire={...wire,email:'fixture-72@example.invalid'};
+  const second=await create('88888888-8888-4888-8888-888888888888',1,5500,[secondWire],[{wire:secondWire,selectedChoices:['skills_only']}]);
+  assert.equal(second.sessionId,native.sessionId);
+  const thirdWire={...wire,email:'fixture-73@example.invalid'};
+  await assert.rejects(create('99999999-9999-4999-8999-999999999999',1,5500,[thirdWire],[{wire:thirdWire,selectedChoices:['skills_only']}]),/session_not_available|insufficient_seats/);
+  assert.equal(await scalar('select count(*) from landerware_public_orders'),2);
+  const key='55555555-5555-4555-8555-555555555555';
+  const receipt=await scalar("select reserve_skills_session_native($1,'cpr-aed',skills_test.offer('profile',55),skills_test.student(5))",[key]);
+  const snapshot=await scalar("select native_checkout_bind_profile($1,'native_skills_shared',1,'skills_reservation','cpr-aed','{}','[]')",[key]);assert.equal(snapshot.profile.version,1);
+  assert.equal((await scalar('select native_checkout_receipt($1)',[key])).amountCents,5500);
+  await db.exec("update landerware_registration_profiles set version=2,requirements='[]' where profile_key='native_skills_shared'");
+  const begin=(keyValue=key,req='renewal_form',sha='a'.repeat(64),index=0)=>scalar('select native_checkout_begin_upload($1,$2,$3,$4,$5,$6)',[keyValue,index,req,sha,'application/pdf',100]);
+  await assert.rejects(begin(),/uploads_disabled/);
+  await assert.rejects(db.exec("update landerware_registration_profiles set requirements='[]',display_name='Unversioned change' where profile_key='native_skills_shared'"),/registration_profile_version_required/);
+  await db.exec(`update landerware_registration_profiles set version=3,requirements='[{"key":"renewal_form","type":"instructor_renewal","display_name":"Instructor renewal form","upload_now":true,"required_before_registration":false,"upload":{"enabled":true,"max_bytes":2097152,"mime_types":["application/pdf"]}}]' where profile_key='native_skills_shared'`);
+  const intent=await begin();assert.equal(intent.state,'pending_storage');assert.equal(intent.profile_version,3);assert.match(intent.storage_path,new RegExp('^'+receipt.sessionId+'/checkout/'+receipt.registrationId+'/renewal_form/[a-f0-9]{64}\\.pdf$'));
+  await assert.rejects(scalar('select native_checkout_finish_upload($1)',[intent.id]),/document_storage_pending/);
+  assert.equal(await scalar('select count(*) from class_session_documents'),0);
+  assert.equal((await begin()).id,intent.id);assert.equal(await scalar('select count(*) from native_checkout_upload_intents'),1);
+  await db.query('insert into storage.objects(bucket_id,name) values($1,$2)',[intent.storage_bucket,intent.storage_path]);
+  const received=await scalar('select native_checkout_finish_upload($1)',[intent.id]);assert.equal(received.evidenceStatus,'received');assert.equal(received.approved,false);
+  assert.equal(await scalar('select state from registration_requirements'),'unknown');assert.equal(await scalar('select satisfied_at from registration_requirements'),null);
+  assert.equal((await scalar('select native_checkout_finish_upload($1)',[intent.id])).idempotentReplay,true);assert.equal(await scalar('select count(*) from class_session_documents'),1);
+  await assert.rejects(begin('66666666-6666-4666-8666-666666666666'),/reservation_not_found/);await assert.rejects(begin(key,'renewal_form','a'.repeat(64),1),/invalid_request/);
+  await assert.rejects(begin(key,'../other-scope'),/invalid_request/);
+  assert.equal((await scalar('select native_checkout_receipt($1)',[key])).profileSnapshot.profile.version,1,'a changed live profile must not rewrite an existing quote snapshot');
+  await db.exec("update registration_requirements set state='satisfied',satisfied_by='fixture-staff',satisfied_at=now(),provenance='{\"document_id\":\"staff-approved-original\"}'");
+  const replacement=await begin(key,'renewal_form','b'.repeat(64));await db.query('insert into storage.objects(bucket_id,name) values($1,$2)',[replacement.storage_bucket,replacement.storage_path]);
+  const pending=await scalar('select native_checkout_finish_upload($1)',[replacement.id]);assert.equal(pending.approved,false);
+  assert.equal(await scalar("select provenance->>'document_id' from registration_requirements"),'staff-approved-original');assert.equal(await scalar('select state from registration_requirements'),'satisfied');
+  await db.exec("update landerware_registration_profiles set version=4,requirements=jsonb_set(requirements,'{0,required_before_registration}','true') where profile_key='native_skills_shared'");
+  const requiredKey='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+  const requiredWire={...wire,email:'required@example.invalid'};
+  const requiredOffer=await scalar("select skills_test.offer('generic-required',57)");
+  await scalar("select reserve_native_checkout_order($1,'native_skills_shared',4,'cpr-aed',null,$2::jsonb,$3::jsonb,$4::jsonb,5500)",
+   [requiredKey,JSON.stringify(requiredOffer),JSON.stringify([requiredWire]),JSON.stringify([{wire:requiredWire,selectedChoices:['skills_only']}])]);
+  assert.equal(await scalar('select native_checkout_payment_allowed($1)',[requiredKey]),false,'only explicit required policy blocks proceeding without a file');
+  const requiredIntent=await begin(requiredKey,'renewal_form','c'.repeat(64));
+  assert.equal(await scalar('select native_checkout_payment_allowed($1)',[requiredKey]),false,'an uncommitted storage upload does not count as received');
+  await db.query('insert into storage.objects(bucket_id,name) values($1,$2)',[requiredIntent.storage_bucket,requiredIntent.storage_path]);
+  assert.equal((await scalar('select native_checkout_finish_upload($1)',[requiredIntent.id])).approved,false);
+  assert.equal(await scalar('select native_checkout_payment_allowed($1)',[requiredKey]),true);
+  assert.equal(await scalar('select native_checkout_payment_allowed($1)',[nativeKey]),true,'later policy edits do not rewrite the previously saved optional quote');
+  const requiredOrder=await scalar('select native_checkout_receipt($1)',[requiredKey]);
+  await db.query("update landerware_public_orders set status='checkout_open',stripe_checkout_session_id='cs_required' where id=$1",[requiredOrder.orderId]);
+  const evidence={id:'cs_required',mode:'payment',payment_status:'paid',amount_total:5500,currency:'usd',metadata:{landerware_order_id:requiredOrder.orderId}};
+  assert.equal((await scalar('select landerware_finalize_public_order($1,$2,$3::jsonb)',[requiredOrder.orderId,'pi_required',JSON.stringify(evidence)])).status,'paid');
+  const final=await scalar('select native_checkout_receipt($1)',[requiredKey]);assert.equal(final.status,'paid');
+  const requirement=await scalar("select jsonb_build_object('state',state,'provenance',provenance) from registration_requirements where registration_id=$1",[final.students[0].registrationId]);
+  assert.equal(requirement.state,'unknown');assert.equal(requirement.provenance.evidence_status,'received');
+  assert.equal((await scalar('select landerware_finalize_public_order($1,$2,$3::jsonb)',[requiredOrder.orderId,'pi_required',JSON.stringify(evidence)])).idempotentReplay,true);
+  for(const role of ['anon','authenticated']){
+   assert.equal(await scalar(`select has_table_privilege('${role}','native_checkout_upload_intents','select')`),false);
+   assert.equal(await scalar(`select has_function_privilege('${role}','public.native_checkout_begin_upload(text,integer,text,text,text,bigint)','execute')`),false);
+   assert.equal(await scalar(`select has_function_privilege('${role}','public.reserve_native_checkout_order(text,text,integer,text,text,jsonb,jsonb,jsonb,integer)','execute')`),false);
+  }
+ }finally{await db.close();}
+});

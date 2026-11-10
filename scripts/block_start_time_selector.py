@@ -1065,13 +1065,16 @@ def find_url(
     containers: list[dict[str, Any]],
     location_resource_map: Any,
 ) -> tuple[int | None, str | None, str | None, str | None]:
-    if course_id == "509474":
+    if course_id == "509474" or (course_id == "210549" and not native_reservation_reasons({
+        "schedule_page_option": {"native_registration_path": "/register/skills-session/", "native_activation_key": "blsEnabled"}
+    })):
         # Native date review has no Enrollware transfer or claimed reservation.
         from urllib.parse import urlencode
         query = urlencode({"course": course_id, "date": start.date().isoformat(),
             "startTime": start.strftime("%H:%M"), "location": window.get("location_name") or "",
             "instructor": window.get("instructor_name") or ""})
         return None, None, "/register/skills-session/?" + query, None
+    from scripts.native_bls_routes import appointment_link
     seed = {
         "date": start.date().isoformat(),
         "start_time": start.strftime("%H:%M"),
@@ -1086,7 +1089,10 @@ def find_url(
     return (
         appointment_day_id,
         str(container.get("container_id") or UNKNOWN),
-        build_registration_url(appointment_day_id, start.time(), course_id),
+        appointment_link(
+            ROOT, course_id, start.date().isoformat(), start.strftime("%H:%M"),
+            window.get("location_name"), window.get("instructor_name"),
+            build_registration_url(appointment_day_id, start.time(), course_id)),
         None,
     )
 
@@ -1105,6 +1111,12 @@ def load_block_schedule_page_configs() -> dict[str, dict[str, Any]]:
         if not isinstance(page, dict):
             continue
         page_key = normalize_key(page.get("page_key") or key)
+        # Keep the existing BLS routes intact until native capacity, inventory,
+        # payment and fulfillment proof explicitly activates the replacement.
+        if page_key == "bls" and isinstance(page.get("native_checkout_course_options"), list):
+            gate = {"schedule_page_option": {"native_registration_path": "/register/skills-session/", "native_activation_key": "blsEnabled"}}
+            if not native_reservation_reasons(gate):
+                page = {**page, "course_options": page["native_checkout_course_options"]}
         course_options = page.get("course_options")
         if not page_key or not isinstance(course_options, list) or not course_options:
             raise BlockSelectorInputError(f"Block schedule page {key} must define course_options")
@@ -1132,6 +1144,9 @@ def native_reservation_reasons(course):
             ready = (activation.get("schemaVersion") == "native-skills-activation.v1"
                 and activation.get("enabled") is True and bool(activation.get("evidence"))
                 and verified is not None and verified <= now)
+            activation_key = course.get("schedule_page_option", {}).get("native_activation_key")
+            if activation_key:
+                ready = ready and activation.get(activation_key) is True
         except (OSError, ValueError, TypeError):
             ready = False
         return [] if ready else ["native_reservation_not_configured"]
@@ -1155,6 +1170,9 @@ def contextual_course(course_id, option, catalog, rules):
                 course[field] = template[field]
     if str(course_id) == "509474":
         course["default_capacity"] = 2
+    if str(course_id) == "210549" and option.get("native_activation_key") == "blsEnabled":
+        course.update(duration_minutes=45, setup_buffer_minutes=0, cleanup_buffer_minutes=15,
+                      scheduler_consumption_minutes=60, default_capacity=2)
     return {**course, "schedule_page_option": option}
 
 

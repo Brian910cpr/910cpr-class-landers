@@ -30,7 +30,10 @@ def _count(session: dict[str, Any]) -> int | None:
 def _promotion_reason(session: dict[str, Any], count: int | None) -> str:
     if session.get("demand_status") in {"stale_anchor", "ambiguous"}:
         return ""
-    if count is not None and count > 0 and _text(session.get("demand_basis")) == "canonical_active_registrations":
+    # Explicitly stale/unavailable demand must never promote a cached positive.
+    # Keep separately declared manual/committed obligations below unchanged.
+    current = session.get("demand_status") in (None, "", "current") and session.get("count_available") is not False
+    if current and count is not None and count > 0 and _text(session.get("demand_basis")) == "canonical_active_registrations":
         return "canonical_active_registration"
     explicit = _text(session.get("anchor_basis") or session.get("promotion_reason")).lower()
     if explicit in {"committed_public_session", "manual_override"}:

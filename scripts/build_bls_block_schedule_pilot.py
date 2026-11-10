@@ -19,6 +19,7 @@ from scripts.block_start_time_selector import (
 from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
 from scripts.static_public_inventory_projection import render_from_schedule
 from scripts.family_course_art import asset_url, hero_markup
+from scripts.inject_global_theme_assets import THEME_TAGS
 
 
 REPORT_JSON_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
@@ -79,7 +80,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
             for course in slot.get("courses", []):
                 compact_course = {
                     "courseId": course.get("courseId"),
-                    **({"publicSelectable": course.get("publicSelectable")} if course.get("courseId") == "509474" else {}),
+                    **({"publicSelectable": course.get("publicSelectable")} if course.get("courseId") in {"509474", "210549"} else {}),
                     "courseName": course.get("courseName"),
                     "courseFamily": course.get("courseFamily"),
                     "deliveryMode": course.get("deliveryMode"),
@@ -564,7 +565,7 @@ def css() -> str:
       padding: 9px 11px;
       cursor: pointer;
     }
-    button[aria-pressed="true"] {
+    button[aria-pressed="true"]:where(:not(.site-theme-toggle)) {
       border-color: var(--accent);
       box-shadow: inset 3px 0 0 var(--accent);
       background: #eef7fc;
@@ -1045,6 +1046,7 @@ def render_html(payload: dict[str, Any]) -> str:
             "optionLabel": option.get("option_label") or "",
             "price": option.get("price"),
             "fullWidth": option.get("full_width") is True,
+            "nativeRegistrationPath": option.get("native_registration_path"),
             "skillsContexts": option.get("skills_contexts", []),
             "details": course_descriptions.get(course_id, {}),
         }
@@ -1396,6 +1398,7 @@ def render_html(payload: dict[str, Any]) -> str:
   {commerce_schema_html}
   {GTM_HEAD_SNIPPET}
   {ATTRIBUTION_SCRIPT_SNIPPET}
+  {THEME_TAGS}
 </head>
 <body>
   {GTM_NOSCRIPT_SNIPPET}
@@ -1467,7 +1470,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261107-skills-compat-1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261108-checkout-2"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
@@ -1910,6 +1913,10 @@ def render_html(payload: dict[str, Any]) -> str:
           family.append(icon, heading, choices);
           host.appendChild(family);
         }});
+          visibleCourseOptions().filter(course => course.fullWidth).forEach(course => {{
+            (course.skillsContexts || []).filter(context => !families.has(context.key))
+              .forEach(context => skillsHost.appendChild(skillsButton(course, context)));
+          }});
         scheduleCourseRailUpdate();
         return;
       }}
@@ -2281,14 +2288,14 @@ def render_html(payload: dict[str, Any]) -> str:
         link.className = 'register-link';
         const config = courseOptions.find(option => option.courseId === course.courseId);
         link.href = course.appointmentUrl;
-        if (config?.fullWidth) {{
+        if (config?.nativeRegistrationPath) {{
           const selection = new URLSearchParams({{course: course.courseId, date: selectedDate,
             startTime: slot.startTime, location: course.location,
             instructor: course.instructor || '', skillsContext: selectedSkillsContext || config.skillsContexts?.[0]?.key || '', context: {json.dumps(str(payload.get("pageKey") or page_config.get("page_key") or ""))}}});
           link.href = '/register/skills-session/?' + selection;
-          link.textContent = 'Schedule skills session';
+          link.textContent = course.courseId === '210549' ? 'Continue to HeartCode BLS checkout' : 'Schedule skills session';
         }}
-        if (!config?.fullWidth) link.textContent = 'Register';
+        if (!config?.nativeRegistrationPath) link.textContent = 'Register';
         link.addEventListener('click', event => {{
           if (isPastStart(day, slot)) {{
             event.preventDefault();

@@ -142,7 +142,7 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
                     ), f"{page_key}: orphan synthetic offer on occupied date {day['date']}")
                     # matchedContainerId is an internal planning field and is omitted
                     # from the compact public selector contract.
-                    if str(course.get('courseId')) == '509474':
+                    if str(course.get('courseId')) == '509474' or (page_key == 'bls' and str(course.get('courseId')) == '210549' and urlsplit(str(course.get('registrationUrl') or course.get('appointmentUrl') or '')).path == '/register/skills-session/'):
                         validate_native_skills_offer(course, page_key, day['date'], slot['startTime'])
                     else:
                         for field in ("appointmentDayId", "appointmentUrl", "availabilityBlockId"):
@@ -158,7 +158,7 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
 
 def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: str) -> None:
     """Native skills use a leased canonical selection, never an Enrollware container."""
-    require(page_key in {'heartsaver', 'arc', 'hsi'}, 'native skills: invalid page context')
+    require(page_key in {'heartsaver', 'arc', 'hsi', 'bls'}, 'native skills: invalid page context')
     require(course.get('publicSelectable') is True, 'native skills: not selectable')
     for key, value in {'durationMinutes':45, 'schedulerConsumptionMinutes':60,
                        'cleanupBufferMinutes':15, 'setupBufferMinutes':0}.items():
@@ -178,7 +178,9 @@ def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: s
     query = parse_qs(url.query)
     require(not url.scheme and not url.netloc and not url.fragment and url.path == '/register/skills-session/',
             'native skills: invalid native destination')
-    for key, value in {'course':'509474', 'date':day, 'startTime':clock,
+    course_id = str(course.get('courseId') or '509474')
+    require(course_id == '509474' or course_id == '210549' and page_key == 'bls', 'native skills: invalid course')
+    for key, value in {'course':course_id, 'date':day, 'startTime':clock,
                        'instructor':course['instructor'], 'location':course['location']}.items():
         require(query.get(key) == [value], 'native skills: mismatched URL '+key)
     require(not course.get('appointmentDayId') and 'appointmentDayId' not in query,

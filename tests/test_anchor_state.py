@@ -31,6 +31,28 @@ class AnchorStateTests(unittest.TestCase):
         self.assertIs(anchor["landing_page_required"], True)
         self.assertIs(anchor["external_publication_eligible"], True)
 
+    def test_stale_or_explicitly_unavailable_positive_demand_cannot_promote(self):
+        for fields in [{'demand_status':'stale_reconciliation'}, {'demand_status':'external_reconciliation_required'},
+                       {'demand_status':'unknown'}, {'count_available':False}]:
+            with self.subTest(fields=fields):
+                self.assertEqual(promote_seated_sessions([session(**fields)]),[])
+        self.assertEqual(len(promote_seated_sessions([session(demand_status='current',count_available=True)])),1)
+
+    def test_last_seat_leaves_only_its_own_anchor_survivor_keeps_identity(self):
+        first=session(session_id='first',demand_status='current',count_available=True)
+        second=session(session_id='second',course_id='210549',start_at='2026-08-05T12:00:00-04:00',
+                       end_at='2026-08-05T13:00:00-04:00',attached_to_session_id='first',
+                       demand_status='current',count_available=True)
+        before=promote_seated_sessions([first,second])
+        self.assertEqual({a['session_id'] for a in before},{'first','second'})
+        first['active_registration_count']=0
+        self.assertEqual(promote_seated_sessions([first,second]),[next(a for a in before if a['session_id']=='second')])
+        first['session_status']='canceled'
+        self.assertEqual(promote_seated_sessions([first,second]),[next(a for a in before if a['session_id']=='second')])
+        self.assertEqual(second['attached_to_session_id'],'first')  # No cancellation propagation/mutation.
+        offer=session(session_id='unseated',active_registration_count=0,attached_to_session_id='second')
+        self.assertEqual(promote_seated_sessions([offer]),[])
+
     def test_zero_demand_appointment_inventory_is_not_anchor(self):
         self.assertEqual([], promote_seated_sessions([session(active_registration_count=0)]))
 

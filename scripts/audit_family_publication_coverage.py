@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
+from zoneinfo import ZoneInfo
 from urllib.request import urlopen
 from concurrent.futures import ThreadPoolExecutor
 
@@ -16,7 +17,43 @@ ROOT = Path(__file__).resolve().parents[1]
 FAMILIES = ('bls', 'heartsaver', 'acls', 'pals', 'arc', 'hsi', 'uscg_first_aid_cpr_aed', 'family_cpr')
 
 
-def summarize(payload, day, now=None):
+WINDOW_DIAGNOSTIC_LIMIT = 50
+
+
+def window_diagnostics(issues, family=None):
+    """Allowlisted issue context only; issues are not necessarily failed windows."""
+    records, seen = [], set()
+    for issue in issues:
+        row = {'family': family if family in FAMILIES else None,
+               'reason': 'unclassified_reconciliation_issue'}
+        for field in ('start', 'end'):
+            try:
+                value = datetime.fromisoformat(str(issue.get(field, '')).replace('Z', '+00:00'))
+                if value.tzinfo is not None:
+                    row[field] = value.isoformat()
+                    if field == 'start':
+                        row['date'] = value.astimezone(ZoneInfo('America/New_York')).date().isoformat()
+            except (ValueError, TypeError, OverflowError):
+                pass  # Missing/invalid bounds stay absent, never inferred.
+        reason = issue.get('reason')
+        prefix = 'missing directional travel rule: '
+        if isinstance(reason, str) and reason.startswith(prefix):
+            locations = reason[len(prefix):].split('->')
+            if len(locations) == 2 and all(0 < len(v) <= 200 and all(c.isprintable() for c in v) for v in locations):
+                row.update(reason='missing_directional_travel_rule', fromLocation=locations[0], toLocation=locations[1])
+        elif reason == 'unresolved_occupied_bounds':
+            row['reason'] = reason
+        key = json.dumps(row, sort_keys=True)
+        if key not in seen:
+            seen.add(key)
+            if len(records) < WINDOW_DIAGNOSTIC_LIMIT:
+                records.append(row)
+    return {'records': records, 'limit': WINDOW_DIAGNOSTIC_LIMIT,
+            'uniqueIssueContexts': len(seen), 'truncated': len(seen) > len(records),
+            'dateTimezone': 'America/New_York'}
+
+
+def summarize(payload, day, now=None, family=None):
     rows = [(d['date'], t['startTime'], c) for d in payload.get('dates', [])
             for t in d.get('startTimes', []) for c in t.get('courses', [])]
     failures = payload.get('reconciliationIssues', [])
@@ -38,6 +75,7 @@ def summarize(payload, day, now=None):
         'dayTimes': sorted({t for d, t, _ in rows if d == day}),
         'dayPerCourse': dict(Counter(str(c['courseId']) for d, _, c in rows if d == day)),
         'failedWindowReasons': dict(Counter(i.get('reason', 'unknown') for i in failures)),
+        'reconciliationWindowDiagnostics': window_diagnostics(failures, family),
         'dayFailedWindows': sum(str(i.get('start', '')).startswith(day) for i in failures),
         'coverageAlert': bool((payload.get('counts') or {}).get('failed_windows')),
     }
@@ -57,20 +95,28 @@ def continuity_incident(feeds):
                     'preserve occupancy and safety rules, then verify rendered appointment choices and booking links.') if failures else None
 
 
-def main():
+def parse_arguments(argv=None, now=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--live', action='store_true')
     parser.add_argument('--continuity', action='store_true',
         help='Alert for expired dynamic inventory or absent BLS/Heartsaver appointments; never retire seated classes')
-    parser.add_argument('--day', default='2026-10-14')
+    parser.add_argument('--day', help='Diagnostic date; defaults to today in America/New_York')
     parser.add_argument('--output', type=Path, required=True)
-    args = parser.parse_args()
-    stamp = datetime.now(timezone.utc).isoformat()
+    args = parser.parse_args(argv)
+    if args.day is None:
+        args.day = (now or datetime.now(timezone.utc)).astimezone(ZoneInfo('America/New_York')).date().isoformat()
+    return args
+
+
+def main():
+    observed = datetime.now(timezone.utc)
+    args = parse_arguments(now=observed)
+    stamp = observed.isoformat()
     def read(family):
         path = f'data/block-selector-availability/{family}.json'
         raw = ((urlopen(f'https://www.910cpr.com/{path}?coverage={stamp}', timeout=30).read())
                if args.live else (ROOT / 'docs' / path).read_bytes())
-        return family, dict(summarize(json.loads(raw), args.day), sha256=hashlib.sha256(raw).hexdigest())
+        return family, dict(summarize(json.loads(raw), args.day, family=family), sha256=hashlib.sha256(raw).hexdigest())
     with ThreadPoolExecutor(max_workers=4) as pool:
         feeds = dict(pool.map(read, FAMILIES))
     incident = continuity_incident(feeds) if args.continuity else None

@@ -6,3 +6,8 @@ verify_jwt = false
 # New anonymous bookings use a server-fetched leased offer, service-only atomic
 # claim, explicit canonical context configuration, and a default-off activation gate.
 verify_jwt = true
+
+[functions.public-registration]
+# Public availability/registration uses server-fetched inventory. Order recovery
+# and document operations require an opaque owned receipt, not a client JWT.
+verify_jwt = false

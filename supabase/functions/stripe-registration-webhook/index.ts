@@ -28,6 +28,23 @@ Deno.serve(async(request)=>{
   const paid=event.type==="checkout.session.completed"?session.payment_status==="paid":event.type==="checkout.session.async_payment_succeeded";
 
   if(retailOrderId){
+    // Public class orders share the metadata key with retail. Route by the
+    // canonical record before invoking either finalizer; never label a class
+    // order paid through the retail-only procedure.
+    const {data:publicOrder,error:publicLookupError}=await db.from('landerware_public_orders').select('id').eq('id',retailOrderId).maybeSingle();
+    if(publicLookupError)return reply({ok:false,error:'Public payment lookup failed'},500);
+    if(publicOrder){
+      if(!paid)return reply({ok:true,ignored:'Public checkout not paid'});
+      const expectedLive=Deno.env.get('STRIPE_EXPECTED_LIVEMODE')!=='false';
+      if(session.mode!=='payment'||session.payment_status!=='paid'||session.livemode!==expectedLive||event.livemode!==expectedLive)return reply({ok:false,error:'Public payment evidence missing'},400);
+      const paymentArgs={p_order_id:publicOrder.id,p_stripe_payment_intent_id:typeof session.payment_intent==='string'?session.payment_intent:null,
+        p_evidence:{id:session.id,mode:session.mode,payment_status:session.payment_status,amount_total:session.amount_total,currency:session.currency,metadata:{landerware_order_id:retailOrderId},livemode:session.livemode,stripeEventId:event.id}};
+      const {error:receiptError}=await db.rpc('landerware_record_public_payment',paymentArgs);
+      if(receiptError)return reply({ok:false,error:'Public payment receipt failed'},500);
+      const {data,error}=await db.rpc('landerware_finalize_public_order',paymentArgs);
+      if(error)return reply({ok:false,error:'Public payment reconciliation failed'},500);
+      return reply({ok:true,orderId:publicOrder.id,status:data?.status});
+    }
     if(!paid)return reply({ok:true,ignored:"Retail checkout not paid"});
     const {data,error}=await db.rpc("confirm_retail_payment",{p_order_id:retailOrderId,p_checkout_session_id:session.id||null,p_payment_intent_id:session.payment_intent||null,p_evidence:{stripeEventId:event.id,paymentStatus:session.payment_status}});
     if(error)return reply({ok:false,error:"Retail payment reconciliation failed"},500);
@@ -36,6 +53,18 @@ Deno.serve(async(request)=>{
 
   const registrationId=String(session.client_reference_id||"").trim();
   if(!registrationId)return reply({ok:true,ignored:"No registration reference"});
+  const {data:skillsReceipt,error:skillsLookupError}=await db.from('skills_session_claim_receipts').select('registration_id').eq('registration_id',registrationId).maybeSingle();
+  if(skillsLookupError)return reply({ok:false,error:'Skills payment lookup failed'},500);
+  if(skillsReceipt){
+    // Route by canonical provenance before the permissive legacy handler.
+    // Failed/expired or delayed events must never overwrite a paid order.
+    if(!paid)return reply({ok:true,ignored:'Skills checkout not paid'});
+    if(session.mode!=='payment'||session.payment_status!=='paid'||session.metadata?.skills_session!=='509474')return reply({ok:false,error:'Skills payment evidence missing'},400);
+    const {data,error}=await db.rpc('confirm_skills_checkout_payment',{p_registration_id:registrationId,p_checkout_id:session.id||null,
+      p_amount_total:session.amount_total??null,p_currency:session.currency||null,p_payment_intent:typeof session.payment_intent==='string'?session.payment_intent:null});
+    if(error||!data?.ok)return reply({ok:false,error:'Skills payment reconciliation failed'},500);
+    return reply({ok:true,status:'paid'});
+  }
   // Pool payments use one atomic confirmation with exact order/session binding.
   // Keep this before generic failure/paid mutations; metadata alone cannot route
   // a pool registration into the less restrictive legacy path.

@@ -10,6 +10,7 @@ from collections import defaultdict
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from scripts.native_bls_routes import course_link as native_bls_course_link, session_link as native_bls_session_link
 from scripts.build_status import BuildStatusReporter
 from scripts.build_course_landers import COURSE_SESSION_ALIASES, TITLE_OVERRIDES
 from scripts.stale_class_link_fallbacks import infer_current_public_destination
@@ -555,8 +556,8 @@ def schedule_future_to_public_session(session: dict) -> dict | None:
         "price": price_label,
         "canonical": f"{SITE_BASE}/classes/{session_id}.html",
         "local_path": f"/classes/{session_id}.html",
-        "register_url": register_url,
-        "schedule_url": build_exact_schedule_url(course_id, course_number),
+        "register_url": native_bls_session_link(ROOT, visibility_token, session_id, register_url),
+        "schedule_url": native_bls_course_link(ROOT, visibility_token, build_exact_schedule_url(course_id, course_number)),
         "source_file": str(session.get("_source_file") or SCHEDULE_FUTURE_FILE),
     }
 
@@ -613,6 +614,7 @@ def render_course_session_rows(sessions: list[dict]) -> str:
         register_url = str(session.get("registration_url", "")).strip()
         session_id = str(session.get("session_id", "")).strip()
         session_url = f"/classes/{session_id}.html#ForwardToEnrollware" if session_id else register_url
+        session_url = native_bls_session_link(ROOT, session.get("course_id") or session.get("course_number"), session_id, session_url)
         register_html = (
             f'<a class="course-session-register" href="{html_escape(session_url)}" data-original-href="{html_escape(register_url)}">Book This Class</a>'
             if session_url
@@ -1381,7 +1383,7 @@ def render_course_page_body(course_meta: dict, future_sessions: list[dict]) -> s
     description = course_description(title)
     parent_hub = course_meta.get("parent_hub") or infer_parent_hub(title)
     schedule_url = course_meta.get("schedule_url") or parent_hub
-    course_lander_cta_url = parent_hub
+    course_lander_cta_url = native_bls_course_link(ROOT, course_meta.get("primary_course_id") or course_meta.get("primary_course_number") or course_meta.get("course_id") or course_meta.get("course_number"), parent_hub)
 
     if future_sessions:
         sessions_html = render_course_session_rows(future_sessions)
@@ -2179,7 +2181,7 @@ def build():
 
             line = " | ".join(html_escape(x) for x in bits if x)
             detail_link = f'<a href="{s["local_path"]}">Details</a>'
-            session_forward = f'{s["local_path"]}#ForwardToEnrollware'
+            session_forward = native_bls_session_link(ROOT, s.get('course_id') or s.get('course_number'), s.get('session_id'), f'{s["local_path"]}#ForwardToEnrollware')
             register_link = f' | <a href="{session_forward}" data-original-href="{s["register_url"]}">Book This Class</a>' if s["register_url"] else ""
 
             lines.append(

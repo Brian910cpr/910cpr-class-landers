@@ -178,3 +178,18 @@
     install();
   }
 })();
+
+// All course selectors share the existing canonical intake. Appointment/skills
+// links remain with their own backend until native materialization is proven.
+if (typeof document !== 'undefined') {
+  const installIntake = () => {
+    if (!document.getElementById('course-list') || !document.getElementById('start-list') ||
+        document.querySelector('script[src*="/assets/inline-registration.js"]')) return;
+    const script = document.createElement('script');
+    script.src = '/assets/inline-registration.js?v=20261108.1';
+    script.defer = true;
+    document.head.appendChild(script);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', installIntake, {once:true});
+  else installIntake();
+}
