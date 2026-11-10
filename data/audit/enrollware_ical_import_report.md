@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-11-10T05:26:12.322951-05:00`
+- Generated at: `2026-11-10T05:37:27.977240-05:00`
 - Source: `enrollware_ical`
-- iCal events read: `199`
-- Public sessions created: `199`
+- iCal events read: `198`
+- Public sessions created: `198`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `164`
+- Registration unavailable sessions marked not direct-bookable: `163`
 - Unmapped sessions: `6`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `13900100` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-12T10:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13901730` | enrollware_registration_closed | BLS Provider (NHCSO) | 2026-08-12T13:00:00-04:00 | New Hanover County Sheriff’s Office |
 | `13828438` | enrollware_registration_closed | AHA ACLS Provider (Initial) | 2026-08-12T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13828445` | enrollware_registration_closed | AHA ACLS Provider (Renewal) | 2026-08-12T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `13828449` | enrollware_registration_closed | AHA ACLS Provider (Renewal) | 2026-08-26T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13989619` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-27T16:00:00-04:00 | Surf City Police Department |
 | `13990775` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-08-27T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `13989672` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-27T18:00:00-04:00 | Surf City Police Department |
 
 ## Unmapped Examples
 
