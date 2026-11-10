@@ -25,7 +25,7 @@ function harness({legacyURL=null,course='fixture-course',profileReady=true,invoi
    if(u.includes('/class_sessions?')&&u.includes('select=id,status'))return Response.json([{id:'class',record_scope:'operational',status:currentStatus,registration_status:'open',start_at:'2031-01-01T14:00:00Z'}]);
    if(u.includes('/class_sessions?'))return Response.json([{id:'class',registration_backend:'landerware',registration_status:'open',visibility:'public',status:'scheduled',start_at:'2031-01-01T14:00:00Z',end_at:'2031-01-01T16:00:00Z',record_scope:'operational',external_class_id:'123456',courses:{enrollware_course_id:course,name:'Fixture title'},locations:{name:'Fixture location'}}]);
    if(u.includes('/landerware_registration_catalog?'))return Response.json([catalog]);
-   if(u.includes('/landerware_public_orders?')){if(init.method==='PATCH'){Object.assign(order,body);return Response.json([order]);}return Response.json([order]);}
+   if(u.includes('/landerware_public_orders?')){if(init.method==='PATCH'){Object.assign(order,body);return Response.json([order]);}const projection=new URL(u).searchParams.get('select');if(projection?.startsWith('idempotency_key,'))return Response.json([Object.fromEntries(projection.split(',').map(k=>[k,order[k]]))]);return Response.json([order]);}
    const rpc=u.split('/rpc/')[1];
    if(rpc==='landerware_create_public_order'){assert.equal(body.p_offer.kind,'bls_initial_offer');assert.equal(body.p_offer.capacity,6);order={id:'fixture-order',class_session_id:'class',external_class_id:'123456',idempotency_key:body.p_idempotency_key,status:'held',total:invoice?0:7500,currency:'usd',payer_email:'fixture@example.invalid',hold_expires_at:new Date(Date.now()+30*60000).toISOString(),recovery_token:'fixture-recovery',registration_profile_snapshot:{},landerware_public_order_students:[]};return Response.json({orderId:order.id,idempotentReplay:false});}
    if(rpc==='landerware_finalize_public_order'){assert.equal(body.p_stripe_payment_intent_id,'no_payment_required');order.status='paid';return Response.json({status:'paid'});}
@@ -58,6 +58,19 @@ test('deployed HTTP form/claim/Stripe adapter keeps service credentials and cont
 test('HTTP adapter rejects foreign origins and malformed/oversize bodies before a claim',async()=>{
  const h=harness();assert.equal((await h.send('reserve',{},'https://other.invalid')).status,403);assert.equal(h.calls.length,0);
  const large=await h.send('reserve',{padding:'x'.repeat(40000)});assert.equal(large.status,413);assert.equal(h.calls.length,0);
+});
+
+test('native recovery uses the immutable creator marker in the actual database projection and resumes the shared form',async()=>{
+ const h=harness();
+ const reserved=await h.send('reserve',{selection:{session:'123456'},profileKey:'fixture_generic',profileVersion:1,students:[{fields:{first_name:'Fixture',email:'fixture@example.invalid'},selectedChoices:[]}]});
+ assert.equal(reserved.status,200);
+ const response=await h.send('form?recover=22222222-2222-4222-8222-222222222222');
+ const model=await response.json();assert.equal(response.status,200,JSON.stringify(model));
+ assert.equal(model.key,key);assert.equal(model.receipt.status,'held');assert.equal(model.profile.profileKey,'fixture_generic');
+ assert.equal(model.legacyRecovery,undefined);
+ const query=h.calls.find(c=>c.url.includes('recovery_token=eq.')).url;
+ assert.ok(new URL(query).searchParams.get('select').split(',').includes('checkout_runtime_version'));
+ assert.equal(h.calls.some(c=>c.url.startsWith('https://api.stripe.com/')),false,'opening recovery does not open another payment');
 });
 test('actual fallback contract permits only the published matching concrete-session destination without a native claim',async()=>{
  const legacyURL='https://coastalcprtraining.enrollware.com/enroll?id=123456',h=harness({legacyURL});

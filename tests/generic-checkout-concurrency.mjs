@@ -162,7 +162,7 @@ const crossLedgers=json(await run(`select jsonb_build_object('legacy',(select co
 const crossReplay=json(await run(`select reserve_native_checkout_order('${crossKey}','native_skills_shared',1,'cpr-aed',null,${crossOffer},'${JSON.stringify([crossWire])}','${JSON.stringify([{wire:crossWire,selectedChoices:['skills_only']}])}',5500)`));assert.equal(crossReplay.kind,crossLedgers.legacy?'skills_reservation':'public_order');
 console.log('PASS isolated PostgreSQL: an old/new nonce race across profile activation produces exactly one ledger and recovery retains the winning creator.');
 
-const generatedLifecycle=await run(readFileSync(new URL('../supabase/reviewed/native-checkout-generated-session-lifecycle.sql',import.meta.url),'utf8'));assert.equal(generatedLifecycle.code,0,generatedLifecycle.error);
+const generatedLifecycle=await run(readFileSync(new URL('../supabase/migrations/20261110231103_native_checkout_generated_session_lifecycle.sql',import.meta.url),'utf8'));assert.equal(generatedLifecycle.code,0,generatedLifecycle.error);
 const abandoned=json(await run(claim(701,820)));
 assert.equal(json(await run(`select jsonb_build_object('version',checkout_runtime_version) from landerware_public_orders where id='${abandoned.orderId}'`)).version,'native-v1','the full-course reserve extension must retain the canonical native creator');
 const releaseWindow=day=>`select native_checkout_release_abandoned((skills_test.offer('maintenance',${day})->>'startsAt')::timestamptz,(skills_test.offer('maintenance',${day})->>'consumptionEndsAt')::timestamptz)`;

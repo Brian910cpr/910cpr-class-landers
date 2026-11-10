@@ -81,7 +81,7 @@ returns jsonb language sql stable set search_path='' as $$
  select jsonb_build_object('kind','recovery','course',c.name,'courseId',o.course_id,
   'startsAt',s.start_at,'endsAt',s.end_at,'venue',l.name,
   'address',concat_ws(', ',nullif(l.address_line1,''),nullif(l.address_line2,''),nullif(l.city,''),nullif(l.state,''),nullif(l.postal_code,'')),
-  'recoveryUrl','https://www.910cpr.com/register/?recover='||o.recovery_token::text,'holdExpiresAt',o.hold_expires_at)
+  'recoveryUrl','https://www.910cpr.com'||case when to_jsonb(o)->>'checkout_runtime_version'='native-v1' then '/register/checkout/' else '/register/' end||'?recover='||o.recovery_token::text,'holdExpiresAt',o.hold_expires_at)
  from public.landerware_messages m join public.landerware_public_orders o on m.idempotency_key='public-order-recovery:'||o.id::text
  join public.class_sessions s on s.id=o.class_session_id join public.courses c on c.id=s.course_id
  left join public.locations l on l.id=s.location_id

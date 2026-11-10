@@ -127,7 +127,7 @@ async function genericRoute(req:Request,route:string[],origin:string){
  const action=route[1],url=new URL(req.url),key=req.headers.get("idempotency-key")||"";
  if(req.method==="GET"&&action==="form"){
   const recoverToken=url.searchParams.get("recover");
-  if(recoverToken){if(!/^[0-9a-f-]{36}$/i.test(recoverToken))throw Error("invalid_recovery_token");const rows=await db(`landerware_public_orders?recovery_token=eq.${recoverToken}&select=idempotency_key,registration_profile_snapshot&limit=1`);if(!rows[0])throw Error("order_not_found");if(publicOrderVersion(rows[0])==='legacy'){const response=await recover(recoverToken,origin);return json(origin,{legacyRecovery:await response.json()});}const recovered=rows[0].idempotency_key.replace(/^public-order:/,"");return json(origin,{...await generic.resume(recovered),key:recovered})}
+  if(recoverToken){if(!/^[0-9a-f-]{36}$/i.test(recoverToken))throw Error("invalid_recovery_token");const rows=await db(`landerware_public_orders?recovery_token=eq.${recoverToken}&select=idempotency_key,checkout_runtime_version,registration_profile_snapshot&limit=1`);if(!rows[0])throw Error("order_not_found");if(publicOrderVersion(rows[0])==='legacy'){const response=await recover(recoverToken,origin);return json(origin,{legacyRecovery:await response.json()});}const recovered=rows[0].idempotency_key.replace(/^public-order:/,"");return json(origin,{...await generic.resume(recovered),key:recovered})}
   return json(origin,key&&!url.searchParams.has("session")&&!url.searchParams.has("course")?await generic.resume(key):await generic.model(Object.fromEntries(url.searchParams)));
  }
  if(req.method==="GET"&&action==="status")return json(origin,await generic.status(key));

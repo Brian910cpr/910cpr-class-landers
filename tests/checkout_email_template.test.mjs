@@ -30,6 +30,8 @@ test('recovery has a bounded canonical checkout link and never claims payment or
  const data={...sample,kind:'recovery',recoveryUrl:'https://www.910cpr.com/register/?recover=00000000-0000-4000-8000-000000000001',holdExpiresAt:'2026-10-24T13:30:00Z'};
  const r=renderCheckoutEmail(data);assert.match(r.subject,/Finish your registration/);assert.match(r.html,/Return to checkout/);assert.match(r.text,/9:30 AM Eastern/);assert.doesNotMatch(r.text,/Payment received|You’re registered/);
  assert.throws(()=>renderCheckoutEmail({...data,recoveryUrl:'https://evil.example/register/?recover=00000000-0000-4000-8000-000000000001'}),/recovery_data_invalid/);
+ assert.match(renderCheckoutEmail({...data,recoveryUrl:data.recoveryUrl.replace('/register/','/register/checkout/')}).text,/\/register\/checkout\/\?recover=/);
+ assert.throws(()=>renderCheckoutEmail({...data,recoveryUrl:data.recoveryUrl.replace('/register/','/admin/') }),/recovery_data_invalid/);
 });
 
  test('completion eCards, optional purchases and reschedule calendar stay distinct',()=>{

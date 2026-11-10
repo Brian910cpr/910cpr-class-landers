@@ -119,6 +119,18 @@ test('unpaid recovery leases once to the payer; paid and expired orders cannot p
  await h.db.query('delete from public.landerware_checkout_delivery_attempts where message_id=$1',[j.messageId]);
  await h.db.query("update public.landerware_public_orders set hold_expires_at=now()-interval '1 second' where id=$1",[a.orderId]);assert.equal((await claim(h)).empty,true);
 }));
+test('native creator recovery links use the shared checkout without upgrading legacy orders',()=>fixture(async h=>{
+ await h.db.exec("alter table landerware_public_orders add column checkout_runtime_version text not null default 'legacy'");
+ const a=await h.create();
+ await h.db.query("insert into landerware_messages(template_key,recipient,subject,body_text,delivery_provider,delivery_status,idempotency_key) select 'retail-checkout-recovery-v2',payer_email,'Recovery','Fixture','cloudflare','pending','public-order-recovery:'||id from landerware_public_orders where id=$1",[a.orderId]);
+ const id=(await h.db.query("select id from landerware_messages where idempotency_key=$1",['public-order-recovery:'+a.orderId])).rows[0].id;
+ const read=async()=>(await h.db.query('select landerware_checkout_recovery_data($1) r',[id])).rows[0].r;
+ assert.equal(new URL((await read()).recoveryUrl).pathname,'/register/');
+ await h.db.query("update landerware_public_orders set checkout_runtime_version='native-v1' where id=$1",[a.orderId]);
+ assert.equal(new URL((await read()).recoveryUrl).pathname,'/register/checkout/');
+ assert.equal((await h.db.query('select enabled from landerware_checkout_delivery_config')).rows[0].enabled,false);
+}));
+
 test('real queue-to-bridge mock sender recovers an explicit rejection once and records acceptance, not recipient delivery',async t=>fixture(async h=>{
  await paidSkills(h);await h.db.exec('update landerware_checkout_delivery_config set enabled=true');
  t.mock.method(globalThis,'fetch',async(url,init)=>{const name=String(url).split('/').at(-1);try{return Response.json(await h.rpc(name,JSON.parse(init.body)));}catch{return new Response('',{status:503});}});

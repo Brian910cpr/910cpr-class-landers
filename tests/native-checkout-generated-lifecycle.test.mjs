@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {preProfileFiles,profileMigration,profileRuntime,orderVersionMigration} from './helpers/native-checkout-migration-plan.mjs';
 const {PGlite}=await import(process.env.SKILLS_PGLITE_MODULE||'@electric-sql/pglite');
 const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const lifecycle='supabase/reviewed/native-checkout-generated-session-lifecycle.sql';
+const lifecycle='supabase/migrations/20261110231103_native_checkout_generated_session_lifecycle.sql';
 
 test('only witnessed automatic unpaid empty sessions release; fresh reuse preserves identity and all collision/qualification checks',async()=>{
  const db=new PGlite();try{

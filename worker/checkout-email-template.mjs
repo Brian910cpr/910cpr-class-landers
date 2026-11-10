@@ -13,7 +13,7 @@ export function renderCheckoutEmail(data,{automaticCodeDelivery=false}={}) {
   if (recovery) {
     const url = new URL(data.recoveryUrl);
     const expires = new Date(data.holdExpiresAt);
-    if (url.origin !== 'https://www.910cpr.com' || url.pathname !== '/register/' || !/^[0-9a-f-]{36}$/i.test(url.searchParams.get('recover') || '') || !Number.isFinite(expires.getTime())) throw Error('recovery_data_invalid');
+    if (url.origin !== 'https://www.910cpr.com' || !['/register/','/register/checkout/'].includes(url.pathname) || !/^[0-9a-f-]{36}$/i.test(url.searchParams.get('recover') || '') || !Number.isFinite(expires.getTime())) throw Error('recovery_data_invalid');
     recoveryUrl = url.href;
     holdNote = `Your current seat hold expires at ${time(expires)} Eastern. Availability is checked again when you return.`;
   }
