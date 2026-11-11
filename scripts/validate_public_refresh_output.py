@@ -147,7 +147,7 @@ def validate_selector(page_key: str, public_session_ids: set[str], *, now=None) 
                     if course.get('authority') == 'native-full-course.v2':
                         validate_native_full_offer(course, payload, page_key, day['date'], slot['startTime'], now=now)
                     elif str(course.get('courseId')) == '509474' or (page_key == 'bls' and str(course.get('courseId')) == '210549' and urlsplit(str(course.get('registrationUrl') or course.get('appointmentUrl') or '')).path == '/register/skills-session/'):
-                        validate_native_skills_offer(course, page_key, day['date'], slot['startTime'])
+                        validate_native_skills_offer(course, page_key, day['date'], slot['startTime'], payload, now=now)
                     else:
                         for field in ("appointmentDayId", "appointmentUrl", "availabilityBlockId"):
                             require(course.get(field) not in (None, ""), f"{page_key}: dynamic offer lacks {field}")
@@ -222,7 +222,7 @@ def validate_native_full_offer(course: dict, payload: dict, page_key: str,
             label+'inconsistent registration destinations')
 
 
-def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: str) -> None:
+def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: str, payload: dict | None = None, *, now: datetime | None = None) -> None:
     """Native skills use a leased canonical selection, never an Enrollware container."""
     require(page_key in {'heartsaver', 'arc', 'hsi', 'bls'}, 'native skills: invalid page context')
     require(course.get('publicSelectable') is True, 'native skills: not selectable')
@@ -236,7 +236,8 @@ def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: s
             'native skills: missing source trace')
     require(course.get('date') == day and course.get('startTime') == clock, 'native skills: inconsistent date or time')
     lease = datetime.fromisoformat(str(course.get('validUntil') or '').replace('Z', '+00:00'))
-    require(lease.tzinfo is not None and lease > datetime.now(timezone.utc), 'native skills: expired lease')
+    now = now or datetime.now(timezone.utc)
+    require(lease.tzinfo is not None and lease > now, 'native skills: expired lease')
     start = datetime.fromisoformat(day+'T'+clock).replace(tzinfo=ZoneInfo('America/New_York')).astimezone(timezone.utc)
     end = datetime.fromisoformat(str(course.get('occupiedUntil') or '').replace('Z', '+00:00'))
     require(end.tzinfo is not None and end == start+timedelta(minutes=60), 'native skills: invalid occupied interval')
@@ -251,6 +252,50 @@ def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: s
         require(query.get(key) == [value], 'native skills: mismatched URL '+key)
     require(not course.get('appointmentDayId') and 'appointmentDayId' not in query,
             'native skills: unexpected Enrollware container')
+    if course.get('authority') or course.get('nativeOfferId') or course.get('nativeScopeId'):
+        from scripts.native_publication_scope import SKILLS_AUTHORITY, SKILLS_CONTEXTS, SCOPE
+        require(course.get('authority') == SKILLS_AUTHORITY and course.get('nativeScopeId') == SCOPE,
+                'native skills: invalid authority or scope')
+        require(page_key in SKILLS_CONTEXTS and course_id == '509474', 'native skills: unsupported first-party course')
+        require('appointmentDayId' not in course and 'matchedContainerId' not in course,
+                'native skills: unexpected external identity')
+        require(re.fullmatch(r'native-skills:[a-f0-9]{64}', str(course.get('nativeOfferId') or '')) is not None,
+                'native skills: invalid native identity')
+        raw = '|'.join([course['nativeScopeId'], '509474', start.isoformat(), course['instructor'], course['resource'], '45', '60'])
+        require(course['nativeOfferId'] == 'native-skills:'+sha256(raw.encode()).hexdigest(),
+                'native skills: native identity mismatch')
+        local = datetime.fromisoformat(day+'T'+clock)
+        zone = ZoneInfo('America/New_York')
+        candidates = {local.replace(tzinfo=zone,fold=fold).astimezone(timezone.utc) for fold in (0,1)
+                      if local.replace(tzinfo=zone,fold=fold).astimezone(timezone.utc).astimezone(zone).replace(tzinfo=None)==local}
+        require(len(candidates) == 1, 'native skills: ambiguous or nonexistent Eastern time')
+        block, sources = course.get('availabilityBlockId'), course.get('sourceSessionIds')
+        require(isinstance(block,str) and bool(block.strip()) and isinstance(sources,list) and
+                all(isinstance(x,str) and x.strip() for x in sources) and len(sources)==len(set(sources)),
+                'native skills: invalid source trace')
+        destination = course.get('registrationUrl')
+        require(isinstance(destination,str) and destination.startswith('/register/skills-session/?') and
+                not any(ord(ch)<32 or ord(ch)==127 for ch in destination) and '\\' not in destination and '#' not in destination,
+                'native skills: invalid native destination')
+        require(parse_qs(url.query,keep_blank_values=True,strict_parsing=True,max_num_fields=5) == {
+                    'course':['509474'], 'date':[day], 'startTime':[clock],
+                    'instructor':[course['instructor']], 'location':[course['location']]},
+                'native skills: invalid native query')
+        require('appointmentUrl' not in course or course['appointmentUrl'] == destination,
+                'native skills: inconsistent registration destinations')
+        require(course.get('qualificationPolicy') == 'skills-session-policy.v1' and
+                course.get('capacity') == 2 and course.get('skillsContexts') == sorted(SKILLS_CONTEXTS[page_key]),
+                'native skills: invalid canonical context policy')
+        require(isinstance(payload, dict), 'native skills: original publication proof required')
+        observed = datetime.fromisoformat(str(course.get('proofObservedAt') or '').replace('Z', '+00:00'))
+        generated = datetime.fromisoformat(str(payload.get('generatedAt') or '').replace('Z', '+00:00'))
+        publication_lease = datetime.fromisoformat(str(payload.get('validUntil') or '').replace('Z', '+00:00'))
+        require(all(value.tzinfo is not None for value in (observed, generated, publication_lease)) and
+                observed <= generated <= now < lease <= observed+timedelta(minutes=15) and
+                lease <= publication_lease <= generated+timedelta(minutes=15),
+                'native skills: original proof expired or extended')
+        require(now+timedelta(hours=24) <= start <= now+timedelta(days=90) and start.minute % 15 == 0,
+                'native skills: invalid native horizon or grid')
 
 
 def validate_non_session_publication(root: Path, demand: dict[str, Any]) -> None:

@@ -114,6 +114,13 @@
     return (Array.isArray(dates) ? dates : []).map(day => ({...day,
       startTimes: (day.startTimes || []).map(slot => ({...slot,
         courses: (slot.courses || []).filter(course => {
+          if (course.authority === 'native-skills-publication.v1' || course.nativeOfferId) {
+            const observed = Date.parse(course.proofObservedAt), expiry = Date.parse(course.validUntil);
+            return course.authority === 'native-skills-publication.v1' && course.courseId === '509474'
+              && course.offerType === 'dynamic_appointment' && course.capacity === 2
+              && Number.isFinite(observed) && observed <= instant && live(validUntil)
+              && live(course.validUntil) && expiry <= observed + 15 * 60 * 1000;
+          }
           if (course.authority === 'native-session-booking.v1') {
             const observed = Date.parse(course.proofObservedAt), expiry = Date.parse(course.validUntil);
             return Number.isFinite(observed) && observed <= instant && live(course.validUntil)

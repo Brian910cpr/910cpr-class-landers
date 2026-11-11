@@ -14,10 +14,12 @@ export async function runNativeConfirmationBatch({ticks = 1, sleep, now = () => 
     if (now() - due >= EXPECTED_INTERVAL_MS) { skipped++; continue; }
     const result = await checkNativeConfirmations({...options, now});
     results.push(result);
-    if (result.latch || result.action === 'not_configured') break;
+    if (result.latch || result.action === 'not_configured' || result.action === 'retry_retired') break;
   }
   const last = results.at(-1);
   return {ticks: results.length, skipped, results,
     queueHealthy: Boolean(last && !last.error && assessMonitorState(last, now()).queueHealthy),
+    schedulerHealthy: Boolean(last && assessMonitorState(last, now()).schedulerHealthy),
+    confirmationHealthy: Boolean(last && !last.error && assessMonitorState(last, now()).confirmationHealthy),
     actualDeliveryConfirmed: false};
 }

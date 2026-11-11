@@ -108,10 +108,11 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "date": day.get("date"),
                     "startTime": slot.get("startTime"),
                 }
-                if course.get('authority') == 'native-full-course.v2':
+                if course.get('authority') in {'native-full-course.v2', 'native-skills-publication.v1'}:
                     compact_course.pop('appointmentDayId', None)
                     compact_course.update({key: course.get(key) for key in
-                        ('authority', 'nativeScopeId', 'selectionId', 'publicSelectable', 'proofObservedAt')})
+                        ('authority', 'nativeScopeId', 'selectionId', 'publicSelectable', 'proofObservedAt',
+                         'nativeOfferId', 'qualificationPolicy', 'skillsContexts', 'capacity')})
                 if course.get('authority') == 'native-session-booking.v1':
                     compact_course.update({key: course.get(key) for key in
                         ('authority', 'capacity', 'remainingSeats', 'proofObservedAt', 'session_id')})

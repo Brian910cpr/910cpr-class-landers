@@ -69,7 +69,10 @@ export function genericCheckout(deps){
   if(packet.profile.form_schema.inventory_kind==='leased_skills_v1'){
    if(deps.enabled&&!deps.enabled())throw Error('native_registration_unavailable');
    const page=CONTEXTS[context];if(!page||session)throw Error('invalid_context');
-   const all=skillsOffers(await deps.publication(page),context,now(),publicCourse);
+   const publication=await deps.publication(page);
+   const nativeSkills=publicCourse==='509474'&&(publication.dates||[]).some(d=>(d.startTimes||[]).some(t=>(t.courses||[]).some(c=>c.authority==='native-skills-publication.v1')));
+   const skillsPolicy=nativeSkills&&deps.skillsPolicy?await deps.skillsPolicy():{};
+   const all=skillsOffers(publication,context,now(),publicCourse,{nativePublicationEnabled:skillsPolicy.nativePublicationEnabled===true});
    const matches=all.filter(o=>selection.selectionId?o.selectionId===selection.selectionId:
     o.localStart===`${selection.date}T${selection.startTime}`&&(!selection.instructor||o.instructor===selection.instructor)&&(!selection.location||o.location===selection.location));
    if(matches.length!==1)throw Error('session_not_available');offer=matches[0];

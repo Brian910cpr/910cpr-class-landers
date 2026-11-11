@@ -26,6 +26,30 @@ export function assessNativeQueue(payload, now = Date.now()) {
     queueHealthy: reason === null, reason, actualDeliveryConfirmed: false};
 }
 
+const SCHEDULER_CODES = new Set(['callback_auth_denied','callback_transport_unknown','callback_completion_unknown',
+  'scheduler_credential_missing','scheduler_transport_security_changed','provider_ambiguous','claim_unknown','claim_invalid',
+  'duplicate_claim','settlement_unknown','mail_unconfigured','delivery_unknown','result_invalid']);
+const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+export function assessNativeScheduler(payload, now = Date.now()) {
+  const present = object(payload) && Object.hasOwn(payload, 'scheduler');
+  const s = present && object(payload.scheduler) ? payload.scheduler : {};
+  const valid = present && object(payload.scheduler) &&
+    ['enabled','latched','callbackFresh','observerFresh','healthy'].every(k => typeof s[k] === 'boolean') &&
+    ['lastCompletedAt','lastObservedAt'].every(k => s[k] === null || timestamp(s[k]) !== null) &&
+    (s.reason === null || typeof s.reason === 'string') && s.actualDeliveryConfirmed === false;
+  const lastCompletedAt = timestamp(s.lastCompletedAt), lastObservedAt = timestamp(s.lastObservedAt);
+  const age = value => value ? now - Date.parse(value) : Infinity;
+  const callbackFresh = valid && s.callbackFresh === true && age(lastCompletedAt) >= 0 && age(lastCompletedAt) < STALE_AFTER_MS;
+  const observerFresh = valid && s.observerFresh === true && age(lastObservedAt) >= 0 && age(lastObservedAt) < STALE_AFTER_MS;
+  const enabled = valid && s.enabled === true, latched = valid && s.latched === true;
+  const latchReason = SCHEDULER_CODES.has(s.reason) ? s.reason : latched ? 'scheduler_review_required' : null;
+  const reason = !present ? 'scheduler_missing' : !valid ? 'scheduler_contract_invalid' : !enabled ? 'scheduler_disabled' :
+    latched ? 'scheduler_latched' : !callbackFresh ? 'scheduler_callback_stale' : !observerFresh ? 'scheduler_observer_stale' :
+    s.healthy !== true ? 'scheduler_unhealthy' : null;
+  return {present, contractValid: valid, enabled, latched, latchReason, lastCompletedAt, lastObservedAt, callbackFresh, observerFresh,
+    schedulerHealthy: reason === null, reason, actualDeliveryConfirmed: false};
+}
+
 export function assessMonitorState(state, now = Date.now()) {
   const checked = timestamp(state?.observerCheckedAt);
   const age = checked ? now - Date.parse(checked) : Infinity;
@@ -34,8 +58,13 @@ export function assessMonitorState(state, now = Date.now()) {
   const queue = state?.queue;
   const pollAge = timestamp(queue?.lastPollAt) ? now - Date.parse(queue.lastPollAt) : Infinity;
   const consumerStale = pollAge < -30_000 || pollAge >= STALE_AFTER_MS;
-  return {observerStale, consumerStale, retryLatched: Boolean(state?.latch),
-    queueHealthy: !observerStale && !consumerStale && !state?.latch && !state?.error && queue?.queueHealthy === true,
+  const scheduler = state?.scheduler;
+  const fresh = value => timestamp(value) !== null && now - Date.parse(value) >= 0 && now - Date.parse(value) < STALE_AFTER_MS;
+  const callbackStale = !fresh(scheduler?.lastCompletedAt), schedulerObserverStale = !fresh(scheduler?.lastObservedAt);
+  const queueHealthy = !observerStale && !consumerStale && !state?.latch && !state?.error && queue?.queueHealthy === true;
+  const schedulerHealthy = !observerStale && !callbackStale && !schedulerObserverStale && scheduler?.present === true && scheduler?.contractValid === true && scheduler?.enabled === true && scheduler?.latched === false && scheduler?.callbackFresh === true && scheduler?.observerFresh === true && scheduler?.schedulerHealthy === true;
+  return {observerStale, consumerStale, callbackStale, schedulerObserverStale, retryLatched: Boolean(state?.latch),
+    queueHealthy, schedulerHealthy, confirmationHealthy: queueHealthy && schedulerHealthy,
     actualDeliveryConfirmed: false};
 }
 
@@ -62,26 +91,17 @@ function previousState(previous) {
   };
 }
 
-function deliverySummary(value) {
-  if (!value || value.configured !== true || value.actualDeliveryConfirmed !== false ||
-      ['accepted', 'rejected', 'ambiguous'].some(k => count(value[k]) === null || value[k] > 10) ||
-      (value.stopped !== null && value.stopped !== undefined && typeof value.stopped !== 'string')) return null;
-  const stops = new Set(['claim_unknown', 'claim_invalid', 'duplicate_claim', 'settlement_unknown', 'mail_unconfigured']);
-  return {accepted: value.accepted, rejected: value.rejected, ambiguous: value.ambiguous,
-    disabled: value.disabled === true, stopped: value.stopped ? (stops.has(value.stopped) ? value.stopped : 'delivery_stopped') : null,
-    actualDeliveryConfirmed: false};
-}
-
-export async function checkNativeConfirmations({mode = 'status', retryEnabled = false, ownerKey, request, stateStore, now = () => Date.now()} = {}) {
+export async function checkNativeConfirmations({mode = 'status', ownerKey, request, stateStore, now = () => Date.now()} = {}) {
   if (!['status', 'retry'].includes(mode) || typeof request !== 'function' || !stateStore ||
       typeof stateStore.load !== 'function' || typeof stateStore.save !== 'function') throw Error('monitor_configuration_invalid');
   let previous;
   try { previous = await stateStore.load(); } catch { throw Error('monitor_state_unavailable'); }
-  const state = {...previousState(previous), observerCheckedAt: null, action: 'not_started', error: null, queue: null};
+  const state = {...previousState(previous), observerCheckedAt: null, action: 'not_started', error: null, queue: null, scheduler: null};
   const finish = async () => {
     await stateStore.save(state);
     return {...state, monitor: assessMonitorState(state, now())};
   };
+  if (mode !== 'status') { state.action = 'retry_retired'; state.error = 'external_retry_retired'; return finish(); }
   if (state.latch === 'authorization_denied') { state.action = 'review_required'; state.error = state.latch; return finish(); }
   if (typeof ownerKey !== 'string' || !ownerKey.trim() || /[\x00-\x20\x7f]/.test(ownerKey)) {
     state.action = 'not_configured'; state.error = 'owner_auth_unconfigured'; return finish();
@@ -97,41 +117,8 @@ export async function checkNativeConfirmations({mode = 'status', retryEnabled = 
   if (response.status !== 200) { state.action = 'status_failed'; state.error = `status_http_${Number.isInteger(response.status) ? response.status : 'invalid'}`; return finish(); }
   try { payload = await readJSON(response); } catch { state.action = 'status_invalid'; state.error = 'status_contract_invalid'; return finish(); }
   state.queue = assessNativeQueue(payload, now());
+  state.scheduler = assessNativeScheduler(payload, now());
   state.action = 'status_observed';
   if (state.latch === 'retry_outcome_unknown') { state.action = 'review_required'; state.error = state.latch; return finish(); }
-  if (mode === 'status') return finish();
-  if (retryEnabled !== true) { state.action = 'retry_not_enabled'; return finish(); }
-  if (!state.queue.configured || !state.queue.enabled || state.queue.provider !== 'resend') {
-    state.action = 'server_not_enabled'; return finish();
-  }
-  if (state.queue.reason === 'health_contract_invalid') { state.action = 'status_invalid'; state.error = 'status_contract_invalid'; return finish(); }
-  const lastAttempt = state.lastRetryAttemptAt ? Date.parse(state.lastRetryAttemptAt) : -Infinity;
-  if (now() - lastAttempt < EXPECTED_INTERVAL_MS) { state.action = 'retry_cooldown'; return finish(); }
-  // Persist before the side effect. A crashed process or lost response leaves a
-  // durable latch. A later process may not blindly issue the same retry request.
-  state.lastRetryAttemptAt = iso(now()); state.latch = 'retry_outcome_unknown'; state.action = 'retry_pending';
-  await stateStore.save(state);
-  try {
-    response = await request(`${ENDPOINT}/retry`, {...options, method: 'POST', headers: {...options.headers, 'content-type': 'application/json'},
-      body: '{}', signal: AbortSignal.timeout(90_000)});
-  } catch { state.action = 'retry_unknown'; state.error = 'retry_request_unknown'; return finish(); }
-  if ([401, 403].includes(response.status)) {
-    state.action = 'authorization_denied'; state.error = 'owner_auth_denied'; state.latch = 'authorization_denied'; return finish();
-  }
-  try { payload = await readJSON(response); } catch { state.action = 'retry_unknown'; state.error = 'retry_contract_unknown'; return finish(); }
-  const delivery = deliverySummary(payload?.delivery);
-  if (![200, 503].includes(response.status) || !delivery || !payload.health || typeof payload.health !== 'object') {
-    state.action = 'retry_unknown'; state.error = 'retry_contract_unknown'; return finish();
-  }
-  // A well-formed completed response may report provider rejection, ambiguity or
-  // stale health. Preserve those failures, rather than turning HTTP success green.
-  state.lastRetryCompletedAt = iso(now()); state.observerCheckedAt = iso(now()); state.latch = null;
-  state.delivery = delivery;
-  state.queue = assessNativeQueue({configured: payload.delivery.configured, health: payload.health}, now());
-  state.action = 'retry_completed';
-  if (delivery.stopped === 'claim_unknown' || delivery.stopped === 'settlement_unknown') {
-    state.latch = 'retry_outcome_unknown'; state.error = delivery.stopped;
-  } else if (delivery.stopped) state.error = delivery.stopped;
-  else if (delivery.rejected || delivery.ambiguous) state.error = 'delivery_requires_review';
   return finish();
 }

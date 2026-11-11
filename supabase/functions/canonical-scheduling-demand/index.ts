@@ -5,11 +5,14 @@ import {registrationProof} from '../_shared/external-roster-proof.ts';
 
 const ACTIVE = new Set(["registered", "confirmed", "completed"]);
 const ALLOWED_ORIGINS = new Set(["https://www.910cpr.com", "https://910cpr.com"]);
+const RELEASE_PROOF_SCHEMA = "910cpr-native-release-proof.v1";
+const RELEASE_BATCH_SIZE = 64;
+const NATIVE_ID = /^lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/;
 
 function response(origin: string, body: unknown, status = 200) {
   const headers: Record<string, string> = {
     "access-control-allow-headers": "content-type,x-hot-sync-admin-key",
-    "access-control-allow-methods": "GET,OPTIONS",
+    "access-control-allow-methods": "GET,POST,OPTIONS",
     "cache-control": "private, no-store",
     "content-type": "application/json; charset=utf-8",
     vary: "Origin",
@@ -244,14 +247,79 @@ export async function loadNonSessionSources(start: string, stop: string) {
   }));
 }
 
+async function nativeMaintenance() {
+  const {url,key} = serviceConfig();
+  const result = await fetch(`${url}/rest/v1/rpc/native_publication_release_expired`, {
+    method: "POST", headers: {apikey:key,authorization:`Bearer ${key}`,"content-type":"application/json"},
+    body: "{}", signal: AbortSignal.timeout(20000), redirect: "error",
+  });
+  const body = await result.json();
+  if (!result.ok || body?.schemaVersion !== "native-publication-maintenance.v1"
+      || !Number.isSafeInteger(body.released) || body.released < 0 || body.released > 32
+      || !Number.isSafeInteger(body.examined) || body.examined < 0 || body.examined > 32)
+    throw new Error("Native maintenance unavailable");
+  return {schemaVersion:body.schemaVersion,released:body.released,examined:body.examined,batchLimit:32,observedAt:body.observedAt};
+}
+
+async function releasedSessions(ids: string[]) {
+  const {url,key} = serviceConfig();
+  const result = await fetch(`${url}/rest/v1/rpc/native_released_scheduling_sessions`, {
+    method: "POST", headers: {apikey:key,authorization:`Bearer ${key}`,"content-type":"application/json"},
+    body: JSON.stringify({p_external_class_ids:ids}), signal: AbortSignal.timeout(20000), redirect: "error",
+  });
+  const proof = await result.json();
+  const rows = proof?.released_native_sessions;
+  if (!result.ok || proof?.schema_version !== RELEASE_PROOF_SCHEMA || proof.complete !== true
+      || timestampIdentity(proof.generated_at) === null
+      || !Array.isArray(proof.requested_external_class_ids)
+      || JSON.stringify(proof.requested_external_class_ids) !== JSON.stringify(ids)
+      || !Array.isArray(rows) || rows.length > ids.length
+      || new Set(rows.map((row: any) => row?.external_class_id)).size !== rows.length
+      || rows.some((row: any) => !ids.includes(row?.external_class_id)))
+    throw new Error("Native release projection unavailable");
+  return proof;
+}
+
 export async function handleRequest(req: Request) {
   const origin = req.headers.get("origin") || "";
   if (origin && !ALLOWED_ORIGINS.has(origin)) return response(origin, { error: "Origin is not allowed" }, 403);
   if (req.method === "OPTIONS") return response(origin, null, 204);
-  if (req.method !== "GET") return response(origin, { error: "Method not allowed" }, 405);
+  if (!["GET", "POST"].includes(req.method)) return response(origin, { error: "Method not allowed" }, 405);
   try {
     if (!(await authorized(req))) return response(origin, { error: "Unauthorized" }, 401);
-    const range = demandRange(new URL(req.url).searchParams);
+    if (req.method === "POST") {
+      // An explicit, authenticated mutation. GET/preview reads never clean up.
+      if (req.headers.get("content-type") !== "application/json" || Number(req.headers.get("content-length") || 0) > 128)
+        return response(origin, {error:"Invalid maintenance request"},400);
+      const reader = req.body?.getReader();
+      if (!reader) return response(origin,{error:"Invalid maintenance request"},400);
+      let raw = "", bytes = 0;
+      try {
+        while (true) {
+          const chunk = await reader.read(); if (chunk.done) break;
+          bytes += chunk.value.length;
+          if (bytes > 128) {await reader.cancel();return response(origin,{error:"Invalid maintenance request"},400);}
+          raw += new TextDecoder().decode(chunk.value);
+        }
+      } finally {reader.releaseLock();}
+      let input;try {input=JSON.parse(raw);} catch {return response(origin,{error:"Invalid maintenance request"},400);}
+      if (input?.action !== "release_expired_native_holds" || Object.keys(input).length !== 1)
+        return response(origin,{error:"Invalid maintenance request"},400);
+      return response(origin, await nativeMaintenance(), 200);
+    }
+    const params = new URL(req.url).searchParams;
+    if (params.has("release_ids") || params.has("projection")) {
+      const ids = (params.get("release_ids") || "").split(",");
+      if (params.get("projection") !== "native-release-proof"
+          || [...params.keys()].some(key => !["projection", "release_ids"].includes(key))
+          || params.getAll("projection").length !== 1 || params.getAll("release_ids").length !== 1
+          || ids.length > RELEASE_BATCH_SIZE || ids.some(id => !NATIVE_ID.test(id))
+          || new Set(ids).size !== ids.length)
+        return response(origin, {error:"Invalid native release proof request"}, 400);
+      // Authenticated and read-only; never run maintenance from GET/preview.
+      return response(origin, await releasedSessions(ids));
+    }
+    const range = demandRange(params);
     return response(origin, {
       schema_version: "910cpr-canonical-scheduling-demand.v1",
       generated_at: new Date().toISOString(),
@@ -259,6 +327,9 @@ export async function handleRequest(req: Request) {
       native_active_registration_statuses: [...ACTIVE, "active"],
       sessions: await loadDemand(range.start, range.stop),
       non_session_sources: await loadNonSessionSources(range.start, range.stop),
+      // History is not publication input. The client asks only for IDs still
+      // present in its retained schedule, in bounded explicit proof requests.
+      released_native_sessions: [],
     });
   } catch (error) {
     if (error instanceof RangeError) return response(origin, { error: error.message }, 400);

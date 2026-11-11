@@ -41,7 +41,7 @@ test('OPTIONS has the same allowed CORS contract and no body or auth access', as
   assert.equal(result.status,204);
   assert.equal(await result.text(),'');
   assert.equal(result.headers.get('access-control-allow-origin'),'https://www.910cpr.com');
-  assert.equal(result.headers.get('access-control-allow-methods'),'GET,OPTIONS');
+  assert.equal(result.headers.get('access-control-allow-methods'),'GET,POST,OPTIONS');
   assert.match(result.headers.get('access-control-allow-headers'),/x-hot-sync-admin-key/);
   assert.match(result.headers.get('cache-control'),/no-store/);
 });
@@ -63,6 +63,7 @@ test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields'
   const calls = [];
   const endpoint = loadEndpoint(async url => {
     if (String(url).includes('/admin/hot-sync')) return new Response('{}');
+    if (String(url).includes('/rpc/native_released_scheduling_sessions')) return Response.json([]);
     if (String(url).includes('/rpc/')) return Response.json({sessions:[]});
     const query = new URL(url).searchParams;
     calls.push(query);

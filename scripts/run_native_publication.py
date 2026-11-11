@@ -2,7 +2,8 @@
 
 Historical occurrence geometry is retained conservatively. Canonical demand owns
 counts and new native sessions; absence/uncertainty never means zero occupancy.
-Only six explicit public paths may be committed by this runner.
+Only explicit public paths may be committed by this runner. Skills adds nine
+known generator outputs only when its independent default-off gate is enabled.
 """
 from __future__ import annotations
 
@@ -29,6 +30,14 @@ REPORT = 'debug/status/native_publication.json'
 PATHS = ('docs/data/schedule_future.json', 'docs/bls.html', 'docs/BLS.html',
          'docs/bls-schedule.html', 'docs/data/block-selector-availability/bls.json',
          'docs/assets/resolved-selector-availability.js')
+PAGE_PATHS = {
+    'bls': ('docs/bls.html', 'docs/BLS.html', 'docs/bls-schedule.html',
+            'docs/data/block-selector-availability/bls.json'),
+    'heartsaver': ('docs/heartsaver.html', 'docs/HEARTSAVER.html', 'docs/heartsaver-schedule.html',
+                  'docs/data/block-selector-availability/heartsaver.json'),
+    'arc': ('docs/arc.html', 'docs/data/block-selector-availability/arc.json'),
+    'hsi': ('docs/hsi.html', 'docs/hsi-schedule.html', 'docs/data/block-selector-availability/hsi.json'),
+}
 # Explicit public DTO. No client names, participant records, notes, or freeform
 # upstream fields can enter the public schedule through a retained projection.
 PUBLIC_FIELDS = frozenset('''session_id external_class_id course_id course_key official_course_name
@@ -46,7 +55,7 @@ mapped_official_description_source mapped_description_status mapping_status mapp
 build_classification canonical_session_id active_registration_count count_available demand_basis
 consumption_start_at consumption_end_at workspace_projection_status source_observed_at
 demand_status demand_match_basis canonical_start_at registration_backend source
-uncertainty_scope'''.split())
+uncertainty_scope last_verified_native_identity'''.split())
 PRIVATE_KEYS = frozenset('''email phone first_name last_name student_name customer_name
 participants students registrations attendee_name contact_email contact_phone
 payment_intent_id stripe_customer_id notes calendar_title description'''.split())
@@ -73,9 +82,19 @@ def git(*args):
 
 def policy_enabled(policy):
     require(isinstance(policy, dict) and policy.get('schemaVersion') == 'native-publication-scope.v1'
-            and type(policy.get('enabled')) is bool and policy.get('scopeId') == scope.SCOPE,
+            and type(policy.get('enabled')) is bool and policy.get('scopeId') == scope.SCOPE
+            and type(policy.get('skillsEnabled', False)) is bool,
             'invalid_native_publication_policy')
     return policy['enabled']
+
+
+def publication_pages(skills_enabled=False):
+    require(type(skills_enabled) is bool, 'invalid_skills_publication_gate')
+    return ('bls', 'heartsaver', 'arc', 'hsi') if skills_enabled else ('bls',)
+
+
+def publication_paths(skills_enabled=False):
+    return PATHS + tuple(path for page in publication_pages(skills_enabled)[1:] for path in PAGE_PATHS[page])
 
 
 def privacy_check(value):
@@ -121,16 +140,103 @@ def session_admission(row, source, observed):
         return None
 
 
+NATIVE_INTERVAL_FIELDS = ('start_at', 'end_at', 'consumption_start_at', 'consumption_end_at')
+NATIVE_IDENTITY_FIELDS = ('canonical_session_id', 'external_class_id', *NATIVE_INTERVAL_FIELDS)
+NATIVE_IDENTITY_SCHEMA = 'retained-native-identity.v1'
+
+
+def same_native_intervals(left, right):
+    try:
+        return (scope.instant(left['end_at']) > scope.instant(left['start_at'])
+            and all((left.get(k) is None and right.get(k) is None) or
+                    scope.instant(left[k]) == scope.instant(right[k]) for k in NATIVE_INTERVAL_FIELDS))
+    except (KeyError, ValueError, TypeError):
+        return False
+
+
+def verified_native_projection_identity(row):
+    """Retain exact prior identity only, never occupancy or booking authority."""
+    sid = row.get('session_id')
+    if not (isinstance(sid, str) and re.fullmatch(r'lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}', sid)
+            and row.get('external_class_id') == sid and row.get('canonical_session_id')
+            and row.get('source') == 'landerware_event' and row.get('registration_backend') == 'landerware'
+            and row.get('demand_status') == 'current' and row.get('count_available') is True
+            and row.get('demand_match_basis') == 'external_class_id'
+            and row.get('workspace_projection_status') == 'current'
+            and same_native_intervals(row, row)):
+        return None
+    return {'schemaVersion': NATIVE_IDENTITY_SCHEMA,
+            **{k: deepcopy(row.get(k)) for k in NATIVE_IDENTITY_FIELDS}}
+
+
+def preserve_native_projection_identity(row):
+    identity = verified_native_projection_identity(row)
+    if identity:
+        row['last_verified_native_identity'] = identity
+    elif isinstance(row.get('last_verified_native_identity'), dict):
+        # This is a bounded DTO, not an arbitrary upstream object. Keep the
+        # original interval binding through unknown reads; never rewrite it to
+        # match changed retained geometry. A later release must match both.
+        prior = row['last_verified_native_identity']
+        keys = ('schemaVersion', *NATIVE_IDENTITY_FIELDS)
+        if (all(k in prior for k in keys)
+                and all(isinstance(prior[k], str) and prior[k] for k in
+                        ('schemaVersion', 'canonical_session_id', 'external_class_id', 'start_at', 'end_at'))
+                and all(prior[k] is None or isinstance(prior[k], str) for k in
+                        ('consumption_start_at', 'consumption_end_at'))):
+            row['last_verified_native_identity'] = {k: prior[k] for k in keys}
+        else:
+            row.pop('last_verified_native_identity', None)
+    else:
+        row.pop('last_verified_native_identity', None)
+
+
+def retire_released_occurrences(rows, demand):
+    releases = {str(row['external_class_id']): row for row in demand.get('released_native_sessions', [])}
+    kept, retired = [], []
+    for row in rows:
+        release = releases.get(str(row.get('session_id')))
+        if release is None:
+            kept.append(row); continue
+        prior = row.get('last_verified_native_identity')
+        identity = prior if isinstance(prior, dict) else row
+        if not identity.get('canonical_session_id'):
+            # Older projections may already have lost their canonical ID.
+            # Do not invent it from the external ID, and do not prevent
+            # publication of unrelated safe offers. Keep this blocker.
+            kept.append(row); continue
+        if isinstance(prior, dict):
+            require(prior.get('schemaVersion') == NATIVE_IDENTITY_SCHEMA
+                    and (not row.get('canonical_session_id')
+                         or row['canonical_session_id'] == prior['canonical_session_id']),
+                    'retained_native_release_identity_changed')
+        require(release.get('authority') == 'native-generated-release.v1'
+            and release.get('release_reason') == 'expired_unpaid_hold'
+            and str(row.get('session_id', '')).startswith('lw-')
+            and row.get('external_class_id') == identity.get('external_class_id') == release.get('external_class_id')
+            and identity.get('canonical_session_id') == release.get('canonical_session_id')
+            and same_native_intervals(row, identity) and same_native_intervals(row, release)
+            and scope.instant(release['released_at']) <= scope.instant(demand['generated_at']),
+            'retained_native_release_identity_changed')
+        retired.append(str(row['session_id']))
+    return kept, retired
+
+
 def retained_projection(retained, demand):
-    rows = session_rows(retained)
+    rows = deepcopy(session_rows(retained))
     require(isinstance(retained, dict) and isinstance(retained.get('sessions'), list), 'retained_occurrences_required')
     ids = [str(row.get('session_id') or '') for row in rows]
     require(all(ids) and len(set(ids)) == len(ids), 'retained_occurrence_identity_invalid')
     # Preserve every retained occurrence, including unknown, private/closed and
     # moved geometry as conservative occupancy. The engine also reads the entire
     # canonical demand separately, so private and offsite commitments still block.
+    rows, retired = retire_released_occurrences(rows, demand)
+    for row in rows:
+        preserve_native_projection_identity(row)
     projected, _ = resolve_canonical_demand(rows, demand['sessions'])
-    require(set(ids) <= {str(row.get('session_id') or '') for row in projected}, 'retained_occurrence_lost')
+    for row in projected:
+        preserve_native_projection_identity(row)
+    require(set(ids)-set(retired) <= {str(row.get('session_id') or '') for row in projected}, 'retained_occurrence_lost')
     projected = [{key: deepcopy(value) for key, value in row.items() if key in PUBLIC_FIELDS}
                  for row in projected]
     sources = {str(source.get('canonical_session_id')): source for source in demand['sessions']}
@@ -147,7 +253,7 @@ def retained_projection(retained, demand):
     privacy_check(projected)
     return {'build': {'source_mode': 'native_canonical_with_retained_occurrences',
                       'generated_at': demand['generated_at'],
-                      'counts': {'retained_sessions': len(rows), 'sessions_output': len(projected)}},
+                      'counts': {'retained_sessions': len(rows), 'released_native_sessions': len(retired), 'sessions_output': len(projected)}},
             'sessions': projected}
 
 
@@ -176,6 +282,8 @@ def check_budget(expires, now, seconds=300):
 
 def validate(*, now=None, margin=300):
     now = now or datetime.now(timezone.utc)
+    policy = read(POLICY)
+    require(policy_enabled(policy), 'native_publication_disabled')
     demand = load_publication_demand(ROOT)
     bounds = calendar_bounds(now)
     # A fresh publication timestamp never renews source observation timestamps.
@@ -196,29 +304,36 @@ def validate(*, now=None, margin=300):
         else:
             require(not row.get('registration_url'), 'unadmitted_session_registration_cta')
     ids = {str(row['session_id']) for row in session_rows(schedule)}
-    counts = validate_selector('bls', ids, now=now)
-    selector = read('docs/data/block-selector-availability/bls.json')
-    # Public authority.description is fixed implementation text, not user data.
-    privacy_check({k: v for k, v in selector.items() if k != 'authority'})
-    originals = []
-    for day in selector['dates']:
-        for slot in day['startTimes']:
-            for offer in slot['courses']:
-                if offer.get('offerType') == 'seated_class':
-                    validate_seated_offer(offer, schedule, now, margin)
-                    continue
-                require(offer.get('offerType') == 'dynamic_appointment'
-                        and offer.get('authority') == 'native-full-course.v2'
-                        and str(offer.get('courseId')) in scope.COURSES,
-                        'unadmitted_public_offer')
-                url = urlsplit(offer.get('registrationUrl') or offer.get('appointmentUrl') or '')
-                require(not url.netloc and not url.scheme and url.path == '/register/skills-session/', 'external_dynamic_destination')
-                if offer.get('authority') == 'native-full-course.v2':
+    counts, originals, full_count, skills_count = {}, [], 0, 0
+    for page_key in publication_pages(policy.get('skillsEnabled', False)):
+        counts[page_key] = validate_selector(page_key, ids, now=now)
+        selector = read('docs/data/block-selector-availability/'+page_key+'.json')
+        # Public authority.description is fixed implementation text, not user data.
+        privacy_check({k: v for k, v in selector.items() if k != 'authority'})
+        for day in selector['dates']:
+            for slot in day['startTimes']:
+                for offer in slot['courses']:
+                    if page_key == 'bls' and offer.get('offerType') == 'seated_class':
+                        validate_seated_offer(offer, schedule, now, margin)
+                        continue
+                    require(offer.get('offerType') == 'dynamic_appointment', 'unadmitted_public_offer')
+                    if page_key == 'bls':
+                        require(offer.get('authority') == 'native-full-course.v2'
+                                and str(offer.get('courseId')) in scope.COURSES, 'unadmitted_public_offer')
+                        full_count += 1
+                    else:
+                        require(offer.get('authority') == scope.SKILLS_AUTHORITY
+                                and str(offer.get('courseId')) == '509474', 'unadmitted_public_offer')
+                        skills_count += 1
+                    url = urlsplit(offer.get('registrationUrl') or offer.get('appointmentUrl') or '')
+                    require(not url.netloc and not url.scheme and url.path == '/register/skills-session/', 'external_dynamic_destination')
                     check_budget(offer['validUntil'], now, margin)
                     originals.append(scope.instant(offer['proofObservedAt']))
+                    expiry = min(expiry, scope.instant(offer['validUntil']))
     require(not originals or min(originals) == bounds['observedAt'], 'calendar_original_proof_mismatch')
-    return {'counts': counts, 'sourceProofObservedAt': min(bounds['observedAt'], scope.instant(demand['generated_at'])).isoformat(),
-            'validUntil': expiry.isoformat(), 'nativeFullOffers': len(originals)}
+    return {'counts': counts['bls'], 'pageCounts': counts,
+            'sourceProofObservedAt': min(bounds['observedAt'], scope.instant(demand['generated_at'])).isoformat(),
+            'validUntil': expiry.isoformat(), 'nativeFullOffers': full_count, 'nativeSkillsOffers': skills_count}
 
 
 def annotate_seated_offers(payload, schedule):
@@ -257,8 +372,21 @@ def validate_seated_offer(offer, schedule, now, margin):
     check_budget(lease, now, margin)
 
 
-def native_page_config(config):
+def native_page_config(config, page_key='bls'):
     config = deepcopy(config)
+    require(config.get('page_key') == page_key and page_key in PAGE_PATHS, 'unexpected_publication_page')
+    if page_key != 'bls':
+        require(page_key in scope.SKILLS_CONTEXTS, 'unsupported_native_skills_page')
+        config.update(allowed_course_ids=['509474'], include_seated_classes=False,
+                      default_course_id='509474', compare_mode={'enabled': False}, show_all_enabled=False)
+        config['course_options'] = [row for row in config.get('course_options', []) if str(row.get('course_id')) == '509474']
+        require(len(config['course_options']) == 1, 'native_skills_course_option_required')
+        contexts = {c.get('key'): c.get('template_course_id') for c in config['course_options'][0].get('skills_contexts', [])}
+        require(contexts == scope.SKILLS_CONTEXTS[page_key], 'native_skills_context_policy_mismatch')
+        config['meta_description'] = 'Choose a verified in-person skills session in Wilmington, NC after completing the required online coursework.'
+        config['intro'] = 'Already completed your online coursework? Choose Skills Session Only and the matching course context. Online coursework is not included.'
+        config['documentation_note'] = {'title': 'Skills Session Only', 'body': config['intro'], 'bullets': []}
+        return config
     config.update(allowed_course_ids=sorted(scope.COURSES), include_seated_classes=True)
     config['course_options'] = [row for row in config.get('course_options', [])
                                 if str(row.get('course_id')) in scope.COURSES]
@@ -272,6 +400,22 @@ def native_page_config(config):
     for group in config.get('compare_mode', {}).get('groups', {}).values():
         group['course_ids'] = [c for c in group.get('course_ids', []) if str(c) in scope.COURSES]
     return config
+
+
+def check_page_outputs(config, page_key):
+    """Check the complete configured write set before invoking any generator."""
+    require(config.get('page_key') == page_key and config.get('render_html', True) is True,
+            'unexpected_generator_output')
+    paths = [config.get('output_path'), *config.get('alias_output_paths', []),
+             'docs/data/block-selector-availability/'+page_key+'.json']
+    if config.get('legacy_schedule_path'):
+        paths.append(config['legacy_schedule_path'])
+    require(len(paths) == len(set(paths)) and set(paths) == set(PAGE_PATHS[page_key]), 'unexpected_generator_output')
+    defaults = ('data/audit/bls_block_schedule_pilot.json', 'data/audit/bls_block_schedule_pilot_report.md') if page_key == 'bls' else (
+        'data/audit/'+page_key+'_block_schedule.json', 'data/audit/'+page_key+'_block_schedule_report.md')
+    reports = (config.get('report_json_path', defaults[0]), config.get('report_md_path', defaults[1]))
+    require(reports == defaults, 'unexpected_generator_report_path')
+    return reports
 
 
 def build(preview=False):
@@ -289,20 +433,25 @@ def build(preview=False):
         from scripts.block_start_time_selector import load_block_schedule_page_configs, build_block_schedule_page
         result = build_availability()
         require(not result['missing'], 'availability_inputs_missing')
-        # Full-course native admission only. Existing classes remain scheduler
-        # blockers; no seated, skills or bundle CTA is implied by this rollout.
-        config = native_page_config(load_block_schedule_page_configs()['bls'])
-        payload = annotate_seated_offers(build_block_schedule_page(config), schedule)
-        page = write_page_outputs(payload, ROOT / config['report_json_path'],
-                                  ROOT / config['report_md_path'], ROOT / config['output_path'])
-        public_paths = {str(Path(p).relative_to(ROOT)) for p in page['output_paths'] if Path(p).is_relative_to(ROOT / 'docs')}
-        require(public_paths == set(PATHS) - {'docs/data/schedule_future.json', 'docs/assets/resolved-selector-availability.js'}, 'unexpected_generator_output')
+        # BLS retains canonical remaining seats. Skills is independently gated,
+        # restricted to course 509474 and its four existing context mappings.
+        skills_enabled = policy.get('skillsEnabled', False)
+        configs = load_block_schedule_page_configs()
+        targets = [(key, native_page_config(configs[key], key)) for key in publication_pages(skills_enabled)]
+        reports = {key: check_page_outputs(config, key) for key, config in targets}
+        for key, config in targets:
+            payload = annotate_seated_offers(build_block_schedule_page(config), schedule)
+            page = write_page_outputs(payload, ROOT / reports[key][0], ROOT / reports[key][1], ROOT / config['output_path'])
+            expected = {*PAGE_PATHS[key], *reports[key]}
+            actual = {str(Path(p).relative_to(ROOT)) for p in page['output_paths']}
+            require(actual == expected, 'unexpected_generator_output')
         evidence = validate()
         evidence.update(schemaVersion='native-publication-run.v1', sourceHead=head, preview=preview,
+                        skillsEnabled=skills_enabled,
                         state='BUILT', generatedAt=datetime.now(timezone.utc).isoformat(),
                         sessionCounts=schedule['build']['counts'],
                         availabilityCounts={k: v for k, v in result['stats'].items() if type(v) is int},
-                        files={p: sha256((ROOT / p).read_bytes()).hexdigest() for p in PATHS})
+                        files={p: sha256((ROOT / p).read_bytes()).hexdigest() for p in publication_paths(skills_enabled)})
         write(REPORT, evidence)
         return evidence
     finally:
@@ -312,16 +461,18 @@ def build(preview=False):
 def assert_manifest(report):
     require(report.get('schemaVersion') == 'native-publication-run.v1' and report.get('preview') is False,
             'production_manifest_required')
-    require(set(report.get('files', {})) == set(PATHS), 'publication_path_allowlist_mismatch')
+    require(set(report.get('files', {})) == set(publication_paths(report.get('skillsEnabled', False))), 'publication_path_allowlist_mismatch')
     for path, expected in report['files'].items():
         require(sha256((ROOT / path).read_bytes()).hexdigest() == expected, 'publication_output_changed')
 
 
 def publish():
     require(os.environ.get('GITHUB_REF') == 'refs/heads/main', 'main_required')
-    require(policy_enabled(read(POLICY)), 'native_publication_disabled')
+    policy = read(POLICY)
+    require(policy_enabled(policy), 'native_publication_disabled')
     report = read(REPORT)
     assert_manifest(report)
+    require(report.get('skillsEnabled', False) == policy.get('skillsEnabled', False), 'skills_publication_gate_changed')
     require(git('rev-parse', 'HEAD') == report['sourceHead'], 'source_head_changed')
     require(not git('diff', '--cached', '--name-only'), 'preexisting_staged_changes')
     require(not git('diff', '--name-only', '--', '.github', 'scripts', 'data/config', 'data/inventory'),
@@ -330,8 +481,9 @@ def publish():
     git('fetch', 'origin', 'main')
     require(git('rev-parse', 'origin/main') == report['sourceHead'], 'remote_main_advanced')
     validate(margin=300)
-    git('add', '--', *PATHS)
-    require(set(git('diff', '--cached', '--name-only').splitlines()) <= set(PATHS), 'staged_path_not_allowed')
+    paths = publication_paths(report.get('skillsEnabled', False))
+    git('add', '--', *paths)
+    require(set(git('diff', '--cached', '--name-only').splitlines()) <= set(paths), 'staged_path_not_allowed')
     require(bool(git('diff', '--cached', '--name-only')), 'no_publication_change')
     git('commit', '-m', 'Publish first-party native availability')
     # A normal fast-forward push is the final race guard, never force/rebase.
@@ -343,6 +495,9 @@ def publish():
 def observe():
     report = read(REPORT)
     assert_manifest(report)
+    policy = read(POLICY)
+    require(policy_enabled(policy) and report.get('skillsEnabled', False) == policy.get('skillsEnabled', False),
+            'publication_gate_changed')
     require(report.get('publicationHead'), 'publication_commit_required')
     # HTTP hash proof of every changed public path, not a green Pages job alone.
     deadline = min(time.monotonic() + 240, time.monotonic() + max(0, (scope.instant(report['validUntil']) - datetime.now(timezone.utc)).total_seconds() - 60))

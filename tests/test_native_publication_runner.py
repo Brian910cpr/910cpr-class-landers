@@ -83,6 +83,7 @@ class NativePublicationRunnerTests(unittest.TestCase):
         bounds = dict(validUntil=case.now+timedelta(minutes=15), observedAt=case.now)
         demand = {'generated_at': case.now.isoformat(), 'sessions': []}
         def read(path):
+            if path == runner.POLICY: return dict(POLICY, enabled=True)
             return {'sessions': []} if path == 'docs/data/schedule_future.json' else feed
         from scripts import validate_public_refresh_output as validator
         with patch.object(runner, 'calendar_bounds', return_value=bounds), patch.object(runner, 'load_publication_demand', return_value=demand), patch.object(runner, 'read', side_effect=read), patch.object(validator, 'load_json', return_value=feed):
@@ -111,7 +112,7 @@ class NativePublicationRunnerTests(unittest.TestCase):
             row = feed['dates'][0]['startTimes'][0]['courses'][0]
             row.update(courseId=course_id, offerType=offer_type)
             row.pop('authority', None)
-            with patch.object(runner, 'calendar_bounds', return_value=dict(validUntil=case.now+timedelta(minutes=15), observedAt=case.now)), patch.object(runner, 'load_publication_demand', return_value={'generated_at': case.now.isoformat(), 'sessions': []}), patch.object(runner, 'read', side_effect=[{'sessions': []}, feed]), patch.object(runner, 'validate_selector', return_value={}):
+            with patch.object(runner, 'calendar_bounds', return_value=dict(validUntil=case.now+timedelta(minutes=15), observedAt=case.now)), patch.object(runner, 'load_publication_demand', return_value={'generated_at': case.now.isoformat(), 'sessions': []}), patch.object(runner, 'read', side_effect=[dict(POLICY, enabled=True), {'sessions': []}, feed]), patch.object(runner, 'validate_selector', return_value={}):
                 with self.assertRaisesRegex(ValueError, 'unadmitted_public_offer'):
                     runner.validate(now=case.now)
 

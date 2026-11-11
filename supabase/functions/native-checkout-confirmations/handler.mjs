@@ -13,7 +13,7 @@ async function body(req,proof=false){
  if(!data||typeof data!=='object'||Array.isArray(data)||Object.keys(data).some(k=>proof||k!=='orderId')||data.orderId!=null&&(typeof data.orderId!=='string'||!UUID.test(data.orderId)))throw Error('invalid_request');
  return data;
 }
-export function nativeConfirmationHandler({authorized,service,proof}){return async req=>{
+export function nativeConfirmationHandler({authorized,service,proof,schedulerStatus}){return async req=>{
  const origin=req.headers.get('origin')||'',reply=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:headers(origin)});
  if(origin&&!ORIGINS.has(origin))return reply({error:'origin_not_allowed'},403);
  if(req.method==='OPTIONS')return new Response(null,{status:204,headers:headers(origin)});
@@ -27,7 +27,7 @@ export function nativeConfirmationHandler({authorized,service,proof}){return asy
    if(typeof proof!=='function')return reply({error:'proof_unavailable'},503);
    const result=await proof();return reply({proof:result},result.state==='accepted'?200:409);
   }
-  if(route==='status')return reply({configured:service.configured(),health:await service.health()});
+  if(route==='status')return reply({configured:service.configured(),health:await service.health(),...(typeof schedulerStatus==='function'?{scheduler:await schedulerStatus()}:{} )});
   const data=await body(req),delivery=await service.deliver(data.orderId||null),health=await service.health();
   return reply({delivery,health},delivery.configured&&!delivery.stopped&&!delivery.ambiguous&&!delivery.rejected&&!delivery.disabled&&health.healthy?200:503);
  }catch(error){const known=['request_too_large','invalid_request','unsupported_media_type'].includes(error?.message);

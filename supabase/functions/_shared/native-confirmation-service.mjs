@@ -6,9 +6,9 @@ import {sendNativeCheckoutClaim} from './native-resend-adapter.mjs';
 export function nativeConfirmationService({rpc,env,request,report=()=>{}}) {
  const configured=()=>Boolean(env('RESEND_API_KEY'));
  const health=()=>rpc('native_checkout_confirmation_health',{});
- async function deliver(orderId=null){
+ async function deliver(orderId=null,{limit=10}={}){
   if(!configured())return {configured:false,accepted:0,rejected:0,ambiguous:0,stopped:'mail_unconfigured',actualDeliveryConfirmed:false};
-  const result=await dispatchNativeConfirmations({orderId,
+  const result=await dispatchNativeConfirmations({orderId,limit,
    claim:args=>rpc('native_checkout_claim_confirmation',args),
    settle:args=>rpc('native_checkout_settle_confirmation',args),
    send:job=>sendNativeCheckoutClaim(job,{apiKey:env('RESEND_API_KEY'),from:env('RESEND_FROM_EMAIL')||env('REQUIREMENT_FROM_EMAIL')||'910CPR <brian@910cpr.com>',replyTo:'brian@910cpr.com',request})});

@@ -198,6 +198,13 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 except (ValueError, KeyError, TypeError) as error:
                     rejected.append(dict(diagnostic(candidate), reasons=[str(error)]))
                     continue
+            elif native_scope.skills_active(native_policy or {}, page_config.get('page_key')):
+                try:
+                    native_fields = native_scope.skills_offer_fields(native_policy, candidate, report, window, now, course, page_config['page_key'])
+                    day_id, container_id, url, blocker = None, None, native_fields['registrationUrl'], None
+                except (ValueError, KeyError, TypeError) as error:
+                    rejected.append(dict(diagnostic(candidate), reasons=[str(error)]))
+                    continue
             else:
                 day_id, container_id, url, blocker = url_for(window, start, candidate["course"])
 

@@ -15,6 +15,13 @@ SAFE_SKIPS = {'outside_export_window', 'excluded_by_exdate',
               'duplicate_explicit_event_same_uid_start'}
 SCOPE = 'brian-shipyard-b.v1'
 COURSES = {'209806', '359474'}
+SKILLS_CONTEXTS = {
+    'heartsaver': {'cpr-aed': '209808', 'first-aid-cpr-aed': '329495'},
+    'arc': {'arc-blended': '372258'},
+    'hsi': {'hsi-blended': '445670'},
+}
+SKILLS_AUTHORITY = 'native-skills-publication.v1'
+SKILLS_QUALIFICATION_POLICY = 'skills-session-policy.v1'
 
 
 def instant(value):
@@ -27,6 +34,64 @@ def instant(value):
 def active(policy):
     return policy.get('enabled') is True and policy.get('schemaVersion') == 'native-publication-scope.v1'
 
+
+
+def skills_active(policy, page_key):
+    return active(policy) and policy.get('skillsEnabled') is True and page_key in SKILLS_CONTEXTS
+
+
+def skills_offer_fields(policy, candidate, report, window, now, course, page_key):
+    """Versioned skills envelope; canonical qualification/capacity is rechecked at claim.
+
+    Four contexts and Brian's shared skills qualification come from the existing
+    20261107112218 skills-session-policy.v1 contract, never inferred certification.
+    """
+    if not skills_active(policy, page_key):
+        return None
+    if policy.get('scopeId') != SCOPE or str(candidate.get('course')) != '509474':
+        raise ValueError('unsupported_native_skills_course')
+    option = course.get('schedule_page_option', {})
+    contexts = {c.get('key'): c.get('template_course_id') for c in option.get('skills_contexts', [])}
+    if (contexts != SKILLS_CONTEXTS[page_key] or option.get('native_registration_path') != '/register/skills-session/'
+            or option.get('scheduling_template_course_id') not in contexts.values()
+            or course.get('kind') != 'skills' or course.get('default_capacity') != 2
+            or course.get('duration_minutes') != 45 or course.get('cleanup_buffer_minutes') != 15
+            or course.get('scheduler_consumption_minutes') != 60):
+        raise ValueError('native_skills_context_policy_mismatch')
+    if not any(candidate == c for c in report.get('accepted', [])):
+        raise ValueError('accepted_engine_candidate_required')
+    if (candidate.get('instructor') != 'Brian Ennis' or window.get('person_id') != 'instructor_24057895173'
+            or candidate.get('location') != ':: Wilmington; Shipyard Blvd - B'
+            or window.get('location_name') != ':: Wilmington; Shipyard Blvd'
+            or not report.get('availability_window') or not isinstance(candidate.get('source_ids'), list)):
+        raise ValueError('native_skills_candidate_identity_mismatch')
+    if (window.get('native_publication_scope_id') != SCOPE
+            or not isinstance(window.get('native_calendar_source_ids'), list)
+            or 'brian_do_not_schedule' not in window['native_calendar_source_ids']):
+        raise ValueError('native_skills_first_party_window_required')
+    now, start, end = instant(now), instant(candidate['start']), instant(candidate['end'])
+    teaching_end = instant(candidate['instruction_end'])
+    observed = min(instant(report['native_proof_observed_at']), instant(window['native_proof_observed_at']))
+    lease = min(instant(report['valid_until']), instant(window['native_valid_until']))
+    if not observed <= now < lease <= observed+timedelta(minutes=15):
+        raise ValueError('native_original_proof_expired_or_extended')
+    if (start < now+timedelta(hours=24) or start > now+timedelta(days=90)
+            or teaching_end-start != timedelta(minutes=45) or end-start != timedelta(minutes=60)):
+        raise ValueError('native_skills_timing_invalid')
+    local = start.astimezone(EASTERN)
+    if local.minute % 15 or local.second or local.microsecond:
+        raise ValueError('native_start_grid_invalid')
+    # Physical identity stays stable across refreshes and provider pages. Context
+    # is added by the service's exact-selection reader, not manufactured here.
+    raw = '|'.join([SCOPE, '509474', start.isoformat(), candidate['instructor'], candidate['location'], '45', '60'])
+    return {'authority': SKILLS_AUTHORITY, 'nativeScopeId': SCOPE,
+            'nativeOfferId': 'native-skills:' + sha256(raw.encode()).hexdigest(),
+            'qualificationPolicy': SKILLS_QUALIFICATION_POLICY,
+            'skillsContexts': sorted(contexts), 'capacity': 2,
+            'validUntil': lease.isoformat(), 'proofObservedAt': observed.isoformat(),
+            'registrationUrl': '/register/skills-session/?' + urlencode({
+                'course': '509474', 'date': local.date().isoformat(), 'startTime': local.strftime('%H:%M'),
+                'instructor': candidate['instructor'], 'location': window['location_name']})}
 
 def inverse_bounds(policy, source, calendars, snapshot, now, validate_event):
     """Return finite first-party bounds, never an inferred empty-calendar window.

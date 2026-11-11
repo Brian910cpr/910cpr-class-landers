@@ -5,6 +5,7 @@ from copy import deepcopy
 import hashlib
 import json
 import os
+import re
 import tempfile
 import urllib.error
 import urllib.parse
@@ -18,12 +19,19 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "data" / "runtime" / "canonical_scheduling_demand.json"
 STATUS_OUTPUT = ROOT / "debug" / "status" / "canonical_scheduling_demand_fetch.json"
+RETAINED_SCHEDULE = ROOT / "docs" / "data" / "schedule_future.json"
 DEFAULT_URL = (
     "https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/"
     "canonical-scheduling-demand"
 )
 SCHEMA_VERSION = "910cpr-canonical-scheduling-demand.v1"
 MAX_SOURCE_AGE = timedelta(minutes=15)
+RELEASE_PROOF_SCHEMA = "910cpr-native-release-proof.v1"
+RELEASE_BATCH_SIZE = 64
+MAX_RELEASE_BATCHES = 64
+MAX_RETAINED_BYTES = 16 * 1024 * 1024
+MAX_RESPONSE_BYTES = 16 * 1024 * 1024
+NATIVE_ID = re.compile(r"lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}")
 FORBIDDEN_KEYS = frozenset({"email", "phone", "first_name", "last_name", "name", "student_name"})
 
 
@@ -93,6 +101,32 @@ def validate_payload(payload: Any, *, now: datetime | None = None) -> dict[str, 
         if external_id in seen or external_id in canonical_external_ids:
             raise ValueError("Conflicting non-session classification")
         seen.add(external_id)
+    releases = payload.get("released_native_sessions", [])
+    if not isinstance(releases, list) or len(releases) > RELEASE_BATCH_SIZE * MAX_RELEASE_BATCHES:
+        raise ValueError("Invalid native release projection")
+    seen_releases = set()
+    seen_canonical_releases = set()
+    active_canonical_ids = {str(row.get("canonical_session_id")) for row in sessions}
+    for row in releases:
+        if (not isinstance(row, dict) or row.get("authority") != "native-generated-release.v1"
+                or row.get("release_reason") != "expired_unpaid_hold"
+                or not NATIVE_ID.fullmatch(str(row.get("external_class_id") or ""))
+                or not isinstance(row.get("canonical_session_id"), str) or not row["canonical_session_id"].strip()
+                or any(key not in row for key in ("start_at", "end_at", "consumption_start_at", "consumption_end_at", "released_at"))):
+            raise ValueError("Unproven native release projection")
+        sid = row["external_class_id"]
+        canonical_id = row["canonical_session_id"]
+        if (sid in canonical_external_ids or sid in seen_releases
+                or canonical_id in active_canonical_ids or canonical_id in seen_canonical_releases):
+            raise ValueError("Conflicting native release projection")
+        if _parse_instant(row["end_at"]) <= _parse_instant(row["start_at"]) or _parse_instant(row["released_at"]) > generated_at:
+            raise ValueError("Invalid native release timing")
+        if ((row["consumption_start_at"] is None) != (row["consumption_end_at"] is None)
+                or (row["consumption_start_at"] is not None
+                    and _parse_instant(row["consumption_end_at"]) <= _parse_instant(row["consumption_start_at"]))):
+            raise ValueError("Invalid native release timing")
+        seen_releases.add(sid)
+        seen_canonical_releases.add(canonical_id)
     # Recheck external source time at consumption as well as endpoint fetch.
     # A fresh database response must not extend an almost-expired roster proof
     # through a long build or a later pass over the same runtime snapshot.
@@ -153,7 +187,7 @@ def validate_admin_key(key: str) -> str:
     return key
 
 
-def request_url(url: str) -> str:
+def request_url(url: str, *, release_ids: list[str] | None = None) -> str:
     parts = urllib.parse.urlsplit(url)
     if (parts.scheme != "https" or parts.hostname != "wktwgcnwdvbebcobgyey.supabase.co"
             or parts.username or parts.password or parts.fragment
@@ -161,9 +195,55 @@ def request_url(url: str) -> str:
         raise ValueError("Canonical demand URL must be the approved HTTPS endpoint")
     # Own both bounds; do not append a second '?' to an override containing a query.
     # Explicit ISO dates also avoid depending on edge-runtime locale formatting.
-    start = datetime.now(ZoneInfo("America/New_York")).date()
-    query = urllib.parse.urlencode({"from": start.isoformat(), "to": (start + timedelta(days=366)).isoformat()})
+    if release_ids is not None:
+        if (not 1 <= len(release_ids) <= RELEASE_BATCH_SIZE or len(set(release_ids)) != len(release_ids)
+                or any(not NATIVE_ID.fullmatch(sid) for sid in release_ids)):
+            raise ValueError("Invalid native release proof request")
+        query = urllib.parse.urlencode({"projection": "native-release-proof", "release_ids": ",".join(release_ids)})
+    else:
+        start = datetime.now(ZoneInfo("America/New_York")).date()
+        query = urllib.parse.urlencode({"from": start.isoformat(), "to": (start + timedelta(days=366)).isoformat()})
     return urllib.parse.urlunsplit((parts.scheme, parts.netloc, parts.path, query, ""))
+
+
+def retained_release_ids(path: Path) -> list[str]:
+    """Read the retained contract, not the cumulative database release history."""
+    with path.open("rb") as stream:
+        raw = stream.read(MAX_RETAINED_BYTES + 1)
+    if len(raw) > MAX_RETAINED_BYTES:
+        raise ValueError("Retained schedule exceeds native release proof input budget")
+    retained = json.loads(raw)
+    rows = retained.get("sessions") if isinstance(retained, dict) else None
+    if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
+        raise ValueError("Retained schedule sessions are required for native release proofs")
+    ids = []
+    for row in rows:
+        sid = str(row.get("session_id") or "")
+        if not sid.startswith("lw-"):
+            continue
+        if not NATIVE_ID.fullmatch(sid):
+            raise ValueError("Invalid retained native session identity")
+        ids.append(sid)
+    if len(ids) != len(set(ids)):
+        raise ValueError("Duplicate retained native session identity")
+    if len(ids) > RELEASE_BATCH_SIZE * MAX_RELEASE_BATCHES:
+        raise ValueError("Retained native release proof batch budget exhausted")
+    return sorted(ids)
+
+
+def validate_release_batch(proof: Any, ids: list[str], *, now: datetime) -> dict[str, Any]:
+    if (not isinstance(proof, dict) or proof.get("schema_version") != RELEASE_PROOF_SCHEMA
+            or proof.get("complete") is not True or proof.get("requested_external_class_ids") != ids
+            or not isinstance(proof.get("released_native_sessions"), list)
+            or len(proof["released_native_sessions"]) > len(ids)):
+        raise ValueError("Incomplete native release proof batch")
+    validated = validate_payload({
+        "schema_version": SCHEMA_VERSION, "generated_at": proof.get("generated_at"),
+        "sessions": [], "released_native_sessions": proof["released_native_sessions"],
+    }, now=now)
+    if any(row["external_class_id"] not in ids for row in validated["released_native_sessions"]):
+        raise ValueError("Unrequested native release proof")
+    return validated
 
 
 def safe_http_error(exc: urllib.error.HTTPError) -> str:
@@ -191,17 +271,48 @@ def safe_http_error(exc: urllib.error.HTTPError) -> str:
     return f"HTTP {exc.code}: {message}" + (f" [response format: {kind}]" if "withheld" in message else "")
 
 
-def fetch(*, url: str, key: str, timeout: float = 30) -> dict[str, Any]:
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *args, **kwargs):
+        raise ValueError("Canonical demand redirect refused")
+
+
+def _fetch_json(*, url: str, key: str, timeout: float) -> Any:
+    request_url(url)  # Recheck the approved destination without changing its query.
     request = urllib.request.Request(
-        request_url(url),
+        url,
         headers={
             "Accept": "application/json",
             "User-Agent": "910CPR-LanderWare-Canonical-Demand/1.0",
             "X-Hot-Sync-Admin-Key": validate_admin_key(key),
         },
     )
-    with urllib.request.urlopen(request, timeout=timeout) as response:
-        return json.loads(response.read().decode("utf-8"))
+    with urllib.request.build_opener(NoRedirect).open(request, timeout=timeout) as response:
+        raw = response.read(MAX_RESPONSE_BYTES + 1)
+        if len(raw) > MAX_RESPONSE_BYTES:
+            raise ValueError("Canonical demand response exceeds input budget")
+        return json.loads(raw.decode("utf-8"))
+
+
+def fetch(*, url: str, key: str, timeout: float = 30) -> dict[str, Any]:
+    ids = retained_release_ids(RETAINED_SCHEDULE)
+    observed_at = datetime.now(timezone.utc)
+    payload = validate_payload(_fetch_json(url=request_url(url), key=key, timeout=timeout), now=observed_at)
+    if payload.get("released_native_sessions"):
+        raise ValueError("Unrequested native release proof")
+    releases = []
+    oldest = _parse_instant(payload["generated_at"])
+    for offset in range(0, len(ids), RELEASE_BATCH_SIZE):
+        batch = ids[offset:offset + RELEASE_BATCH_SIZE]
+        proof = validate_release_batch(_fetch_json(
+            url=request_url(url, release_ids=batch), key=key, timeout=timeout), batch, now=observed_at)
+        oldest = min(oldest, _parse_instant(proof["generated_at"]))
+        releases.extend(proof["released_native_sessions"])
+    payload["released_native_sessions"] = releases
+    # Never renew an earlier snapshot by using the final response's clock.
+    # Active/released identity conflicts (including races across requests) abort
+    # the whole fetch. Nothing is published from a partial proof sequence.
+    payload["generated_at"] = oldest.isoformat()
+    return validate_payload(payload)
 
 
 def run(*, now: datetime | None = None) -> int:

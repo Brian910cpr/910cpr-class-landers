@@ -486,7 +486,13 @@ def expand_inverse_availability(
             })
             continue
         gap_index += 1
-        blocks.append(make_inverse_gap_block(source, person, course_catalog, gap_start, gap_end, gap_index))
+        block = make_inverse_gap_block(source, person, course_catalog, gap_start, gap_end, gap_index)
+        if native_bounds is not None:
+            block.update(native_publication_scope_id=native_bounds['scopeId'],
+                native_proof_observed_at=native_bounds['observedAt'].isoformat(),
+                native_valid_until=native_bounds['validUntil'].isoformat(),
+                native_calendar_source_ids=native_bounds['sourceIds'])
+        blocks.append(block)
 
     return blocks, blocked, dns_markers
 
