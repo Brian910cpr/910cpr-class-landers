@@ -158,7 +158,20 @@ class HeartsaverPublicationBrowserTests(unittest.TestCase):
                 self.assertEqual(parsed.path, '/register/')
                 self.assertEqual(parse_qs(parsed.query)['session'], [source['external_class_id']])
                 self.assertNotIn('selectionId', parse_qs(parsed.query))
-                link.click(); page.wait_for_url('**/register/?**')
+                # Existing-session links intentionally open the shared inline
+                # checkout. Dynamic selections navigate, but seats do not.
+                parent_url = page.url
+                link.click()
+                panel = page.locator('#selected-time-checkout')
+                panel.wait_for(state='visible')
+                frame = panel.locator('iframe')
+                self.assertEqual(frame.count(), 1)
+                embedded = urlsplit(frame.get_attribute('src'))
+                self.assertEqual(embedded.path, '/register/')
+                self.assertEqual(parse_qs(embedded.query), {'session': [source['external_class_id']], 'embed': ['1']})
+                page.frame_locator('#selected-time-checkout iframe').get_by_role('heading', name='Local route assertion only').wait_for()
+                self.assertEqual(page.url, parent_url)
+                self.assertEqual(self.errors, [])
 
     def test_expiry_removes_cta_even_when_global_feed_is_restamped(self):
         case = fixture()

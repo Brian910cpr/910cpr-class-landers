@@ -3,15 +3,21 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
+const {execFileSync} = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const api = require('../docs/assets/resolved-selector-availability.js');
 const generator = fs.readFileSync(path.join(root, 'scripts/build_bls_block_schedule_pilot.py'), 'utf8');
+// Exercise executable output, not unexpanded Python f-string source. The
+// fixture supplies synthetic local scheduling proof and performs no network I/O.
+const rendered = execFileSync('python', ['-B', '-c',
+  'from tests.test_native_heartsaver_publication import fixture, emit, generator; print(generator.render_html(emit(fixture(True))))'],
+  {cwd: root, encoding: 'utf8', timeout: 30000});
 function fragment(begin, end) {
-  const start = generator.indexOf(begin);
+  const start = rendered.indexOf(begin);
   assert.ok(start >= 0);
-  const stop = generator.indexOf(end, start);
+  const stop = rendered.indexOf(end, start);
   assert.ok(stop > start);
-  return generator.slice(start, stop).replaceAll('{{', '{').replaceAll('}}', '}');
+  return rendered.slice(start, stop);
 }
 const loader = fragment('    let availabilityRequestId = 0;', '\n    loadResolvedAvailability();');
 const currentDates = fragment('    function currentPublicationDates()', '\n    function filteredDates()');
