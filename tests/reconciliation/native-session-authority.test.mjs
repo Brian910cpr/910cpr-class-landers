@@ -4,8 +4,8 @@ import {readFileSync} from 'node:fs';
 import {randomUUID} from 'node:crypto';
 import {setup} from './native-checkout-harness.mjs';
 
-const sql=readFileSync(new URL('../../supabase/migrations/20261111182922_native_session_authority_cutover.sql',import.meta.url),'utf8');
-async function fixture(fn,capacity=6){
+const sql=readFileSync(new URL('../../supabase/migrations/20261111185724_native_session_authority_cutover.sql',import.meta.url),'utf8');
+async function fixture(fn,capacity=6,sourceEnding=null){
  const h=await setup(capacity);
  try{
   await h.db.exec("alter table landerware_public_orders add column registration_profile_snapshot jsonb not null default '{}'");
@@ -13,6 +13,10 @@ async function fixture(fn,capacity=6){
   h.create=(st=h.students(1),key=randomUUID(),extra={})=>h.rpc('native_checkout_create_order',{p_idempotency_key:key,p_external_class_id:h.external,p_course_id:'359474',p_payer_email:st[0].email,p_payer_phone:st[0].phone,p_students:st,p_billing_code:null,p_offer:{},...extra});
   h.finalize=async o=>{const args={p_order_id:o.id,p_stripe_payment_intent_id:`pi_test_${o.id}`,p_evidence:h.evidence(o)};await h.rpc('native_checkout_record_payment',args);return h.rpc('native_checkout_finalize_order',args);};
   await h.db.exec('grant all on all tables in schema public to service_role; grant usage on schema public to service_role');
+  if(sourceEnding){
+   const definition=(await h.db.query("select pg_get_functiondef('public.landerware_public_seat_state(uuid)'::regprocedure) definition")).rows[0].definition;
+   await h.db.exec(sourceEnding==='crlf'?definition.replaceAll('\n','\r\n'):definition.replace('declare s public.class_sessions;','declare s public.class_sessions; /* synthetic unreviewed drift */'));
+  }
   await h.db.exec(sql);
   h.snapshot=()=>h.rpc('native_session_authority_snapshot',{p_session_id:h.id});
   h.authority=async(enabled=false,snapshot=null,decision=randomUUID())=>{snapshot??=await h.snapshot();return h.rpc('native_session_authority_record',{
@@ -181,3 +185,7 @@ test('real service role may snapshot/admit/read but anonymous and authenticated 
  const rows=(await h.db.query(`select p.proname,p.prosecdef,p.proconfig from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname like 'native_session_authority_%'`)).rows;
  assert.equal(rows.length,3);for(const row of rows){assert.equal(row.prosecdef,false);assert.ok(row.proconfig.includes('search_path=""'));if(row.proname==='native_session_authority_record')assert.ok(row.proconfig.includes('lock_timeout=2s'));}
 }));
+
+
+test('exact reviewed CRLF function body passes the normalized source guard',()=>fixture(async h=>{assert.equal((await h.seats()).remaining,6);},6,'crlf'));
+test('changed reader body is rejected rather than normalized into approval',async()=>{await assert.rejects(()=>fixture(async()=>{},6,'drift'),/native_authority_reader_review_required/);});

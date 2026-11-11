@@ -190,7 +190,7 @@ console.log('PASS isolated PostgreSQL: released unpaid interval admits another e
 
 // Native cutover remains separate from public/session activation. These are
 // synthetic retained IDs inside the already-verified disposable database.
-const authorityMigration=await run(readFileSync(new URL('../supabase/migrations/20261111182922_native_session_authority_cutover.sql',import.meta.url),'utf8'));
+const authorityMigration=await run(readFileSync(new URL('../supabase/migrations/20261111185724_native_session_authority_cutover.sql',import.meta.url),'utf8'));
 assert.equal(authorityMigration.code,0,authorityMigration.error);
 const authoritySession=json(await run(`insert into class_sessions(source,status,course_id,start_at,end_at,consumption_start_at,consumption_end_at,lead_instructor_id,location_id,max_students,registration_backend,visibility,registration_status,external_class_id,record_scope,external_reconciliation)
  select source,status,course_id,start_at+interval '3 years',end_at+interval '3 years',consumption_start_at+interval '3 years',consumption_end_at+interval '3 years',lead_instructor_id,location_id,2,registration_backend,visibility,registration_status,'910000001','operational',

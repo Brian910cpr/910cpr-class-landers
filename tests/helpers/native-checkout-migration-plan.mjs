@@ -23,7 +23,7 @@ export const preProfileFiles=Object.freeze([
 ]);
 export const profileMigration='supabase/migrations/20261108175130_native_checkout_course_profiles.sql';
 
-export const fullCourseMigration='supabase/migrations/20261109120000_native_full_course_materialization.sql';
+export const fullCourseMigration='supabase/migrations/20261111185247_native_full_course_materialization.sql';
 
 export const codeDeliveryMigration='supabase/migrations/20261109130000_native_learner_code_delivery.sql';
 

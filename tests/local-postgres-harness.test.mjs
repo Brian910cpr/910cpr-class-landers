@@ -30,11 +30,11 @@ test('shared fixture plan contains current release migrations in order and every
   '20261111175721_native_checkout_resend_service_consumer.sql',
   '20261110195617_native_checkout_profile_columns_only.sql',
   '20261108175130_native_checkout_course_profiles.sql',
-  '20261109120000_native_full_course_materialization.sql',
+  '20261111185247_native_full_course_materialization.sql',
   '20261109130000_native_learner_code_delivery.sql',
   '20261109140000_native_code_delivery_events.sql'
  ]);
- assert.equal(files.at(-3),'supabase/migrations/20261109120000_native_full_course_materialization.sql');
+ assert.equal(files.at(-3),'supabase/migrations/20261111185247_native_full_course_materialization.sql');
  assert.equal(files.at(-2),'supabase/migrations/20261109130000_native_learner_code_delivery.sql');
  assert.equal(files.at(-1),'supabase/migrations/20261109140000_native_code_delivery_events.sql');
  for(const n of ['generic-checkout-concurrency.mjs','skills-native-concurrency.mjs','skills-checkout-concurrency.mjs'])assert.match(readFileSync(new URL(n,import.meta.url),'utf8'),/env:psql.env/);

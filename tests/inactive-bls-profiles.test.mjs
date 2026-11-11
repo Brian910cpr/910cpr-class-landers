@@ -6,7 +6,7 @@ import {fixture,catalogs} from './helpers/inactive-bls-profile-fixture.mjs';
 
 const root=new URL('../',import.meta.url);
 const read=path=>readFile(new URL(path,root),'utf8');
-const sql=await read('supabase/migrations/20261111181129_native_bls_profiles_inactive_unbound.sql');
+const sql=await read('supabase/migrations/20261111185535_native_bls_profiles_inactive_unbound.sql');
 // The SQL is the single source of the draft definition. Fixtures are synthetic.
 const profileLiteral=sql.match(/\$profiles\$([\s\S]*?)\$profiles\$::jsonb/);
 assert.ok(profileLiteral,'profile JSON literal is required');

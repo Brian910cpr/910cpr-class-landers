@@ -27,6 +27,11 @@ test('actual full-course SQL materializes idempotently, preserves existing recor
   await db.exec("insert into courses(course_key,name,enrollware_course_id,duration_minutes,cleanup_buffer_minutes,max_students_default,base_price) values('aha-bls-provider','Fixture BLS','209806',120,30,6,75),('aha-bls-provider-renewal','Fixture Renewal','359474',120,30,6,75); insert into people(person_key,display_name) values('brian','Brian Ennis'); insert into instructor_qualifications(instructor_id,course_id,status) select p.id,c.id,'active' from people p cross join courses c where p.person_key='brian' and c.enrollware_course_id in ('209806','359474');");
   await db.exec(load(profileMigration));await db.exec(load(fullCourseMigration));
   const scalar=async(sql,args=[])=>Object.values((await db.query(sql,args)).rows[0])[0];
+  await db.exec(load('supabase/migrations/20261111190525_native_full_course_policy_service_access.sql'));
+  await db.exec('set role service_role');
+  assert.equal(await scalar("select native_full_course_option('209806','{}')"),null,'actual service role reads disabled policy through explicit RLS');
+  await db.exec('reset role');
+  assert.equal(await scalar("select has_table_privilege('anon','native_full_course_policy','SELECT')"),false);
   // Inspect the actual installed replacement after the shared migration plan.
   // The immutable-order migration runs earlier and cannot protect a later replacement.
   const reserveDefinition=await scalar("select pg_get_functiondef('public.reserve_native_checkout_order(text,text,integer,text,text,jsonb,jsonb,jsonb,integer)'::regprocedure)");
@@ -58,6 +63,7 @@ test('actual full-course SQL materializes idempotently, preserves existing recor
   const beforeInstall=await state();
   await db.exec('drop table native_full_course_policy');
   await db.exec(load(fullCourseMigration));
+  await db.exec(load('supabase/migrations/20261111190525_native_full_course_policy_service_access.sql'));
   assert.deepEqual(await state(),beforeInstall,'default-off installation preserves existing orders, sessions, workspaces and registrations');
   assert.equal(await opt(),null);
   assert.equal((await claim()).orderId,order.orderId,'existing nonce resumes with policy disabled');

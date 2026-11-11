@@ -7,7 +7,7 @@ set local statement_timeout='30s';
 
 -- Refuse to replace a reader that changed after this narrow review.
 do $guard$ begin
- if (select md5(replace(prosrc,E'\\r','')) from pg_proc where oid='public.landerware_public_seat_state(uuid)'::regprocedure)
+ if (select md5(replace(prosrc,chr(13),'')) from pg_proc where oid='public.landerware_public_seat_state(uuid)'::regprocedure)
    is distinct from 'bab7bd1b55b0b55d1471e421e9608274' then raise exception 'native_authority_reader_review_required'; end if;
 end $guard$;
 
