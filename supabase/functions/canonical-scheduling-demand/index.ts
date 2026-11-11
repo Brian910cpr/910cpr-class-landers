@@ -37,11 +37,32 @@ async function authorized(req: Request) {
 }
 
 // Only service-read authority events opt into the native count contract.
-// The seat RPC revalidates the latest decision, exact session identity, current
-// canonical registrations, paid/unexpired holds, and inherited occupied reserve.
+// The dedicated STABLE RPC reads exact identity, registrations, holds and
+// inherited reserve from one database statement snapshot.
 function hasNativeAuthority(row: any) {
   return Array.isArray(row.landerware_session_authority_events)
     && row.landerware_session_authority_events.some((event: any) => event.enabled === true);
+}
+
+// Lifecycle witnesses are service-only. Materialized provenance without a
+// witness must also take the native path and fail closed, never lose its holds.
+function hasGeneratedMaterialization(row: any) {
+  const witness = row.native_checkout_generated_sessions;
+  return (Array.isArray(witness) ? witness.length > 0 : witness != null)
+    || ["skills_session_native", "native_full_course"].includes(row.external_session_evidence?.materializedBy);
+}
+
+function capturedGeneratedIdentity(row: any): string {
+  const relationship = row.native_checkout_generated_sessions;
+  const witness = Array.isArray(relationship) ? relationship.length === 1 ? relationship[0] : null : relationship;
+  if (row.registration_backend !== "landerware" || row.source !== "landerware_event"
+      || row.record_scope !== "operational" || witness?.state !== "holding"
+      || !/^[0-9a-f]{32}$/.test(witness?.identity_hash || "")
+      || !/^lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/.test(row.external_class_id || "")
+      || !["skills_session_native", "native_full_course"].includes(row.external_session_evidence?.materializedBy)) {
+    throw new Error("Native generated authority is unavailable");
+  }
+  return witness.identity_hash;
 }
 
 // Compare PostgreSQL timestamptz values by instant, retaining microseconds.
@@ -55,35 +76,45 @@ function timestampIdentity(value: any): bigint | null {
   return BigInt(milliseconds) * 1000n + BigInt((match[2] || "").padEnd(6, "0"));
 }
 
+function matchesSessionIdentity(row: any, captured: any): boolean {
+  const identity = [row.course_id, row.start_at, row.end_at, row.consumption_start_at,
+    row.consumption_end_at, row.lead_instructor_id, row.location_id, row.resource_id,
+    row.organization_id, row.external_class_id, row.record_scope];
+  return Array.isArray(captured) && captured.length === identity.length
+    && identity.every((value: any, index: number) => {
+      if (value === undefined || captured[index] === undefined) return false;
+      if (value === null || captured[index] === null) return value === captured[index];
+      if (index >= 1 && index <= 4) {
+        const instant = timestampIdentity(value);
+        return instant !== null && instant === timestampIdentity(captured[index]);
+      }
+      return value === captured[index];
+    });
+}
+
 function capturedAuthorityRevision(row: any): number {
   const events = row.landerware_session_authority_events;
   const revisions = events.map((event: any) => event.revision);
   if (revisions.some((revision: any) => !Number.isSafeInteger(revision) || revision < 1)
       || new Set(revisions).size !== revisions.length) throw new Error("Invalid native authority history");
   const latest = events.reduce((a: any, b: any) => a.revision > b.revision ? a : b);
-  const identity = [row.course_id, row.start_at, row.end_at, row.consumption_start_at,
-    row.consumption_end_at, row.lead_instructor_id, row.location_id, row.resource_id,
-    row.organization_id, row.external_class_id, row.record_scope];
   if (row.registration_backend !== "landerware" || latest.enabled !== true
-      || !Array.isArray(latest.session_identity) || latest.session_identity.length !== identity.length
-      || identity.some((value: any, index: number) => {
-        const captured = latest.session_identity[index];
-        if (value === undefined || captured === undefined) return true;
-        if (value === null || captured === null) return value !== captured;
-        if (index >= 1 && index <= 4) {
-          const instant = timestampIdentity(value);
-          return instant === null || instant !== timestampIdentity(captured);
-        }
-        return value !== captured;
-      })) throw new Error("Native scheduling identity changed");
+      || !matchesSessionIdentity(row, latest.session_identity)) throw new Error("Native scheduling identity changed");
   return latest.revision;
 }
 
 export function projectDemand(row: any, seats: any = null) {
-  const native = hasNativeAuthority(row);
-  const capturedRevision = native ? capturedAuthorityRevision(row) : null;
-  if (native && (seats?.registrationAuthority !== "landerware-session-authority.v1"
+  const adopted = hasNativeAuthority(row);
+  const native = adopted || hasGeneratedMaterialization(row);
+  const capturedRevision = adopted ? capturedAuthorityRevision(row) : null;
+  const generatedIdentity = native && !adopted ? capturedGeneratedIdentity(row) : null;
+  if (native && (seats?.registrationAuthority !== (adopted ? "landerware-session-authority.v1" : "landerware-generated-session.v1")
       || seats.authorityRevision !== capturedRevision
+      || seats.generatedIdentity !== generatedIdentity
+      || !matchesSessionIdentity(row, seats.sessionIdentity)
+      || typeof row.status !== "string" || seats.sessionStatus !== row.status
+      || typeof row.registration_status !== "string" || seats.registrationStatus !== row.registration_status
+      || typeof row.visibility !== "string" || seats.visibility !== row.visibility
       || [seats.registered, seats.holds, seats.unreconciledReserved, seats.capacity]
         .some((value: any) => !Number.isSafeInteger(value) || value < 0)
       || seats.capacity < 1
@@ -148,6 +179,7 @@ export async function loadDemand(start: string, stop: string) {
     "landerware_sessions!landerware_sessions_class_session_id_fkey(id,starts_at,ends_at)",
     "registrations!registrations_class_session_id_fkey(status,external_registration_id,registration_source)",
     "landerware_session_authority_events!landerware_session_authority_events_class_session_id_fkey(enabled,revision,session_identity)",
+    "native_checkout_generated_sessions!native_checkout_generated_sessions_class_session_id_fkey(identity_hash,state)",
   ].join(",");
   const params = new URLSearchParams({
     select, record_scope: "eq.operational", status: "in.(scheduled,active,completed)", order: "start_at.asc,id.asc", limit: "500",
@@ -166,8 +198,8 @@ export async function loadDemand(start: string, stop: string) {
     // or silently fall back to historical external evidence.
     for (let index = 0; index < body.length; index += 10) {
       sessions.push(...await Promise.all(body.slice(index, index + 10).map(async (row: any) => {
-        if (!hasNativeAuthority(row)) return projectDemand(row);
-        const result = await fetch(`${url}/rest/v1/rpc/landerware_public_seat_state`, {
+        if (!hasNativeAuthority(row) && !hasGeneratedMaterialization(row)) return projectDemand(row);
+        const result = await fetch(`${url}/rest/v1/rpc/native_scheduling_seat_snapshot`, {
           method: "POST", headers: { apikey: key, authorization: `Bearer ${key}`, "content-type": "application/json" },
           body: JSON.stringify({ p_session_id: row.id }), signal: AbortSignal.timeout(20000),
         });
@@ -211,6 +243,7 @@ export async function handleRequest(req: Request) {
       schema_version: "910cpr-canonical-scheduling-demand.v1",
       generated_at: new Date().toISOString(),
       active_registration_statuses: [...ACTIVE],
+      native_active_registration_statuses: [...ACTIVE, "active"],
       sessions: await loadDemand(range.start, range.stop),
       non_session_sources: await loadNonSessionSources(range.start, range.stop),
     });

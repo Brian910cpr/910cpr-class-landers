@@ -1,0 +1,108 @@
+name: Publish first-party native availability
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish from main only after native cutover is enabled (false builds a private preview)
+        type: boolean
+        required: false
+        default: false
+# Activation gate: add a five-minute schedule only after a real visible cycle and
+# an independent stale/observer-heartbeat monitor are proven. Never extend the
+# original 15-minute proof to compensate for queue, build, or Pages delays.
+# schedule:
+#   - cron: '*/5 * * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: schedule-publish-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: write
+      pages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.publish && 'main' || github.sha }}
+          fetch-depth: 1
+      - name: Check production activation before reading live sources
+        env:
+          PUBLISH: ${{ inputs.publish }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from scripts.run_native_publication import policy_enabled
+          enabled = policy_enabled(json.loads(Path('data/config/native_publication_scope.json').read_text()))
+          if os.environ['PUBLISH'] == 'true':
+              assert enabled and os.environ['GITHUB_REF'] == 'refs/heads/main', 'Explicit main cutover required'
+          PY
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install bounded build dependencies
+        run: python -m pip install -r requirements.txt openpyxl python-dateutil tzdata beautifulsoup4
+      - name: Test first-party publisher safeguards before fetching
+        run: python -m unittest tests.test_native_publication_runner tests.test_native_publication_scope tests.test_native_full_publication_validator tests.test_native_demand_consumer
+      - name: Fetch only canonical demand and current first-party calendars
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: |
+          python -m scripts.fetch_canonical_scheduling_demand
+          python -m scripts.export_calendar_snapshots
+      - name: Build five allowlisted public files
+        env:
+          PUBLISH: ${{ inputs.publish }}
+        run: |
+          if [ "$PUBLISH" = true ]; then
+            python -m scripts.run_native_publication build
+          else
+            python -m scripts.run_native_publication build --preview
+          fi
+      - name: Publish exact source and original proof only
+        if: inputs.publish
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python -m scripts.run_native_publication publish
+      - name: Request the existing branch-based Pages build
+        if: inputs.publish
+        env:
+          GH_TOKEN: ${{ github.token }}
+        # GITHUB_TOKEN commits alone do not guarantee a Pages build. This uses
+        # the existing branch-based deployment, never changes Pages settings.
+        run: gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds" --silent
+      - name: Prove exact customer-visible files before original proof expires
+        if: inputs.publish
+        run: python -m scripts.run_native_publication observe
+      - name: Upload sanitized proof and failure status only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-publication-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            debug/status/native_publication.json
+            debug/status/native_publication_failure.json
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Upload only approved public preview paths
+        if: success() && !inputs.publish
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-publication-preview-${{ github.run_id }}
+          path: |
+            docs/data/schedule_future.json
+            docs/bls.html
+            docs/BLS.html
+            docs/bls-schedule.html
+            docs/data/block-selector-availability/bls.json
+          if-no-files-found: error
+          retention-days: 1

@@ -20,6 +20,9 @@ const profileRuntimeApplied=await run(readFileSync(new URL('../'+profileRuntime,
 const sharedNonceRuntime=await run(readFileSync(new URL('../'+orderVersionMigration,import.meta.url),'utf8'));assert.equal(sharedNonceRuntime.code,0,sharedNonceRuntime.error);
 const legacySkillsAdapter=await run(readFileSync(new URL('../supabase/migrations/20261110213130_native_skills_payment_adapter_only.sql',import.meta.url),'utf8'));assert.equal(legacySkillsAdapter.code,0,legacySkillsAdapter.error);
 const fullMigrated=await run(readFileSync(new URL('../'+fullCourseMigration,import.meta.url),'utf8'));assert.equal(fullMigrated.code,0,fullMigrated.error);
+// Install v2 before later lifecycle integration, matching the guarded source.
+const v2Migration=await run(readFileSync(new URL('../supabase/migrations/20261111195655_native_full_course_v2_policy.sql',import.meta.url),'utf8'));
+assert.equal(v2Migration.code,0,v2Migration.error);
 const codesMigrated=await run(readFileSync(new URL('../'+codeDeliveryMigration,import.meta.url),'utf8'));assert.equal(codesMigrated.code,0,codesMigrated.error);
 const eventMigrated=await run(readFileSync(new URL('../'+codeEventMigration,import.meta.url),'utf8'));assert.equal(eventMigrated.code,0,eventMigrated.error);
 const configured=await run(`update skills_session_context_config set qualification_course_id=(select id from courses where course_key='fixture-qualification'),enabled=true where context_key='bls-skills';
@@ -240,8 +243,8 @@ console.log('PASS isolated PostgreSQL: simultaneous re-admission and checkout se
 
 // First-party v2 uses original calendar proof and dedicated public defaults.
 // This final phase does not relax the already-tested legacy/v1 contracts.
-const v2Migration=await run(readFileSync(new URL('../supabase/migrations/20261111195655_native_full_course_v2_policy.sql',import.meta.url),'utf8'));
-assert.equal(v2Migration.code,0,v2Migration.error);
+const fullLifecycleHooks=await run(readFileSync(new URL('../supabase/migrations/20261111200908_native_full_course_lifecycle_hooks.sql',import.meta.url),'utf8'));
+assert.equal(fullLifecycleHooks.code,0,fullLifecycleHooks.error);
 const v2Configured=await run(`update courses set max_students_default=12,cleanup_buffer_minutes=0 where enrollware_course_id in ('209806','359474');
  update native_full_course_public_policy set enabled=true,publication_enabled=true,verified=true,evidence='EXPLICIT DISPOSABLE LOCAL FIXTURE';
  create function skills_test.full_offer_v2(p_day integer,p_course text) returns jsonb language sql as $$

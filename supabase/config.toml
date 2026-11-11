@@ -18,3 +18,7 @@ verify_jwt = false
 # owner-automation authorizer before service-only queue access. No public sender.
 verify_jwt = false
 
+
+[functions.canonical-scheduling-demand]
+# Preserve deployed custom owner automation authentication.
+verify_jwt = false

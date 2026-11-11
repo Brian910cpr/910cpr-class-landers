@@ -54,11 +54,32 @@ permissions:
   contents: write
 
 jobs:
+  source-mode:
+    runs-on: ubuntu-latest
+    outputs:
+      legacy: ${{ steps.mode.outputs.legacy }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Stop retired publisher before any source fetch
+        id: mode
+        run: |
+          python - <<'PYCODE'
+          import json, os
+          from pathlib import Path
+          from scripts.run_native_publication import policy_enabled
+          enabled = policy_enabled(json.loads(Path('data/config/native_publication_scope.json').read_text()))
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write('legacy=' + ('false' if enabled else 'true') + '\n')
+          print('Native mode owns publication; retired pipeline skipped.' if enabled else 'Legacy mode remains configured.')
+          PYCODE
   refresh:
     concurrency:
       group: schedule-publish-main
       cancel-in-progress: false
-    if: github.ref == 'refs/heads/main' && !inputs.v2_release_probe
+    needs: source-mode
+    if: needs.source-mode.outputs.legacy == 'true' && github.ref == 'refs/heads/main' && !inputs.v2_release_probe
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -260,7 +281,8 @@ jobs:
     concurrency:
       group: v2-release-probe-${{ github.ref_name }}
       cancel-in-progress: false
-    if: github.event_name == 'workflow_dispatch' && inputs.v2_release_probe
+    needs: source-mode
+    if: needs.source-mode.outputs.legacy == 'true' && github.event_name == 'workflow_dispatch' && inputs.v2_release_probe
     runs-on: ubuntu-latest
     permissions:
       contents: read

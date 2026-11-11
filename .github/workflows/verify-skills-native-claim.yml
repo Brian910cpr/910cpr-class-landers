@@ -2,7 +2,7 @@ name: Verify native skills reservation
 on:
   workflow_dispatch:
   pull_request:
-    paths: ['scripts/native_publication_scope.py','data/config/native_publication_scope.json','tests/test_native_publication_scope.py','tests/test_native_publication_wiring.py','tests/test_native_full_publication_validator.py','tests/native-publication-reader.test.mjs','tests/native-full-v2-policy.test.mjs','tests/helpers/native-full-service-role-acl.sql','supabase/functions/canonical-scheduling-demand/**','tests/native_demand_authority.test.cjs','tests/test_native_demand_consumer.py','supabase/migrations/*native_owner_transport_proof.sql','tests/native-owner-proof.test.mjs','supabase/migrations/*native_session_authority*.sql','tests/inactive-bls-profiles.test.mjs','tests/helpers/inactive-bls-profile-*','tests/helpers/native-bls-inactive-validator.sql','worker/native-confirmation-*.mjs','scripts/check-native-confirmations.mjs','tests/native-confirmation-monitor.test.mjs','.github/workflows/native-confirmation-health.yml','.github/workflows/native-confirmation-retry.yml','supabase/functions/native-checkout-confirmations/**','supabase/functions/_shared/native-*','tests/native-resend-adapter.test.mjs','tests/native-checkout-email.test.mjs','tests/native-confirmation-consumer.test.mjs','tests/native-confirmation-service.test.mjs','tests/native-confirmation-postcommit.test.mjs','supabase/reviewed/*.sql','tests/helpers/native-checkout-closure-contract.sql','tests/native-checkout-hosted-compat.test.mjs','tests/helpers/native-checkout-legacy-hosted-functions.sql','supabase/migrations/*native_checkout_additive_order_runtime.sql','data/config/native_heartsaver_course_drafts.json','tests/heartsaver-checkout-drafts.test.mjs','supabase/migrations/*heartsaver_inactive_checkout_drafts.sql','docs/admin/production-summary.js','docs/admin/dashboard.html','tests/checkout-attention-ui.test.mjs','supabase/functions/production-board/**','tests/checkout-attention.test.mjs','tests/helpers/local-postgres.mjs','tests/helpers/native-checkout-migration-plan.mjs','tests/local-postgres-harness.test.mjs','tests/full-course-materialization.test.mjs','tests/learner-code-delivery.test.mjs','worker/learner-code-delivery.mjs','worker/checkout-confirmation.mjs','worker/checkout-email-template.mjs','worker/wrangler.checkout-confirmation.jsonc','tests/checkout_confirmation_worker.test.mjs','tests/checkout_email_template.test.mjs','supabase/config.toml','supabase/functions/public-registration/**','supabase/functions/_shared/checkout-*','supabase/migrations/*bls*.sql','supabase/migrations/*native_checkout*.sql','supabase/migrations/*native_full_course*.sql','supabase/migrations/*native_learner_code*.sql','supabase/migrations/*native_code_delivery_events.sql','tests/generic-checkout*','tests/native-checkout-profile*','tests/bls-bundle*','tests/reconciliation/**','tests/helpers/bls-checkout*','tests/helpers/native-checkout-profile*','docs/register/**','docs/assets/generic-checkout.js','docs/assets/checkout-profile.js','scripts/sync_checkout_profile.py','.github/workflows/verify-skills-native-claim.yml','scripts/validate_public_refresh_output.py','tests/test_validate_public_refresh_output.py','supabase/functions/skills-session-reservation/**','supabase/functions/stripe-registration-webhook/**','supabase/migrations/*skills*.sql','tests/skills-native*','tests/skills-checkout*','tests/helpers/skills-native*','tests/helpers/skills-checkout*','docs/register/skills-session/**','docs/assets/skills-reservation-client.js','docs/assets/skills-checkout-client.js']
+    paths: ['tests/native-demand-snapshot*','tests/native_demand_snapshot_endpoint.test.cjs','tests/native-full-lifecycle-hooks.test.mjs','supabase/migrations/*native_scheduling_seat_snapshot.sql','tests/helpers/native-demand-snapshot-schema.sql','scripts/run_native_publication.py','tests/test_native_publication_runner.py','.github/workflows/publish-native-availability.yml','scripts/native_publication_scope.py','data/config/native_publication_scope.json','tests/test_native_publication_scope.py','tests/test_native_publication_wiring.py','tests/test_native_full_publication_validator.py','tests/native-publication-reader.test.mjs','tests/native-full-v2-policy.test.mjs','tests/helpers/native-full-service-role-acl.sql','supabase/functions/canonical-scheduling-demand/**','tests/native_demand_authority.test.cjs','tests/test_native_demand_consumer.py','supabase/migrations/*native_owner_transport_proof.sql','tests/native-owner-proof.test.mjs','supabase/migrations/*native_session_authority*.sql','tests/inactive-bls-profiles.test.mjs','tests/helpers/inactive-bls-profile-*','tests/helpers/native-bls-inactive-validator.sql','worker/native-confirmation-*.mjs','scripts/check-native-confirmations.mjs','tests/native-confirmation-monitor.test.mjs','.github/workflows/native-confirmation-health.yml','.github/workflows/native-confirmation-retry.yml','supabase/functions/native-checkout-confirmations/**','supabase/functions/_shared/native-*','tests/native-resend-adapter.test.mjs','tests/native-checkout-email.test.mjs','tests/native-confirmation-consumer.test.mjs','tests/native-confirmation-service.test.mjs','tests/native-confirmation-postcommit.test.mjs','supabase/reviewed/*.sql','tests/helpers/native-checkout-closure-contract.sql','tests/native-checkout-hosted-compat.test.mjs','tests/helpers/native-checkout-legacy-hosted-functions.sql','supabase/migrations/*native_checkout_additive_order_runtime.sql','data/config/native_heartsaver_course_drafts.json','tests/heartsaver-checkout-drafts.test.mjs','supabase/migrations/*heartsaver_inactive_checkout_drafts.sql','docs/admin/production-summary.js','docs/admin/dashboard.html','tests/checkout-attention-ui.test.mjs','supabase/functions/production-board/**','tests/checkout-attention.test.mjs','tests/helpers/local-postgres.mjs','tests/helpers/native-checkout-migration-plan.mjs','tests/local-postgres-harness.test.mjs','tests/full-course-materialization.test.mjs','tests/learner-code-delivery.test.mjs','worker/learner-code-delivery.mjs','worker/checkout-confirmation.mjs','worker/checkout-email-template.mjs','worker/wrangler.checkout-confirmation.jsonc','tests/checkout_confirmation_worker.test.mjs','tests/checkout_email_template.test.mjs','supabase/config.toml','supabase/functions/public-registration/**','supabase/functions/_shared/checkout-*','supabase/migrations/*bls*.sql','supabase/migrations/*native_checkout*.sql','supabase/migrations/*native_full_course*.sql','supabase/migrations/*native_learner_code*.sql','supabase/migrations/*native_code_delivery_events.sql','tests/generic-checkout*','tests/native-checkout-profile*','tests/bls-bundle*','tests/reconciliation/**','tests/helpers/bls-checkout*','tests/helpers/native-checkout-profile*','docs/register/**','docs/assets/generic-checkout.js','docs/assets/checkout-profile.js','scripts/sync_checkout_profile.py','.github/workflows/verify-skills-native-claim.yml','scripts/validate_public_refresh_output.py','tests/test_validate_public_refresh_output.py','supabase/functions/skills-session-reservation/**','supabase/functions/stripe-registration-webhook/**','supabase/migrations/*skills*.sql','tests/skills-native*','tests/skills-checkout*','tests/helpers/skills-native*','tests/helpers/skills-checkout*','docs/register/skills-session/**','docs/assets/skills-reservation-client.js','docs/assets/skills-checkout-client.js']
 permissions:
   contents: read
 jobs:
@@ -26,10 +26,10 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install openpyxl python-dateutil tzdata
       - run: python -m unittest tests.test_skills_session_509474.SkillsOnlyTests tests.test_layered_publication_adapter.LayeredPublicationTests tests.test_layered_selector_adapter.LayeredAdapterTests
-      - run: python -m unittest tests.test_native_publication_scope tests.test_native_publication_wiring tests.test_native_full_publication_validator tests.test_native_demand_consumer
+      - run: python -m unittest tests.test_native_publication_runner tests.test_native_publication_scope tests.test_native_publication_wiring tests.test_native_full_publication_validator tests.test_native_demand_consumer
       - run: python -m unittest tests.test_validate_public_refresh_output
       - run: npm install --no-save --ignore-scripts @electric-sql/pglite@0.5.15
-      - run: node --experimental-strip-types --test tests/native-full-v2-policy.test.mjs tests/native-publication-reader.test.mjs tests/native_demand_authority.test.cjs tests/native-owner-proof.test.mjs tests/inactive-bls-profiles.test.mjs tests/native-confirmation-monitor.test.mjs tests/native-resend-adapter.test.mjs tests/native-checkout-email.test.mjs tests/native-confirmation-consumer.test.mjs tests/native-confirmation-service.test.mjs tests/native-confirmation-postcommit.test.mjs tests/reconciliation/native-resend-consumer.test.mjs tests/reconciliation/native-session-authority.test.mjs tests/skills-native-handler.test.mjs tests/skills-native-adapter.test.mjs tests/skills-native-sql.test.mjs tests/skills-checkout.test.mjs tests/skills-checkout-form.test.mjs tests/skills-checkout-webhook.test.mjs tests/generic-checkout.test.mjs tests/generic-checkout-adapter.test.mjs tests/heartsaver-checkout-drafts.test.mjs tests/native-checkout-hosted-compat.test.mjs tests/native-checkout-generated-lifecycle.test.mjs tests/native-checkout-profile.test.mjs tests/native-checkout-profile-sql.test.mjs tests/bls-bundle.test.mjs tests/bls-bundle-handler.test.mjs tests/reconciliation/native-checkout.test.mjs tests/reconciliation/addon-sellability.test.mjs tests/reconciliation/public-inventory.test.mjs tests/reconciliation/checkout-confirmation.test.mjs tests/public_registration_option_errors.test.cjs tests/native_registration_closure.test.cjs tests/shared_checkout_bootstrap.test.cjs tests/checkout_confirmation_worker.test.mjs tests/checkout_email_template.test.mjs tests/local-postgres-harness.test.mjs tests/full-course-materialization.test.mjs tests/learner-code-delivery.test.mjs tests/checkout-attention.test.mjs tests/checkout-attention-ui.test.mjs
+      - run: node --experimental-strip-types --test tests/native-demand-snapshot.test.mjs tests/native_demand_snapshot_endpoint.test.cjs tests/native-full-lifecycle-hooks.test.mjs tests/native-full-v2-policy.test.mjs tests/native-publication-reader.test.mjs tests/native_demand_authority.test.cjs tests/native-owner-proof.test.mjs tests/inactive-bls-profiles.test.mjs tests/native-confirmation-monitor.test.mjs tests/native-resend-adapter.test.mjs tests/native-checkout-email.test.mjs tests/native-confirmation-consumer.test.mjs tests/native-confirmation-service.test.mjs tests/native-confirmation-postcommit.test.mjs tests/reconciliation/native-resend-consumer.test.mjs tests/reconciliation/native-session-authority.test.mjs tests/skills-native-handler.test.mjs tests/skills-native-adapter.test.mjs tests/skills-native-sql.test.mjs tests/skills-checkout.test.mjs tests/skills-checkout-form.test.mjs tests/skills-checkout-webhook.test.mjs tests/generic-checkout.test.mjs tests/generic-checkout-adapter.test.mjs tests/heartsaver-checkout-drafts.test.mjs tests/native-checkout-hosted-compat.test.mjs tests/native-checkout-generated-lifecycle.test.mjs tests/native-checkout-profile.test.mjs tests/native-checkout-profile-sql.test.mjs tests/bls-bundle.test.mjs tests/bls-bundle-handler.test.mjs tests/reconciliation/native-checkout.test.mjs tests/reconciliation/addon-sellability.test.mjs tests/reconciliation/public-inventory.test.mjs tests/reconciliation/checkout-confirmation.test.mjs tests/public_registration_option_errors.test.cjs tests/native_registration_closure.test.cjs tests/shared_checkout_bootstrap.test.cjs tests/checkout_confirmation_worker.test.mjs tests/checkout_email_template.test.mjs tests/local-postgres-harness.test.mjs tests/full-course-materialization.test.mjs tests/learner-code-delivery.test.mjs tests/checkout-attention.test.mjs tests/checkout-attention-ui.test.mjs
       - name: Verify real concurrent claims in isolated PostgreSQL
         env:
           SKILLS_TEST_DATABASE: skills_claim_test
@@ -51,6 +51,10 @@ jobs:
         run: |
           createdb -h 127.0.0.1 -U postgres native_checkout_test
           node tests/generic-checkout-concurrency.mjs
+      - name: Verify atomic native demand snapshots on independent PostgreSQL connections
+        run: |
+          createdb -h 127.0.0.1 -U postgres native_demand_snapshot_test
+          node tests/native-demand-snapshot-concurrency.mjs
   selector-preview:
     # Dedicated race refs never access production scheduling inputs/secrets.
     if: ${{ !startsWith(github.head_ref || github.ref_name, 'codex/checkout-pg17-validation-') }}
@@ -67,47 +71,14 @@ jobs:
         run: |
           python -m scripts.fetch_canonical_scheduling_demand
           python -m scripts.export_calendar_snapshots
-          # Preview-only switch. Never commit this workspace change or deploy it.
-          python -c "import json; from pathlib import Path; p=Path('data/config/native_publication_scope.json'); c=json.loads(p.read_text()); c['enabled']=True; p.write_text(json.dumps(c))"
-          python -m scripts.build_live_availability_snapshot
-          python -m scripts.build_sessions_current
-          python -m scripts.build_schedule_future
-      - name: Build native BLS and the three skills selector previews
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          from datetime import datetime, timezone
-          from scripts.build_bls_block_schedule_pilot import run_page
-          from scripts.validate_public_refresh_output import validate_selector, session_rows
-          p=Path('data/config/native_skills_activation.json')
-          p.write_text(json.dumps({'schemaVersion':'native-skills-activation.v1','enabled':True,'canonicalVerifiedAt':datetime.now(timezone.utc).isoformat(),'evidence':'isolated-review-preview'}))
-          for key in ['bls','heartsaver','arc','hsi']:
-              result=run_page(key)
-              session_ids={str(s.get('session_id') or s.get('sessionId') or s.get('id')) for s in session_rows(json.loads(Path('docs/data/schedule_future.json').read_text()))}
-              validate_selector(key,session_ids)
-              print(key, {k:v for k,v in result.items() if k!='output_paths'})
-              data=json.loads(Path(f'docs/data/block-selector-availability/{key}.json').read_text())
-              rows=[o for d in data['dates'] for t in d['startTimes'] for o in t['courses']]
-              if key=='bls':
-                  offers=[o for o in rows if o.get('authority')=='native-full-course.v2']
-                  assert offers, 'No first-party native BLS offers'
-                  assert all(o.get('proofObservedAt') and not o.get('appointmentDayId') and not o.get('matchedContainerId') for o in offers)
-                  print(key, 'first-party native BLS offers',len(offers))
-              else:
-                  offers=[o for o in rows if o['courseId']=='509474']
-                  assert offers, f'No skills offers for {key}'
-                  print(key, 'native skills offers',len(offers))
-          PY
+      - name: Build and validate native-only BLS preview
+        run: python -m scripts.run_native_publication build --preview
       - uses: actions/upload-artifact@v4
         with:
           name: skills-selector-preview
           path: |
             docs/bls.html
-            docs/heartsaver.html
-            docs/arc.html
-            docs/hsi.html
-            docs/data/block-selector-availability/
+            docs/data/block-selector-availability/bls.json
             docs/assets/
             docs/img/
             docs/register/skills-session/

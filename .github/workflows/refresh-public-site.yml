@@ -41,7 +41,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  source-mode:
+    runs-on: ubuntu-latest
+    outputs:
+      legacy: ${{ steps.mode.outputs.legacy }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Stop retired publisher before any source fetch
+        id: mode
+        run: |
+          python - <<'PYCODE'
+          import json, os
+          from pathlib import Path
+          from scripts.run_native_publication import policy_enabled
+          enabled = policy_enabled(json.loads(Path('data/config/native_publication_scope.json').read_text()))
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write('legacy=' + ('false' if enabled else 'true') + '\n')
+          print('Native mode owns publication; retired pipeline skipped.' if enabled else 'Legacy mode remains configured.')
+          PYCODE
   refresh:
+    needs: source-mode
+    if: needs.source-mode.outputs.legacy == 'true'
     name: Refresh public static output
     # The tracked public tree intentionally preserves a small set of case-only
     # legacy URL aliases. A Linux checkout is required to represent both blobs.

@@ -5,10 +5,10 @@ const api = loadEndpoint(() => {throw Error('Unexpected network');});
 const row = {id:'canonical',external_class_id:'12345',external_course_id:'456',registration_backend:'landerware',
  start_at:'2030-09-01T12:00:00Z',end_at:'2030-09-01T13:00:00Z',consumption_start_at:'2030-09-01T11:30:00Z',consumption_end_at:'2030-09-01T14:00:00Z',
  course_id:'course',resource_id:null,organization_id:null,record_scope:'operational',lead_instructor_id:'instructor',location_id:'location',
- visibility:'private',registrations:[{status:'registered'},{status:'active'}],
+ status:'scheduled',registration_status:'open',visibility:'private',registrations:[{status:'registered'},{status:'active'}],
  external_reconciliation:{complete:true,source_observed_at:'2020-01-01T00:00:00Z',active_registration_count:0,active_external_registration_ids:[]},
  landerware_session_authority_events:[{enabled:true,revision:2,session_identity:['course','2030-09-01T12:00:00+00:00','2030-09-01T13:00:00+00:00','2030-09-01T11:30:00+00:00','2030-09-01T14:00:00+00:00','instructor','location',null,null,'12345','operational']}]};
-const seats={registrationAuthority:'landerware-session-authority.v1',authorityRevision:2,registered:2,holds:1,unreconciledReserved:3,capacity:10};
+const seats={registrationAuthority:'landerware-session-authority.v1',authorityRevision:2,registered:2,holds:1,unreconciledReserved:3,capacity:10,generatedIdentity:null,sessionIdentity:row.landerware_session_authority_events[0].session_identity,sessionStatus:row.status,registrationStatus:row.registration_status,visibility:row.visibility};
 test('explicit native authority uses live occupied counts and preserves inherited reserve, holds and intervals',()=>{
  const result=api.projectDemand(row,seats);
  assert.equal(result.active_registration_count,6);
@@ -38,7 +38,7 @@ test('unknown, malformed, over-capacity and missing native counts fail closed',(
 test('native RPC uses only session ID and service authorization, never external registration service',async()=>{
  let rpc=0;
  const endpoint=loadEndpoint(async(url,options)=>{
-  if(String(url).includes('/rpc/landerware_public_seat_state')) {
+  if(String(url).includes('/rpc/native_scheduling_seat_snapshot')) {
    rpc++;
    assert.deepEqual(JSON.parse(options.body),{p_session_id:'canonical'});
    assert.equal(options.headers.authorization,'Bearer fixture-only');
@@ -71,7 +71,7 @@ test('identity timestamps compare instants across offsets without losing microse
  assert.throws(()=>api.projectDemand({...row,start_at:'2030-09-01T12:00:00.000001Z'},seats));
  assert.throws(()=>api.projectDemand({...row,resource_id:''},seats));
  const nullable={...row,consumption_start_at:null,landerware_session_authority_events:[{...row.landerware_session_authority_events[0],session_identity:row.landerware_session_authority_events[0].session_identity.map((value,index)=>index===3?null:value)}]};
- assert.equal(api.projectDemand(nullable,seats).active_registration_count,6);
+ assert.equal(api.projectDemand(nullable,{...seats,sessionIdentity:nullable.landerware_session_authority_events[0].session_identity}).active_registration_count,6);
  assert.throws(()=>api.projectDemand({...nullable,consumption_start_at:undefined},seats));
 });
 test('latest event is selected by revision, not relationship order, and ambiguity fails closed',()=>{
