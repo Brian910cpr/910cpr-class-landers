@@ -1001,6 +1001,9 @@ def seated_class_selector_offers(
             continue
         if course_id == "509474" and native_reservation_reasons(course):
             continue
+        heartsaver_admission = session.get('native_heartsaver_booking_admission')
+        if isinstance(heartsaver_admission, dict):
+            rule = dict(rule, scheduler_consumption_minutes=heartsaver_admission['instructionMinutes']+heartsaver_admission['cleanupMinutes'])
         scheduler_minutes = int(rule.get("scheduler_consumption_minutes") or max(1, int((end - start).total_seconds() // 60)))
         consumption_end = max(end, start + timedelta(minutes=scheduler_minutes),
                               parse_dt(session.get("consumption_end_at")) or end)
@@ -1196,7 +1199,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     native_policy = native_scope.load_policy(ROOT)
     native_bls = native_scope.active(native_policy) and page_key == 'bls'
     native_skills = native_scope.skills_active(native_policy, page_key)
-    native_page = native_bls or native_skills
+    native_heartsaver = native_scope.heartsaver_active(native_policy, page_key)
+    native_page = native_bls or native_skills or native_heartsaver
     live_availability_snapshot = require_current_live_availability_snapshot()
     consolidation_groups = course_consolidation_groups(load_block_schedule_page_configs())
     loaded = {
@@ -1209,6 +1213,9 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         "schedule_future": read_required_json(SCHEDULE_FUTURE_PATH),
         "canonical_demand": load_publication_demand(ROOT),
     }
+    if native_heartsaver:
+        proof = native_scope.validate_heartsaver_proof(loaded['canonical_demand'].get('native_heartsaver_policy_proof'), selector_reference_datetime().replace(tzinfo=ZoneInfo('America/New_York')))
+        native_policy = dict(native_policy, _heartsaverProof=proof)
     # Candidate consolidation and final daily_anchor_stack_v1 must read the same
     # canonical demand snapshot. Legacy seat snapshots cannot create anchors here.
     loaded["schedule_future"]["sessions"], _demand_audit = sessions_with_canonical_demand(

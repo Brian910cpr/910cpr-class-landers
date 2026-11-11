@@ -83,18 +83,20 @@ def git(*args):
 def policy_enabled(policy):
     require(isinstance(policy, dict) and policy.get('schemaVersion') == 'native-publication-scope.v1'
             and type(policy.get('enabled')) is bool and policy.get('scopeId') == scope.SCOPE
-            and type(policy.get('skillsEnabled', False)) is bool,
+            and type(policy.get('skillsEnabled', False)) is bool
+            and type(policy.get('heartsaverFullEnabled', False)) is bool,
             'invalid_native_publication_policy')
     return policy['enabled']
 
 
-def publication_pages(skills_enabled=False):
+def publication_pages(skills_enabled=False, heartsaver_enabled=False):
     require(type(skills_enabled) is bool, 'invalid_skills_publication_gate')
-    return ('bls', 'heartsaver', 'arc', 'hsi') if skills_enabled else ('bls',)
+    require(type(heartsaver_enabled) is bool, 'invalid_heartsaver_publication_gate')
+    return ('bls', 'heartsaver', 'arc', 'hsi') if skills_enabled else ('bls', 'heartsaver') if heartsaver_enabled else ('bls',)
 
 
-def publication_paths(skills_enabled=False):
-    return PATHS + tuple(path for page in publication_pages(skills_enabled)[1:] for path in PAGE_PATHS[page])
+def publication_paths(skills_enabled=False, heartsaver_enabled=False):
+    return PATHS + tuple(path for page in publication_pages(skills_enabled, heartsaver_enabled)[1:] for path in PAGE_PATHS[page])
 
 
 def privacy_check(value):
@@ -170,6 +172,48 @@ def skills_session_admission(row, source, observed):
             and row.get('lead_instructor_name') == source.get('lead_instructor_name') == 'Brian Ennis')
         if valid:
             return {**booking, 'proofObservedAt': observed, 'validUntil': (scope.instant(observed)+timedelta(minutes=15)).isoformat()}
+    except (KeyError, ValueError, TypeError):
+        pass
+    return None
+
+
+def heartsaver_session_admission(row, source, observed, proof, now):
+    booking = source.get('native_heartsaver_booking_admission')
+    cid = str(row.get('course_id'))
+    if not isinstance(booking, dict) or cid not in scope.HEARTSAVER:
+        return None
+    try:
+        backend = scope.heartsaver_course_policy(proof, cid, now, row['consumption_end_at'])
+        if not backend:
+            return None
+        count, capacity, remaining = source['active_registration_count'], booking['capacity'], booking['remaining']
+        sid = str(row['session_id'])
+        instruction, cleanup = backend['instructionMinutes'], backend['cleanupMinutes']
+        valid = (source.get('registration_authority') in {'landerware-session-authority.v1','landerware-generated-session.v1'}
+            and source.get('registration_backend') == 'landerware' and source.get('session_status') in {'scheduled','active'}
+            and source.get('visibility') == 'public' and source.get('registration_status') == 'open'
+            and source.get('workspace_projection_status') == 'current' and source.get('count_available') is True
+            and row.get('demand_status') == 'current'
+            and booking.get('schemaVersion') == 'native-heartsaver-session-booking.v1'
+            and source.get('external_course_id') == booking.get('publicCourseId') == cid
+            and booking.get('canonicalCourseId') == backend['canonicalCourseId']
+            and booking.get('coursePolicyKey') == backend['coursePolicyKey']
+            and booking.get('profileKey') == 'native_heartsaver_'+cid+'_draft'
+            and source.get('external_class_id') == booking.get('sourceSessionId') == sid
+            and re.fullmatch(r'(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})', sid)
+            and re.fullmatch(r'[a-f0-9]{32}', booking.get('identityWitness',''))
+            and all(type(v) is int for v in [count,capacity,remaining,booking.get('profileVersion'),booking.get('instructionMinutes'),booking.get('cleanupMinutes')])
+            and 0 <= count < capacity <= backend['maxStudents'] and remaining == capacity-count and booking['profileVersion'] > 0
+            and booking['instructionMinutes'] == instruction and booking['cleanupMinutes'] == cleanup
+            and all(scope.instant(row[k]) == scope.instant(source[k]) for k in NATIVE_INTERVAL_FIELDS)
+            and scope.instant(row['end_at']) == scope.instant(row['start_at'])+timedelta(minutes=instruction)
+            and scope.instant(row['consumption_start_at']) == scope.instant(row['start_at'])
+            and scope.instant(row['consumption_end_at']) == scope.instant(row['start_at'])+timedelta(minutes=instruction+cleanup)
+            and row.get('location_name') == source.get('location_name') == ':: Wilmington; Shipyard Blvd'
+            and row.get('lead_instructor_name') == source.get('lead_instructor_name') == 'Brian Ennis')
+        if valid:
+            return {**booking, 'proofObservedAt': min(scope.instant(observed),scope.instant(proof['observedAt'])).isoformat(),
+                    'validUntil': min(scope.instant(observed)+timedelta(minutes=15),scope.instant(proof['validUntil'])).isoformat()}
     except (KeyError, ValueError, TypeError):
         pass
     return None
@@ -264,7 +308,10 @@ def retire_released_occurrences(rows, demand):
     return kept, retired
 
 
-def retained_projection(retained, demand, *, skills_enabled=False):
+def retained_projection(retained, demand, *, skills_enabled=False, heartsaver_enabled=False, now=None):
+    now = now or datetime.now(timezone.utc)
+    if heartsaver_enabled:
+        scope.validate_heartsaver_proof(demand.get('native_heartsaver_policy_proof'), now)
     rows = deepcopy(session_rows(retained))
     require(isinstance(retained, dict) and isinstance(retained.get('sessions'), list), 'retained_occurrences_required')
     ids = [str(row.get('session_id') or '') for row in rows]
@@ -290,6 +337,10 @@ def retained_projection(retained, demand, *, skills_enabled=False):
         source = sources.get(str(row.get('canonical_session_id')), {})
         admission = session_admission(row, source, demand['generated_at'])
         skills = skills_session_admission(row, source, demand['generated_at']) if skills_enabled else None
+        heartsaver = heartsaver_session_admission(row, source, demand['generated_at'], demand.get('native_heartsaver_policy_proof'), now) if heartsaver_enabled else None
+        if heartsaver:
+            row.update(native_heartsaver_booking_admission=heartsaver, public_direct_booking=True,
+                       registration_url='/register/?session='+str(row['session_id']))
         if skills:
             row.update(native_skills_booking_admission=skills, public_direct_booking=True,
                        registration_url=skills_registration_url(row))
@@ -306,7 +357,7 @@ def retained_projection(retained, demand, *, skills_enabled=False):
 def prepare():
     require(policy_enabled(read(POLICY)), 'native_publication_disabled')
     demand = load_publication_demand(ROOT)
-    output = retained_projection(read('docs/data/schedule_future.json'), demand, skills_enabled=read(POLICY).get('skillsEnabled', False))
+    output = retained_projection(read('docs/data/schedule_future.json'), demand, skills_enabled=read(POLICY).get('skillsEnabled', False), heartsaver_enabled=read(POLICY).get('heartsaverFullEnabled', False))
     write('data/sessions_current.json', output)
     write('docs/data/schedule_future.json', output)
     return output
@@ -334,18 +385,23 @@ def validate(*, now=None, margin=300):
     bounds = calendar_bounds(now)
     # A fresh publication timestamp never renews source observation timestamps.
     expiry = min(bounds['validUntil'], scope.instant(demand['generated_at']) + timedelta(minutes=15))
+    heartsaver_proof = None
+    if policy.get('heartsaverFullEnabled', False):
+        heartsaver_proof = scope.validate_heartsaver_proof(demand.get('native_heartsaver_policy_proof'), now)
+        expiry = min(expiry, scope.instant(heartsaver_proof['validUntil']))
     check_budget(expiry, now, margin)
     schedule = read('docs/data/schedule_future.json')
     privacy_check(schedule)
-    expected_rows = {str(row['session_id']): row for row in retained_projection(schedule, demand, skills_enabled=policy.get('skillsEnabled', False))['sessions']}
+    expected_rows = {str(row['session_id']): row for row in retained_projection(schedule, demand, skills_enabled=policy.get('skillsEnabled', False), heartsaver_enabled=policy.get('heartsaverFullEnabled', False), now=now)['sessions']}
     for row in session_rows(schedule):
         expected = expected_rows[str(row['session_id'])]
         require(row.get('native_booking_admission') == expected.get('native_booking_admission')
                 and row.get('native_skills_booking_admission') == expected.get('native_skills_booking_admission')
+                and row.get('native_heartsaver_booking_admission') == expected.get('native_heartsaver_booking_admission')
                 and row.get('public_direct_booking') == expected.get('public_direct_booking'),
                 'native_admission_source_changed')
         if row.get('public_direct_booking') is True:
-            admission = row.get('native_booking_admission')
+            admission = row.get('native_booking_admission') or row.get('native_heartsaver_booking_admission')
             if row.get('native_skills_booking_admission'):
                 require(row.get('registration_url') == skills_registration_url(row), 'unadmitted_skills_registration_cta')
                 check_budget(row['native_skills_booking_admission']['validUntil'], now, margin)
@@ -356,7 +412,7 @@ def validate(*, now=None, margin=300):
             require(not row.get('registration_url'), 'unadmitted_session_registration_cta')
     ids = {str(row['session_id']) for row in session_rows(schedule)}
     counts, originals, full_count, skills_count = {}, [], 0, 0
-    for page_key in publication_pages(policy.get('skillsEnabled', False)):
+    for page_key in publication_pages(policy.get('skillsEnabled', False), policy.get('heartsaverFullEnabled', False)):
         counts[page_key] = validate_selector(page_key, ids, now=now)
         selector = read('docs/data/block-selector-availability/'+page_key+'.json')
         # Public authority.description is fixed implementation text, not user data.
@@ -364,6 +420,18 @@ def validate(*, now=None, margin=300):
         for day in selector['dates']:
             for slot in day['startTimes']:
                 for offer in slot['courses']:
+                    heartsaver = page_key == 'heartsaver' and str(offer.get('courseId')) in scope.HEARTSAVER
+                    if heartsaver:
+                        require(policy.get('heartsaverFullEnabled') is True, 'native_heartsaver_publication_disabled')
+                        backend = scope.heartsaver_course_policy(heartsaver_proof, offer['courseId'], now, offer.get('occupiedUntil'))
+                        require(backend is not None, 'native_heartsaver_course_not_ready')
+                        if offer.get('offerType') == 'seated_class':
+                            validate_heartsaver_seated_offer(offer, schedule, now, margin)
+                            full_count += 1
+                            expiry = min(expiry, scope.instant(offer['validUntil']))
+                            continue
+                        require(scope.instant(offer['policyProofObservedAt']) == scope.instant(heartsaver_proof['observedAt'])
+                                and scope.instant(offer['validUntil']) <= scope.instant(heartsaver_proof['validUntil']), 'native_heartsaver_policy_proof_changed')
                     if page_key != 'bls' and offer.get('offerType') == 'seated_class':
                         validate_skills_seated_offer(offer, schedule, page_key, now, margin)
                         skills_count += 1
@@ -373,9 +441,9 @@ def validate(*, now=None, margin=300):
                         validate_seated_offer(offer, schedule, now, margin)
                         continue
                     require(offer.get('offerType') == 'dynamic_appointment', 'unadmitted_public_offer')
-                    if page_key == 'bls':
+                    if page_key == 'bls' or heartsaver:
                         require(offer.get('authority') == 'native-full-course.v2'
-                                and str(offer.get('courseId')) in scope.COURSES, 'unadmitted_public_offer')
+                                and str(offer.get('courseId')) in (set(scope.HEARTSAVER) if heartsaver else scope.COURSES), 'unadmitted_public_offer')
                         full_count += 1
                     else:
                         require(offer.get('authority') == scope.SKILLS_AUTHORITY
@@ -384,7 +452,7 @@ def validate(*, now=None, margin=300):
                     url = urlsplit(offer.get('registrationUrl') or offer.get('appointmentUrl') or '')
                     require(not url.netloc and not url.scheme and url.path == '/register/skills-session/', 'external_dynamic_destination')
                     check_budget(offer['validUntil'], now, margin)
-                    originals.append(scope.instant(offer['proofObservedAt']))
+                    originals.append(scope.instant(offer['calendarProofObservedAt'] if heartsaver else offer['proofObservedAt']))
                     expiry = min(expiry, scope.instant(offer['validUntil']))
     require(not originals or min(originals) == bounds['observedAt'], 'calendar_original_proof_mismatch')
     return {'counts': counts['bls'], 'pageCounts': counts,
@@ -399,6 +467,19 @@ def annotate_seated_offers(payload, schedule):
             continue
         sid = str((offer.get('sourceAvailabilityBlock') or {}).get('sessionId') or '')
         row = rows.get(sid, {})
+        if str(offer.get('courseId')) in scope.HEARTSAVER:
+            admission = row.get('native_heartsaver_booking_admission') or {}
+            require(row.get('public_direct_booking') is True and admission, 'unadmitted_heartsaver_seated_offer')
+            offer.pop('appointmentDayId', None); offer.pop('matchedContainerId', None)
+            instruction, cleanup = admission['instructionMinutes'], admission['cleanupMinutes']
+            offer.update(authority='native-heartsaver-session-booking.v1', nativeScopeId=scope.SCOPE,
+                coursePolicyKey=admission['coursePolicyKey'], session_id=sid, sourceSessionIds=[sid],
+                capacity=admission['capacity'], remainingSeats=admission['remaining'], profileVersion=admission['profileVersion'],
+                identityWitness=admission['identityWitness'], resource=':: Wilmington; Shipyard Blvd - B',
+                durationMinutes=instruction, setupBufferMinutes=0, cleanupBufferMinutes=cleanup,
+                schedulerConsumptionMinutes=instruction+cleanup, occupiedUntil=row['consumption_end_at'],
+                proofObservedAt=admission['proofObservedAt'], validUntil=admission['validUntil'])
+            continue
         if str(offer.get('courseId')) == '509474':
             admission = row.get('native_skills_booking_admission') or {}
             contexts = sorted(set(admission.get('skillsContexts', [])) & set(scope.SKILLS_CONTEXTS.get(payload.get('pageKey'), {})))
@@ -417,7 +498,7 @@ def annotate_seated_offers(payload, schedule):
             capacity=admission['capacity'], remainingSeats=admission['remaining'],
             proofObservedAt=admission['proofObservedAt'], validUntil=admission['validUntil'])
     # Seated-only pages still carry a bounded native lease through finalization.
-    leases = [offer['validUntil'] for offer in payload.get('offers', []) if offer.get('authority') == 'native-skills-seated.v1']
+    leases = [offer['validUntil'] for offer in payload.get('offers', []) if offer.get('authority') in {'native-skills-seated.v1','native-heartsaver-session-booking.v1'}]
     if leases:
         payload['validUntil'] = max([payload.get('validUntil') or min(leases), *leases], key=scope.instant)
     return payload
@@ -459,9 +540,46 @@ def validate_seated_offer(offer, schedule, now, margin):
     check_budget(lease, now, margin)
 
 
-def native_page_config(config, page_key='bls'):
+def validate_heartsaver_seated_offer(offer, schedule, now, margin):
+    sid = str(offer.get('session_id') or '')
+    rows = [r for r in session_rows(schedule) if str(r.get('session_id')) == sid]
+    require(len(rows) == 1, 'unadmitted_heartsaver_seated_offer')
+    row = rows[0]; booking = row.get('native_heartsaver_booking_admission') or {}
+    expected = {'pageKey':'heartsaver', 'offers':[dict(offer, sourceAvailabilityBlock={'sessionId': sid})]}
+    annotate_seated_offers(expected, schedule)
+    for key in ['authority','nativeScopeId','coursePolicyKey','session_id','sourceSessionIds','capacity','remainingSeats',
+                'profileVersion','identityWitness','resource','durationMinutes','setupBufferMinutes','cleanupBufferMinutes',
+                'schedulerConsumptionMinutes','occupiedUntil','proofObservedAt','validUntil']:
+        require(offer.get(key) == expected['offers'][0].get(key), 'heartsaver_seated_proof_changed')
+    local = scope.instant(row['start_at']).astimezone(scope.EASTERN)
+    require(str(offer.get('courseId')) == str(row.get('course_id')) == booking.get('publicCourseId')
+        and offer.get('date') == local.date().isoformat() and offer.get('startTime') == local.strftime('%H:%M')
+        and offer.get('location') == row.get('location_name') and offer.get('instructor') == row.get('lead_instructor_name')
+        and offer.get('availabilityBlockId') == 'seated:'+sid
+        and offer.get('registrationUrl') == offer.get('appointmentUrl') == row.get('registration_url') == '/register/?session='+sid,
+        'unadmitted_heartsaver_seated_offer')
+    check_budget(offer['validUntil'], now, margin)
+
+
+def native_page_config(config, page_key='bls', *, skills_enabled=True, heartsaver_enabled=False):
     config = deepcopy(config)
     require(config.get('page_key') == page_key and page_key in PAGE_PATHS, 'unexpected_publication_page')
+    if page_key == 'heartsaver' and heartsaver_enabled:
+        allowed = set(scope.HEARTSAVER) | ({'509474'} if skills_enabled else set())
+        config.update(allowed_course_ids=sorted(allowed), include_seated_classes=True, native_heartsaver_publication=True,
+                      default_course_id='209809', compare_mode={'enabled':False}, show_all_enabled=False)
+        config['course_options'] = [row for row in config.get('course_options', []) if str(row.get('course_id')) in allowed]
+        require({str(row['course_id']) for row in config['course_options']} == allowed, 'native_heartsaver_course_options_required')
+        if skills_enabled:
+            native_page_config(config, page_key, skills_enabled=True, heartsaver_enabled=False)
+        config['subtitle'] = 'Instructor-led CPR, AED and First Aid training'
+        config['meta_description'] = 'Choose instructor-led Heartsaver CPR AED or First Aid CPR AED in Wilmington, NC.'
+        config['intro'] = 'Choose First Aid CPR AED if you need First Aid, or CPR AED for CPR and AED only.'
+        if skills_enabled:
+            config['intro'] += ' Already completed online coursework? Choose Skills Session Only and the matching context.'
+        config['documentation_note'] = {'title':'Choose your Heartsaver course','body':config['intro'],'bullets':[]}
+        config['delivery_help'] = [item for item in config.get('delivery_help',[]) if item.get('label') == 'IN-PERSON']
+        return config
     if page_key != 'bls':
         require(page_key in scope.SKILLS_CONTEXTS, 'unsupported_native_skills_page')
         config.update(allowed_course_ids=['509474'], include_seated_classes=True,
@@ -523,8 +641,9 @@ def build(preview=False):
         # BLS retains canonical remaining seats. Skills is independently gated,
         # restricted to course 509474 and its four existing context mappings.
         skills_enabled = policy.get('skillsEnabled', False)
+        heartsaver_enabled = policy.get('heartsaverFullEnabled', False)
         configs = load_block_schedule_page_configs()
-        targets = [(key, native_page_config(configs[key], key)) for key in publication_pages(skills_enabled)]
+        targets = [(key, native_page_config(configs[key], key, skills_enabled=skills_enabled, heartsaver_enabled=heartsaver_enabled)) for key in publication_pages(skills_enabled, heartsaver_enabled)]
         reports = {key: check_page_outputs(config, key) for key, config in targets}
         for key, config in targets:
             payload = annotate_seated_offers(build_block_schedule_page(config), schedule)
@@ -534,11 +653,11 @@ def build(preview=False):
             require(actual == expected, 'unexpected_generator_output')
         evidence = validate()
         evidence.update(schemaVersion='native-publication-run.v1', sourceHead=head, preview=preview,
-                        skillsEnabled=skills_enabled,
+                        skillsEnabled=skills_enabled, heartsaverFullEnabled=heartsaver_enabled,
                         state='BUILT', generatedAt=datetime.now(timezone.utc).isoformat(),
                         sessionCounts=schedule['build']['counts'],
                         availabilityCounts={k: v for k, v in result['stats'].items() if type(v) is int},
-                        files={p: sha256((ROOT / p).read_bytes()).hexdigest() for p in publication_paths(skills_enabled)})
+                        files={p: sha256((ROOT / p).read_bytes()).hexdigest() for p in publication_paths(skills_enabled, heartsaver_enabled)})
         write(REPORT, evidence)
         return evidence
     finally:
@@ -548,7 +667,7 @@ def build(preview=False):
 def assert_manifest(report):
     require(report.get('schemaVersion') == 'native-publication-run.v1' and report.get('preview') is False,
             'production_manifest_required')
-    require(set(report.get('files', {})) == set(publication_paths(report.get('skillsEnabled', False))), 'publication_path_allowlist_mismatch')
+    require(set(report.get('files', {})) == set(publication_paths(report.get('skillsEnabled', False), report.get('heartsaverFullEnabled', False))), 'publication_path_allowlist_mismatch')
     for path, expected in report['files'].items():
         require(sha256((ROOT / path).read_bytes()).hexdigest() == expected, 'publication_output_changed')
 
@@ -560,6 +679,7 @@ def publish():
     report = read(REPORT)
     assert_manifest(report)
     require(report.get('skillsEnabled', False) == policy.get('skillsEnabled', False), 'skills_publication_gate_changed')
+    require(report.get('heartsaverFullEnabled', False) == policy.get('heartsaverFullEnabled', False), 'heartsaver_publication_gate_changed')
     require(git('rev-parse', 'HEAD') == report['sourceHead'], 'source_head_changed')
     require(not git('diff', '--cached', '--name-only'), 'preexisting_staged_changes')
     require(not git('diff', '--name-only', '--', '.github', 'scripts', 'data/config', 'data/inventory'),
@@ -568,7 +688,7 @@ def publish():
     git('fetch', 'origin', 'main')
     require(git('rev-parse', 'origin/main') == report['sourceHead'], 'remote_main_advanced')
     validate(margin=300)
-    paths = publication_paths(report.get('skillsEnabled', False))
+    paths = publication_paths(report.get('skillsEnabled', False), report.get('heartsaverFullEnabled', False))
     git('add', '--', *paths)
     require(set(git('diff', '--cached', '--name-only').splitlines()) <= set(paths), 'staged_path_not_allowed')
     require(bool(git('diff', '--cached', '--name-only')), 'no_publication_change')
@@ -583,7 +703,8 @@ def observe():
     report = read(REPORT)
     assert_manifest(report)
     policy = read(POLICY)
-    require(policy_enabled(policy) and report.get('skillsEnabled', False) == policy.get('skillsEnabled', False),
+    require(policy_enabled(policy) and report.get('skillsEnabled', False) == policy.get('skillsEnabled', False)
+            and report.get('heartsaverFullEnabled', False) == policy.get('heartsaverFullEnabled', False),
             'publication_gate_changed')
     require(report.get('publicationHead'), 'publication_commit_required')
     # HTTP hash proof of every changed public path, not a green Pages job alone.

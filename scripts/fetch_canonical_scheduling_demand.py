@@ -187,7 +187,9 @@ def validate_admin_key(key: str) -> str:
     return key
 
 
-def request_url(url: str, *, release_ids: list[str] | None = None) -> str:
+def request_url(url: str, *, release_ids: list[str] | None = None, heartsaver_enabled: bool = False) -> str:
+    if type(heartsaver_enabled) is not bool:
+        raise ValueError('Invalid Heartsaver publication gate')
     parts = urllib.parse.urlsplit(url)
     if (parts.scheme != "https" or parts.hostname != "wktwgcnwdvbebcobgyey.supabase.co"
             or parts.username or parts.password or parts.fragment
@@ -202,7 +204,7 @@ def request_url(url: str, *, release_ids: list[str] | None = None) -> str:
         query = urllib.parse.urlencode({"projection": "native-release-proof", "release_ids": ",".join(release_ids)})
     else:
         start = datetime.now(ZoneInfo("America/New_York")).date()
-        query = urllib.parse.urlencode({"from": start.isoformat(), "to": (start + timedelta(days=366)).isoformat()})
+        query = urllib.parse.urlencode({"from": start.isoformat(), "to": (start + timedelta(days=366)).isoformat(), **({"native_heartsaver":"1"} if heartsaver_enabled else {})})
     return urllib.parse.urlunsplit((parts.scheme, parts.netloc, parts.path, query, ""))
 
 
@@ -293,10 +295,13 @@ def _fetch_json(*, url: str, key: str, timeout: float) -> Any:
         return json.loads(raw.decode("utf-8"))
 
 
-def fetch(*, url: str, key: str, timeout: float = 30) -> dict[str, Any]:
+def fetch(*, url: str, key: str, timeout: float = 30, heartsaver_enabled: bool = False) -> dict[str, Any]:
     ids = retained_release_ids(RETAINED_SCHEDULE)
     observed_at = datetime.now(timezone.utc)
-    payload = validate_payload(_fetch_json(url=request_url(url), key=key, timeout=timeout), now=observed_at)
+    payload = validate_payload(_fetch_json(url=request_url(url, heartsaver_enabled=heartsaver_enabled), key=key, timeout=timeout), now=observed_at)
+    if heartsaver_enabled:
+        from scripts.native_publication_scope import validate_heartsaver_proof
+        validate_heartsaver_proof(payload.get('native_heartsaver_policy_proof'), datetime.now(timezone.utc))
     if payload.get("released_native_sessions"):
         raise ValueError("Unrequested native release proof")
     releases = []
@@ -329,7 +334,13 @@ def run(*, now: datetime | None = None) -> int:
     try:
         if not key:
             raise RuntimeError("HOT_SYNC_ADMIN_KEY is not configured")
-        payload = validate_payload(fetch(url=url, key=key), now=observed_at)
+        from scripts.native_publication_scope import load_policy
+        policy = load_policy(ROOT)
+        heartsaver = policy.get('heartsaverFullEnabled', False)
+        if type(heartsaver) is not bool:
+            raise ValueError('Invalid Heartsaver publication gate')
+        options = {'heartsaver_enabled': True} if heartsaver else {}
+        payload = validate_payload(fetch(url=url, key=key, **options), now=observed_at)
         _atomic_write_json(OUTPUT, payload)
         status.update({
             "success": True,

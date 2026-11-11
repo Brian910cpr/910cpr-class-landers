@@ -137,6 +137,8 @@ def validate_selector(page_key: str, public_session_ids: set[str], *, now=None) 
                     require(session_id in public_session_ids, f"{page_key}: stale seated session {session_id}")
                     registration_url = course.get("registrationUrl") or course.get("appointmentUrl")
                     require(registration_url, f"{page_key}: seated session {session_id} lacks registration URL")
+                    if course.get('authority') == 'native-heartsaver-session-booking.v1':
+                        validate_native_heartsaver_seated(course, payload, page_key, day['date'], slot['startTime'], now=now)
                     if str(course.get('courseId')) == '509474':
                         validate_native_skills_offer(course, page_key, day['date'], slot['startTime'], payload, now=now)
                 else:
@@ -166,14 +168,22 @@ def validate_native_full_offer(course: dict, payload: dict, page_key: str,
                                day: str, clock: str, *, now=None) -> None:
     """Native BLS v2 uses original first-party proof, never a legacy container."""
     label = 'native full: '
-    require(page_key == 'bls' and payload.get('pageKey') == 'bls', label+'invalid page')
+    from scripts.native_publication_scope import HEARTSAVER
+    cid = course.get('courseId')
+    heartsaver = cid in HEARTSAVER
+    expected_page = 'heartsaver' if heartsaver else 'bls'
+    require(page_key == expected_page and payload.get('pageKey') == expected_page, label+'invalid page')
+    instruction = HEARTSAVER[cid]['instructionMinutes'] if heartsaver else 120
+    cleanup = HEARTSAVER[cid]['cleanupMinutes'] if heartsaver else 30
+    if heartsaver:
+        require(course.get('coursePolicyKey') == 'heartsaver-full:'+cid+'.v1', label+'invalid course policy')
     require(course.get('authority') == 'native-full-course.v2' and
             course.get('nativeScopeId') == 'brian-shipyard-b.v1', label+'invalid authority or scope')
-    require(course.get('courseId') in {'209806','359474'} and
+    require(course.get('courseId') in ({'209806','359474'} | set(HEARTSAVER)) and
             course.get('offerType') == 'dynamic_appointment' and course.get('publicSelectable') is True,
             label+'invalid course or selection state')
-    for key,value in {'durationMinutes':120,'schedulerConsumptionMinutes':150,
-                      'cleanupBufferMinutes':30,'setupBufferMinutes':0}.items():
+    for key,value in {'durationMinutes':instruction,'schedulerConsumptionMinutes':instruction+cleanup,
+                      'cleanupBufferMinutes':cleanup,'setupBufferMinutes':0}.items():
         require(type(course.get(key)) is int and course[key] == value,label+'invalid '+key)
     require(course.get('instructor') == 'Brian Ennis' and
             course.get('resource') == ':: Wilmington; Shipyard Blvd - B' and
@@ -204,12 +214,16 @@ def validate_native_full_offer(course: dict, payload: dict, page_key: str,
     require(observed <= generated <= current < lease <= observed+timedelta(minutes=15),
             label+'original proof stale, future or extended')
     require(lease <= publication_lease,label+'offer lease exceeds publication')
+    if heartsaver:
+        calendar_observed, policy_observed = instant(course.get('calendarProofObservedAt')), instant(course.get('policyProofObservedAt'))
+        require(observed == min(calendar_observed, policy_observed) and max(calendar_observed, policy_observed) <= generated,
+                label+'invalid scoped proof')
     require(current+timedelta(hours=24) <= start <= current+timedelta(days=90),label+'outside lead or horizon')
-    require(instant(course.get('occupiedUntil')) == start+timedelta(minutes=150),label+'invalid occupied interval')
+    require(instant(course.get('occupiedUntil')) == start+timedelta(minutes=instruction+cleanup),label+'invalid occupied interval')
     selection = course.get('selectionId')
     require(isinstance(selection,str) and re.fullmatch(r'native-full:[a-f0-9]{64}',selection),label+'invalid selection identity')
     raw = '|'.join([course['nativeScopeId'],course['courseId'],start.isoformat(),
-                    course['instructor'],course['resource'],'120','150'])
+                    course['instructor'],course['resource'],str(instruction),str(instruction+cleanup)])
     require(selection == 'native-full:'+sha256(raw.encode()).hexdigest(),label+'selection identity mismatch')
     destination = course.get('registrationUrl')
     require(isinstance(destination,str) and destination.startswith('/register/skills-session/?') and
@@ -222,6 +236,39 @@ def validate_native_full_offer(course: dict, payload: dict, page_key: str,
     require(query == {'course':[course['courseId']],'selectionId':[selection]},label+'invalid native query')
     require('appointmentUrl' not in course or course['appointmentUrl'] == destination,
             label+'inconsistent registration destinations')
+
+
+def validate_native_heartsaver_seated(course, payload, page_key, day, clock, *, now=None):
+    from scripts.native_publication_scope import HEARTSAVER, SCOPE, instant
+    label = 'native heartsaver seated: '
+    cid, sid = course.get('courseId'), course.get('session_id')
+    require(page_key == payload.get('pageKey') == 'heartsaver' and cid in HEARTSAVER, label+'invalid course or page')
+    require(course.get('authority') == 'native-heartsaver-session-booking.v1' and course.get('nativeScopeId') == SCOPE
+            and course.get('coursePolicyKey') == 'heartsaver-full:'+cid+'.v1'
+            and course.get('offerType') == 'seated_class' and course.get('publicSelectable') is True, label+'invalid scope')
+    require(isinstance(sid,str) and re.fullmatch(r'(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})',sid)
+            and course.get('availabilityBlockId') == 'seated:'+sid and course.get('sourceSessionIds') == [sid], label+'invalid identity')
+    require(re.fullmatch(r'[a-f0-9]{32}', str(course.get('identityWitness') or ''))
+            and type(course.get('profileVersion')) is int and course['profileVersion'] > 0, label+'invalid canonical witness')
+    require(all(type(course.get(k)) is int for k in ['capacity','remainingSeats'])
+            and 0 < course['remainingSeats'] <= course['capacity'] <= 100, label+'invalid seats')
+    instruction, cleanup = HEARTSAVER[cid]['instructionMinutes'], HEARTSAVER[cid]['cleanupMinutes']
+    for key,value in {'durationMinutes':instruction,'cleanupBufferMinutes':cleanup,'setupBufferMinutes':0,'schedulerConsumptionMinutes':instruction+cleanup}.items():
+        require(type(course.get(key)) is int and course[key] == value, label+'invalid geometry')
+    require(course.get('date') == day and course.get('startTime') == clock, label+'invalid local time')
+    local = datetime.fromisoformat(day+'T'+clock); zone = ZoneInfo('America/New_York')
+    starts = {local.replace(tzinfo=zone,fold=fold).astimezone(timezone.utc) for fold in (0,1)
+              if local.replace(tzinfo=zone,fold=fold).astimezone(timezone.utc).astimezone(zone).replace(tzinfo=None)==local}
+    require(len(starts) == 1, label+'ambiguous or nonexistent local time')
+    current = instant(now or datetime.now(timezone.utc)); start = next(iter(starts))
+    observed, expiry = instant(course.get('proofObservedAt')), instant(course.get('validUntil'))
+    require(observed <= instant(payload['generatedAt']) <= current < expiry <= observed+timedelta(minutes=15)
+            and expiry <= instant(payload['validUntil']) and start > current
+            and instant(course.get('occupiedUntil')) == start+timedelta(minutes=instruction+cleanup), label+'invalid original proof or interval')
+    require(course.get('instructor') == 'Brian Ennis' and course.get('resource') == ':: Wilmington; Shipyard Blvd - B'
+            and course.get('location') == ':: Wilmington; Shipyard Blvd', label+'invalid resource')
+    require('appointmentDayId' not in course and 'matchedContainerId' not in course
+            and course.get('registrationUrl') == course.get('appointmentUrl') == '/register/?session='+sid, label+'invalid native destination')
 
 
 def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: str, payload: dict | None = None, *, now: datetime | None = None) -> None:

@@ -145,6 +145,27 @@ export function projectDemand(row: any, seats: any = null) {
       || skills.skillsContexts.some((c: string) => !["cpr-aed","first-aid-cpr-aed","arc-blended","hsi-blended"].includes(c))
       || row.visibility !== "public" || row.registration_status !== "open" || !["scheduled","active"].includes(row.status)))
     throw new Error("Native skills admission is unavailable");
+  const heartsaver = native ? seats.heartsaverBooking : null;
+  if (heartsaver != null) {
+    const course = heartsaver.publicCourseId;
+    const canonical = course === "209809" ? "23dfcfa7-4224-46ed-8d45-64d43d5425db" : course === "344085" ? "306bc81a-0e09-49e1-8910-e05501222eb4" : null;
+    const fields = ["schemaVersion","publicCourseId","canonicalCourseId","coursePolicyKey","profileKey","profileVersion","sourceSessionId","identityWitness","capacity","remaining","instructionMinutes","cleanupMinutes"];
+    if (Object.keys(heartsaver).length !== fields.length || fields.some(key => !Object.hasOwn(heartsaver,key))
+        || heartsaver.schemaVersion !== "native-heartsaver-session-booking.v1" || canonical === null
+        || heartsaver.canonicalCourseId !== canonical || row.course_id !== canonical || row.external_course_id !== course
+        || heartsaver.coursePolicyKey !== `heartsaver-full:${course}.v1` || heartsaver.profileKey !== `native_heartsaver_${course}_draft`
+        || !Number.isSafeInteger(heartsaver.profileVersion) || heartsaver.profileVersion < 1
+        || heartsaver.sourceSessionId !== row.external_class_id || !/^(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/.test(heartsaver.sourceSessionId || "")
+        || !/^[a-f0-9]{32}$/.test(heartsaver.identityWitness || "") || (!adopted && heartsaver.identityWitness !== generatedIdentity)
+        || heartsaver.capacity !== seats.capacity || heartsaver.remaining !== seats.capacity - seats.registered - seats.holds - seats.unreconciledReserved
+        || !Number.isSafeInteger(heartsaver.remaining) || heartsaver.remaining < 1
+        || heartsaver.instructionMinutes !== (course === "209809" ? 120 : 90) || heartsaver.cleanupMinutes !== (course === "209809" ? 30 : 15)
+        || timestampIdentity(row.end_at)!==timestampIdentity(row.start_at)! + BigInt(heartsaver.instructionMinutes)*60000000n
+        || timestampIdentity(row.consumption_start_at)!==timestampIdentity(row.start_at)
+        || timestampIdentity(row.consumption_end_at)!==timestampIdentity(row.end_at)! + BigInt(heartsaver.cleanupMinutes)*60000000n
+        || row.resource_id !== null || row.visibility !== "public" || row.registration_status !== "open" || !["scheduled","active"].includes(row.status))
+      throw new Error("Native Heartsaver admission is unavailable");
+  }
   const proof = native ? {
     count_available: true, demand_status: "current", source_observed_at: null,
     reconciled_at: null, source_sha256: null, freshness_minutes: null,
@@ -160,6 +181,7 @@ export function projectDemand(row: any, seats: any = null) {
       capacity: skills.capacity, remaining: skills.remaining, skillsContexts: skills.skillsContexts,
       qualificationPolicy: skills.qualificationPolicy,
     },
+    native_heartsaver_booking_admission: heartsaver == null ? null : {...heartsaver},
     authority_revision: seats.authorityRevision,
     canonical_registered_count: seats.registered,
     held_seat_count: seats.holds,
@@ -298,6 +320,33 @@ async function releasedSessions(ids: string[]) {
   return proof;
 }
 
+async function heartsaverPolicyProof() {
+  const {url,key} = serviceConfig();
+  const result = await fetch(`${url}/rest/v1/rpc/native_heartsaver_publication_policy`, {
+    method:"POST", headers:{apikey:key,authorization:`Bearer ${key}`,"content-type":"application/json"},
+    body:"{}", signal:AbortSignal.timeout(20000), redirect:"error",
+  });
+  const proof = await result.json();
+  const observed = timestampIdentity(proof?.observedAt), until = timestampIdentity(proof?.validUntil);
+  if (!result.ok || proof?.schemaVersion !== "native-heartsaver-publication-policy.v1"
+      || observed === null || until === null || until-observed !== 900000000n
+      || !proof.courses || Object.keys(proof.courses).sort().join(",") !== "209809,344085")
+    throw new Error("Native Heartsaver policy proof unavailable");
+  for (const course of ["209809","344085"]) {
+    const p = proof.courses[course];
+    if (!p || typeof p.materializationEnabled !== "boolean" || typeof p.nativePublicationEnabled !== "boolean"
+        || p.nativeScopeId !== "brian-shipyard-b.v1" || p.pageKey !== "heartsaver"
+        || p.coursePolicyKey !== `heartsaver-full:${course}.v1`
+        || p.canonicalCourseId !== (course === "209809" ? "23dfcfa7-4224-46ed-8d45-64d43d5425db" : "306bc81a-0e09-49e1-8910-e05501222eb4")
+        || p.instructionMinutes !== (course === "209809" ? 120 : 90) || p.cleanupMinutes !== (course === "209809" ? 30 : 15)
+        || (p.maxStudents !== null && (!Number.isSafeInteger(p.maxStudents) || p.maxStudents < 1 || p.maxStudents > 100))
+        || (p.nativePublicationEnabled && (!p.materializationEnabled || p.maxStudents === null
+          || timestampIdentity(p.qualificationValidThrough) === null || timestampIdentity(p.qualificationValidThrough)! < observed)))
+      throw new Error("Native Heartsaver policy proof unavailable");
+  }
+  return proof;
+}
+
 export async function handleRequest(req: Request) {
   const origin = req.headers.get("origin") || "";
   if (origin && !ALLOWED_ORIGINS.has(origin)) return response(origin, { error: "Origin is not allowed" }, 403);
@@ -337,6 +386,8 @@ export async function handleRequest(req: Request) {
       // Authenticated and read-only; never run maintenance from GET/preview.
       return response(origin, await releasedSessions(ids));
     }
+    if (params.has("native_heartsaver") && (params.getAll("native_heartsaver").length !== 1 || params.get("native_heartsaver") !== "1"))
+      return response(origin,{error:"Invalid Heartsaver policy request"},400);
     const range = demandRange(params);
     return response(origin, {
       schema_version: "910cpr-canonical-scheduling-demand.v1",
@@ -348,6 +399,7 @@ export async function handleRequest(req: Request) {
       // History is not publication input. The client asks only for IDs still
       // present in its retained schedule, in bounded explicit proof requests.
       released_native_sessions: [],
+      ...(params.get("native_heartsaver") === "1" ? {native_heartsaver_policy_proof:await heartsaverPolicyProof()} : {}),
     });
   } catch (error) {
     if (error instanceof RangeError) return response(origin, { error: error.message }, 400);

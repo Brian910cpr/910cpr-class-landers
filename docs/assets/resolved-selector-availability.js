@@ -114,6 +114,36 @@
     return (Array.isArray(dates) ? dates : []).map(day => ({...day,
       startTimes: (day.startTimes || []).map(slot => ({...slot,
         courses: (slot.courses || []).filter(course => {
+          if (course.coursePolicyKey || course.authority === 'native-heartsaver-session-booking.v1') {
+            const instruction = course.courseId === '209809' ? 120 : course.courseId === '344085' ? 90 : 0;
+            const cleanup = course.courseId === '209809' ? 30 : 15;
+            const observed = Date.parse(course.proofObservedAt), expiry = Date.parse(course.validUntil);
+            if (!instruction || course.coursePolicyKey !== 'heartsaver-full:' + course.courseId + '.v1'
+                || course.nativeScopeId !== 'brian-shipyard-b.v1' || course.publicSelectable !== true
+                || course.durationMinutes !== instruction || course.cleanupBufferMinutes !== cleanup
+                || course.schedulerConsumptionMinutes !== instruction + cleanup || course.setupBufferMinutes !== 0
+                || course.instructor !== 'Brian Ennis' || course.resource !== ':: Wilmington; Shipyard Blvd - B'
+                || course.location !== ':: Wilmington; Shipyard Blvd'
+                || !Number.isFinite(observed) || observed > instant || !live(validUntil) || !live(course.validUntil)
+                || expiry > observed + 15 * 60 * 1000 || expiry > Date.parse(validUntil)
+                || Object.hasOwn(course, 'appointmentDayId') || Object.hasOwn(course, 'matchedContainerId')
+                || course.appointmentUrl !== course.registrationUrl) return false;
+            if (course.offerType === 'seated_class') {
+              return course.authority === 'native-heartsaver-session-booking.v1'
+                && /^(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/.test(course.session_id || '')
+                && course.availabilityBlockId === 'seated:' + course.session_id
+                && course.registrationUrl === '/register/?session=' + course.session_id
+                && /^[a-f0-9]{32}$/.test(course.identityWitness || '')
+                && Number.isInteger(course.profileVersion) && course.profileVersion > 0
+                && Number.isInteger(course.capacity) && course.capacity > 0 && course.capacity <= 100
+                && Number.isInteger(course.remainingSeats) && course.remainingSeats > 0 && course.remainingSeats <= course.capacity;
+            }
+            const calendar = Date.parse(course.calendarProofObservedAt), policy = Date.parse(course.policyProofObservedAt);
+            return course.authority === 'native-full-course.v2' && course.offerType === 'dynamic_appointment'
+              && observed === Math.min(calendar, policy) && Math.max(calendar, policy) <= instant
+              && /^native-full:[a-f0-9]{64}$/.test(course.selectionId || '')
+              && course.registrationUrl === '/register/skills-session/?' + new URLSearchParams({course:course.courseId, selectionId:course.selectionId});
+          }
           if (course.authority === 'native-skills-seated.v1') {
             const observed = Date.parse(course.proofObservedAt), expiry = Date.parse(course.validUntil);
             return course.courseId === '509474' && course.offerType === 'seated_class' && course.capacity === 2

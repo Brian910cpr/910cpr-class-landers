@@ -15,6 +15,11 @@ SAFE_SKIPS = {'outside_export_window', 'excluded_by_exdate',
               'duplicate_explicit_event_same_uid_start'}
 SCOPE = 'brian-shipyard-b.v1'
 COURSES = {'209806', '359474'}
+HEARTSAVER = {
+    '209809': {'canonicalCourseId': '23dfcfa7-4224-46ed-8d45-64d43d5425db', 'instructionMinutes': 120, 'cleanupMinutes': 30},
+    '344085': {'canonicalCourseId': '306bc81a-0e09-49e1-8910-e05501222eb4', 'instructionMinutes': 90, 'cleanupMinutes': 15},
+}
+HEARTSAVER_PROOF = 'native-heartsaver-publication-policy.v1'
 SKILLS_CONTEXTS = {
     'heartsaver': {'cpr-aed': '209808', 'first-aid-cpr-aed': '329495'},
     'arc': {'arc-blended': '372258'},
@@ -92,6 +97,84 @@ def skills_offer_fields(policy, candidate, report, window, now, course, page_key
             'registrationUrl': '/register/skills-session/?' + urlencode({
                 'course': '509474', 'date': local.date().isoformat(), 'startTime': local.strftime('%H:%M'),
                 'instructor': candidate['instructor'], 'location': window['location_name']})}
+
+def heartsaver_active(policy, page_key='heartsaver'):
+    return active(policy) and policy.get('heartsaverFullEnabled') is True and page_key == 'heartsaver'
+
+
+def validate_heartsaver_proof(proof, now):
+    """Service-only source proof. Config/cached page capacities are never authority."""
+    if not isinstance(proof, dict) or proof.get('schemaVersion') != HEARTSAVER_PROOF or set(proof.get('courses', {})) != set(HEARTSAVER):
+        raise ValueError('native_heartsaver_policy_proof_required')
+    observed, lease, now = instant(proof['observedAt']), instant(proof['validUntil']), instant(now)
+    if not observed <= now < lease <= observed+timedelta(minutes=15):
+        raise ValueError('native_heartsaver_policy_proof_expired_or_extended')
+    for cid, expected in HEARTSAVER.items():
+        policy = proof['courses'][cid]
+        if not isinstance(policy, dict) or any(type(policy.get(k)) is not bool for k in ('materializationEnabled', 'nativePublicationEnabled')):
+            raise ValueError('native_heartsaver_policy_invalid')
+        if not policy['materializationEnabled'] or not policy['nativePublicationEnabled']:
+            continue
+        if (any(policy.get(k) != v or type(policy.get(k)) != type(v) for k,v in expected.items())
+                or policy.get('coursePolicyKey') != 'heartsaver-full:'+cid+'.v1'
+                or policy.get('nativeScopeId') != SCOPE or policy.get('pageKey') != 'heartsaver'
+                or type(policy.get('maxStudents')) is not int or not 1 <= policy['maxStudents'] <= 100
+                or instant(policy['qualificationValidThrough']) <= now):
+            raise ValueError('native_heartsaver_policy_invalid')
+    return proof
+
+
+def heartsaver_course_policy(proof, course_id, now, through=None):
+    proof = validate_heartsaver_proof(proof, now)
+    policy = proof['courses'].get(str(course_id), {})
+    if not policy.get('materializationEnabled') or not policy.get('nativePublicationEnabled'):
+        return None
+    if through is not None and instant(policy['qualificationValidThrough']) < instant(through):
+        return None
+    return policy
+
+
+def heartsaver_offer_fields(policy, candidate, report, window, now, course):
+    if not heartsaver_active(policy):
+        return None
+    cid = str(candidate.get('course'))
+    if policy.get('scopeId') != SCOPE or cid not in HEARTSAVER or course.get('kind') != 'full':
+        raise ValueError('unsupported_native_heartsaver_course')
+    proof = policy.get('_heartsaverProof')
+    backend = heartsaver_course_policy(proof, cid, now, candidate['end'])
+    if not backend:
+        raise ValueError('native_heartsaver_course_not_ready')
+    if not any(candidate == c for c in report.get('accepted', [])):
+        raise ValueError('accepted_engine_candidate_required')
+    if (candidate.get('instructor') != 'Brian Ennis' or window.get('person_id') != 'instructor_24057895173'
+            or candidate.get('location') != ':: Wilmington; Shipyard Blvd - B'
+            or window.get('location_name') != ':: Wilmington; Shipyard Blvd'
+            or not report.get('availability_window') or not isinstance(candidate.get('source_ids'), list)
+            or window.get('native_publication_scope_id') != SCOPE
+            or not isinstance(window.get('native_calendar_source_ids'), list)
+            or 'brian_do_not_schedule' not in window['native_calendar_source_ids']):
+        raise ValueError('native_heartsaver_candidate_identity_mismatch')
+    now, start, end = instant(now), instant(candidate['start']), instant(candidate['end'])
+    teaching_end = instant(candidate['instruction_end'])
+    calendar_observed = min(instant(report['native_proof_observed_at']), instant(window['native_proof_observed_at']))
+    observed = min(calendar_observed, instant(proof['observedAt']))
+    lease = min(instant(report['valid_until']), instant(window['native_valid_until']), instant(proof['validUntil']))
+    instruction, cleanup = backend['instructionMinutes'], backend['cleanupMinutes']
+    if not observed <= now < lease <= observed+timedelta(minutes=15):
+        raise ValueError('native_original_proof_expired_or_extended')
+    if (start < now+timedelta(hours=24) or start > now+timedelta(days=90)
+            or teaching_end-start != timedelta(minutes=instruction) or end-start != timedelta(minutes=instruction+cleanup)):
+        raise ValueError('native_heartsaver_timing_invalid')
+    local = start.astimezone(EASTERN)
+    if local.minute % 15 or local.second or local.microsecond:
+        raise ValueError('native_start_grid_invalid')
+    raw = '|'.join([SCOPE, cid, start.isoformat(), candidate['instructor'], candidate['location'], str(instruction), str(instruction+cleanup)])
+    selection = 'native-full:' + sha256(raw.encode()).hexdigest()
+    return {'authority': 'native-full-course.v2', 'nativeScopeId': SCOPE, 'coursePolicyKey': backend['coursePolicyKey'],
+            'selectionId': selection, 'validUntil': lease.isoformat(), 'proofObservedAt': observed.isoformat(),
+            'calendarProofObservedAt': calendar_observed.isoformat(), 'policyProofObservedAt': proof['observedAt'],
+            'registrationUrl': '/register/skills-session/?'+urlencode({'course': cid, 'selectionId': selection})}
+
 
 def inverse_bounds(policy, source, calendars, snapshot, now, validate_event):
     """Return finite first-party bounds, never an inferred empty-calendar window.

@@ -198,6 +198,13 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 except (ValueError, KeyError, TypeError) as error:
                     rejected.append(dict(diagnostic(candidate), reasons=[str(error)]))
                     continue
+            elif native_scope.heartsaver_active(native_policy or {}, page_config.get('page_key')) and str(candidate.get('course')) != '509474':
+                try:
+                    native_fields = native_scope.heartsaver_offer_fields(native_policy, candidate, report, window, now, course)
+                    day_id, container_id, url, blocker = None, None, native_fields['registrationUrl'], None
+                except (ValueError, KeyError, TypeError) as error:
+                    rejected.append(dict(diagnostic(candidate), reasons=[str(error)]))
+                    continue
             elif native_scope.skills_active(native_policy or {}, page_config.get('page_key')):
                 try:
                     native_fields = native_scope.skills_offer_fields(native_policy, candidate, report, window, now, course, page_config['page_key'])
@@ -205,6 +212,9 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 except (ValueError, KeyError, TypeError) as error:
                     rejected.append(dict(diagnostic(candidate), reasons=[str(error)]))
                     continue
+            elif native_scope.heartsaver_active(native_policy or {}, page_config.get('page_key')):
+                rejected.append(dict(diagnostic(candidate), reasons=['unsupported_native_heartsaver_course']))
+                continue
             else:
                 day_id, container_id, url, blocker = url_for(window, start, candidate["course"])
 
@@ -317,13 +327,13 @@ def finalize(payload, now=None):
     original=result.get("offers", [])
     kept=[]
     for offer in original:
-        if offer.get("offerType")=="seated_class" and offer.get("authority") != "native-skills-seated.v1":
+        if offer.get("offerType")=="seated_class" and offer.get("authority") not in {"native-skills-seated.v1", "native-heartsaver-session-booking.v1"}:
             kept.append(offer)
         elif offer.get("validUntil") and aware(offer["validUntil"]) > now:
             kept.append(offer)
         else:
             result.setdefault("rejectedCourseStartTimes", []).append(dict(offer,reasons=["expired_or_missing_scoped_lease"]))
-    result["validUntil"] = max((o["validUntil"] for o in kept if o.get("offerType")!="seated_class" or o.get("authority")=="native-skills-seated.v1"),default=now.isoformat())
+    result["validUntil"] = max((o["validUntil"] for o in kept if o.get("offerType")!="seated_class" or o.get("authority") in {"native-skills-seated.v1", "native-heartsaver-session-booking.v1"}),default=now.isoformat())
     result["anchor_policy"] = dict(mode=SCHEMA,finalized=True)
     from scripts.public_registration_closures import apply_closures
     return apply_closures(_rebuild_dates(result,kept))[0]
