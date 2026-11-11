@@ -899,11 +899,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </main>
   <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261107-skills-compat-1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261111-publication-expiry-1"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/arc.json?v=2026-11-11T12%3A20%3A24.071657%2B00%3A00";
+    const availabilityUrl = "/data/block-selector-availability/arc.json?v=2026-11-11T12%3A39%3A11.126961%2B00%3A00";
     const courseOptions = [{"courseId": "248288", "courseName": "American Red Cross Basic Life Support", "family": "ARC", "variant": "bls", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["bls"], "iconLabel": "ARC", "imageUrl": "/images/arc-in-person-training.png", "imageFit": "cover", "imageAlt": "American Red Cross Basic Life Support course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross BLS classroom option.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 99, "fullWidth": false, "skillsContexts": [], "details": {"course_key": "arc_bls", "title": "American Red Cross Basic Life Support", "certifying_body": "ARC", "family": "BLS", "short_description": "Red Cross BLS option for healthcare students and providers whose requirement specifically accepts ARC.", "who_this_is_for": "Students whose employer, school, or program asks for American Red Cross BLS.", "topics_covered": ["CPR", "AED use", "Ventilation concepts", "Team response", "Choking response"], "required_materials": ["Course materials as assigned for the selected Red Cross class format."], "certification_issued": "American Red Cross certificate after successful completion.", "compliance_acceptance_notes": ["Use ARC only when your requirement accepts or requests Red Cross certification."], "full_course_page": "/arc.html"}}, {"courseId": "372258", "courseName": "American Red Cross Adult CPR/AED", "family": "ARC", "variant": "cpr-aed", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["cpr-aed"], "iconLabel": "CPR", "imageUrl": "/images/arc-blended-training.png", "imageFit": "cover", "imageAlt": "American Red Cross Adult CPR AED course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "Red Cross Adult CPR/AED skills option.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 90, "fullWidth": false, "skillsContexts": [], "details": {}}, {"courseId": "369209", "courseName": "American Red Cross First Aid/CPR/AED", "family": "ARC", "variant": "first-aid-cpr-aed", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/arc-in-person-training.png", "imageFit": "cover", "imageAlt": "American Red Cross First Aid CPR AED course option", "deliveryBadge": "IN-PERSON", "clarification": "Red Cross Adult and Pediatric First Aid, CPR, and AED classroom option.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 110, "fullWidth": false, "skillsContexts": [], "details": {}}, {"courseId": "509474", "courseName": "Skills Session Only", "family": "ARC", "variant": "skills-session-only", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["skills-session-only", "skills-only", "509474"], "iconLabel": "ARC", "imageUrl": "/images/ARCLTP.png", "imageFit": "contain", "imageAlt": "Skills Session Only course option", "deliveryBadge": "SKILLS SESSION ONLY", "clarification": "Already completed your online portion? Choose your in-person skills date. Online coursework is not included.", "familyGroup": "", "familyLabel": "", "optionLabel": "Skills Session Only — $55", "price": 55, "fullWidth": true, "skillsContexts": [{"key": "arc-blended", "label": "Red Cross", "template_course_id": "372258"}], "details": {}}];
     const optionGroups = {"ARC": {"family": "ARC", "label": "All Red Cross options", "courseIds": ["248288", "372258", "369209", "509474"]}};
     const asapOptionLabel = "All Red Cross options";
@@ -1171,12 +1171,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
     }
 
+    function currentPublicationDates() {
+      return ResolvedSelectorAvailability.datesForPublication(
+        scheduleDates, resolvedAvailability?.validUntil
+      );
+    }
+
     function filteredDates() {
       if (!availabilityReady()) {
         return [];
       }
       return CalendarTimeFilters.filterDates(
-        ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds()),
+        ResolvedSelectorAvailability.filterDatesByCourse(currentPublicationDates(), activeCourseIds()),
         timingPreferences.constraints
       );
     }
@@ -1187,7 +1193,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const group = selected ? Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId)) : null;
       const alternativeIds = new Set((group?.courseIds || []).filter(courseId => courseId !== selectedCourseId));
       if (!alternativeIds.size) return [];
-      return scheduleDates.filter(day =>
+      return currentPublicationDates().filter(day =>
         isSelectableDate(day, now) && day.startTimes.some(slot =>
           !isPastStart(day, slot, now) && slot.courses.some(course => alternativeIds.has(course.courseId))
         )
@@ -1722,7 +1728,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
         if (!config?.fullWidth) link.textContent = 'Register';
         link.addEventListener('click', event => {
-          if (isPastStart(day, slot)) {
+          if (!availabilityReady() || isPastStart(day, {...slot, courses: [course]}) ||
+              !ResolvedSelectorAvailability.datesForPublication(
+                [{...day, startTimes: [{...slot, courses: [course]}]}], resolvedAvailability?.validUntil
+              ).length) {
             event.preventDefault();
             loadResolvedAvailability();
           }
@@ -1805,7 +1814,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       setTimeout(focusDeepLinkedElement, 0);
     });
 
+    let availabilityRequestId = 0;
     async function loadResolvedAvailability() {
+      const requestId = ++availabilityRequestId;
       availabilityState = 'checking';
       setAvailabilityMessage('Checking current class times...');
       renderAll();
@@ -1818,12 +1829,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (!payload || payload.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(payload.dates)) {
           throw new Error('availability payload has an unexpected shape');
         }
+        if (requestId !== availabilityRequestId) return;
         resolvedAvailability = payload;
-        scheduleDates = payload.dates;
+        scheduleDates = ResolvedSelectorAvailability.datesForPublication(payload.dates, payload.validUntil);
         availabilityState = 'ready';
         setAvailabilityMessage('');
         renderAll();
       } catch (error) {
+        if (requestId !== availabilityRequestId) return;
         console.error(error);
         resolvedAvailability = null;
         scheduleDates = [];
@@ -1833,7 +1846,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     }
 
+    function refreshVisibleAvailability() {
+      if (document.hidden || !availabilityReady()) return;
+      renderAll();
+      const hasDynamicOffers = resolvedAvailability?.dates?.some(day =>
+        day.startTimes?.some(slot => slot.courses?.some(course => course.offerType !== 'seated_class'))
+      );
+      const expiresAt = Date.parse(resolvedAvailability?.validUntil);
+      if (hasDynamicOffers && (!Number.isFinite(expiresAt) || expiresAt <= Date.now())) {
+        return loadResolvedAvailability();
+      }
+    }
+
     loadResolvedAvailability();
+    setInterval(refreshVisibleAvailability, 30000);
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) loadResolvedAvailability();
     });

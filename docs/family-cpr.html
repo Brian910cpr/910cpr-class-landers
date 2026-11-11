@@ -887,11 +887,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </main>
   <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261107-skills-compat-1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261111-publication-expiry-1"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/family_cpr.json?v=2026-11-11T12%3A20%3A27.346597%2B00%3A00";
+    const availabilityUrl = "/data/block-selector-availability/family_cpr.json?v=2026-11-11T12%3A39%3A15.393677%2B00%3A00";
     const courseOptions = [{"courseId": "252737", "courseName": "Family & Friends CPR", "family": "Heartsaver", "variant": "family-cpr", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["family-cpr", "family", "family-friends", "family-and-friends", "friends"], "iconLabel": "CPR", "imageUrl": "/images/FF-CPR-2.jpg", "imageFit": "contain", "imageAlt": "Family CPR practice with an infant CPR manikin", "deliveryBadge": "IN-PERSON", "clarification": "Relaxed, hands-on CPR practice for families and community members. No certification card is included.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 45, "fullWidth": false, "skillsContexts": [], "details": {}}];
     const optionGroups = {"Heartsaver": {"family": "Heartsaver", "label": "Family & Friends CPR", "courseIds": ["252737"]}};
     const asapOptionLabel = "Family & Friends CPR";
@@ -1159,12 +1159,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
     }
 
+    function currentPublicationDates() {
+      return ResolvedSelectorAvailability.datesForPublication(
+        scheduleDates, resolvedAvailability?.validUntil
+      );
+    }
+
     function filteredDates() {
       if (!availabilityReady()) {
         return [];
       }
       return CalendarTimeFilters.filterDates(
-        ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds()),
+        ResolvedSelectorAvailability.filterDatesByCourse(currentPublicationDates(), activeCourseIds()),
         timingPreferences.constraints
       );
     }
@@ -1175,7 +1181,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const group = selected ? Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId)) : null;
       const alternativeIds = new Set((group?.courseIds || []).filter(courseId => courseId !== selectedCourseId));
       if (!alternativeIds.size) return [];
-      return scheduleDates.filter(day =>
+      return currentPublicationDates().filter(day =>
         isSelectableDate(day, now) && day.startTimes.some(slot =>
           !isPastStart(day, slot, now) && slot.courses.some(course => alternativeIds.has(course.courseId))
         )
@@ -1710,7 +1716,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
         if (!config?.fullWidth) link.textContent = 'Register';
         link.addEventListener('click', event => {
-          if (isPastStart(day, slot)) {
+          if (!availabilityReady() || isPastStart(day, {...slot, courses: [course]}) ||
+              !ResolvedSelectorAvailability.datesForPublication(
+                [{...day, startTimes: [{...slot, courses: [course]}]}], resolvedAvailability?.validUntil
+              ).length) {
             event.preventDefault();
             loadResolvedAvailability();
           }
@@ -1793,7 +1802,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       setTimeout(focusDeepLinkedElement, 0);
     });
 
+    let availabilityRequestId = 0;
     async function loadResolvedAvailability() {
+      const requestId = ++availabilityRequestId;
       availabilityState = 'checking';
       setAvailabilityMessage('Checking current class times...');
       renderAll();
@@ -1806,12 +1817,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (!payload || payload.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(payload.dates)) {
           throw new Error('availability payload has an unexpected shape');
         }
+        if (requestId !== availabilityRequestId) return;
         resolvedAvailability = payload;
-        scheduleDates = payload.dates;
+        scheduleDates = ResolvedSelectorAvailability.datesForPublication(payload.dates, payload.validUntil);
         availabilityState = 'ready';
         setAvailabilityMessage('');
         renderAll();
       } catch (error) {
+        if (requestId !== availabilityRequestId) return;
         console.error(error);
         resolvedAvailability = null;
         scheduleDates = [];
@@ -1821,7 +1834,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     }
 
+    function refreshVisibleAvailability() {
+      if (document.hidden || !availabilityReady()) return;
+      renderAll();
+      const hasDynamicOffers = resolvedAvailability?.dates?.some(day =>
+        day.startTimes?.some(slot => slot.courses?.some(course => course.offerType !== 'seated_class'))
+      );
+      const expiresAt = Date.parse(resolvedAvailability?.validUntil);
+      if (hasDynamicOffers && (!Number.isFinite(expiresAt) || expiresAt <= Date.now())) {
+        return loadResolvedAvailability();
+      }
+    }
+
     loadResolvedAvailability();
+    setInterval(refreshVisibleAvailability, 30000);
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) loadResolvedAvailability();
     });

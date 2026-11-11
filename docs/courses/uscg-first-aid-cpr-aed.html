@@ -889,11 +889,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </main>
   <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261107-skills-compat-1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261111-publication-expiry-1"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/uscg_first_aid_cpr_aed.json?v=2026-11-11T12%3A20%3A19.577345%2B00%3A00";
+    const availabilityUrl = "/data/block-selector-availability/uscg_first_aid_cpr_aed.json?v=2026-11-11T12%3A39%3A04.297486%2B00%3A00";
     const courseOptions = [{"courseId": "209809", "courseName": "In-person AHA Heartsaver First Aid CPR AED", "family": "Heartsaver", "variant": "in-person", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["in-person", "classroom", "uscg-in-person", "first-aid-cpr-aed"], "iconLabel": "FA", "imageUrl": "/images/heartsaver-total-course-images-2.jpg", "imageFit": "contain", "imageAlt": "AHA Heartsaver First Aid CPR AED course training", "deliveryBadge": "IN-PERSON", "clarification": "First Aid, CPR, and AED training completed entirely in person.", "familyGroup": "uscg-first-aid-cpr-aed", "familyLabel": "First Aid CPR AED — USCG Documentation Path", "optionLabel": "In Person", "price": 95, "fullWidth": false, "skillsContexts": [], "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed", "title": "AHA Heartsaver First Aid CPR AED", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "First Aid, CPR, and AED training for workplace, school, and professional requirements.", "who_this_is_for": "Students who need a combined first aid, CPR, and AED certification for work, school, licensing, or general preparedness.", "topics_covered": ["First aid basics", "CPR and AED use", "Choking response", "Opioid emergency awareness", "Stroke warning signs", "Seizures", "Asthma support", "Heat illness", "Burns and common injuries"], "required_materials": ["Course materials as assigned for the selected class format."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Use this path when your requirement specifically includes first aid plus CPR/AED."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}, {"courseId": "329495", "courseName": "Online learning + in-person skills session", "family": "Heartsaver", "variant": "online-learning-skills", "deliveryMode": "blended", "recommended": true, "deepLinkAliases": ["online-learning-skills", "blended", "uscg-blended", "first-aid-cpr-aed-blended"], "iconLabel": "BL", "imageUrl": "/images/Heartsaver-TOTAL-Online.webp", "imageFit": "contain", "imageAlt": "AHA Heartsaver Total online learning course", "deliveryBadge": "BLENDED", "clarification": "Complete assigned online coursework before the scheduled skills/classroom session.", "familyGroup": "uscg-first-aid-cpr-aed", "familyLabel": "First Aid CPR AED — USCG Documentation Path", "optionLabel": "Blended — Online + In-person Skills", "price": 95, "fullWidth": false, "skillsContexts": [], "details": {"course_key": "aha_heartsaver_first_aid_cpr_aed_blended", "title": "AHA Heartsaver First Aid CPR AED Online + Skills", "certifying_body": "AHA", "family": "Heartsaver", "short_description": "Blended First Aid/CPR/AED option with online coursework and an in-person skills session.", "who_this_is_for": "Students whose requirement accepts blended Heartsaver First Aid CPR AED.", "topics_covered": ["Online first aid, CPR, and AED coursework", "In-person CPR/AED skills", "Selected first aid skills", "Emergency recognition"], "required_materials": ["Completed AHA Heartsaver First Aid CPR AED Online certificate before the skills session."], "certification_issued": "American Heart Association Heartsaver First Aid CPR AED course completion card, valid for two years after successful completion.", "compliance_acceptance_notes": ["Confirm blended learning acceptance before registering."], "full_course_page": "/courses/heartsaver-first-aid-cpr-aed.html"}}];
     const optionGroups = {"USCG_AHA_HEARTSAVER_FIRST_AID_CPR_AED": {"family": "USCG_AHA_HEARTSAVER_FIRST_AID_CPR_AED", "label": "AHA Heartsaver First Aid CPR AED Total options", "courseIds": ["209809", "329495"]}};
     const asapOptionLabel = "Show all options";
@@ -1161,12 +1161,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
     }
 
+    function currentPublicationDates() {
+      return ResolvedSelectorAvailability.datesForPublication(
+        scheduleDates, resolvedAvailability?.validUntil
+      );
+    }
+
     function filteredDates() {
       if (!availabilityReady()) {
         return [];
       }
       return CalendarTimeFilters.filterDates(
-        ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds()),
+        ResolvedSelectorAvailability.filterDatesByCourse(currentPublicationDates(), activeCourseIds()),
         timingPreferences.constraints
       );
     }
@@ -1177,7 +1183,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const group = selected ? Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId)) : null;
       const alternativeIds = new Set((group?.courseIds || []).filter(courseId => courseId !== selectedCourseId));
       if (!alternativeIds.size) return [];
-      return scheduleDates.filter(day =>
+      return currentPublicationDates().filter(day =>
         isSelectableDate(day, now) && day.startTimes.some(slot =>
           !isPastStart(day, slot, now) && slot.courses.some(course => alternativeIds.has(course.courseId))
         )
@@ -1712,7 +1718,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
         if (!config?.fullWidth) link.textContent = 'Register';
         link.addEventListener('click', event => {
-          if (isPastStart(day, slot)) {
+          if (!availabilityReady() || isPastStart(day, {...slot, courses: [course]}) ||
+              !ResolvedSelectorAvailability.datesForPublication(
+                [{...day, startTimes: [{...slot, courses: [course]}]}], resolvedAvailability?.validUntil
+              ).length) {
             event.preventDefault();
             loadResolvedAvailability();
           }
@@ -1795,7 +1804,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       setTimeout(focusDeepLinkedElement, 0);
     });
 
+    let availabilityRequestId = 0;
     async function loadResolvedAvailability() {
+      const requestId = ++availabilityRequestId;
       availabilityState = 'checking';
       setAvailabilityMessage('Checking current class times...');
       renderAll();
@@ -1808,12 +1819,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (!payload || payload.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(payload.dates)) {
           throw new Error('availability payload has an unexpected shape');
         }
+        if (requestId !== availabilityRequestId) return;
         resolvedAvailability = payload;
-        scheduleDates = payload.dates;
+        scheduleDates = ResolvedSelectorAvailability.datesForPublication(payload.dates, payload.validUntil);
         availabilityState = 'ready';
         setAvailabilityMessage('');
         renderAll();
       } catch (error) {
+        if (requestId !== availabilityRequestId) return;
         console.error(error);
         resolvedAvailability = null;
         scheduleDates = [];
@@ -1823,7 +1836,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     }
 
+    function refreshVisibleAvailability() {
+      if (document.hidden || !availabilityReady()) return;
+      renderAll();
+      const hasDynamicOffers = resolvedAvailability?.dates?.some(day =>
+        day.startTimes?.some(slot => slot.courses?.some(course => course.offerType !== 'seated_class'))
+      );
+      const expiresAt = Date.parse(resolvedAvailability?.validUntil);
+      if (hasDynamicOffers && (!Number.isFinite(expiresAt) || expiresAt <= Date.now())) {
+        return loadResolvedAvailability();
+      }
+    }
+
     loadResolvedAvailability();
+    setInterval(refreshVisibleAvailability, 30000);
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) loadResolvedAvailability();
     });

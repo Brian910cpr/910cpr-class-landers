@@ -908,11 +908,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </main>
   <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261107-skills-compat-1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261111-publication-expiry-1"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/bls.json?v=2026-11-11T12%3A20%3A05.356689%2B00%3A00";
+    const availabilityUrl = "/data/block-selector-availability/bls.json?v=2026-11-11T12%3A38%3A45.877759%2B00%3A00";
     const courseOptions = [{"courseId": "209806", "courseName": "AHA BLS Provider", "family": "BLS", "variant": "initial", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["initial", "provider", "bls-provider"], "iconLabel": "BLS", "imageUrl": "/images/bls_general.png", "imageFit": "contain", "imageAlt": "AHA BLS Provider course option", "deliveryBadge": "IN-PERSON", "clarification": "Full classroom BLS certification for healthcare providers and clinical students.", "familyGroup": "bls-provider", "familyLabel": "BLS Provider", "optionLabel": "Initial — In Person", "price": 75, "fullWidth": false, "skillsContexts": [], "details": {"course_key": "aha_bls_provider", "title": "AHA BLS Provider", "certifying_body": "AHA", "family": "BLS", "short_description": "Healthcare provider BLS for clinical workers, dental teams, EMS students, and healthcare students.", "who_this_is_for": "Students who need an American Heart Association BLS Provider card for patient care, school, licensing, or healthcare employment.", "topics_covered": ["High-quality CPR", "AED use", "Ventilations", "Choking response", "Team-based resuscitation"], "required_materials": ["Current AHA BLS Provider Student Manual or accepted eBook when required."], "certification_issued": "American Heart Association BLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Use Heartsaver instead when your requirement is non-healthcare CPR/AED or first aid."], "full_course_page": "/bls.html"}}, {"courseId": "359474", "courseName": "AHA BLS Provider Renewal", "family": "BLS", "variant": "renewal", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["renewal", "provider-renewal", "bls-renewal"], "iconLabel": "RN", "imageUrl": "/images/bls_general.png", "imageFit": "contain", "imageAlt": "AHA BLS Provider Renewal course option", "deliveryBadge": "IN-PERSON", "clarification": "Renewal path for providers who already hold current or recently expired BLS.", "familyGroup": "bls-provider", "familyLabel": "BLS Provider", "optionLabel": "Renewal — In Person", "price": 75, "fullWidth": false, "skillsContexts": [], "details": {"course_key": "aha_bls_provider_renewal", "title": "AHA BLS Provider Renewal", "certifying_body": "AHA", "family": "BLS", "short_description": "Focused BLS renewal for students who already hold or recently held BLS certification.", "who_this_is_for": "Current or recently expired BLS providers renewing an AHA BLS Provider card.", "topics_covered": ["BLS skills review", "CPR and AED practice", "Ventilation practice", "Choking response"], "required_materials": ["Current AHA BLS Provider Student Manual or accepted eBook when required."], "certification_issued": "American Heart Association BLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["Choose the full Provider option if your employer or school requires an initial course."], "full_course_page": "/bls.html"}}, {"courseId": "210549", "courseName": "AHA HeartCode BLS", "family": "BLS", "variant": "heartcode", "deliveryMode": "skills-session", "recommended": true, "deepLinkAliases": ["heartcode", "heartcode-bls"], "iconLabel": "HC", "imageUrl": "/images/hc_b.png", "imageFit": "contain", "imageAlt": "AHA HeartCode BLS course option", "deliveryBadge": "ONLINE + SKILLS", "clarification": "For students who already purchased and completed the AHA online course separately.", "familyGroup": "bls-skills-session", "familyLabel": "BLS Skills Session Only", "optionLabel": "In-person Skills Session", "price": 55, "fullWidth": false, "skillsContexts": [], "details": {"course_key": "aha_heartcode_bls", "title": "AHA HeartCode BLS", "certifying_body": "AHA", "family": "BLS", "short_description": "In-person skills session for students who completed the AHA HeartCode BLS online course.", "who_this_is_for": "Healthcare students and providers who already completed the official AHA HeartCode BLS online portion.", "topics_covered": ["BLS skills practice", "CPR and AED skills testing", "Ventilation skills", "Choking response"], "required_materials": ["Completed AHA HeartCode BLS certificate of completion before the skills session."], "certification_issued": "American Heart Association BLS Provider eCard, valid for two years after successful completion.", "compliance_acceptance_notes": ["This is the skills session, not the online course purchase."], "full_course_page": "/courses/heartcode-bls.html"}}];
     const optionGroups = {"BLS": {"family": "BLS", "label": "All AHA BLS options", "courseIds": ["209806", "359474", "210549"]}};
     const asapOptionLabel = "Need BLS ASAP? Show all AHA BLS options";
@@ -1180,12 +1180,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
     }
 
+    function currentPublicationDates() {
+      return ResolvedSelectorAvailability.datesForPublication(
+        scheduleDates, resolvedAvailability?.validUntil
+      );
+    }
+
     function filteredDates() {
       if (!availabilityReady()) {
         return [];
       }
       return CalendarTimeFilters.filterDates(
-        ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds()),
+        ResolvedSelectorAvailability.filterDatesByCourse(currentPublicationDates(), activeCourseIds()),
         timingPreferences.constraints
       );
     }
@@ -1196,7 +1202,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const group = selected ? Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId)) : null;
       const alternativeIds = new Set((group?.courseIds || []).filter(courseId => courseId !== selectedCourseId));
       if (!alternativeIds.size) return [];
-      return scheduleDates.filter(day =>
+      return currentPublicationDates().filter(day =>
         isSelectableDate(day, now) && day.startTimes.some(slot =>
           !isPastStart(day, slot, now) && slot.courses.some(course => alternativeIds.has(course.courseId))
         )
@@ -1731,7 +1737,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
         if (!config?.fullWidth) link.textContent = 'Register';
         link.addEventListener('click', event => {
-          if (isPastStart(day, slot)) {
+          if (!availabilityReady() || isPastStart(day, {...slot, courses: [course]}) ||
+              !ResolvedSelectorAvailability.datesForPublication(
+                [{...day, startTimes: [{...slot, courses: [course]}]}], resolvedAvailability?.validUntil
+              ).length) {
             event.preventDefault();
             loadResolvedAvailability();
           }
@@ -1814,7 +1823,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       setTimeout(focusDeepLinkedElement, 0);
     });
 
+    let availabilityRequestId = 0;
     async function loadResolvedAvailability() {
+      const requestId = ++availabilityRequestId;
       availabilityState = 'checking';
       setAvailabilityMessage('Checking current class times...');
       renderAll();
@@ -1827,12 +1838,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         if (!payload || payload.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(payload.dates)) {
           throw new Error('availability payload has an unexpected shape');
         }
+        if (requestId !== availabilityRequestId) return;
         resolvedAvailability = payload;
-        scheduleDates = payload.dates;
+        scheduleDates = ResolvedSelectorAvailability.datesForPublication(payload.dates, payload.validUntil);
         availabilityState = 'ready';
         setAvailabilityMessage('');
         renderAll();
       } catch (error) {
+        if (requestId !== availabilityRequestId) return;
         console.error(error);
         resolvedAvailability = null;
         scheduleDates = [];
@@ -1842,7 +1855,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     }
 
+    function refreshVisibleAvailability() {
+      if (document.hidden || !availabilityReady()) return;
+      renderAll();
+      const hasDynamicOffers = resolvedAvailability?.dates?.some(day =>
+        day.startTimes?.some(slot => slot.courses?.some(course => course.offerType !== 'seated_class'))
+      );
+      const expiresAt = Date.parse(resolvedAvailability?.validUntil);
+      if (hasDynamicOffers && (!Number.isFinite(expiresAt) || expiresAt <= Date.now())) {
+        return loadResolvedAvailability();
+      }
+    }
+
     loadResolvedAvailability();
+    setInterval(refreshVisibleAvailability, 30000);
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) loadResolvedAvailability();
     });
