@@ -1,0 +1,42 @@
+name: Native confirmation bounded retry
+on:
+  workflow_dispatch:
+    inputs:
+      reviewed_previous_failure:
+        description: 'Prior failed or cancelled retry was reconciled; no unknown send remains.'
+        type: boolean
+        default: false
+        required: true
+  # Prepared only. Add a five-minute schedule after authorized activation and
+  # observed cadence proof. GitHub scheduling is best-effort, not a guarantee.
+  # schedule:
+  #   - cron: '2-59/5 * * * *'
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: native-confirmation-retry
+  cancel-in-progress: false
+jobs:
+  retry:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      # Fail closed rather than skip green: a disabled run must not overwrite
+      # evidence of an earlier uncertain retry with a misleading success.
+      - name: Require explicit retry activation
+        env:
+          NATIVE_CHECKOUT_RETRY_ENABLED: ${{ vars.NATIVE_CHECKOUT_RETRY_ENABLED }}
+        run: test "$NATIVE_CHECKOUT_RETRY_ENABLED" = 'true'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run up to five one-minute native queue checks
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+          NATIVE_CHECKOUT_RETRY_ENABLED: 'true'
+          NATIVE_RETRY_PREVIOUS_FAILURE_REVIEWED: ${{ inputs.reviewed_previous_failure || 'false' }}
+        run: node scripts/check-native-confirmations.mjs --mode=retry --ticks=5 --state-file="${RUNNER_TEMP}/native-confirmation-retry.json"

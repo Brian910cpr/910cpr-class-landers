@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
 import {nativeConfirmationService} from '../supabase/functions/_shared/native-confirmation-service.mjs';
 import {nativeConfirmationHandler} from '../supabase/functions/native-checkout-confirmations/handler.mjs';
@@ -40,4 +41,10 @@ test('owner retry reports unhealthy or disabled explicitly and accepts only an o
  let passed;const service={configured:()=>true,deliver:async o=>{passed=o;return {configured:true,disabled:true,accepted:0,actualDeliveryConfirmed:false};},health:async()=>({healthy:false,disabled:true})};
  const h=nativeConfirmationHandler({authorized:async()=>true,service});const r=await h(request('retry',{orderId:id}));assert.equal(r.status,503);assert.equal(passed,id);assert.equal((await r.json()).delivery.actualDeliveryConfirmed,false);
  const status=await h(request('status'));assert.equal(status.status,200);assert.deepEqual(await status.json(),{configured:true,health:{healthy:false,disabled:true}});
+});
+
+test('source deployment contract preserves the installed owner-authenticated function route',()=>{
+ const config=readFileSync(new URL('../supabase/config.toml',import.meta.url),'utf8');
+ const section=config.split('[functions.native-checkout-confirmations]')[1]?.split('\n[')[0];assert.ok(section);assert.match(section,/verify_jwt\s*=\s*false/);
+ const source=readFileSync(new URL('../supabase/functions/native-checkout-confirmations/index.ts',import.meta.url),'utf8');assert.match(source,/authorized:authorizedOwner/);
 });

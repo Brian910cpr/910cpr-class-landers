@@ -1,3 +1,5 @@
+import {nativeConfirmationService} from '../../supabase/functions/_shared/native-confirmation-service.mjs';
+import {nativeConfirmationPostcommit} from '../../supabase/functions/_shared/native-confirmation-postcommit.mjs';
 import {publicOrderVersion,publicOrderReturnPath,settlePublicOrder} from '../../supabase/functions/public-registration/public-order-routing.mjs';
 const {PGlite}=await import(process.env.SKILLS_PGLITE_MODULE||'@electric-sql/pglite');
 import fs from 'node:fs';
@@ -131,7 +133,7 @@ test('signed webhook executes the real PostgreSQL public finalizer and replay co
  await h.db.query("update landerware_public_orders set registration_profile_snapshot=$2 where id=$1",[a.orderId,JSON.stringify({profile:{profile_key:'fixture_native',version:1,form_schema:{schemaVersion:'native-checkout.form.v1'}}})]);
  const o=await h.bind(a.orderId);let handler;
  const client={from(table){let id;return {select(){return this},eq(_k,v){id=v;return this},async maybeSingle(){if(table==='landerware_integration_secrets')return {data:{secret_value:secret}};return {data:(await h.db.query(`select * from public.${table} where id=$1`,[id])).rows[0]||null}}}},async rpc(name,args){try{return {data:await h.rpc(name,args)}}catch(e){return {error:{message:e.message}}}}};
- const context=vm.createContext({publicOrderVersion,publicOrderReturnPath,settlePublicOrder,Date,TextEncoder,crypto:webcrypto,Response,console,createClient:()=>client,Deno:{env:{get:k=>k==='STRIPE_EXPECTED_LIVEMODE'?'false':''},serve:fn=>handler=fn}});
+ const context=vm.createContext({nativeConfirmationService,nativeConfirmationPostcommit,fetch:()=>{throw Error('unexpected_confirmation_network');},publicOrderVersion,publicOrderReturnPath,settlePublicOrder,Date,TextEncoder,crypto:webcrypto,Response,console,createClient:()=>client,Deno:{env:{get:k=>k==='STRIPE_EXPECTED_LIVEMODE'?'false':''},serve:fn=>handler=fn}});
  vm.runInContext(stripTypeScriptTypes(read('supabase/functions/stripe-registration-webhook/index.ts').replace(/^import .*;\r?\n/gm,'')),context);
  const event={id:'evt_local_signed',created:Math.floor(Date.now()/1000),livemode:false,type:'checkout.session.completed',data:{object:{...h.evidence(o),payment_intent:`pi_test_${o.id}`}}};
  const deliver=async value=>{const raw=JSON.stringify(value),ts=Math.floor(Date.now()/1000),sig=createHmac('sha256',secret).update(`${ts}.${raw}`).digest('hex');return handler(new Request('https://local.test/webhook',{method:'POST',body:raw,headers:{'stripe-signature':`t=${ts},v1=${sig}`}}))};
@@ -168,3 +170,4 @@ test('a native-looking source label cannot bypass external roster proof for an E
  await h.db.query("update public.class_sessions set source='landerware_public_offer',registration_backend='landerware',external_class_id='123456' where id=$1",[h.id]);
  await assert.rejects(h.seats(),/external_reconciliation_required/);
 }));
+

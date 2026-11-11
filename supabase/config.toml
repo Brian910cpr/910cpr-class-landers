@@ -11,3 +11,10 @@ verify_jwt = true
 # Public availability/registration uses server-fetched inventory. Order recovery
 # and document operations require an opaque owned receipt, not a client JWT.
 verify_jwt = false
+
+
+[functions.native-checkout-confirmations]
+# Every status/retry request is checked by the existing private owner-session or
+# owner-automation authorizer before service-only queue access. No public sender.
+verify_jwt = false
+
