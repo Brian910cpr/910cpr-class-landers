@@ -98,7 +98,7 @@ class NativePublicationRunnerTests(unittest.TestCase):
         from scripts.block_start_time_selector import load_block_schedule_page_configs
         original = load_block_schedule_page_configs()['bls']
         config = runner.native_page_config(original)
-        self.assertFalse(config['include_seated_classes'])
+        self.assertTrue(config['include_seated_classes'])
         self.assertEqual(set(config['allowed_course_ids']), {'209806', '359474'})
         self.assertEqual({str(c['course_id']) for c in config['course_options']}, {'209806', '359474'})
         self.assertTrue(original['include_seated_classes'])
@@ -111,7 +111,7 @@ class NativePublicationRunnerTests(unittest.TestCase):
             row = feed['dates'][0]['startTimes'][0]['courses'][0]
             row.update(courseId=course_id, offerType=offer_type)
             row.pop('authority', None)
-            with patch.object(runner, 'calendar_bounds', return_value=dict(validUntil=case.now+timedelta(minutes=15), observedAt=case.now)), patch.object(runner, 'load_publication_demand', return_value={'generated_at': case.now.isoformat()}), patch.object(runner, 'read', side_effect=[{'sessions': []}, feed]), patch.object(runner, 'validate_selector', return_value={}):
+            with patch.object(runner, 'calendar_bounds', return_value=dict(validUntil=case.now+timedelta(minutes=15), observedAt=case.now)), patch.object(runner, 'load_publication_demand', return_value={'generated_at': case.now.isoformat(), 'sessions': []}), patch.object(runner, 'read', side_effect=[{'sessions': []}, feed]), patch.object(runner, 'validate_selector', return_value={}):
                 with self.assertRaisesRegex(ValueError, 'unadmitted_public_offer'):
                     runner.validate(now=case.now)
 

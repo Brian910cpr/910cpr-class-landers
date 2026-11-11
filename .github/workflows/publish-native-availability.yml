@@ -51,14 +51,14 @@ jobs:
       - name: Install bounded build dependencies
         run: python -m pip install -r requirements.txt openpyxl python-dateutil tzdata beautifulsoup4
       - name: Test first-party publisher safeguards before fetching
-        run: python -m unittest tests.test_native_publication_runner tests.test_native_publication_scope tests.test_native_full_publication_validator tests.test_native_demand_consumer
+        run: python -m unittest tests.test_native_seated_publication tests.test_native_publication_runner tests.test_native_publication_scope tests.test_native_full_publication_validator tests.test_native_demand_consumer
       - name: Fetch only canonical demand and current first-party calendars
         env:
           HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
         run: |
           python -m scripts.fetch_canonical_scheduling_demand
           python -m scripts.export_calendar_snapshots
-      - name: Build five allowlisted public files
+      - name: Build six allowlisted public files
         env:
           PUBLISH: ${{ inputs.publish }}
         run: |
@@ -104,5 +104,6 @@ jobs:
             docs/BLS.html
             docs/bls-schedule.html
             docs/data/block-selector-availability/bls.json
+            docs/assets/resolved-selector-availability.js
           if-no-files-found: error
           retention-days: 1

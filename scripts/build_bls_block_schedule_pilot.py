@@ -112,6 +112,9 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     compact_course.pop('appointmentDayId', None)
                     compact_course.update({key: course.get(key) for key in
                         ('authority', 'nativeScopeId', 'selectionId', 'publicSelectable', 'proofObservedAt')})
+                if course.get('authority') == 'native-session-booking.v1':
+                    compact_course.update({key: course.get(key) for key in
+                        ('authority', 'capacity', 'remainingSeats', 'proofObservedAt', 'session_id')})
                 compact_courses.append({key: value for key, value in compact_course.items() if value not in (None, "")})
             if compact_courses:
                 compact_slots.append({
@@ -1092,6 +1095,8 @@ def render_html(payload: dict[str, Any]) -> str:
                     "sourceAvailabilityBlock": course.get("sourceAvailabilityBlock", {}),
                     "offerType": course.get("offerType") or "dynamic_appointment",
                     "publicSelectable": course.get("publicSelectable") is True,
+                    **({key: course.get(key) for key in ('authority', 'proofObservedAt', 'validUntil', 'capacity', 'remainingSeats')}
+                       if course.get('authority') == 'native-session-booking.v1' else {}),
                 }
                 courses.append(course_record)
                 course_options_by_id.setdefault(course["courseId"], {
@@ -1474,7 +1479,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261111-native2"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261111-native-seats1"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
@@ -2429,7 +2434,7 @@ def render_html(payload: dict[str, Any]) -> str:
       if (document.hidden || !availabilityReady()) return;
       renderAll();
       const hasDynamicOffers = resolvedAvailability?.dates?.some(day =>
-        day.startTimes?.some(slot => slot.courses?.some(course => course.offerType !== 'seated_class'))
+        day.startTimes?.some(slot => slot.courses?.some(course => course.offerType !== 'seated_class' || course.authority === 'native-session-booking.v1'))
       );
       const expiresAt = Date.parse(resolvedAvailability?.validUntil);
       if (hasDynamicOffers && (!Number.isFinite(expiresAt) || expiresAt <= Date.now())) {{

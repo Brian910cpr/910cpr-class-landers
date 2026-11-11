@@ -31,6 +31,9 @@ create function public.native_checkout_generated_identity(p_session public.class
 language sql immutable security invoker set search_path='' as $$
  select md5((to_jsonb(p_session)-array['status','registration_status','updated_at'])::text)
 $$;
+create table public.courses(id uuid primary key,course_key text,enrollware_course_id text,registration_profile_key text,base_price numeric);
+create table public.landerware_registration_profiles(profile_key text primary key,course_id text,version integer,active boolean,registration_mode text,form_schema jsonb);
+create table public.landerware_registration_catalog(course_id text primary key,active boolean,currency text,unit_amount integer);
 grant usage on schema public to service_role,anon,authenticated;
 grant select on all tables in schema public to service_role;
 revoke all on function public.native_checkout_generated_identity(public.class_sessions) from public,anon,authenticated;

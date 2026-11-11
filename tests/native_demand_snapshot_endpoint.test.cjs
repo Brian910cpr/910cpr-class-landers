@@ -20,3 +20,15 @@ test('materialized provenance routes through snapshot RPC and never falls back t
  const failed=loadEndpoint(async url=>String(url).includes('/rpc/')?Response.json({error:'native_generated_authority_unavailable'},{status:400}):Response.json([{...row,native_checkout_generated_sessions:null}]));
  await assert.rejects(failed.loadDemand('2030-01-01','2030-01-02'));
 });
+test('canonical booking admission is separate from counts and exact snapshot capacity/profile proof',()=>{
+ const session={...row,external_course_id:'209806'};
+ const booking={schemaVersion:'native-session-booking.v1',publicCourseId:'209806',profileVersion:3,capacity:6,remaining:3};
+ const projected=api.projectDemand(session,{...seats,publicBooking:booking});
+ assert.equal(projected.native_booking_admission.remaining,3);
+ assert.equal(projected.native_booking_admission.capacity,6);
+ assert.equal(api.projectDemand(session,{...seats,publicBooking:null}).active_registration_count,3);
+ assert.equal(api.projectDemand(session,{...seats,publicBooking:null}).native_booking_admission,null);
+ for(const change of [{remaining:4},{capacity:7},{profileVersion:0},{publicCourseId:'210549'},{publicCourseId:'359474'}])
+  assert.throws(()=>api.projectDemand(session,{...seats,publicBooking:{...booking,...change}}));
+ assert.throws(()=>api.projectDemand({...session,visibility:'private'},{...seats,visibility:'private',publicBooking:booking}));
+});

@@ -10,6 +10,7 @@ declare
  s public.class_sessions; e public.landerware_session_authority_events;
  g public.native_checkout_generated_sessions;
  identity jsonb; authority text; revision integer; witness text;
+ booking jsonb;
  v_capacity integer; v_registered integer; v_holds integer; v_reserved integer:=0;
 begin
  -- STABLE applies to every SELECT below. Do not call VOLATILE seat/authority
@@ -63,10 +64,35 @@ begin
    where o.class_session_id=s.id and o.status in ('held','checkout_open')
      and (o.hold_expires_at>now() or (o.payment_evidence->>'payment_status'='paid' and o.payment_evidence->>'seat_hold_protected'='true'));
  if v_registered+v_holds+v_reserved>v_capacity then raise exception 'native_occupancy_conflict'; end if;
+ -- Booking admission is separate from occupancy: disabling a profile/catalog
+ -- suppresses only its CTA, never this session or its held/registered seats.
+ -- Inline STABLE reads keep profile, price, identity and capacity in one snapshot.
+ select jsonb_build_object('schemaVersion','native-session-booking.v1',
+   'publicCourseId',c.enrollware_course_id,'profileVersion',p.version,
+   'capacity',v_capacity,'remaining',v_capacity-v_registered-v_holds-v_reserved)
+ into booking
+ from public.courses c
+ join public.landerware_registration_profiles p on p.profile_key=c.registration_profile_key
+ join public.landerware_registration_catalog catalog on catalog.course_id=c.enrollware_course_id
+ where c.id=s.course_id and c.enrollware_course_id in ('209806','359474')
+   and p.course_id=c.course_key and p.active and p.registration_mode='native_public_checkout'
+   and p.version>0 and p.form_schema->>'schemaVersion'='native-checkout.form.v1'
+   and p.form_schema->>'inventory_kind'='scheduled_session_v1'
+   and catalog.active and catalog.currency='usd' and catalog.unit_amount>0
+   and c.base_price*100=catalog.unit_amount::numeric
+   and s.visibility='public' and s.registration_status='open' and s.status in ('scheduled','active')
+   and s.start_at>now() and v_capacity-v_registered-v_holds-v_reserved>0
+   -- A public alias must not select another physical course at checkout.
+   and not exists(select 1 from public.courses other
+     join public.landerware_registration_profiles op on op.profile_key=other.registration_profile_key
+     where op.active and op.registration_mode='native_public_checkout' and other.id<>c.id
+       and exists(select 1 from jsonb_array_elements(case when jsonb_typeof(op.form_schema->'public_aliases')='array'
+         then op.form_schema->'public_aliases' else '[]'::jsonb end) alias
+         where alias->>'public_course_id'=c.enrollware_course_id and alias->>'context' is null));
  return jsonb_build_object('registrationAuthority',authority,'authorityRevision',revision,'generatedIdentity',witness,
    'sessionIdentity',identity,'sessionStatus',s.status,'registrationStatus',s.registration_status,'visibility',s.visibility,
    'capacity',v_capacity,'registered',v_registered,'holds',v_holds,'unreconciledReserved',v_reserved,
-   'remaining',v_capacity-v_registered-v_holds-v_reserved);
+   'remaining',v_capacity-v_registered-v_holds-v_reserved,'publicBooking',booking);
 end $function$;
 
 revoke all on function public.native_scheduling_seat_snapshot(uuid) from public,anon,authenticated;

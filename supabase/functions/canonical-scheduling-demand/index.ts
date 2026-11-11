@@ -121,11 +121,24 @@ export function projectDemand(row: any, seats: any = null) {
       || seats.registered + seats.holds + seats.unreconciledReserved > seats.capacity)) {
     throw new Error("Native scheduling occupancy is unavailable");
   }
+  const booking = native ? seats.publicBooking : null;
+  if (booking != null && (booking.schemaVersion !== "native-session-booking.v1"
+      || !["209806", "359474"].includes(booking.publicCourseId)
+      || booking.publicCourseId !== row.external_course_id
+      || !Number.isSafeInteger(booking.profileVersion) || booking.profileVersion < 1
+      || booking.capacity !== seats.capacity
+      || booking.remaining !== seats.capacity - seats.registered - seats.holds - seats.unreconciledReserved
+      || booking.remaining < 1 || row.visibility !== "public" || row.registration_status !== "open"
+      || !["scheduled", "active"].includes(row.status))) throw new Error("Native booking admission is unavailable");
   const proof = native ? {
     count_available: true, demand_status: "current", source_observed_at: null,
     reconciled_at: null, source_sha256: null, freshness_minutes: null,
     active_registration_count: seats.registered + seats.holds + seats.unreconciledReserved,
     registration_authority: seats.registrationAuthority,
+    native_booking_admission: booking == null ? null : {
+      schemaVersion: booking.schemaVersion, publicCourseId: booking.publicCourseId,
+      profileVersion: booking.profileVersion, capacity: booking.capacity, remaining: booking.remaining,
+    },
     authority_revision: seats.authorityRevision,
     canonical_registered_count: seats.registered,
     held_seat_count: seats.holds,

@@ -50,3 +50,20 @@ test('fresh materialized native sessions require their witness and count held an
   await db.exec("update native_checkout_generated_sessions set state='holding';update class_sessions set max_students=9");await assert.rejects(read,/native_generated_authority_unavailable/);
  }finally{await db.close();}
 });
+test('profile/catalog booking admission is atomic and cannot erase occupied seats when disabled',async()=>{
+ const {db,read}=await fixture();try{
+  await db.exec(`update class_sessions set external_class_id='lw-11111111-1111-4111-8111-111111111111',max_students=6,visibility='public',source='landerware_event',external_session_evidence='{"materializedBy":"native_full_course"}';
+   insert into native_checkout_generated_sessions select id,native_checkout_generated_identity(s),'holding' from class_sessions s;
+   insert into courses values('22222222-2222-4222-8222-222222222222','bls','209806','bls-profile',75);
+   insert into landerware_registration_profiles values('bls-profile','bls',2,true,'native_public_checkout','{"schemaVersion":"native-checkout.form.v1","inventory_kind":"scheduled_session_v1"}');
+   insert into landerware_registration_catalog values('209806',true,'usd',7500);`);
+  await db.exec(hold);
+  let state=await read();assert.equal(state.holds,1);assert.equal(state.publicBooking.remaining,5);assert.equal(state.publicBooking.capacity,6);assert.equal(state.publicBooking.profileVersion,2);
+  for(const [disable,restore] of [
+   ["update landerware_registration_profiles set active=false","update landerware_registration_profiles set active=true"],
+   ["update landerware_registration_catalog set active=false","update landerware_registration_catalog set active=true"],
+   ["update landerware_registration_catalog set unit_amount=1","update landerware_registration_catalog set unit_amount=7500"],
+   ["update landerware_registration_profiles set form_schema=jsonb_set(form_schema,'{inventory_kind}','\"leased_skills_v1\"')","update landerware_registration_profiles set form_schema=jsonb_set(form_schema,'{inventory_kind}','\"scheduled_session_v1\"')"],
+  ]){await db.exec(disable);state=await read();assert.equal(state.publicBooking,null);assert.equal(state.holds,1);assert.equal(state.remaining,5);await db.exec(restore);assert.equal((await read()).publicBooking.remaining,5);}
+ }finally{await db.close();}
+});

@@ -97,7 +97,7 @@ async function waitForBarrier(pid, blockerPid) {
 try {
   const server = JSON.parse(await writer.query(`SELECT json_build_object(
     'database', current_database(), 'version', current_setting('server_version_num')::int,
-    'recovery', pg_is_in_recovery(), 'address', inet_server_addr()::text);`));
+    'recovery', pg_is_in_recovery(), 'address', host(inet_server_addr()));`));
   assert.equal(server.database, database);
   assert.equal(Math.floor(server.version / 10000), 17, 'requires PostgreSQL 17');
   assert.equal(server.recovery, false);
@@ -148,7 +148,7 @@ try {
     const oldName = clone.name === 'legacy_reader' ? 'landerware_public_seat_state' : 'native_scheduling_seat_snapshot';
     const definition = clone.definition.replace(`public.${oldName}(`, `snapshot_test.${clone.name}(`);
     assert.notEqual(definition, clone.definition, 'clone rename failed');
-    await writer.query(`${definition}\nREVOKE ALL ON FUNCTION snapshot_test.${clone.name}(uuid) FROM PUBLIC;
+    await writer.query(`${definition};\nREVOKE ALL ON FUNCTION snapshot_test.${clone.name}(uuid) FROM PUBLIC;
       GRANT EXECUTE ON FUNCTION snapshot_test.${clone.name}(uuid) TO service_role;`);
   }
   const readerPid = Number(await reader.query('SELECT pg_backend_pid();'));

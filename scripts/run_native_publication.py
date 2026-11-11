@@ -2,7 +2,7 @@
 
 Historical occurrence geometry is retained conservatively. Canonical demand owns
 counts and new native sessions; absence/uncertainty never means zero occupancy.
-Only five explicit public paths may be committed by this runner.
+Only six explicit public paths may be committed by this runner.
 """
 from __future__ import annotations
 
@@ -12,6 +12,7 @@ from datetime import datetime, timedelta, timezone
 from hashlib import sha256
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import time
@@ -26,7 +27,8 @@ ROOT = Path(__file__).resolve().parents[1]
 POLICY = 'data/config/native_publication_scope.json'
 REPORT = 'debug/status/native_publication.json'
 PATHS = ('docs/data/schedule_future.json', 'docs/bls.html', 'docs/BLS.html',
-         'docs/bls-schedule.html', 'docs/data/block-selector-availability/bls.json')
+         'docs/bls-schedule.html', 'docs/data/block-selector-availability/bls.json',
+         'docs/assets/resolved-selector-availability.js')
 # Explicit public DTO. No client names, participant records, notes, or freeform
 # upstream fields can enter the public schedule through a retained projection.
 PUBLIC_FIELDS = frozenset('''session_id external_class_id course_id course_key official_course_name
@@ -86,6 +88,39 @@ def privacy_check(value):
             privacy_check(child)
 
 
+def session_admission(row, source, observed):
+    """Only current exact-identity canonical booking proof can admit an old seat."""
+    booking = source.get('native_booking_admission')
+    if not isinstance(booking, dict):
+        return None
+    try:
+        count = source['active_registration_count']
+        capacity, remaining = booking['capacity'], booking['remaining']
+        sid = str(row['session_id'])
+        valid = (source.get('registration_authority') in {'landerware-session-authority.v1', 'landerware-generated-session.v1'}
+            and source.get('registration_backend') == 'landerware'
+            and source.get('session_status') in {'scheduled', 'active'}
+            and source.get('visibility') == 'public' and source.get('registration_status') == 'open'
+            and source.get('workspace_projection_status') == 'current'
+            and source.get('count_available') is True and row.get('demand_status') == 'current'
+            and booking.get('schemaVersion') == 'native-session-booking.v1'
+            and str(row.get('course_id')) == source.get('external_course_id') == booking.get('publicCourseId')
+            and booking['publicCourseId'] in scope.COURSES
+            and source.get('external_class_id') == sid
+            and re.fullmatch(r'(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})', sid)
+            and all(type(v) is int for v in [count, capacity, remaining, booking.get('profileVersion')])
+            and 0 <= count < capacity and remaining == capacity-count and booking['profileVersion'] > 0
+            and all(scope.instant(row[k]) == scope.instant(source[k]) for k in ['start_at', 'end_at'])
+            and row.get('location_name') == source.get('location_name')
+            and row.get('lead_instructor_name') == source.get('lead_instructor_name'))
+        if not valid:
+            return None
+        return {**booking, 'proofObservedAt': observed,
+                'validUntil': (scope.instant(observed)+timedelta(minutes=15)).isoformat()}
+    except (KeyError, ValueError, TypeError):
+        return None
+
+
 def retained_projection(retained, demand):
     rows = session_rows(retained)
     require(isinstance(retained, dict) and isinstance(retained.get('sessions'), list), 'retained_occurrences_required')
@@ -98,11 +133,17 @@ def retained_projection(retained, demand):
     require(set(ids) <= {str(row.get('session_id') or '') for row in projected}, 'retained_occurrence_lost')
     projected = [{key: deepcopy(value) for key, value in row.items() if key in PUBLIC_FIELDS}
                  for row in projected]
+    sources = {str(source.get('canonical_session_id')): source for source in demand['sessions']}
     for row in projected:
-        # Retain occupancy/counts, not an unproven registration CTA. Admission of
-        # an existing seat requires a separate canonical capacity/profile proof.
+        # A prior public projection is never booking authority. Re-admit only
+        # using this newly fetched exact-identity canonical capacity/profile DTO.
         row.pop('registration_url', None)
         row['public_direct_booking'] = False
+        source = sources.get(str(row.get('canonical_session_id')), {})
+        admission = session_admission(row, source, demand['generated_at'])
+        if admission:
+            row.update(native_booking_admission=admission, public_direct_booking=True,
+                       registration_url='/register/?session='+str(row['session_id']))
     privacy_check(projected)
     return {'build': {'source_mode': 'native_canonical_with_retained_occurrences',
                       'generated_at': demand['generated_at'],
@@ -142,8 +183,18 @@ def validate(*, now=None, margin=300):
     check_budget(expiry, now, margin)
     schedule = read('docs/data/schedule_future.json')
     privacy_check(schedule)
-    require(all(row.get('public_direct_booking') is False and not row.get('registration_url')
-                for row in session_rows(schedule)), 'unadmitted_session_registration_cta')
+    expected_rows = {str(row['session_id']): row for row in retained_projection(schedule, demand)['sessions']}
+    for row in session_rows(schedule):
+        expected = expected_rows[str(row['session_id'])]
+        require(row.get('native_booking_admission') == expected.get('native_booking_admission')
+                and row.get('public_direct_booking') == expected.get('public_direct_booking'),
+                'native_admission_source_changed')
+        if row.get('public_direct_booking') is True:
+            admission = row.get('native_booking_admission')
+            require(isinstance(admission, dict) and row.get('registration_url') == '/register/?session='+str(row.get('session_id')), 'unadmitted_session_registration_cta')
+            check_budget(admission['validUntil'], now, margin)
+        else:
+            require(not row.get('registration_url'), 'unadmitted_session_registration_cta')
     ids = {str(row['session_id']) for row in session_rows(schedule)}
     counts = validate_selector('bls', ids, now=now)
     selector = read('docs/data/block-selector-availability/bls.json')
@@ -153,6 +204,9 @@ def validate(*, now=None, margin=300):
     for day in selector['dates']:
         for slot in day['startTimes']:
             for offer in slot['courses']:
+                if offer.get('offerType') == 'seated_class':
+                    validate_seated_offer(offer, schedule, now, margin)
+                    continue
                 require(offer.get('offerType') == 'dynamic_appointment'
                         and offer.get('authority') == 'native-full-course.v2'
                         and str(offer.get('courseId')) in scope.COURSES,
@@ -167,9 +221,45 @@ def validate(*, now=None, margin=300):
             'validUntil': expiry.isoformat(), 'nativeFullOffers': len(originals)}
 
 
+def annotate_seated_offers(payload, schedule):
+    rows = {str(row['session_id']): row for row in session_rows(schedule)}
+    for offer in payload.get('offers', []):
+        if offer.get('offerType') != 'seated_class':
+            continue
+        sid = str((offer.get('sourceAvailabilityBlock') or {}).get('sessionId') or '')
+        row = rows.get(sid, {})
+        admission = row.get('native_booking_admission')
+        require(row.get('public_direct_booking') is True and isinstance(admission, dict), 'unadmitted_seated_offer')
+        offer.update(authority='native-session-booking.v1', session_id=sid,
+            capacity=admission['capacity'], remainingSeats=admission['remaining'],
+            proofObservedAt=admission['proofObservedAt'], validUntil=admission['validUntil'])
+    return payload
+
+
+def validate_seated_offer(offer, schedule, now, margin):
+    sid = str(offer.get('session_id') or '')
+    rows = [row for row in session_rows(schedule) if str(row.get('session_id')) == sid]
+    require(len(rows) == 1, 'unadmitted_public_offer')
+    row = rows[0]; admission = row.get('native_booking_admission') or {}
+    local_start = scope.instant(row['start_at']).astimezone(scope.EASTERN)
+    require(offer.get('authority') == 'native-session-booking.v1' and row.get('public_direct_booking') is True
+        and str(offer.get('courseId')) in scope.COURSES and str(offer.get('courseId')) == str(row.get('course_id'))
+        and offer.get('date') == local_start.date().isoformat() and offer.get('startTime') == local_start.strftime('%H:%M')
+        and offer.get('location') == row.get('location_name') and offer.get('instructor') == row.get('lead_instructor_name')
+        and offer.get('availabilityBlockId') == 'seated:'+sid
+        and offer.get('registrationUrl') == offer.get('appointmentUrl') == row.get('registration_url') == '/register/?session='+sid
+        and offer.get('capacity') == admission.get('capacity') and offer.get('remainingSeats') == admission.get('remaining')
+        and type(offer.get('remainingSeats')) is int and offer['remainingSeats'] > 0
+        and offer.get('proofObservedAt') == admission.get('proofObservedAt')
+        and offer.get('validUntil') == admission.get('validUntil'), 'unadmitted_public_offer')
+    observed, lease = scope.instant(offer['proofObservedAt']), scope.instant(offer['validUntil'])
+    require(observed <= now < lease <= observed+timedelta(minutes=15), 'native_seated_original_proof_invalid')
+    check_budget(lease, now, margin)
+
+
 def native_page_config(config):
     config = deepcopy(config)
-    config.update(allowed_course_ids=sorted(scope.COURSES), include_seated_classes=False)
+    config.update(allowed_course_ids=sorted(scope.COURSES), include_seated_classes=True)
     config['course_options'] = [row for row in config.get('course_options', [])
                                 if str(row.get('course_id')) in scope.COURSES]
     # The narrow preview must not advertise an unadmitted bundle as available.
@@ -202,11 +292,11 @@ def build(preview=False):
         # Full-course native admission only. Existing classes remain scheduler
         # blockers; no seated, skills or bundle CTA is implied by this rollout.
         config = native_page_config(load_block_schedule_page_configs()['bls'])
-        payload = build_block_schedule_page(config)
+        payload = annotate_seated_offers(build_block_schedule_page(config), schedule)
         page = write_page_outputs(payload, ROOT / config['report_json_path'],
                                   ROOT / config['report_md_path'], ROOT / config['output_path'])
         public_paths = {str(Path(p).relative_to(ROOT)) for p in page['output_paths'] if Path(p).is_relative_to(ROOT / 'docs')}
-        require(public_paths == set(PATHS) - {'docs/data/schedule_future.json'}, 'unexpected_generator_output')
+        require(public_paths == set(PATHS) - {'docs/data/schedule_future.json', 'docs/assets/resolved-selector-availability.js'}, 'unexpected_generator_output')
         evidence = validate()
         evidence.update(schemaVersion='native-publication-run.v1', sourceHead=head, preview=preview,
                         state='BUILT', generatedAt=datetime.now(timezone.utc).isoformat(),

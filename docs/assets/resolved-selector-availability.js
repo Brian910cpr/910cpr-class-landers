@@ -43,7 +43,7 @@
   function isPastStart(day, slot, now) {
     if (!day || !slot) return true;
     if (Number.isFinite(now.instant) && slot.courses?.length &&
-        slot.courses.every(course => course.offerType !== 'seated_class' &&
+        slot.courses.every(course => (course.offerType !== 'seated_class' || course.authority === 'native-session-booking.v1') &&
           course.validUntil && Date.parse(course.validUntil) <= now.instant)) return true;
     if (day.date < now.dateKey) return true;
     if (day.date > now.dateKey) return false;
@@ -113,8 +113,16 @@
     const live = value => Number.isFinite(Date.parse(value)) && Date.parse(value) > instant;
     return (Array.isArray(dates) ? dates : []).map(day => ({...day,
       startTimes: (day.startTimes || []).map(slot => ({...slot,
-        courses: (slot.courses || []).filter(course => course.offerType === 'seated_class' ||
-          (live(validUntil) && (!course.validUntil || live(course.validUntil)))),
+        courses: (slot.courses || []).filter(course => {
+          if (course.authority === 'native-session-booking.v1') {
+            const observed = Date.parse(course.proofObservedAt), expiry = Date.parse(course.validUntil);
+            return Number.isFinite(observed) && observed <= instant && live(course.validUntil)
+              && expiry <= observed + 15 * 60 * 1000
+              && Number.isInteger(course.remainingSeats) && course.remainingSeats > 0;
+          }
+          return course.offerType === 'seated_class' ||
+            (live(validUntil) && (!course.validUntil || live(course.validUntil)));
+        }),
       })).filter(slot => slot.courses.length),
     })).filter(day => day.startTimes.length);
   }
