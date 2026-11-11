@@ -2416,8 +2416,20 @@ def render_html(payload: dict[str, Any]) -> str:
       }}
     }}
 
+    function refreshVisibleAvailability() {{
+      if (document.hidden || !availabilityReady()) return;
+      renderAll();
+      const hasDynamicOffers = resolvedAvailability?.dates?.some(day =>
+        day.startTimes?.some(slot => slot.courses?.some(course => course.offerType !== 'seated_class'))
+      );
+      const expiresAt = Date.parse(resolvedAvailability?.validUntil);
+      if (hasDynamicOffers && (!Number.isFinite(expiresAt) || expiresAt <= Date.now())) {{
+        return loadResolvedAvailability();
+      }}
+    }}
+
     loadResolvedAvailability();
-    setInterval(() => {{ if (!document.hidden && availabilityReady()) renderAll(); }}, 30000);
+    setInterval(refreshVisibleAvailability, 30000);
     document.addEventListener('visibilitychange', () => {{
       if (!document.hidden) loadResolvedAvailability();
     }});

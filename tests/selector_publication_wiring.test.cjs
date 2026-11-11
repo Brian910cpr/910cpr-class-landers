@@ -26,8 +26,9 @@ function fixture(validUntil = future) {
 }
 function box(data) {
   const context = {ResolvedSelectorAvailability: api, fetch: async () => ({ok: true, json: async () => data}),
-    availabilityUrl: '/fixture', setAvailabilityMessage() {}, renderAll() {}, console,
-    scheduleDates: [], resolvedAvailability: null, availabilityState: '', availabilityReady() {return this.availabilityState === 'ready';}};
+    availabilityUrl: '/fixture', setAvailabilityMessage() {}, renderAll() {}, console, document: {hidden: false},
+    scheduleDates: [], resolvedAvailability: null, availabilityState: ''};
+  context.availabilityReady = () => context.availabilityState === 'ready';
   vm.createContext(context);
   vm.runInContext(loader + currentDates, context);
   return context;
@@ -96,4 +97,41 @@ test('all configured families and courses preserve identity and suppress stale d
       assert.ok(api.filterDatesByCourse(visible, id).every(d => d.startTimes.every(s => s.courses.every(c => String(c.courseId) === id))), family + ':' + id);
     }
   }
+});
+
+test('visible expired dynamic publication refetches once while pending and recovers fresh choices', async () => {
+  const ctx = box(fixture(past));
+  await ctx.loadResolvedAvailability();
+  assert.deepEqual(ids(ctx.currentPublicationDates()), ['seated']);
+  let calls = 0, finish;
+  ctx.fetch = () => {calls++; return new Promise(resolve => {finish = resolve;});};
+  const pending = ctx.refreshVisibleAvailability();
+  ctx.refreshVisibleAvailability();
+  assert.equal(calls, 1);
+  assert.equal(ctx.availabilityState, 'checking');
+  assert.deepEqual(ids(ctx.currentPublicationDates()), ['seated']);
+  finish({ok: true, json: async () => fixture()}); await pending;
+  assert.deepEqual(ids(ctx.currentPublicationDates()), ['seated', 'dynamic']);
+  ctx.refreshVisibleAvailability();
+  assert.equal(calls, 1);
+});
+test('timer does not poll hidden, fresh, or seated-only publications', async () => {
+  for (const mode of ['hidden', 'fresh', 'seated']) {
+    const data = fixture(mode === 'fresh' ? future : past);
+    if (mode === 'seated') data.dates[0].startTimes[0].courses.pop();
+    const ctx = box(data); await ctx.loadResolvedAvailability();
+    ctx.document.hidden = mode === 'hidden';
+    let calls = 0; ctx.fetch = async () => {calls++; throw Error('unexpected fetch');};
+    await ctx.refreshVisibleAvailability();
+    assert.equal(calls, 0, mode);
+  }
+});
+test('repeated stale responses never revive expired offers and retry only on later ticks', async () => {
+  const ctx = box(fixture(past)); await ctx.loadResolvedAvailability();
+  let calls = 0;
+  ctx.fetch = async () => {calls++; return {ok: true, json: async () => fixture(past)};};
+  await ctx.refreshVisibleAvailability();
+  assert.equal(calls, 1); assert.deepEqual(ids(ctx.currentPublicationDates()), ['seated']);
+  await ctx.refreshVisibleAvailability();
+  assert.equal(calls, 2); assert.deepEqual(ids(ctx.currentPublicationDates()), ['seated']);
 });
