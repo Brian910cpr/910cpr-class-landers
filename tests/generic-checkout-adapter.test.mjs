@@ -106,9 +106,9 @@ test('disabled upload policy rejects synthetic files before an upload intent or 
  assert.equal(response.status,400);assert.equal((await response.json()).error,'uploads_disabled');
  assert.equal(h.calls.some(c=>c.url.includes('native_checkout_begin_upload')||c.url.includes('/storage/v1/object/')),false);
 });
-test('actual fallback contract permits only the published matching concrete-session destination without a native claim',async()=>{
+test('actual generic HTTP adapter rejects unconverted sessions without an external handoff or native claim',async()=>{
  const legacyURL='https://coastalcprtraining.enrollware.com/enroll?id=123456',h=harness({legacyURL});
- const response=await h.send('form?session=123456');assert.equal(response.status,200);const m=await response.json();assert.equal(m.nativeReady,false);assert.equal(m.fallbackRegistrationUrl,legacyURL);assert.equal(m.profile,undefined);
+ const response=await h.send('form?session=123456');assert.equal(response.status,400);const m=await response.json();assert.equal(m.error,'native_registration_unavailable');assert.equal(m.fallbackRegistrationUrl,undefined);assert.equal(m.profile,undefined);
  const reserve=await h.send('reserve',{selection:{session:'123456'},profileKey:'fixture_generic',profileVersion:1,students:[]});assert.equal(reserve.status,400);assert.equal(h.calls.some(c=>c.url.includes('reserve_native_checkout_order')),false);
  for(const bad of ['https://unapproved.invalid/enroll?id=123456','https://coastalcprtraining.enrollware.com/enroll?id=999999']){const no=harness({legacyURL:bad});assert.equal((await no.send('form?session=123456')).status,400);}
 });
@@ -187,3 +187,4 @@ test('legacy paid recovery queues its original confirmation once, including when
  assert.equal((await h.raw('order/'+id+'?requireDelivery=1')).status,200);assert.equal(h.messages().length,1);
  assert.equal(h.calls.some(c=>c.url.endsWith('/rpc/native_checkout_finalize_order')),false);
 });
+

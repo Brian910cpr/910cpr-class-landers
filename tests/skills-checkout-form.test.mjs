@@ -63,10 +63,12 @@ test('saved refunded order shows its terminal state and cannot offer another pay
  const h=await harness({saved:true,refunded:true});assert.equal(h.nodes.get('pay').hidden,true);assert.match(h.nodes.get('status').textContent,/order was refunded/);assert.equal(h.nodes.get('result').textContent,'');
  await h.submit();assert.equal(h.calls.includes('checkout'),false);assert.equal(h.calls.includes('reserve'),false);
 });
-test('unconverted concrete classes expose the verified original route rather than a dead-end native form',async()=>{
- const url='https://coastalcprtraining.enrollware.com/enroll?id=123456',h=await harness({legacy:url});
- assert.deepEqual(h.calls,['form']);assert.equal(h.cards.length,0);assert.equal(h.nodes.get('app').children[0].href,url);assert.equal(h.nodes.get('app').children[0].target,'_top');
- const rejected=await harness({legacy:'https://unapproved.invalid/enroll?id=123456'});assert.equal(rejected.nodes.get('app').children[0].href,'/classes/');
+test('stale external-fallback responses cannot offer external registration or create a new reservation',async()=>{
+ for(const url of ['https://coastalcprtraining.enrollware.com/enroll?id=123456','https://unapproved.invalid/enroll?id=123456']){
+  const h=await harness({legacy:url});
+  assert.deepEqual(h.calls,['form']);assert.equal(h.cards.length,0);assert.equal(h.nodes.get('app').children[0].href,'/classes/');
+  assert.match(h.nodes.get('app').textContent,/Online checkout is not available/);assert.equal(h.redirected(),undefined);
+ }
 });
 
 test('legacy storage recovery uses only the matching receipt and rejects ambiguous saved reservations before a fresh claim',()=>{
@@ -85,3 +87,4 @@ test('legacy storage recovery uses only the matching receipt and rejects ambiguo
 test('actual shared client resumes the old saved nonce before offer lookup and pays without a duplicate reservation',async()=>{
  const h=await harness({legacySaved:true});assert.equal(h.cards.length,1);await h.submit();assert.equal(h.calls.filter(x=>x==='form').length,1);assert.equal(h.calls.includes('reserve'),false);assert.match(h.redirected(),/^https:\/\/checkout.stripe.com\//);
 });
+

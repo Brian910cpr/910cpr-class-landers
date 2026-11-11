@@ -53,7 +53,9 @@ export function genericCheckout(deps){
   }
   if(selection.session){
    session=await deps.scheduleSession(String(selection.session));
-   if(!session.nativeReady){if(selection.date)throw Error('session_not_available');const error=Error('native_registration_unavailable');error.fallbackRegistrationUrl=deps.fallbackUrl?.(session,String(selection.session));throw error;}
+   // Registration is owned by LanderWare. An unconverted session must not
+   // redirect a new registrant to the retired external enrollment service.
+   if(!session.nativeReady)throw Error(selection.date?'session_not_available':'native_registration_unavailable');
    const actualCourse=String(session.course_id||session.course_number);
    if(publicCourse&&publicCourse!==actualCourse)throw Error('invalid_session');
    publicCourse=actualCourse;
@@ -88,8 +90,7 @@ export function genericCheckout(deps){
     ...(Number.isFinite(durationMinutes)&&durationMinutes>0?{durationMinutes}:{}),...(Number.isInteger(capacity)&&capacity>0?{capacity}:{}),...(Number.isInteger(remaining)?{remainingSeats:remaining}:{})}};
  }
  async function model(selection){
-  try{const m=await resolve(selection);return {ok:true,profile:m.view,selection:m.selection,session:m.session};}
-  catch(error){if(error.message==='native_registration_unavailable'&&error.fallbackRegistrationUrl)return {ok:true,nativeReady:false,sessionId:String(selection.session),fallbackRegistrationUrl:error.fallbackRegistrationUrl};throw error;}
+  const m=await resolve(selection);return {ok:true,profile:m.view,selection:m.selection,session:m.session};
  }
  async function resume(key){
   let r=await receipt(key),snap=r.profileSnapshot;
@@ -173,3 +174,4 @@ export async function boundedCheckoutJSON(req,limit=32768){
  const bytes=new Uint8Array(size);let offset=0;for(const c of chunks){bytes.set(c,offset);offset+=c.length;}
  try{return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));}catch{throw Error('invalid_request');}
 }
+

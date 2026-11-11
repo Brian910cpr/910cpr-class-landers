@@ -93,10 +93,8 @@ async function init(){
   else if(key){try{model=await request('form');}catch(e){if(e.message!=='reservation_not_found')throw e;/* Keep the same nonce if an earlier save is still in flight. */}}
   if(!model)model=await request('form',null,originalSelection);
   if(model.nativeReady===false){
-   const url=new URL(model.fallbackRegistrationUrl);
-   if(url.origin!=='https://coastalcprtraining.enrollware.com'||url.pathname!=='/enroll'||url.searchParams.get('id')!==originalSelection.session||model.sessionId!==originalSelection.session)throw Error('native_registration_unavailable');
-   app.innerHTML='<section class="formwrap"><h1>Registration for your selected class</h1><p>This class is still registered through our existing enrollment system. Continue there to register.</p></section>';
-   const link=document.createElement('a');link.href=url.href;link.target='_top';link.textContent='Continue to existing registration';app.append(link);announceSize();return;
+   // Also reject a stale API response from before the native-only cutover.
+   throw Error('native_registration_unavailable');
   }
   if(model.legacyRecovery){
    const recovery=model.legacyRecovery;
@@ -123,3 +121,4 @@ async function init(){
 if(params.get('embed')==='1')document.documentElement.classList.add('embedded-checkout');
 new ResizeObserver(announceSize).observe(app);
 init();
+

@@ -123,10 +123,10 @@ test('observed payment with a failed finalizer stays processing rather than expi
  assert.equal((await f.api.status(key)).receipt.status,'processing');assert.equal((await f.api.checkout(key)).receipt.status,'processing');
  f.receipts.get(key).status='paid';assert.equal((await f.api.status(key)).receipt.status,'paid');
 });
-test('unconverted concrete sessions retain only their server-verified legacy route and cannot create a native reservation',async()=>{
+test('unconverted concrete sessions never offer external registration or create a native reservation',async()=>{
  const f=fixture(),legacy='https://coastalcprtraining.enrollware.com/enroll?id=123456';
  f.deps.scheduleSession=async()=>({nativeReady:false,registration_url:legacy});f.deps.fallbackUrl=(_s,id)=>id==='123456'?legacy:null;
- const model=await f.api.model(f.selection);assert.equal(model.nativeReady,false);assert.equal(model.fallbackRegistrationUrl,legacy);
+ await assert.rejects(f.api.model(f.selection),/native_registration_unavailable/);
  assert.equal(f.calls.some(c=>c.name==='native_checkout_profile'),false);
  await assert.rejects(f.api.reserve(key,f.body()),/native_registration_unavailable/);
  f.deps.fallbackUrl=()=>null;await assert.rejects(f.api.model(f.selection),/native_registration_unavailable/);
@@ -180,3 +180,4 @@ test('other configured course families resolve existing appointments through the
  f.deps.scheduleSession=async()=>({nativeReady:false,course_id:'241108'});
  await assert.rejects(f.api.model({course:'241108',date:'2031-01-01',startTime:'09:00'}),/session_not_available/);
 });
+
