@@ -21,6 +21,7 @@
     const hour = Number(parts.hour === "24" ? "0" : parts.hour);
     return {
       dateKey: `${parts.year}-${parts.month}-${parts.day}`,
+      instant: now.getTime(),
       minutes: (hour * 60) + Number(parts.minute),
     };
   }
