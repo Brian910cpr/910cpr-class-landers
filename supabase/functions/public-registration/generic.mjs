@@ -1,4 +1,4 @@
-import {fullCourseOffers} from './full-course.mjs';
+import {fullCourseOffers,fullCoursePage} from './full-course.mjs';
 import {normalizeCheckoutProfile,checkoutSelection,uploadPolicies,conditionApplies} from '../_shared/checkout-profile.mjs';
 import {profileUploadInput} from '../_shared/checkout-upload.mjs';
 import {skillsOffers,CONTEXTS} from '../skills-session-reservation/policy.mjs';
@@ -41,13 +41,12 @@ export function genericCheckout(deps){
    let id;try{if(!selection.selectionId)id=await deps.appointmentSession?.(selection);}catch(error){if(error.message!=='session_not_available')throw error;}
    if(id)selection={...selection,session:id};
    else {
-    // Other course families can select configured existing sessions only.
-    // Dynamic materialization remains limited to the evidenced BLS contract.
-    if(!['209806','359474'].includes(publicCourse))throw Error('session_not_available');
-    const fullPolicy=deps.fullPolicy?await deps.fullPolicy():{materializationEnabled:await deps.fullEnabled?.(),nativePublicationEnabled:false};
+    // Each full course must have an independently reviewed server-side policy.
+    const fullPage=fullCoursePage(publicCourse);if(!fullPage)throw Error('session_not_available');
+    const fullPolicy=deps.fullPolicy?await deps.fullPolicy(publicCourse):{materializationEnabled:await deps.fullEnabled?.(),nativePublicationEnabled:false};
     if(fullPolicy?.materializationEnabled!==true)throw Error('native_registration_unavailable');
     if(selection.skillsContext)throw Error('invalid_context');
-    const all=fullCourseOffers(await deps.publication('bls'),publicCourse,now(),{nativePublicationEnabled:fullPolicy.nativePublicationEnabled===true});
+    const all=fullCourseOffers(await deps.publication(fullPage),publicCourse,now(),{nativePublicationEnabled:fullPolicy.nativePublicationEnabled===true,coursePolicy:fullPolicy});
     const matches=all.filter(o=>selection.selectionId?o.selectionId===selection.selectionId:
      o.localStart===`${selection.date}T${selection.startTime}`&&(!selection.instructor||o.instructor===selection.instructor)&&(!selection.location||o.location===selection.location));
     if(matches.length!==1)throw Error('session_not_available');fullOffer=matches[0];
