@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import tempfile
+import textwrap
 import unittest
 from unittest.mock import patch
 
@@ -13,6 +14,19 @@ from tests.test_native_full_publication_validator import NativeFullValidatorTest
 
 NOW = datetime(2030, 1, 1, tzinfo=timezone.utc)
 POLICY = dict(schemaVersion='native-publication-scope.v1', enabled=False, scopeId='brian-shipyard-b.v1')
+
+
+def workflow_report_paths(report):
+    """Execute the actual workflow exporter with a local report and output file."""
+    workflow = (Path(__file__).resolve().parents[1] / '.github/workflows/publish-native-availability.yml').read_text()
+    step = workflow.split('      - name: Build exact gate-selected public files\n', 1)[1].split('\n      - name:', 1)[0]
+    script = textwrap.dedent(step.split("python - <<'PY'\n", 1)[1].split('\n          PY', 1)[0])
+    with tempfile.TemporaryDirectory() as directory:
+        output = Path(directory) / 'github-output'
+        with patch.dict(os.environ, {'GITHUB_OUTPUT': str(output)}), patch.object(runner, 'read', return_value=report) as read:
+            exec(compile(script, '<native-workflow-report-export>', 'exec'), {})
+            read.assert_called_once_with(runner.REPORT)
+        return output.read_text()
 
 
 class NativePublicationRunnerTests(unittest.TestCase):
@@ -148,6 +162,23 @@ class NativePublicationRunnerTests(unittest.TestCase):
             with patch.object(runner, 'git', return_value='head'), patch.object(runner, 'prepare', side_effect=RuntimeError('fixture')):
                 with self.assertRaises(RuntimeError): runner.build(preview=True)
             self.assertEqual((Path(directory) / runner.POLICY).read_bytes(), before)
+
+    def test_workflow_report_export_preserves_exact_independent_gate_allowlists(self):
+        for skills, heartsaver, count in [(False, False, 6), (False, True, 10), (True, False, 15), (True, True, 15)]:
+            with self.subTest(skills=skills, heartsaver=heartsaver):
+                paths = runner.publication_paths(skills, heartsaver)
+                self.assertEqual(len(paths), count)
+                report = dict(skillsEnabled=skills, heartsaverFullEnabled=heartsaver,
+                              files={path: 'fixture-hash' for path in paths})
+                expected = 'paths<<NATIVE_PUBLICATION_PATHS\n' + '\n'.join(paths) + '\nNATIVE_PUBLICATION_PATHS\n'
+                self.assertEqual(workflow_report_paths(report), expected)
+                for files in [dict(report['files'], **{'docs/private.json': 'extra'}),
+                              {path: 'fixture-hash' for path in paths[1:]}]:
+                    with self.assertRaisesRegex(AssertionError, 'Unexpected preview paths'):
+                        workflow_report_paths(dict(report, files=files))
+        legacy = {'files': dict.fromkeys(runner.PATHS, 'fixture-hash')}
+        self.assertEqual(workflow_report_paths(legacy),
+                         'paths<<NATIVE_PUBLICATION_PATHS\n' + '\n'.join(runner.PATHS) + '\nNATIVE_PUBLICATION_PATHS\n')
 
     def test_workflow_has_no_retired_fetch_or_broad_public_staging(self):
         root = Path(__file__).resolve().parents[1]

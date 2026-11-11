@@ -11,6 +11,9 @@ on:
 # Activation gate: add a five-minute schedule only after a real visible cycle and
 # an independent stale/observer-heartbeat monitor are proven. Never extend the
 # original 15-minute proof to compensate for queue, build, or Pages delays.
+# A schedule alone stays preview-only because inputs.publish is absent. Future
+# activation must explicitly derive one publish mode for checkout, activation
+# checks, maintenance, build, publish, Pages, observation, and preview upload.
 # schedule:
 #   - cron: '*/5 * * * *'
 
@@ -78,7 +81,7 @@ jobs:
           from pathlib import Path
           from scripts.run_native_publication import read, REPORT, publication_paths
           report = read(REPORT)
-          paths = publication_paths(report.get('skillsEnabled', False))
+          paths = publication_paths(report.get('skillsEnabled', False), report.get('heartsaverFullEnabled', False))
           assert set(report['files']) == set(paths), 'Unexpected preview paths'
           with Path(os.environ['GITHUB_OUTPUT']).open('a') as output:
               output.write('paths<<NATIVE_PUBLICATION_PATHS\n' + '\n'.join(paths) + '\nNATIVE_PUBLICATION_PATHS\n')

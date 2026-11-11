@@ -237,6 +237,9 @@ class HeartsaverPublicationTests(unittest.TestCase):
                 original=(root/runner.POLICY).read_bytes();evidence=runner.build(preview=True)
                 self.assertEqual((root/runner.POLICY).read_bytes(),original)
                 self.assertEqual(set(evidence['files']),set(runner.publication_paths(skills,True)))
+                from tests.test_native_publication_runner import workflow_report_paths
+                self.assertEqual(workflow_report_paths(evidence),
+                    'paths<<NATIVE_PUBLICATION_PATHS\n' + '\n'.join(runner.publication_paths(skills,True)) + '\nNATIVE_PUBLICATION_PATHS\n')
                 self.assertEqual({str(path.relative_to(root)) for path in (root/'docs').rglob('*') if path.is_file()},set(evidence['files']))
                 html=(root/'docs/heartsaver.html').read_text();self.assertIn('20261111-native-heartsaver1',html)
                 self.assertIn('First Aid CPR AED',html);self.assertIn('CPR AED',html)
