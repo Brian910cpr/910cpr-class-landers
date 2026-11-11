@@ -18,7 +18,7 @@ export function nativeConfirmationService({rpc,env,request,report=()=>{}}) {
    // call the provider again after acceptance or an uncertain response.
    let settled;try{settled=await rpc('native_checkout_settle_confirmation',outcome);}catch{/* Preserve the exact receipt for private reconciliation. */}
    if(settled?.settled===true||settled?.replay===true){
-    result.stopped=null;result[result.pendingSettlement.p_outcome==='sent'?'accepted':result.pendingSettlement.p_outcome]++;
+    result.stopped=null;result.continuationRequired=true;result[result.pendingSettlement.p_outcome==='sent'?'accepted':result.pendingSettlement.p_outcome]++;
    }else report({event:'native_confirmation_settlement_unknown',...outcome});
    delete result.pendingSettlement;
   }

@@ -16,7 +16,7 @@ test('disabled queue never calls transport',async()=>{
 test('uncertain settlement retries the same receipt once without a second provider call',async()=>{
  let claims=0,settles=0,sends=0;const seen=[];
  const svc=nativeConfirmationService({rpc:async(name,args)=>{if(name==='native_checkout_claim_confirmation'){claims++;return job;}seen.push(args);if(++settles===1)throw Error('lost response');return {replay:true};},env:key=>key==='RESEND_API_KEY'?'fixture':undefined,request:async()=>{sends++;return Response.json({id:'fixture_receipt'});}});
- const r=await svc.deliver();assert.equal(r.accepted,1);assert.equal(r.stopped,null);assert.equal(r.pendingSettlement,undefined);assert.equal(claims,1);assert.equal(sends,1);assert.equal(settles,2);assert.deepEqual(seen[0],seen[1]);
+ const r=await svc.deliver();assert.equal(r.accepted,1);assert.equal(r.stopped,null);assert.equal(r.continuationRequired,true);assert.equal(r.pendingSettlement,undefined);assert.equal(claims,1);assert.equal(sends,1);assert.equal(settles,2);assert.deepEqual(seen[0],seen[1]);
 });
 test('unresolved settlement preserves a private receipt and exposes no lease in result',async()=>{
  let sends=0;const reports=[];const svc=nativeConfirmationService({rpc:async name=>{if(name==='native_checkout_claim_confirmation')return job;throw Error('unknown');},env:key=>key==='RESEND_API_KEY'?'fixture':undefined,request:async()=>{sends++;return Response.json({id:'fixture_receipt'});},report:r=>reports.push(r)});

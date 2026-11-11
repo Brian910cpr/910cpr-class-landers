@@ -18,7 +18,7 @@ function fixture(jobs = [job(1)], options = {}) {
 test('bounded service consumer records receipt with exact durable message and lease', async () => {
   const f = fixture();
   const result = await dispatchNativeConfirmations(f.input);
-  assert.deepEqual(result, {claimed: 1, accepted: 1, rejected: 0, ambiguous: 0, stopped: null, disabled: false, empty: true, actualDeliveryConfirmed: false});
+  assert.deepEqual(result, {claimed: 1, accepted: 1, rejected: 0, ambiguous: 0, stopped: null, disabled: false, empty: true, limitReached: false, actualDeliveryConfirmed: false});
   assert.deepEqual(f.claims, [{p_order_id: null}, {p_order_id: null}]);
   assert.equal(f.sends.length, 1);
   assert.deepEqual(f.settlements, [{p_message_id: uuid(1), p_lease: uuid(101), p_outcome: 'sent', p_provider_id: 'synthetic-provider-id', p_error: null}]);
@@ -36,7 +36,7 @@ test('maximum loop is ten messages and custom bounded limit is honored', async (
   for (const limit of [1, 3, 10]) {
     const f = fixture(Array.from({length: 12}, (_, i) => job(i + 1)));
     const result = await dispatchNativeConfirmations({...f.input, limit});
-    assert.equal(f.claims.length, limit); assert.equal(f.sends.length, limit); assert.equal(result.accepted, limit);
+    assert.equal(f.claims.length, limit); assert.equal(f.sends.length, limit); assert.equal(result.accepted, limit);assert.equal(result.limitReached,true);
   }
 });
 

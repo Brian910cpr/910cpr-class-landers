@@ -22,7 +22,7 @@ export async function dispatchNativeConfirmations({ orderId = null, limit = 10, 
   }
   const summary = {
     claimed: 0, accepted: 0, rejected: 0, ambiguous: 0, stopped: null,
-    disabled: false, empty: false, actualDeliveryConfirmed: false,
+    disabled: false, empty: false, limitReached: false, actualDeliveryConfirmed: false,
   };
   const seen = new Set();
   for (let i = 0; i < limit; i++) {
@@ -58,5 +58,6 @@ export async function dispatchNativeConfirmations({ orderId = null, limit = 10, 
     if (result.outcome === 'sent') summary.accepted++;
     else summary[result.outcome]++;
   }
+  summary.limitReached = summary.claimed === limit && !summary.stopped && !summary.disabled && !summary.empty;
   return summary;
 }

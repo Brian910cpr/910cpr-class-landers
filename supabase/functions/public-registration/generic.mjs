@@ -32,6 +32,7 @@ function sameJSON(a,b){
 }
 export function genericCheckout(deps){
  const rpc=deps.rpc,now=deps.now||(()=>Date.now());
+ const afterCommit=async id=>{try{await deps.afterCommit?.(id);}catch{/* Delivery cannot roll back a committed reservation. */}};
  const receipt=key=>{if(!KEY.test(key||''))throw Error('invalid_request');return rpc('native_checkout_receipt',{p_key:key});};
  async function resolve(selection={}){
   const context=String(selection.skillsContext||'');let publicCourse=String(selection.course||''),session;
@@ -113,6 +114,7 @@ export function genericCheckout(deps){
    const prior=normalizeCheckoutProfile(snap.profile,snap.catalog,{context:snap.context,publicCourse:snap.physicalCourseId});
    if(snap.selection&&(body.selection?.session&&body.selection.session!==snap.selection.externalId||body.selection?.selectionId&&body.selection.selectionId!==snap.selection.offerId)||body.selection?.skillsContext&&body.selection.skillsContext!==snap.context)throw Error('idempotency_conflict');
    if(old.some((x,i)=>{const s=checkoutSelection(prior,body.students[i].fields||{},body.students[i].selectedChoices);return !sameJSON(x.submitted,{fields:s.fields,selectedChoices:s.selectedChoices});}))throw Error('idempotency_conflict');
+   if(existing.kind==='public_order')await afterCommit(existing.orderId);
    return {ok:true,receipt:receiptView(existing,now())};
   }
   const m=await resolve(body.selection),students=body.students;
@@ -129,17 +131,18 @@ export function genericCheckout(deps){
   const r=await rpc('reserve_native_checkout_order',{p_key:key,p_profile_key:m.view.profileKey,p_version:m.view.profileVersion,p_context:m.context,
    p_external_id:m.selection.session||null,p_offer:m.offer||{},p_students:wire,p_inputs:inputs,p_expected_total:expected});
   if(r.status==='offer_required')throw Error('calendar_refresh_required');
+  await afterCommit(r.orderId);
   return {ok:true,receipt:receiptView(r,now())};
  }
  async function status(key){
   let r=await receipt(key);
   try{if(r.kind==='skills_reservation')await deps.legacyPayment(key,r.context,true);else if(['held','checkout_open'].includes(r.status)&&!r.reconciliationError)await deps.verify(r.orderId);}
   catch(error){r=await receipt(key);if(!r.paymentObserved)throw error;}
-  r=await receipt(key);return {ok:true,receipt:receiptView(r,now())};
+  r=await receipt(key);if(r.kind==='public_order'&&r.status==='paid')await afterCommit(r.orderId);return {ok:true,receipt:receiptView(r,now())};
  }
  async function checkout(key){
   const r=await receipt(key),v=receiptView(r,now());
-  if(v.status==='paid')return {ok:true,receipt:v};
+  if(v.status==='paid'){if(r.kind==='public_order')await afterCommit(r.orderId);return {ok:true,receipt:v};}
   if(v.status==='processing')return {ok:true,receipt:v};
   if(!['held','checkout_open'].includes(v.status))throw Error(v.status==='expired'?'hold_expired':'payment_reconciliation_required');
   if(!await rpc('native_checkout_payment_allowed',{p_key:key}))throw Error('required_document_missing');

@@ -1,3 +1,5 @@
+import {nativeConfirmationService} from "../_shared/native-confirmation-service.mjs";
+import {nativeConfirmationPostcommit} from "../_shared/native-confirmation-postcommit.mjs";
 import {publicOrderVersion,settlePublicOrder} from "../public-registration/public-order-routing.mjs";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.56.0";
 
@@ -44,6 +46,15 @@ Deno.serve(async(request)=>{
        if(result?.status==='paid'&&publicOrderVersion(publicOrder)==='legacy'){
         const confirmation=await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/public-registration/order/${publicOrder.id}?requireDelivery=1`,{redirect:'error',signal:AbortSignal.timeout(20000)});
         if(!confirmation.ok)throw Error('legacy_confirmation_pending');
+       }
+       if(result?.status==='paid'&&publicOrderVersion(publicOrder)==='native-v1'){
+        const rpc=async(name:string,args:unknown)=>{const {data,error}=await db.rpc(name,args);if(error)throw Error('confirmation_rpc_failed');return data;};
+        const notify=nativeConfirmationPostcommit({
+         service:nativeConfirmationService({rpc,env:(name:string)=>Deno.env.get(name),request:fetch,report:(r:unknown)=>console.error(JSON.stringify(r))}),
+         waitUntil:typeof EdgeRuntime!=="undefined"?(p:Promise<unknown>)=>EdgeRuntime.waitUntil(p):undefined,
+         report:(r:unknown)=>console.error(JSON.stringify(r))
+        });
+        await notify(publicOrder.id);
        }
        return reply({ok:true,orderId:publicOrder.id,status:result?.status});
       }catch{return reply({ok:false,error:'Public payment reconciliation failed'},500);}
@@ -115,3 +126,4 @@ Deno.serve(async(request)=>{
   }
   return reply({ok:true,registrationId,groupRegistrationIds:groupIds,orderId:order.id,status:"paid"});
 });
+

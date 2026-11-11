@@ -181,3 +181,16 @@ test('other configured course families resolve existing appointments through the
  await assert.rejects(f.api.model({course:'241108',date:'2031-01-01',startTime:'09:00'}),/session_not_available/);
 });
 
+
+test('post-commit trigger sees a durable reservation and cannot erase it on mail failure',async()=>{
+ const f=fixture(),notified=[];f.deps.afterCommit=async id=>{assert.ok(f.receipts.has(key));notified.push(id);throw Error('private mail failure');};
+ const saved=await f.api.reserve(key,f.body());assert.equal(saved.receipt.status,'held');assert.deepEqual(notified,['fixture-order']);
+ assert.equal((await f.api.reserve(key,f.body())).receipt.status,'held');assert.equal(notified.length,2);assert.equal(f.calls.filter(c=>c.name==='reserve_native_checkout_order').length,1);
+ await assert.rejects(f.api.reserve(key,{...f.body(),students:[]}));assert.equal(notified.length,2);
+});
+test('paid generic status and checkout retries nudge only the committed public order',async()=>{
+ const f=fixture(),notified=[];await f.api.reserve(key,f.body());f.deps.afterCommit=async id=>notified.push(id);
+ assert.equal((await f.api.status(key)).receipt.status,'held');assert.equal(notified.length,0);
+ f.paid(true);assert.equal((await f.api.status(key)).receipt.status,'paid');assert.deepEqual(notified,['fixture-order']);
+ assert.equal((await f.api.checkout(key)).receipt.status,'paid');assert.equal(notified.length,2);
+});
