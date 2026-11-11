@@ -160,6 +160,8 @@ declare p public.landerware_registration_profiles; c public.courses; o public.la
 begin
  if p_key is null or p_key !~ '^[a-f0-9-]{36}$' or jsonb_typeof(p_students) is distinct from 'array' or jsonb_typeof(p_inputs) is distinct from 'array'
   or p_expected_total is null or p_expected_total<=0 or p_expected_total>10000000 then raise exception 'invalid_request'; end if;
+ -- native_checkout_shared_nonce_v1
+ perform pg_advisory_xact_lock(hashtextextended('skills-claim|'||p_key,0));
  perform pg_advisory_xact_lock(hashtextextended('native-checkout-key|'||p_key,0));
  select * into o from public.landerware_public_orders where idempotency_key='public-order:'||p_key;
  select * into old_receipt from public.skills_session_claim_receipts where idempotency_key=p_key;
@@ -201,3 +203,4 @@ end $$;
 revoke all on function public.native_full_course_option(text,jsonb),public.materialize_native_full_checkout(text,jsonb,text),public.reserve_native_checkout_order(text,text,integer,text,text,jsonb,jsonb,jsonb,integer) from public,anon,authenticated;
 grant execute on function public.native_full_course_option(text,jsonb),public.materialize_native_full_checkout(text,jsonb,text),public.reserve_native_checkout_order(text,text,integer,text,text,jsonb,jsonb,jsonb,integer) to service_role;
 commit;
+

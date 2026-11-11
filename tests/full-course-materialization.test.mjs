@@ -27,6 +27,15 @@ test('actual full-course SQL materializes idempotently, preserves existing recor
   await db.exec("insert into courses(course_key,name,enrollware_course_id,duration_minutes,cleanup_buffer_minutes,max_students_default,base_price) values('aha-bls-provider','Fixture BLS','209806',120,30,6,75),('aha-bls-provider-renewal','Fixture Renewal','359474',120,30,6,75); insert into people(person_key,display_name) values('brian','Brian Ennis'); insert into instructor_qualifications(instructor_id,course_id,status) select p.id,c.id,'active' from people p cross join courses c where p.person_key='brian' and c.enrollware_course_id in ('209806','359474');");
   await db.exec(load(profileMigration));await db.exec(load(fullCourseMigration));
   const scalar=async(sql,args=[])=>Object.values((await db.query(sql,args)).rows[0])[0];
+  // Inspect the actual installed replacement after the shared migration plan.
+  // The immutable-order migration runs earlier and cannot protect a later replacement.
+  const reserveDefinition=await scalar("select pg_get_functiondef('public.reserve_native_checkout_order(text,text,integer,text,text,jsonb,jsonb,jsonb,integer)'::regprocedure)");
+  const sharedLock="perform pg_advisory_xact_lock(hashtextextended('skills-claim|'||p_key,0));";
+  const nativeLock="perform pg_advisory_xact_lock(hashtextextended('native-checkout-key|'||p_key,0));";
+  assert.ok(reserveDefinition.includes('native_checkout_shared_nonce_v1'));
+  assert.equal(reserveDefinition.split(sharedLock).length-1,1);
+  assert.ok(reserveDefinition.indexOf(sharedLock)<reserveDefinition.indexOf(nativeLock));
+  assert.ok(reserveDefinition.indexOf(nativeLock)<reserveDefinition.indexOf('select * into o'));
   const offer=await scalar("select skills_test.offer('full-fixture',80)||jsonb_build_object('authority','native-full-course.v1','courseNumber','209806','instructor','Brian Ennis','appointmentDayId','123','selectionId','dynamic:full-fixture','endsAt',(skills_test.offer('full-fixture',80)->>'startsAt')::timestamptz+interval '120 minutes','consumptionEndsAt',(skills_test.offer('full-fixture',80)->>'startsAt')::timestamptz+interval '150 minutes')");
   const opt=(o=offer,c='209806')=>scalar('select native_full_course_option($1,$2::jsonb)',[c,JSON.stringify(o)]);
   const mat=(o=offer,c='209806')=>scalar("select materialize_native_full_checkout($1,$2::jsonb,'fixture-idempotency')",[c,JSON.stringify(o)]);
@@ -42,6 +51,19 @@ test('actual full-course SQL materializes idempotently, preserves existing recor
   const inputs=[{wire,selectedChoices:['manual_own']}],key='12121212-1212-4212-8212-121212121212';
   const claim=()=>scalar("select reserve_native_checkout_order($1,'native_bls_initial',1,'',null,$2::jsonb,$3::jsonb,$4::jsonb,7500)",[key,JSON.stringify(offer),JSON.stringify([wire]),JSON.stringify(inputs)]);
   const order=await claim();assert.equal(order.amountCents,7500);assert.equal((await claim()).orderId,order.orderId);assert.equal(await scalar('select count(*) from class_sessions'),1);
+  // Reinstall the exact migration into this disposable database with an existing
+  // native order/session. Removing only its fixture policy table permits replay;
+  // production installation remains one-time and never drops the policy.
+  const state=()=>scalar("select jsonb_build_object('orders',(select coalesce(jsonb_agg(to_jsonb(o) order by id),'[]') from landerware_public_orders o),'sessions',(select coalesce(jsonb_agg(to_jsonb(s) order by id),'[]') from class_sessions s),'workspaces',(select coalesce(jsonb_agg(to_jsonb(w) order by id),'[]') from landerware_sessions w),'registrations',(select coalesce(jsonb_agg(to_jsonb(r) order by id),'[]') from registrations r))");
+  const beforeInstall=await state();
+  await db.exec('drop table native_full_course_policy');
+  await db.exec(load(fullCourseMigration));
+  assert.deepEqual(await state(),beforeInstall,'default-off installation preserves existing orders, sessions, workspaces and registrations');
+  assert.equal(await opt(),null);
+  assert.equal((await claim()).orderId,order.orderId,'existing nonce resumes with policy disabled');
+  assert.deepEqual(await state(),beforeInstall,'existing nonce retry is read-only');
+  await assert.rejects(()=>scalar("select reserve_native_checkout_order($1,'native_bls_initial',1,'',null,$2::jsonb,$3::jsonb,$4::jsonb,7500)",[key,JSON.stringify(offer),JSON.stringify([wire]),JSON.stringify([{...inputs[0],selectedChoices:[]}])]),/idempotency_conflict/);
+  await db.exec("update native_full_course_policy set enabled=true,verified=true,evidence='DISPOSABLE LOCAL FIXTURE ONLY'");
   await db.exec("update class_sessions set max_students=4,source_location_label='staff-owned-note'");
   assert.equal((await mat()).capacity,4);assert.equal(await scalar('select max_students from class_sessions'),4);assert.equal(await scalar('select source_location_label from class_sessions'),'staff-owned-note');
   // Never rewrite a manually managed record that occupies the same identity.
@@ -54,3 +76,4 @@ test('actual full-course SQL materializes idempotently, preserves existing recor
   await db.exec("update courses set cleanup_buffer_minutes=0 where enrollware_course_id='209806'");assert.equal(await opt(),null);
  }finally{await db.close();}
 });
+

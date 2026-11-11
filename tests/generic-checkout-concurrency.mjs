@@ -187,3 +187,54 @@ const alternative=claim(707,822,false,30).replaceAll("'bls-skills'","'cpr-aed'")
 const crossContext=json(await run(alternative));assert.notEqual(crossContext.sessionId,alternateSource.sessionId);
 const forbiddenReopen=await run(claim(708,822));assert.notEqual(forbiddenReopen.code,0);assert.match(forbiddenReopen.error,/session_not_available/);
 console.log('PASS isolated PostgreSQL: released unpaid interval admits another eligible skills context; surviving new commitment blocks conflicting old-position reopening.');
+
+// Native cutover remains separate from public/session activation. These are
+// synthetic retained IDs inside the already-verified disposable database.
+const authorityMigration=await run(readFileSync(new URL('../supabase/migrations/20261111182922_native_session_authority_cutover.sql',import.meta.url),'utf8'));
+assert.equal(authorityMigration.code,0,authorityMigration.error);
+const authoritySession=json(await run(`insert into class_sessions(source,status,course_id,start_at,end_at,consumption_start_at,consumption_end_at,lead_instructor_id,location_id,max_students,registration_backend,visibility,registration_status,external_class_id,record_scope,external_reconciliation)
+ select source,status,course_id,start_at+interval '3 years',end_at+interval '3 years',consumption_start_at+interval '3 years',consumption_end_at+interval '3 years',lead_instructor_id,location_id,2,registration_backend,visibility,registration_status,'910000001','operational',
+ '{"complete":true,"source_observed_at":"2020-01-01T00:00:00Z","active_external_registration_ids":["synthetic-retained-seat"],"active_registration_count":1}'::jsonb
+ from class_sessions where external_class_id='fixture-compat-session' returning jsonb_build_object('id',id)`));
+const authoritySnapshot=json(await run(`select native_session_authority_snapshot('${authoritySession.id}')`));
+const admit=n=>`select native_session_authority_record('${authoritySession.id}','${key(900+n)}','${authoritySnapshot.fingerprint}',${authoritySnapshot.revision},true)`;
+const admissionRace=await Promise.all([run(admit(1)),run(admit(2))]);
+assert.equal(admissionRace.filter(r=>r.code===0).length,1);assert.match(admissionRace.find(r=>r.code!==0).error,/native_authority_snapshot_changed/);
+const authorityClaim=n=>compatibilityClaim(n).replaceAll('fixture-compat-session','910000001');
+const authoritySeats=await Promise.all([run(authorityClaim(911)),run(authorityClaim(912))]);
+assert.equal(authoritySeats.filter(r=>r.code===0).length,1);assert.match(authoritySeats.find(r=>r.code!==0).error,/insufficient_seats/);
+const authorityOrder=json(authoritySeats.find(r=>r.code===0));
+const authorityBefore=json(await run(`select landerware_public_seat_state('${authoritySession.id}')`));assert.equal(authorityBefore.unreconciledReserved,1);assert.equal(authorityBefore.holds,1);assert.equal(authorityBefore.remaining,0);
+const imported=await run(`with c as(insert into customers(first_name,last_name,email) values('Synthetic','Retained','retained@example.invalid') returning id)
+ insert into registrations(customer_id,class_session_id,status,registration_source,external_registration_id)
+ select id,'${authoritySession.id}','registered','enrollware_history','synthetic-retained-seat' from c`);assert.equal(imported.code,0,imported.error);
+const authorityAfter=json(await run(`select landerware_public_seat_state('${authoritySession.id}')`));assert.equal(authorityAfter.registered,1);assert.equal(authorityAfter.unreconciledReserved,0);assert.equal(authorityAfter.remaining,0);
+assert.equal((await run(`update landerware_public_orders set stripe_checkout_session_id='cs_authority' where id='${authorityOrder.orderId}'`)).code,0);
+const authorityPayment={id:'cs_authority',mode:'payment',payment_status:'paid',amount_total:7500,currency:'usd',metadata:{landerware_order_id:authorityOrder.orderId}};
+json(await run(`select native_checkout_record_payment('${authorityOrder.orderId}','pi_authority','${JSON.stringify(authorityPayment)}')`));
+assert.equal((await run(`update landerware_public_orders set hold_expires_at=now()-interval '1 minute' where id='${authorityOrder.orderId}'`)).code,0);
+const authoritySettled=(await Promise.all([1,2].map(()=>run(`select native_checkout_finalize_order('${authorityOrder.orderId}','pi_authority','${JSON.stringify(authorityPayment)}')`)))).map(json);
+assert.ok(authoritySettled.every(r=>r.status==='paid'));
+const authorityFinal=json(await run(`select landerware_public_seat_state('${authoritySession.id}')`));assert.equal(authorityFinal.registered,2);assert.equal(authorityFinal.holds,0);assert.equal(authorityFinal.remaining,0);
+console.log('PASS isolated PostgreSQL: cutover admissions serialize; retained unknown seat survives last-seat race, canonical import replaces it once, paid-expired hold and concurrent finalization preserve occupancy.');
+
+// Re-admission versus checkout uses the same session-first row lock. Whichever
+// wins must make the other's stale review/seat claim fail, not lose occupancy.
+const cutoverRaceSession=json(await run(`insert into class_sessions(source,status,course_id,start_at,end_at,consumption_start_at,consumption_end_at,lead_instructor_id,location_id,max_students,registration_backend,visibility,registration_status,external_class_id,record_scope,external_reconciliation)
+ select source,status,course_id,start_at+interval '1 day',end_at+interval '1 day',consumption_start_at+interval '1 day',consumption_end_at+interval '1 day',lead_instructor_id,location_id,1,registration_backend,visibility,registration_status,'910000002','operational',
+ '{"complete":true,"source_observed_at":"2020-01-01T00:00:00Z","active_external_registration_ids":[],"active_registration_count":0}'::jsonb
+ from class_sessions where id='${authoritySession.id}' returning jsonb_build_object('id',id)`));
+const initialCutover=json(await run(`select native_session_authority_snapshot('${cutoverRaceSession.id}')`));
+json(await run(`select native_session_authority_record('${cutoverRaceSession.id}','${key(920)}','${initialCutover.fingerprint}',0,true)`));
+assert.equal((await run(`update class_sessions set external_reconciliation=jsonb_set(jsonb_set(external_reconciliation,'{active_external_registration_ids}','["synthetic-discovered-seat"]'),'{active_registration_count}','1') where id='${cutoverRaceSession.id}'`)).code,0);
+const nextCutover=json(await run(`select native_session_authority_snapshot('${cutoverRaceSession.id}')`));
+const simultaneous=await Promise.all([
+ run(`select native_session_authority_record('${cutoverRaceSession.id}','${key(921)}','${nextCutover.fingerprint}',1,true)`),
+ run(compatibilityClaim(922).replaceAll('fixture-compat-session','910000002'))
+]);
+assert.equal(simultaneous.filter(r=>r.code===0).length,1,'admission and a conflicting last-seat checkout cannot both commit');
+assert.match(simultaneous.find(r=>r.code!==0).error,/native_authority_snapshot_changed|native_occupancy_conflict|insufficient_seats/);
+const cutoverRaceSeats=json(await run(`select landerware_public_seat_state('${cutoverRaceSession.id}')`));
+assert.equal(cutoverRaceSeats.holds+cutoverRaceSeats.unreconciledReserved,1);assert.equal(cutoverRaceSeats.remaining,0);
+console.log('PASS isolated PostgreSQL: simultaneous re-admission and checkout serialize; stale review or conflicting last-seat claim is rejected without erasing a commitment.');
+
