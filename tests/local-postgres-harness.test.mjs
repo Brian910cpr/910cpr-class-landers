@@ -16,10 +16,23 @@ test('test database and port guards reject production names, URLs and malformed 
  for(const port of ['0','-1','65536','5432 --host=remote','nan'])assert.throws(()=>localPsql('native_checkout_test',{SKILLS_TEST_PORT:port}),/invalid_test_port/);
  assert.equal(localPsql('skills_claim_test_1',{SKILLS_TEST_PORT:'6543'}).args.includes('6543'),true);
 });
-test('shared fixture plan contains all eight new migrations in order and every referenced source exists',()=>{
+test('shared fixture plan contains current release migrations in order and every referenced source exists',()=>{
  const files=[...preProfileFiles,profileMigration,fullCourseMigration,codeDeliveryMigration,codeEventMigration];for(const p of files)assert.ok(existsSync(new URL('../'+p,import.meta.url)),p);
- const names=files.filter(p=>/migrations\/20261108/.test(p)).map(p=>p.split('/').at(-1));
- assert.deepEqual(names,['20261108142206_skills_checkout_and_optional_certificate.sql','20261108145719_bls_native_checkout_integrity.sql','20261108145720_bls_heartcode_bundle_contract.sql','20261108153759_checkout_confirmation_delivery_gate.sql','20261108175130_native_checkout_course_profiles.sql']);
+ const names=files.filter(p=>/migrations\/202611/.test(p)).map(p=>p.split('/').at(-1));
+ assert.deepEqual(names,[
+  '20261106180848_skills_session_native_claim.sql',
+  '20261108142206_skills_checkout_and_optional_certificate.sql',
+  '20261108145719_bls_native_checkout_integrity.sql',
+  '20261110212444_native_checkout_additive_order_runtime.sql',
+  '20261110225640_native_checkout_immutable_order_version.sql',
+  '20261108145720_bls_heartcode_bundle_contract.sql',
+  '20261110231615_native_checkout_confirmation_bridge_disabled.sql',
+  '20261110195617_native_checkout_profile_columns_only.sql',
+  '20261108175130_native_checkout_course_profiles.sql',
+  '20261109120000_native_full_course_materialization.sql',
+  '20261109130000_native_learner_code_delivery.sql',
+  '20261109140000_native_code_delivery_events.sql'
+ ]);
  assert.equal(files.at(-3),'supabase/migrations/20261109120000_native_full_course_materialization.sql');
  assert.equal(files.at(-2),'supabase/migrations/20261109130000_native_learner_code_delivery.sql');
  assert.equal(files.at(-1),'supabase/migrations/20261109140000_native_code_delivery_events.sql');
