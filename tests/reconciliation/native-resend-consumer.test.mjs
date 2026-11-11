@@ -7,7 +7,7 @@ import {dispatchNativeConfirmations} from '../../supabase/functions/_shared/nati
 import {sendNativeCheckoutClaim} from '../../supabase/functions/_shared/native-resend-adapter.mjs';
 const read=p=>fs.readFileSync(new URL('../../'+p,import.meta.url),'utf8');
 const bridge=read('supabase/migrations/20261110231615_native_checkout_confirmation_bridge_disabled.sql');
-const migration=read('supabase/migrations/20261111174404_native_checkout_resend_service_consumer.sql');
+const migration=read('supabase/migrations/20261111175721_native_checkout_resend_service_consumer.sql');
 const token='synthetic-delivery-token-local-only-123456789';
 async function fixture(fn){const h=await setup();try{
  await h.db.exec(`alter table landerware_messages add column created_at timestamptz default now(),add column provider_message_id text,add column sent_at timestamptz,add column failed_at timestamptz,add column failure_detail text;

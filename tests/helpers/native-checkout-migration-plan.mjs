@@ -17,7 +17,7 @@ export const preProfileFiles=Object.freeze([
  'supabase/migrations/20261110225640_native_checkout_immutable_order_version.sql',
  'supabase/migrations/20261108145720_bls_heartcode_bundle_contract.sql',
  'supabase/migrations/20261110231615_native_checkout_confirmation_bridge_disabled.sql',
- 'supabase/migrations/20261111174404_native_checkout_resend_service_consumer.sql',
+ 'supabase/migrations/20261111175721_native_checkout_resend_service_consumer.sql',
  'tests/helpers/native-checkout-profile-schema.sql',
  'supabase/migrations/20261110195617_native_checkout_profile_columns_only.sql'
 ]);

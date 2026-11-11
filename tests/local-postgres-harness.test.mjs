@@ -27,7 +27,7 @@ test('shared fixture plan contains current release migrations in order and every
   '20261110225640_native_checkout_immutable_order_version.sql',
   '20261108145720_bls_heartcode_bundle_contract.sql',
   '20261110231615_native_checkout_confirmation_bridge_disabled.sql',
-  '20261111174404_native_checkout_resend_service_consumer.sql',
+  '20261111175721_native_checkout_resend_service_consumer.sql',
   '20261110195617_native_checkout_profile_columns_only.sql',
   '20261108175130_native_checkout_course_profiles.sql',
   '20261109120000_native_full_course_materialization.sql',
