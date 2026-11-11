@@ -4,6 +4,12 @@ const HEARTSAVER=Object.freeze({
  '209809':{canonicalCourseId:'23dfcfa7-4224-46ed-8d45-64d43d5425db',instructionMinutes:120,cleanupMinutes:30},
  '344085':{canonicalCourseId:'306bc81a-0e09-49e1-8910-e05501222eb4',instructionMinutes:90,cleanupMinutes:15},
 });
+// Keep BLS deployable against its existing zero-argument RPC. Optional course
+// scopes must not make that established path depend on a later migration.
+export function fullCoursePolicyRpcArgs(course){
+ if(typeof course!=='string'||!/^\d+$/.test(course))throw Error('invalid_course');
+ return ['209806','359474'].includes(course)?{}:{p_course_number:course};
+}
 export function fullCoursePage(course){
  return ['209806','359474'].includes(String(course))?'bls':Object.hasOwn(HEARTSAVER,String(course))?'heartsaver':null;
 }

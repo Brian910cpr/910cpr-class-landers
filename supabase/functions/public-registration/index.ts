@@ -2,6 +2,7 @@ import {nativeConfirmationService} from "../_shared/native-confirmation-service.
 import {nativeConfirmationPostcommit} from "../_shared/native-confirmation-postcommit.mjs";
 import {publicOrderVersion,publicOrderReturnPath,settlePublicOrder} from "./public-order-routing.mjs";
 import {genericCheckout,boundedCheckoutJSON,fullAppointmentSession} from "./generic.mjs";
+import {fullCoursePolicyRpcArgs} from "./full-course.mjs";
 import {skillsCheckout} from "../skills-session-reservation/checkout.mjs";
 
 const ORIGIN="https://www.910cpr.com",ALLOWED=new Set([ORIGIN,"https://910cpr.com"]),STRIPE_API="https://api.stripe.com/v1";
@@ -118,7 +119,7 @@ async function verifyPaid(id:string,origin:string,requireDelivery=false){
 }
 
 function fallbackUrl(s:any,id:string){try{const u=new URL(String(s.registration_url||""));return u.origin==="https://coastalcprtraining.enrollware.com"&&u.pathname==="/enroll"&&u.searchParams.get("id")===id?u.toString():null}catch{return null}}
-const generic=genericCheckout({rpc,afterCommit:afterNativeCommit,catalog,scheduleSession,fallbackUrl,fullPolicy:(course:string)=>rpc("native_full_course_runtime_policy",{p_course_number:course}),skillsPolicy:()=>rpc("native_skills_publication_runtime_policy",{}),
+const generic=genericCheckout({rpc,afterCommit:afterNativeCommit,catalog,scheduleSession,fallbackUrl,fullPolicy:(course:string)=>rpc("native_full_course_runtime_policy",fullCoursePolicyRpcArgs(course)),skillsPolicy:()=>rpc("native_skills_publication_runtime_policy",{}),
  async appointmentSession(selection:any){
   if(!/^\d{1,12}$/.test(String(selection.course||''))||selection.skillsContext)throw Error('invalid_session');
   const rows=await db(`class_sessions?record_scope=eq.operational&registration_backend=eq.landerware&registration_status=eq.open&visibility=eq.public&courses.enrollware_course_id=eq.${selection.course}&start_at=gt.${encodeURIComponent(new Date().toISOString())}&select=*,courses!inner(enrollware_course_id),locations(name),people!class_sessions_lead_instructor_id_fkey(display_name)&order=start_at.asc&limit=201`);

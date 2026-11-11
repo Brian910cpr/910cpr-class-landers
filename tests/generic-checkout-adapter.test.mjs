@@ -8,6 +8,7 @@ import vm from 'node:vm';
 import {stripTypeScriptTypes} from 'node:module';
 import {readFileSync} from 'node:fs';
 import {webcrypto} from 'node:crypto';
+import {fullCoursePolicyRpcArgs} from '../supabase/functions/public-registration/full-course.mjs';
 import {genericCheckout,boundedCheckoutJSON,fullAppointmentSession} from '../supabase/functions/public-registration/generic.mjs';
 const source=readFileSync(new URL('../supabase/functions/public-registration/index.ts',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'');
 const key='11111111-1111-4111-8111-111111111111';
@@ -17,7 +18,7 @@ function harness({legacyURL=null,course='fixture-course',profileReady=true,invoi
  const catalog={course_id:course,course_name:'Fixture title',unit_amount:7500,currency:'usd',addons:[],billing_codes:[{code:'PRIVATE'}]};
  if(uploads)profile.requirements=[{key:'completion',type:'online_completion',display_name:'Completion certificate',upload_now:true,required_before_registration:false,upload:{enabled:true,max_bytes:2097152,mime_types:['application/pdf']}}];
  const packet={profile,physicalCourseId:'fixture-course',catalog};
- const ctx=vm.createContext({nativeConfirmationService,nativeConfirmationPostcommit,EdgeRuntime:mail?{waitUntil:p=>background.push(p)}:undefined,publicOrderVersion,publicOrderReturnPath,settlePublicOrder,genericCheckout,boundedCheckoutJSON,fullAppointmentSession,URL,URLSearchParams,Request,Response,Headers,Date,Error,Set,Promise,JSON,Object,Array,Number,String,Uint8Array,crypto:webcrypto,AbortSignal,console,
+ const ctx=vm.createContext({fullCoursePolicyRpcArgs,nativeConfirmationService,nativeConfirmationPostcommit,EdgeRuntime:mail?{waitUntil:p=>background.push(p)}:undefined,publicOrderVersion,publicOrderReturnPath,settlePublicOrder,genericCheckout,boundedCheckoutJSON,fullAppointmentSession,URL,URLSearchParams,Request,Response,Headers,Date,Error,Set,Promise,JSON,Object,Array,Number,String,Uint8Array,crypto:webcrypto,AbortSignal,console,
   Deno:{env:{get:k=>({SUPABASE_URL:'https://fixture-db.invalid',SUPABASE_SERVICE_ROLE_KEY:'server-only-fixture',STRIPE_SECRET_KEY:'sk_test_fixture',RESEND_API_KEY:mail?'fixture-mail-key':undefined})[k]},serve:fn=>handler=fn},
   fetch:async(url,init={})=>{
    const u=String(url),body=init.body&&typeof init.body==='string'?JSON.parse(init.body):null;calls.push({url:u,init});
