@@ -36,10 +36,72 @@ async function authorized(req: Request) {
   return result.ok;
 }
 
-export function projectDemand(row: any) {
-  const proof = registrationProof(row);
+// Only service-read authority events opt into the native count contract.
+// The seat RPC revalidates the latest decision, exact session identity, current
+// canonical registrations, paid/unexpired holds, and inherited occupied reserve.
+function hasNativeAuthority(row: any) {
+  return Array.isArray(row.landerware_session_authority_events)
+    && row.landerware_session_authority_events.some((event: any) => event.enabled === true);
+}
+
+// Compare PostgreSQL timestamptz values by instant, retaining microseconds.
+// Date.parse alone would hide identity changes smaller than one millisecond.
+function timestampIdentity(value: any): bigint | null {
+  if (typeof value !== "string") return null;
+  const match = value.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,6}))?(Z|[+-]\d{2}:\d{2})$/);
+  if (!match) return null;
+  const milliseconds = Date.parse(match[1] + match[3]);
+  if (!Number.isFinite(milliseconds)) return null;
+  return BigInt(milliseconds) * 1000n + BigInt((match[2] || "").padEnd(6, "0"));
+}
+
+function capturedAuthorityRevision(row: any): number {
+  const events = row.landerware_session_authority_events;
+  const revisions = events.map((event: any) => event.revision);
+  if (revisions.some((revision: any) => !Number.isSafeInteger(revision) || revision < 1)
+      || new Set(revisions).size !== revisions.length) throw new Error("Invalid native authority history");
+  const latest = events.reduce((a: any, b: any) => a.revision > b.revision ? a : b);
+  const identity = [row.course_id, row.start_at, row.end_at, row.consumption_start_at,
+    row.consumption_end_at, row.lead_instructor_id, row.location_id, row.resource_id,
+    row.organization_id, row.external_class_id, row.record_scope];
+  if (row.registration_backend !== "landerware" || latest.enabled !== true
+      || !Array.isArray(latest.session_identity) || latest.session_identity.length !== identity.length
+      || identity.some((value: any, index: number) => {
+        const captured = latest.session_identity[index];
+        if (value === undefined || captured === undefined) return true;
+        if (value === null || captured === null) return value !== captured;
+        if (index >= 1 && index <= 4) {
+          const instant = timestampIdentity(value);
+          return instant === null || instant !== timestampIdentity(captured);
+        }
+        return value !== captured;
+      })) throw new Error("Native scheduling identity changed");
+  return latest.revision;
+}
+
+export function projectDemand(row: any, seats: any = null) {
+  const native = hasNativeAuthority(row);
+  const capturedRevision = native ? capturedAuthorityRevision(row) : null;
+  if (native && (seats?.registrationAuthority !== "landerware-session-authority.v1"
+      || seats.authorityRevision !== capturedRevision
+      || [seats.registered, seats.holds, seats.unreconciledReserved, seats.capacity]
+        .some((value: any) => !Number.isSafeInteger(value) || value < 0)
+      || seats.capacity < 1
+      || seats.registered + seats.holds + seats.unreconciledReserved > seats.capacity)) {
+    throw new Error("Native scheduling occupancy is unavailable");
+  }
+  const proof = native ? {
+    count_available: true, demand_status: "current", source_observed_at: null,
+    reconciled_at: null, source_sha256: null, freshness_minutes: null,
+    active_registration_count: seats.registered + seats.holds + seats.unreconciledReserved,
+    registration_authority: seats.registrationAuthority,
+    authority_revision: seats.authorityRevision,
+    canonical_registered_count: seats.registered,
+    held_seat_count: seats.holds,
+    unreconciled_reserved_count: seats.unreconciledReserved,
+  } : registrationProof(row);
   const countAvailable = proof.count_available;
-  const registrations = countAvailable ? row.registrations : [];
+  const registrations = countAvailable && Array.isArray(row.registrations) ? row.registrations : [];
   const workspaces = row.landerware_sessions || [];
   const workspace = workspaces.length === 1 ? workspaces[0] : null;
   const workspaceStatus = !workspaces.length ? "missing" : !workspace
@@ -64,27 +126,28 @@ export function projectDemand(row: any) {
     registration_status: row.registration_status,
     workspace_projection_status: workspaceStatus,
     workspace_session_id: workspace?.id || null,
-    canonical_recorded_registration_count: Array.isArray(row.registrations)
+    canonical_recorded_registration_count: native ? seats.registered : Array.isArray(row.registrations)
       ? row.registrations.filter((item: any) => ACTIVE.has(item.status)).length : null,
     source: row.source,
     session_status: row.status,
     active_registration_count: countAvailable ? registrations.filter((item: any) => ACTIVE.has(item.status)).length : null,
     count_available: countAvailable,
     ...proof,
-    demand_basis: countAvailable ? "canonical_active_registrations" : "unknown",
+    demand_basis: native ? "native_authoritative_occupied_seats" : countAvailable ? "canonical_active_registrations" : "unknown",
   };
 }
 
 export async function loadDemand(start: string, stop: string) {
   const { url, key } = serviceConfig();
   const select = [
-    "id", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "external_session_evidence", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
+    "id", "course_id", "resource_id", "organization_id", "record_scope", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "external_session_evidence", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
     "consumption_start_at", "consumption_end_at", "source_location_label", "source_instructor_label", "visibility", "registration_status",
     "courses!class_sessions_course_id_fkey(course_key,name)",
     "locations!class_sessions_location_id_fkey(name)",
     "people!class_sessions_lead_instructor_id_fkey(display_name)",
     "landerware_sessions!landerware_sessions_class_session_id_fkey(id,starts_at,ends_at)",
     "registrations!registrations_class_session_id_fkey(status,external_registration_id,registration_source)",
+    "landerware_session_authority_events!landerware_session_authority_events_class_session_id_fkey(enabled,revision,session_identity)",
   ].join(",");
   const params = new URLSearchParams({
     select, record_scope: "eq.operational", status: "in.(scheduled,active,completed)", order: "start_at.asc,id.asc", limit: "500",
@@ -99,7 +162,19 @@ export async function loadDemand(start: string, stop: string) {
     });
     const body = await result.json();
     if (!result.ok || !Array.isArray(body)) throw new Error(`Database request failed (${result.status})`);
-    sessions.push(...body.map(projectDemand));
+    // Bound parallel RPCs; never convert a failed native authority read to zero
+    // or silently fall back to historical external evidence.
+    for (let index = 0; index < body.length; index += 10) {
+      sessions.push(...await Promise.all(body.slice(index, index + 10).map(async (row: any) => {
+        if (!hasNativeAuthority(row)) return projectDemand(row);
+        const result = await fetch(`${url}/rest/v1/rpc/landerware_public_seat_state`, {
+          method: "POST", headers: { apikey: key, authorization: `Bearer ${key}`, "content-type": "application/json" },
+          body: JSON.stringify({ p_session_id: row.id }), signal: AbortSignal.timeout(20000),
+        });
+        if (!result.ok) throw new Error(`Native occupancy request failed (${result.status})`);
+        return projectDemand(row, await result.json());
+      })));
+    }
     if (body.length < 500) return sessions;
   }
 }

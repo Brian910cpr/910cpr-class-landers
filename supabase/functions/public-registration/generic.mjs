@@ -38,15 +38,16 @@ export function genericCheckout(deps){
   const context=String(selection.skillsContext||'');let publicCourse=String(selection.course||''),session;
   let fullOffer=null;
   if(!selection.session&&!context&&/^\d{1,12}$/.test(publicCourse)){
-   let id;try{id=await deps.appointmentSession?.(selection);}catch(error){if(error.message!=='session_not_available')throw error;}
+   let id;try{if(!selection.selectionId)id=await deps.appointmentSession?.(selection);}catch(error){if(error.message!=='session_not_available')throw error;}
    if(id)selection={...selection,session:id};
    else {
     // Other course families can select configured existing sessions only.
     // Dynamic materialization remains limited to the evidenced BLS contract.
     if(!['209806','359474'].includes(publicCourse))throw Error('session_not_available');
-    if(deps.fullEnabled?.()!==true)throw Error('native_registration_unavailable');
+    const fullPolicy=deps.fullPolicy?await deps.fullPolicy():{materializationEnabled:await deps.fullEnabled?.(),nativePublicationEnabled:false};
+    if(fullPolicy?.materializationEnabled!==true)throw Error('native_registration_unavailable');
     if(selection.skillsContext)throw Error('invalid_context');
-    const all=fullCourseOffers(await deps.publication('bls'),publicCourse,now());
+    const all=fullCourseOffers(await deps.publication('bls'),publicCourse,now(),{nativePublicationEnabled:fullPolicy.nativePublicationEnabled===true});
     const matches=all.filter(o=>selection.selectionId?o.selectionId===selection.selectionId:
      o.localStart===`${selection.date}T${selection.startTime}`&&(!selection.instructor||o.instructor===selection.instructor)&&(!selection.location||o.location===selection.location));
     if(matches.length!==1)throw Error('session_not_available');fullOffer=matches[0];

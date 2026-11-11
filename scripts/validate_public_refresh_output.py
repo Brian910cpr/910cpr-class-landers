@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import re
+from hashlib import sha256
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlsplit, parse_qs
 from zoneinfo import ZoneInfo
@@ -82,7 +84,7 @@ def validate_admin_reconciliation(current_payload: Any, admin_payload: Any) -> s
     }
 
 
-def validate_selector_lease(payload: dict, page_key: str) -> None:
+def validate_selector_lease(payload: dict, page_key: str, *, now=None) -> None:
     expiry = datetime.fromisoformat(str(payload.get("validUntil") or "").replace("Z", "+00:00"))
     require(expiry.tzinfo is not None, f"{page_key}: publication expiry lacks timezone")
     # Existing classes survive expired offer leases in both V2 finalization
@@ -92,15 +94,15 @@ def validate_selector_lease(payload: dict, page_key: str) -> None:
                      for slot in day.get('startTimes', [])
                      for course in slot.get('courses', []))
     if calculated:
-        require(expiry > datetime.now(timezone.utc), f"{page_key}: expired publication")
+        require(expiry > (now or datetime.now(timezone.utc)), f"{page_key}: expired publication")
 
 
-def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, int]:
+def validate_selector(page_key: str, public_session_ids: set[str], *, now=None) -> dict[str, int]:
     path = SELECTOR_DIR / f"{page_key}.json"
     payload = load_json(path)
     require(payload.get("schemaVersion") == "selector-resolved-availability.v1", f"{page_key}: invalid schema")
     require((payload.get("anchor_policy") or {}).get("finalized") is True, f"{page_key}: selector has not passed final policy")
-    validate_selector_lease(payload, page_key)
+    validate_selector_lease(payload, page_key, now=now)
     blocked = set(payload.get("synthesisBlockedDates", []))
     occupied = set(payload.get("occupiedDates", []))
     dates = payload.get("dates")
@@ -142,7 +144,9 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
                     ), f"{page_key}: orphan synthetic offer on occupied date {day['date']}")
                     # matchedContainerId is an internal planning field and is omitted
                     # from the compact public selector contract.
-                    if str(course.get('courseId')) == '509474' or (page_key == 'bls' and str(course.get('courseId')) == '210549' and urlsplit(str(course.get('registrationUrl') or course.get('appointmentUrl') or '')).path == '/register/skills-session/'):
+                    if course.get('authority') == 'native-full-course.v2':
+                        validate_native_full_offer(course, payload, page_key, day['date'], slot['startTime'], now=now)
+                    elif str(course.get('courseId')) == '509474' or (page_key == 'bls' and str(course.get('courseId')) == '210549' and urlsplit(str(course.get('registrationUrl') or course.get('appointmentUrl') or '')).path == '/register/skills-session/'):
                         validate_native_skills_offer(course, page_key, day['date'], slot['startTime'])
                     else:
                         for field in ("appointmentDayId", "appointmentUrl", "availabilityBlockId"):
@@ -154,6 +158,68 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
     require(counts.get("publicSelectableOfferCount") == offer_count, f"{page_key}: offer count mismatch")
     # A correctly closed feed must replace stale inventory even when it has no offers.
     return {"dates": date_count, "starts": start_count, "offers": offer_count}
+
+
+def validate_native_full_offer(course: dict, payload: dict, page_key: str,
+                               day: str, clock: str, *, now=None) -> None:
+    """Native BLS v2 uses original first-party proof, never a legacy container."""
+    label = 'native full: '
+    require(page_key == 'bls' and payload.get('pageKey') == 'bls', label+'invalid page')
+    require(course.get('authority') == 'native-full-course.v2' and
+            course.get('nativeScopeId') == 'brian-shipyard-b.v1', label+'invalid authority or scope')
+    require(course.get('courseId') in {'209806','359474'} and
+            course.get('offerType') == 'dynamic_appointment' and course.get('publicSelectable') is True,
+            label+'invalid course or selection state')
+    for key,value in {'durationMinutes':120,'schedulerConsumptionMinutes':150,
+                      'cleanupBufferMinutes':30,'setupBufferMinutes':0}.items():
+        require(type(course.get(key)) is int and course[key] == value,label+'invalid '+key)
+    require(course.get('instructor') == 'Brian Ennis' and
+            course.get('resource') == ':: Wilmington; Shipyard Blvd - B' and
+            course.get('location') == ':: Wilmington; Shipyard Blvd',label+'invalid instructor or resource')
+    block, sources = course.get('availabilityBlockId'), course.get('sourceSessionIds')
+    require(isinstance(block,str) and bool(block.strip()) and isinstance(sources,list) and
+            all(isinstance(x,str) and x.strip() for x in sources) and len(sources)==len(set(sources)),
+            label+'missing or invalid source trace')
+    require('appointmentDayId' not in course and 'matchedContainerId' not in course,
+            label+'unexpected legacy identity')
+    require(course.get('date') == day and course.get('startTime') == clock and
+            re.fullmatch(r'\d{4}-\d{2}-\d{2}',day) and re.fullmatch(r'\d{2}:\d{2}',clock),
+            label+'inconsistent local date or time')
+    local = datetime.fromisoformat(day+'T'+clock)
+    require(local.minute % 15 == 0,label+'invalid start grid')
+    zone = ZoneInfo('America/New_York')
+    candidates = {local.replace(tzinfo=zone,fold=fold).astimezone(timezone.utc) for fold in (0,1)
+                  if local.replace(tzinfo=zone,fold=fold).astimezone(timezone.utc).astimezone(zone).replace(tzinfo=None)==local}
+    require(len(candidates)==1,label+'ambiguous or nonexistent Eastern time')
+    start = next(iter(candidates))
+    def instant(value):
+        value = datetime.fromisoformat(str(value or '').replace('Z','+00:00'))
+        require(value.tzinfo is not None,label+'timezone required')
+        return value.astimezone(timezone.utc)
+    current = instant(now or datetime.now(timezone.utc))
+    observed,generated = instant(course.get('proofObservedAt')),instant(payload.get('generatedAt'))
+    lease,publication_lease = instant(course.get('validUntil')),instant(payload.get('validUntil'))
+    require(observed <= generated <= current < lease <= observed+timedelta(minutes=15),
+            label+'original proof stale, future or extended')
+    require(lease <= publication_lease,label+'offer lease exceeds publication')
+    require(current+timedelta(hours=24) <= start <= current+timedelta(days=90),label+'outside lead or horizon')
+    require(instant(course.get('occupiedUntil')) == start+timedelta(minutes=150),label+'invalid occupied interval')
+    selection = course.get('selectionId')
+    require(isinstance(selection,str) and re.fullmatch(r'native-full:[a-f0-9]{64}',selection),label+'invalid selection identity')
+    raw = '|'.join([course['nativeScopeId'],course['courseId'],start.isoformat(),
+                    course['instructor'],course['resource'],'120','150'])
+    require(selection == 'native-full:'+sha256(raw.encode()).hexdigest(),label+'selection identity mismatch')
+    destination = course.get('registrationUrl')
+    require(isinstance(destination,str) and destination.startswith('/register/skills-session/?') and
+            not any(ord(ch)<32 or ord(ch)==127 for ch in destination) and '\\' not in destination and '#' not in destination,
+            label+'invalid native destination')
+    url = urlsplit(destination)
+    require(not url.scheme and not url.netloc and not url.fragment and url.path == '/register/skills-session/',
+            label+'invalid native destination')
+    query = parse_qs(url.query,keep_blank_values=True,strict_parsing=True,max_num_fields=3)
+    require(query == {'course':[course['courseId']],'selectionId':[selection]},label+'invalid native query')
+    require('appointmentUrl' not in course or course['appointmentUrl'] == destination,
+            label+'inconsistent registration destinations')
 
 
 def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: str) -> None:

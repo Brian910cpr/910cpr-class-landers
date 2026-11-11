@@ -238,3 +238,31 @@ const cutoverRaceSeats=json(await run(`select landerware_public_seat_state('${cu
 assert.equal(cutoverRaceSeats.holds+cutoverRaceSeats.unreconciledReserved,1);assert.equal(cutoverRaceSeats.remaining,0);
 console.log('PASS isolated PostgreSQL: simultaneous re-admission and checkout serialize; stale review or conflicting last-seat claim is rejected without erasing a commitment.');
 
+// First-party v2 uses original calendar proof and dedicated public defaults.
+// This final phase does not relax the already-tested legacy/v1 contracts.
+const v2Migration=await run(readFileSync(new URL('../supabase/migrations/20261111195655_native_full_course_v2_policy.sql',import.meta.url),'utf8'));
+assert.equal(v2Migration.code,0,v2Migration.error);
+const v2Configured=await run(`update courses set max_students_default=12,cleanup_buffer_minutes=0 where enrollware_course_id in ('209806','359474');
+ update native_full_course_public_policy set enabled=true,publication_enabled=true,verified=true,evidence='EXPLICIT DISPOSABLE LOCAL FIXTURE';
+ create function skills_test.full_offer_v2(p_day integer,p_course text) returns jsonb language sql as $$
+ select (skills_test.full_offer(p_day,p_course)-'appointmentDayId')||jsonb_build_object(
+  'authority','native-full-course.v2','nativeScopeId','brian-shipyard-b.v1',
+  'selectionId','native-full:'||encode(sha256(convert_to(p_day::text||'|'||p_course,'UTF8')),'hex'),
+  'proofObservedAt',now()-interval '30 seconds','generatedAt',now(),'validUntil',now()+interval '10 minutes') $$;`);
+assert.equal(v2Configured.code,0,v2Configured.error);
+const v2Claim=(n,day,course='209806')=>fullClaim(n,day,course).replace('skills_test.full_offer(', 'skills_test.full_offer_v2(');
+const v2Before=json(await run("select coalesce(jsonb_agg(to_jsonb(s) order by id),'[]') from class_sessions s"));
+const v2Seats=await Promise.all(Array.from({length:7},(_,i)=>run(v2Claim(9500+i,70))));
+assert.equal(v2Seats.filter(r=>r.code===0).length,6,'six independent v2 seat claims succeed; seventh is rejected');
+assert.match(v2Seats.find(r=>r.code!==0).error,/insufficient_seats|session_not_available/);
+const v2Receipts=v2Seats.filter(r=>r.code===0).map(json);assert.equal(new Set(v2Receipts.map(r=>r.sessionId)).size,1);
+const v2State=json(await run(`select landerware_public_seat_state('${v2Receipts[0].sessionId}')`));
+assert.equal(v2State.capacity,6);assert.equal(v2State.holds,6);assert.equal(v2State.remaining,0);
+const v2Replay=(await Promise.all([run(v2Claim(9600,71,'359474')),run(v2Claim(9600,71,'359474'))])).map(json);
+assert.equal(v2Replay[0].orderId,v2Replay[1].orderId);
+const v2Cross=await Promise.all([run(v2Claim(9700,72)),run(v2Claim(9701,72,'359474'))]);
+assert.equal(v2Cross.filter(r=>r.code===0).length,1);assert.match(v2Cross.find(r=>r.code!==0).error,/session_not_available/);
+const v2After=json(await run("select coalesce(jsonb_agg(to_jsonb(s) order by id),'[]') from class_sessions s"));
+const oldIds=new Set(v2Before.map(s=>s.id));assert.deepEqual(v2After.filter(s=>oldIds.has(s.id)),v2Before,'v2 creates only new native classes; old classes remain byte-for-byte unchanged');
+console.log('PASS isolated PostgreSQL: first-party v2 six-seat contention, stable nonce replay and cross-course collisions preserve native capacity and all earlier sessions without external appointment IDs.');
+

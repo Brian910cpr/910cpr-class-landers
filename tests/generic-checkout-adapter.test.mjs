@@ -47,6 +47,7 @@ function harness({legacyURL=null,course='fixture-course',profileReady=true,invoi
     return Response.json({messageId:'44444444-4444-4444-8444-444444444444',lease:'55555555-5555-4555-8555-555555555555',recipient:'fixture@example.invalid',customerTemplate:true,confirmation:{kind:'recovery',course:'Fixture title',courseId:'359474',startsAt:'2031-01-01T14:00:00Z',endsAt:'2031-01-01T16:00:00Z',venue:'Fixture location',recoveryUrl:'https://www.910cpr.com/register/checkout/?recover=66666666-6666-4666-8666-666666666666',holdExpiresAt:'2031-01-01T13:00:00Z'}});
    }
    if(rpc==='native_checkout_settle_confirmation'){assert.equal(body.p_outcome,'sent');assert.equal(body.p_provider_id,'fixture_native_mail_receipt');mailAccepted++;return Response.json({settled:true});}
+   if(rpc==='native_full_course_runtime_policy')return Response.json({materializationEnabled:false,nativePublicationEnabled:false,nativeScopeId:'brian-shipyard-b.v1'});
    if(rpc==='native_checkout_profile')return profileReady?Response.json(packet):Response.json({message:'native_profile_not_configured'},{status:400});
    if(rpc==='assert_public_registration_open')return Response.json(true);
    if(rpc==='landerware_public_seat_state')return Response.json({remaining:2});

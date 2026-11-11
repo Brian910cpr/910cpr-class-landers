@@ -1,10 +1,10 @@
-import {conditionApplies,checkoutSelection,escapeCheckoutText as esc} from './checkout-profile.js';
-import {legacySkillsReceipt} from './checkout-receipt.js';
+import {conditionApplies,checkoutSelection,escapeCheckoutText as esc} from './checkout-profile.js?v=20261111-native2';
+import {legacySkillsReceipt} from './checkout-receipt.js?v=20261111-native2';
 
 const API='https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/public-registration/generic';
 const app=document.getElementById('app'),params=new URLSearchParams(location.search);
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n/100);
-const originalSelection=Object.fromEntries([...params].filter(([k])=>['session','course','date','startTime','instructor','location','skillsContext'].includes(k)));
+const originalSelection=Object.fromEntries([...params].filter(([k])=>['session','course','date','startTime','instructor','location','skillsContext','selectionId'].includes(k)));
 const selectionKey='native-checkout:'+JSON.stringify(Object.entries(originalSelection).sort());
 let key='',model,receipt,busy=false,studentCount=0;
 function stored(name){try{return sessionStorage.getItem(name)||'';}catch{return '';}}
@@ -44,7 +44,7 @@ function update(){
 function addStudent(){
  if(receipt||cards().length>=model.profile.maxStudents)return;
  const index=studentCount++,card=document.createElement('fieldset');card.className='student';
- const groups=model.profile.optionGroups.map(g=>`<fieldset class="option-group"><legend>${esc(g.label)}</legend>${g.choices.map(c=>`<label class="choice"><input data-choice type="${g.type}" name="${index}-${esc(g.key)}" value="${esc(c.key)}" ${model.profile.defaultChoices.includes(c.key)?'checked':''} ${!c.available?'disabled':''}><span>${esc(c.label)}${c.amountCents?' (+'+money(c.amountCents)+')':''}${!c.available?' — unavailable':''}</span></label>`).join('')}</fieldset>`).join('');
+ const groups=model.profile.optionGroups.map(g=>`<fieldset class="option-group"><legend>${esc(g.label)}</legend>${g.choices.map(c=>`<label class="choice"><input data-choice type="${g.type}" name="${index}-${esc(g.key)}" value="${esc(c.key)}" ${model.profile.defaultChoices.includes(c.key)?'checked':''} ${!c.available?'disabled':''}><span>${esc(c.label)}${c.amountCents?' (+'+money(c.amountCents)+')':''}${!c.available?' - unavailable':''}</span></label>`).join('')}</fieldset>`).join('');
  const fields=model.profile.fields.map(f=>`<label data-config-field="${esc(f.key)}">${esc(f.label)}${f.type==='textarea'?`<textarea data-field="${esc(f.key)}" maxlength="${f.max_length}"></textarea>`:`<input data-field="${esc(f.key)}" type="${esc(f.type)}" maxlength="${f.max_length}" autocomplete="${esc(f.autocomplete||'off')}">`}</label>`).join('');
  const uploads=model.profile.uploads.map(p=>`<label class="wide" data-upload-wrapper="${esc(p.key)}">${esc(p.label)} (${p.required?'required':'optional'})<input data-upload="${esc(p.key)}" type="file" accept="${esc(p.mimeTypes.join(','))}"><small>Maximum ${Math.round(p.maxBytes/1048576*10)/10} MB. ${p.required?'':'You may bring the document to class instead.'} Files are private; receiving a file does not mean it has been approved.</small></label>`).join('');
  card.innerHTML=`<legend>Participant ${cards().length+1}</legend><button class="remove secondary" type="button">Remove participant</button><div class="fields">${fields}</div>${groups}${uploads}`;
@@ -64,7 +64,7 @@ function confirmed(){
 function rememberReceipt(){save(selectionKey,key);if(receipt.orderId)save('native-checkout-order:'+receipt.orderId,key);}
 async function status(){const p=await request('status');receipt=p.receipt;if(receipt.status==='paid')confirmed();else if(receipt.status==='refunded')message('This order was refunded; it is not a confirmed registration. Contact 910CPR for help.');else if(receipt.status==='processing')message('Payment received; registration confirmation is pending. Check payment status again or contact 910CPR. Do not pay again.');else if(['expired','payment_review','cancelled','canceled'].includes(receipt.status))throw Error(receipt.status==='expired'?'hold_expired':'payment_reconciliation_required');update();return receipt;}
 async function submit(event){
- event.preventDefault();if(busy)return;busy=true;const button=document.getElementById('pay');button.disabled=true;message('Saving your selection…');
+ event.preventDefault();if(busy)return;busy=true;const button=document.getElementById('pay');button.disabled=true;message('Saving your selection.');
  try{
   if(!receipt){
    const students=cards().map(card=>{const fields=inputs(card),selectedChoices=selected(card);checkoutSelection(model.profile,fields,selectedChoices);return {fields,selectedChoices};});
@@ -74,10 +74,10 @@ async function submit(event){
   if(['paid','processing','refunded'].includes((await status()).status))return;
   for(const [index,card] of cards().entries())for(const el of card.querySelectorAll('[data-upload]')){
    if(el.disabled||!el.files[0])continue;
-   const policy=model.profile.uploads.find(p=>p.key===el.dataset.upload);message('Receiving your document…');
+   const policy=model.profile.uploads.find(p=>p.key===el.dataset.upload);message('Receiving your document.');
    await request('upload',{studentIndex:index,requirementKey:policy.key,file:await filePacket(el.files[0],policy)});
   }
-  message('Opening secure payment…');const p=await request('checkout',{});
+  message('Opening secure payment.');const p=await request('checkout',{});
   if(p.receipt?.status==='paid'){receipt=p.receipt;confirmed();return;}
   if(['processing','refunded'].includes(p.receipt?.status)){receipt=p.receipt;await status();return;}
   const destination=new URL(p.checkoutUrl);if(destination.origin!=='https://checkout.stripe.com')throw Error('payment_unavailable');

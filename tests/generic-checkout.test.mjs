@@ -194,3 +194,23 @@ test('paid generic status and checkout retries nudge only the committed public o
  f.paid(true);assert.equal((await f.api.status(key)).receipt.status,'paid');assert.deepEqual(notified,['fixture-order']);
  assert.equal((await f.api.checkout(key)).receipt.status,'paid');assert.equal(notified.length,2);
 });
+
+
+test('async backend policy is awaited; native publication gate is independent and claims revalidate stable ID without date lookup',async()=>{
+ const f=fixture(),now=Date.parse('2030-01-01T00:00:00Z');
+ f.deps.now=()=>now;let policy={materializationEnabled:false,nativePublicationEnabled:false},policyCalls=0,publications=0;
+ f.deps.fullPolicy=async()=>{await Promise.resolve();policyCalls++;return policy;};
+ f.deps.appointmentSession=async s=>{assert.ok(s.date,'selection ID claims must not use the date-only canonical lookup');throw Error('session_not_available');};
+ const course={courseId:'209806',offerType:'dynamic_appointment',authority:'native-full-course.v2',proofObservedAt:new Date(now-60000).toISOString(),nativeScopeId:'brian-shipyard-b.v1',selectionId:'native-full:'+'a'.repeat(64),publicSelectable:true,instructor:'Brian Ennis',resource:':: Wilmington; Shipyard Blvd - B',location:':: Wilmington; Shipyard Blvd',availabilityBlockId:'fixture-full',sourceSessionIds:[],durationMinutes:120,schedulerConsumptionMinutes:150,cleanupBufferMinutes:30,setupBufferMinutes:0,occupiedUntil:'2030-01-02T17:30:00Z',validUntil:new Date(now+600000).toISOString()};
+ let payload={pageKey:'bls',schemaVersion:'selector-resolved-availability.v1',generatedAt:new Date(now).toISOString(),validUntil:new Date(now+600000).toISOString(),dates:[{date:'2030-01-02',startTimes:[{startTime:'10:00',courses:[course]}]}]};
+ f.deps.publication=async()=>{publications++;return structuredClone(payload);};const rpc=f.deps.rpc;
+ f.deps.rpc=async(n,a)=>n==='native_full_course_option'?{capacity:6}:rpc(n,a);
+ const api=genericCheckout(f.deps),selection={course:'209806',date:'2030-01-02',startTime:'10:00'};
+ await assert.rejects(api.model(selection),/native_registration_unavailable/);assert.equal(publications,0);
+ policy={materializationEnabled:true,nativePublicationEnabled:false};await assert.rejects(api.model(selection),/session_not_available/);
+ policy={materializationEnabled:true,nativePublicationEnabled:true};const m=await api.model(selection);assert.equal(m.selection.selectionId,course.selectionId);assert.equal(m.session.capacity,6);
+ await api.reserve(key,{...f.body(),selection:m.selection});assert.equal(publications,3);assert.equal(policyCalls,4);
+ const offer=f.calls.find(c=>c.name==='reserve_native_checkout_order').args.p_offer;assert.equal(offer.authority,'native-full-course.v2');assert.equal(offer.proofObservedAt,course.proofObservedAt);assert.equal(Object.hasOwn(offer,'appointmentDayId'),false);
+ policy={materializationEnabled:false,nativePublicationEnabled:false};await api.reserve(key,{...f.body(),selection:m.selection});assert.equal(policyCalls,4,'nonce replay precedes policy/publication fetch');
+ f.deps.fullPolicy=async()=>{throw Error('backend_unavailable');};await assert.rejects(api.model(selection),/backend_unavailable/);
+});

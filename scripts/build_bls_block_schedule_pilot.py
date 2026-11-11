@@ -108,6 +108,10 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "date": day.get("date"),
                     "startTime": slot.get("startTime"),
                 }
+                if course.get('authority') == 'native-full-course.v2':
+                    compact_course.pop('appointmentDayId', None)
+                    compact_course.update({key: course.get(key) for key in
+                        ('authority', 'nativeScopeId', 'selectionId', 'publicSelectable', 'proofObservedAt')})
                 compact_courses.append({key: value for key, value in compact_course.items() if value not in (None, "")})
             if compact_courses:
                 compact_slots.append({
@@ -221,7 +225,7 @@ def render_report(payload: dict[str, Any]) -> str:
         for offer in sample_offers:
             lines.append(
                 f"| {offer['date']} | {offer['displayStartTime']} | {offer['courseName']} "
-                f"(`{offer['courseId']}`) | {offer['appointmentDayId']} | `{offer['appointmentUrl']}` |"
+                f"(`{offer['courseId']}`) | {offer.get('appointmentDayId', '')} | `{offer['appointmentUrl']}` |"
             )
     else:
         lines.append("- None")
@@ -1081,7 +1085,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     "cleanupBufferMinutes": course.get("cleanupBufferMinutes"),
                     "schedulerConsumptionMinutes": course.get("schedulerConsumptionMinutes"),
                     "schedulerConsumptionEnd": course.get("schedulerConsumptionEnd"),
-                    "appointmentDayId": course["appointmentDayId"],
+                    **({"appointmentDayId": course["appointmentDayId"]} if "appointmentDayId" in course else {}),
                     "appointmentUrl": course["appointmentUrl"],
                     "location": course["location"],
                     "availabilityBlockId": course.get("availabilityBlockId"),
@@ -1470,7 +1474,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261108-checkout-2"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261111-native2"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
@@ -1742,12 +1746,18 @@ def render_html(payload: dict[str, Any]) -> str:
       return Boolean(day && day.date >= now.dateKey && selectableStartTimes(day, now).length);
     }}
 
+    function currentPublicationDates() {{
+      return ResolvedSelectorAvailability.datesForPublication(
+        scheduleDates, resolvedAvailability?.validUntil
+      );
+    }}
+
     function filteredDates() {{
       if (!availabilityReady()) {{
         return [];
       }}
       return CalendarTimeFilters.filterDates(
-        ResolvedSelectorAvailability.filterDatesByCourse(scheduleDates, activeCourseIds()),
+        ResolvedSelectorAvailability.filterDatesByCourse(currentPublicationDates(), activeCourseIds()),
         timingPreferences.constraints
       );
     }}
@@ -1758,7 +1768,7 @@ def render_html(payload: dict[str, Any]) -> str:
       const group = selected ? Object.values(optionGroups).find(item => item.courseIds?.includes(selectedCourseId)) : null;
       const alternativeIds = new Set((group?.courseIds || []).filter(courseId => courseId !== selectedCourseId));
       if (!alternativeIds.size) return [];
-      return scheduleDates.filter(day =>
+      return currentPublicationDates().filter(day =>
         isSelectableDate(day, now) && day.startTimes.some(slot =>
           !isPastStart(day, slot, now) && slot.courses.some(course => alternativeIds.has(course.courseId))
         )
@@ -2297,7 +2307,10 @@ def render_html(payload: dict[str, Any]) -> str:
         }}
         if (!config?.nativeRegistrationPath) link.textContent = 'Register';
         link.addEventListener('click', event => {{
-          if (isPastStart(day, slot)) {{
+          if (!availabilityReady() || isPastStart(day, {{...slot, courses: [course]}}) ||
+              !ResolvedSelectorAvailability.datesForPublication(
+                [{{...day, startTimes: [{{...slot, courses: [course]}}]}}], resolvedAvailability?.validUntil
+              ).length) {{
             event.preventDefault();
             loadResolvedAvailability();
           }}
@@ -2380,7 +2393,9 @@ def render_html(payload: dict[str, Any]) -> str:
       setTimeout(focusDeepLinkedElement, 0);
     }});
 
+    let availabilityRequestId = 0;
     async function loadResolvedAvailability() {{
+      const requestId = ++availabilityRequestId;
       availabilityState = 'checking';
       setAvailabilityMessage('Checking current class times...');
       renderAll();
@@ -2393,12 +2408,14 @@ def render_html(payload: dict[str, Any]) -> str:
         if (!payload || payload.schemaVersion !== 'selector-resolved-availability.v1' || !Array.isArray(payload.dates)) {{
           throw new Error('availability payload has an unexpected shape');
         }}
+        if (requestId !== availabilityRequestId) return;
         resolvedAvailability = payload;
-        scheduleDates = payload.dates;
+        scheduleDates = ResolvedSelectorAvailability.datesForPublication(payload.dates, payload.validUntil);
         availabilityState = 'ready';
         setAvailabilityMessage('');
         renderAll();
       }} catch (error) {{
+        if (requestId !== availabilityRequestId) return;
         console.error(error);
         resolvedAvailability = null;
         scheduleDates = [];
@@ -2408,7 +2425,20 @@ def render_html(payload: dict[str, Any]) -> str:
       }}
     }}
 
+    function refreshVisibleAvailability() {{
+      if (document.hidden || !availabilityReady()) return;
+      renderAll();
+      const hasDynamicOffers = resolvedAvailability?.dates?.some(day =>
+        day.startTimes?.some(slot => slot.courses?.some(course => course.offerType !== 'seated_class'))
+      );
+      const expiresAt = Date.parse(resolvedAvailability?.validUntil);
+      if (hasDynamicOffers && (!Number.isFinite(expiresAt) || expiresAt <= Date.now())) {{
+        return loadResolvedAvailability();
+      }}
+    }}
+
     loadResolvedAvailability();
+    setInterval(refreshVisibleAvailability, 30000);
     document.addEventListener('visibilitychange', () => {{
       if (!document.hidden) loadResolvedAvailability();
     }});

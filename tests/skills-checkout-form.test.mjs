@@ -7,7 +7,7 @@ import {readFileSync} from 'node:fs';
 import {conditionApplies,checkoutSelection,escapeCheckoutText} from '../supabase/functions/_shared/checkout-profile.mjs';
 const source=readFileSync(new URL('../docs/assets/generic-checkout.js',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'').replace('init();','globalThis.initialized=init();');
 const key='11111111-1111-4111-8111-111111111111';
-async function harness({online=false,uploads=false,file=null,failUpload=false,saved=false,paid=false,processing=false,refunded=false,legacy=null,legacySaved=false}={}){
+async function harness({online=false,uploads=false,file=null,failUpload=false,saved=false,paid=false,processing=false,refunded=false,legacy=null,legacySaved=false,nativeSelectionId=null}={}){
  const calls=[],nodes=new Map(),store=new Map(),cards=[];let redirected,receipt;
  const profile={profileKey:'generic',profileVersion:1,title:'Fixture course',description:'Fixture description',fields:[],baseCents:5500,maxStudents:2,backUrl:'/classes/',driverRules:[{driver:'native_order'}],defaultChoices:[online?'online':'skills'],optionGroups:[{key:'path',label:'Course option',type:'radio',required:true,choices:[{key:'skills',label:'Skills only',available:true,amountCents:0,catalog_keys:[]},{key:'online',label:'Online access + skills',available:true,amountCents:4000,catalog_keys:['code']}]}],uploads:uploads?[{key:'completion',label:'Certificate',mode:'optional',required:false,maxBytes:2097152,mimeTypes:['application/pdf']}]:[]};
  function element(){return {hidden:false,disabled:false,required:false,textContent:'',value:'',files:[],dataset:{},addEventListener(){},append(c){this.children=(this.children||[]).concat(c);},querySelectorAll(){return [];}};}
@@ -18,17 +18,17 @@ async function harness({online=false,uploads=false,file=null,failUpload=false,sa
   c.querySelector=s=>s==='.remove'?remove:null;
   c.querySelectorAll=s=>s==='[data-choice]:checked'?c.choices.filter(x=>x.checked):s==='[data-choice]'?c.choices:s==='[data-choice],.remove'?[...c.choices,remove]:s==='[data-upload]'?uploads?[c.upload]:[]:s==='[data-upload-wrapper]'?uploads?[c.wrapper]:[]:[];
   c.remove=()=>cards.splice(cards.indexOf(c),1);return c;}
- const query=new URLSearchParams(legacySaved?{course:'509474',skillsContext:'arc-blended',date:'2031-01-01',startTime:'09:00',instructor:'Fixture instructor',location:':: Wilmington; Shipyard Blvd'}:{session:'123456',paid:'1'}),selectionKey='native-checkout:'+JSON.stringify([...query].filter(([k])=>k!=='paid').sort(([a],[b])=>a.localeCompare(b)));
+ const query=new URLSearchParams(nativeSelectionId?{course:'209806',selectionId:nativeSelectionId}:legacySaved?{course:'509474',skillsContext:'arc-blended',date:'2031-01-01',startTime:'09:00',instructor:'Fixture instructor',location:':: Wilmington; Shipyard Blvd'}:{session:'123456',paid:'1'}),selectionKey='native-checkout:'+JSON.stringify([...query].filter(([k])=>k!=='paid').sort(([a],[b])=>a.localeCompare(b)));
  if(legacySaved){store.set('skillsReservation:skills:'+encodeURIComponent(JSON.stringify(['509474','arc-blended','2031-01-01T09:00','Fixture instructor',':: Wilmington; Shipyard Blvd - B','old-block'])),key);receipt={status:'held',orderId:'order',amountCents:5500,students:[{selectedChoices:['skills'],uploads:{}}]};}
  if(saved){store.set(selectionKey,key);receipt={status:paid?'paid':refunded?'refunded':processing?'processing':'held',orderId:'order',amountCents:online?9500:5500,students:[{selectedChoices:[online?'online':'skills'],uploads:{}}]};}
- const model=()=>legacy?{ok:true,nativeReady:false,sessionId:'123456',fallbackRegistrationUrl:legacy}:({ok:true,profile,selection:{session:'123456'},session:{startsAt:'2031-01-01T14:00:00Z',location:'Fixture location'},...(receipt?{receipt}:{} )});
+ const model=()=>legacy?{ok:true,nativeReady:false,sessionId:'123456',fallbackRegistrationUrl:legacy}:({ok:true,profile,selection:nativeSelectionId?{course:'209806',selectionId:nativeSelectionId}:{session:'123456'},session:{startsAt:'2031-01-01T14:00:00Z',location:'Fixture location'},...(receipt?{receipt}:{} )});
  const context=vm.createContext({legacySkillsReceipt,AbortSignal,URL,URLSearchParams,Intl,Date,Uint8Array,TextEncoder,Error,Object,JSON,Number,String,console,conditionApplies,checkoutSelection,esc:escapeCheckoutText,btoa,
   location:{search:'?'+query,origin:'https://fixture.invalid',assign:url=>redirected=url},window:{},parent:{postMessage(){}},crypto:{randomUUID:()=>key},
   sessionStorage:{get length(){return store.size;},key:i=>[...store.keys()][i],getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v)},ResizeObserver:class{observe(){}},
   document:{getElementById:id=>nodes.get(id),querySelectorAll:s=>s==='.student'?cards:[],documentElement:{scrollHeight:900,classList:{add(){}}},createElement:tag=>tag==='fieldset'?card():element()},
   fetch:async(url,init)=>{const action=new URL(url).pathname.split('/').at(-1);calls.push(action);const body=init.body?JSON.parse(init.body):null;
-   if(action==='form'){if(legacySaved)assert.equal(init.headers['idempotency-key'],key,'resume the saved nonce before attempting a now-unavailable fresh offer');return Response.json(model());}
-   if(action==='reserve'){assert.equal(body.profileKey,profile.profileKey);assert.equal(body.profileVersion,profile.profileVersion);assert.equal(store.get(selectionKey),key);receipt={status:'held',orderId:'order',amountCents:online?9500:5500,students:body.students.map(s=>({selectedChoices:s.selectedChoices,uploads:{}}))};return Response.json({ok:true,receipt});}
+   if(action==='form'){if(nativeSelectionId){assert.equal(new URL(url).searchParams.get('selectionId'),nativeSelectionId);assert.equal(new URL(url).searchParams.get('course'),'209806');}if(legacySaved)assert.equal(init.headers['idempotency-key'],key,'resume the saved nonce before attempting a now-unavailable fresh offer');return Response.json(model());}
+   if(action==='reserve'){if(nativeSelectionId)assert.equal(body.selection.selectionId,nativeSelectionId);assert.equal(body.profileKey,profile.profileKey);assert.equal(body.profileVersion,profile.profileVersion);assert.equal(store.get(selectionKey),key);receipt={status:'held',orderId:'order',amountCents:online?9500:5500,students:body.students.map(s=>({selectedChoices:s.selectedChoices,uploads:{}}))};return Response.json({ok:true,receipt});}
    if(action==='status')return Response.json({ok:true,receipt});
    if(action==='upload'&&failUpload)return Response.json({error:'document_storage_pending'},{status:503});
    if(action==='upload')return Response.json({ok:true,evidenceStatus:'received',approved:false});
@@ -53,6 +53,7 @@ test('paid query alone does not confirm; a saved return uses server status and n
 test('disabled upload configuration renders no upload control and all legacy skills URLs use the same form',async()=>{
  const h=await harness();assert.equal(h.cards[0].querySelectorAll('[data-upload]').length,0);
  const alias=readFileSync(new URL('../docs/register/skills-session/index.html',import.meta.url),'utf8');assert.match(alias,/location.replace\(destination\)/);assert.ok(alias.includes("const destination='/register/checkout/'"));assert.equal(alias.includes('<form'),false);
+ const entry=readFileSync(new URL('../docs/register/checkout/index.html',import.meta.url),'utf8');assert.ok(entry.includes('/assets/generic-checkout.js?v=20261111-native2'));assert.equal(entry.includes('<form'),false);
  const mirror=readFileSync(new URL('../docs/assets/checkout-profile.js',import.meta.url),'utf8'),server=readFileSync(new URL('../supabase/functions/_shared/checkout-profile.mjs',import.meta.url),'utf8');assert.equal(mirror,server);
 });
 test('saved observed payment hides the payment action and offers status recovery without confirming registration or charging again',async()=>{
@@ -88,3 +89,7 @@ test('actual shared client resumes the old saved nonce before offer lookup and p
  const h=await harness({legacySaved:true});assert.equal(h.cards.length,1);await h.submit();assert.equal(h.calls.filter(x=>x==='form').length,1);assert.equal(h.calls.includes('reserve'),false);assert.match(h.redirected(),/^https:\/\/checkout.stripe.com\//);
 });
 
+
+test('native full-course URL keeps its stable selection through form lookup, storage and reservation without appointment fields',async()=>{
+ for(const digit of ['a','b']){const id='native-full:'+digit.repeat(64),h=await harness({nativeSelectionId:id});await h.submit();assert.deepEqual(h.calls,['form','reserve','status','checkout']);assert.ok([...h.store.keys()].some(k=>k.includes(id)));assert.match(h.redirected(),/^https:\/\/checkout.stripe.com\//);}
+});

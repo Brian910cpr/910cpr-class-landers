@@ -19,6 +19,7 @@ PUBLIC_TZ = ZoneInfo("America/New_York")
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts import native_publication_scope as native_scope
 from scripts import generate_dynamic_offers
 from scripts.anchor_state import anchor_promotion_reason
 from scripts.apply_anchor_policy import sessions_with_canonical_demand, resolve_selector_payload
@@ -1184,6 +1185,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     if not allowed_course_ids:
         raise BlockSelectorInputError(f"Block schedule page {page_key} has no allowed course IDs")
 
+    native_policy = native_scope.load_policy(ROOT)
+    native_bls = native_scope.active(native_policy) and page_key == 'bls'
     live_availability_snapshot = require_current_live_availability_snapshot()
     consolidation_groups = course_consolidation_groups(load_block_schedule_page_configs())
     loaded = {
@@ -1191,7 +1194,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         "location_resource_map": read_required_json(LOCATION_RESOURCE_MAP_PATH),
         "course_catalog": read_required_json(COURSE_CATALOG_PATH),
         "people_catalog": read_required_json(PEOPLE_CATALOG_PATH),
-        "appointment_containers": read_required_json(APPOINTMENT_CONTAINERS_PATH),
+        "appointment_containers": {} if native_bls else read_required_json(APPOINTMENT_CONTAINERS_PATH),
         "sessions_current": read_required_json(SESSIONS_CURRENT_PATH),
         "schedule_future": read_required_json(SCHEDULE_FUTURE_PATH),
         "canonical_demand": load_publication_demand(ROOT),
@@ -1207,12 +1210,14 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     public_location_policy = read_required_json(PUBLIC_LOCATION_POLICY_PATH)
     public_offer_policy = read_required_json(PUBLIC_OFFER_POLICY_PATH)
     containers = active_containers(loaded["appointment_containers"])
-    if not containers:
+    if not containers and not native_bls:
         raise BlockSelectorInputError(f"{APPOINTMENT_CONTAINERS_PATH} has no active appointment containers")
     windows, availability_stats = selected_public_page_live_windows(live_availability_snapshot, loaded["location_resource_map"])
     layered_policy_path = ROOT / "data" / "config" / "layered_scheduling_policy.json"
     layered_policy = read_required_json(layered_policy_path) if layered_policy_path.exists() else {}
     from scripts.layered_publication_adapter import active as layered_active
+    if native_bls and not layered_active(layered_policy):
+        raise BlockSelectorInputError('native_publication_requires_layered_engine')
     occupancy = build_occupancy(loaded, course_rules, allow_unresolved=layered_active(layered_policy))
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy) if not layered_active(layered_policy) else {}
     reference_now = selector_reference_datetime()
@@ -1268,6 +1273,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             clean_text(w.get("location_name")), public_location_policy)) for w in windows]
         effective_layered_policy = dict(layered_policy,
             lead_minutes=int(public_offer_policy.get("minimum_lead_hours") or 0) * 60)
+        if native_bls:
+            effective_layered_policy['native_publication_scope'] = native_policy
         calculation = cached_calculate(windows, occupancy, selected_courses, effective_layered_policy,
             loaded["location_resource_map"], reference_now, window_datetimes,
             lambda window, course: bool(people.get(normalize_key(window.get("person_id")))
@@ -1290,7 +1297,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             return reasons
         result = publish(calculation, page_config, selected_courses, windows, reference_now,
             lambda window, start, cid: find_url(window, start, cid, containers, loaded["location_resource_map"]),
-            layered_public_reasons, seated)
+            layered_public_reasons, seated, native_policy=native_policy if native_bls else None)
         result["inputFiles"] = {"liveAvailabilitySnapshot": str(LIVE_AVAILABILITY_PATH),
             "courseConsumptionRules": str(COURSE_RULES_PATH), "layeredPolicy": str(layered_policy_path)}
         result["horizonDays"] = 90
