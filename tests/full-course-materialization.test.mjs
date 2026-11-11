@@ -26,7 +26,7 @@ test('actual full-course SQL materializes idempotently, preserves existing recor
   for(const file of preProfileFiles)await db.exec(load(file));
   await db.exec("insert into courses(course_key,name,enrollware_course_id,duration_minutes,cleanup_buffer_minutes,max_students_default,base_price) values('aha-bls-provider','Fixture BLS','209806',120,30,6,75),('aha-bls-provider-renewal','Fixture Renewal','359474',120,30,6,75); insert into people(person_key,display_name) values('brian','Brian Ennis'); insert into instructor_qualifications(instructor_id,course_id,status) select p.id,c.id,'active' from people p cross join courses c where p.person_key='brian' and c.enrollware_course_id in ('209806','359474');");
   await db.exec(load(profileMigration));await db.exec(load(fullCourseMigration));
-  await db.exec(load('supabase/migrations/20261111192524_native_full_course_v2_policy.sql'));
+  await db.exec(load('supabase/migrations/20261111195655_native_full_course_v2_policy.sql'));
   const scalar=async(sql,args=[])=>Object.values((await db.query(sql,args)).rows[0])[0];
   await db.exec(load('supabase/migrations/20261111190525_native_full_course_policy_service_access.sql'));
   await db.exec('set role service_role');
