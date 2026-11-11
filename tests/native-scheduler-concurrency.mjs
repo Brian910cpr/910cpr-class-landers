@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// Local synthetic race harness only. Refuses nonempty/non-loopback/non-PG17 DBs.
+// Synthetic race harness only: empty PG17 through loopback or a verified local CI service.
 import assert from 'node:assert/strict';
+import {assertIsolatedPostgresServerAddress} from './helpers/isolated-postgres-address.mjs';
 import {spawn} from 'node:child_process';
 import {readFile} from 'node:fs/promises';
 import {randomUUID} from 'node:crypto';
@@ -80,7 +81,7 @@ async function queued(){assert.equal((await value(c,'select landerware_native_sc
 const check=async(name,fn)=>{await reset();await fn();result.cases.push({name,passed:true});console.log('PASS '+name);};
 try{
  result.server=await value(c,`select json_build_object('database',current_database(),'version',current_setting('server_version_num')::int,'address',host(inet_server_addr()),'recovery',pg_is_in_recovery());`);
- assert.equal(result.server.database,database);assert.equal(Math.floor(result.server.version/10000),17);assert.equal(result.server.address,'127.0.0.1');assert.equal(result.server.recovery,false);
+ assert.equal(result.server.database,database);assert.equal(Math.floor(result.server.version/10000),17);await assertIsolatedPostgresServerAddress(result.server.address,{args,env,port,database});assert.equal(result.server.recovery,false);
  assert.equal(await c.query(`select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname not in('pg_catalog','information_schema') and n.nspname not like 'pg_toast%';`),'0','refusing nonempty DB');
  assert.equal(await c.query(`select count(*) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname not in('pg_catalog','information_schema');`),'0','refusing existing routines');
  await c.query(await readFile(new URL('./helpers/native-scheduler-concurrency-schema.sql',import.meta.url),'utf8'));

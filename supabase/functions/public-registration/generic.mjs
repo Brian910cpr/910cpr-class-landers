@@ -70,7 +70,7 @@ export function genericCheckout(deps){
    if(deps.enabled&&!deps.enabled())throw Error('native_registration_unavailable');
    const page=CONTEXTS[context];if(!page||session)throw Error('invalid_context');
    const publication=await deps.publication(page);
-   const nativeSkills=publicCourse==='509474'&&(publication.dates||[]).some(d=>(d.startTimes||[]).some(t=>(t.courses||[]).some(c=>c.authority==='native-skills-publication.v1')));
+   const nativeSkills=publicCourse==='509474'&&(publication.dates||[]).some(d=>(d.startTimes||[]).some(t=>(t.courses||[]).some(c=>['native-skills-publication.v1','native-skills-seated.v1'].includes(c.authority))));
    const skillsPolicy=nativeSkills&&deps.skillsPolicy?await deps.skillsPolicy():{};
    const all=skillsOffers(publication,context,now(),publicCourse,{nativePublicationEnabled:skillsPolicy.nativePublicationEnabled===true});
    const matches=all.filter(o=>selection.selectionId?o.selectionId===selection.selectionId:

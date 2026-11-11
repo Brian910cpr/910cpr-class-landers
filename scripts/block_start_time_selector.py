@@ -995,6 +995,10 @@ def seated_class_selector_offers(
             continue
         course = courses_by_id.get(course_id, {})
         rule = course_rules.get(course_id, {})
+        skills_admission = session.get('native_skills_booking_admission') or {}
+        if course_id == '509474' and skills_admission and not (set(skills_admission.get('skillsContexts', [])) &
+                {c.get('key') for c in course.get('schedule_page_option', course).get('skills_contexts', [])}):
+            continue
         if course_id == "509474" and native_reservation_reasons(course):
             continue
         scheduler_minutes = int(rule.get("scheduler_consumption_minutes") or max(1, int((end - start).total_seconds() // 60)))

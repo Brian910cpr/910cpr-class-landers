@@ -18,6 +18,8 @@ test('native skills SQL guard preserves installed safeguards and defaults off wi
   // Historical bundle fixture seeds an active catalog. Model the current inactive
   // baseline explicitly before checking this migration leaves it untouched.
   await db.exec("update landerware_registration_catalog set active=false where course_id='509474'");
+  await db.exec(load('supabase/migrations/20261111185724_native_session_authority_cutover.sql'));
+  await db.exec(load('supabase/migrations/20261111200810_native_scheduling_seat_snapshot.sql'));
   const scalar=async(sql,args=[])=>Object.values((await db.query(sql,args)).rows[0])[0];
   const snapshot=()=>scalar("select jsonb_build_object('courses',(select jsonb_agg(to_jsonb(c) order by id) from courses c),'sessions',(select coalesce(jsonb_agg(to_jsonb(s) order by id),'[]') from class_sessions s),'catalog',(select jsonb_agg(to_jsonb(c) order by course_id) from landerware_registration_catalog c),'profiles',(select jsonb_agg(to_jsonb(p) order by profile_key) from landerware_registration_profiles p),'contexts',(select jsonb_agg(to_jsonb(c) order by context_key) from skills_session_context_config c),'qualifications',(select jsonb_agg(to_jsonb(q) order by id) from instructor_qualifications q))");
   const installed=await scalar("select pg_get_functiondef('public.skills_session_native_option(text,jsonb)'::regprocedure)");
@@ -60,8 +62,7 @@ test('native skills SQL guard preserves installed safeguards and defaults off wi
   const result=await materialize();assert.ok(result.targetSessionId);assert.equal((await materialize()).targetSessionId,result.targetSessionId);await db.exec('reset role');
   // Current materializer supplies the actual lifecycle witness. Install the
   // unchanged authority/snapshot migrations, then project their atomic result.
-  await db.exec(load('supabase/migrations/20261111185724_native_session_authority_cutover.sql'));
-  await db.exec(load('supabase/migrations/20261111200810_native_scheduling_seat_snapshot.sql'));
+
   const hold=await scalar(`insert into landerware_public_orders(external_class_id,class_session_id,course_id,payer_email,idempotency_key,hold_expires_at)
     select external_class_id,id,'509474','fixture@example.invalid','native-skills-snapshot-fixture',now()+interval '5 minutes' from class_sessions where id=$1 returning id`,[result.targetSessionId]);
   await db.query(`insert into landerware_public_order_students(order_id,first_name,last_name,email,phone,unit_amount)

@@ -3,6 +3,7 @@
 // native_demand_snapshot_test database. No DATABASE_URL, credentials, or hosted
 // services are used. Requires Node 20+ and a local PostgreSQL 17 psql/server.
 import assert from 'node:assert/strict';
+import {assertIsolatedPostgresServerAddress} from './helpers/isolated-postgres-address.mjs';
 import { spawn } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -101,7 +102,7 @@ try {
   assert.equal(server.database, database);
   assert.equal(Math.floor(server.version / 10000), 17, 'requires PostgreSQL 17');
   assert.equal(server.recovery, false);
-  assert.equal(server.address, '127.0.0.1');
+  await assertIsolatedPostgresServerAddress(server.address,{args,env,port,database});
   const count = await writer.query(`SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace
     WHERE n.nspname NOT IN ('pg_catalog','information_schema') AND n.nspname NOT LIKE 'pg_toast%';`);
   assert.equal(count, '0', 'database must be NEW and empty; refusing to modify existing data');

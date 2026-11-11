@@ -109,12 +109,26 @@
     throw lastError;
   }
 
-  function datesForPublication(dates, validUntil, instant = Date.now()) {
+  function datesForPublication(dates, validUntil, instant = Date.now(), skillsContext = null) {
     const live = value => Number.isFinite(Date.parse(value)) && Date.parse(value) > instant;
     return (Array.isArray(dates) ? dates : []).map(day => ({...day,
       startTimes: (day.startTimes || []).map(slot => ({...slot,
         courses: (slot.courses || []).filter(course => {
-          if (course.authority === 'native-skills-publication.v1' || course.nativeOfferId) {
+          if (course.authority === 'native-skills-seated.v1') {
+            const observed = Date.parse(course.proofObservedAt), expiry = Date.parse(course.validUntil);
+            return course.courseId === '509474' && course.offerType === 'seated_class' && course.capacity === 2
+              && /^(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/.test(course.session_id || '')
+              && course.nativeOfferId === 'native-skills-seated:' + course.session_id
+              && Array.isArray(course.skillsContexts) && course.skillsContexts.length > 0
+              && (!skillsContext || course.skillsContexts.includes(skillsContext))
+              && course.availabilityBlockId === 'seated:' + course.session_id
+              && /^[a-f0-9]{32}$/.test(course.identityWitness || '')
+              && Number.isInteger(course.profileVersion) && course.profileVersion > 0
+              && Number.isInteger(course.remainingSeats) && course.remainingSeats > 0 && course.remainingSeats <= 2
+              && Number.isFinite(observed) && observed <= instant && live(validUntil)
+              && live(course.validUntil) && expiry <= observed + 15 * 60 * 1000;
+          }
+          if (course.authority === 'native-skills-publication.v1' || course.nativeOfferId || course.identityWitness || course.profileVersion) {
             const observed = Date.parse(course.proofObservedAt), expiry = Date.parse(course.validUntil);
             return course.authority === 'native-skills-publication.v1' && course.courseId === '509474'
               && course.offerType === 'dynamic_appointment' && course.capacity === 2

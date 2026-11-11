@@ -140,6 +140,48 @@ def session_admission(row, source, observed):
         return None
 
 
+def skills_session_admission(row, source, observed):
+    booking = source.get('native_skills_booking_admission')
+    if not isinstance(booking, dict):
+        return None
+    try:
+        count = source['active_registration_count']
+        valid = (source.get('registration_authority') in {'landerware-session-authority.v1', 'landerware-generated-session.v1'}
+            and source.get('registration_backend') == 'landerware' and source.get('session_status') in {'scheduled', 'active'}
+            and source.get('visibility') == 'public' and source.get('registration_status') == 'open'
+            and source.get('workspace_projection_status') == 'current' and source.get('count_available') is True
+            and row.get('demand_status') == 'current' and type(count) is int and 0 <= count < 2
+            and booking.get('schemaVersion') == 'native-skills-session-booking.v1'
+            and booking.get('profileKey') == 'native_skills_shared' and type(booking.get('profileVersion')) is int and booking['profileVersion'] > 0
+            and booking.get('qualificationPolicy') == 'skills-session-policy.v1'
+            and booking.get('capacity') == 2 and type(booking.get('remaining')) is int and booking['remaining'] == 2-count
+            and str(row.get('course_id')) == source.get('external_course_id') == booking.get('publicCourseId') == '509474'
+            and str(row.get('session_id')) == source.get('external_class_id') == booking.get('sourceSessionId')
+            and re.fullmatch(r'(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})', booking['sourceSessionId'])
+            and re.fullmatch(r'[a-f0-9]{32}', booking.get('identityWitness', ''))
+            and isinstance(booking.get('skillsContexts'), list) and booking['skillsContexts']
+            and len(set(booking['skillsContexts'])) == len(booking['skillsContexts'])
+            and set(booking['skillsContexts']) <= {'cpr-aed','first-aid-cpr-aed','arc-blended','hsi-blended'}
+            and all(scope.instant(row[k]) == scope.instant(source[k]) for k in ['start_at','end_at','consumption_start_at','consumption_end_at'])
+            and scope.instant(row['end_at']) == scope.instant(row['start_at'])+timedelta(minutes=45)
+            and scope.instant(row['consumption_start_at']) == scope.instant(row['start_at'])
+            and scope.instant(row['consumption_end_at']) == scope.instant(row['start_at'])+timedelta(minutes=60)
+            and row.get('location_name') == source.get('location_name') == ':: Wilmington; Shipyard Blvd'
+            and row.get('lead_instructor_name') == source.get('lead_instructor_name') == 'Brian Ennis')
+        if valid:
+            return {**booking, 'proofObservedAt': observed, 'validUntil': (scope.instant(observed)+timedelta(minutes=15)).isoformat()}
+    except (KeyError, ValueError, TypeError):
+        pass
+    return None
+
+
+def skills_registration_url(row):
+    from urllib.parse import urlencode
+    starts = scope.instant(row['start_at']).astimezone(scope.EASTERN)
+    return '/register/skills-session/?'+urlencode({'course':'509474','date':starts.date().isoformat(),
+        'startTime':starts.strftime('%H:%M'),'instructor':row['lead_instructor_name'],'location':row['location_name']})
+
+
 NATIVE_INTERVAL_FIELDS = ('start_at', 'end_at', 'consumption_start_at', 'consumption_end_at')
 NATIVE_IDENTITY_FIELDS = ('canonical_session_id', 'external_class_id', *NATIVE_INTERVAL_FIELDS)
 NATIVE_IDENTITY_SCHEMA = 'retained-native-identity.v1'
@@ -222,7 +264,7 @@ def retire_released_occurrences(rows, demand):
     return kept, retired
 
 
-def retained_projection(retained, demand):
+def retained_projection(retained, demand, *, skills_enabled=False):
     rows = deepcopy(session_rows(retained))
     require(isinstance(retained, dict) and isinstance(retained.get('sessions'), list), 'retained_occurrences_required')
     ids = [str(row.get('session_id') or '') for row in rows]
@@ -247,6 +289,10 @@ def retained_projection(retained, demand):
         row['public_direct_booking'] = False
         source = sources.get(str(row.get('canonical_session_id')), {})
         admission = session_admission(row, source, demand['generated_at'])
+        skills = skills_session_admission(row, source, demand['generated_at']) if skills_enabled else None
+        if skills:
+            row.update(native_skills_booking_admission=skills, public_direct_booking=True,
+                       registration_url=skills_registration_url(row))
         if admission:
             row.update(native_booking_admission=admission, public_direct_booking=True,
                        registration_url='/register/?session='+str(row['session_id']))
@@ -260,7 +306,7 @@ def retained_projection(retained, demand):
 def prepare():
     require(policy_enabled(read(POLICY)), 'native_publication_disabled')
     demand = load_publication_demand(ROOT)
-    output = retained_projection(read('docs/data/schedule_future.json'), demand)
+    output = retained_projection(read('docs/data/schedule_future.json'), demand, skills_enabled=read(POLICY).get('skillsEnabled', False))
     write('data/sessions_current.json', output)
     write('docs/data/schedule_future.json', output)
     return output
@@ -291,14 +337,19 @@ def validate(*, now=None, margin=300):
     check_budget(expiry, now, margin)
     schedule = read('docs/data/schedule_future.json')
     privacy_check(schedule)
-    expected_rows = {str(row['session_id']): row for row in retained_projection(schedule, demand)['sessions']}
+    expected_rows = {str(row['session_id']): row for row in retained_projection(schedule, demand, skills_enabled=policy.get('skillsEnabled', False))['sessions']}
     for row in session_rows(schedule):
         expected = expected_rows[str(row['session_id'])]
         require(row.get('native_booking_admission') == expected.get('native_booking_admission')
+                and row.get('native_skills_booking_admission') == expected.get('native_skills_booking_admission')
                 and row.get('public_direct_booking') == expected.get('public_direct_booking'),
                 'native_admission_source_changed')
         if row.get('public_direct_booking') is True:
             admission = row.get('native_booking_admission')
+            if row.get('native_skills_booking_admission'):
+                require(row.get('registration_url') == skills_registration_url(row), 'unadmitted_skills_registration_cta')
+                check_budget(row['native_skills_booking_admission']['validUntil'], now, margin)
+                continue
             require(isinstance(admission, dict) and row.get('registration_url') == '/register/?session='+str(row.get('session_id')), 'unadmitted_session_registration_cta')
             check_budget(admission['validUntil'], now, margin)
         else:
@@ -313,6 +364,11 @@ def validate(*, now=None, margin=300):
         for day in selector['dates']:
             for slot in day['startTimes']:
                 for offer in slot['courses']:
+                    if page_key != 'bls' and offer.get('offerType') == 'seated_class':
+                        validate_skills_seated_offer(offer, schedule, page_key, now, margin)
+                        skills_count += 1
+                        expiry = min(expiry, scope.instant(offer['validUntil']))
+                        continue
                     if page_key == 'bls' and offer.get('offerType') == 'seated_class':
                         validate_seated_offer(offer, schedule, now, margin)
                         continue
@@ -343,12 +399,43 @@ def annotate_seated_offers(payload, schedule):
             continue
         sid = str((offer.get('sourceAvailabilityBlock') or {}).get('sessionId') or '')
         row = rows.get(sid, {})
+        if str(offer.get('courseId')) == '509474':
+            admission = row.get('native_skills_booking_admission') or {}
+            contexts = sorted(set(admission.get('skillsContexts', [])) & set(scope.SKILLS_CONTEXTS.get(payload.get('pageKey'), {})))
+            require(row.get('public_direct_booking') is True and contexts, 'unadmitted_skills_seated_offer')
+            offer.pop('appointmentDayId', None); offer.pop('matchedContainerId', None)
+            offer.update(authority='native-skills-seated.v1', nativeScopeId=scope.SCOPE,
+                nativeOfferId='native-skills-seated:'+sid, session_id=sid, sourceSessionIds=[sid],
+                capacity=2, remainingSeats=admission['remaining'], profileVersion=admission['profileVersion'],
+                identityWitness=admission['identityWitness'], qualificationPolicy='skills-session-policy.v1', skillsContexts=contexts,
+                durationMinutes=45, setupBufferMinutes=0, cleanupBufferMinutes=15, schedulerConsumptionMinutes=60,
+                occupiedUntil=row['consumption_end_at'], proofObservedAt=admission['proofObservedAt'], validUntil=admission['validUntil'])
+            continue
         admission = row.get('native_booking_admission')
         require(row.get('public_direct_booking') is True and isinstance(admission, dict), 'unadmitted_seated_offer')
         offer.update(authority='native-session-booking.v1', session_id=sid,
             capacity=admission['capacity'], remainingSeats=admission['remaining'],
             proofObservedAt=admission['proofObservedAt'], validUntil=admission['validUntil'])
+    # Seated-only pages still carry a bounded native lease through finalization.
+    leases = [offer['validUntil'] for offer in payload.get('offers', []) if offer.get('authority') == 'native-skills-seated.v1']
+    if leases:
+        payload['validUntil'] = max([payload.get('validUntil') or min(leases), *leases], key=scope.instant)
     return payload
+
+
+def validate_skills_seated_offer(offer, schedule, page_key, now, margin):
+    sid = str(offer.get('session_id') or '')
+    rows = [r for r in session_rows(schedule) if str(r.get('session_id')) == sid]
+    require(len(rows) == 1, 'unadmitted_skills_seated_offer')
+    row = rows[0]; booking = row.get('native_skills_booking_admission') or {}
+    require(row.get('public_direct_booking') is True and
+        offer.get('registrationUrl') == row.get('registration_url') == skills_registration_url(row), 'unadmitted_skills_seated_offer')
+    for public, canonical in [('profileVersion','profileVersion'),('identityWitness','identityWitness'),
+        ('remainingSeats','remaining'),('proofObservedAt','proofObservedAt'),('validUntil','validUntil')]:
+        require(offer.get(public) == booking.get(canonical), 'skills_seated_proof_changed')
+    require(offer.get('skillsContexts') == sorted(set(booking.get('skillsContexts', [])) & set(scope.SKILLS_CONTEXTS[page_key])), 'skills_context_changed')
+    require(scope.instant(offer['occupiedUntil']) == scope.instant(row['consumption_end_at']), 'skills_identity_changed')
+    check_budget(offer['validUntil'], now, margin)
 
 
 def validate_seated_offer(offer, schedule, now, margin):
@@ -377,7 +464,7 @@ def native_page_config(config, page_key='bls'):
     require(config.get('page_key') == page_key and page_key in PAGE_PATHS, 'unexpected_publication_page')
     if page_key != 'bls':
         require(page_key in scope.SKILLS_CONTEXTS, 'unsupported_native_skills_page')
-        config.update(allowed_course_ids=['509474'], include_seated_classes=False,
+        config.update(allowed_course_ids=['509474'], include_seated_classes=True,
                       default_course_id='509474', compare_mode={'enabled': False}, show_all_enabled=False)
         config['course_options'] = [row for row in config.get('course_options', []) if str(row.get('course_id')) == '509474']
         require(len(config['course_options']) == 1, 'native_skills_course_option_required')

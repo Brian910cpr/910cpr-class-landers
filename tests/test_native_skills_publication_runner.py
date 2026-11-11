@@ -71,7 +71,7 @@ class NativeSkillsRunnerTests(unittest.TestCase):
             config = runner.native_page_config(pages[key], key)
             runner.check_page_outputs(config, key)
             self.assertEqual(original, pages[key])
-            self.assertEqual(config['include_seated_classes'], key == 'bls')
+            self.assertIs(config['include_seated_classes'], True)
             if key != 'bls':
                 self.assertEqual(config['allowed_course_ids'], ['509474'])
                 self.assertEqual([o['course_id'] for o in config['course_options']], ['509474'])

@@ -173,6 +173,16 @@ class NativePublicationRunnerTests(unittest.TestCase):
             self.assertIn('Stop retired publisher before any source fetch', text)
             self.assertEqual(text.count('needs: source-mode'), expected_jobs)
             self.assertEqual(text.count("needs.source-mode.outputs.legacy == 'true'"), expected_jobs)
+            triggers = text.split('on:', 1)[1].split('permissions:', 1)[0]
+            self.assertIn('workflow_dispatch:', triggers)
+            self.assertNotIn('schedule:', triggers)
+            self.assertNotIn('push:', triggers)
+            guard = text.split('      - name: Stop retired publisher before any source fetch', 1)[1].split('  refresh:', 1)[0]
+            self.assertIn('echo "legacy=false"', guard)
+            self.assertIn('exit 1', guard)
+            self.assertNotIn('policy_enabled', guard)
+            self.assertNotIn('HOT_SYNC_ADMIN_KEY', guard)
+
 
 
 if __name__ == '__main__':

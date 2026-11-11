@@ -108,11 +108,11 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "date": day.get("date"),
                     "startTime": slot.get("startTime"),
                 }
-                if course.get('authority') in {'native-full-course.v2', 'native-skills-publication.v1'}:
+                if course.get('authority') in {'native-full-course.v2', 'native-skills-publication.v1', 'native-skills-seated.v1'}:
                     compact_course.pop('appointmentDayId', None)
                     compact_course.update({key: course.get(key) for key in
                         ('authority', 'nativeScopeId', 'selectionId', 'publicSelectable', 'proofObservedAt',
-                         'nativeOfferId', 'qualificationPolicy', 'skillsContexts', 'capacity')})
+                         'nativeOfferId', 'qualificationPolicy', 'skillsContexts', 'capacity', 'remainingSeats', 'profileVersion', 'identityWitness')})
                 if course.get('authority') == 'native-session-booking.v1':
                     compact_course.update({key: course.get(key) for key in
                         ('authority', 'capacity', 'remainingSeats', 'proofObservedAt', 'session_id')})
@@ -1480,7 +1480,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261111-native-seats1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261111-native-skills-seats2"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
@@ -1754,7 +1754,7 @@ def render_html(payload: dict[str, Any]) -> str:
 
     function currentPublicationDates() {{
       return ResolvedSelectorAvailability.datesForPublication(
-        scheduleDates, resolvedAvailability?.validUntil
+        scheduleDates, resolvedAvailability?.validUntil, Date.now(), selectedSkillsContext || null
       );
     }}
 
@@ -2308,6 +2308,9 @@ def render_html(payload: dict[str, Any]) -> str:
           const selection = new URLSearchParams({{course: course.courseId, date: selectedDate,
             startTime: slot.startTime, location: course.location,
             instructor: course.instructor || '', skillsContext: selectedSkillsContext || config.skillsContexts?.[0]?.key || '', context: {json.dumps(str(payload.get("pageKey") or page_config.get("page_key") or ""))}}});
+          if (course.authority === 'native-skills-seated.v1') {{
+            selection.set('selectionId', 'skills:' + course.nativeOfferId + ':' + selection.get('skillsContext'));
+          }}
           link.href = '/register/skills-session/?' + selection;
           link.textContent = course.courseId === '210549' ? 'Continue to HeartCode BLS checkout' : 'Schedule skills session';
         }}
@@ -2316,7 +2319,8 @@ def render_html(payload: dict[str, Any]) -> str:
           if (!availabilityReady() || isPastStart(day, {{...slot, courses: [course]}}) ||
               !ResolvedSelectorAvailability.datesForPublication(
                 [{{...day, startTimes: [{{...slot, courses: [course]}}]}}], resolvedAvailability?.validUntil
-              ).length) {{
+              ).length || (course.authority === 'native-skills-seated.v1' &&
+                !course.skillsContexts?.includes(selectedSkillsContext || config.skillsContexts?.[0]?.key))) {{
             event.preventDefault();
             loadResolvedAvailability();
           }}

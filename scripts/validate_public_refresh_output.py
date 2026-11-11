@@ -137,6 +137,8 @@ def validate_selector(page_key: str, public_session_ids: set[str], *, now=None) 
                     require(session_id in public_session_ids, f"{page_key}: stale seated session {session_id}")
                     registration_url = course.get("registrationUrl") or course.get("appointmentUrl")
                     require(registration_url, f"{page_key}: seated session {session_id} lacks registration URL")
+                    if str(course.get('courseId')) == '509474':
+                        validate_native_skills_offer(course, page_key, day['date'], slot['startTime'], payload, now=now)
                 else:
                     require(day["date"] not in blocked, f"{page_key}: synthetic offer on unreconciled date {day['date']}")
                     require(day["date"] not in occupied or (
@@ -252,18 +254,30 @@ def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: s
         require(query.get(key) == [value], 'native skills: mismatched URL '+key)
     require(not course.get('appointmentDayId') and 'appointmentDayId' not in query,
             'native skills: unexpected Enrollware container')
-    if course.get('authority') or course.get('nativeOfferId') or course.get('nativeScopeId'):
+    if course.get('authority') or course.get('nativeOfferId') or course.get('nativeScopeId') or course.get('offerType') == 'seated_class':
         from scripts.native_publication_scope import SKILLS_AUTHORITY, SKILLS_CONTEXTS, SCOPE
-        require(course.get('authority') == SKILLS_AUTHORITY and course.get('nativeScopeId') == SCOPE,
+        seated = course.get('authority') == 'native-skills-seated.v1'
+        require(course.get('authority') in {SKILLS_AUTHORITY, 'native-skills-seated.v1'} and course.get('nativeScopeId') == SCOPE,
                 'native skills: invalid authority or scope')
         require(page_key in SKILLS_CONTEXTS and course_id == '509474', 'native skills: unsupported first-party course')
         require('appointmentDayId' not in course and 'matchedContainerId' not in course,
                 'native skills: unexpected external identity')
-        require(re.fullmatch(r'native-skills:[a-f0-9]{64}', str(course.get('nativeOfferId') or '')) is not None,
-                'native skills: invalid native identity')
-        raw = '|'.join([course['nativeScopeId'], '509474', start.isoformat(), course['instructor'], course['resource'], '45', '60'])
-        require(course['nativeOfferId'] == 'native-skills:'+sha256(raw.encode()).hexdigest(),
-                'native skills: native identity mismatch')
+        require(course.get('offerType') == ('seated_class' if seated else 'dynamic_appointment'), 'native skills: wrong offer kind')
+        if seated:
+            sid = course.get('session_id')
+            require(isinstance(sid, str) and re.fullmatch(r'(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})', sid)
+                and course.get('nativeOfferId') == 'native-skills-seated:'+sid
+                and course.get('availabilityBlockId') == 'seated:'+sid and course.get('sourceSessionIds') == [sid]
+                and re.fullmatch(r'[a-f0-9]{32}', str(course.get('identityWitness') or ''))
+                and type(course.get('profileVersion')) is int and course['profileVersion'] > 0
+                and type(course.get('remainingSeats')) is int and 1 <= course['remainingSeats'] <= 2,
+                'native skills: invalid seated proof')
+        else:
+            require(re.fullmatch(r'native-skills:[a-f0-9]{64}', str(course.get('nativeOfferId') or '')) is not None,
+                    'native skills: invalid native identity')
+            raw = '|'.join([course['nativeScopeId'], '509474', start.isoformat(), course['instructor'], course['resource'], '45', '60'])
+            require(course['nativeOfferId'] == 'native-skills:'+sha256(raw.encode()).hexdigest(),
+                    'native skills: native identity mismatch')
         local = datetime.fromisoformat(day+'T'+clock)
         zone = ZoneInfo('America/New_York')
         candidates = {local.replace(tzinfo=zone,fold=fold).astimezone(timezone.utc) for fold in (0,1)
@@ -283,9 +297,11 @@ def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: s
                 'native skills: invalid native query')
         require('appointmentUrl' not in course or course['appointmentUrl'] == destination,
                 'native skills: inconsistent registration destinations')
-        require(course.get('qualificationPolicy') == 'skills-session-policy.v1' and
-                course.get('capacity') == 2 and course.get('skillsContexts') == sorted(SKILLS_CONTEXTS[page_key]),
-                'native skills: invalid canonical context policy')
+        contexts = course.get('skillsContexts')
+        require(isinstance(contexts, list) and bool(contexts), 'native skills: missing contexts')
+        expected_contexts = sorted(set(contexts) & set(SKILLS_CONTEXTS[page_key])) if seated else sorted(SKILLS_CONTEXTS[page_key])
+        require(course.get('qualificationPolicy') == 'skills-session-policy.v1' and course.get('capacity') == 2
+                and contexts == expected_contexts, 'native skills: invalid canonical context policy')
         require(isinstance(payload, dict), 'native skills: original publication proof required')
         observed = datetime.fromisoformat(str(course.get('proofObservedAt') or '').replace('Z', '+00:00'))
         generated = datetime.fromisoformat(str(payload.get('generatedAt') or '').replace('Z', '+00:00'))

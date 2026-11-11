@@ -8,16 +8,21 @@ export function skillsOffers(payload,context,now=Date.now(),publicCourse='509474
   if(!Number.isFinite(generated)||generated>now+60000||now-generated>30*60000)throw Error('calendar_refresh_required');
   const offers=[];
   for(const day of payload.dates||[])for(const slot of day.startTimes||[])for(const c of slot.courses||[]) {
-    const native=c.authority==='native-skills-publication.v1';
-    if(!native&&(c.authority||c.nativeOfferId||c.nativeScopeId||c.proofObservedAt))continue;
+    const nativeSeated=c.authority==='native-skills-seated.v1';
+    const native=nativeSeated||c.authority==='native-skills-publication.v1';
+    if(!native&&(c.authority||c.nativeOfferId||c.nativeScopeId||c.proofObservedAt||c.identityWitness||c.profileVersion))continue;
     const proof=Date.parse(c.proofObservedAt),nativeLease=Date.parse(c.validUntil);
     if(native&&(options.nativePublicationEnabled!==true||publicCourse!=='509474'||context==='bls-skills'||
        c.nativeScopeId!=='brian-shipyard-b.v1'||c.qualificationPolicy!=='skills-session-policy.v1'||
        c.capacity!==2||c.instructor!=='Brian Ennis'||c.setupBufferMinutes!==0||
-       !/^native-skills:[a-f0-9]{64}$/.test(c.nativeOfferId||'')||
+       (!nativeSeated&&!/^native-skills:[a-f0-9]{64}$/.test(c.nativeOfferId||''))||
+       (nativeSeated&&(!/^(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/.test(c.session_id||'')||
+        c.nativeOfferId!=='native-skills-seated:'+c.session_id||!Number.isSafeInteger(c.profileVersion)||c.profileVersion<1||
+        !/^[a-f0-9]{32}$/.test(c.identityWitness||'')||!Number.isInteger(c.remainingSeats)||c.remainingSeats<1||c.remainingSeats>2||
+        JSON.stringify(c.sourceSessionIds)!==JSON.stringify([c.session_id])))||
        !Array.isArray(c.skillsContexts)||!c.skillsContexts.includes(context)||
        c.skillsContexts.some(key=>CONTEXTS[key]!==payload.pageKey||key==='bls-skills')||
-       'appointmentDayId' in c||'matchedContainerId' in c||c.offerType!=='dynamic_appointment'||
+       'appointmentDayId' in c||'matchedContainerId' in c||c.offerType!==(nativeSeated?'seated_class':'dynamic_appointment')||
        !/T.*(?:Z|[+-]\d{2}:\d{2})$/.test(c.proofObservedAt||'')||
        !Number.isFinite(proof)||proof>generated||proof>now||proof<now-900000||
        !Number.isFinite(nativeLease)||nativeLease<=now||nativeLease>proof+900000||nativeLease>lease||
@@ -31,11 +36,11 @@ export function skillsOffers(payload,context,now=Date.now(),publicCourse='509474
        (seated&&(!sourceSessionId||c.availabilityBlockId!=='seated:'+sourceSessionId)))continue;
     const local=day.date+'T'+slot.startTime;
     if(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(local))continue;
-    const startsAt=easternInstant(local),start=Date.parse(startsAt),validUntil=seated?generated+15*60000:Math.min(lease,Date.parse(c.validUntil));
+    const startsAt=easternInstant(local),start=Date.parse(startsAt),validUntil=seated&&!native?generated+15*60000:Math.min(lease,Date.parse(c.validUntil));
     if(native&&(start<now+86400000||start>now+90*86400000||Number(slot.startTime.slice(3))%15))continue;
     if(!startsAt||start<=now||!Number.isFinite(validUntil)||validUntil<=now||Date.parse(c.occupiedUntil)!==start+60*60000)continue;
     const selectionId=native?'skills:'+c.nativeOfferId+':'+context:'skills:'+encodeURIComponent(JSON.stringify([publicCourse,context,local,c.instructor,c.resource,c.availabilityBlockId]));
-    offers.push({kind:'dynamic',...(native?{authority:c.authority,nativeScopeId:c.nativeScopeId,nativeOfferId:c.nativeOfferId,proofObservedAt:c.proofObservedAt,qualificationPolicy:c.qualificationPolicy,capacity:2}:{}),offerType:c.offerType,sourceSessionId:seated?sourceSessionId:null,courseNumber:'509474',context,selectionId,localStart:local,startsAt,
+    offers.push({kind:'dynamic',...(native?{authority:c.authority,nativeScopeId:c.nativeScopeId,nativeOfferId:c.nativeOfferId,proofObservedAt:c.proofObservedAt,qualificationPolicy:c.qualificationPolicy,capacity:2,...(nativeSeated?{profileVersion:c.profileVersion,identityWitness:c.identityWitness,remainingSeats:c.remainingSeats}:{})}:{}),offerType:c.offerType,sourceSessionId:seated?sourceSessionId:null,courseNumber:'509474',context,selectionId,localStart:local,startsAt,
       endsAt:new Date(start+45*60000).toISOString(),consumptionEndsAt:new Date(start+60*60000).toISOString(),
       instructor:c.instructor,resource:c.resource,location:c.location,availabilityBlockId:c.availabilityBlockId,
       sourceSessionIds:c.sourceSessionIds,generatedAt:new Date(generated).toISOString(),validUntil:new Date(validUntil).toISOString()});

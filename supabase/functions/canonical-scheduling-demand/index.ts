@@ -133,6 +133,18 @@ export function projectDemand(row: any, seats: any = null) {
       || booking.remaining !== seats.capacity - seats.registered - seats.holds - seats.unreconciledReserved
       || booking.remaining < 1 || row.visibility !== "public" || row.registration_status !== "open"
       || !["scheduled", "active"].includes(row.status))) throw new Error("Native booking admission is unavailable");
+  const skills = native ? seats.skillsBooking : null;
+  if (skills != null && (skills.schemaVersion !== "native-skills-session-booking.v1"
+      || skills.publicCourseId !== "509474" || row.external_course_id !== "509474"
+      || skills.profileKey !== "native_skills_shared" || !Number.isSafeInteger(skills.profileVersion) || skills.profileVersion < 1
+      || skills.sourceSessionId !== row.external_class_id || !/^[a-f0-9]{32}$/.test(skills.identityWitness || "")
+      || skills.capacity !== 2 || seats.capacity !== 2 || skills.remaining !== seats.capacity - seats.registered - seats.holds - seats.unreconciledReserved
+      || !Number.isSafeInteger(skills.remaining) || skills.remaining < 1
+      || skills.qualificationPolicy !== "skills-session-policy.v1" || !Array.isArray(skills.skillsContexts) || !skills.skillsContexts.length
+      || new Set(skills.skillsContexts).size !== skills.skillsContexts.length
+      || skills.skillsContexts.some((c: string) => !["cpr-aed","first-aid-cpr-aed","arc-blended","hsi-blended"].includes(c))
+      || row.visibility !== "public" || row.registration_status !== "open" || !["scheduled","active"].includes(row.status)))
+    throw new Error("Native skills admission is unavailable");
   const proof = native ? {
     count_available: true, demand_status: "current", source_observed_at: null,
     reconciled_at: null, source_sha256: null, freshness_minutes: null,
@@ -141,6 +153,12 @@ export function projectDemand(row: any, seats: any = null) {
     native_booking_admission: booking == null ? null : {
       schemaVersion: booking.schemaVersion, publicCourseId: booking.publicCourseId,
       profileVersion: booking.profileVersion, capacity: booking.capacity, remaining: booking.remaining,
+    },
+    native_skills_booking_admission: skills == null ? null : {
+      schemaVersion: skills.schemaVersion, publicCourseId: skills.publicCourseId, profileKey: skills.profileKey,
+      profileVersion: skills.profileVersion, sourceSessionId: skills.sourceSessionId, identityWitness: skills.identityWitness,
+      capacity: skills.capacity, remaining: skills.remaining, skillsContexts: skills.skillsContexts,
+      qualificationPolicy: skills.qualificationPolicy,
     },
     authority_revision: seats.authorityRevision,
     canonical_registered_count: seats.registered,

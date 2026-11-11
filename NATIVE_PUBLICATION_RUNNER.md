@@ -1,6 +1,6 @@
 # Bounded first-party publication
 
-Implementation state: **BUILT**, default off. **Skills activation is blocked:** context-safe native remaining-seat admission is not implemented. A first held skills seat remains correctly occupied, but its second seat is not yet publicly selectable. This change neither activates native publication nor proves the live registration path.
+Implementation state: **BUILT**, default off. Context-safe native remaining-seat admission is implemented behind independent publication and checkout gates. This change neither activates native publication nor proves the live registration path.
 
 ## Source and output contract
 
@@ -16,7 +16,7 @@ Implementation state: **BUILT**, default off. **Skills activation is blocked:** 
 
 `python -m scripts.run_native_publication build` requires native mode already enabled. The manual workflow defaults to preview. Publication additionally requires `publish=true`, a main dispatch, unchanged source files and source commit, and unchanged remote main. A preview manifest cannot be published.
 
-The retired public refresh and admin availability/probe workflows have a prerequisite source-mode job. Native mode skips their entire legacy jobs before any feed or page fetch. Invalid configuration fails closed rather than choosing the legacy route.
+The retired public refresh and admin availability/probe workflows are manual-only retirement notices. Their prerequisite job fails unconditionally before any feed or page fetch, including when native configuration is disabled or invalid.
 
 ## Freshness and race behavior
 
@@ -57,4 +57,8 @@ The skills gate adds exactly nine public outputs from the existing page generato
 
 The runner checks each configured output and audit path before invoking a page generator. The manifest, staging, preview artifact and live observer use the same six-or-fifteen-path allowlist. An unexpected alias, missing or extra path, modified file, changed gate, stale proof or unsupported course aborts publication. Every enabled selector is strictly validated, including exact native destinations, context, duration, capacity, source trace and original-proof expiry. The manifest expiry cannot outlive its earliest selected offer.
 
-Preview temporarily enables only the existing master gate, never skills. Skills publication, backend runtime admission, verified qualifications, catalog/profile activation and the maintenance policy remain separate gates. This local implementation supplies no hosted activation or production proof. Before any skills activation, add and prove context-safe seated admission for the existing physical class without duplicating its capacity pool. Activation also requires a current first-party preview and observed customer path within the original 15-minute proof, followed by an independent stale-cycle observer.
+Preview temporarily enables only the existing master gate, never skills. Skills publication, backend runtime admission, verified qualifications, catalog/profile activation and the maintenance policy remain separate gates. This local implementation supplies no hosted activation or production proof. The native remaining-seat path retains the existing physical session and its shared capacity-two pool across all qualified contexts. A separate admission DTO binds the exact session, profile version, identity witness, remaining capacity and allowed contexts. Only those contexts appear on each family feed; a revoked context or expired original proof removes its CTA without removing occupancy. Checkout rechecks the current binding and shared capacity under the session lock. Unresolved paid or ambiguous orders block new admission until reconciled. Activation requires a current first-party preview and observed customer path within the original 15-minute proof, followed by an independent stale-cycle observer.
+
+## Retired external publishers
+
+The old public/admin external-source workflows are manual-only retirement notices. Their unconditional pre-fetch guard fails before either old publication or the old probe can run. A disabled native flag never restores the retired source. Existing owner controls or external callers that still target those workflows must be redirected to the explicit native publisher; they are not evidence of a native refresh cadence.
