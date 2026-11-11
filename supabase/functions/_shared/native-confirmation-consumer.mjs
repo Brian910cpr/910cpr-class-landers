@@ -16,7 +16,7 @@ function normalizedOutcome(result) {
 }
 
 export async function dispatchNativeConfirmations({ orderId = null, limit = 10, claim, settle, send } = {}) {
-  if ((orderId !== null && !UUID.test(orderId)) || !Number.isInteger(limit) || limit < 1 || limit > 10 ||
+  if ((orderId !== null && (typeof orderId !== 'string' || !UUID.test(orderId))) || !Number.isInteger(limit) || limit < 1 || limit > 10 ||
       typeof claim !== 'function' || typeof settle !== 'function' || typeof send !== 'function') {
     throw Error('native_confirmation_consumer_invalid_configuration');
   }

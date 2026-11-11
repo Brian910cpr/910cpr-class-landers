@@ -28,8 +28,8 @@ test('HTTP owner authorization precedes all health, queue and transport access',
 });
 test('HTTP request cannot pick recipient, body, sender, provider or oversized fields',async()=>{
  let calls=0;const h=nativeConfirmationHandler({authorized:async()=>true,service:{deliver:()=>calls++,health:()=>calls++}});
- for(const data of [{recipient:'other@example.test'},{body:'untrusted'},{from:'other@example.test'},{provider:'other'},{orderId:'invalid'},{orderId:[]},[]])assert.equal((await h(request('retry',data))).status,400);
- assert.equal((await h(request('retry',{body:'a'.repeat(5000)}))).status,413);assert.equal(calls,0);
+ for(const data of [{recipient:'other@example.test'},{body:'untrusted'},{from:'other@example.test'},{provider:'other'},{orderId:'invalid'},{orderId:[]},{orderId:[id]},[]])assert.equal((await h(request('retry',data))).status,400);
+ assert.equal((await h(request('retry',{body:'a'.repeat(5000)}))).status,413);assert.equal((await h(request('retry',{}, {'content-type':'text/plain'}))).status,415);assert.equal(calls,0);
 });
 test('HTTP origin rejection and auth failures expose no raw exceptions',async()=>{
  const h=nativeConfirmationHandler({authorized:async()=>{throw Error('secret diagnostic');},service:{}});
