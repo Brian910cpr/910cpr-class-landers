@@ -20,11 +20,25 @@ async function scheduleSession(id:string,newRegistration=true){
  if(!/^(?:\d+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/.test(id))throw Error("invalid_session");
  const native=await db(`class_sessions?external_class_id=eq.${encodeURIComponent(id)}&record_scope=eq.operational&select=*,courses(enrollware_course_id,name),locations(name),people!class_sessions_lead_instructor_id_fkey(display_name)&limit=2`);
  if(native.length===1&&native[0].registration_backend==="landerware"&&native[0].registration_status==="open"&&native[0].visibility==="public"&&["scheduled","active"].includes(native[0].status)&&Date.parse(native[0].start_at)>Date.now()){
-  const n=native[0];if(newRegistration)await rpc("assert_public_registration_open",{p_start:n.start_at,p_end:n.end_at,p_external_id:id});
+  const n=native[0];
+  if(newRegistration && (String(n.external_course_id)==="351632" || String(n.courses?.enrollware_course_id)==="351632" || n.course_id==="0689a2c5-c507-4e8a-b94c-15e5c5689e28")) {
+   const snapshot=await rpc("native_scheduling_seat_snapshot",{p_session_id:n.id}), b=snapshot?.pediatricBooking;
+   if(!b || b.schemaVersion!=="native-pediatric-session-booking.v1" || b.publicCourseId!=="351632"
+      || b.canonicalCourseId!==n.course_id || String(n.external_course_id)!=="351632" || String(n.courses?.enrollware_course_id)!=="351632"
+      || b.sourceSessionId!==id || b.packageCode!=="full-course" || b.profileKey!=="native_heartsaver_351632_draft"
+      || b.coursePolicyKey!=="heartsaver-pediatric-existing:351632.v1" || !Number.isSafeInteger(b.remaining) || b.remaining<1
+      || snapshot.sessionStatus!==n.status || snapshot.registrationStatus!==n.registration_status || snapshot.visibility!==n.visibility
+      || !Array.isArray(snapshot.sessionIdentity) || snapshot.sessionIdentity.length!==11 || snapshot.sessionIdentity[0]!==n.course_id
+      || [n.lead_instructor_id,n.location_id,n.resource_id,n.organization_id,n.external_class_id,n.record_scope].some((v,i)=>v!==snapshot.sessionIdentity[i+5])
+      || [n.start_at,n.end_at,n.consumption_start_at,n.consumption_end_at].some((v,i)=>Date.parse(v)!==Date.parse(snapshot.sessionIdentity[i+1])))
+     throw Error("native_registration_unavailable");
+  }
+  if(newRegistration)await rpc("assert_public_registration_open",{p_start:n.start_at,p_end:n.end_at,p_external_id:id});
   try{const seats=await rpc("landerware_public_seat_state",{p_session_id:n.id});return {...n,session_id:id,course_id:n.courses.enrollware_course_id,course_name:n.courses.name,location_name:n.locations.name,lead_instructor_name:n.people?.display_name,nativeReady:true,seats}}
   catch(error){if(!["external_reconciliation_required","unverified_capacity"].includes(error instanceof Error?error.message:""))throw error}
  }
- const r=await fetch(`${ORIGIN}/data/schedule_future.json`,{headers:{accept:"application/json"}});if(!r.ok)throw Error("public_schedule_unavailable");const p=await r.json(),rows=Array.isArray(p)?p:p.sessions||[],s=rows.find((x:any)=>String(x.session_id)===id&&x.public_direct_booking===true&&x.registration_status==="open");if(!s)throw Error("session_not_open");if(newRegistration)await rpc("assert_public_registration_open",{p_start:s.consumption_start_at||s.start_at,p_end:s.consumption_end_at||s.end_at,p_external_id:id});return {...s,nativeReady:false};
+ if(newRegistration && native.some((n:any)=>String(n.external_course_id)==="351632" || String(n.courses?.enrollware_course_id)==="351632" || n.course_id==="0689a2c5-c507-4e8a-b94c-15e5c5689e28"))throw Error("native_registration_unavailable");
+ const r=await fetch(`${ORIGIN}/data/schedule_future.json`,{headers:{accept:"application/json"}});if(!r.ok)throw Error("public_schedule_unavailable");const p=await r.json(),rows=Array.isArray(p)?p:p.sessions||[],s=rows.find((x:any)=>String(x.session_id)===id&&x.public_direct_booking===true&&x.registration_status==="open");if(!s)throw Error("session_not_open");if(newRegistration && String(s.course_id||s.course_number)==="351632")throw Error("native_registration_unavailable");if(newRegistration)await rpc("assert_public_registration_open",{p_start:s.consumption_start_at||s.start_at,p_end:s.consumption_end_at||s.end_at,p_external_id:id});return {...s,nativeReady:false};
 }
 async function catalog(courseId:string){const rows=await db(`landerware_registration_catalog?course_id=eq.${encodeURIComponent(courseId)}&active=eq.true&select=course_id,course_name,unit_amount,currency,addons,billing_codes&limit=1`);if(!rows[0])throw Error("price_catalog_missing");
  const c=rows[0];

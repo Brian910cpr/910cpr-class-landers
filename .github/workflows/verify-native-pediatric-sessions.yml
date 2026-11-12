@@ -1,0 +1,68 @@
+name: Verify native pediatric sessions
+on:
+  workflow_dispatch:
+  push:
+    branches: ['codex/native-pediatric-sessions-20261112']
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'supabase/functions/public-registration/**'
+      - 'supabase/functions/canonical-scheduling-demand/**'
+      - 'scripts/*native*publication*.py'
+      - 'scripts/fetch_canonical_scheduling_demand.py'
+      - 'scripts/build_bls_block_schedule_pilot.py'
+      - 'scripts/validate_public_refresh_output.py'
+      - 'scripts/test-native-pediatric-admission-postgres.sh'
+      - 'docs/assets/resolved-selector-availability.js'
+      - 'data/config/native_publication_scope.json'
+      - 'tests/**'
+      - '.github/workflows/publish-native-availability.yml'
+      - '.github/workflows/verify-native-pediatric-sessions.yml'
+permissions:
+  contents: read
+jobs:
+  synthetic-admission:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: skills_claim_test_120109
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm install --no-save --ignore-scripts @electric-sql/pglite@0.5.15
+      - run: python -m pip install openpyxl python-dateutil tzdata beautifulsoup4
+      - name: Verify current admission, endpoint and preserved course contracts
+        run: node --test --test-concurrency=1 tests/native-pediatric-admission.test.mjs tests/native_pediatric_endpoint.test.cjs tests/native-heartsaver-admission.test.mjs tests/native-heartsaver-full-scopes.test.mjs tests/native-heartsaver-publication.test.mjs tests/native_heartsaver_demand_endpoint.test.cjs tests/generic-checkout-adapter.test.mjs tests/native-bls-admission.test.mjs tests/native-full-offer-lease.test.mjs
+      - name: Verify canonical publication and unchanged independent gates
+        run: python -B -m unittest tests.test_native_pediatric_publication tests.test_native_heartsaver_publication tests.test_native_publication_runner tests.test_native_publication_wiring tests.test_fetch_canonical_scheduling_demand tests.test_native_bls_renderer tests.test_native_bls_publication_runner tests.test_native_skills_publication_runner tests.test_validate_public_refresh_output -v
+      - name: Verify actual authority and class-row races
+        env:
+          NATIVE_TEST_POSTGRES_CONTAINER_ID: ${{ job.services.postgres.id }}
+        run: node tests/native-pediatric-admission-concurrency.mjs
+  browser-contracts:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install openpyxl python-dateutil tzdata playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Verify pediatric selector to native form without external requests
+        run: python -B -m unittest tests.test_native_pediatric_publication_browser -v
+      - name: Verify independent adult and BLS browser contracts
+        run: python -B -m unittest tests.test_native_heartsaver_publication_browser tests.test_native_bls_browser_fixtures tests.test_native_bls_publication_browser -v
+# Synthetic fixtures and intercepted requests only. No production input or sends.

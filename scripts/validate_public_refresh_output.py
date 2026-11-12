@@ -137,6 +137,9 @@ def validate_selector(page_key: str, public_session_ids: set[str], *, now=None) 
                     require(session_id in public_session_ids, f"{page_key}: stale seated session {session_id}")
                     registration_url = course.get("registrationUrl") or course.get("appointmentUrl")
                     require(registration_url, f"{page_key}: seated session {session_id} lacks registration URL")
+                    if str(course.get('courseId')) == '351632' or course.get('authority') == 'native-pediatric-session-booking.v1':
+                        from scripts.native_pediatric_publication import validate_offer
+                        validate_offer(course, payload, page_key, day['date'], slot['startTime'], now)
                     if course.get('authority') == 'native-heartsaver-session-booking.v1':
                         validate_native_heartsaver_seated(course, payload, page_key, day['date'], slot['startTime'], now=now)
                     if str(course.get('courseId')) == '509474' or (page_key == 'bls' and str(course.get('courseId')) == '210549' and course.get('authority') == 'native-skills-seated.v1'):

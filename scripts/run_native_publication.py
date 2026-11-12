@@ -21,6 +21,7 @@ import urllib.request
 from urllib.parse import urlsplit
 
 from scripts import native_publication_scope as scope
+from scripts import native_pediatric_publication as pediatric
 from scripts.canonical_scheduling_demand import load_publication_demand, resolve_canonical_demand
 from scripts.validate_public_refresh_output import validate_selector, session_rows
 
@@ -85,20 +86,22 @@ def policy_enabled(policy):
             and type(policy.get('enabled')) is bool and policy.get('scopeId') == scope.SCOPE
             and type(policy.get('skillsEnabled', False)) is bool
             and type(policy.get('heartsaverFullEnabled', False)) is bool
+            and type(policy.get('pediatricExistingSessionEnabled', False)) is bool
             and type(policy.get('blsSkillsEnabled', False)) is bool
             and type(policy.get('blsBundleEnabled', False)) is bool,
             'invalid_native_publication_policy')
     return policy['enabled']
 
 
-def publication_pages(skills_enabled=False, heartsaver_enabled=False):
+def publication_pages(skills_enabled=False, heartsaver_enabled=False, pediatric_enabled=False):
+    require(type(pediatric_enabled) is bool, "invalid_pediatric_publication_gate")
     require(type(skills_enabled) is bool, 'invalid_skills_publication_gate')
     require(type(heartsaver_enabled) is bool, 'invalid_heartsaver_publication_gate')
-    return ('bls', 'heartsaver', 'arc', 'hsi') if skills_enabled else ('bls', 'heartsaver') if heartsaver_enabled else ('bls',)
+    return ('bls', 'heartsaver', 'arc', 'hsi') if skills_enabled else ('bls', 'heartsaver') if (heartsaver_enabled or pediatric_enabled) else ('bls',)
 
 
-def publication_paths(skills_enabled=False, heartsaver_enabled=False):
-    return PATHS + tuple(path for page in publication_pages(skills_enabled, heartsaver_enabled)[1:] for path in PAGE_PATHS[page])
+def publication_paths(skills_enabled=False, heartsaver_enabled=False, pediatric_enabled=False):
+    return PATHS + tuple(path for page in publication_pages(skills_enabled, heartsaver_enabled, pediatric_enabled)[1:] for path in PAGE_PATHS[page])
 
 
 def privacy_check(value):
@@ -426,7 +429,7 @@ def validate(*, now=None, margin=300):
             require(not row.get('registration_url'), 'unadmitted_session_registration_cta')
     ids = {str(row['session_id']) for row in session_rows(schedule)}
     counts, originals, full_count, skills_count = {}, [], 0, 0
-    for page_key in publication_pages(policy.get('skillsEnabled', False), policy.get('heartsaverFullEnabled', False)):
+    for page_key in publication_pages(policy.get('skillsEnabled', False), policy.get('heartsaverFullEnabled', False), policy.get('pediatricExistingSessionEnabled',False)):
         counts[page_key] = validate_selector(page_key, ids, now=now)
         selector = read('docs/data/block-selector-availability/'+page_key+'.json')
         # Public authority.description is fixed implementation text, not user data.
@@ -440,6 +443,18 @@ def validate(*, now=None, margin=300):
                         expiry = min(expiry, scope.instant(offer['validUntil']))
                         if offer.get('offerType') == 'dynamic_appointment':
                             originals.append(scope.instant(offer['calendarProofObservedAt']))
+                        continue
+                    if str(offer.get('courseId')) == pediatric.COURSE:
+                        require(policy.get('pediatricExistingSessionEnabled') is True, 'pediatric_publication_disabled')
+                        expected = pediatric.project({'pageKey':'heartsaver','offers':[]}, demand, policy, now)
+                        match = next((o for o in expected['offers'] if o['session_id'] == offer.get('session_id')), None)
+                        from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload
+                        compact = public_selector_availability_payload(expected)
+                        expected_offer = next((o for d in compact['dates'] for slot in d['startTimes'] for o in slot['courses'] if o['session_id'] == offer.get('session_id')), None)
+                        require(match is not None and offer == expected_offer, 'pediatric_publication_proof_changed')
+                        check_budget(offer['validUntil'], now, margin)
+                        expiry = min(expiry, scope.instant(offer['validUntil']))
+                        full_count += 1
                         continue
                     heartsaver = page_key == 'heartsaver' and str(offer.get('courseId')) in scope.HEARTSAVER
                     if heartsaver:
@@ -668,9 +683,22 @@ def validate_heartsaver_seated_offer(offer, schedule, now, margin):
     check_budget(offer['validUntil'], now, margin)
 
 
-def native_page_config(config, page_key='bls', *, skills_enabled=True, heartsaver_enabled=False, bls_skills_enabled=False, bls_bundle_enabled=False):
+def native_page_config(config, page_key='bls', *, skills_enabled=True, heartsaver_enabled=False, bls_skills_enabled=False, bls_bundle_enabled=False, pediatric_enabled=False):
     config = deepcopy(config)
     require(config.get('page_key') == page_key and page_key in PAGE_PATHS, 'unexpected_publication_page')
+    if page_key == 'heartsaver' and pediatric_enabled:
+        pediatric_option = next((deepcopy(o) for o in config.get('course_options',[]) if str(o.get('course_id')) == '351632'), None)
+        require(pediatric_option is not None, 'pediatric_course_option_required')
+        if heartsaver_enabled or skills_enabled:
+            config = native_page_config(config, page_key, skills_enabled=skills_enabled, heartsaver_enabled=heartsaver_enabled)
+        else:
+            config.update(allowed_course_ids=[], course_options=[], include_seated_classes=False,
+                compare_mode={'enabled':False}, show_all_enabled=False)
+        pediatric_option.pop('price',None)
+        config['course_options'].append(pediatric_option)
+        config['default_course_id'] = config.get('default_course_id') if heartsaver_enabled or skills_enabled else '351632'
+        config['native_pediatric_publication'] = True
+        return config
     if page_key == 'heartsaver' and heartsaver_enabled:
         allowed = set(scope.HEARTSAVER) | ({'509474'} if skills_enabled else set())
         config.update(allowed_course_ids=sorted(allowed), include_seated_classes=True, native_heartsaver_publication=True,
@@ -765,17 +793,19 @@ def build(preview=False):
         # restricted to course 509474 and its four existing context mappings.
         skills_enabled = policy.get('skillsEnabled', False)
         heartsaver_enabled = policy.get('heartsaverFullEnabled', False)
+        pediatric_enabled = policy.get('pediatricExistingSessionEnabled', False)
         policy['_blsSkillsProof'] = load_publication_demand(ROOT).get('native_bls_skills_policy_proof')
         if preview:
             policy['enabled'] = True
         bls_skills_enabled = bool(scope.bls_course_ready(policy, '509474', datetime.now(timezone.utc)))
         bls_bundle_enabled = bool(scope.bls_course_ready(policy, '210549', datetime.now(timezone.utc)))
         configs = load_block_schedule_page_configs()
-        targets = [(key, native_page_config(configs[key], key, skills_enabled=skills_enabled, heartsaver_enabled=heartsaver_enabled, bls_skills_enabled=bls_skills_enabled, bls_bundle_enabled=bls_bundle_enabled)) for key in publication_pages(skills_enabled, heartsaver_enabled)]
+        targets = [(key, native_page_config(configs[key], key, skills_enabled=skills_enabled, heartsaver_enabled=heartsaver_enabled, bls_skills_enabled=bls_skills_enabled, bls_bundle_enabled=bls_bundle_enabled, pediatric_enabled=pediatric_enabled)) for key in publication_pages(skills_enabled, heartsaver_enabled, pediatric_enabled)]
         reports = {key: check_page_outputs(config, key) for key, config in targets}
         for key, config in targets:
             payload = annotate_seated_offers(build_block_schedule_page(config), schedule)
             payload = project_bls_offers(payload, schedule, policy, datetime.now(timezone.utc))
+            payload = pediatric.project(payload, load_publication_demand(ROOT), policy, datetime.now(timezone.utc))
             page = write_page_outputs(payload, ROOT / reports[key][0], ROOT / reports[key][1], ROOT / config['output_path'])
             expected = {*PAGE_PATHS[key], *reports[key]}
             actual = {str(Path(p).relative_to(ROOT)) for p in page['output_paths']}
@@ -783,11 +813,12 @@ def build(preview=False):
         evidence = validate()
         evidence.update(schemaVersion='native-publication-run.v1', sourceHead=head, preview=preview,
                         skillsEnabled=skills_enabled, heartsaverFullEnabled=heartsaver_enabled,
+                        pediatricExistingSessionEnabled=pediatric_enabled,
                         blsSkillsEnabled=policy.get('blsSkillsEnabled', False), blsBundleEnabled=policy.get('blsBundleEnabled', False),
                         state='BUILT', generatedAt=datetime.now(timezone.utc).isoformat(),
                         sessionCounts=schedule['build']['counts'],
                         availabilityCounts={k: v for k, v in result['stats'].items() if type(v) is int},
-                        files={p: sha256((ROOT / p).read_bytes()).hexdigest() for p in publication_paths(skills_enabled, heartsaver_enabled)})
+                        files={p: sha256((ROOT / p).read_bytes()).hexdigest() for p in publication_paths(skills_enabled, heartsaver_enabled, pediatric_enabled)})
         write(REPORT, evidence)
         return evidence
     finally:
@@ -797,7 +828,7 @@ def build(preview=False):
 def assert_manifest(report):
     require(report.get('schemaVersion') == 'native-publication-run.v1' and report.get('preview') is False,
             'production_manifest_required')
-    require(set(report.get('files', {})) == set(publication_paths(report.get('skillsEnabled', False), report.get('heartsaverFullEnabled', False))), 'publication_path_allowlist_mismatch')
+    require(set(report.get('files', {})) == set(publication_paths(report.get('skillsEnabled', False), report.get('heartsaverFullEnabled', False), report.get('pediatricExistingSessionEnabled',False))), 'publication_path_allowlist_mismatch')
     for path, expected in report['files'].items():
         require(sha256((ROOT / path).read_bytes()).hexdigest() == expected, 'publication_output_changed')
 
@@ -819,7 +850,7 @@ def publish():
     git('fetch', 'origin', 'main')
     require(git('rev-parse', 'origin/main') == report['sourceHead'], 'remote_main_advanced')
     validate(margin=300)
-    paths = publication_paths(report.get('skillsEnabled', False), report.get('heartsaverFullEnabled', False))
+    paths = publication_paths(report.get('skillsEnabled', False), report.get('heartsaverFullEnabled', False), report.get('pediatricExistingSessionEnabled',False))
     git('add', '--', *paths)
     require(set(git('diff', '--cached', '--name-only').splitlines()) <= set(paths), 'staged_path_not_allowed')
     require(bool(git('diff', '--cached', '--name-only')), 'no_publication_change')

@@ -117,6 +117,12 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                          'publicCourseId', 'physicalCourseId', 'checkoutPackage', 'profileKey')})
                 if course.get('authority') == 'native-heartsaver-session-booking.v1':
                     compact_course['session_id'] = course.get('session_id')
+                if course.get('authority') == 'native-pediatric-session-booking.v1':
+                    compact_course.pop('appointmentDayId', None)
+                    compact_course.update({key: course.get(key) for key in
+                        ('authority','publicSelectable','canonicalCourseId','canonicalSessionId','profileKey','profileVersion',
+                         'checkoutPackage','capacity','remainingSeats','identityWitness','coursePolicyKey','proofObservedAt',
+                         'startsAt','endsAt','occupiedFrom')})
                 if course.get('authority') == 'native-session-booking.v1':
                     compact_course.update({key: course.get(key) for key in
                         ('authority', 'capacity', 'remainingSeats', 'proofObservedAt', 'session_id')})
@@ -1484,7 +1490,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v={"20261111-native-heartsaver1" if page_config.get("native_heartsaver_publication") else "20261111-native-skills-seats2"}"></script>
+  <script src="/assets/resolved-selector-availability.js?v={"20261112-native-pediatric1" if page_config.get("native_pediatric_publication") else "20261111-native-heartsaver1" if page_config.get("native_heartsaver_publication") else "20261111-native-skills-seats2"}"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
@@ -1915,7 +1921,7 @@ def render_html(payload: dict[str, Any]) -> str:
             help.textContent = course.clarification || '';
             const price = document.createElement('span');
             price.className = 'course-price';
-            price.textContent = Number.isFinite(Number(course.price)) ? `$${{Number(course.price).toFixed(2)}}` : '';
+            price.textContent = {"course.price != null && " if page_config.get("native_pediatric_publication") else ""}Number.isFinite(Number(course.price)) ? `$${{Number(course.price).toFixed(2)}}` : '';
             button.appendChild(label);
             if (price.textContent) button.appendChild(price);
             button.appendChild(help);
@@ -1977,7 +1983,7 @@ def render_html(payload: dict[str, Any]) -> str:
         help.textContent = course.clarification || '';
         const price = document.createElement('span');
         price.className = 'course-price';
-        price.textContent = Number.isFinite(Number(course.price)) ? `$${{Number(course.price).toFixed(2)}}` : '';
+        price.textContent = {"course.price != null && " if page_config.get("native_pediatric_publication") else ""}Number.isFinite(Number(course.price)) ? `$${{Number(course.price).toFixed(2)}}` : '';
         copy.append(title, delivery);
         if (price.textContent) copy.appendChild(price);
         copy.appendChild(help);
@@ -2444,7 +2450,7 @@ def render_html(payload: dict[str, Any]) -> str:
       if (document.hidden || !availabilityReady()) return;
       renderAll();
       const hasDynamicOffers = resolvedAvailability?.dates?.some(day =>
-        day.startTimes?.some(slot => slot.courses?.some(course => course.offerType !== 'seated_class' || course.authority === 'native-session-booking.v1'{" || course.authority === 'native-heartsaver-session-booking.v1'" if page_config.get("native_heartsaver_publication") else ""}))
+        day.startTimes?.some(slot => slot.courses?.some(course => course.offerType !== 'seated_class' || course.authority === 'native-session-booking.v1'{" || course.authority === 'native-heartsaver-session-booking.v1'" if page_config.get("native_heartsaver_publication") else ""}{" || course.authority === 'native-pediatric-session-booking.v1'" if page_config.get("native_pediatric_publication") else ""}))
       );
       const expiresAt = Date.parse(resolvedAvailability?.validUntil);
       if (hasDynamicOffers && (!Number.isFinite(expiresAt) || expiresAt <= Date.now())) {{

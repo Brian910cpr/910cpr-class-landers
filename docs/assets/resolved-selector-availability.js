@@ -114,6 +114,31 @@
     return (Array.isArray(dates) ? dates : []).map(day => ({...day,
       startTimes: (day.startTimes || []).map(slot => ({...slot,
         courses: (slot.courses || []).filter(course => {
+          if (String(course.courseId) === '351632' || course.authority === 'native-pediatric-session-booking.v1') {
+            const observed=Date.parse(course.proofObservedAt), expiry=Date.parse(course.validUntil);
+            const start=Date.parse(course.startsAt), end=Date.parse(course.endsAt), occupied=Date.parse(course.occupiedUntil), from=Date.parse(course.occupiedFrom);
+            const local = businessNow('America/New_York', new Date(Number.isFinite(start) ? start : 0));
+            return course.courseId === '351632' && course.authority === 'native-pediatric-session-booking.v1'
+              && course.coursePolicyKey === 'heartsaver-pediatric-existing:351632.v1'
+              && course.canonicalCourseId === '0689a2c5-c507-4e8a-b94c-15e5c5689e28'
+              && course.profileKey === 'native_heartsaver_351632_draft' && course.checkoutPackage === 'full-course'
+              && course.offerType === 'seated_class' && course.publicSelectable === true
+              && /^(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/.test(course.session_id || '')
+              && typeof course.canonicalSessionId === 'string' && course.canonicalSessionId.length > 0
+              && course.availabilityBlockId === 'seated:' + course.session_id
+              && course.registrationUrl === '/register/?session=' + course.session_id + '&course=351632'
+              && course.appointmentUrl === course.registrationUrl && /^[a-f0-9]{32}$/.test(course.identityWitness || '')
+              && Number.isSafeInteger(course.profileVersion) && course.profileVersion > 0
+              && Number.isSafeInteger(course.capacity) && course.capacity > 0 && course.capacity <= 100
+              && Number.isSafeInteger(course.remainingSeats) && course.remainingSeats > 0 && course.remainingSeats <= course.capacity
+              && [course.durationMinutes,course.setupBufferMinutes,course.cleanupBufferMinutes].every(v=>Number.isSafeInteger(v)&&v>=0)
+              && course.durationMinutes > 0 && course.schedulerConsumptionMinutes === course.durationMinutes+course.setupBufferMinutes+course.cleanupBufferMinutes
+              && start > instant && end-start === course.durationMinutes*60000 && start-from === course.setupBufferMinutes*60000
+              && occupied-end === course.cleanupBufferMinutes*60000 && local.dateKey === day.date && local.minutes === startMinutes(slot.startTime)
+              && Number.isFinite(observed) && observed <= instant && live(validUntil) && live(course.validUntil)
+              && expiry <= observed+900000 && expiry <= Date.parse(validUntil)
+              && !Object.hasOwn(course,'appointmentDayId') && !Object.hasOwn(course,'matchedContainerId') && !Object.hasOwn(course,'selectionId');
+          }
           if (course.coursePolicyKey || course.authority === 'native-heartsaver-session-booking.v1') {
             const instruction = course.courseId === '209809' ? 120 : course.courseId === '344085' ? 90 : 0;
             const cleanup = course.courseId === '209809' ? 30 : 15;

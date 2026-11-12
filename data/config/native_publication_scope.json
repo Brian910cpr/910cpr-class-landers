@@ -1,1 +1,10 @@
-{"schemaVersion":"native-publication-scope.v1","enabled":false,"skillsEnabled":false,"scopeId":"brian-shipyard-b.v1","heartsaverFullEnabled":false,"blsSkillsEnabled":false,"blsBundleEnabled":false}
+{
+  "schemaVersion": "native-publication-scope.v1",
+  "enabled": false,
+  "skillsEnabled": false,
+  "scopeId": "brian-shipyard-b.v1",
+  "heartsaverFullEnabled": false,
+  "blsSkillsEnabled": false,
+  "blsBundleEnabled": false,
+  "pediatricExistingSessionEnabled": false
+}

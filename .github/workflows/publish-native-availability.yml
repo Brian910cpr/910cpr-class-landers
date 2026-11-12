@@ -81,7 +81,7 @@ jobs:
           from pathlib import Path
           from scripts.run_native_publication import read, REPORT, publication_paths
           report = read(REPORT)
-          paths = publication_paths(report.get('skillsEnabled', False), report.get('heartsaverFullEnabled', False))
+          paths = publication_paths(report.get('skillsEnabled', False), report.get('heartsaverFullEnabled', False), report.get('pediatricExistingSessionEnabled', False))
           assert set(report['files']) == set(paths), 'Unexpected preview paths'
           with Path(os.environ['GITHUB_OUTPUT']).open('a') as output:
               output.write('paths<<NATIVE_PUBLICATION_PATHS\n' + '\n'.join(paths) + '\nNATIVE_PUBLICATION_PATHS\n')

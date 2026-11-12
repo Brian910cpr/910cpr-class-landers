@@ -166,6 +166,27 @@ export function projectDemand(row: any, seats: any = null) {
         || row.resource_id !== null || row.visibility !== "public" || row.registration_status !== "open" || !["scheduled","active"].includes(row.status))
       throw new Error("Native Heartsaver admission is unavailable");
   }
+  const pediatric = native ? seats.pediatricBooking : null;
+  if (pediatric != null) {
+    const fields = ["schemaVersion","publicCourseId","canonicalCourseId","coursePolicyKey","profileKey","profileVersion","sourceSessionId","identityWitness","capacity","remaining","instructionMinutes","setupMinutes","cleanupMinutes","packageCode","unitAmount","currency"];
+    if (!adopted || Object.keys(pediatric).length !== fields.length || fields.some(key => !Object.hasOwn(pediatric,key))
+        || pediatric.schemaVersion !== "native-pediatric-session-booking.v1"
+        || pediatric.publicCourseId !== "351632" || row.external_course_id !== "351632"
+        || pediatric.canonicalCourseId !== "0689a2c5-c507-4e8a-b94c-15e5c5689e28" || row.course_id !== pediatric.canonicalCourseId
+        || pediatric.coursePolicyKey !== "heartsaver-pediatric-existing:351632.v1"
+        || pediatric.profileKey !== "native_heartsaver_351632_draft" || pediatric.packageCode !== "full-course"
+        || pediatric.currency !== "usd" || !Number.isSafeInteger(pediatric.unitAmount) || pediatric.unitAmount < 1
+        || !Number.isSafeInteger(pediatric.profileVersion) || pediatric.profileVersion < 1
+        || pediatric.sourceSessionId !== row.external_class_id || !/^[a-f0-9]{32}$/.test(pediatric.identityWitness || "")
+        || [pediatric.instructionMinutes,pediatric.setupMinutes,pediatric.cleanupMinutes].some(v => !Number.isSafeInteger(v) || v < 0)
+        || pediatric.instructionMinutes < 1 || pediatric.capacity !== seats.capacity
+        || pediatric.remaining !== seats.capacity-seats.registered-seats.holds-seats.unreconciledReserved || pediatric.remaining < 1
+        || timestampIdentity(row.end_at)!==timestampIdentity(row.start_at)! + BigInt(pediatric.instructionMinutes)*60000000n
+        || timestampIdentity(row.consumption_start_at)!==timestampIdentity(row.start_at)! - BigInt(pediatric.setupMinutes)*60000000n
+        || timestampIdentity(row.consumption_end_at)!==timestampIdentity(row.end_at)! + BigInt(pediatric.cleanupMinutes)*60000000n
+        || row.visibility !== "public" || row.registration_status !== "open" || !["scheduled","active"].includes(row.status))
+      throw new Error("Native pediatric admission is unavailable");
+  }
   const proof = native ? {
     count_available: true, demand_status: "current", source_observed_at: null,
     reconciled_at: null, source_sha256: null, freshness_minutes: null,
@@ -182,6 +203,7 @@ export function projectDemand(row: any, seats: any = null) {
       qualificationPolicy: skills.qualificationPolicy,
     },
     native_heartsaver_booking_admission: heartsaver == null ? null : {...heartsaver},
+    ...(pediatric == null ? {} : {native_pediatric_booking_admission:{...pediatric}}),
     authority_revision: seats.authorityRevision,
     canonical_registered_count: seats.registered,
     held_seat_count: seats.holds,
@@ -347,6 +369,25 @@ async function heartsaverPolicyProof() {
   return proof;
 }
 
+async function pediatricPolicyProof() {
+  const {url,key} = serviceConfig();
+  const result = await fetch(`${url}/rest/v1/rpc/native_pediatric_existing_session_runtime_policy`, {
+    method:"POST", headers:{apikey:key,authorization:`Bearer ${key}`,"content-type":"application/json"},
+    body:"{}", signal:AbortSignal.timeout(20000), redirect:"error",
+  });
+  const p = await result.json(), observed = timestampIdentity(p?.observedAt), until = timestampIdentity(p?.validUntil);
+  if (!result.ok || p?.schemaVersion !== "native-pediatric-existing-session-policy.v1"
+      || observed === null || until === null || until-observed !== 900000000n
+      || p.publicCourseId !== "351632" || p.canonicalCourseId !== "0689a2c5-c507-4e8a-b94c-15e5c5689e28"
+      || p.coursePolicyKey !== "heartsaver-pediatric-existing:351632.v1" || p.packageCode !== "full-course"
+      || p.courseKey !== "aha-heartsaver-pediatric-fa-cpr-aed" || p.pageKey !== "heartsaver"
+      || p.profileKey !== "native_heartsaver_351632_draft" || p.materializationEnabled !== false || p.currency !== "usd"
+      || (p.nativePublicationEnabled && (!Number.isSafeInteger(p.unitAmount) || p.unitAmount < 1))
+      || typeof p.existingSessionEnabled !== "boolean" || typeof p.nativePublicationEnabled !== "boolean")
+    throw new Error("Native pediatric policy proof unavailable");
+  return p;
+}
+
 async function blsSkillsPolicyProof() {
   const {url,key} = serviceConfig();
   const result = await fetch(`${url}/rest/v1/rpc/native_bls_skills_publication_policy`, {
@@ -411,6 +452,8 @@ export async function handleRequest(req: Request) {
       return response(origin,{error:"Invalid Heartsaver policy request"},400);
     if (params.has("native_bls_skills") && (params.getAll("native_bls_skills").length !== 1 || params.get("native_bls_skills") !== "1"))
       return response(origin,{error:"Invalid BLS skills policy request"},400);
+    if (params.has("native_pediatric") && (params.getAll("native_pediatric").length !== 1 || params.get("native_pediatric") !== "1"))
+      return response(origin,{error:"Invalid pediatric policy request"},400);
     const range = demandRange(params);
     return response(origin, {
       schema_version: "910cpr-canonical-scheduling-demand.v1",
@@ -422,6 +465,7 @@ export async function handleRequest(req: Request) {
       // History is not publication input. The client asks only for IDs still
       // present in its retained schedule, in bounded explicit proof requests.
       released_native_sessions: [],
+      ...(params.get("native_pediatric") === "1" ? {native_pediatric_existing_session_policy_proof:await pediatricPolicyProof()} : {}),
       ...(params.get("native_heartsaver") === "1" ? {native_heartsaver_policy_proof:await heartsaverPolicyProof()} : {}),
       ...(params.get("native_bls_skills") === "1" ? {native_bls_skills_policy_proof:await blsSkillsPolicyProof()} : {}),
     });
