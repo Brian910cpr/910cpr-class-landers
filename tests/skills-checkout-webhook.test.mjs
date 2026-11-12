@@ -50,6 +50,7 @@ test('signed native webhook uses enabled mocked background delivery after commit
    events.push(name);
    if(name==='native_checkout_record_payment')return{data:{recorded:true}};
    if(name==='native_checkout_finalize_order'){order.status='paid';return{data:{status:'paid'}};}
+   if(name==='native_mail_next_lane')return {data:{lane:'confirmation'}};
    if(name==='native_checkout_claim_confirmation'){
     assert.equal(order.status,'paid');assert.equal(args.p_order_id,id);if(claimed)return{data:{empty:true}};claimed=true;
     return{data:{messageId:'44444444-4444-4444-8444-444444444444',lease:'55555555-5555-4555-8555-555555555555',recipient:'fixture@example.invalid',customerTemplate:true,confirmation:{kind:'confirmation',firstName:'Fixture',course:'Skills Session Only',courseId:'509474',startsAt:'2031-01-01T14:00:00Z',endsAt:'2031-01-01T14:45:00Z',venue:'Fixture location',selectedOptions:[]}}};

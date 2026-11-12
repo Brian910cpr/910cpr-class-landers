@@ -29,3 +29,9 @@ test('scheduler status failure is not silently converted to healthy queue-only s
  const h=nativeConfirmationHandler({authorized:async()=>true,service:{configured:()=>true,health:async()=>({healthy:true})},schedulerStatus:async()=>{throw Error('private');}});
  const r=await h(new Request('https://fixture.invalid/native-checkout-confirmations/status'));assert.equal(r.status,503);assert.doesNotMatch(await r.text(),/private/);
 });
+
+test('blocked code preparation completes without acceptance or rejection and remains sanitized',async()=>{
+ const f=setup({result:{...good,claimed:1,blocked:1}});assert.equal((await f.h(req())).status,200);
+ assert.deepEqual(f.calls[1].args.p_result,{outcome:'completed',code:null,claimed:1,accepted:0,rejected:0,ambiguous:0,blocked:1});
+ for(const blocked of [-1,1.5,11,'1']){const bad=setup({result:{...good,claimed:1,blocked}});assert.equal((await bad.h(req())).status,503);}
+});

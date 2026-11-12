@@ -18,6 +18,12 @@ function validSender(value) {
   return Boolean(named && EMAIL.test(named[1]));
 }
 
+export function nativeMailConfigured({apiKey, from, replyTo, request} = {}) {
+  return typeof request === 'function' && typeof apiKey === 'string' && Boolean(apiKey.trim()) &&
+    !/[\r\n]/.test(apiKey) && validSender(from) &&
+    (replyTo === undefined || (typeof replyTo === 'string' && EMAIL.test(replyTo)));
+}
+
 function validClaim(claim) {
   return claim && UUID.test(claim.messageId || '') &&
     typeof claim.recipient === 'string' && claim.recipient.length <= 254 && EMAIL.test(claim.recipient) &&
@@ -58,12 +64,25 @@ export async function sendNativeCheckoutClaim(claim, options = {}) {
   return sendNativeContent(claim, content, options);
 }
 
-async function sendNativeContent(claim, content, options) {
+// Only a service-side prepared delivery may reach this entry point. No arbitrary
+// subject, HTML, recipient override or provider endpoint is accepted.
+export async function sendNativeLearnerCode(prepared, options = {}) {
+  if (!prepared || !UUID.test(prepared.deliveryId || '') ||
+      typeof prepared.code !== 'string' || !prepared.code.trim() || prepared.code.length > 8192 ||
+      /[\r\n\u0000-\u001f\u007f]/.test(prepared.code) ||
+      typeof prepared.product !== 'string' || !prepared.product.trim() || prepared.product.length > 256 ||
+      /[\r\n\u0000-\u001f\u007f]/.test(prepared.product)) {
+    return outcome('rejected', 'native_mail_invalid_code');
+  }
+  const text = `Your purchased online course access code is ready.\n\nProduct: ${prepared.product}\nCode: ${prepared.code}\n\nKeep this code private. Complete the online course before your skills session. For help, reply to this email or call 910-395-5193.`;
+  return sendNativeContent({messageId: prepared.deliveryId, recipient: prepared.recipient},
+    {subject: 'Your purchased online course access', text}, options, 'native-learner-code');
+}
+
+async function sendNativeContent(claim, content, options, namespace = 'native-checkout') {
   const { apiKey, from, replyTo, request } = options;
   // No default network function: tests and callers must explicitly provide one.
-  if (typeof request !== 'function' || typeof apiKey !== 'string' || !apiKey.trim() || /[\r\n]/.test(apiKey) ||
-      !validSender(from) ||
-      (replyTo !== undefined && (typeof replyTo !== 'string' || !EMAIL.test(replyTo)))) {
+  if (!nativeMailConfigured(options)) {
     return outcome('rejected', 'native_mail_not_configured');
   }
   const renderedClaim = { ...claim, subject: content.subject, body: content.text };
@@ -80,7 +99,7 @@ async function sendNativeContent(claim, content, options) {
       method: 'POST', redirect: 'error', signal: AbortSignal.timeout(12_000),
       headers: {
         authorization: `Bearer ${apiKey}`, 'content-type': 'application/json',
-        'idempotency-key': `native-checkout-${claim.messageId}`,
+        'idempotency-key': `${namespace}-${claim.messageId}`,
       },
       body: JSON.stringify(payload),
     });

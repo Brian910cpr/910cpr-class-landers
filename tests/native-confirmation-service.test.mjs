@@ -11,16 +11,16 @@ test('missing server mail configuration never claims or sends',async()=>{
  assert.equal(svc.configured(),false);assert.equal((await svc.deliver()).configured,false);
 });
 test('disabled queue never calls transport',async()=>{
- let calls=0;const svc=nativeConfirmationService({rpc:async name=>{assert.equal(name,'native_checkout_claim_confirmation');calls++;return {disabled:true};},env:()=> 'fixture',request:()=>{throw Error('must not send');}});
- assert.equal((await svc.deliver()).disabled,true);assert.equal(calls,1);
+ let calls=0;const svc=nativeConfirmationService({rpc:async name=>{if(name==='native_mail_next_lane')return {lane:'confirmation'};assert.equal(name,'native_checkout_claim_confirmation');calls++;return {disabled:true};},env:()=> 'fixture',request:()=>{throw Error('must not send');}});
+ assert.equal((await svc.deliver()).disabled,true);assert.equal(calls,10);
 });
 test('uncertain settlement retries the same receipt once without a second provider call',async()=>{
  let claims=0,settles=0,sends=0;const seen=[];
- const svc=nativeConfirmationService({rpc:async(name,args)=>{if(name==='native_checkout_claim_confirmation'){claims++;return job;}seen.push(args);if(++settles===1)throw Error('lost response');return {replay:true};},env:key=>key==='RESEND_API_KEY'?'fixture':undefined,request:async()=>{sends++;return Response.json({id:'fixture_receipt'});}});
+ const svc=nativeConfirmationService({rpc:async(name,args)=>{if(name==='native_mail_next_lane')return {lane:'confirmation'};if(name==='native_checkout_claim_confirmation'){claims++;return job;}seen.push(args);if(++settles===1)throw Error('lost response');return {replay:true};},env:key=>key==='RESEND_API_KEY'?'fixture':undefined,request:async()=>{sends++;return Response.json({id:'fixture_receipt'});}});
  const r=await svc.deliver();assert.equal(r.accepted,1);assert.equal(r.stopped,null);assert.equal(r.continuationRequired,true);assert.equal(r.pendingSettlement,undefined);assert.equal(claims,1);assert.equal(sends,1);assert.equal(settles,2);assert.deepEqual(seen[0],seen[1]);
 });
 test('unresolved settlement preserves a private receipt and exposes no lease in result',async()=>{
- let sends=0;const reports=[];const svc=nativeConfirmationService({rpc:async name=>{if(name==='native_checkout_claim_confirmation')return job;throw Error('unknown');},env:key=>key==='RESEND_API_KEY'?'fixture':undefined,request:async()=>{sends++;return Response.json({id:'fixture_receipt'});},report:r=>reports.push(r)});
+ let sends=0;const reports=[];const svc=nativeConfirmationService({rpc:async name=>{if(name==='native_mail_next_lane')return {lane:'confirmation'};if(name==='native_checkout_claim_confirmation')return job;throw Error('unknown');},env:key=>key==='RESEND_API_KEY'?'fixture':undefined,request:async()=>{sends++;return Response.json({id:'fixture_receipt'});},report:r=>reports.push(r)});
  const r=await svc.deliver();assert.equal(r.stopped,'settlement_unknown');assert.equal(r.accepted,0);assert.equal(sends,1);assert.equal(reports[0].p_provider_id,'fixture_receipt');assert.equal(reports[0].p_lease,lease);assert.equal(r.pendingSettlement,undefined);assert.doesNotMatch(JSON.stringify(r),/fixture_receipt|brian@|22222222/);
 });
 test('HTTP owner authorization precedes all health, queue and transport access',async()=>{

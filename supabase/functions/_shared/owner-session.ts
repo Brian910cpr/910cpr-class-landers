@@ -19,7 +19,7 @@ export function newToken(prefix:string):string {
 export async function ownerRest(path:string,init:RequestInit={},config=ownerConfig(),send:typeof fetch=fetch) {
   let response:Response;
   try {
-    response=await send(`${config.url}/rest/v1/${path}`,{...init,redirect:'error',signal:AbortSignal.timeout(15000),headers:{apikey:config.key,authorization:`Bearer ${config.key}`,'content-type':'application/json',prefer:'return=representation',...Object.fromEntries(new Headers(init.headers).entries())}});
+    response=await send(`${config.url}/rest/v1/${path}`,{...init,redirect:'error',signal:init.signal?AbortSignal.any([init.signal,AbortSignal.timeout(15000)]):AbortSignal.timeout(15000),headers:{apikey:config.key,authorization:`Bearer ${config.key}`,'content-type':'application/json',prefer:'return=representation',...Object.fromEntries(new Headers(init.headers).entries())}});
   } catch {throw Object.assign(Error('Owner access is temporarily unavailable.'),{status:503});}
   if(!response.ok)throw Object.assign(Error('Owner access is temporarily unavailable.'),{status:503});
   const text=await response.text();return text?JSON.parse(text):null;

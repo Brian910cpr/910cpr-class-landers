@@ -1,7 +1,7 @@
 // Separate machine-only route. Never forwards credentials to the owner handler.
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const TOKEN=/^[a-f0-9]{64}$/;
-const CODES=new Set(['claim_unknown','claim_invalid','duplicate_claim','settlement_unknown','mail_unconfigured']);
+const CODES=new Set(['claim_unknown','claim_invalid','duplicate_claim','settlement_unknown','mail_unconfigured','lane_unknown','lane_invalid','prepare_unknown','prepare_invalid','provider_ambiguous','code_runtime_unknown']);
 const reply=(data,status=200)=>Response.json(data,{status,headers:{'cache-control':'no-store','referrer-policy':'no-referrer'}});
 export async function tokenHash(token){return [...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(token)))].map(n=>n.toString(16).padStart(2,'0')).join('');}
 async function emptyObject(req){
@@ -15,13 +15,16 @@ function summary(value){
  if(!value||typeof value!=='object')return invalid();
  const fields=['claimed','accepted','rejected','ambiguous'],counts={};
  for(const key of fields){const n=value[key]??0;if(!Number.isInteger(n)||n<0||n>10)return invalid();counts[key]=n;}
- if(counts.accepted+counts.rejected+counts.ambiguous>counts.claimed)return invalid();
+ const blocked=value.blocked??0;
+ if(!Number.isInteger(blocked)||blocked<0||blocked>10)return invalid();
+ if(blocked>0)counts.blocked=blocked;
+ if(counts.accepted+counts.rejected+counts.ambiguous+blocked>counts.claimed)return invalid();
  let outcome='completed',code=null;
  if(value.stopped){outcome='uncertain';code=CODES.has(value.stopped)?value.stopped:'result_invalid';}
  else if(counts.ambiguous){outcome='uncertain';code='provider_ambiguous';}
  else if(value.configured===false){outcome='fault';code='mail_unconfigured';}
  else if(value.disabled===true){if(counts.claimed!==0)return invalid();outcome='disabled';}
- else if(value.configured!==true||counts.accepted+counts.rejected!==counts.claimed)return invalid();
+ else if(value.configured!==true||counts.accepted+counts.rejected+blocked!==counts.claimed)return invalid();
  return {outcome,code,...counts};
 }
 export function nativeScheduledHandler({rpc,service,hash=tokenHash}){return async req=>{

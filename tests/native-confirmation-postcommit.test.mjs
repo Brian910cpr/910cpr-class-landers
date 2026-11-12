@@ -40,6 +40,7 @@ test('two-batch maximum reports remaining work instead of silently leaving it or
 test('a recovered settlement continues the same order without resending the accepted message',async()=>{
  let next=0,sends=0,settles=0;const ids=[1,2,3].map(n=>`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`),logs=[];
  const service=nativeConfirmationService({env:k=>k==='RESEND_API_KEY'?'fixture':undefined,request:async()=>{sends++;return Response.json({id:'fixture_receipt_'+sends});},rpc:async(name,args)=>{
+  if(name==='native_mail_next_lane')return {lane:'confirmation'};
   if(name==='native_checkout_claim_confirmation'){assert.equal(args.p_order_id,id);return next<ids.length?{messageId:ids[next++],lease:'22222222-2222-4222-8222-222222222222',recipient:'brian@910cpr.com',customerTemplate:false,confirmation:null,subject:'Fixture fulfillment',body:'Synthetic local fixture only.'}:{empty:true};}
   if(name==='native_checkout_settle_confirmation'){if(++settles===1)throw Error('transient unknown settlement');return{settled:true};}
   throw Error('unexpected RPC');

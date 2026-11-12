@@ -1,0 +1,52 @@
+name: Verify native learner code delivery
+on:
+  workflow_dispatch:
+  push:
+    branches: ['codex/native-code-delivery-20261112']
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'supabase/functions/_shared/**'
+      - 'supabase/functions/native-checkout-confirmations/**'
+      - 'tests/**'
+      - 'scripts/test-native-learner-code-postgres.sh'
+      - 'scripts/test-native-bls-code-expiry-postgres.sh'
+      - '.github/workflows/verify-native-learner-code.yml'
+permissions:
+  contents: read
+jobs:
+  synthetic-code-delivery:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: skills_claim_test_235101
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install openpyxl python-dateutil tzdata
+      - run: npm install --no-save --ignore-scripts @electric-sql/pglite@0.5.15
+      - name: Verify default-off sender, exact receipts, permissions and fair scheduling
+        run: node --experimental-strip-types --test --test-concurrency=1 tests/native-learner-code-*.test.mjs tests/native-bls-code-completion.test.mjs tests/native-code-disabled-dispatcher.test.mjs tests/native-mail-fair-dispatch.test.mjs tests/native-resend-adapter.test.mjs tests/native-checkout-email.test.mjs tests/native-confirmation-service.test.mjs tests/native-confirmation-consumer.test.mjs tests/native-confirmation-scheduler-handler.test.mjs tests/native-confirmation-scheduler-budget.test.mjs tests/native-confirmation-postcommit.test.mjs tests/generic-checkout-adapter.test.mjs tests/skills-checkout-webhook.test.mjs tests/owner_access.test.mjs tests/learner-code-delivery.test.mjs tests/native-owner-proof.test.mjs
+      - name: Verify real code claim and prepare races with migration-only privileges
+        env:
+          NATIVE_TEST_POSTGRES_CONTAINER_ID: ${{ job.services.postgres.id }}
+        run: node tests/native-learner-code-concurrency.mjs
+      - name: Verify bundle completion freshness after final workspace waits
+        env:
+          NATIVE_TEST_POSTGRES_CONTAINER_ID: ${{ job.services.postgres.id }}
+        run: |
+          createdb -h 127.0.0.1 -U postgres skills_claim_test_120005
+          createdb -h 127.0.0.1 -U postgres skills_claim_test_120006
+          node tests/native-bls-code-expiry-concurrency.mjs
+          node tests/native-bls-code-expiry-concurrency.mjs --full
+# Synthetic data and provider mocks only. No credentials, hosted calls or mail.
