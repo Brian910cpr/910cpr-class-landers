@@ -1,12 +1,15 @@
 // Multi-client PostgreSQL, never Supabase/live. Explicit fresh localhost database only.
 import {spawn} from 'node:child_process';
+import {localPsql,assertLocalTargetServer} from './helpers/local-postgres.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const database=process.env.SKILLS_TEST_DATABASE;
 if(!/^skills_claim_test(?:_\d+)?$/.test(database||''))throw Error('Use a fresh disposable localhost database named skills_claim_test.');
-const args=['-X','-q','-t','-A','-h','127.0.0.1','-p',process.env.SKILLS_TEST_PORT||'5432','-U','postgres','-d',database,'-v','ON_ERROR_STOP=1'];
-function run(sql){return new Promise(resolve=>{const p=spawn(process.env.SKILLS_TEST_PSQL||'psql',args,{windowsHide:true,stdio:['pipe','pipe','pipe']});let out='',error='';p.stdout.on('data',s=>out+=s);p.stderr.on('data',s=>error+=s);p.on('error',e=>resolve({code:-1,error:String(e),out}));p.on('close',code=>resolve({code,error,out}));p.stdin.end(sql);});}
+const psql=localPsql(database),args=psql.args;
+function run(sql){return new Promise(resolve=>{const p=spawn(psql.command,args,{windowsHide:true,env:psql.env,stdio:['pipe','pipe','pipe']});let out='',error='';p.stdout.on('data',s=>out+=s);p.stderr.on('data',s=>error+=s);p.on('error',e=>resolve({code:-1,error:String(e),out}));p.on('close',code=>resolve({code,error,out}));p.stdin.end(sql);});}
 function json(r){assert.equal(r.code,0,r.error);return JSON.parse(r.out.trim().split('\n').at(-1));}
+const server=json(await run("select jsonb_build_object('database',current_database(),'version',current_setting('server_version_num')::integer,'recovery',pg_is_in_recovery())"));
+assertLocalTargetServer(server,database);
 const key=n=>`11111111-1111-4111-8111-${String(n).padStart(12,'0')}`;
 const claim=(n,identity,day,offset=0)=>`public.reserve_skills_session_native('${key(n)}','cpr-aed',skills_test.offer('${identity}',${day},${offset}),skills_test.student(${n}))`;
 const empty=await run('select count(*) from customers');assert.equal(empty.code,0,empty.error);assert.equal(+empty.out.trim(),0,'Fixture requires empty database');

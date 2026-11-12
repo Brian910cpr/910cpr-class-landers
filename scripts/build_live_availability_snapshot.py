@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from scripts import native_publication_scope as native_scope
 import re
 from collections import Counter
 from datetime import date, datetime, time, timedelta
@@ -407,12 +408,13 @@ def expand_inverse_availability(
     person: dict[str, Any] | None,
     course_catalog: Any,
     appointment_payload: Any,
+    *, native_bounds=None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int]:
     source_key = str(source.get("calendar_source_key") or UNKNOWN)
     blocks: list[dict[str, Any]] = []
     blocked: list[dict[str, Any]] = []
-    container_ranges = appointment_container_date_ranges(source, person, appointment_payload)
-    require_container = bool(source.get("inverse_expansion_require_active_appointment_container", True))
+    container_ranges = [] if native_bounds is not None else appointment_container_date_ranges(source, person, appointment_payload)
+    require_container = native_bounds is None and bool(source.get("inverse_expansion_require_active_appointment_container", True))
     if require_container and not container_ranges:
         blocked.append({
             "calendar_source_key": source_key,
@@ -422,7 +424,10 @@ def expand_inverse_availability(
         })
         return blocks, blocked, 0
 
-    horizon_start, horizon_end = inverse_expansion_horizon(source, container_ranges)
+    if native_bounds is None:
+        horizon_start, horizon_end = inverse_expansion_horizon(source, container_ranges)
+    else:
+        horizon_start, horizon_end = (native_bounds[k].astimezone(LOCAL_TZ).replace(tzinfo=None) for k in ("startsAt", "endsAt"))
     day_start_time = parse_hhmm(source.get("inverse_expansion_day_start_time"), time.min)
     day_end_text = clean_text(source.get("inverse_expansion_day_end_time") or "24:00")
     day_end_time = time.max if day_end_text == "24:00" else parse_hhmm(day_end_text, time.max)
@@ -481,7 +486,13 @@ def expand_inverse_availability(
             })
             continue
         gap_index += 1
-        blocks.append(make_inverse_gap_block(source, person, course_catalog, gap_start, gap_end, gap_index))
+        block = make_inverse_gap_block(source, person, course_catalog, gap_start, gap_end, gap_index)
+        if native_bounds is not None:
+            block.update(native_publication_scope_id=native_bounds['scopeId'],
+                native_proof_observed_at=native_bounds['observedAt'].isoformat(),
+                native_valid_until=native_bounds['validUntil'].isoformat(),
+                native_calendar_source_ids=native_bounds['sourceIds'])
+        blocks.append(block)
 
     return blocks, blocked, dns_markers
 
@@ -655,6 +666,7 @@ def build_snapshot(
     course_payload: Any,
     local_snapshot_payload: Any,
     appointment_payload: Any | None = None,
+    *, native_policy=None, now=None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     sources = calendar_sources(calendar_payload)
     people = people_lookup(people_payload)
@@ -683,12 +695,22 @@ def build_snapshot(
             })
             continue
         if source_type(source) == "inverse_google_calendar" and source.get("inverse_expansion_enabled", True) is not False:
+            bounds = None
+            if native_scope.active(native_policy or {}) and source_key == 'brian_do_not_schedule':
+                try:
+                    bounds = native_scope.inverse_bounds(native_policy, source, calendar_payload,
+                        local_snapshot_payload, now or datetime.now(LOCAL_TZ), event_time_validation)
+                except (ValueError, TypeError, KeyError) as error:
+                    blocked.append(dict(calendar_source_key=source_key, source_type=source_type(source),
+                        reason_code='native_calendar_coverage_required', message=str(error)))
+                    continue
             inverse_blocks, inverse_blocked, inverse_dns_markers = expand_inverse_availability(
                 source,
                 events,
                 person,
                 course_payload,
                 appointment_payload or {},
+                native_bounds=bounds,
             )
             blocks.extend(inverse_blocks)
             blocked.extend(inverse_blocked)
@@ -857,7 +879,8 @@ def run() -> dict[str, Any]:
     calendar_payload, calendar_error = read_json(CALENDAR_SOURCES_PATH)
     people_payload, people_error = read_json(PEOPLE_CATALOG_PATH)
     course_payload, course_error = read_json(COURSE_CATALOG_PATH)
-    appointment_payload, appointment_error = read_json(APPOINTMENT_CONTAINERS_PATH)
+    native_policy = native_scope.load_policy(ROOT)
+    appointment_payload, appointment_error = ({}, None) if native_scope.active(native_policy) else read_json(APPOINTMENT_CONTAINERS_PATH)
     _requirements, requirements_error = read_json(RECHECK_REQUIREMENTS_PATH)
     local_snapshot_path, local_snapshot_payload, local_snapshot_missing = find_local_snapshot()
     missing = {}
@@ -878,6 +901,7 @@ def run() -> dict[str, Any]:
         course_payload or {},
         local_snapshot_payload or {},
         appointment_payload or {},
+        native_policy=native_policy,
     )
     payload = {
         "generated_at": datetime.now().astimezone().isoformat(),

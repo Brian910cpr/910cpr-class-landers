@@ -1,3 +1,6 @@
+import {nativeConfirmationService} from "../_shared/native-confirmation-service.mjs";
+import {nativeConfirmationPostcommit} from "../_shared/native-confirmation-postcommit.mjs";
+import {publicOrderVersion,settlePublicOrder} from "../public-registration/public-order-routing.mjs";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.56.0";
 
 const enc = new TextEncoder();
@@ -28,6 +31,35 @@ Deno.serve(async(request)=>{
   const paid=event.type==="checkout.session.completed"?session.payment_status==="paid":event.type==="checkout.session.async_payment_succeeded";
 
   if(retailOrderId){
+    // Public class orders share the metadata key with retail. Route by the
+    // canonical record before invoking either finalizer; never label a class
+    // order paid through the retail-only procedure.
+    const {data:publicOrder,error:publicLookupError}=await db.from('landerware_public_orders').select('id,status,total,currency,stripe_checkout_session_id,stripe_payment_intent_id,registration_profile_snapshot,checkout_runtime_version').eq('id',retailOrderId).maybeSingle();
+    if(publicLookupError)return reply({ok:false,error:'Public payment lookup failed'},500);
+    if(publicOrder){
+      if(!paid)return reply({ok:true,ignored:'Public checkout not paid'});
+      const expectedLive=Deno.env.get('STRIPE_EXPECTED_LIVEMODE')!=='false';
+      if(session.mode!=='payment'||session.payment_status!=='paid'||session.livemode!==expectedLive||event.livemode!==expectedLive)return reply({ok:false,error:'Public payment evidence missing'},400);
+      const evidence={id:session.id,mode:session.mode,payment_status:session.payment_status,amount_total:session.amount_total,currency:session.currency,metadata:{landerware_order_id:retailOrderId},livemode:session.livemode,stripeEventId:event.id};
+      try{
+       const result=await settlePublicOrder(async(name:string,args:Record<string,unknown>)=>{const {data,error}=await db.rpc(name,args);if(error)throw Error('payment_rpc_failed');return data;},publicOrder,session,evidence);
+       if(result?.status==='paid'&&publicOrderVersion(publicOrder)==='legacy'){
+        const confirmation=await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/public-registration/order/${publicOrder.id}?requireDelivery=1`,{redirect:'error',signal:AbortSignal.timeout(20000)});
+        if(!confirmation.ok)throw Error('legacy_confirmation_pending');
+       }
+       if(result?.status==='paid'&&publicOrderVersion(publicOrder)==='native-v1'){
+        const rpc=async(name:string,args:unknown)=>{const {data,error}=await db.rpc(name,args);if(error)throw Error('confirmation_rpc_failed');return data;};
+        const notify=nativeConfirmationPostcommit({
+         service:nativeConfirmationService({rpc,env:(name:string)=>Deno.env.get(name),request:fetch,report:(r:unknown)=>console.error(JSON.stringify(r))}),
+         waitUntil:typeof EdgeRuntime!=="undefined"?(p:Promise<unknown>)=>EdgeRuntime.waitUntil(p):undefined,
+         report:(r:unknown)=>console.error(JSON.stringify(r))
+        });
+        await notify(publicOrder.id);
+       }
+       return reply({ok:true,orderId:publicOrder.id,status:result?.status});
+      }catch{return reply({ok:false,error:'Public payment reconciliation failed'},500);}
+
+    }
     if(!paid)return reply({ok:true,ignored:"Retail checkout not paid"});
     const {data,error}=await db.rpc("confirm_retail_payment",{p_order_id:retailOrderId,p_checkout_session_id:session.id||null,p_payment_intent_id:session.payment_intent||null,p_evidence:{stripeEventId:event.id,paymentStatus:session.payment_status}});
     if(error)return reply({ok:false,error:"Retail payment reconciliation failed"},500);
@@ -36,6 +68,18 @@ Deno.serve(async(request)=>{
 
   const registrationId=String(session.client_reference_id||"").trim();
   if(!registrationId)return reply({ok:true,ignored:"No registration reference"});
+  const {data:skillsReceipt,error:skillsLookupError}=await db.from('skills_session_claim_receipts').select('registration_id').eq('registration_id',registrationId).maybeSingle();
+  if(skillsLookupError)return reply({ok:false,error:'Skills payment lookup failed'},500);
+  if(skillsReceipt){
+    // Route by canonical provenance before the permissive legacy handler.
+    // Failed/expired or delayed events must never overwrite a paid order.
+    if(!paid)return reply({ok:true,ignored:'Skills checkout not paid'});
+    if(session.mode!=='payment'||session.payment_status!=='paid'||session.metadata?.skills_session!=='509474')return reply({ok:false,error:'Skills payment evidence missing'},400);
+    const {data,error}=await db.rpc('confirm_skills_checkout_payment',{p_registration_id:registrationId,p_checkout_id:session.id||null,
+      p_amount_total:session.amount_total??null,p_currency:session.currency||null,p_payment_intent:typeof session.payment_intent==='string'?session.payment_intent:null});
+    if(error||!data?.ok)return reply({ok:false,error:'Skills payment reconciliation failed'},500);
+    return reply({ok:true,status:'paid'});
+  }
   // Pool payments use one atomic confirmation with exact order/session binding.
   // Keep this before generic failure/paid mutations; metadata alone cannot route
   // a pool registration into the less restrictive legacy path.
@@ -82,3 +126,4 @@ Deno.serve(async(request)=>{
   }
   return reply({ok:true,registrationId,groupRegistrationIds:groupIds,orderId:order.id,status:"paid"});
 });
+

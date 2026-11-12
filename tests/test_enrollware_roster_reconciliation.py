@@ -78,4 +78,31 @@ class CompleteRosterContract(unittest.TestCase):
         conflict={**deadline,'canonical_session_id':'unexpected-session','status':'non_session_conflicting_canonical_session'}
         self.assertFalse(audit({'sessions':[conflict]},{})['healthy'])
 
+class DiagnosticContract(unittest.TestCase):
+    def test_diagnostics_preserve_37_alarms_and_signature(self):
+        rows=[{'external_class_id':str(100+i),'canonical_session_id':'s'+str(i),
+               'status':'stale_reconciliation' if i<11 else 'external_reconciliation_required'} for i in range(15)]
+        projection={'sessions':[{'session_id':str(200+i)} for i in range(22)]}
+        old=audit({'sessions':rows},projection)
+        for i,row in enumerate(rows):
+            row.update(lifecycle_status='canceled' if i%2 else 'active',
+                       ownership_classification=['native','external','unknown'][i%3],
+                       ownership_basis='existing_native_provenance',
+                       external_session_evidence={'private':'must-not-copy'})
+        result=audit({'sessions':rows},projection)
+        self.assertEqual(result['signature'],old['signature'])
+        self.assertFalse(result['healthy'])
+        self.assertEqual(len(result['gaps']),37)
+        self.assertEqual(result['gap_breakdown'],{'committed_projection_without_canonical_session':22,'external_reconciliation_required':4,'stale_reconciliation':11})
+        self.assertNotIn('must-not-copy',str(result))
+        self.assertEqual(result['record_integrity_gaps'],26)
+        self.assertEqual(result['stale_source_checks'],11)
+    def test_missing_partial_or_untrusted_diagnostic_fields_are_unknown(self):
+        for fields in [{},{'ownership_classification':'native'},
+                       {'lifecycle_status':'private secret','ownership_classification':'private','ownership_basis':'private'}]:
+            gap=audit({'sessions':[{'external_class_id':'100','status':'external_reconciliation_required',**fields}]},{})['gaps'][0]
+            self.assertIsNone(gap['lifecycle_status'])
+            self.assertEqual(gap['ownership_basis'],'insufficient_or_ambiguous_evidence')
+            self.assertNotIn('private',str(gap))
+
 if __name__=='__main__':unittest.main()

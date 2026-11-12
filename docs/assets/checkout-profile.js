@@ -86,4 +86,3 @@ export function checkoutSelection(view,fields,selected){
 }
 export function requiredUploadKeys(view,selected){return view.uploads.filter(p=>p.required&&conditionApplies(p,selected)).map(p=>p.key);}
 export function escapeCheckoutText(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-

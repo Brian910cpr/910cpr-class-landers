@@ -2,8 +2,6 @@ import {readFileSync,readdirSync} from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
-import {spawnSync} from 'node:child_process';
-import {fileURLToPath} from 'node:url';
 import {skillsOffers} from '../supabase/functions/skills-session-reservation/policy.mjs';
 import {createHandler} from '../supabase/functions/skills-session-reservation/handler.mjs';
 const require=createRequire(import.meta.url);
@@ -76,12 +74,15 @@ test('actual PostgreSQL transaction: default-off, canonical claim, capacity, rol
     const row=await scalar(`select to_jsonb(s)||jsonb_build_object('courses',(select jsonb_build_object('course_key',course_key,'name',name) from courses where id=s.course_id),
       'landerware_sessions',(select jsonb_agg(w) from landerware_sessions w where w.class_session_id=s.id),
       'registrations',(select jsonb_agg(r) from registrations r where r.class_session_id=s.id)) from class_sessions s where id=$1`,[first.sessionId]);
-    const projected=loadEndpoint(()=>{throw Error('network forbidden')}).projectDemand(row);
-    assert.equal(projected.count_available,true);assert.equal(projected.active_registration_count,1);assert.equal(projected.workspace_projection_status,'current');assert.equal(projected.external_course_id,'509474');
-    const pipeline=`import sys,json\nfrom pathlib import Path\nfrom unittest.mock import patch\nfrom scripts.canonical_scheduling_demand import resolve_canonical_demand\nfrom scripts import block_start_time_selector as s\nfrom scripts.build_bls_block_schedule_pilot import public_selector_availability_payload\np=json.load(sys.stdin);rows,audit=resolve_canonical_demand([], [p]);assert len(rows)==1\nrules=s.course_rules_by_id(json.loads(Path('data/inventory/course_consumption_rules.json').read_text()));catalog=s.courses_by_id(json.loads(Path('data/config/course_catalog.json').read_text()));page=s.load_block_schedule_page_configs()['heartsaver'];opt=next(o for o in page['course_options'] if o['course_id']=='509474');course=s.contextual_course('509474',opt,catalog,rules)\nwith patch.object(s,'native_reservation_reasons',lambda c:[]):\n offers=s.seated_class_selector_offers(schedule_future_payload={'sessions':rows},selected_courses=[course],selected_course_ids={'509474'},course_rules=rules)\nassert len(offers)==1\no=offers[0];payload={'generatedAt':sys.argv[1],'validUntil':sys.argv[1],'pageKey':'heartsaver','dates':[{'date':o['date'],'startTimes':[{'startTime':o['startTime'],'courses':offers}]}]}\nprint(json.dumps(public_selector_availability_payload(payload)))`;
-    const published=spawnSync(process.env.SKILLS_TEST_PYTHON||'python',['-B','-c',pipeline,new Date(now).toISOString()],{cwd:fileURLToPath(root),input:JSON.stringify(projected),encoding:'utf8',timeout:30000,windowsHide:true});
-    assert.equal(published.status,0,published.stderr||String(published.error));
-    const seated=skillsOffers(JSON.parse(published.stdout),'cpr-aed',now)[0];assert.ok(seated,published.stdout);assert.equal(seated.sourceSessionId,source);
+    // This historical claim RPC predates the lifecycle witness and STABLE
+    // occupancy snapshot. The current source must refuse to infer authority.
+    assert.throws(()=>loadEndpoint(()=>{throw Error('network forbidden')}).projectDemand(row),
+      /Native generated authority is unavailable/);
+    // Retain the historical SQL same-class capacity contract without pretending
+    // that an unwitnessed row is admissible in current publication. The current
+    // migration-to-snapshot-to-projection path is tested by native skills publication.
+    const seated={...offer,offerType:'seated_class',sourceSessionId:source,
+      availabilityBlockId:'seated:'+source};
     assert.equal(await option({...seated,sourceSessionId:'forged'}),null,'existing seats require the exact canonical source');
     const second=await reserve(2,seated,{...student,email:'second@example.invalid'});
     assert.equal(second.sessionId,first.sessionId,'existing skills seats reuse the same canonical session');

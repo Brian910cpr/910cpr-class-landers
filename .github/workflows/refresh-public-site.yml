@@ -1,37 +1,7 @@
-name: Refresh public site from Enrollware iCal
+name: Retired external public publisher
 
 on:
-  schedule:
-    - cron: "13,43 * * * *"
   workflow_dispatch:
-    inputs:
-      force_rebuild:
-        description: "Force a full rebuild from the live Enrollware feed even when the feed hash is unchanged"
-        required: false
-        type: boolean
-        default: false
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/refresh-public-site.yml'
-      - 'scripts/fetch_canonical_scheduling_demand.py'
-      - 'tests/test_fetch_canonical_scheduling_demand.py'
-      - 'scripts/audit_sitewide_links.py'
-      - 'scripts/validate_sitewide_links_strict.py'
-      - 'tests/test_validate_sitewide_links_strict.py'
-      - 'docs/contact.html'
-      - 'docs/corp/nhcso/index.html'
-      - 'docs/_headers'
-      - 'scripts/build_sessions_current.py'
-      - 'scripts/build_bls_block_schedule_pilot.py'
-      - 'docs/assets/resolved-selector-availability.js'
-      - 'tests/resolved_selector_availability.test.mjs'
-      - 'data/config/course_catalog.json'
-      - 'data/config/course_map.json'
-      - 'data/inventory/course_consumption_rules.json'
-      - 'tests/test_zero_duration_pipeline.py'
-      - 'tests/fixtures/enrollware_zero_duration_20260929.json'
 
 permissions:
   contents: write
@@ -41,7 +11,24 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  source-mode:
+    runs-on: ubuntu-latest
+    outputs:
+      legacy: ${{ steps.mode.outputs.legacy }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Stop retired publisher before any source fetch
+        id: mode
+        run: |
+          echo "legacy=false" >> "$GITHUB_OUTPUT"
+          echo "This external-source publisher is retired. Use Publish native availability; native-disabled state never authorizes a legacy fetch."
+          exit 1
+
   refresh:
+    needs: source-mode
+    if: needs.source-mode.outputs.legacy == 'true'
     name: Refresh public static output
     # The tracked public tree intentionally preserves a small set of case-only
     # legacy URL aliases. A Linux checkout is required to represent both blobs.

@@ -80,7 +80,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
             for course in slot.get("courses", []):
                 compact_course = {
                     "courseId": course.get("courseId"),
-                    **({"publicSelectable": course.get("publicSelectable")} if course.get("courseId") == "509474" else {}),
+                    **({"publicSelectable": course.get("publicSelectable")} if course.get("courseId") in {"509474", "210549"} else {}),
                     "courseName": course.get("courseName"),
                     "courseFamily": course.get("courseFamily"),
                     "deliveryMode": course.get("deliveryMode"),
@@ -108,6 +108,18 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "date": day.get("date"),
                     "startTime": slot.get("startTime"),
                 }
+                if course.get('authority') in {'native-full-course.v2', 'native-skills-publication.v1', 'native-skills-seated.v1', 'native-heartsaver-session-booking.v1'}:
+                    compact_course.pop('appointmentDayId', None)
+                    compact_course.update({key: course.get(key) for key in
+                        ('authority', 'nativeScopeId', 'selectionId', 'publicSelectable', 'proofObservedAt',
+                         'nativeOfferId', 'qualificationPolicy', 'skillsContexts', 'capacity', 'remainingSeats', 'profileVersion', 'identityWitness',
+                         'coursePolicyKey', 'calendarProofObservedAt', 'policyProofObservedAt',
+                         'publicCourseId', 'physicalCourseId', 'checkoutPackage', 'profileKey')})
+                if course.get('authority') == 'native-heartsaver-session-booking.v1':
+                    compact_course['session_id'] = course.get('session_id')
+                if course.get('authority') == 'native-session-booking.v1':
+                    compact_course.update({key: course.get(key) for key in
+                        ('authority', 'capacity', 'remainingSeats', 'proofObservedAt', 'session_id')})
                 compact_courses.append({key: value for key, value in compact_course.items() if value not in (None, "")})
             if compact_courses:
                 compact_slots.append({
@@ -221,7 +233,7 @@ def render_report(payload: dict[str, Any]) -> str:
         for offer in sample_offers:
             lines.append(
                 f"| {offer['date']} | {offer['displayStartTime']} | {offer['courseName']} "
-                f"(`{offer['courseId']}`) | {offer['appointmentDayId']} | `{offer['appointmentUrl']}` |"
+                f"(`{offer['courseId']}`) | {offer.get('appointmentDayId', '')} | `{offer['appointmentUrl']}` |"
             )
     else:
         lines.append("- None")
@@ -1046,6 +1058,7 @@ def render_html(payload: dict[str, Any]) -> str:
             "optionLabel": option.get("option_label") or "",
             "price": option.get("price"),
             "fullWidth": option.get("full_width") is True,
+            "nativeRegistrationPath": option.get("native_registration_path"),
             "skillsContexts": option.get("skills_contexts", []),
             "details": course_descriptions.get(course_id, {}),
         }
@@ -1080,13 +1093,15 @@ def render_html(payload: dict[str, Any]) -> str:
                     "cleanupBufferMinutes": course.get("cleanupBufferMinutes"),
                     "schedulerConsumptionMinutes": course.get("schedulerConsumptionMinutes"),
                     "schedulerConsumptionEnd": course.get("schedulerConsumptionEnd"),
-                    "appointmentDayId": course["appointmentDayId"],
+                    **({"appointmentDayId": course["appointmentDayId"]} if "appointmentDayId" in course else {}),
                     "appointmentUrl": course["appointmentUrl"],
                     "location": course["location"],
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "sourceAvailabilityBlock": course.get("sourceAvailabilityBlock", {}),
                     "offerType": course.get("offerType") or "dynamic_appointment",
                     "publicSelectable": course.get("publicSelectable") is True,
+                    **({key: course.get(key) for key in ('authority', 'proofObservedAt', 'validUntil', 'capacity', 'remainingSeats')}
+                       if course.get('authority') == 'native-session-booking.v1' else {}),
                 }
                 courses.append(course_record)
                 course_options_by_id.setdefault(course["courseId"], {
@@ -1469,7 +1484,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261111-publication-expiry-1"></script>
+  <script src="/assets/resolved-selector-availability.js?v={"20261111-native-heartsaver1" if page_config.get("native_heartsaver_publication") else "20261111-native-skills-seats2"}"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
@@ -1743,7 +1758,7 @@ def render_html(payload: dict[str, Any]) -> str:
 
     function currentPublicationDates() {{
       return ResolvedSelectorAvailability.datesForPublication(
-        scheduleDates, resolvedAvailability?.validUntil
+        scheduleDates, resolvedAvailability?.validUntil, Date.now(), selectedSkillsContext || null
       );
     }}
 
@@ -1918,6 +1933,10 @@ def render_html(payload: dict[str, Any]) -> str:
           family.append(icon, heading, choices);
           host.appendChild(family);
         }});
+          visibleCourseOptions().filter(course => course.fullWidth).forEach(course => {{
+            (course.skillsContexts || []).filter(context => !families.has(context.key))
+              .forEach(context => skillsHost.appendChild(skillsButton(course, context)));
+          }});
         scheduleCourseRailUpdate();
         return;
       }}
@@ -2289,19 +2308,24 @@ def render_html(payload: dict[str, Any]) -> str:
         link.className = 'register-link';
         const config = courseOptions.find(option => option.courseId === course.courseId);
         link.href = course.appointmentUrl;
-        if (config?.fullWidth) {{
+        if (config?.nativeRegistrationPath) {{
           const selection = new URLSearchParams({{course: course.courseId, date: selectedDate,
             startTime: slot.startTime, location: course.location,
             instructor: course.instructor || '', skillsContext: selectedSkillsContext || config.skillsContexts?.[0]?.key || '', context: {json.dumps(str(payload.get("pageKey") or page_config.get("page_key") or ""))}}});
-          link.href = '/register/skills-session/?' + selection;
-          link.textContent = 'Schedule skills session';
+          if (course.authority === 'native-skills-seated.v1') {{
+            selection.set('selectionId', 'skills:' + course.nativeOfferId + ':' + selection.get('skillsContext'));
+          }}
+          link.href = '/register/skills-session/?' + selection;{'''
+          if (course.checkoutPackage) link.href = course.registrationUrl;''' if page_config.get('native_bls_skills_publication') else ''}
+          link.textContent = course.courseId === '210549' ? 'Continue to HeartCode BLS checkout' : 'Schedule skills session';
         }}
-        if (!config?.fullWidth) link.textContent = 'Register';
+        if (!config?.nativeRegistrationPath) link.textContent = 'Register';
         link.addEventListener('click', event => {{
           if (!availabilityReady() || isPastStart(day, {{...slot, courses: [course]}}) ||
               !ResolvedSelectorAvailability.datesForPublication(
                 [{{...day, startTimes: [{{...slot, courses: [course]}}]}}], resolvedAvailability?.validUntil
-              ).length) {{
+              ).length || (course.authority === 'native-skills-seated.v1' &&
+                !course.skillsContexts?.includes(selectedSkillsContext || config.skillsContexts?.[0]?.key))) {{
             event.preventDefault();
             loadResolvedAvailability();
           }}
@@ -2420,7 +2444,7 @@ def render_html(payload: dict[str, Any]) -> str:
       if (document.hidden || !availabilityReady()) return;
       renderAll();
       const hasDynamicOffers = resolvedAvailability?.dates?.some(day =>
-        day.startTimes?.some(slot => slot.courses?.some(course => course.offerType !== 'seated_class'))
+        day.startTimes?.some(slot => slot.courses?.some(course => course.offerType !== 'seated_class' || course.authority === 'native-session-booking.v1'{" || course.authority === 'native-heartsaver-session-booking.v1'" if page_config.get("native_heartsaver_publication") else ""}))
       );
       const expiresAt = Date.parse(resolvedAvailability?.validUntil);
       if (hasDynamicOffers && (!Number.isFinite(expiresAt) || expiresAt <= Date.now())) {{

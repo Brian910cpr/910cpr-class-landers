@@ -15,12 +15,22 @@ def audit(health, projection):
     non_sessions=[{k:s.get(k) for k in ('external_class_id','non_session_classification','approved_location_key')}
                   for s in sessions if s.get('status')=='classified_non_session' and not s.get('canonical_session_id')]
     non_session_ids={str(s['external_class_id']) for s in non_sessions}
-    gaps=[{k:s.get(k) for k in ('external_class_id','status','source_observed_at','reason')}
+    # Allowlisted enum diagnostics only; never copy provenance blobs or learner data.
+    def diagnostics(row):
+        lifecycle=row.get('lifecycle_status')
+        ownership=row.get('ownership_classification')
+        basis=row.get('ownership_basis')
+        return {
+            'lifecycle_status': lifecycle if lifecycle in {'scheduled','active','completed','canceled','cancelled','draft','archived'} else None,
+            'ownership_classification': ownership if ownership in {'native','external','unknown'} else 'unknown',
+            'ownership_basis': basis if basis in {'existing_native_provenance','enrollware_backend_numeric_identity','insufficient_or_ambiguous_evidence'} else 'insufficient_or_ambiguous_evidence',
+        }
+    gaps=[{**{k:s.get(k) for k in ('external_class_id','status','source_observed_at','reason')}, **diagnostics(s)}
           for s in sessions if s.get('status')!='current' and str(s.get('external_class_id')) not in non_session_ids]
     for s in projection.get('sessions',[]):
         identity=str(s.get('external_class_id') or s.get('session_id') or '')
         if identity.isdigit() and identity not in known and identity not in non_session_ids and not any(x['external_class_id']==identity for x in gaps):
-            gaps.append({'external_class_id':identity,'status':'committed_projection_without_canonical_session'})
+            gaps.append({'external_class_id':identity,'status':'committed_projection_without_canonical_session',**diagnostics({})})
     gaps.sort(key=lambda x:(x['external_class_id'],x['status']))
     signature=hashlib.sha256(json.dumps([(x['external_class_id'],x['status']) for x in gaps]).encode()).hexdigest()
     breakdown = dict(sorted(Counter(gap['status'] for gap in gaps).items()))

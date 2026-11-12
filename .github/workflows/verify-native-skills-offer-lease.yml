@@ -1,0 +1,50 @@
+name: Verify native shared-skills offer leases
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'supabase/migrations/*native_full_course*.sql'
+      - 'supabase/migrations/*native_checkout*.sql'
+      - 'supabase/migrations/*skills*.sql'
+      - 'supabase/migrations/*native_full_offer_wallclock_lease.sql'
+      - 'supabase/migrations/*native_skills_offer_wallclock_lease.sql'
+      - 'supabase/migrations/*native_heartsaver*.sql'
+      - 'supabase/migrations/*native_bls_existing_session_admission.sql'
+      - 'tests/native-skills-offer-lease*'
+      - 'tests/native-bls-admission-proof.mjs'
+      - 'tests/helpers/**'
+      - 'scripts/run-local-skills-offer-lease-pg17.sh'
+      - '.github/workflows/verify-native-skills-offer-lease.yml'
+permissions:
+  contents: read
+jobs:
+  skills-offer-leases:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: skills_claim_test_233000
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --no-save --ignore-scripts @electric-sql/pglite@0.5.15
+      - name: Verify guarded BLS-only and Heartsaver-extended source chains
+        run: node --test tests/native-skills-offer-lease.test.mjs
+      - name: Verify BLS-only expiry races and paid recovery on PostgreSQL17
+        env:
+          NATIVE_TEST_POSTGRES_CONTAINER_ID: ${{ job.services.postgres.id }}
+          NATIVE_SKILLS_LEASE_CHAIN: bls
+        run: node tests/native-skills-offer-lease-concurrency.mjs
+      - name: Verify Heartsaver-extended expiry races and paid recovery on PostgreSQL17
+        env:
+          NATIVE_TEST_POSTGRES_CONTAINER_ID: ${{ job.services.postgres.id }}
+          NATIVE_SKILLS_LEASE_CHAIN: full
+        run: |
+          createdb -h 127.0.0.1 -U postgres skills_claim_test_233001
+          node tests/native-skills-offer-lease-concurrency.mjs

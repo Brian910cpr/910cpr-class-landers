@@ -102,10 +102,11 @@ class SkillsOnlyTests(unittest.TestCase):
             self.assertNotIn('schedule#ct509474',html)
         pediatric=[o for o in self.pages['heartsaver']['course_options'] if o.get('family_group')=='pediatric-first-aid-cpr-aed']
         self.assertEqual({o['course_id'] for o in pediatric},{'351632','251545'})
-        page=(ROOT/'docs/register/skills-session/index.html').read_text()
-        self.assertIn('Your date has not been reserved',page)
-        self.assertIn('form id="reservation" hidden',page)
-        self.assertNotIn('type="file"',page)
-        self.assertIn('SkillsReservationClient.reservationState',page)
+        page=(ROOT/'docs/register/skills-session/index.html').read_text(encoding='utf-8')
+        self.assertIn("const destination='/register/checkout/'+location.search",page)
+        self.assertIn('location.replace(destination)',page)
+        shared=(ROOT/'docs/register/index.html').read_text(encoding='utf-8')
+        self.assertIn('/assets/generic-checkout.js',shared)
+        self.assertNotIn('enrollware',page.lower())
 
 if __name__=='__main__': unittest.main()

@@ -4,6 +4,7 @@ Coverage is evidence, not inferred from room hours or an inverse availability ro
 Malformed occupancy closes only intersecting declared resource/instructor windows;
 missing bounds close the affected resource horizon. Existing records are immutable.
 """
+from scripts import native_publication_scope as native_scope
 from copy import deepcopy
 from collections import Counter
 from datetime import timedelta, timezone
@@ -154,6 +155,9 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             matched = [p for p in fresh if p.get("instructor") == window["instructor_name"]
                 and p.get("location") == room and aware(p["start"]) <= ws and we <= aware(p["end"])]
             report["valid_until"] = min((aware(p["valid_until"]).astimezone(timezone.utc) for p in matched), default=now)
+            if native_scope.active(policy.get('native_publication_scope', {})) and matched:
+                report['native_proof_observed_at'] = min(aware(p['observed_at']).astimezone(timezone.utc) for p in matched)
+
             reports.append(report)
         except ValueError as error:
             issues.append(dict(reason=str(error), instructor=window.get("instructor_name"),
@@ -165,7 +169,7 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
 
 
 def publish(calculation, page_config, courses, windows, now, url_for, public_reasons,
-            seated_offers=()):
+            seated_offers=(), *, native_policy=None):
     """Translate accepted calculations to the existing URL/feed/renderer contract."""
     from scripts.apply_anchor_policy import _rebuild_dates
     now = aware(now).astimezone(timezone.utc)
@@ -186,7 +190,35 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             course = catalog[candidate["course"]]
             start, end = aware(candidate["start"]), aware(candidate["end"])
             window = origins[report["availability_window"]]
-            day_id, container_id, url, blocker = url_for(window, start, candidate["course"])
+            native_fields = None
+            if (native_scope.active(native_policy or {}) and page_config.get('page_key') == 'bls'
+                    and str(candidate.get('course')) in native_scope.COURSES):
+                try:
+                    native_fields = native_scope.offer_fields(native_policy, candidate, report, window, now)
+                    day_id, container_id, url, blocker = None, None, native_fields['registrationUrl'], None
+                except (ValueError, KeyError, TypeError) as error:
+                    rejected.append(dict(diagnostic(candidate), reasons=[str(error)]))
+                    continue
+            elif native_scope.heartsaver_active(native_policy or {}, page_config.get('page_key')) and str(candidate.get('course')) != '509474':
+                try:
+                    native_fields = native_scope.heartsaver_offer_fields(native_policy, candidate, report, window, now, course)
+                    day_id, container_id, url, blocker = None, None, native_fields['registrationUrl'], None
+                except (ValueError, KeyError, TypeError) as error:
+                    rejected.append(dict(diagnostic(candidate), reasons=[str(error)]))
+                    continue
+            elif native_scope.skills_active(native_policy or {}, page_config.get('page_key')):
+                try:
+                    native_fields = native_scope.skills_offer_fields(native_policy, candidate, report, window, now, course, page_config['page_key'])
+                    day_id, container_id, url, blocker = None, None, native_fields['registrationUrl'], None
+                except (ValueError, KeyError, TypeError) as error:
+                    rejected.append(dict(diagnostic(candidate), reasons=[str(error)]))
+                    continue
+            elif native_scope.heartsaver_active(native_policy or {}, page_config.get('page_key')):
+                rejected.append(dict(diagnostic(candidate), reasons=['unsupported_native_heartsaver_course']))
+                continue
+            else:
+                day_id, container_id, url, blocker = url_for(window, start, candidate["course"])
+
             reasons = list(public_reasons(start, course))
             allowed_families = set(window.get("allowed_course_families", []))
             if allowed_families and (course.get("course_family") or course.get("family")) not in allowed_families:
@@ -215,6 +247,12 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 offerType="dynamic_appointment", scheduleRole="barnacle" if candidate["mode"]=="barnacle" else "open_day",
                 sourceSessionIds=candidate["source_ids"], edgeIds=candidate["edge_ids"],
                 validUntil=report["valid_until"].isoformat(), publicSelectable=True))
+            if native_fields is not None:
+                accepted[-1].pop('appointmentDayId', None)
+                accepted[-1].pop('matchedContainerId', None)
+                accepted[-1].update(native_fields)
+                accepted[-1]['appointmentUrl'] = native_fields['registrationUrl']
+
     # Never retire a source record. Confirmed-zero booking choices are retired
     # only from this projection; their occupied interval remains in calculation.
     counts = {}
@@ -290,13 +328,13 @@ def finalize(payload, now=None):
     original=result.get("offers", [])
     kept=[]
     for offer in original:
-        if offer.get("offerType")=="seated_class":
+        if offer.get("offerType")=="seated_class" and offer.get("authority") not in {"native-skills-seated.v1", "native-heartsaver-session-booking.v1"}:
             kept.append(offer)
         elif offer.get("validUntil") and aware(offer["validUntil"]) > now:
             kept.append(offer)
         else:
             result.setdefault("rejectedCourseStartTimes", []).append(dict(offer,reasons=["expired_or_missing_scoped_lease"]))
-    result["validUntil"] = max((o["validUntil"] for o in kept if o.get("offerType")!="seated_class"),default=now.isoformat())
+    result["validUntil"] = max((o["validUntil"] for o in kept if o.get("offerType")!="seated_class" or o.get("authority") in {"native-skills-seated.v1", "native-heartsaver-session-booking.v1"}),default=now.isoformat())
     result["anchor_policy"] = dict(mode=SCHEMA,finalized=True)
     from scripts.public_registration_closures import apply_closures
     return apply_closures(_rebuild_dates(result,kept))[0]

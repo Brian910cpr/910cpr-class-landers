@@ -1,0 +1,24 @@
+name: Native confirmation health audit
+on:
+  workflow_dispatch:
+# Read-only audit. An eventual slower audit schedule detects stale consumer
+# evidence; it cannot itself maintain the three-minute native health contract.
+permissions:
+  contents: read
+concurrency:
+  group: native-confirmation-health
+  cancel-in-progress: false
+jobs:
+  observe:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Observe native queue without claiming or sending
+        env:
+          HOT_SYNC_ADMIN_KEY: ${{ secrets.HOT_SYNC_ADMIN_KEY }}
+        run: node scripts/check-native-confirmations.mjs --mode=status --ticks=1 --state-file="${RUNNER_TEMP}/native-confirmation-health.json"

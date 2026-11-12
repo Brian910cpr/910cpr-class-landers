@@ -3,15 +3,21 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
+const {execFileSync} = require('node:child_process');
 const root = path.resolve(__dirname, '..');
 const api = require('../docs/assets/resolved-selector-availability.js');
 const generator = fs.readFileSync(path.join(root, 'scripts/build_bls_block_schedule_pilot.py'), 'utf8');
+// Exercise executable output, not unexpanded Python f-string source. The
+// fixture supplies synthetic local scheduling proof and performs no network I/O.
+const rendered = execFileSync('python', ['-B', '-c',
+  'from tests.test_native_heartsaver_publication import fixture, emit, generator; print(generator.render_html(emit(fixture(True))))'],
+  {cwd: root, encoding: 'utf8', timeout: 30000});
 function fragment(begin, end) {
-  const start = generator.indexOf(begin);
+  const start = rendered.indexOf(begin);
   assert.ok(start >= 0);
-  const stop = generator.indexOf(end, start);
+  const stop = rendered.indexOf(end, start);
   assert.ok(stop > start);
-  return generator.slice(start, stop).replaceAll('{{', '{').replaceAll('}}', '}');
+  return rendered.slice(start, stop);
 }
 const loader = fragment('    let availabilityRequestId = 0;', '\n    loadResolvedAvailability();');
 const currentDates = fragment('    function currentPublicationDates()', '\n    function filteredDates()');
@@ -27,7 +33,7 @@ function fixture(validUntil = future) {
 function box(data) {
   const context = {ResolvedSelectorAvailability: api, fetch: async () => ({ok: true, json: async () => data}),
     availabilityUrl: '/fixture', setAvailabilityMessage() {}, renderAll() {}, console, document: {hidden: false},
-    scheduleDates: [], resolvedAvailability: null, availabilityState: ''};
+    scheduleDates: [], resolvedAvailability: null, availabilityState: '', selectedSkillsContext: '', config: {}};
   context.availabilityReady = () => context.availabilityState === 'ready';
   vm.createContext(context);
   vm.runInContext(loader + currentDates, context);
@@ -134,4 +140,21 @@ test('repeated stale responses never revive expired offers and retry only on lat
   assert.equal(calls, 1); assert.deepEqual(ids(ctx.currentPublicationDates()), ['seated']);
   await ctx.refreshVisibleAvailability();
   assert.equal(calls, 2); assert.deepEqual(ids(ctx.currentPublicationDates()), ['seated']);
+});
+test('native seated skills UI hides a revoked context and rejects a stale cross-context click', async () => {
+  const data=fixture(),now=Date.now(),sid='lw-11111111-1111-4111-8111-111111111111';
+  data.validUntil=new Date(now+600000).toISOString();
+  const course={courseId:'509474',offerType:'seated_class',authority:'native-skills-seated.v1',capacity:2,remainingSeats:1,
+    session_id:sid,nativeOfferId:'native-skills-seated:'+sid,availabilityBlockId:'seated:'+sid,identityWitness:'a'.repeat(32),profileVersion:2,
+    skillsContexts:['cpr-aed'],proofObservedAt:new Date(now).toISOString(),validUntil:data.validUntil};
+  data.dates[0].startTimes[0].courses=[course];
+  const ctx=box(data);ctx.selectedSkillsContext='cpr-aed';await ctx.loadResolvedAvailability();
+  assert.deepEqual(ids(ctx.currentPublicationDates()),['509474']);
+  ctx.selectedSkillsContext='first-aid-cpr-aed';assert.deepEqual(ids(ctx.currentPublicationDates()),[]);
+  ctx.day=data.dates[0];ctx.slot=ctx.day.startTimes[0];ctx.course=course;ctx.isPastStart=()=>false;ctx.availabilityReady=()=>true;
+  ctx.config={skillsContexts:[{key:'cpr-aed'}]};let handler,prevented=0,reloads=0;
+  ctx.link={addEventListener(_name,fn){handler=fn;}};ctx.loadResolvedAvailability=()=>reloads++;
+  vm.runInContext(click,ctx);handler({preventDefault(){prevented++;}});
+  assert.equal(prevented,1);assert.equal(reloads,1);
+  ctx.selectedSkillsContext='cpr-aed';handler({preventDefault(){prevented++;}});assert.equal(prevented,1);
 });

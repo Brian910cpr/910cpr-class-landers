@@ -1,10 +1,10 @@
-import {conditionApplies,checkoutSelection,escapeCheckoutText as esc} from './checkout-profile.js';
-import {legacySkillsReceipt} from './checkout-receipt.js';
+import {conditionApplies,checkoutSelection,escapeCheckoutText as esc} from './checkout-profile.js?v=20261111-native2';
+import {legacySkillsReceipt} from './checkout-receipt.js?v=20261111-native2';
 
 const API='https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/public-registration/generic';
 const app=document.getElementById('app'),params=new URLSearchParams(location.search);
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n/100);
-const originalSelection=Object.fromEntries([...params].filter(([k])=>['session','course','date','startTime','instructor','location','skillsContext'].includes(k)));
+const originalSelection=Object.fromEntries([...params].filter(([k])=>['session','course','date','startTime','instructor','location','skillsContext','selectionId'].includes(k)));
 const selectionKey='native-checkout:'+JSON.stringify(Object.entries(originalSelection).sort());
 let key='',model,receipt,busy=false,studentCount=0;
 function stored(name){try{return sessionStorage.getItem(name)||'';}catch{return '';}}
@@ -93,10 +93,8 @@ async function init(){
   else if(key){try{model=await request('form');}catch(e){if(e.message!=='reservation_not_found')throw e;/* Keep the same nonce if an earlier save is still in flight. */}}
   if(!model)model=await request('form',null,originalSelection);
   if(model.nativeReady===false){
-   const url=new URL(model.fallbackRegistrationUrl);
-   if(url.origin!=='https://coastalcprtraining.enrollware.com'||url.pathname!=='/enroll'||url.searchParams.get('id')!==originalSelection.session||model.sessionId!==originalSelection.session)throw Error('native_registration_unavailable');
-   app.innerHTML='<section class="formwrap"><h1>Registration for your selected class</h1><p>This class is still registered through our existing enrollment system. Continue there to register.</p></section>';
-   const link=document.createElement('a');link.href=url.href;link.target='_top';link.textContent='Continue to existing registration';app.append(link);announceSize();return;
+   // Also reject a stale API response from before the native-only cutover.
+   throw Error('native_registration_unavailable');
   }
   if(model.legacyRecovery){
    const recovery=model.legacyRecovery;

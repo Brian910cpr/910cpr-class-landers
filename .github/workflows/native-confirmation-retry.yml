@@ -1,0 +1,13 @@
+name: Native Confirmation Retry (Retired)
+on:
+  workflow_dispatch:
+permissions: {}
+jobs:
+  retired:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: External retry is retired
+        run: |
+          echo 'External retry is retired. Native retry belongs to the scoped database scheduler. Use the read-only native confirmation health workflow for observation.'
+          exit 1

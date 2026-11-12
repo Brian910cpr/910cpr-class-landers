@@ -9,7 +9,7 @@ function loadEndpoint(fetch) {
   const clock = fs.readFileSync(path.resolve(__dirname, '../../supabase/functions/_shared/scheduling-clock.ts'), 'utf8');
   const source = (clock + '\n' + shared + '\n' + fs.readFileSync(filename, 'utf8').replace(/^(?:import|export \{).*;\r?\n/gm, '')).replace(/export /g, '');
   const context = vm.createContext({
-    Date, Intl, URL, URLSearchParams, Request, Response, AbortSignal, console, fetch,
+    Date, Intl, URL, URLSearchParams, Request, Response, AbortSignal, TextDecoder, console, fetch,
     Deno: {serve() {}, env: {get: name => ({SUPABASE_URL:'https://database.test', SUPABASE_SERVICE_ROLE_KEY:'fixture-only'})[name]}},
   });
   vm.runInContext(stripTypeScriptTypes(source) + '\nthis.api = {localDate, localMidnight, demandRange, projectDemand, loadDemand, handleRequest};', context, {filename});
@@ -22,7 +22,7 @@ if (require.main === module) {
   const input = JSON.parse(fs.readFileSync(0, 'utf8'));
   const rows = Array.isArray(input) ? input : input.sessions;
   const health = Array.isArray(input) ? {sessions:[]} : input.health;
-  const api = loadEndpoint(async url => new Response(JSON.stringify(String(url).includes('/admin/hot-sync') ? {} : String(url).includes('/rpc/') ? health : rows)));
+  const api = loadEndpoint(async url => new Response(JSON.stringify(String(url).includes('/admin/hot-sync') ? {} : String(url).includes('/rpc/native_released_scheduling_sessions') ? [] : String(url).includes('/rpc/') ? health : rows)));
   api.handleRequest(new Request('https://endpoint.test/?from=2030-09-01&to=2030-10-01', {headers:{'x-hot-sync-admin-key':'fixture-only'}}))
     .then(response => response.text()).then(body => process.stdout.write(body));
 }

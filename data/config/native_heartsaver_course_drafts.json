@@ -1,0 +1,231 @@
+{
+  "schemaVersion": "native-course-drafts.v1",
+  "source": {
+    "archivePath": "raw/course_archive_v4.json",
+    "gitBlob": "208ec08aef0bd7eb3a3ce441d7232bd75ff05e60",
+    "hostedIdentityEvidence": "verified canonical course metadata 2026-11-10"
+  },
+  "courses": [
+    {
+      "externalId": "209809",
+      "canonicalId": "23dfcfa7-4224-46ed-8d45-64d43d5425db",
+      "courseKey": "aha-heartsaver-fa-cpr-aed",
+      "displayName": "Heartsaver First Aid CPR AED",
+      "profileKey": "native_heartsaver_209809_draft",
+      "priceCents": 9500,
+      "currency": "usd",
+      "durationMinutes": 120,
+      "capacity": 12,
+      "setupMinutes": 0,
+      "cleanupMinutes": 0,
+      "visibility": "private",
+      "active": false,
+      "requirements": [],
+      "formSchema": {
+        "schemaVersion": "native-checkout.form.v1",
+        "inventory_kind": "scheduled_session_v1",
+        "fields": [
+          {
+            "key": "first_name",
+            "wire": "firstName",
+            "type": "text",
+            "label": "First name",
+            "required": true
+          },
+          {
+            "key": "last_name",
+            "wire": "lastName",
+            "type": "text",
+            "label": "Last name",
+            "required": true
+          },
+          {
+            "key": "email",
+            "wire": "email",
+            "type": "email",
+            "label": "Email",
+            "required": true
+          },
+          {
+            "key": "phone",
+            "wire": "phone",
+            "type": "tel",
+            "label": "Phone",
+            "required": true
+          }
+        ],
+        "max_students": 10,
+        "default_choices": [],
+        "option_groups": [],
+        "driver_rules": [
+          {
+            "driver": "native_order"
+          }
+        ],
+        "back_url": "/heartsaver.html"
+      },
+      "releaseBlockers": [
+        "review required materials/completion policy",
+        "canonical base price and native session backend activation",
+        "hosted payment/confirmation proof"
+      ]
+    },
+    {
+      "externalId": "329495",
+      "canonicalId": "630a9ed4-388d-4fea-83ba-ba2f9dab62bc",
+      "courseKey": "aha-heartsaver-fa-cpr-aed-skills",
+      "displayName": "Heartsaver First Aid CPR AED - Online + Skills",
+      "profileKey": "native_heartsaver_329495_draft",
+      "priceCents": 9500,
+      "currency": "usd",
+      "durationMinutes": 45,
+      "capacity": 4,
+      "setupMinutes": 0,
+      "cleanupMinutes": 0,
+      "visibility": "unlisted",
+      "active": false,
+      "requirements": [
+        {
+          "key": "completion_document",
+          "type": "online_completion",
+          "display_name": "Online completion certificate",
+          "upload_now": true,
+          "submit_later": true,
+          "required_before_registration": false,
+          "required_before_attendance": false,
+          "required_before_completion": false,
+          "upload": {
+            "enabled": true,
+            "field": "completion_document",
+            "max_bytes": 2097152,
+            "mime_types": [
+              "application/pdf",
+              "image/jpeg",
+              "image/png"
+            ]
+          }
+        }
+      ],
+      "formSchema": {
+        "schemaVersion": "native-checkout.form.v1",
+        "inventory_kind": "scheduled_session_v1",
+        "fields": [
+          {
+            "key": "first_name",
+            "wire": "firstName",
+            "type": "text",
+            "label": "First name",
+            "required": true
+          },
+          {
+            "key": "last_name",
+            "wire": "lastName",
+            "type": "text",
+            "label": "Last name",
+            "required": true
+          },
+          {
+            "key": "email",
+            "wire": "email",
+            "type": "email",
+            "label": "Email",
+            "required": true
+          },
+          {
+            "key": "phone",
+            "wire": "phone",
+            "type": "tel",
+            "label": "Phone",
+            "required": true
+          },
+          {
+            "key": "online_completed",
+            "wire": "onlineCompleted",
+            "type": "checkbox",
+            "label": "I have completed the required online portion.",
+            "required": true
+          }
+        ],
+        "max_students": 4,
+        "default_choices": [],
+        "option_groups": [],
+        "driver_rules": [
+          {
+            "driver": "native_order"
+          }
+        ],
+        "back_url": "/heartsaver.html"
+      },
+      "releaseBlockers": [
+        "review required materials/completion policy",
+        "canonical base price and native session backend activation",
+        "hosted payment/confirmation proof",
+        "archive permits purchasing required online portion after selecting a date; exact product/options/price inclusion unresolved; do not activate this narrowed draft"
+      ]
+    },
+    {
+      "externalId": "351632",
+      "canonicalId": "0689a2c5-c507-4e8a-b94c-15e5c5689e28",
+      "courseKey": "aha-heartsaver-pediatric-fa-cpr-aed",
+      "displayName": "Heartsaver Pediatric First Aid CPR AED",
+      "profileKey": "native_heartsaver_351632_draft",
+      "priceCents": 9500,
+      "currency": "usd",
+      "durationMinutes": 180,
+      "capacity": 20,
+      "setupMinutes": 0,
+      "cleanupMinutes": 0,
+      "visibility": "private",
+      "active": false,
+      "requirements": [],
+      "formSchema": {
+        "schemaVersion": "native-checkout.form.v1",
+        "inventory_kind": "scheduled_session_v1",
+        "fields": [
+          {
+            "key": "first_name",
+            "wire": "firstName",
+            "type": "text",
+            "label": "First name",
+            "required": true
+          },
+          {
+            "key": "last_name",
+            "wire": "lastName",
+            "type": "text",
+            "label": "Last name",
+            "required": true
+          },
+          {
+            "key": "email",
+            "wire": "email",
+            "type": "email",
+            "label": "Email",
+            "required": true
+          },
+          {
+            "key": "phone",
+            "wire": "phone",
+            "type": "tel",
+            "label": "Phone",
+            "required": true
+          }
+        ],
+        "max_students": 10,
+        "default_choices": [],
+        "option_groups": [],
+        "driver_rules": [
+          {
+            "driver": "native_order"
+          }
+        ],
+        "back_url": "/heartsaver.html"
+      },
+      "releaseBlockers": [
+        "review required materials/completion policy",
+        "canonical base price and native session backend activation",
+        "hosted payment/confirmation proof"
+      ]
+    }
+  ]
+}

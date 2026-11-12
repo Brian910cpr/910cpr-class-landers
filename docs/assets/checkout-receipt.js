@@ -16,4 +16,3 @@ export function legacySkillsReceipt(storage,selection){
  if(matches.size>1)throw Error('ambiguous_saved_reservation');
  return [...matches][0]||'';
 }
-

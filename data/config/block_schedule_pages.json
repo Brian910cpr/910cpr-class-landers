@@ -134,7 +134,98 @@
       "certification_notice": {
         "title": "Does this meet an AHA BLS requirement?",
         "body": "Yes. Successfully complete BLS Provider, BLS Renewal, or HeartCode BLS with the required hands-on skills session to receive an American Heart Association (AHA) BLS Provider eCard. Choose one of the AHA BLS options below when your employer or school requires AHA BLS."
-      }
+      },
+      "native_checkout_course_options": [
+        {
+          "course_id": "209806",
+          "family_group": "bls-provider",
+          "family_label": "BLS Provider",
+          "option_label": "Initial — In Person",
+          "price": 75,
+          "display_label": "AHA BLS Provider",
+          "icon_label": "BLS",
+          "clarification": "Full classroom BLS certification for healthcare providers and clinical students.",
+          "delivery_mode": "in-person",
+          "variant": "initial",
+          "deep_link_aliases": [
+            "provider",
+            "bls-provider"
+          ],
+          "image_url": "/images/bls_general.png",
+          "image_alt": "AHA BLS Provider course option",
+          "delivery_badge": "IN-PERSON"
+        },
+        {
+          "course_id": "359474",
+          "family_group": "bls-provider",
+          "family_label": "BLS Provider",
+          "option_label": "Renewal — In Person",
+          "price": 75,
+          "display_label": "AHA BLS Provider Renewal",
+          "icon_label": "RN",
+          "clarification": "Renewal path for providers who already hold current or recently expired BLS.",
+          "delivery_mode": "in-person",
+          "variant": "renewal",
+          "deep_link_aliases": [
+            "provider-renewal",
+            "bls-renewal"
+          ],
+          "image_url": "/images/bls_general.png",
+          "image_alt": "AHA BLS Provider Renewal course option",
+          "delivery_badge": "IN-PERSON"
+        },
+        {
+          "course_id": "210549",
+          "family_group": "bls-heartcode",
+          "family_label": "HeartCode BLS",
+          "option_label": "Online course + Skills",
+          "price": 95,
+          "display_label": "HeartCode BLS including online access",
+          "icon_label": "HC",
+          "clarification": "Includes the AHA HeartCode BLS online course and your in-person skills session. Complete the online course before class.",
+          "delivery_mode": "skills-session",
+          "variant": "heartcode",
+          "deep_link_aliases": [
+            "heartcode-bls"
+          ],
+          "image_url": "/images/hc_b.png",
+          "image_alt": "AHA HeartCode BLS course option",
+          "delivery_badge": "ONLINE + SKILLS",
+          "native_registration_path": "/register/skills-session/",
+          "native_activation_key": "blsEnabled",
+          "skills_contexts": [
+            {
+              "key": "bls-skills",
+              "label": "BLS"
+            }
+          ]
+        },
+        {
+          "course_id": "509474",
+          "display_label": "Skills Session Only",
+          "option_label": "Skills Session Only — $55",
+          "price": 55,
+          "delivery_mode": "skills-session",
+          "variant": "skills-session-only",
+          "deep_link_aliases": [
+            "skills-only",
+            "bls-skills",
+            "509474"
+          ],
+          "clarification": "Already completed your online portion? Choose your in-person skills date. Online coursework is not included.",
+          "delivery_badge": "SKILLS SESSION ONLY",
+          "full_width": true,
+          "scheduling_template_course_id": "210549",
+          "native_registration_path": "/register/skills-session/",
+          "skills_contexts": [
+            {
+              "key": "bls-skills",
+              "label": "BLS"
+            }
+          ],
+          "native_activation_key": "blsEnabled"
+        }
+      ]
     },
     "acls": {
       "page_key": "acls",
