@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-11-12T22:03:20.357897+00:00",
+  "generated_at": "2026-11-12T22:20:41.644111+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,15 +8,15 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-12T22:03:19.670056+00:00",
-      "event_count": 0
+      "generated_at": "2026-11-12T22:20:41.084216+00:00",
+      "event_count": 1
     },
     {
       "source_key": "brian_do_not_schedule",
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-12T22:03:20.357897+00:00",
+      "generated_at": "2026-11-12T22:20:41.644111+00:00",
       "event_count": 98
     },
     {
@@ -24,7 +24,7 @@
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-12T22:03:19.923130+00:00",
+      "generated_at": "2026-11-12T22:20:41.290518+00:00",
       "event_count": 0
     }
   ],
@@ -666,6 +666,17 @@
       "end": "2026-12-25T07:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
       "status": "CONFIRMED"
+    },
+    {
+      "source_key": "amy_availability",
+      "display_name": "910CPR - Amy Availability",
+      "source_type": "google_calendar",
+      "instructor_key": "amy",
+      "title": "Busy",
+      "start": "2026-12-26T18:00:00+00:00",
+      "end": "2026-12-26T23:00:00+00:00",
+      "location": "",
+      "status": "UNKNOWN"
     },
     {
       "source_key": "brian_do_not_schedule",

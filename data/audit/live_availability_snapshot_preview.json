@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-12T22:03:20.464100+00:00",
+  "generated_at": "2026-11-12T22:20:41.712862+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -22,28 +22,61 @@
         "display_name": "Brian Ennis"
       }
     ],
-    "blocks_generated": 248,
-    "blocks_blocked": 18,
+    "blocks_generated": 249,
+    "blocks_blocked": 17,
     "dns_markers_found": 0,
     "blocked_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 18
+      "inverse_gap_shorter_than_minimum_consumption": 17
     },
     "blocked_all_reason_counts": {
-      "inverse_gap_shorter_than_minimum_consumption": 18
+      "inverse_gap_shorter_than_minimum_consumption": 17
     },
     "source_type_counts": {
       "google_calendar": 2,
       "inverse_google_calendar": 1
     },
     "availability_status_counts": {
-      "blocked": 98,
-      "available": 150
+      "available": 151,
+      "blocked": 98
     },
     "inverse_generated_availability_blocks": 150,
     "inverse_blocking_event_blocks": 98,
     "confirmed_training_class_blocks": 0
   },
   "availability_blocks": [
+    {
+      "instructor_name": "Amy Arnold",
+      "person_id": "instructor_4180671442",
+      "start_datetime": "2026-12-26T13:00:00",
+      "end_datetime": "2026-12-26T18:00:00",
+      "date": "2026-12-26",
+      "end_date": "2026-12-26",
+      "start_time": "13:00",
+      "end_time": "18:00",
+      "availability_status": "available",
+      "availability_location_mode": "location_specific",
+      "source_location": "UNKNOWN",
+      "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "allowed_course_families": [
+        "ACLS",
+        "BLS",
+        "Heartsaver",
+        "PALS",
+        "USCG"
+      ],
+      "source_calendar_id": "amy_availability",
+      "source_event_id": "57r481d5q3i9vj1rmrua1vpjul@google.com",
+      "summary": "Busy",
+      "source_type": "google_calendar",
+      "confirmed_training_class": false,
+      "confirmed_training_course_id": "",
+      "confirmed_training_course_name": "",
+      "reasons": [
+        "read_only_preview",
+        "local_calendar_snapshot",
+        "offerable_calendar_window"
+      ]
+    },
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
@@ -7019,11 +7052,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-02-10T07:30:00",
-      "end_datetime": "2027-02-10T17:15:00",
+      "end_datetime": "2027-02-10T17:30:00",
       "date": "2027-02-10",
       "end_date": "2027-02-10",
       "start_time": "07:30",
-      "end_time": "17:15",
+      "end_time": "17:30",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -7050,12 +7083,26 @@
   "layered_commitment_coverage": [
     {
       "status": "known_complete",
+      "instructor": "Amy Arnold",
+      "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+      "start": "2026-12-26T13:00:00-05:00",
+      "end": "2026-12-26T18:00:00-05:00",
+      "observed_at": "2026-11-12T22:20:41.084216+00:00",
+      "valid_until": "2026-11-12T22:35:41.084216+00:00",
+      "freshness_minutes": 15,
+      "source": "configured_calendar_exports",
+      "source_ids": [
+        "amy_availability"
+      ]
+    },
+    {
+      "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-11-12T22:03:19.385566+00:00",
-      "end": "2027-02-10T22:03:19.385566+00:00",
-      "observed_at": "2026-11-12T22:03:20.357897+00:00",
-      "valid_until": "2026-11-12T22:18:20.357897+00:00",
+      "start": "2026-11-12T22:20:40.828586+00:00",
+      "end": "2027-02-10T22:20:40.828586+00:00",
+      "observed_at": "2026-11-12T22:20:41.644111+00:00",
+      "valid_until": "2026-11-12T22:35:41.644111+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
@@ -7064,14 +7111,6 @@
     }
   ],
   "blocked_or_placeholder_sources": [
-    {
-      "calendar_source_key": "brian_do_not_schedule",
-      "source_type": "inverse_google_calendar",
-      "reason_code": "inverse_gap_shorter_than_minimum_consumption",
-      "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
-      "start_datetime": "2026-11-12T17:15:00",
-      "end_datetime": "2026-11-12T17:30:00"
-    },
     {
       "calendar_source_key": "brian_do_not_schedule",
       "source_type": "inverse_google_calendar",
