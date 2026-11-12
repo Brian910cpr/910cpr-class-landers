@@ -1,0 +1,42 @@
+name: Verify native Heartsaver admission
+on:
+  workflow_dispatch:
+  push:
+    branches: ['codex/native-heartsaver-admission-20261112']
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'tests/helpers/**'
+      - 'tests/native-heartsaver-admission*'
+      - 'tests/native-heartsaver-full*'
+      - 'tests/native-heartsaver-publication*'
+      - 'tests/native-bls-admission*'
+      - 'tests/native-full-offer-lease*'
+      - 'scripts/test-native-heartsaver-admission-postgres.sh'
+      - '.github/workflows/verify-native-heartsaver-admission.yml'
+permissions:
+  contents: read
+jobs:
+  synthetic-admission:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: skills_claim_test_120030
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --no-save --ignore-scripts @electric-sql/pglite@0.5.15
+      - name: Verify both courses and preserved BLS admission
+        run: node --test --test-concurrency=1 tests/native-heartsaver-admission.test.mjs tests/native-heartsaver-full-scopes.test.mjs tests/native-heartsaver-publication.test.mjs tests/native-bls-admission.test.mjs tests/native-full-offer-lease.test.mjs
+      - name: Verify real dependency races and service-role admission
+        env:
+          NATIVE_TEST_POSTGRES_CONTAINER_ID: ${{ job.services.postgres.id }}
+        run: node tests/native-heartsaver-admission-concurrency.mjs
+# Synthetic fixtures only. No production inputs, credentials, payment or mail.
