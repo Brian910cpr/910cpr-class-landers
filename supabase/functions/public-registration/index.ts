@@ -108,8 +108,16 @@ async function verifyPaid(id:string,origin:string,requireDelivery=false){
  if(!/^[0-9a-f-]{36}$/i.test(id))throw Error("order_not_found");const o=await order(id);const version=publicOrderVersion(o);if(["cancelled","refunded"].includes(o.status))return json(origin,{ok:false,status:o.status},409);if(o.status==="paid"){if(version==='legacy')await ensureLegacyConfirmation(o,requireDelivery);else await afterNativeCommit(o.id);return json(origin,{ok:true,status:"paid"});}
  if(!o.stripe_checkout_session_id)return json(origin,{ok:false,status:"payment_pending"},409);
  const checkout=await stripeGet(`checkout/sessions/${encodeURIComponent(o.stripe_checkout_session_id)}`);
- if(checkout.payment_status!=="paid")return json(origin,{ok:false,status:"payment_pending"},409);
  const expectedLive=!stripeKey().startsWith("sk_test_")&&!stripeKey().startsWith("rk_test_");
+ // Only a complete, bound native Checkout response can establish nonpayment.
+ // An ambiguous lookup must never tell a returning payer to pay again.
+ if(version==='native-v1'&&(checkout.id!==o.stripe_checkout_session_id||checkout.mode!=="payment"
+  ||checkout.metadata?.landerware_order_id!==o.id||!Number.isSafeInteger(checkout.amount_total)
+  ||checkout.amount_total!==o.total||checkout.currency!==o.currency||checkout.livemode!==expectedLive))throw Error("payment_evidence_mismatch");
+ if(checkout.payment_status!=="paid"){
+  if(version==='native-v1'&&(checkout.payment_status!=="unpaid"||!["open","complete","expired"].includes(checkout.status)))throw Error("payment_evidence_mismatch");
+  return json(origin,{ok:false,status:"payment_pending"},409);
+ }
  if(checkout.livemode!==expectedLive)throw Error("stripe_mode_mismatch");
  const evidence={id:checkout.id,mode:checkout.mode,payment_status:checkout.payment_status,amount_total:checkout.amount_total,currency:checkout.currency,metadata:{landerware_order_id:checkout.metadata?.landerware_order_id},livemode:checkout.livemode,verificationSource:"stripe_api_recovery"};
  const result=await settlePublicOrder(rpc,o,checkout,evidence);
@@ -125,7 +133,7 @@ const generic=genericCheckout({rpc,afterCommit:afterNativeCommit,catalog,schedul
   const rows=await db(`class_sessions?record_scope=eq.operational&registration_backend=eq.landerware&registration_status=eq.open&visibility=eq.public&courses.enrollware_course_id=eq.${selection.course}&start_at=gt.${encodeURIComponent(new Date().toISOString())}&select=*,courses!inner(enrollware_course_id),locations(name),people!class_sessions_lead_instructor_id_fkey(display_name)&order=start_at.asc&limit=201`);
   return fullAppointmentSession(rows,selection);
  },enabled:()=>Deno.env.get("SKILLS_SESSION_RESERVATIONS_ENABLED")!=="false",
- async legacyPayment(key:string,context:string,statusOnly:boolean){return skillsCheckout({rpc,stripe:async(method:string,path:string,params?:URLSearchParams,idempotencyKey?:string)=>method==="GET"?stripeGet(path):stripe(path,params!,idempotencyKey!)},key,context,statusOnly)},
+ async legacyPayment(key:string,context:string,statusOnly:boolean){return skillsCheckout({rpc,expectedLive:!stripeKey().startsWith("sk_test_")&&!stripeKey().startsWith("rk_test_"),stripe:async(method:string,path:string,params?:URLSearchParams,idempotencyKey?:string)=>method==="GET"?stripeGet(path):stripe(path,params!,idempotencyKey!)},key,context,statusOnly)},
  async publication(page:string){const r=await fetch(`${ORIGIN}/data/block-selector-availability/${page}.json`,{redirect:"error",cache:"no-store",signal:AbortSignal.timeout(15000)});if(!r.ok)throw Error("calendar_refresh_required");return r.json()},
  async checkout(id:string,snapshot:any){const o=await order(id);return createCheckout(o,snapshot?.catalog||await catalog(o.course_id))},
  async verify(id:string){const response=await verifyPaid(id,ORIGIN);if(response.status!==409&&!response.ok)throw Error("payment_unavailable")},

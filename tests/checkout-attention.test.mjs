@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {stripTypeScriptTypes} from 'node:module';
 import {readFileSync} from 'node:fs';
-import {checkoutAttention,ORDER_STATUS_QUERY,CODE_STATUS_QUERY} from '../supabase/functions/production-board/checkout-attention.mjs';
+import {checkoutAttention,ORDER_STATUS_QUERY,CODE_STATUS_QUERY,SKILLS_PAYMENT_QUERY} from '../supabase/functions/production-board/checkout-attention.mjs';
 const now=Date.parse('2030-01-01T12:00:00Z'),id=n=>`12121212-1212-4212-8212-${String(n).padStart(12,'0')}`;
 const code=(n,state,extra={})=>({id:id(n),state,attempts:1,claimed_at:'2030-01-01T11:59:00Z',student:{order_id:id(100+n),registration:{class_session_id:id(200+n)}},...extra});
 test('read-only adapter distinguishes observed payment/finalization and queued/accepted/unknown/rejected/terminal code outcomes without secrets',async()=>{
@@ -12,7 +12,7 @@ test('read-only adapter distinguishes observed payment/finalization and queued/a
  {id:id(3),status:'held',payment_status:'unpaid'}];
  const codes=[code(10,'processing'),code(11,'processing',{prepared_at:'2030-01-01T11:59:01Z'}),code(12,'processing',{claimed_at:'2030-01-01T11:50:00Z'}),code(13,'accepted',{provider_id:'DO-NOT-EXPOSE'}),code(14,'ambiguous'),code(15,'rejected'),code(16,'rejected',{attempts:5}),code(17,'cancelled'),code(18,'cancelled',{prepared_at:'2030-01-01T11:58:00Z'}),code(19,'cancelled',{provider_id:'DO-NOT-EXPOSE'})];
  for(const c of codes)Object.assign(c,{secret_value:'DO-NOT-EXPOSE',recipient:'DO-NOT-EXPOSE'});
- const calls=[],r=await checkoutAttention(async p=>(calls.push(p),p===ORDER_STATUS_QUERY?orders:codes),now);
+ const calls=[],r=await checkoutAttention(async p=>(calls.push(p),p===ORDER_STATUS_QUERY?orders:p===CODE_STATUS_QUERY?codes:[]),now);
  assert.equal(r.items.length,12);assert.equal(r.availability.payments,true);assert.equal(r.availability.codes,true);
  assert.equal(r.items.find(x=>x.key==='native-payment:'+id(1)).title,'Payment received; registration not finalized');
  assert.match(r.items.find(x=>x.key==='native-payment:'+id(2)).detail,/payment not confirmed/);
@@ -21,12 +21,12 @@ test('read-only adapter distinguishes observed payment/finalization and queued/a
  assert.match(r.items.find(x=>x.key==='native-code:'+id(18)).detail,/after private preparation/);
  assert.equal(r.items.find(x=>x.key==='native-code:'+id(16)).severity,'critical');
  assert.equal(JSON.stringify(r).includes('DO-NOT-EXPOSE'),false);
- assert.equal(calls.length,2);for(const p of calls){assert.ok(!/secret_value|recipient|email|payer|token|stripe_checkout/.test(p));assert.match(p,/limit=100/);}
+ assert.equal(calls.length,3);for(const p of calls){assert.ok(!/secret_value|recipient|email|payer|token|stripe_checkout/.test(p));assert.match(p,/limit=100/);}
  assert.equal(r.items[0].action_url,'/admin/dashboard.html?session='+id(5));
 });
 test('unavailable migration/source is visible and cannot masquerade as an empty healthy queue',async()=>{
  const r=await checkoutAttention(async p=>{if(p===CODE_STATUS_QUERY)throw Error('DO-NOT-EXPOSE');return[];},now);
- assert.deepEqual(r.availability,{payments:true,codes:false});assert.equal(r.items.length,1);assert.match(r.items[0].detail,/not evidence of an empty queue/);assert.equal(JSON.stringify(r).includes('DO-NOT-EXPOSE'),false);
+ assert.deepEqual(r.availability,{payments:true,codes:false,legacySkills:true});assert.equal(r.items.length,1);assert.match(r.items[0].detail,/not evidence of an empty queue/);assert.equal(JSON.stringify(r).includes('DO-NOT-EXPOSE'),false);
  assert.deepEqual((await checkoutAttention(async()=>[],now)).items,[]);
 });
 function adapter(allowed=true,unavailable=false){
@@ -45,7 +45,14 @@ test('actual existing staff endpoint authenticates before any reads and merges n
 
 test('recipient-bound provider events are distinct from acceptance, deferment, failure and terminal state',async()=>{
  const rows=[code(30,'accepted',{provider_delivery_status:'delivered',actual_delivery_confirmed:true}),code(31,'accepted',{provider_delivery_status:'deferred'}),code(32,'accepted',{provider_delivery_status:'bounced'}),code(33,'accepted',{provider_delivery_status:'complained'}),code(34,'cancelled',{provider_delivery_status:'delivered',actual_delivery_confirmed:true}),code(35,'accepted',{provider_delivery_status:'delivered',actual_delivery_confirmed:false})];
- const r=await checkoutAttention(async p=>p===ORDER_STATUS_QUERY?[]:rows,now);
+ const r=await checkoutAttention(async p=>p===CODE_STATUS_QUERY?rows:[],now);
  assert.equal(r.items[0].title,'Code email delivery confirmed by provider');assert.match(r.items[0].detail,/activation and course completion are not established/);
  assert.equal(r.items[1].title,'Code email delivery deferred');assert.equal(r.items[2].severity,'critical');assert.equal(r.items[3].title,'Code email complaint recorded');assert.equal(r.items[4].title,'Code delivery stopped');assert.equal(r.items[5].title,'Code provider accepted; delivery unconfirmed');
+});
+
+ test('historical skills payment review is bounded, private, deduplicated by order and never hides source failure',async()=>{
+ const row={id:id(70),status:'canceled',skills_payment_received_at:'2030-01-01T11:00:00Z',skills_payment_review_reason:'PRIVATE-REASON',registration:{class_session_id:id(80)},stripe_payment_intent_id:'PRIVATE-INTENT'};
+ const result=await checkoutAttention(async p=>p===SKILLS_PAYMENT_QUERY?[row]:[],now);assert.equal(result.items.length,1);assert.equal(result.items[0].key,'legacy-skills-payment:'+row.id);assert.equal(result.items[0].severity,'critical');assert.match(result.items[0].detail,/not restored/);assert.doesNotMatch(JSON.stringify(result),/PRIVATE/);
+ assert.equal((await checkoutAttention(async p=>p===SKILLS_PAYMENT_QUERY?[{...row,status:'refunded'}]:[],now)).items.length,0);
+ const unavailable=await checkoutAttention(async p=>{if(p===SKILLS_PAYMENT_QUERY)throw Error('PRIVATE');return[];},now);assert.equal(unavailable.availability.legacySkills,false);assert.equal(unavailable.items.length,1);assert.match(unavailable.items[0].detail,/not evidence of an empty queue/);
 });

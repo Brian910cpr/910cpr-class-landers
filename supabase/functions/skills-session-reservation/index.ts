@@ -17,7 +17,7 @@ export const handler=createHandler({
       return call('upload',{studentIndex:0,requirementKey:p[0].key,file:body.certificate});
     }
     const p=await call(route.endsWith('status')?'status':'checkout',route.endsWith('status')?undefined:{});
-    return {...p,paymentStatus:p.receipt?.status==='paid'?'paid':'pending',reservation:{startsAt:form.session.startsAt,location:form.session.location}};
+    return {...p,paymentStatus:['paid','processing','payment_review','refunded','cancelled','canceled'].includes(p.receipt?.status)?p.receipt.status:'pending',reservation:{startsAt:form.session.startsAt,location:form.session.location}};
   },
   async publicOrder(action:string,key:string,order:any){
     const c=ownerConfig(),student=order.checkoutStudents[0];

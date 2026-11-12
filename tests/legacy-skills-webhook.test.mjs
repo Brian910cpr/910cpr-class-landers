@@ -1,0 +1,19 @@
+import test from 'node:test';import assert from 'node:assert/strict';import vm from 'node:vm';import {stripTypeScriptTypes} from 'node:module';import {createHmac,webcrypto} from 'node:crypto';import {readFileSync} from 'node:fs';
+const source=readFileSync(new URL('../supabase/functions/stripe-registration-webhook/index.ts',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'');
+function handler(){
+ let callback,result='payment_review',failure=false;const calls=[],reads=[];
+ const db={from(table){reads.push(table);assert.ok(['landerware_integration_secrets','skills_session_claim_receipts','registration_orders'].includes(table),'historical skills cannot touch native/retail or fulfillment');const q={select:()=>q,eq:()=>q,maybeSingle:async()=>({data:table==='landerware_integration_secrets'?{secret_value:'SYNTHETIC'}:table==='registration_orders'?{id:'order'}:{registration_id:'reg'}})};return q;},rpc:async(name,args)=>{assert.equal(name,'confirm_skills_checkout_payment');calls.push(args);return failure?{error:'synthetic'}:{data:{ok:true,paymentStatus:result}};}};
+ const context=vm.createContext({createClient:()=>db,TextEncoder,Uint8Array,ArrayBuffer,Date,JSON,Request,Response,crypto:webcrypto,Deno:{serve:f=>callback=f,env:{get:k=>k==='STRIPE_EXPECTED_LIVEMODE'?'false':'fixture'}},fetch:()=>assert.fail('no mail/provider request'),nativeConfirmationService:()=>assert.fail('no confirmation'),nativeConfirmationPostcommit:()=>assert.fail('no fulfillment')});vm.runInContext(stripTypeScriptTypes(source),context);
+ async function send(changes={},eventChanges={},valid=true){const raw=JSON.stringify({id:'evt_synthetic',type:'checkout.session.completed',livemode:false,data:{object:{id:'cs_synthetic',mode:'payment',payment_status:'paid',livemode:false,client_reference_id:'reg',payment_intent:'pi_synthetic',amount_total:5500,currency:'usd',metadata:{skills_session:'509474',registration_id:'reg',order_id:'order'},...changes}},...eventChanges}),t=String(Math.floor(Date.now()/1000)),v=createHmac('sha256','SYNTHETIC').update(t+'.'+raw).digest('hex');return callback(new Request('https://fixture.invalid',{method:'POST',headers:{'stripe-signature':`t=${t},v1=${valid?v:'bad'}`},body:raw}));}
+ return{send,calls,reads,status:v=>result=v,fail:v=>failure=v};
+}
+test('signed historical payment callback reports durable review/refund truth without confirmations or rebooking',async()=>{
+ const h=handler();for(let i=0;i<3;i++){const r=await h.send();assert.equal(r.status,200);assert.equal((await r.json()).status,'payment_review');}assert.equal(h.calls.length,3);
+ h.status('cancelled');assert.equal((await(await h.send()).json()).status,'cancelled');h.status('refunded');assert.equal((await(await h.send()).json()).status,'refunded');h.status('paid');assert.equal((await(await h.send()).json()).status,'paid');h.fail(true);assert.equal((await h.send()).status,500);
+});
+test('wrong signed provider mode, identity, intent, and nonpaid events never reach historical settlement',async()=>{
+ const h=handler();for(const c of [{mode:'subscription'},{livemode:true},{metadata:{skills_session:'509474',registration_id:'other',order_id:'order'}},{metadata:{skills_session:'509474',registration_id:'reg',order_id:'other'}},{payment_intent:null},{payment_intent:''},{payment_intent:{id:'pi_synthetic'}}])assert.equal((await h.send(c)).status,400);
+ assert.equal((await h.send({}, {livemode:true})).status,400);assert.equal((await h.send({}, {},false)).status,400);
+ for(const type of ['checkout.session.async_payment_failed','checkout.session.expired'])assert.equal((await h.send({}, {type})).status,200);
+ assert.equal((await h.send({payment_status:'unpaid'})).status,200);assert.equal((await h.send({payment_status:'unpaid'},{type:'checkout.session.async_payment_succeeded'})).status,400);assert.equal(h.calls.length,0);
+});

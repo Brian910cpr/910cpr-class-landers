@@ -6,7 +6,11 @@ import {skillsOffers,CONTEXTS,BLS_PACKAGES} from '../skills-session-reservation/
 const KEY=/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 const WIRES=new Set(['firstName','lastName','email','phone','billingCode','onlineCompleted','onlineCompletionAcknowledged']);
 export function receiptView(r,now=Date.now()){
- const status=r.reconciliationError?'payment_review':r.status==='paid'?'paid':r.paymentObserved&&['held','checkout_open'].includes(r.status)?'processing':r.holdExpiresAt&&Date.parse(r.holdExpiresAt)<=now?'expired':r.kind==='skills_reservation'&&['registered','active','confirmed'].includes(r.status)?'held':r.status;
+ // Expiry releases a seat hold, not an already recorded payment. Terminal
+ // native orders remain terminal even when old hold/payment evidence survives.
+ const terminal=r.kind==='public_order'&&['cancelled','canceled','refunded'].includes(r.status);
+ const observed=r.paymentObserved&&(['held','checkout_open'].includes(r.status)||r.kind==='public_order'&&r.status==='expired');
+ const status=terminal?r.status:r.reconciliationError?'payment_review':r.status==='paid'?'paid':observed?'processing':r.holdExpiresAt&&Date.parse(r.holdExpiresAt)<=now?'expired':r.kind==='skills_reservation'&&['registered','active','confirmed'].includes(r.status)?'held':r.status;
  return {status,orderId:r.orderId,amountCents:r.amountCents,currency:r.currency,startsAt:r.startsAt,endsAt:r.endsAt,location:r.location,
   holdExpiresAt:r.holdExpiresAt,students:(r.students||[]).map((st,index)=>({selectedChoices:r.profileSnapshot?.inputs?.[index]?.selectedChoices||[],uploads:Object.fromEntries(Object.entries(st.options?.checkoutUploads||{}).map(([k,v])=>[k,{evidenceStatus:v.evidenceStatus,approved:false}]))}))};
 }
@@ -166,7 +170,9 @@ export function genericCheckout(deps){
  }
  async function status(key){
   let r=await receipt(key);
-  try{if(r.kind==='skills_reservation')await deps.legacyPayment(key,r.context,true);else if(['held','checkout_open'].includes(r.status)&&!r.reconciliationError)await deps.verify(r.orderId);}
+  // A released hold may still have a payable, previously bound Checkout.
+  // Verification only retrieves that Checkout; admission stays with SQL.
+  try{if(r.kind==='skills_reservation')await deps.legacyPayment(key,r.context,true);else if(r.kind==='public_order'&&['held','checkout_open','expired'].includes(r.status)&&!r.reconciliationError)await deps.verify(r.orderId);}
   catch(error){r=await receipt(key);if(!r.paymentObserved)throw error;}
   r=await receipt(key);if(r.kind==='public_order'&&r.status==='paid')await afterCommit(r.orderId);return {ok:true,receipt:receiptView(r,now())};
  }

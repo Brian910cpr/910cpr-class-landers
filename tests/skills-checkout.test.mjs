@@ -7,7 +7,7 @@ import client from '../docs/assets/skills-checkout-client.js';
 const root=new URL('../',import.meta.url),load=p=>readFileSync(new URL(p,root),'utf8');
 const key='11111111-1111-4111-8111-111111111111';
 const quote={registrationId:'reg',orderId:'order',status:'payment_pending',amountCents:5500,currency:'usd',createdAt:new Date().toISOString(),startsAt:'2031-04-05T14:00:00Z',location:':: Wilmington; Shipyard Blvd',instructor:'Fixture Instructor',email:'fixture@example.invalid'};
-const checkout={id:'cs_fixture',mode:'payment',client_reference_id:'reg',metadata:{order_id:'order',skills_session:'509474'},amount_total:5500,currency:'usd',status:'open',payment_status:'unpaid',url:'https://checkout.stripe.com/c/pay/fixture'};
+const checkout={id:'cs_fixture',mode:'payment',livemode:true,payment_intent:'pi_fixture',client_reference_id:'reg',metadata:{order_id:'order',registration_id:'reg',skills_session:'509474'},amount_total:5500,currency:'usd',status:'open',payment_status:'unpaid',url:'https://checkout.stripe.com/c/pay/fixture'};
 test('Stripe gets the canonical quote, stable idempotency and safe return URLs; resume does not create another session',async()=>{
  let bound=false,posts=0;
  const deps={rpc:async(name,args)=>{if(name==='skills_checkout_order')return {...quote,checkoutId:bound?'cs_fixture':null};assert.equal(name,'bind_skills_checkout');assert.equal(args.p_checkout_id,'cs_fixture');bound=true;},stripe:async(method,path,params,idempotency)=>{
@@ -19,7 +19,7 @@ test('Stripe gets the canonical quote, stable idempotency and safe return URLs; 
 test('return parameters never mark paid; verified paid session reconciles, processing/expired/mismatch never redirect',async()=>{
  let confirms=0;
  for(const variant of [{payment_status:'paid'},{status:'complete'},{status:'expired'},{amount_total:1},{client_reference_id:'forged'},{url:'https://evil.example/' }]){
-  const deps={rpc:async name=>name==='skills_checkout_order'?{...quote,checkoutId:'cs_fixture'}:(confirms++,{ok:true}),stripe:async()=>({...checkout,...variant})};
+  const deps={rpc:async name=>name==='skills_checkout_order'?{...quote,checkoutId:'cs_fixture'}:(confirms++,{ok:true,paymentStatus:'paid'}),stripe:async()=>({...checkout,...variant})};
   if(variant.payment_status==='paid')assert.equal((await skillsCheckout(deps,key,'cpr-aed',true)).paymentStatus,'paid');
   else if(variant.status==='complete')assert.equal((await skillsCheckout(deps,key,'cpr-aed')).paymentStatus,'processing');
   else await assert.rejects(skillsCheckout(deps,key,'cpr-aed'));

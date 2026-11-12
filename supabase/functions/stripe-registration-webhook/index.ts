@@ -102,11 +102,16 @@ Deno.serve(async(request)=>{
     // Route by canonical provenance before the permissive legacy handler.
     // Failed/expired or delayed events must never overwrite a paid order.
     if(!paid)return reply({ok:true,ignored:'Skills checkout not paid'});
-    if(session.mode!=='payment'||session.payment_status!=='paid'||session.metadata?.skills_session!=='509474')return reply({ok:false,error:'Skills payment evidence missing'},400);
+    const expectedLive=Deno.env.get('STRIPE_EXPECTED_LIVEMODE')!=='false';
+    if(session.mode!=='payment'||session.payment_status!=='paid'||session.metadata?.skills_session!=='509474'||session.metadata?.registration_id!==registrationId||session.livemode!==expectedLive||event.livemode!==expectedLive||typeof session.payment_intent!=='string'||!/^pi_[A-Za-z0-9_]+$/.test(session.payment_intent))return reply({ok:false,error:'Skills payment evidence missing'},400);
+    const {data:skillsOrder,error:skillsOrderError}=await db.from('registration_orders').select('id').eq('registration_id',registrationId).maybeSingle();
+    if(skillsOrderError)return reply({ok:false,error:'Skills payment lookup failed'},500);
+    if(!skillsOrder||session.metadata?.order_id!==skillsOrder.id)return reply({ok:false,error:'Skills payment evidence missing'},400);
     const {data,error}=await db.rpc('confirm_skills_checkout_payment',{p_registration_id:registrationId,p_checkout_id:session.id||null,
       p_amount_total:session.amount_total??null,p_currency:session.currency||null,p_payment_intent:typeof session.payment_intent==='string'?session.payment_intent:null});
     if(error||!data?.ok)return reply({ok:false,error:'Skills payment reconciliation failed'},500);
-    return reply({ok:true,status:'paid'});
+    if(!['paid','payment_review','refunded','cancelled'].includes(data.paymentStatus))return reply({ok:false,error:'Skills payment state unavailable'},500);
+    return reply({ok:true,status:data.paymentStatus});
   }
   // Pool payments use one atomic confirmation with exact order/session binding.
   // Keep this before generic failure/paid mutations; metadata alone cannot route

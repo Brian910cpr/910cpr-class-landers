@@ -6,7 +6,7 @@ const app=document.getElementById('app'),params=new URLSearchParams(location.sea
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n/100);
 const originalSelection=Object.fromEntries([...params].filter(([k])=>['session','course','date','startTime','instructor','location','skillsContext','selectionId'].includes(k)));
 const selectionKey='native-checkout:'+JSON.stringify(Object.entries(originalSelection).sort());
-let key='',model,receipt,busy=false,studentCount=0;
+let key='',model,receipt,busy=false,studentCount=0,paymentStatusUncertain=false;
 function stored(name){try{return sessionStorage.getItem(name)||'';}catch{return '';}}
 function save(name,value){try{sessionStorage.setItem(name,value);}catch{/* The active page still retains its receipt. */}}
 function message(text){const el=document.getElementById('status');if(el)el.textContent=text;}
@@ -16,7 +16,7 @@ async function request(action,body,query={}){
  const r=await fetch(url,{method:body?'POST':'GET',headers:{...(body?{'content-type':'application/json'}:{}),...(key?{'idempotency-key':key}:{})},...(body?{body:JSON.stringify(body)}:{}),redirect:'error',signal:AbortSignal.timeout(30000)});
  const p=await r.json();if(!r.ok||p.ok===false)throw Error(p.error||'service_unavailable');return p;
 }
-const errors={ambiguous_saved_reservation:'More than one saved registration matches this time. Contact 910CPR before reserving or paying again.',session_not_available:'This time is no longer available. Please choose another time.',calendar_refresh_required:'Please return to the calendar and select a current time.',profile_changed:'Course options changed. Reload this page before continuing.',hold_expired:'Your reservation hold expired. Please select a time again.',required_document_missing:'Upload the required document before proceeding.',document_storage_pending:'The file was not received. Retry the upload. For optional files, you may remove the file and bring it to class.',invalid_document:'Choose a supported file within the displayed size limit.',option_unavailable:'That option is currently unavailable. Please choose another.',insufficient_seats:'There are not enough seats for this selection.',idempotency_conflict:'This saved reservation has different details. Return to the calendar to make another selection.',payment_processing:'Payment is processing. Check payment status before trying again.',payment_reconciliation_required:'Payment needs review. Please contact 910CPR before trying again.',payment_unavailable:'Secure payment is temporarily unavailable. Your saved hold has not been charged.',native_registration_unavailable:'Online checkout is not available for this class yet.'};
+const errors={ambiguous_saved_reservation:'More than one saved registration matches this time. Contact 910CPR before reserving or paying again.',session_not_available:'This time is no longer available. Please choose another time.',calendar_refresh_required:'Please return to the calendar and select a current time.',profile_changed:'Course options changed. Reload this page before continuing.',hold_expired:'Your reservation hold expired. Please select a time again.',required_document_missing:'Upload the required document before proceeding.',document_storage_pending:'The file was not received. Retry the upload. For optional files, you may remove the file and bring it to class.',invalid_document:'Choose a supported file within the displayed size limit.',option_unavailable:'That option is currently unavailable. Please choose another.',insufficient_seats:'There are not enough seats for this selection.',idempotency_conflict:'This saved reservation has different details. Return to the calendar to make another selection.',payment_processing:'Payment is processing. Check payment status before trying again.',payment_reconciliation_required:'Payment needs review. Please contact 910CPR. Do not pay again.',payment_unavailable:'Payment status is temporarily unavailable. Check payment status again or contact 910CPR before paying.',native_registration_unavailable:'Online checkout is not available for this class yet.'};
 function errorText(e){return errors[e.message]||'We could not complete that step. Your payment is not confirmed. Please retry or contact 910CPR.';}
 function cards(){return [...document.querySelectorAll('.student')];}
 function selected(card){return [...card.querySelectorAll('[data-choice]:checked')].map(el=>el.value);}
@@ -38,7 +38,7 @@ function update(){
  }
  document.getElementById('total').textContent=receipt?'Saved total: '+money(receipt.amountCents)+(receipt.holdExpiresAt?' - Seat hold ends '+new Date(receipt.holdExpiresAt).toLocaleTimeString('en-US',{timeZone:'America/New_York'})+' Eastern':''):'Estimated total: '+money(total);
  document.getElementById('add-student').disabled=!!receipt||cards().length>=model.profile.maxStudents;
- document.getElementById('pay').hidden=['processing','refunded'].includes(receipt?.status);
+ document.getElementById('pay').hidden=paymentStatusUncertain||!!receipt&&!['held','checkout_open'].includes(receipt.status);
  announceSize();
 }
 function addStudent(){
@@ -62,7 +62,18 @@ function confirmed(){
  announceSize();
 }
 function rememberReceipt(){save(selectionKey,key);if(receipt.orderId)save('native-checkout-order:'+receipt.orderId,key);}
-async function status(){const p=await request('status');receipt=p.receipt;if(receipt.status==='paid')confirmed();else if(receipt.status==='refunded')message('This order was refunded; it is not a confirmed registration. Contact 910CPR for help.');else if(receipt.status==='processing')message('Payment received; registration confirmation is pending. Check payment status again or contact 910CPR. Do not pay again.');else if(['expired','payment_review','cancelled','canceled'].includes(receipt.status))throw Error(receipt.status==='expired'?'hold_expired':'payment_reconciliation_required');update();return receipt;}
+async function status(){
+ let p;
+ try{p=await request('status');}catch(e){paymentStatusUncertain=true;update();throw e;}
+ paymentStatusUncertain=false;receipt=p.receipt;
+ if(receipt.status==='paid')confirmed();
+ else if(receipt.status==='refunded')message('This order was refunded; it is not a confirmed registration. Contact 910CPR for help.');
+ else if(receipt.status==='processing')message('Payment received; registration confirmation is pending. Check payment status again or contact 910CPR. Do not pay again.');
+ else if(receipt.status==='payment_review')message('Payment received. Your registration is not confirmed and needs staff review. The displayed class details are not a confirmed booking. Contact 910CPR. Do not pay again.');
+ else if(['cancelled','canceled'].includes(receipt.status))message('This registration was canceled. Contact 910CPR for help.');
+ else if(receipt.status==='expired')message('Your seat hold expired. Payment has not been confirmed. If you paid, check payment status again or contact 910CPR before choosing another class.');
+ update();return receipt;
+}
 async function submit(event){
  event.preventDefault();if(busy)return;busy=true;const button=document.getElementById('pay');button.disabled=true;message('Saving your selection.');
  try{
@@ -71,7 +82,7 @@ async function submit(event){
    key=key||crypto.randomUUID();save(selectionKey,key);
    const p=await request('reserve',{selection:model.selection,profileKey:model.profile.profileKey,profileVersion:model.profile.profileVersion,students});receipt=p.receipt;rememberReceipt();update();
   }
-  if(['paid','processing','refunded'].includes((await status()).status))return;
+  if(!['held','checkout_open'].includes((await status()).status))return;
   for(const [index,card] of cards().entries())for(const el of card.querySelectorAll('[data-upload]')){
    if(el.disabled||!el.files[0])continue;
    const policy=model.profile.uploads.find(p=>p.key===el.dataset.upload);message('Receiving your document.');
@@ -79,7 +90,7 @@ async function submit(event){
   }
   message('Opening secure payment.');const p=await request('checkout',{});
   if(p.receipt?.status==='paid'){receipt=p.receipt;confirmed();return;}
-  if(['processing','refunded'].includes(p.receipt?.status)){receipt=p.receipt;await status();return;}
+  if(p.receipt){receipt=p.receipt;await status();return;}
   const destination=new URL(p.checkoutUrl);if(destination.origin!=='https://checkout.stripe.com')throw Error('payment_unavailable');
   if(params.get('embed')==='1')window.top.location.href=destination.href;else location.assign(destination.href);
  }catch(e){message(errorText(e));}finally{busy=false;button.disabled=false;announceSize();}
@@ -104,7 +115,7 @@ async function init(){
    if(recovery.checkoutUrl){const destination=new URL(recovery.checkoutUrl);if(destination.origin!=='https://checkout.stripe.com')throw Error('payment_unavailable');const link=document.createElement('a');link.href=destination.href;link.target='_top';link.textContent='Continue to secure payment';app.querySelector('section').append(link);}
    announceSize();return;
   }
-  receipt=model.receipt;
+  receipt=model.receipt;paymentStatusUncertain=!!receipt;
   const p=model.profile,date=new Date(model.session.startsAt).toLocaleString('en-US',{timeZone:'America/New_York',dateStyle:'full',timeStyle:'short'});
   const length=model.session.durationMinutes||(Date.parse(model.session.endsAt)-Date.parse(model.session.startsAt))/60000;
   const details=(Number.isFinite(length)&&length>0?'Class length: '+length+' minutes. ':'')+(model.session.capacity?'Class capacity: '+model.session.capacity+'. ':'')+(Number.isInteger(model.session.remainingSeats)?'Seats currently available: '+model.session.remainingSeats+'.':'');
@@ -114,8 +125,8 @@ async function init(){
   if(receipt)cards().forEach((card,i)=>{if(receipt.students[i].selectedChoices.length)for(const el of card.querySelectorAll('[data-choice]'))el.checked=receipt.students[i].selectedChoices.includes(el.value);});
   if(receipt){rememberReceipt();for(const card of cards())for(const el of card.querySelectorAll('[data-field]'))el.required=false;}
   document.getElementById('add-student').addEventListener('click',addStudent);document.getElementById('checkout-form').addEventListener('submit',submit);
-  document.getElementById('check-status').addEventListener('click',async()=>{if(busy||!key)return;try{const r=await status();if(!['paid','processing','refunded'].includes(r.status))message('Payment has not been confirmed. You may continue to secure payment.');}catch(e){message(errorText(e));}});
-  update();if(receipt)await status();
+  document.getElementById('check-status').addEventListener('click',async()=>{if(busy||!key)return;try{const r=await status();if(['held','checkout_open'].includes(r.status))message('Payment has not been confirmed. You may continue to secure payment.');}catch(e){message(errorText(e));}});
+  update();if(receipt)try{await status();}catch(e){message(errorText(e));}
  }catch(e){app.textContent=errorText(e);const link=document.createElement('a');link.href='/classes/';link.textContent=' Return to classes';app.append(link);}
 }
 if(params.get('embed')==='1')document.documentElement.classList.add('embedded-checkout');

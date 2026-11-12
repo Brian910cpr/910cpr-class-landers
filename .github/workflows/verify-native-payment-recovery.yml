@@ -1,0 +1,148 @@
+name: Verify native payment recovery
+on:
+  workflow_dispatch:
+  push:
+    branches: ['codex/native-payment-recovery-20261112']
+  pull_request:
+    paths:
+      - 'supabase/functions/public-registration/**'
+      - 'supabase/functions/skills-session-reservation/**'
+      - 'supabase/functions/stripe-registration-webhook/**'
+      - 'supabase/functions/production-board/checkout-attention.mjs'
+      - 'supabase/migrations/**'
+      - 'docs/assets/generic-checkout.js'
+      - 'tests/**'
+      - '.github/workflows/verify-native-payment-recovery.yml'
+permissions:
+  contents: read
+jobs:
+  independent-bls:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: skills_claim_test_121198
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --no-save --ignore-scripts @electric-sql/pglite@0.5.15
+      - name: Verify receipt, signature, form and shared service contracts
+        run: >-
+          node --test --test-concurrency=1
+          tests/native-expired-payment-recovery.test.mjs
+          tests/generic-checkout-adapter.test.mjs
+          tests/generic-checkout.test.mjs tests/native-checkout-profile.test.mjs
+          tests/skills-checkout-form.test.mjs
+          tests/skills-checkout.test.mjs
+          tests/skills-checkout-webhook.test.mjs
+          tests/legacy-skills-webhook.test.mjs
+          tests/checkout-attention.test.mjs
+          tests/skills-native-adapter.test.mjs
+          tests/stripe-webhook-signature.test.mjs
+          tests/stripe-webhook-handler.test.mjs
+          tests/native-confirmation-postcommit.test.mjs
+          tests/native-confirmation-service.test.mjs
+          tests/local-postgres-harness.test.mjs
+          tests/isolated-postgres-address.test.mjs
+      - run: node tests/legacy-skills-receipts-proof.mjs
+      - name: Verify real service-role transactions and lock races
+        env:
+          NATIVE_TEST_POSTGRES_CONTAINER_ID: ${{ job.services.postgres.id }}
+          SKILLS_TEST_PORT: '5432'
+        run: |
+          node tests/native-booking-identity-postgres.mjs
+          createdb -h 127.0.0.1 -U postgres skills_claim_test_121197
+          node tests/legacy-skills-receipts-proof.mjs --postgres
+          for number in 121210 121211 121212 121213; do
+            createdb -h 127.0.0.1 -U postgres skills_claim_test_$number
+          done
+          SKILLS_PGLITE_MODULE="$PWD/tests/helpers/native-return-postgres-shim.mjs" node --test tests/native-expired-payment-recovery.test.mjs
+  independent-bls-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm install --no-save --ignore-scripts @electric-sql/pglite@0.5.15
+      - run: python -m pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Verify mobile and desktop recovery through actual HTTP adapter and SQL
+        run: python -B -m unittest discover -s tests -p test_native_expired_return_browser.py -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: synthetic-bls-return-browser
+          path: test-results/native-expired-return-browser/
+          if-no-files-found: warn
+  later-course-compatibility:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: skills_claim_test_121198
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: '3a133802d8e419ea3436f850600703941d01ed59'
+          path: compatibility
+      - name: Apply only this increment to the separately pinned later-course source
+        run: |
+          git fetch --no-tags --depth=1 origin f9af0f173de3dd6a5520f114d05597abcc33142c
+          git diff --binary f9af0f173de3dd6a5520f114d05597abcc33142c "$GITHUB_SHA" > "$RUNNER_TEMP/native-recovery.patch"
+          git -C compatibility apply --check "$RUNNER_TEMP/native-recovery.patch"
+          git -C compatibility apply "$RUNNER_TEMP/native-recovery.patch"
+          # The pinned later-course baseline predates the independent verifier fix.
+          cp supabase/functions/stripe-registration-webhook/index.ts compatibility/supabase/functions/stripe-registration-webhook/index.ts
+          cp tests/stripe-webhook-signature.test.mjs tests/stripe-webhook-handler.test.mjs compatibility/tests/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm install --no-save --ignore-scripts @electric-sql/pglite@0.5.15
+        working-directory: compatibility
+      - name: Verify all six course receipts and existing admission contracts
+        working-directory: compatibility
+        env:
+          NATIVE_RETURN_TEST_SCOPE: extended
+        run: node --test --test-concurrency=1 tests/native-expired-payment-recovery.test.mjs tests/native-pediatric-admission.test.mjs tests/native-heartsaver-admission.test.mjs tests/native-bls-admission.test.mjs tests/generic-checkout-adapter.test.mjs
+      - name: Verify real six-course booking identity and locks
+        working-directory: compatibility
+        env:
+          NATIVE_TEST_POSTGRES_CONTAINER_ID: ${{ job.services.postgres.id }}
+          SKILLS_TEST_PORT: '5432'
+        run: node tests/native-booking-identity-postgres.mjs --full
+      - run: python -m pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Verify all six course returns on mobile and desktop
+        working-directory: compatibility
+        env:
+          NATIVE_RETURN_TEST_SCOPE: extended
+        run: python -B -m unittest discover -s tests -p test_native_expired_return_browser.py -v
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: synthetic-six-course-return-browser
+          path: compatibility/test-results/native-expired-return-browser/
+          if-no-files-found: warn
+# Disposable synthetic SQL and injected/intercepted requests only. No secrets,
+# provider calls, customer data, production configuration or deployment steps.

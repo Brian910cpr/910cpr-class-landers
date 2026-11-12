@@ -35,3 +35,20 @@ test('cached skills forms use the shared per-course policy and payment gate inst
   disabled=true;const denied=await handler(request('certificate',{certificate:{}}));assert.equal(denied.status,409);assert.equal((await denied.json()).error,'uploads_disabled');assert.deepEqual(calls,['form','checkout','form','upload','form']);
  }finally{globalThis.fetch=previous;}
 });
+
+
+test('cached skills status preserves terminal and review truth instead of saying payment pending',async()=>{
+ const previous=globalThis.fetch;let status='payment_review';const calls=[];
+ globalThis.fetch=async(url,init)=>{
+  const action=String(url).split('/').at(-1);calls.push(action);assert.match(String(url),/functions\/v1\/public-registration\/generic\//);
+  if(action==='form')return Response.json({ok:true,context:'cpr-aed',profile:{uploads:[]},session:{startsAt:'2031-01-01T14:00:00Z',location:'Fixture'}});
+  assert.equal(action,'status');return Response.json({ok:true,receipt:{status}});
+ };
+ try{
+  for(const value of ['payment_review','refunded','cancelled','canceled','processing','paid','held']){
+   status=value;
+   const response=await handler(new Request('https://fixture.invalid/payment-status',{method:'POST',headers:{'idempotency-key':'11111111-1111-4111-8111-111111111111','content-type':'application/json'},body:JSON.stringify({context:'cpr-aed'})}));
+   assert.equal(response.status,200);const body=await response.json();assert.equal(body.paymentStatus,value==='held'?'pending':value);assert.equal(body.checkoutUrl,undefined);
+  }
+ }finally{globalThis.fetch=previous;}
+});
