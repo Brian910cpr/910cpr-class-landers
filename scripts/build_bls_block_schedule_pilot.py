@@ -113,7 +113,8 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     compact_course.update({key: course.get(key) for key in
                         ('authority', 'nativeScopeId', 'selectionId', 'publicSelectable', 'proofObservedAt',
                          'nativeOfferId', 'qualificationPolicy', 'skillsContexts', 'capacity', 'remainingSeats', 'profileVersion', 'identityWitness',
-                         'coursePolicyKey', 'calendarProofObservedAt', 'policyProofObservedAt')})
+                         'coursePolicyKey', 'calendarProofObservedAt', 'policyProofObservedAt',
+                         'publicCourseId', 'physicalCourseId', 'checkoutPackage', 'profileKey')})
                 if course.get('authority') == 'native-heartsaver-session-booking.v1':
                     compact_course['session_id'] = course.get('session_id')
                 if course.get('authority') == 'native-session-booking.v1':
@@ -2314,7 +2315,8 @@ def render_html(payload: dict[str, Any]) -> str:
           if (course.authority === 'native-skills-seated.v1') {{
             selection.set('selectionId', 'skills:' + course.nativeOfferId + ':' + selection.get('skillsContext'));
           }}
-          link.href = '/register/skills-session/?' + selection;
+          link.href = '/register/skills-session/?' + selection;{'''
+          if (course.checkoutPackage) link.href = course.registrationUrl;''' if page_config.get('native_bls_skills_publication') else ''}
           link.textContent = course.courseId === '210549' ? 'Continue to HeartCode BLS checkout' : 'Schedule skills session';
         }}
         if (!config?.nativeRegistrationPath) link.textContent = 'Register';

@@ -144,6 +144,46 @@
               && /^native-full:[a-f0-9]{64}$/.test(course.selectionId || '')
               && course.registrationUrl === '/register/skills-session/?' + new URLSearchParams({course:course.courseId, selectionId:course.selectionId});
           }
+          // BLS packages share one physical offer and require a new exact selection.
+          // Never reinterpret a legacy HeartCode link as an online purchase.
+          if (course.checkoutPackage || course.physicalCourseId || course.publicCourseId
+              || String(course.selectionId || '').includes(':bls-skills:')
+              || course.courseId === '210549' && ['native-skills-publication.v1', 'native-skills-seated.v1'].includes(course.authority)
+              || Array.isArray(course.skillsContexts) && course.skillsContexts.includes('bls-skills')) {
+            const packageKey = course.courseId === '509474' ? 'bls-skills-only.v1'
+              : course.courseId === '210549' ? 'heartcode-bls-online-and-skills.v1' : null;
+            const observed = Date.parse(course.proofObservedAt), expiry = Date.parse(course.validUntil);
+            const calendar = Date.parse(course.calendarProofObservedAt), policy = Date.parse(course.policyProofObservedAt);
+            const seated = course.authority === 'native-skills-seated.v1';
+            if (!packageKey || course.checkoutPackage !== packageKey || course.publicCourseId !== course.courseId
+                || course.physicalCourseId !== '509474' || course.profileKey !== 'native_skills_shared'
+                || course.nativeScopeId !== 'brian-shipyard-b.v1' || course.publicSelectable !== true
+                || course.qualificationPolicy !== 'skills-session-policy.v1' || course.capacity !== 2
+                || !Number.isInteger(course.profileVersion) || course.profileVersion <= 0
+                || JSON.stringify(course.skillsContexts) !== '["bls-skills"]'
+                || skillsContext && skillsContext !== 'bls-skills'
+                || course.durationMinutes !== 45 || course.cleanupBufferMinutes !== 15
+                || course.schedulerConsumptionMinutes !== 60 || course.setupBufferMinutes !== 0
+                || course.instructor !== 'Brian Ennis' || course.resource !== ':: Wilmington; Shipyard Blvd - B'
+                || course.location !== ':: Wilmington; Shipyard Blvd'
+                || !Number.isFinite(observed) || observed !== Math.min(calendar, policy) || Math.max(calendar, policy) > instant
+                || !live(validUntil) || !live(course.validUntil) || expiry > observed + 15 * 60 * 1000
+                || expiry > Date.parse(validUntil)
+                || Object.hasOwn(course, 'appointmentDayId') || Object.hasOwn(course, 'matchedContainerId')
+                || course.selectionId !== 'skills:' + course.nativeOfferId + ':bls-skills:' + packageKey
+                || course.registrationUrl !== '/register/skills-session/?' + new URLSearchParams({
+                  course:course.courseId, skillsContext:'bls-skills', selectionId:course.selectionId})
+                || course.appointmentUrl !== course.registrationUrl) return false;
+            if (seated) return course.offerType === 'seated_class'
+              && /^(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/.test(course.session_id || '')
+              && course.nativeOfferId === 'native-skills-seated:' + course.session_id
+              && course.availabilityBlockId === 'seated:' + course.session_id
+              && JSON.stringify(course.sourceSessionIds) === JSON.stringify([course.session_id])
+              && /^[a-f0-9]{32}$/.test(course.identityWitness || '')
+              && Number.isInteger(course.remainingSeats) && course.remainingSeats > 0 && course.remainingSeats <= 2;
+            return course.authority === 'native-skills-publication.v1' && course.offerType === 'dynamic_appointment'
+              && /^native-skills:[a-f0-9]{64}$/.test(course.nativeOfferId || '');
+          }
           if (course.authority === 'native-skills-seated.v1') {
             const observed = Date.parse(course.proofObservedAt), expiry = Date.parse(course.validUntil);
             return course.courseId === '509474' && course.offerType === 'seated_class' && course.capacity === 2

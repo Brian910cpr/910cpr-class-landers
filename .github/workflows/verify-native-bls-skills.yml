@@ -1,0 +1,49 @@
+name: Verify native BLS skills packages
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/verify-native-bls-skills.yml'
+      - 'supabase/migrations/**'
+      - 'supabase/functions/public-registration/**'
+      - 'supabase/functions/skills-session-reservation/**'
+      - 'supabase/functions/canonical-scheduling-demand/**'
+      - 'scripts/**'
+      - 'data/config/native_publication_scope.json'
+      - 'docs/assets/resolved-selector-availability.js'
+      - 'tests/**'
+permissions:
+  contents: read
+jobs:
+  synthetic-contracts:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: skills_claim_test_233504
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install openpyxl python-dateutil tzdata
+      - run: npm install --no-save --ignore-scripts @electric-sql/pglite@0.5.15
+      - name: Verify independent packages, canonical projection and unchanged gate-off rendering
+        run: python -B -m unittest tests.test_native_bls_renderer tests.test_native_bls_publication_runner tests.test_native_skills_publication tests.test_native_skills_publication_runner tests.test_native_skills_publication_validator tests.test_native_publication_scope tests.test_fetch_canonical_scheduling_demand
+      - name: Verify SQL, API and browser reader contracts with synthetic fixtures only
+        run: node --experimental-strip-types --test --test-concurrency=2 tests/native-bls-skills.test.mjs tests/native-bls-skills-reader.test.mjs tests/native_bls_skills_demand_endpoint.test.cjs tests/native-skills-offer-lease.test.mjs tests/native-skills-publication-reader.test.mjs tests/generic-checkout.test.mjs tests/generic-checkout-adapter.test.mjs
+      - name: Verify real BLS-only and full-chain lock races on isolated PostgreSQL17
+        env:
+          NATIVE_TEST_POSTGRES_CONTAINER_ID: ${{ job.services.postgres.id }}
+        run: |
+          createdb -h 127.0.0.1 -U postgres skills_claim_test_233505
+          node tests/native-bls-skills-concurrency.mjs
+          NATIVE_BLS_SKILLS_CHAIN=full node tests/native-bls-skills-concurrency.mjs
+# Deliberately no secrets, hosted inputs, refresh/publish step, payment, or email sender.

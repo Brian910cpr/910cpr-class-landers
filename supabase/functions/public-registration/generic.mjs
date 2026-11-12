@@ -1,7 +1,7 @@
 import {fullCourseOffers,fullCoursePage} from './full-course.mjs';
 import {normalizeCheckoutProfile,checkoutSelection,uploadPolicies,conditionApplies} from '../_shared/checkout-profile.mjs';
 import {profileUploadInput} from '../_shared/checkout-upload.mjs';
-import {skillsOffers,CONTEXTS} from '../skills-session-reservation/policy.mjs';
+import {skillsOffers,CONTEXTS,BLS_PACKAGES} from '../skills-session-reservation/policy.mjs';
 
 const KEY=/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 const WIRES=new Set(['firstName','lastName','email','phone','billingCode','onlineCompleted','onlineCompletionAcknowledged']);
@@ -37,6 +37,21 @@ export function genericCheckout(deps){
  async function resolve(selection={}){
   const context=String(selection.skillsContext||'');let publicCourse=String(selection.course||''),session;
   let fullOffer=null;
+  // A historic dated210549 link meant skills-only. Resolve it only against a
+  // current native55-dollar package; new95-dollar orders require an exact ID.
+  // Receipt recovery never enters this branch.
+  let legacyBlsSkills=false;
+  if(context==='bls-skills'&&publicCourse==='210549'){
+   if(selection.session!=null)throw Error('session_not_available');
+   if(selection.selectionId==null){
+    const date=selection.date,time=selection.startTime;
+    if(typeof date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(date)||
+       typeof time!=='string'||!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)||
+       !Number.isFinite(Date.parse(date+'T00:00:00Z'))||new Date(date+'T00:00:00Z').toISOString().slice(0,10)!==date||
+       ['location','instructor'].some(k=>selection[k]!=null&&(typeof selection[k]!=='string'||!selection[k].trim())))throw Error('session_not_available');
+    legacyBlsSkills=true;publicCourse='509474';selection={...selection,course:publicCourse};
+   }else if(!/^skills:native-skills(?::[a-f0-9]{64}|-seated:(?:[0-9]+|lw-[0-9a-f-]{36})):bls-skills:heartcode-bls-online-and-skills\.v1$/.test(selection.selectionId))throw Error('session_not_available');
+  }
   if(!selection.session&&!context&&/^\d{1,12}$/.test(publicCourse)){
    let id;try{if(!selection.selectionId)id=await deps.appointmentSession?.(selection);}catch(error){if(error.message!=='session_not_available')throw error;}
    if(id)selection={...selection,session:id};
@@ -69,12 +84,24 @@ export function genericCheckout(deps){
    if(deps.enabled&&!deps.enabled())throw Error('native_registration_unavailable');
    const page=CONTEXTS[context];if(!page||session)throw Error('invalid_context');
    const publication=await deps.publication(page);
-   const nativeSkills=publicCourse==='509474'&&(publication.dates||[]).some(d=>(d.startTimes||[]).some(t=>(t.courses||[]).some(c=>['native-skills-publication.v1','native-skills-seated.v1'].includes(c.authority))));
+   const nativeSkills=['509474','210549'].includes(publicCourse)&&(publication.dates||[]).some(d=>(d.startTimes||[]).some(t=>(t.courses||[]).some(c=>['native-skills-publication.v1','native-skills-seated.v1'].includes(c.authority))));
    const skillsPolicy=nativeSkills&&deps.skillsPolicy?await deps.skillsPolicy():{};
-   const all=skillsOffers(publication,context,now(),publicCourse,{nativePublicationEnabled:skillsPolicy.nativePublicationEnabled===true});
+   const blsPolicy=context==='bls-skills'&&deps.blsSkillsPolicy?await deps.blsSkillsPolicy():{};
+   const all=skillsOffers(publication,context,now(),publicCourse,{nativePublicationEnabled:skillsPolicy.nativePublicationEnabled===true,
+    blsSkillsEnabled:blsPolicy.skillsEnabled===true,blsBundleEnabled:blsPolicy.bundleEnabled===true,profileVersion:blsPolicy.profileVersion});
    const matches=all.filter(o=>selection.selectionId?o.selectionId===selection.selectionId:
     o.localStart===`${selection.date}T${selection.startTime}`&&(!selection.instructor||o.instructor===selection.instructor)&&(!selection.location||o.location===selection.location));
    if(matches.length!==1)throw Error('session_not_available');offer=matches[0];
+   if(context==='bls-skills'){
+    if(!BLS_PACKAGES[publicCourse]||(!legacyBlsSkills&&selection.selectionId!==offer.selectionId)||offer.profileVersion!==view.profileVersion||
+       offer.profileKey!==view.profileKey||packet.physicalCourseId!=='509474')throw Error('session_not_available');
+    const choice=publicCourse==='210549'?'online_and_skills':'skills_only';
+    const group=view.optionGroups.find(g=>g.key==='learning_path'),selected=group?.choices.find(c=>c.key===choice&&c.available);
+    if(!selected||view.baseCents+selected.amountCents!==(publicCourse==='210549'?9500:5500))throw Error('option_unavailable');
+    // One renderer; freeze the explicitly selected product, not a silent upgrade.
+    view.optionGroups=view.optionGroups.map(g=>g.key==='learning_path'?{...g,choices:[selected]}:g);
+    view.defaultChoices=[choice];view.title=publicCourse==='210549'?'HeartCode BLS online access + skills session':'BLS Skills Session Only';
+   }
     await rpc('native_checkout_release_abandoned',{p_starts_at:offer.startsAt,p_ends_at:offer.consumptionEndsAt});
     const canonical=await rpc('skills_session_native_option',{p_context:context,p_offer:offer});
    if(!canonical)throw Error('session_not_available');capacity=canonical.capacity;

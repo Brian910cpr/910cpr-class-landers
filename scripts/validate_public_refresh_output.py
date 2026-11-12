@@ -139,7 +139,7 @@ def validate_selector(page_key: str, public_session_ids: set[str], *, now=None) 
                     require(registration_url, f"{page_key}: seated session {session_id} lacks registration URL")
                     if course.get('authority') == 'native-heartsaver-session-booking.v1':
                         validate_native_heartsaver_seated(course, payload, page_key, day['date'], slot['startTime'], now=now)
-                    if str(course.get('courseId')) == '509474':
+                    if str(course.get('courseId')) == '509474' or (page_key == 'bls' and str(course.get('courseId')) == '210549' and course.get('authority') == 'native-skills-seated.v1'):
                         validate_native_skills_offer(course, page_key, day['date'], slot['startTime'], payload, now=now)
                 else:
                     require(day["date"] not in blocked, f"{page_key}: synthetic offer on unreconciled date {day['date']}")
@@ -296,8 +296,11 @@ def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: s
             'native skills: invalid native destination')
     course_id = str(course.get('courseId') or '509474')
     require(course_id == '509474' or course_id == '210549' and page_key == 'bls', 'native skills: invalid course')
-    for key, value in {'course':course_id, 'date':day, 'startTime':clock,
-                       'instructor':course['instructor'], 'location':course['location']}.items():
+    bls = page_key == 'bls' and bool(course.get('authority') or course.get('checkoutPackage'))
+    expected_query = ({'course':course_id, 'skillsContext':'bls-skills', 'selectionId':course.get('selectionId')} if bls else
+                      {'course':course_id, 'date':day, 'startTime':clock,
+                       'instructor':course['instructor'], 'location':course['location']})
+    for key, value in expected_query.items():
         require(query.get(key) == [value], 'native skills: mismatched URL '+key)
     require(not course.get('appointmentDayId') and 'appointmentDayId' not in query,
             'native skills: unexpected Enrollware container')
@@ -306,7 +309,8 @@ def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: s
         seated = course.get('authority') == 'native-skills-seated.v1'
         require(course.get('authority') in {SKILLS_AUTHORITY, 'native-skills-seated.v1'} and course.get('nativeScopeId') == SCOPE,
                 'native skills: invalid authority or scope')
-        require(page_key in SKILLS_CONTEXTS and course_id == '509474', 'native skills: unsupported first-party course')
+        require((bls and course_id in {'509474','210549'}) or
+                (page_key in SKILLS_CONTEXTS and course_id == '509474'), 'native skills: unsupported first-party course')
         require('appointmentDayId' not in course and 'matchedContainerId' not in course,
                 'native skills: unexpected external identity')
         require(course.get('offerType') == ('seated_class' if seated else 'dynamic_appointment'), 'native skills: wrong offer kind')
@@ -338,15 +342,21 @@ def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: s
         require(isinstance(destination,str) and destination.startswith('/register/skills-session/?') and
                 not any(ord(ch)<32 or ord(ch)==127 for ch in destination) and '\\' not in destination and '#' not in destination,
                 'native skills: invalid native destination')
-        require(parse_qs(url.query,keep_blank_values=True,strict_parsing=True,max_num_fields=5) == {
-                    'course':['509474'], 'date':[day], 'startTime':[clock],
-                    'instructor':[course['instructor']], 'location':[course['location']]},
+        require(parse_qs(url.query,keep_blank_values=True,strict_parsing=True,max_num_fields=5) ==
+                {key:[value] for key,value in expected_query.items()},
                 'native skills: invalid native query')
         require('appointmentUrl' not in course or course['appointmentUrl'] == destination,
                 'native skills: inconsistent registration destinations')
         contexts = course.get('skillsContexts')
         require(isinstance(contexts, list) and bool(contexts), 'native skills: missing contexts')
-        expected_contexts = sorted(set(contexts) & set(SKILLS_CONTEXTS[page_key])) if seated else sorted(SKILLS_CONTEXTS[page_key])
+        expected_contexts = ['bls-skills'] if bls else (sorted(set(contexts) & set(SKILLS_CONTEXTS[page_key])) if seated else sorted(SKILLS_CONTEXTS[page_key]))
+        if bls:
+            package = 'bls-skills-only.v1' if course_id == '509474' else 'heartcode-bls-online-and-skills.v1'
+            require(course.get('publicCourseId') == course_id and course.get('physicalCourseId') == '509474'
+                    and course.get('checkoutPackage') == package and course.get('profileKey') == 'native_skills_shared'
+                    and type(course.get('profileVersion')) is int and course['profileVersion'] > 0
+                    and course.get('selectionId') == 'skills:'+course['nativeOfferId']+':bls-skills:'+package,
+                    'native skills: invalid BLS package identity')
         require(course.get('qualificationPolicy') == 'skills-session-policy.v1' and course.get('capacity') == 2
                 and contexts == expected_contexts, 'native skills: invalid canonical context policy')
         require(isinstance(payload, dict), 'native skills: original publication proof required')
@@ -357,6 +367,12 @@ def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: s
                 observed <= generated <= now < lease <= observed+timedelta(minutes=15) and
                 lease <= publication_lease <= generated+timedelta(minutes=15),
                 'native skills: original proof expired or extended')
+        if bls:
+            calendar = datetime.fromisoformat(str(course.get('calendarProofObservedAt') or '').replace('Z', '+00:00'))
+            policy = datetime.fromisoformat(str(course.get('policyProofObservedAt') or '').replace('Z', '+00:00'))
+            require(calendar.tzinfo is not None and policy.tzinfo is not None
+                    and observed == min(calendar, policy) and max(calendar, policy) <= now,
+                    'native skills: invalid BLS original proof')
         require(now+timedelta(hours=24) <= start <= now+timedelta(days=90) and start.minute % 15 == 0,
                 'native skills: invalid native horizon or grid')
 

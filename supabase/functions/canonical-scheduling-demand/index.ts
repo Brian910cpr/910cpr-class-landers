@@ -142,7 +142,7 @@ export function projectDemand(row: any, seats: any = null) {
       || !Number.isSafeInteger(skills.remaining) || skills.remaining < 1
       || skills.qualificationPolicy !== "skills-session-policy.v1" || !Array.isArray(skills.skillsContexts) || !skills.skillsContexts.length
       || new Set(skills.skillsContexts).size !== skills.skillsContexts.length
-      || skills.skillsContexts.some((c: string) => !["cpr-aed","first-aid-cpr-aed","arc-blended","hsi-blended"].includes(c))
+      || skills.skillsContexts.some((c: string) => !["cpr-aed","first-aid-cpr-aed","arc-blended","hsi-blended","bls-skills"].includes(c))
       || row.visibility !== "public" || row.registration_status !== "open" || !["scheduled","active"].includes(row.status)))
     throw new Error("Native skills admission is unavailable");
   const heartsaver = native ? seats.heartsaverBooking : null;
@@ -347,6 +347,27 @@ async function heartsaverPolicyProof() {
   return proof;
 }
 
+async function blsSkillsPolicyProof() {
+  const {url,key} = serviceConfig();
+  const result = await fetch(`${url}/rest/v1/rpc/native_bls_skills_publication_policy`, {
+    method:"POST", headers:{apikey:key,authorization:`Bearer ${key}`,"content-type":"application/json"},
+    body:"{}", signal:AbortSignal.timeout(20000), redirect:"error",
+  });
+  const p = await result.json(), observed = timestampIdentity(p?.observedAt), until = timestampIdentity(p?.validUntil);
+  const fields = ["schemaVersion","observedAt","validUntil","nativeScopeId","physicalCourseId","context","profileKey","profileVersion",
+    "skillsEnabled","bundleEnabled","qualificationValidThrough","instructionMinutes","cleanupMinutes","capacity","skillsCents","bundleCents"];
+  if (!result.ok || !p || Object.keys(p).length !== fields.length || fields.some(key => !Object.hasOwn(p,key))
+      || p.schemaVersion !== "native-bls-skills-publication-policy.v1" || observed === null || until === null || until-observed !== 900000000n
+      || p.nativeScopeId !== "brian-shipyard-b.v1" || p.physicalCourseId !== "509474" || p.context !== "bls-skills" || p.profileKey !== "native_skills_shared"
+      || typeof p.skillsEnabled !== "boolean" || typeof p.bundleEnabled !== "boolean" || (p.bundleEnabled && !p.skillsEnabled)
+      || p.instructionMinutes !== 45 || p.cleanupMinutes !== 15 || p.capacity !== 2 || p.skillsCents !== 5500 || p.bundleCents !== 9500
+      || (p.skillsEnabled ? (!Number.isSafeInteger(p.profileVersion) || p.profileVersion < 1
+          || timestampIdentity(p.qualificationValidThrough) === null || timestampIdentity(p.qualificationValidThrough)! < observed)
+        : p.profileVersion !== null || p.qualificationValidThrough !== null))
+    throw new Error("Native BLS skills policy proof unavailable");
+  return p;
+}
+
 export async function handleRequest(req: Request) {
   const origin = req.headers.get("origin") || "";
   if (origin && !ALLOWED_ORIGINS.has(origin)) return response(origin, { error: "Origin is not allowed" }, 403);
@@ -388,6 +409,8 @@ export async function handleRequest(req: Request) {
     }
     if (params.has("native_heartsaver") && (params.getAll("native_heartsaver").length !== 1 || params.get("native_heartsaver") !== "1"))
       return response(origin,{error:"Invalid Heartsaver policy request"},400);
+    if (params.has("native_bls_skills") && (params.getAll("native_bls_skills").length !== 1 || params.get("native_bls_skills") !== "1"))
+      return response(origin,{error:"Invalid BLS skills policy request"},400);
     const range = demandRange(params);
     return response(origin, {
       schema_version: "910cpr-canonical-scheduling-demand.v1",
@@ -400,6 +423,7 @@ export async function handleRequest(req: Request) {
       // present in its retained schedule, in bounded explicit proof requests.
       released_native_sessions: [],
       ...(params.get("native_heartsaver") === "1" ? {native_heartsaver_policy_proof:await heartsaverPolicyProof()} : {}),
+      ...(params.get("native_bls_skills") === "1" ? {native_bls_skills_policy_proof:await blsSkillsPolicyProof()} : {}),
     });
   } catch (error) {
     if (error instanceof RangeError) return response(origin, { error: error.message }, 400);

@@ -191,7 +191,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             start, end = aware(candidate["start"]), aware(candidate["end"])
             window = origins[report["availability_window"]]
             native_fields = None
-            if native_scope.active(native_policy or {}) and page_config.get('page_key') == 'bls':
+            if (native_scope.active(native_policy or {}) and page_config.get('page_key') == 'bls'
+                    and str(candidate.get('course')) in native_scope.COURSES):
                 try:
                     native_fields = native_scope.offer_fields(native_policy, candidate, report, window, now)
                     day_id, container_id, url, blocker = None, None, native_fields['registrationUrl'], None

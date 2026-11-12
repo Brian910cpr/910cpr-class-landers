@@ -25,6 +25,8 @@ SKILLS_CONTEXTS = {
     'arc': {'arc-blended': '372258'},
     'hsi': {'hsi-blended': '445670'},
 }
+BLS_PACKAGES = {'509474': 'bls-skills-only.v1', '210549': 'heartcode-bls-online-and-skills.v1'}
+BLS_PROOF = 'native-bls-skills-publication-policy.v1'
 SKILLS_AUTHORITY = 'native-skills-publication.v1'
 SKILLS_QUALIFICATION_POLICY = 'skills-session-policy.v1'
 
@@ -42,7 +44,55 @@ def active(policy):
 
 
 def skills_active(policy, page_key):
-    return active(policy) and policy.get('skillsEnabled') is True and page_key in SKILLS_CONTEXTS
+    return active(policy) and ((policy.get('skillsEnabled') is True and page_key in SKILLS_CONTEXTS)
+        or (page_key == 'bls' and (policy.get('blsSkillsEnabled') is True or policy.get('blsBundleEnabled') is True)))
+
+
+def validate_bls_skills_proof(proof, now):
+    if not isinstance(proof, dict) or proof.get('schemaVersion') != BLS_PROOF:
+        raise ValueError('native_bls_skills_policy_proof_required')
+    observed, lease, now = instant(proof['observedAt']), instant(proof['validUntil']), instant(now)
+    if not observed <= now < lease <= observed + timedelta(minutes=15):
+        raise ValueError('native_bls_skills_policy_proof_expired_or_extended')
+    expected = {'nativeScopeId': SCOPE, 'physicalCourseId': '509474', 'context': 'bls-skills',
+                'profileKey': 'native_skills_shared', 'instructionMinutes': 45, 'cleanupMinutes': 15,
+                'capacity': 2, 'skillsCents': 5500, 'bundleCents': 9500}
+    if (any(proof.get(k) != v or type(proof.get(k)) != type(v) for k, v in expected.items())
+            or any(type(proof.get(k)) is not bool for k in ('skillsEnabled', 'bundleEnabled'))
+            or (proof['bundleEnabled'] and not proof['skillsEnabled'])):
+        raise ValueError('native_bls_skills_policy_invalid')
+    if proof['skillsEnabled'] and (type(proof.get('profileVersion')) is not int
+            or proof['profileVersion'] <= 0 or instant(proof['qualificationValidThrough']) <= now):
+        raise ValueError('native_bls_skills_qualification_invalid')
+    return proof
+
+
+def bls_course_ready(policy, course_id, now, through=None):
+    cid = str(course_id)
+    flag = {'509474': 'blsSkillsEnabled', '210549': 'blsBundleEnabled'}.get(cid)
+    if not active(policy) or policy.get(flag) is not True:
+        return None
+    try:
+        proof = validate_bls_skills_proof(policy.get('_blsSkillsProof'), now)
+        if not proof['skillsEnabled'] or (cid == '210549' and not proof['bundleEnabled']):
+            return None
+        if through is not None and instant(proof['qualificationValidThrough']) < instant(through):
+            return None
+        return proof
+    except (KeyError, TypeError, ValueError):
+        # Missing/unready BLS authority never suppresses unrelated full classes.
+        return None
+
+
+def bls_offer_identity(offer, course_id):
+    cid = str(course_id)
+    package = BLS_PACKAGES[cid]
+    selection = 'skills:' + offer['nativeOfferId'] + ':bls-skills:' + package
+    return {'courseId': cid, 'publicCourseId': cid, 'physicalCourseId': '509474',
+            'checkoutPackage': package, 'selectionId': selection,
+            'profileKey': 'native_skills_shared', 'skillsContexts': ['bls-skills'],
+            'registrationUrl': '/register/skills-session/?' + urlencode({
+                'course': cid, 'skillsContext': 'bls-skills', 'selectionId': selection})}
 
 
 def skills_offer_fields(policy, candidate, report, window, now, course, page_key):
@@ -57,7 +107,7 @@ def skills_offer_fields(policy, candidate, report, window, now, course, page_key
         raise ValueError('unsupported_native_skills_course')
     option = course.get('schedule_page_option', {})
     contexts = {c.get('key'): c.get('template_course_id') for c in option.get('skills_contexts', [])}
-    if (contexts != SKILLS_CONTEXTS[page_key] or option.get('native_registration_path') != '/register/skills-session/'
+    if (contexts != ({'bls-skills': '209806'} if page_key == 'bls' else SKILLS_CONTEXTS[page_key]) or option.get('native_registration_path') != '/register/skills-session/'
             or option.get('scheduling_template_course_id') not in contexts.values()
             or course.get('kind') != 'skills' or course.get('default_capacity') != 2
             or course.get('duration_minutes') != 45 or course.get('cleanup_buffer_minutes') != 15
@@ -86,10 +136,18 @@ def skills_offer_fields(policy, candidate, report, window, now, course, page_key
     local = start.astimezone(EASTERN)
     if local.minute % 15 or local.second or local.microsecond:
         raise ValueError('native_start_grid_invalid')
+    backend = None
+    if page_key == 'bls':
+        backend = bls_course_ready(policy, '509474', now, end) or bls_course_ready(policy, '210549', now, end)
+        if not backend:
+            raise ValueError('native_bls_skills_course_not_ready')
+        calendar_observed = observed
+        observed = min(observed, instant(backend['observedAt']))
+        lease = min(lease, instant(backend['validUntil']))
     # Physical identity stays stable across refreshes and provider pages. Context
     # is added by the service's exact-selection reader, not manufactured here.
     raw = '|'.join([SCOPE, '509474', start.isoformat(), candidate['instructor'], candidate['location'], '45', '60'])
-    return {'authority': SKILLS_AUTHORITY, 'nativeScopeId': SCOPE,
+    fields = {'authority': SKILLS_AUTHORITY, 'nativeScopeId': SCOPE,
             'nativeOfferId': 'native-skills:' + sha256(raw.encode()).hexdigest(),
             'qualificationPolicy': SKILLS_QUALIFICATION_POLICY,
             'skillsContexts': sorted(contexts), 'capacity': 2,
@@ -97,6 +155,10 @@ def skills_offer_fields(policy, candidate, report, window, now, course, page_key
             'registrationUrl': '/register/skills-session/?' + urlencode({
                 'course': '509474', 'date': local.date().isoformat(), 'startTime': local.strftime('%H:%M'),
                 'instructor': candidate['instructor'], 'location': window['location_name']})}
+    if backend:
+        fields.update(bls_offer_identity(fields, '509474'), profileVersion=backend['profileVersion'],
+                      calendarProofObservedAt=calendar_observed.isoformat(), policyProofObservedAt=backend['observedAt'])
+    return fields
 
 def heartsaver_active(policy, page_key='heartsaver'):
     return active(policy) and policy.get('heartsaverFullEnabled') is True and page_key == 'heartsaver'

@@ -975,6 +975,8 @@ def seated_class_selector_offers(
     selected_course_ids: set[str],
     course_rules: dict[str, dict[str, Any]],
     minimum_enrollment: int = 0,
+    native_policy: dict[str, Any] | None = None,
+    reference_now: datetime | None = None,
 ) -> list[dict[str, Any]]:
     if not isinstance(schedule_future_payload, dict) or not isinstance(schedule_future_payload.get("sessions"), list):
         return []
@@ -1000,7 +1002,20 @@ def seated_class_selector_offers(
                 {c.get('key') for c in course.get('schedule_page_option', course).get('skills_contexts', [])}):
             continue
         if course_id == "509474" and native_reservation_reasons(course):
-            continue
+            # The independently admitted BLS lane does not inherit the obsolete
+            # checkout activation gate. Require this publication's proof and
+            # the exact filtered seated context/profile before bypassing it.
+            from scripts import native_publication_scope as native_scope
+            contexts = course.get('schedule_page_option', course).get('skills_contexts', [])
+            proof = None
+            if native_policy is not None and reference_now is not None:
+                proof = next((ready for cid in ('509474', '210549') if
+                    (ready := native_scope.bls_course_ready(native_policy, cid, reference_now,
+                        session.get('consumption_end_at')))), None)
+            if not (proof and {c.get('key') for c in contexts} == {'bls-skills'}
+                    and 'bls-skills' in skills_admission.get('skillsContexts', [])
+                    and skills_admission.get('profileVersion') == proof['profileVersion']):
+                continue
         heartsaver_admission = session.get('native_heartsaver_booking_admission')
         if isinstance(heartsaver_admission, dict):
             rule = dict(rule, scheduler_consumption_minutes=heartsaver_admission['instructionMinutes']+heartsaver_admission['cleanupMinutes'])
@@ -1182,6 +1197,9 @@ def contextual_course(course_id, option, catalog, rules):
                 course[field] = template[field]
     if str(course_id) == "509474":
         course["default_capacity"] = 2
+        if [c.get("key") for c in option.get("skills_contexts", [])] == ["bls-skills"]:
+            course.update(duration_minutes=45, setup_buffer_minutes=0, cleanup_buffer_minutes=15,
+                          scheduler_consumption_minutes=60)
     if str(course_id) == "210549" and option.get("native_activation_key") == "blsEnabled":
         course.update(duration_minutes=45, setup_buffer_minutes=0, cleanup_buffer_minutes=15,
                       scheduler_consumption_minutes=60, default_capacity=2)
@@ -1213,6 +1231,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         "schedule_future": read_required_json(SCHEDULE_FUTURE_PATH),
         "canonical_demand": load_publication_demand(ROOT),
     }
+    if native_skills and page_key == 'bls':
+        native_policy = dict(native_policy, _blsSkillsProof=loaded['canonical_demand'].get('native_bls_skills_policy_proof'))
     if native_heartsaver:
         proof = native_scope.validate_heartsaver_proof(loaded['canonical_demand'].get('native_heartsaver_policy_proof'), selector_reference_datetime().replace(tzinfo=ZoneInfo('America/New_York')))
         native_policy = dict(native_policy, _heartsaverProof=proof)
@@ -1303,12 +1323,17 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         seated = seated_class_selector_offers(
             schedule_future_payload=loaded.get("schedule_future"), selected_courses=selected_courses,
             selected_course_ids=set(allowed_course_ids), course_rules=course_rules,
-            minimum_enrollment=0) if page_config.get("include_seated_classes", True) else []
+            minimum_enrollment=0, native_policy=native_policy,
+            reference_now=reference_now.replace(tzinfo=ZoneInfo("America/New_York"))) if page_config.get("include_seated_classes", True) else []
         def layered_public_reasons(start, course):
             reasons = public_policy_reasons(start, str(course["course_id"]),
                 str(course.get("course_family") or course.get("family") or ""),
                 public_offer_policy, set(allowed_course_ids), reference_now=reference_now)
-            reasons.extend(native_reservation_reasons(course))
+            bls_ready = (page_key == "bls" and str(course.get("course_id")) == "509474"
+                and any(native_scope.bls_course_ready(native_policy, cid,
+                    reference_now.replace(tzinfo=ZoneInfo("America/New_York"))) for cid in ("509474", "210549")))
+            if not bls_ready:
+                reasons.extend(native_reservation_reasons(course))
             if course.get("appointment_eligible") is not True or course.get("appointment_allowed") is not True:
                 reasons.append("course_not_appointment_eligible")
             return reasons
