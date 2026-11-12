@@ -42,7 +42,7 @@ html[data-theme="dark"] body.pool-page :is(a,button,input,select,summary):focus-
 @media(prefers-reduced-motion:reduce){.pool-page :is(.partner,.pressitem){transition:none}}
 
 /* Preserve high contrast on the hero action and the practical arrival note. */
-html body.pool-page .hero p a.cta{color:#0a273a!important}
+html body.pool-page .hero p a.cta.cta{color:#0a273a!important}
 html body.pool-page .note{background:var(--event-soft)!important;color:var(--event-text)!important;border-left-color:var(--event-link)!important}
 html body.pool-page .share{display:grid}
 html body.pool-page .nav{padding:16px 20px}
