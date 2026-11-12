@@ -1,0 +1,36 @@
+name: Verify native payment callback
+on:
+  workflow_dispatch:
+  push:
+    branches: ['codex/native-payment-callback-20261112']
+  pull_request:
+    paths:
+      - 'supabase/functions/stripe-registration-webhook/**'
+      - 'supabase/functions/public-registration/public-order-routing.mjs'
+      - 'supabase/functions/_shared/native-confirmation-*.mjs'
+      - 'tests/stripe-webhook-*.test.mjs'
+      - 'tests/skills-checkout-webhook.test.mjs'
+      - 'tests/generic-checkout-adapter.test.mjs'
+      - '.github/workflows/verify-native-payment-callback.yml'
+permissions:
+  contents: read
+jobs:
+  payment-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify actual signatures, callback recovery and postcommit ordering
+        run: >-
+          node --test --test-concurrency=1
+          tests/stripe-webhook-signature.test.mjs
+          tests/stripe-webhook-handler.test.mjs
+          tests/generic-checkout-adapter.test.mjs
+          tests/skills-checkout-webhook.test.mjs
+          tests/native-confirmation-postcommit.test.mjs
+          tests/native-confirmation-service.test.mjs
+          tests/native-confirmation-consumer.test.mjs
+          tests/native-resend-adapter.test.mjs
+# Synthetic signed events and injected provider requests only. No secrets or live calls.

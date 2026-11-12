@@ -4,15 +4,43 @@ import {publicOrderVersion,settlePublicOrder} from "../public-registration/publi
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.56.0";
 
 const enc = new TextEncoder();
-function hex(bytes:ArrayBuffer){return Array.from(new Uint8Array(bytes)).map(byte=>byte.toString(16).padStart(2,"0")).join("")}
-function safeEqual(a:string,b:string){if(a.length!==b.length)return false;let difference=0;for(let i=0;i<a.length;i+=1)difference|=a.charCodeAt(i)^b.charCodeAt(i);return difference===0}
+const SIGNATURE_TOLERANCE_SECONDS=300;
 async function verify(raw:string,header:string|null,secret:string|null){
-  if(!secret||!header)return false;
-  const pieces=Object.fromEntries(header.split(",").map(piece=>piece.split("=",2) as [string,string]));
-  if(!pieces.t||!pieces.v1)return false;
-  const key=await crypto.subtle.importKey("raw",enc.encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);
-  const signature=hex(await crypto.subtle.sign("HMAC",key,enc.encode(`${pieces.t}.${raw}`)));
-  return safeEqual(signature,pieces.v1);
+  if(!secret||!header||header.length>4096)return false;
+  const pieces=header.split(",");
+  if(pieces.length>32)return false;
+  let timestamp:string|null=null;
+  const signatures:string[]=[];
+  for(const piece of pieces){
+    const match=/^([a-zA-Z0-9]+)=([^\s=,]+)$/.exec(piece.trim());
+    if(!match)return false;
+    const [,scheme,value]=match;
+    if(scheme==="t"){
+      // One unambiguous integer timestamp; never silently choose a duplicate.
+      if(timestamp!==null||!/^(0|[1-9][0-9]{0,15})$/.test(value)||!Number.isSafeInteger(Number(value)))return false;
+      timestamp=value;
+    }else if(scheme==="v1"){
+      if(!/^[0-9a-f]{64}$/i.test(value))return false;
+      signatures.push(value);
+    }
+    // Ignore other well-formed schemes, as Stripe may include older versions.
+  }
+  if(timestamp===null||signatures.length===0)return false;
+  // Stripe signs retries with a fresh delivery timestamp. Event/receipt
+  // idempotency remains the durable database's responsibility.
+  const now=Math.floor(Date.now()/1000);
+  if(!Number.isSafeInteger(now)||Math.abs(now-Number(timestamp))>SIGNATURE_TOLERANCE_SECONDS)return false;
+  const key=await crypto.subtle.importKey("raw",enc.encode(secret),{name:"HMAC",hash:"SHA-256"},false,["verify"]);
+  const payload=enc.encode(`${timestamp}.${raw}`);
+  let matched=false;
+  for(const signature of signatures){
+    const bytes=new Uint8Array(32);
+    for(let i=0;i<bytes.length;i+=1)bytes[i]=parseInt(signature.slice(i*2,i*2+2),16);
+    // Web Crypto verifies each candidate without a handwritten digest compare.
+    // Evaluate every bounded candidate, including signatures after a match.
+    matched=(await crypto.subtle.verify("HMAC",key,bytes,payload))||matched;
+  }
+  return matched;
 }
 const reply=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers:{"content-type":"application/json","cache-control":"no-store"}});
 
