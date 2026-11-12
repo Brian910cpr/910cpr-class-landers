@@ -245,12 +245,24 @@ if(p&&!p.hidden&&p.getClientRects().length)window.__returnPaymentExposures.push(
         self.assertEqual(int(state['orderCount']), 1)
         self.assertEqual(state['orderId'], self.case['orderId'])
         self.assertEqual(state['paymentObserved'], scenario in ('available', 'full', 'after_start', 'finalizer_failure', 'cancelled', 'refunded'))
-        self.assertEqual(state['status'], dict(available='paid', full='payment_review', after_start='payment_review',
+        self.assertEqual(state['status'], dict(available='paid', full='expired', after_start='expired',
                         finalizer_failure='expired', unpaid='expired', ambiguous='expired', held_ambiguous='held', checkout_open_ambiguous='checkout_open', cancelled='cancelled', refunded='refunded')[scenario])
         provider = [call for call in state['calls'] if call['path'].startswith('/v1/')]
         self.assertTrue(all(call['method'] == 'GET' and call['path'].endswith('/' + state['stripeCheckoutId']) for call in provider))
+        # payment_review is the public receipt projection, not an order enum.
+        # Keep the persisted expired state and the precise reconciliation reason.
+        if scenario in ('full', 'after_start'):
+            self.assertEqual(state['reconciliationError'],
+                             'paid_seat_unavailable' if scenario == 'full' else 'session_not_open')
+        elif scenario not in ('cancelled', 'refunded'):
+            self.assertIsNone(state['reconciliationError'])
         records = [call for call in state['calls'] if call['path'].endswith('/native_checkout_record_payment')]
-        self.assertEqual(len(records), 1 if scenario in ('available', 'full', 'after_start', 'finalizer_failure') else 0)
+        if self.case['scenario'] == 'finalizer_failure':
+            # Each user-requested recovery may retry the idempotent recording RPC
+            # before finalization. Durable footprints above must still be 0 or 1.
+            self.assertGreaterEqual(len(records), 1)
+        else:
+            self.assertEqual(len(records), 1 if scenario in ('available', 'full', 'after_start') else 0)
         if scenario in ('cancelled', 'refunded'):
             self.assertEqual(provider, [])
             self.assertFalse(any(call['path'].endswith('/native_checkout_finalize_order') for call in state['calls']))
@@ -354,9 +366,14 @@ if(p&&!p.hidden&&p.getClientRects().length)window.__returnPaymentExposures.push(
                 self.bridge.call('repair')
                 self.recheck(view)
                 self.assert_state(view, 'available')
+                repaired = self.assert_durable('available')
+                mutation_paths = ('/native_checkout_record_payment', '/native_checkout_finalize_order')
+                settled_calls = [call for call in repaired['calls'] if call['path'].endswith(mutation_paths)]
                 view.goto(view.url)
                 self.assert_state(view, 'available')
                 state = self.assert_durable('available')
+                self.assertEqual([call for call in state['calls'] if call['path'].endswith(mutation_paths)],
+                                 settled_calls, 'paid replay must not record or finalize payment again')
             if scenario.endswith('_ambiguous'):
                 self.bridge.call('verify_unpaid')
                 self.recheck(view)

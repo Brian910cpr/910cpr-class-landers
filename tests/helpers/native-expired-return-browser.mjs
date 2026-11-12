@@ -79,7 +79,7 @@ const footprint=(db,c)=>scalar(db,`select jsonb_build_object(
  'studentLinks',(select count(*) from landerware_public_order_students where order_id=$1::uuid and registration_id is not null),
  'confirmations',(select count(*) from landerware_messages where idempotency_key like 'public-order-paid:'||$1::text||':%'))`,[c.orderId]);
 
-const db=await create();
+let db=await create();
 // Fail closed even if future fixture changes accidentally use global fetch.
 globalThis.fetch=async()=>{throw Error('synthetic_bridge_external_fetch_forbidden');};
 let current;
@@ -89,6 +89,12 @@ async function clearFailure(){
 async function seed(course,scenario){
  assert.ok(courses.includes(course),'course outside selected scope');
  assert.ok(scenarios.includes(scenario),'unknown scenario');
+ // A complete browser matrix exceeds the production 90-day offer horizon if
+ // every family shares one increasing day counter. Isolate families instead of
+ // relaxing that admission policy or recycling still-occupied fixture dates.
+ if(current && current.course!==course){
+  await db.close();db=await create();current=null;day=10;
+ }
  await clearFailure();
  if(current)await db.query("update class_sessions set status='cancelled',registration_status='closed' where id=$1",[current.claim.sessionId]);
  const claim=await reserve(db,course),provider=await bound(db,claim,{expired:!scenario.endsWith('_ambiguous')});
