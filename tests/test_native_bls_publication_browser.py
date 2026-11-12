@@ -152,7 +152,12 @@ class BlsPublicationBrowserTests(unittest.TestCase):
                 with self.subTest(width=width, cid=cid):
                     page = self.open(case, payload, width, remaining=1)
                     row = self.select(page, cid)
-                    self.assertEqual(row['sourceSessionId'], sid)
+                    # Public renderer uses session_id and sourceSessionIds;
+                    # sourceSessionId belongs to the backend offer projection.
+                    self.assertEqual(row['session_id'], sid)
+                    self.assertEqual(row['sourceSessionIds'], [sid])
+                    package = 'bls-skills-only.v1' if cid == '509474' else 'heartcode-bls-online-and-skills.v1'
+                    self.assertEqual(row['selectionId'], 'skills:native-skills-seated:' + sid + ':bls-skills:' + package)
                     self.assertEqual(row['remainingSeats'], 1)
                     self.assertEqual(row['nativeOfferId'], 'native-skills-seated:' + sid)
                     page.locator('#course-list a.register-link').click()
