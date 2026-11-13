@@ -235,4 +235,3 @@ $function$
 revoke all on function public.record_confirmed_intake(uuid,uuid,uuid,timestamptz,jsonb,uuid,integer) from public,anon,authenticated;
 grant execute on function public.record_confirmed_intake(uuid,uuid,uuid,timestamptz,jsonb,uuid,integer) to service_role;
 commit;
-
