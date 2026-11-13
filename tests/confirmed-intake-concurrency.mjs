@@ -1,0 +1,34 @@
+// Disposable loopback PostgreSQL17 only; never use hosted records or credentials.
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {readFileSync} from 'node:fs';
+import {localPsql,assertLocalTargetServer} from './helpers/local-postgres.mjs';
+import {assertIsolatedPostgresServerAddress} from './helpers/isolated-postgres-address.mjs';
+const database='skills_claim_test_991114',psql=localPsql(database);
+const quote=v=>v==null?'null':"'"+String(v).replaceAll("'","''")+"'";
+function run(sql){return new Promise((resolve,reject)=>{const p=spawn(psql.command,psql.args,{env:psql.env,stdio:['pipe','pipe','pipe']});let out='',err='';p.stdout.on('data',v=>out+=v);p.stderr.on('data',v=>err+=v);p.on('error',reject);p.on('close',code=>code===0?resolve(out.trim()):reject(Error(err)));p.stdin.end(sql);});}
+const value=async sql=>JSON.parse((await run(sql)).split('\n').at(-1));
+const server=await value("select json_build_object('database',current_database(),'version',current_setting('server_version_num')::int,'recovery',pg_is_in_recovery(),'address',host(inet_server_addr()));");
+assertLocalTargetServer(server,database);await assertIsolatedPostgresServerAddress(server.address,{args:psql.args,env:psql.env,port:Number(process.env.SKILLS_TEST_PORT||5432),database});
+assert.equal(await run("select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname not in ('pg_catalog','information_schema') and n.nspname not like 'pg_toast%';"),'0');
+const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+await run(load('tests/helpers/confirmed-intake-schema.sql'));
+await run(load('supabase/reviewed/confirmed-intake-installed-contract.sql'));
+await run(`create trigger canonical_projection after insert or update or delete on class_sessions for each row execute function sync_enrollware_class_session_to_landerware();
+create trigger workspace_identity before insert or update or delete on landerware_sessions for each row execute function enforce_canonical_workspace_schedule();`);
+const course=await value("insert into courses(course_key,name,duration_minutes,max_students_default) values('synthetic-race','Synthetic race',75,4) returning to_json(id);");
+const location=await value("insert into locations(name) values('Synthetic room') returning to_json(id);");
+const people=[];for(let i=0;i<3;i++)people.push(await value(`insert into customers(first_name,last_name,email) values('Synthetic','Customer',${quote('fixture-'+i+'@example.invalid')}) returning to_json(id);`));
+const evidence=(i,message)=>({kind:'registration_confirmation',gmail_message_id:message,customer_email:'fixture-'+i+'@example.invalid',customer_name:'Synthetic Customer',source_course_name:'Synthetic race',source_location_label:'Synthetic room'});
+const place=(i,message,start)=>value(`select json_build_object('pid',pg_backend_pid(),'result',record_confirmed_intake(${quote(course)}::uuid,${quote(location)}::uuid,${quote(people[i])}::uuid,${quote(start)}::timestamptz,${quote(JSON.stringify(evidence(i,message)))}::jsonb));`);
+const repeated=await Promise.all([place(0,'synthetic-repeat','2031-01-01T14:30Z'),place(0,'synthetic-repeat','2031-01-01T14:30Z')]);
+assert.notEqual(repeated[0].pid,repeated[1].pid);assert.equal(repeated[0].result.class_session_id,repeated[1].result.class_session_id);assert.equal(repeated[0].result.registration_id,repeated[1].result.registration_id);
+assert.equal(await run('select count(*) from registrations;'),'1');assert.equal(await run('select count(*) from class_session_audit;'),'1');
+const joined=await Promise.all([place(1,'synthetic-second','2031-01-01T14:30Z'),place(2,'synthetic-third','2031-01-01T14:30Z')]);
+assert.notEqual(joined[0].pid,joined[1].pid);assert.equal(joined[0].result.class_session_id,repeated[0].result.class_session_id);assert.equal(joined[1].result.class_session_id,repeated[0].result.class_session_id);
+assert.equal(await run('select count(*) from class_sessions;'),'1');assert.equal(await run('select count(*) from registrations;'),'3');
+const moved=await Promise.allSettled([place(0,'synthetic-conflicting-source','2031-01-02T14:30Z'),place(0,'synthetic-conflicting-source','2031-01-03T14:30Z')]);
+assert.equal(moved.filter(x=>x.status==='fulfilled').length,1);assert.equal(moved.filter(x=>x.status==='rejected').length,1);
+assert.equal(await run('select count(*) from class_sessions;'),'2','losing source claim rolls back its provisional class');
+assert.equal(await run("select count(*) from registrations where idempotency_key='gmail-confirmation:synthetic-conflicting-source';"),'1');
+console.log('PASS independent PostgreSQL17 intake replay, shared-class participants and conflicting-source rollback');
