@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
-import {preProfileFiles,profileMigration,fullCourseMigration} from './helpers/native-checkout-migration-plan.mjs';
+import {preProfileFiles,profileMigration,fullCourseMigration,codeDeliveryMigration} from './helpers/native-checkout-migration-plan.mjs';
 const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8').replaceAll('\r\n','\n');
 export async function proveCombinedCheckout(db,race=null){
   for(const p of preProfileFiles)await db.exec(load(p));
   await db.exec("insert into courses(course_key,name,enrollware_course_id,duration_minutes,cleanup_buffer_minutes,max_students_default,base_price) values('aha-bls-provider','Fixture BLS','209806',120,30,6,75),('aha-bls-provider-renewal','Fixture Renewal','359474',120,30,6,75); insert into people(person_key,display_name) values('brian','Brian Ennis');");
-  for(const p of [profileMigration,'supabase/migrations/20261110231103_native_checkout_generated_session_lifecycle.sql',fullCourseMigration,'supabase/migrations/20261111190525_native_full_course_policy_service_access.sql','supabase/migrations/20261111195655_native_full_course_v2_policy.sql','supabase/reviewed/native-advanced-course-checkout.sql','supabase/reviewed/native-combined-checkout.sql'])await db.exec(load(p));
+  for(const p of [profileMigration,'supabase/migrations/20261110231103_native_checkout_generated_session_lifecycle.sql',fullCourseMigration,'supabase/migrations/20261111190525_native_full_course_policy_service_access.sql','supabase/migrations/20261111195655_native_full_course_v2_policy.sql','supabase/reviewed/native-advanced-course-checkout.sql',codeDeliveryMigration,'supabase/reviewed/native-combined-checkout.sql'])await db.exec(load(p));
   const scalar=async(q,args=[])=>Object.values((await db.query(q,args)).rows[0])[0];
   assert.equal(await scalar('select count(*) from native_checkout_basket_course_policy'),0,'no invented activation/mappings');
   await db.exec(`insert into landerware_registration_profiles select (jsonb_populate_record(null::landerware_registration_profiles,to_jsonb(p)||'{"profile_key":"fixture_acls","course_id":"fixture-acls","active":true}')).* from landerware_registration_profiles p where profile_key='native_bls_initial';
@@ -64,6 +64,12 @@ export async function proveCombinedCheckout(db,race=null){
   const paid=await scalar('select native_checkout_basket_finalize($1,$2,$3::jsonb)',[saved.basketId,intent,JSON.stringify(nextEvent)]);assert.equal(paid.status,'paid');assert.equal(await scalar("select count(*) from registrations where registration_source='landerware_native_checkout'"),2);
   assert.equal((await finalize()).status,'paid');assert.equal(await scalar("select count(*) from registrations where registration_source='landerware_native_checkout'"),2);
   assert.equal(await scalar('select count(distinct class_session_id) from registrations'),2);
+  assert.equal(await scalar('select count(*) from landerware_public_orders o where native_checkout_order_payment_verified(o)'),2,'each paid child uses its verified aggregate allocation');
+  await db.query("update native_checkout_baskets set status='refunded' where id=$1",[saved.basketId]);
+  assert.equal(await scalar('select count(*) from landerware_public_orders o where native_checkout_order_payment_verified(o)'),0,'terminal parent stops pending code eligibility without inventing another charge');
+  assert.equal((await finalize()).status,'refunded','payment callbacks cannot resurrect a terminal basket');
+  await db.query("update native_checkout_baskets set status='paid' where id=$1",[saved.basketId]);
+
   assert.equal(await scalar('select count(*) from landerware_public_orders where stripe_checkout_session_id is not null'),0,'never manufacture separate processor sessions');
   for(const role of ['anon','authenticated'])assert.equal(await scalar("select has_function_privilege($1,'reserve_native_checkout_basket(uuid,jsonb,jsonb)','EXECUTE')",[role]),false);
 

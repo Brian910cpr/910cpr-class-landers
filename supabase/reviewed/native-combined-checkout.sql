@@ -218,6 +218,33 @@ begin
  return public.native_checkout_basket_receipt(b.request_key);
 end $$;
 
+-- Preserve the established product/course allowlist and recipient/unit guards.
+-- A basket child has a verified allocation, not its own processor charge.
+create function public.native_checkout_order_payment_verified(o public.landerware_public_orders) returns boolean
+language sql stable security invoker set search_path='' as $$
+ select case when exists(select 1 from public.native_checkout_basket_items where order_id=o.id) then exists(
+  select 1 from public.native_checkout_basket_items i join public.native_checkout_baskets b on b.id=i.basket_id
+  where i.order_id=o.id and b.status='paid' and b.reconciliation_error is null
+   and public.native_checkout_basket_payment_valid(o.id,o.stripe_payment_intent_id,o.payment_evidence))
+ else coalesce(o.payment_evidence->>'payment_status'='paid' and o.payment_evidence->>'id'=o.stripe_checkout_session_id
+  and o.payment_evidence->'metadata'->>'landerware_order_id'=o.id::text and o.payment_evidence->>'currency'=o.currency
+  and (o.payment_evidence->>'amount_total')::bigint=o.total,false) end;
+$$;
+do $delivery$ declare definition text; old_text text;
+begin
+ if to_regprocedure('public.native_code_delivery_eligible(uuid,uuid,text)') is null then raise exception 'basket_code_delivery_prerequisite_missing'; end if;
+ definition:=replace(pg_get_functiondef('public.native_code_delivery_eligible(uuid,uuid,text)'::regprocedure),E'\r\n',E'\n');
+ old_text:=$old$ and o.payment_evidence->>'payment_status'='paid'
+ and o.payment_evidence->>'id'=o.stripe_checkout_session_id
+ and o.payment_evidence->'metadata'->>'landerware_order_id'=o.id::text
+ and o.payment_evidence->>'currency'=o.currency
+ and (o.payment_evidence->>'amount_total')::bigint=o.total$old$;
+ if (length(definition)-length(replace(definition,old_text,'')))/length(old_text)<>1 then raise exception 'basket_code_delivery_source_drift'; end if;
+ execute replace(definition,old_text,' and public.native_checkout_order_payment_verified(o)');
+end $delivery$;
+revoke all on function public.native_checkout_order_payment_verified(public.landerware_public_orders),public.native_code_delivery_eligible(uuid,uuid,text) from public,anon,authenticated;
+grant execute on function public.native_checkout_order_payment_verified(public.landerware_public_orders),public.native_code_delivery_eligible(uuid,uuid,text) to service_role;
+
 revoke all on function public.native_checkout_basket_contains_order(uuid),public.native_checkout_basket_choices(text),public.native_checkout_basket_replay(uuid,jsonb),public.native_checkout_basket_receipt(uuid),public.reserve_native_checkout_basket(uuid,jsonb,jsonb),public.native_checkout_basket_payment_valid(uuid,text,jsonb),public.native_checkout_finalize_basket_child(uuid,text,jsonb),public.native_checkout_basket_record_payment(uuid,text,jsonb),public.native_checkout_basket_finalize(uuid,text,jsonb) from public,anon,authenticated;
 grant execute on function public.native_checkout_basket_contains_order(uuid),public.native_checkout_basket_choices(text),public.native_checkout_basket_replay(uuid,jsonb),public.native_checkout_basket_receipt(uuid),public.reserve_native_checkout_basket(uuid,jsonb,jsonb),public.native_checkout_basket_payment_valid(uuid,text,jsonb),public.native_checkout_finalize_basket_child(uuid,text,jsonb),public.native_checkout_basket_record_payment(uuid,text,jsonb),public.native_checkout_basket_finalize(uuid,text,jsonb) to service_role;
 commit;

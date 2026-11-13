@@ -66,6 +66,7 @@ test('advanced proposal installs behind disabled policy with no invented identit
   assert.equal(await scalar('select extract(epoch from end_at-start_at)/60 from class_sessions where id=$1',[created.targetSessionId]),'240.0000000000000000');
   await db.exec("update instructor_qualifications set status='revoked' where course_id=(select id from courses where course_key='fixture-acls')");
   assert.equal(await option(offer),null,'qualification revocation invalidates existing published lease');
+  assert.equal(await scalar("select native_advanced_existing_session_ready('241108',$1)",[created.externalId]),false,'existing-session checkout also rejects a revoked qualification');
 
  }finally{await db.close();}
 });
