@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,realpathSync,statSync} from 'node:fs';
+import {homedir} from 'node:os';
+import {resolve,sep,join} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {proveCombinedCheckout} from './combined-checkout-proof.mjs';
-import {adaptLocalSupabaseFixture,localSupabaseFixturePreflight} from './helpers/local-supabase-fixture-plan.mjs';
+import {adaptLocalSupabaseFixture,localSupabaseFixtureAdmission} from './helpers/local-supabase-fixture-plan.mjs';
 let raw;try{raw=JSON.parse(readFileSync(process.argv[2],'utf8'));}catch{throw Error('invalid_private_stack_metadata');}
 const env=raw.env||raw.environment||raw,api=new URL(env.API_URL||env.SUPABASE_URL),target=new URL(env.DB_URL||env.DATABASE_URL);
 for(const u of [api,target])assert(['127.0.0.1','localhost','[::1]'].includes(u.hostname),'loopback stack required');
@@ -17,7 +19,22 @@ Object.assign(processEnv,{PGPASSWORD:decodeURIComponent(target.password),PGPASSF
 const sql=text=>{const p=spawnSync('psql',['-X','-w','-q','-t','-A','-h',target.hostname,'-p',target.port||'5432','-U',decodeURIComponent(target.username),'-d',target.pathname.slice(1),'-v','ON_ERROR_STOP=1'],{env:processEnv,input:text,encoding:'utf8',maxBuffer:16*1024*1024});if(p.status!==0)throw Error('isolated_sql_failed: '+String(p.stderr).split('\n').filter(x=>/ERROR:/.test(x)).join(' ').slice(0,250));return p.stdout.trim();};
 const quote=x=>x==null?'null':typeof x==='number'?String(x):"'"+String(x).replaceAll("'","''")+"'";
 const db={exec:async text=>sql(text),query:async(text,args=[])=>{text=text.replace(/\$(\d+)\b/g,(_,n)=>quote(args[Number(n)-1])).trim().replace(/;$/,'');const result=sql(`select row_to_json(q) from (${text}) q;`);return{rows:result?result.split('\n').filter(x=>x.startsWith('{')).map(x=>JSON.parse(x)):[]};}};
-await db.exec(localSupabaseFixturePreflight);
+const backend=(await db.query("select host(inet_server_addr()) as address,current_setting('data_directory') as directory")).rows[0];
+let verifiedNativeSocket=false;
+if(backend.address===null){
+ assert.equal(raw.runtime,'native','Unix socket requires native CLI runtime');
+ const directory=realpathSync(backend.directory);
+ const roots=[resolve(process.env.SUPABASE_HOME,'stacks'),resolve(homedir(),'.supabase/stacks')];
+ assert(roots.some(root=>directory.startsWith(root+sep)),'native data directory outside disposable stack roots');
+ assert.equal(statSync(directory).uid,process.getuid(),'native database must belong to runner');
+ const pid=Number(readFileSync(join(directory,'postmaster.pid'),'utf8').split('\n')[0]);assert(Number.isSafeInteger(pid)&&pid>1);
+ assert.equal(statSync('/proc/'+pid).uid,process.getuid());
+ assert(realpathSync('/proc/'+pid+'/exe').endsWith('/postgres'),'owned native PostgreSQL process required');
+ const args=readFileSync('/proc/'+pid+'/cmdline','utf8').split('\0');
+ assert(args.includes(backend.directory)||args.includes(directory),'process must own exact database directory');
+ verifiedNativeSocket=true;
+}
+await db.exec(localSupabaseFixtureAdmission({verifiedNativeSocket}));
 const authCount=sql('select count(*) from auth.users;');
 await proveCombinedCheckout(db,null,{fixtureTransform:adaptLocalSupabaseFixture,seedOnly:true});
 assert.equal(sql('select count(*) from auth.users;'),authCount,'application fixtures must preserve auth');

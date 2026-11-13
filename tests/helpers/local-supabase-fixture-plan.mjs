@@ -22,3 +22,10 @@ begin
  or not exists(select 1 from information_schema.columns where table_schema='storage' and table_name='objects' and column_name='metadata' and data_type='jsonb') then raise exception 'local_fixture_storage_contract_mismatch'; end if;
  if not exists(select 1 from storage.buckets where id='class-session-docs' and public=false) then raise exception 'local_fixture_private_bucket_required'; end if;
 end $local_fixture$;`;
+
+// Native CLI may proxy a loopback client onto PostgreSQL's Unix socket.
+// Only the runner's independent process/directory ownership check may opt in.
+export function localSupabaseFixtureAdmission({verifiedNativeSocket=false}={}){
+ if(verifiedNativeSocket!==true&&verifiedNativeSocket!==false)throw Error('invalid_native_socket_proof');
+ return verifiedNativeSocket?localSupabaseFixturePreflight.replace("inet_server_addr() is null or host(inet_server_addr()) not in", "inet_server_addr() is not null and host(inet_server_addr()) not in"):localSupabaseFixturePreflight;
+}
