@@ -6,6 +6,7 @@ carry window-level failures separately from candidate rejection counts.
 import argparse
 from collections import Counter
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 import hashlib
 import json
 from pathlib import Path
@@ -57,15 +58,23 @@ def continuity_incident(feeds):
                     'preserve occupancy and safety rules, then verify rendered appointment choices and booking links.') if failures else None
 
 
-def main():
+def parse_arguments(argv=None, now=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--live', action='store_true')
     parser.add_argument('--continuity', action='store_true',
         help='Alert for expired dynamic inventory or absent BLS/Heartsaver appointments; never retire seated classes')
-    parser.add_argument('--day', default='2026-10-14')
+    parser.add_argument('--day', help='Diagnostic date; defaults to today in America/New_York')
     parser.add_argument('--output', type=Path, required=True)
-    args = parser.parse_args()
-    stamp = datetime.now(timezone.utc).isoformat()
+    args = parser.parse_args(argv)
+    if args.day is None:
+        args.day = (now or datetime.now(timezone.utc)).astimezone(ZoneInfo('America/New_York')).date().isoformat()
+    return args
+
+
+def main():
+    observed = datetime.now(timezone.utc)
+    args = parse_arguments(now=observed)
+    stamp = observed.isoformat()
     def read(family):
         path = f'data/block-selector-availability/{family}.json'
         raw = ((urlopen(f'https://www.910cpr.com/{path}?coverage={stamp}', timeout=30).read())
