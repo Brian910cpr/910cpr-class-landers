@@ -5,6 +5,7 @@ Malformed occupancy closes only intersecting declared resource/instructor window
 missing bounds close the affected resource horizon. Existing records are immutable.
 """
 from scripts import native_publication_scope as native_scope
+from scripts import native_advanced_publication as advanced
 from copy import deepcopy
 from collections import Counter
 from datetime import timedelta, timezone
@@ -157,6 +158,7 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             report["valid_until"] = min((aware(p["valid_until"]).astimezone(timezone.utc) for p in matched), default=now)
             if native_scope.active(policy.get('native_publication_scope', {})) and matched:
                 report['native_proof_observed_at'] = min(aware(p['observed_at']).astimezone(timezone.utc) for p in matched)
+            report['native_calendar_coverage'] = matched
 
             reports.append(report)
         except ValueError as error:
@@ -191,7 +193,13 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             start, end = aware(candidate["start"]), aware(candidate["end"])
             window = origins[report["availability_window"]]
             native_fields = None
-            if (native_scope.active(native_policy or {}) and page_config.get('page_key') == 'bls'
+            if advanced.active(native_policy or {},page_config.get('page_key')):
+                try:
+                    native_fields=advanced.offer_fields(native_policy,candidate,report,window,now)
+                    day_id,container_id,url,blocker=None,None,native_fields['registrationUrl'],None
+                except (ValueError,KeyError,TypeError) as error:
+                    rejected.append(dict(diagnostic(candidate),reasons=[str(error)]));continue
+            elif (native_scope.active(native_policy or {}) and page_config.get('page_key') == 'bls'
                     and str(candidate.get('course')) in native_scope.COURSES):
                 try:
                     native_fields = native_scope.offer_fields(native_policy, candidate, report, window, now)
@@ -252,6 +260,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 accepted[-1].pop('matchedContainerId', None)
                 accepted[-1].update(native_fields)
                 accepted[-1]['appointmentUrl'] = native_fields['registrationUrl']
+                if native_fields.get('authority')=='native-full-course.v3':
+                    accepted[-1].update(sourceAvailabilityBlock={},edgeIds=[],availabilityWindow=native_fields['availabilityBlockId'])
 
     # Never retire a source record. Confirmed-zero booking choices are retired
     # only from this projection; their occupied interval remains in calculation.

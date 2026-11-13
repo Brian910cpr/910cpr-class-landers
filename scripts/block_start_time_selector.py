@@ -20,6 +20,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts import native_publication_scope as native_scope
+from scripts import native_advanced_publication as advanced
 from scripts import generate_dynamic_offers
 from scripts.anchor_state import anchor_promotion_reason
 from scripts.apply_anchor_policy import sessions_with_canonical_demand, resolve_selector_payload
@@ -1218,7 +1219,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     native_bls = native_scope.active(native_policy) and page_key == 'bls'
     native_skills = native_scope.skills_active(native_policy, page_key)
     native_heartsaver = native_scope.heartsaver_active(native_policy, page_key)
-    native_page = native_bls or native_skills or native_heartsaver
+    native_advanced = advanced.active(native_policy,page_key)
+    native_page = native_bls or native_skills or native_heartsaver or native_advanced
     live_availability_snapshot = require_current_live_availability_snapshot()
     consolidation_groups = course_consolidation_groups(load_block_schedule_page_configs())
     loaded = {
@@ -1236,6 +1238,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     if native_heartsaver:
         proof = native_scope.validate_heartsaver_proof(loaded['canonical_demand'].get('native_heartsaver_policy_proof'), selector_reference_datetime().replace(tzinfo=ZoneInfo('America/New_York')))
         native_policy = dict(native_policy, _heartsaverProof=proof)
+    if native_advanced:
+        native_policy=dict(native_policy,_advancedProof=advanced.validate_proof(loaded['canonical_demand'].get('native_advanced_policy_proof'),selector_reference_datetime().replace(tzinfo=ZoneInfo('America/New_York'))))
     # Candidate consolidation and final daily_anchor_stack_v1 must read the same
     # canonical demand snapshot. Legacy seat snapshots cannot create anchors here.
     loaded["schedule_future"]["sessions"], _demand_audit = sessions_with_canonical_demand(
@@ -1312,10 +1316,11 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             lead_minutes=int(public_offer_policy.get("minimum_lead_hours") or 0) * 60)
         if native_page:
             effective_layered_policy['native_publication_scope'] = native_policy
+        if native_advanced:
+            effective_layered_policy=advanced.duration_policy(native_policy,effective_layered_policy,reference_now.replace(tzinfo=ZoneInfo('America/New_York')))
         calculation = cached_calculate(windows, occupancy, selected_courses, effective_layered_policy,
             loaded["location_resource_map"], reference_now, window_datetimes,
-            lambda window, course: bool(people.get(normalize_key(window.get("person_id")))
-                and has_required_cert(people[normalize_key(window.get("person_id"))], course)),
+            lambda window, course: advanced.qualified(native_policy,window,course,reference_now.replace(tzinfo=ZoneInfo('America/New_York'))) if native_advanced else bool(people.get(normalize_key(window.get('person_id'))) and has_required_cert(people[normalize_key(window.get('person_id'))],course)),
             coverage, layered_policy.get("travel_minutes", {}),
             cache_dir=ROOT / 'data/runtime/layered_day_cache' / page_key,
             horizon_days=90)
@@ -1332,7 +1337,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             bls_ready = (page_key == "bls" and str(course.get("course_id")) == "509474"
                 and any(native_scope.bls_course_ready(native_policy, cid,
                     reference_now.replace(tzinfo=ZoneInfo("America/New_York"))) for cid in ("509474", "210549")))
-            if not bls_ready:
+            if not bls_ready and not native_advanced:
                 reasons.extend(native_reservation_reasons(course))
             if course.get("appointment_eligible") is not True or course.get("appointment_allowed") is not True:
                 reasons.append("course_not_appointment_eligible")

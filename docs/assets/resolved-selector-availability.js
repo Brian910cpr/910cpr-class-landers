@@ -114,6 +114,21 @@
     return (Array.isArray(dates) ? dates : []).map(day => ({...day,
       startTimes: (day.startTimes || []).map(slot => ({...slot,
         courses: (slot.courses || []).filter(course => {
+          if (course.authority === 'native-full-course.v3') {
+            const observed=Date.parse(course.proofObservedAt),expiry=Date.parse(course.validUntil),start=Date.parse(course.occupiedFrom),end=Date.parse(course.occupiedUntil);
+            const parts=Number.isFinite(start)?Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(start)).map(p=>[p.type,p.value])):{};
+            return ['241108','209818','209805','251496'].includes(course.courseId)&&course.nativeScopeId==='qualified-advanced-shipyard-b.v1'
+              &&course.coursePolicyKey==='advanced-full:'+course.courseId+'.v1'&&course.offerType==='dynamic_appointment'&&course.publicSelectable===true
+              &&/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(course.canonicalCourseId||'')&&/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(course.instructorId||'')
+              &&/^native-full:[a-f0-9]{64}$/.test(course.selectionId||'')&&/^[a-zA-Z0-9_.:-]{1,160}$/.test(course.calendarSourceKey||'')
+              &&!('appointmentDayId' in course)&&!('matchedContainerId' in course)&&Array.isArray(course.sourceSessionIds)
+              &&course.durationMinutes===240&&course.setupBufferMinutes===0&&Number.isSafeInteger(course.cleanupBufferMinutes)&&course.cleanupBufferMinutes>=0
+              &&course.schedulerConsumptionMinutes===240+course.cleanupBufferMinutes&&end-start===(240+course.cleanupBufferMinutes)*60000
+              &&Date.parse(course.availabilityStartsAt)<=start&&end<=Date.parse(course.availabilityEndsAt)&&start>=instant+86400000&&start<=instant+90*86400000
+              &&`${parts.year}-${parts.month}-${parts.day}`===day.date&&`${parts.hour}:${parts.minute}`===slot.startTime
+              &&Number.isFinite(observed)&&observed<=instant&&live(validUntil)&&live(course.validUntil)&&expiry<=observed+900000&&expiry<=Date.parse(validUntil)
+              &&course.registrationUrl==='/register/checkout/?'+new URLSearchParams({course:course.courseId,selectionId:course.selectionId});
+          }
           if (course.coursePolicyKey || course.authority === 'native-heartsaver-session-booking.v1') {
             const instruction = course.courseId === '209809' ? 120 : course.courseId === '344085' ? 90 : 0;
             const cleanup = course.courseId === '209809' ? 30 : 15;

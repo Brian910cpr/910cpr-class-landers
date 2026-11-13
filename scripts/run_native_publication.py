@@ -21,6 +21,7 @@ import urllib.request
 from urllib.parse import urlsplit
 
 from scripts import native_publication_scope as scope
+from scripts import native_advanced_publication as advanced
 from scripts.canonical_scheduling_demand import load_publication_demand, resolve_canonical_demand
 from scripts.validate_public_refresh_output import validate_selector, session_rows
 
@@ -31,6 +32,8 @@ PATHS = ('docs/data/schedule_future.json', 'docs/bls.html', 'docs/BLS.html',
          'docs/bls-schedule.html', 'docs/data/block-selector-availability/bls.json',
          'docs/assets/resolved-selector-availability.js')
 PAGE_PATHS = {
+    'acls': ('docs/acls.html','docs/ACLS.html','docs/acls-schedule.html','docs/data/block-selector-availability/acls.json'),
+    'pals': ('docs/pals.html','docs/PALS.html','docs/pals-schedule.html','docs/data/block-selector-availability/pals.json'),
     'bls': ('docs/bls.html', 'docs/BLS.html', 'docs/bls-schedule.html',
             'docs/data/block-selector-availability/bls.json'),
     'heartsaver': ('docs/heartsaver.html', 'docs/HEARTSAVER.html', 'docs/heartsaver-schedule.html',
@@ -84,6 +87,7 @@ def policy_enabled(policy):
     require(isinstance(policy, dict) and policy.get('schemaVersion') == 'native-publication-scope.v1'
             and type(policy.get('enabled')) is bool and policy.get('scopeId') == scope.SCOPE
             and type(policy.get('skillsEnabled', False)) is bool
+            and type(policy.get('advancedFullEnabled', False)) is bool
             and type(policy.get('heartsaverFullEnabled', False)) is bool
             and type(policy.get('blsSkillsEnabled', False)) is bool
             and type(policy.get('blsBundleEnabled', False)) is bool,
@@ -91,14 +95,16 @@ def policy_enabled(policy):
     return policy['enabled']
 
 
-def publication_pages(skills_enabled=False, heartsaver_enabled=False):
+def publication_pages(skills_enabled=False, heartsaver_enabled=False, advanced_enabled=False):
     require(type(skills_enabled) is bool, 'invalid_skills_publication_gate')
     require(type(heartsaver_enabled) is bool, 'invalid_heartsaver_publication_gate')
-    return ('bls', 'heartsaver', 'arc', 'hsi') if skills_enabled else ('bls', 'heartsaver') if heartsaver_enabled else ('bls',)
+    require(type(advanced_enabled) is bool,'invalid_advanced_publication_gate')
+    base=('bls','heartsaver','arc','hsi') if skills_enabled else ('bls','heartsaver') if heartsaver_enabled else ('bls',)
+    return base+('acls','pals') if advanced_enabled else base
 
 
-def publication_paths(skills_enabled=False, heartsaver_enabled=False):
-    return PATHS + tuple(path for page in publication_pages(skills_enabled, heartsaver_enabled)[1:] for path in PAGE_PATHS[page])
+def publication_paths(skills_enabled=False, heartsaver_enabled=False, advanced_enabled=False):
+    return PATHS + tuple(path for page in publication_pages(skills_enabled, heartsaver_enabled, advanced_enabled)[1:] for path in PAGE_PATHS[page])
 
 
 def privacy_check(value):
@@ -426,7 +432,8 @@ def validate(*, now=None, margin=300):
             require(not row.get('registration_url'), 'unadmitted_session_registration_cta')
     ids = {str(row['session_id']) for row in session_rows(schedule)}
     counts, originals, full_count, skills_count = {}, [], 0, 0
-    for page_key in publication_pages(policy.get('skillsEnabled', False), policy.get('heartsaverFullEnabled', False)):
+    advanced_observations=[]
+    for page_key in publication_pages(policy.get('skillsEnabled', False),policy.get('heartsaverFullEnabled', False),policy.get('advancedFullEnabled',False)):
         counts[page_key] = validate_selector(page_key, ids, now=now)
         selector = read('docs/data/block-selector-availability/'+page_key+'.json')
         # Public authority.description is fixed implementation text, not user data.
@@ -434,6 +441,12 @@ def validate(*, now=None, margin=300):
         for day in selector['dates']:
             for slot in day['startTimes']:
                 for offer in slot['courses']:
+                    if page_key in ('acls','pals'):
+                        advanced.validate_public(dict(offer,date=day['date'],startTime=slot['startTime']),selector['generatedAt'],demand.get('native_advanced_policy_proof'),now)
+                        check_budget(offer['validUntil'],now,margin)
+                        advanced_observations.append(scope.instant(offer['proofObservedAt']))
+                        expiry=min(expiry,scope.instant(offer['validUntil']));full_count+=1
+                        continue
                     if page_key == 'bls' and str(offer.get('courseId')) in scope.BLS_PACKAGES:
                         validate_bls_offer(offer, schedule, policy, now, margin)
                         skills_count += 1
@@ -477,7 +490,7 @@ def validate(*, now=None, margin=300):
                     expiry = min(expiry, scope.instant(offer['validUntil']))
     require(not originals or min(originals) == bounds['observedAt'], 'calendar_original_proof_mismatch')
     return {'counts': counts['bls'], 'pageCounts': counts,
-            'sourceProofObservedAt': min(bounds['observedAt'], scope.instant(demand['generated_at'])).isoformat(),
+            'sourceProofObservedAt': min([bounds['observedAt'],scope.instant(demand['generated_at']),*advanced_observations]).isoformat(),
             'validUntil': expiry.isoformat(), 'nativeFullOffers': full_count, 'nativeSkillsOffers': skills_count}
 
 
@@ -668,9 +681,14 @@ def validate_heartsaver_seated_offer(offer, schedule, now, margin):
     check_budget(offer['validUntil'], now, margin)
 
 
-def native_page_config(config, page_key='bls', *, skills_enabled=True, heartsaver_enabled=False, bls_skills_enabled=False, bls_bundle_enabled=False):
+def native_page_config(config, page_key='bls', *, skills_enabled=True, heartsaver_enabled=False, bls_skills_enabled=False, bls_bundle_enabled=False, advanced_enabled=False):
     config = deepcopy(config)
     require(config.get('page_key') == page_key and page_key in PAGE_PATHS, 'unexpected_publication_page')
+    if page_key in ('acls','pals') and advanced_enabled:
+        allowed={cid for cid,page in advanced.COURSES.items() if page==page_key}
+        config.update(native_advanced_publication=True,allowed_course_ids=sorted(allowed),include_seated_classes=False,default_course_id=sorted(allowed)[0],compare_mode={'enabled':False},show_all_enabled=False)
+        config['course_options']=[c for c in config.get('course_options',[]) if str(c.get('course_id')) in allowed]
+        return config
     if page_key == 'heartsaver' and heartsaver_enabled:
         allowed = set(scope.HEARTSAVER) | ({'509474'} if skills_enabled else set())
         config.update(allowed_course_ids=sorted(allowed), include_seated_classes=True, native_heartsaver_publication=True,
@@ -765,13 +783,14 @@ def build(preview=False):
         # restricted to course 509474 and its four existing context mappings.
         skills_enabled = policy.get('skillsEnabled', False)
         heartsaver_enabled = policy.get('heartsaverFullEnabled', False)
+        advanced_enabled=policy.get('advancedFullEnabled',False)
         policy['_blsSkillsProof'] = load_publication_demand(ROOT).get('native_bls_skills_policy_proof')
         if preview:
             policy['enabled'] = True
         bls_skills_enabled = bool(scope.bls_course_ready(policy, '509474', datetime.now(timezone.utc)))
         bls_bundle_enabled = bool(scope.bls_course_ready(policy, '210549', datetime.now(timezone.utc)))
         configs = load_block_schedule_page_configs()
-        targets = [(key, native_page_config(configs[key], key, skills_enabled=skills_enabled, heartsaver_enabled=heartsaver_enabled, bls_skills_enabled=bls_skills_enabled, bls_bundle_enabled=bls_bundle_enabled)) for key in publication_pages(skills_enabled, heartsaver_enabled)]
+        targets = [(key, native_page_config(configs[key], key, skills_enabled=skills_enabled, heartsaver_enabled=heartsaver_enabled, bls_skills_enabled=bls_skills_enabled, bls_bundle_enabled=bls_bundle_enabled,advanced_enabled=advanced_enabled)) for key in publication_pages(skills_enabled,heartsaver_enabled,advanced_enabled)]
         reports = {key: check_page_outputs(config, key) for key, config in targets}
         for key, config in targets:
             payload = annotate_seated_offers(build_block_schedule_page(config), schedule)
@@ -782,12 +801,12 @@ def build(preview=False):
             require(actual == expected, 'unexpected_generator_output')
         evidence = validate()
         evidence.update(schemaVersion='native-publication-run.v1', sourceHead=head, preview=preview,
-                        skillsEnabled=skills_enabled, heartsaverFullEnabled=heartsaver_enabled,
+                        skillsEnabled=skills_enabled, heartsaverFullEnabled=heartsaver_enabled,advancedFullEnabled=advanced_enabled,
                         blsSkillsEnabled=policy.get('blsSkillsEnabled', False), blsBundleEnabled=policy.get('blsBundleEnabled', False),
                         state='BUILT', generatedAt=datetime.now(timezone.utc).isoformat(),
                         sessionCounts=schedule['build']['counts'],
                         availabilityCounts={k: v for k, v in result['stats'].items() if type(v) is int},
-                        files={p: sha256((ROOT / p).read_bytes()).hexdigest() for p in publication_paths(skills_enabled, heartsaver_enabled)})
+                        files={p: sha256((ROOT / p).read_bytes()).hexdigest() for p in publication_paths(skills_enabled,heartsaver_enabled,advanced_enabled)})
         write(REPORT, evidence)
         return evidence
     finally:
@@ -797,10 +816,32 @@ def build(preview=False):
 def assert_manifest(report):
     require(report.get('schemaVersion') == 'native-publication-run.v1' and report.get('preview') is False,
             'production_manifest_required')
-    require(set(report.get('files', {})) == set(publication_paths(report.get('skillsEnabled', False), report.get('heartsaverFullEnabled', False))), 'publication_path_allowlist_mismatch')
+    require(set(report.get('files', {})) == set(publication_paths(report.get('skillsEnabled', False),report.get('heartsaverFullEnabled', False),report.get('advancedFullEnabled',False))), 'publication_path_allowlist_mismatch')
     for path, expected in report['files'].items():
         require(sha256((ROOT / path).read_bytes()).hexdigest() == expected, 'publication_output_changed')
 
+
+def admit_advanced(report,policy):
+    # Explicit publication stage only; previews and builds never mutate leases.
+    from scripts.fetch_canonical_scheduling_demand import validate_admin_key,DEFAULT_URL,NoRedirect
+    require(advanced.active(policy,'acls') and report.get('preview') is False and report.get('advancedFullEnabled') is True,'explicit_advanced_publication_required')
+    key=validate_admin_key(os.environ.get('HOT_SYNC_ADMIN_KEY',''))
+    proof=load_publication_demand(ROOT).get('native_advanced_policy_proof')
+    offers=[];now=datetime.now(timezone.utc)
+    for page in ('acls','pals'):
+        payload=read('docs/data/block-selector-availability/'+page+'.json')
+        for day in payload['dates']:
+            for slot in day['startTimes']:
+                for offer in slot['courses']:
+                    offers.append(advanced.validate_public(dict(offer,date=day['date'],startTime=slot['startTime']),payload['generatedAt'],proof,now))
+    for offset in range(0,len(offers),128):
+        batch=offers[offset:offset+128]
+        request=urllib.request.Request(DEFAULT_URL+'?advanced_publish=1',data=json.dumps({'action':'publish_advanced_offers','offers':batch}).encode(),headers={'content-type':'application/json','x-hot-sync-admin-key':key},method='POST')
+        with urllib.request.build_opener(NoRedirect).open(request,timeout=30) as response:
+            raw=response.read(4097)
+            require(len(raw)<=4096,'invalid_advanced_admission_receipt')
+            receipt=json.loads(raw)
+        require(receipt.get('ok') is True and receipt.get('accepted')==len(batch),'advanced_offer_admission_incomplete')
 
 def publish():
     require(os.environ.get('GITHUB_REF') == 'refs/heads/main', 'main_required')
@@ -811,6 +852,7 @@ def publish():
     require(all(report.get(k, False) == policy.get(k, False) for k in ('blsSkillsEnabled','blsBundleEnabled')), 'bls_publication_gate_changed')
     require(report.get('skillsEnabled', False) == policy.get('skillsEnabled', False), 'skills_publication_gate_changed')
     require(report.get('heartsaverFullEnabled', False) == policy.get('heartsaverFullEnabled', False), 'heartsaver_publication_gate_changed')
+    require(report.get('advancedFullEnabled',False)==policy.get('advancedFullEnabled',False),'advanced_publication_gate_changed')
     require(git('rev-parse', 'HEAD') == report['sourceHead'], 'source_head_changed')
     require(not git('diff', '--cached', '--name-only'), 'preexisting_staged_changes')
     require(not git('diff', '--name-only', '--', '.github', 'scripts', 'data/config', 'data/inventory'),
@@ -819,7 +861,8 @@ def publish():
     git('fetch', 'origin', 'main')
     require(git('rev-parse', 'origin/main') == report['sourceHead'], 'remote_main_advanced')
     validate(margin=300)
-    paths = publication_paths(report.get('skillsEnabled', False), report.get('heartsaverFullEnabled', False))
+    if policy.get("advancedFullEnabled",False):admit_advanced(report,policy)
+    paths = publication_paths(report.get('skillsEnabled', False),report.get('heartsaverFullEnabled', False),report.get('advancedFullEnabled',False))
     git('add', '--', *paths)
     require(set(git('diff', '--cached', '--name-only').splitlines()) <= set(paths), 'staged_path_not_allowed')
     require(bool(git('diff', '--cached', '--name-only')), 'no_publication_change')

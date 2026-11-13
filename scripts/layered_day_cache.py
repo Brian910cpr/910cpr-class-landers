@@ -75,7 +75,7 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
     cache_dir=Path(cache_dir)
     travel=max([0]+[int(v) for v in (travel_minutes or {}).values() if isinstance(v,(int,float)) and v>=0])
     code=digest([Path(__file__).read_text(), *[Path(__file__).with_name(name).read_text() for name in
-        ('layered_publication_adapter.py','layered_selector_adapter.py','layered_scheduling_engine.py','layered_resource_readiness.py')]])
+        ('layered_publication_adapter.py','layered_selector_adapter.py','layered_scheduling_engine.py','layered_resource_readiness.py','native_advanced_publication.py')]])
     reports=[];issues=[];hits=0;rebuilt=[];selected=[]
     for index,original in enumerate(windows):
         start,end=map(aware,interval(original))

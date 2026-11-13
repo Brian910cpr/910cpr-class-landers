@@ -108,13 +108,15 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "date": day.get("date"),
                     "startTime": slot.get("startTime"),
                 }
-                if course.get('authority') in {'native-full-course.v2', 'native-skills-publication.v1', 'native-skills-seated.v1', 'native-heartsaver-session-booking.v1'}:
+                if course.get('authority') in {'native-full-course.v2', 'native-full-course.v3', 'native-skills-publication.v1', 'native-skills-seated.v1', 'native-heartsaver-session-booking.v1'}:
                     compact_course.pop('appointmentDayId', None)
                     compact_course.update({key: course.get(key) for key in
                         ('authority', 'nativeScopeId', 'selectionId', 'publicSelectable', 'proofObservedAt',
                          'nativeOfferId', 'qualificationPolicy', 'skillsContexts', 'capacity', 'remainingSeats', 'profileVersion', 'identityWitness',
                          'coursePolicyKey', 'calendarProofObservedAt', 'policyProofObservedAt',
                          'publicCourseId', 'physicalCourseId', 'checkoutPackage', 'profileKey')})
+                if course.get('authority') == 'native-full-course.v3':
+                    compact_course.update({key:course.get(key) for key in ('canonicalCourseId','instructorId','availabilityPersonId','calendarSourceKey','availabilityStartsAt','availabilityEndsAt','occupiedFrom')})
                 if course.get('authority') == 'native-heartsaver-session-booking.v1':
                     compact_course['session_id'] = course.get('session_id')
                 if course.get('authority') == 'native-session-booking.v1':
@@ -1484,7 +1486,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v={"20261111-native-heartsaver1" if page_config.get("native_heartsaver_publication") else "20261111-native-skills-seats2"}"></script>
+  <script src="/assets/resolved-selector-availability.js?v={"20261113-native-advanced1" if page_config.get("native_advanced_publication") else "20261111-native-heartsaver1" if page_config.get("native_heartsaver_publication") else "20261111-native-skills-seats2"}"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};

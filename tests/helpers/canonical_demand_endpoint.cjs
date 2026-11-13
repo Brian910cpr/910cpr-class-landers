@@ -3,14 +3,14 @@ const path = require('node:path');
 const vm = require('node:vm');
 const {stripTypeScriptTypes} = require('node:module');
 
-function loadEndpoint(fetch) {
+function loadEndpoint(fetch, env = {}) {
   const filename = path.resolve(__dirname, '../../supabase/functions/canonical-scheduling-demand/index.ts');
   const shared = fs.readFileSync(path.resolve(__dirname, '../../supabase/functions/_shared/external-roster-proof.ts'), 'utf8');
   const clock = fs.readFileSync(path.resolve(__dirname, '../../supabase/functions/_shared/scheduling-clock.ts'), 'utf8');
   const source = (clock + '\n' + shared + '\n' + fs.readFileSync(filename, 'utf8').replace(/^(?:import|export \{).*;\r?\n/gm, '')).replace(/export /g, '');
   const context = vm.createContext({
     Date, Intl, URL, URLSearchParams, Request, Response, AbortSignal, TextDecoder, console, fetch,
-    Deno: {serve() {}, env: {get: name => ({SUPABASE_URL:'https://database.test', SUPABASE_SERVICE_ROLE_KEY:'fixture-only'})[name]}},
+    Deno: {serve() {}, env: {get: name => ({SUPABASE_URL:'https://database.test', SUPABASE_SERVICE_ROLE_KEY:'fixture-only',...env})[name]}},
   });
   vm.runInContext(stripTypeScriptTypes(source) + '\nthis.api = {localDate, localMidnight, demandRange, projectDemand, loadDemand, handleRequest};', context, {filename});
   return context.api;

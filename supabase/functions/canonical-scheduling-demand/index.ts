@@ -368,6 +368,16 @@ async function blsSkillsPolicyProof() {
   return p;
 }
 
+async function advancedRpc(name:string,body:unknown){
+ const {url,key}=serviceConfig();const r=await fetch(`${url}/rest/v1/rpc/${name}`,{method:"POST",headers:{apikey:key,authorization:`Bearer ${key}`,"content-type":"application/json"},body:JSON.stringify(body),redirect:"error",signal:AbortSignal.timeout(20000)});
+ if(!r.ok)throw Error("Native advanced policy service unavailable");return r.json();
+}
+async function advancedPolicyProof(){
+ if(Deno.env.get("NATIVE_ADVANCED_PUBLICATION_ENABLED")!=="true")throw Error("Native advanced publication disabled");
+ const p=await advancedRpc("native_advanced_publication_policy",{});
+ if(p?.schemaVersion!=="native-advanced-publication-policy.v1"||Object.keys(p.courses||{}).sort().join(',')!=="209805,209818,241108,251496"||timestampIdentity(p.validUntil)===null||timestampIdentity(p.observedAt)===null||timestampIdentity(p.validUntil)!-timestampIdentity(p.observedAt)!!==900000000n)throw Error("Native advanced policy proof unavailable");return p;
+}
+
 export async function handleRequest(req: Request) {
   const origin = req.headers.get("origin") || "";
   if (origin && !ALLOWED_ORIGINS.has(origin)) return response(origin, { error: "Origin is not allowed" }, 403);
@@ -375,9 +385,13 @@ export async function handleRequest(req: Request) {
   if (!["GET", "POST"].includes(req.method)) return response(origin, { error: "Method not allowed" }, 405);
   try {
     if (!(await authorized(req))) return response(origin, { error: "Unauthorized" }, 401);
+    const params=new URL(req.url).searchParams;
     if (req.method === "POST") {
+      const advanced=params.get("advanced_publish")==="1";
+      if(params.has("advanced_publish")&&(params.getAll("advanced_publish").length!==1||!advanced||[...params.keys()].some(k=>k!=="advanced_publish")))return response(origin,{error:"Invalid advanced publication request"},400);
+      const limit=advanced?262144:128;
       // An explicit, authenticated mutation. GET/preview reads never clean up.
-      if (req.headers.get("content-type") !== "application/json" || Number(req.headers.get("content-length") || 0) > 128)
+      if (req.headers.get("content-type") !== "application/json" || Number(req.headers.get("content-length") || 0) > limit)
         return response(origin, {error:"Invalid maintenance request"},400);
       const reader = req.body?.getReader();
       if (!reader) return response(origin,{error:"Invalid maintenance request"},400);
@@ -386,16 +400,20 @@ export async function handleRequest(req: Request) {
         while (true) {
           const chunk = await reader.read(); if (chunk.done) break;
           bytes += chunk.value.length;
-          if (bytes > 128) {await reader.cancel();return response(origin,{error:"Invalid maintenance request"},400);}
+          if (bytes > limit) {await reader.cancel();return response(origin,{error:"Invalid maintenance request"},400);}
           raw += new TextDecoder().decode(chunk.value);
         }
       } finally {reader.releaseLock();}
       let input;try {input=JSON.parse(raw);} catch {return response(origin,{error:"Invalid maintenance request"},400);}
+      if(advanced){
+       if(Deno.env.get("NATIVE_ADVANCED_PUBLICATION_ENABLED")!=="true"||input?.action!=="publish_advanced_offers"||Object.keys(input).length!==2||!Array.isArray(input.offers)||input.offers.length<1||input.offers.length>128)return response(origin,{error:"Invalid advanced publication request"},400);
+       const accepted=await advancedRpc("native_publish_advanced_offers",{p_offers:input.offers});
+       if(accepted!==input.offers.length)throw Error("Incomplete advanced publication admission");return response(origin,{ok:true,accepted},200);
+      }
       if (input?.action !== "release_expired_native_holds" || Object.keys(input).length !== 1)
         return response(origin,{error:"Invalid maintenance request"},400);
       return response(origin, await nativeMaintenance(), 200);
     }
-    const params = new URL(req.url).searchParams;
     if (params.has("release_ids") || params.has("projection")) {
       const ids = (params.get("release_ids") || "").split(",");
       if (params.get("projection") !== "native-release-proof"
@@ -407,6 +425,7 @@ export async function handleRequest(req: Request) {
       // Authenticated and read-only; never run maintenance from GET/preview.
       return response(origin, await releasedSessions(ids));
     }
+    if(params.has("native_advanced")&&(params.getAll("native_advanced").length!==1||params.get("native_advanced")!=="1"))return response(origin,{error:"Invalid advanced policy request"},400);
     if (params.has("native_heartsaver") && (params.getAll("native_heartsaver").length !== 1 || params.get("native_heartsaver") !== "1"))
       return response(origin,{error:"Invalid Heartsaver policy request"},400);
     if (params.has("native_bls_skills") && (params.getAll("native_bls_skills").length !== 1 || params.get("native_bls_skills") !== "1"))
@@ -422,6 +441,7 @@ export async function handleRequest(req: Request) {
       // History is not publication input. The client asks only for IDs still
       // present in its retained schedule, in bounded explicit proof requests.
       released_native_sessions: [],
+      ...(params.get("native_advanced")==="1"?{native_advanced_policy_proof:await advancedPolicyProof()}:{}),
       ...(params.get("native_heartsaver") === "1" ? {native_heartsaver_policy_proof:await heartsaverPolicyProof()} : {}),
       ...(params.get("native_bls_skills") === "1" ? {native_bls_skills_policy_proof:await blsSkillsPolicyProof()} : {}),
     });

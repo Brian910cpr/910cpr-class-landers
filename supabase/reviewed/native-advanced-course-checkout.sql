@@ -82,6 +82,14 @@ begin
   'maxStudents',p.max_students,'sessionCents',p.session_cents,'resource',p.resource_label,'location',p.location_label,'instructors',teachers);
 end $$;
 
+create function public.native_advanced_publication_policy() returns jsonb
+language sql stable security invoker set search_path='' as $$
+ select jsonb_build_object('schemaVersion','native-advanced-publication-policy.v1','observedAt',now(),'validUntil',now()+interval '15 minutes',
+  'courses',(select jsonb_object_agg(cid,public.native_advanced_course_runtime_policy(cid)) from unnest(array['241108','209818','209805','251496']) cid));
+$$;
+revoke all on function public.native_advanced_publication_policy() from public,anon,authenticated;
+grant execute on function public.native_advanced_publication_policy() to service_role;
+
 -- Only the trusted publication runner can persist offers. This DTO contains
 -- schedule/qualification evidence, never roster/contact/document information.
 create function public.native_publish_advanced_offers(p_offers jsonb) returns integer
