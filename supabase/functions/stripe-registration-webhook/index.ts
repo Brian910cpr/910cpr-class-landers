@@ -3,7 +3,8 @@ import {settleBasket} from "../public-registration/basket.mjs";
 import {nativeConfirmationService} from "../_shared/native-confirmation-service.mjs";
 import {nativeConfirmationPostcommit} from "../_shared/native-confirmation-postcommit.mjs";
 import {publicOrderVersion,settlePublicOrder} from "../public-registration/public-order-routing.mjs";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.56.0";
+// Pin the SDK's compatible storage dependency; its upstream caret otherwise floats.
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.56.0?deps=@supabase/storage-js@2.10.4";
 
 const enc = new TextEncoder();
 function hex(bytes:ArrayBuffer){return Array.from(new Uint8Array(bytes)).map(byte=>byte.toString(16).padStart(2,"0")).join("")}
