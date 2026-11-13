@@ -1,10 +1,14 @@
 import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
 import {preProfileFiles,profileMigration,fullCourseMigration,codeDeliveryMigration} from './helpers/native-checkout-migration-plan.mjs';
 const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8').replaceAll('\r\n','\n');
-export async function proveCombinedCheckout(db,race=null){
-  for(const p of preProfileFiles)await db.exec(load(p));
+export async function prepareCombinedCheckout(db,{fixtureTransform=(_path,sql)=>sql}={}){
+  for(const p of preProfileFiles)await db.exec(fixtureTransform(p,load(p)));
   await db.exec("insert into courses(course_key,name,enrollware_course_id,duration_minutes,cleanup_buffer_minutes,max_students_default,base_price) values('aha-bls-provider','Fixture BLS','209806',120,30,6,75),('aha-bls-provider-renewal','Fixture Renewal','359474',120,30,6,75); insert into people(person_key,display_name) values('brian','Brian Ennis');");
-  for(const p of [profileMigration,'supabase/migrations/20261110231103_native_checkout_generated_session_lifecycle.sql',fullCourseMigration,'supabase/migrations/20261111190525_native_full_course_policy_service_access.sql','supabase/migrations/20261111195655_native_full_course_v2_policy.sql','supabase/migrations/20261111185724_native_session_authority_cutover.sql','supabase/reviewed/native-advanced-readonly-prerequisites.sql','supabase/reviewed/native-advanced-course-checkout.sql',codeDeliveryMigration,'supabase/reviewed/native-checkout-basket-membership.sql','supabase/reviewed/native-combined-checkout.sql'])await db.exec(load(p));
+  for(const p of [profileMigration,'supabase/migrations/20261110231103_native_checkout_generated_session_lifecycle.sql',fullCourseMigration,'supabase/migrations/20261111190525_native_full_course_policy_service_access.sql','supabase/migrations/20261111195655_native_full_course_v2_policy.sql','supabase/migrations/20261111185724_native_session_authority_cutover.sql','supabase/reviewed/native-advanced-readonly-prerequisites.sql','supabase/reviewed/native-advanced-course-checkout.sql',codeDeliveryMigration,'supabase/reviewed/native-checkout-basket-membership.sql'])await db.exec(load(p));
+}
+export async function proveCombinedCheckout(db,race=null,options={}){
+  await prepareCombinedCheckout(db,options);
+  await db.exec(load('supabase/migrations/20261113133919_native_combined_checkout_guarded.sql'));
   const scalar=async(q,args=[])=>Object.values((await db.query(q,args)).rows[0])[0];
   assert.equal(await scalar("select md5(pg_get_functiondef('landerware_public_seat_state(uuid)'::regprocedure))"),'193f53e98ce47503390188674ed65151','proof preserves exact hosted owner-cutover seat reader');
   assert.equal(await scalar('select count(*) from native_checkout_basket_course_policy'),0,'no invented activation/mappings');
@@ -30,6 +34,7 @@ export async function proveCombinedCheckout(db,race=null){
   const items=[item('241108','fixture_acls','lw-11111111-1111-4111-8111-111111111111',22500),item('209806','native_bls_initial','lw-22222222-2222-4222-8222-222222222222',7500)];
   items[1].students=[{...student,manualChoice:'ebook',addons:[{key:'aha_bls_provider_manual_ebook',quantity:1}]}];items[1].inputs=[{...input,wire:items[1].students[0],selectedChoices:['manual_ebook','no_first_aid'],submitted:{...input.submitted,selectedChoices:['manual_ebook','no_first_aid']}}];items[1].expectedTotal=9500;
   const key='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+  if(options.seedOnly)return {items,key}; // Synthetic configuration only; no payment evidence.
   const reserve=(k=key,x=items)=>scalar('select reserve_native_checkout_basket($1,$2::jsonb)',[k,JSON.stringify(x)]);
   // Actual hosted reader includes owner-adopted reserved seats and capacity
   // ceilings. Synthetic authority events below roll back inside the probe.
