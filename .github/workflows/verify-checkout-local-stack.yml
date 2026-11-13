@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [codex/checkout-pg17-validation-advanced-20261113]
-    paths: [.github/workflows/verify-checkout-local-stack.yml, scripts/run-checkout-local-stack.sh, tests/local-supabase-service-proof.mjs, tests/local-supabase-application-proof.mjs, tests/combined-checkout-proof.mjs, supabase/migrations/*native_combined_checkout_guarded.sql]
+    paths: [.github/workflows/verify-checkout-local-stack.yml, scripts/run-checkout-local-stack.sh, tests/local-supabase-service-proof.mjs, tests/local-supabase-application-proof.mjs, tests/local-native-mail-capture.mjs, tests/combined-checkout-proof.mjs, supabase/migrations/*native_combined_checkout_guarded.sql]
 permissions:
   contents: read
 jobs:

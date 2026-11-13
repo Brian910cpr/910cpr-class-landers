@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {proveLocalRecoveryCapture} from './local-native-mail-capture.mjs';
 import {readFileSync,realpathSync,statSync} from 'node:fs';
 import {homedir} from 'node:os';
 import {resolve,sep,join} from 'node:path';
@@ -66,3 +67,10 @@ assert.equal(sql('select count(*) from registrations;'),'0','unpaid hold is not 
 assert.equal(sql("select count(*) from landerware_public_orders where status='paid' or stripe_checkout_session_id is not null or payment_evidence<>'{}'::jsonb;"),'0','no processor receipt or paid-state fabrication');
 console.log('PASS: missing Stripe credential fails closed; no paid registration or processor evidence fabricated.');
 console.log('NOT RUN: real Stripe test payment/webhook and confirmation delivery; secure test runtime/provider bindings absent.');
+
+const actualRpc=async(name,body)=>{
+ assert(/^[a-z_]+$/.test(name));
+ const response=await request('/rest/v1/rpc/'+name,{method:'POST',headers:{...headers,'content-type':'application/json'},body:JSON.stringify(body)});
+ assert.equal(response.status,200,'isolated notification RPC '+name);return response.json();
+};
+await proveLocalRecoveryCapture({orderId:order,sql,rpc:actualRpc});
