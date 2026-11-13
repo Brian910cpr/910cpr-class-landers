@@ -175,7 +175,7 @@ test('other configured course families resolve existing appointments through the
  assert.equal(model.session.durationMinutes,240);assert.equal(model.session.capacity,12);assert.equal(model.session.remainingSeats,7);
  assert.ok(f.calls.some(c=>c.name==='native_checkout_profile'&&c.args.p_public_course_id==='241108'));
  f.deps.appointmentSession=async()=>{throw Error('session_not_available');};
- await assert.rejects(f.api.model({course:'241108',date:'2031-01-01',startTime:'09:00'}),/session_not_available/);
+ await assert.rejects(f.api.model({course:'241108',date:'2031-01-01',startTime:'09:00'}),/native_registration_unavailable/);
  f.deps.appointmentSession=async()=> 'canonical-acls-fixture';
  f.deps.scheduleSession=async()=>({nativeReady:false,course_id:'241108'});
  await assert.rejects(f.api.model({course:'241108',date:'2031-01-01',startTime:'09:00'}),/session_not_available/);

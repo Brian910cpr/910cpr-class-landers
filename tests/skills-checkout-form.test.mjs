@@ -1,3 +1,4 @@
+import {participantMarkup,mountCourseAdditions} from '../docs/assets/checkout-course-controls.js';
 import {legacySkillsReceipt} from '../docs/assets/checkout-receipt.js';
 // Executes the actual shared form module in a minimal DOM, with no network/browser.
 import test from 'node:test';
@@ -22,7 +23,7 @@ async function harness({online=false,uploads=false,file=null,failUpload=false,sa
  if(legacySaved){store.set('skillsReservation:skills:'+encodeURIComponent(JSON.stringify(['509474','arc-blended','2031-01-01T09:00','Fixture instructor',':: Wilmington; Shipyard Blvd - B','old-block'])),key);receipt={status:'held',orderId:'order',amountCents:5500,students:[{selectedChoices:['skills'],uploads:{}}]};}
  if(saved){store.set(selectionKey,key);receipt={status:paid?'paid':refunded?'refunded':processing?'processing':'held',orderId:'order',amountCents:online?9500:5500,students:[{selectedChoices:[online?'online':'skills'],uploads:{}}]};}
  const model=()=>legacy?{ok:true,nativeReady:false,sessionId:'123456',fallbackRegistrationUrl:legacy}:({ok:true,profile,selection:nativeSelectionId?{course:'209806',selectionId:nativeSelectionId}:{session:'123456'},session:{startsAt:'2031-01-01T14:00:00Z',location:'Fixture location'},...(receipt?{receipt}:{} )});
- const context=vm.createContext({legacySkillsReceipt,AbortSignal,URL,URLSearchParams,Intl,Date,Uint8Array,TextEncoder,Error,Object,JSON,Number,String,console,conditionApplies,checkoutSelection,esc:escapeCheckoutText,btoa,
+ const context=vm.createContext({participantMarkup,mountCourseAdditions,legacySkillsReceipt,AbortSignal,URL,URLSearchParams,Intl,Date,Uint8Array,TextEncoder,Error,Object,JSON,Number,String,console,conditionApplies,checkoutSelection,esc:escapeCheckoutText,btoa,
   location:{search:'?'+query,origin:'https://fixture.invalid',assign:url=>redirected=url},window:{},parent:{postMessage(){}},crypto:{randomUUID:()=>key},
   sessionStorage:{get length(){return store.size;},key:i=>[...store.keys()][i],getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v)},ResizeObserver:class{observe(){}},
   document:{getElementById:id=>nodes.get(id),querySelectorAll:s=>s==='.student'?cards:[],documentElement:{scrollHeight:900,classList:{add(){}}},createElement:tag=>tag==='fieldset'?card():element()},
@@ -53,7 +54,7 @@ test('paid query alone does not confirm; a saved return uses server status and n
 test('disabled upload configuration renders no upload control and all legacy skills URLs use the same form',async()=>{
  const h=await harness();assert.equal(h.cards[0].querySelectorAll('[data-upload]').length,0);
  const alias=readFileSync(new URL('../docs/register/skills-session/index.html',import.meta.url),'utf8');assert.match(alias,/location.replace\(destination\)/);assert.ok(alias.includes("const destination='/register/checkout/'"));assert.equal(alias.includes('<form'),false);
- const entry=readFileSync(new URL('../docs/register/checkout/index.html',import.meta.url),'utf8');assert.ok(entry.includes('/assets/generic-checkout.js?v=20261111-native2'));assert.equal(entry.includes('<form'),false);
+ const entry=readFileSync(new URL('../docs/register/checkout/index.html',import.meta.url),'utf8');assert.ok(entry.includes('/assets/generic-checkout.js?v=20261113-advanced1'));assert.equal(entry.includes('<form'),false);
  const mirror=readFileSync(new URL('../docs/assets/checkout-profile.js',import.meta.url),'utf8'),server=readFileSync(new URL('../supabase/functions/_shared/checkout-profile.mjs',import.meta.url),'utf8');assert.equal(mirror,server);
 });
 test('saved observed payment hides the payment action and offers status recovery without confirming registration or charging again',async()=>{

@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {preProfileFiles,profileMigration,fullCourseMigration} from './helpers/native-checkout-migration-plan.mjs';
-const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8').replaceAll('\r\n','\n');
 const migration='supabase/migrations/20261111195655_native_full_course_v2_policy.sql';
 test('additive v2 policy is service-only/default-off; preserves canonical defaults, gates and existing records',async()=>{
  const {PGlite}=await import(process.env.SKILLS_PGLITE_MODULE||'@electric-sql/pglite');const db=new PGlite();

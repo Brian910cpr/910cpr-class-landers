@@ -1,3 +1,4 @@
+import {nativeBasketCheckout,basketCheckoutParams,settleBasket} from '../supabase/functions/public-registration/basket.mjs';
 import {nativeConfirmationService} from '../supabase/functions/_shared/native-confirmation-service.mjs';
 import {nativeConfirmationPostcommit} from '../supabase/functions/_shared/native-confirmation-postcommit.mjs';
 import {publicOrderVersion,publicOrderReturnPath,settlePublicOrder} from '../supabase/functions/public-registration/public-order-routing.mjs';
@@ -18,7 +19,7 @@ function harness({legacyURL=null,course='fixture-course',profileReady=true,invoi
  const catalog={course_id:course,course_name:'Fixture title',unit_amount:7500,currency:'usd',addons:[],billing_codes:[{code:'PRIVATE'}]};
  if(uploads)profile.requirements=[{key:'completion',type:'online_completion',display_name:'Completion certificate',upload_now:true,required_before_registration:false,upload:{enabled:true,max_bytes:2097152,mime_types:['application/pdf']}}];
  const packet={profile,physicalCourseId:'fixture-course',catalog};
- const ctx=vm.createContext({fullCoursePolicyRpcArgs,nativeConfirmationService,nativeConfirmationPostcommit,EdgeRuntime:mail?{waitUntil:p=>background.push(p)}:undefined,publicOrderVersion,publicOrderReturnPath,settlePublicOrder,genericCheckout,boundedCheckoutJSON,fullAppointmentSession,URL,URLSearchParams,Request,Response,Headers,Date,Error,Set,Promise,JSON,Object,Array,Number,String,Uint8Array,crypto:webcrypto,AbortSignal,console,
+ const ctx=vm.createContext({nativeBasketCheckout,basketCheckoutParams,settleBasket,fullCoursePolicyRpcArgs,nativeConfirmationService,nativeConfirmationPostcommit,EdgeRuntime:mail?{waitUntil:p=>background.push(p)}:undefined,publicOrderVersion,publicOrderReturnPath,settlePublicOrder,genericCheckout,boundedCheckoutJSON,fullAppointmentSession,URL,URLSearchParams,Request,Response,Headers,Date,Error,Set,Promise,JSON,Object,Array,Number,String,Uint8Array,crypto:webcrypto,AbortSignal,console,
   Deno:{env:{get:k=>({SUPABASE_URL:'https://fixture-db.invalid',SUPABASE_SERVICE_ROLE_KEY:'server-only-fixture',STRIPE_SECRET_KEY:'sk_test_fixture',RESEND_API_KEY:mail?'fixture-mail-key':undefined})[k]},serve:fn=>handler=fn},
   fetch:async(url,init={})=>{
    const u=String(url),body=init.body&&typeof init.body==='string'?JSON.parse(init.body):null;calls.push({url:u,init});
@@ -53,6 +54,7 @@ function harness({legacyURL=null,course='fixture-course',profileReady=true,invoi
    if(rpc==='assert_public_registration_open')return Response.json(true);
    if(rpc==='landerware_public_seat_state')return Response.json({remaining:2});
    if(rpc==='native_checkout_receipt')return receipt?Response.json(receipt):Response.json({message:'reservation_not_found'},{status:400});
+   if(rpc==='native_checkout_basket_contains_order')return Response.json(false);
    if(rpc==='native_checkout_payment_allowed')return Response.json(!required);
    if(rpc==='native_checkout_begin_upload'){
     assert.equal(body.p_key,key);assert.equal(body.p_student_index,0);assert.equal(body.p_requirement_key,'completion');assert.match(body.p_sha,/^[a-f0-9]{64}$/);

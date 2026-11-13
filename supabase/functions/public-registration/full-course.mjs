@@ -1,4 +1,5 @@
 import {easternInstant} from '../registration-reschedule/policy.mjs';
+import {ADVANCED_COURSES,advancedFullCourseOffers} from './advanced-course.mjs';
 // Exact full-class identities only. Blended Heartsaver courses never enter here.
 const HEARTSAVER=Object.freeze({
  '209809':{canonicalCourseId:'23dfcfa7-4224-46ed-8d45-64d43d5425db',instructionMinutes:120,cleanupMinutes:30},
@@ -11,9 +12,11 @@ export function fullCoursePolicyRpcArgs(course){
  return ['209806','359474'].includes(course)?{}:{p_course_number:course};
 }
 export function fullCoursePage(course){
- return ['209806','359474'].includes(String(course))?'bls':Object.hasOwn(HEARTSAVER,String(course))?'heartsaver':null;
+ return ['209806','359474'].includes(String(course))?'bls':Object.hasOwn(HEARTSAVER,String(course))?'heartsaver':ADVANCED_COURSES[String(course)]||null;
 }
+export const fullCourseOptionRpc=course=>Object.hasOwn(ADVANCED_COURSES,String(course))?'native_advanced_full_course_option':'native_full_course_option';
 export function fullCourseOffers(payload,course,now=Date.now(),options={}){
+ if(Object.hasOwn(ADVANCED_COURSES,String(course)))return advancedFullCourseOffers(payload,String(course),now,options.coursePolicy);
  const page=fullCoursePage(course),heartsaver=page==='heartsaver',policy=options.coursePolicy,expected=HEARTSAVER[String(course)];
  if(!page||payload?.pageKey!==page||payload.schemaVersion!=='selector-resolved-availability.v1')throw Error('invalid_session');
  if(heartsaver&&(!policy||policy.materializationEnabled!==true||policy.nativePublicationEnabled!==true||policy.pageKey!==page||

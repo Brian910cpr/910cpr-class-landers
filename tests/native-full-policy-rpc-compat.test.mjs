@@ -13,7 +13,7 @@ test('optional scopes keep the explicit course argument and never fall into BLS'
 test('deployed adapter uses the tested RPC argument selector',()=>{
  const source=readFileSync(new URL('../supabase/functions/public-registration/index.ts',import.meta.url),'utf8');
  assert.match(source,/import \{fullCoursePolicyRpcArgs\} from "\.\/full-course\.mjs"/);
- assert.ok(source.includes('fullPolicy:(course:string)=>rpc("native_full_course_runtime_policy",fullCoursePolicyRpcArgs(course))'));
+ assert.ok(source.includes('fullPolicy:(course:string)=>rpc(["241108","209818","209805","251496"].includes(course)?"native_advanced_course_runtime_policy":"native_full_course_runtime_policy",fullCoursePolicyRpcArgs(course))'));
 });
 test('BLS policy resolves with only the existing SQL signature installed',async()=>{
  const {PGlite}=await import(process.env.SKILLS_PGLITE_MODULE||'@electric-sql/pglite');const db=new PGlite();

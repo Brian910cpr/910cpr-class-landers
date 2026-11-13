@@ -1,3 +1,5 @@
+declare const EdgeRuntime:{waitUntil:(promise:Promise<unknown>)=>void};
+import {settleBasket} from "../public-registration/basket.mjs";
 import {nativeConfirmationService} from "../_shared/native-confirmation-service.mjs";
 import {nativeConfirmationPostcommit} from "../_shared/native-confirmation-postcommit.mjs";
 import {publicOrderVersion,settlePublicOrder} from "../public-registration/public-order-routing.mjs";
@@ -30,6 +32,25 @@ Deno.serve(async(request)=>{
   const retailOrderId=String(session?.metadata?.landerware_order_id||"").trim();
   const paid=event.type==="checkout.session.completed"?session.payment_status==="paid":event.type==="checkout.session.async_payment_succeeded";
 
+  const basketId=String(session?.metadata?.landerware_basket_id||"").trim();
+  if(basketId){
+   if(retailOrderId)return reply({ok:false,error:"Ambiguous checkout identity"},400);
+   if(!paid)return reply({ok:true,ignored:"Basket checkout not paid"});
+   const expectedLive=Deno.env.get('STRIPE_EXPECTED_LIVEMODE')!=='false';
+   if(session.mode!=="payment"||session.payment_status!=="paid"||session.livemode!==expectedLive||event.livemode!==expectedLive)return reply({ok:false,error:"Basket payment evidence missing"},400);
+   const {data:basket,error:lookupError}=await db.from("native_checkout_baskets").select("id,total,currency,stripe_checkout_session_id,stripe_payment_intent_id,status").eq("id",basketId).maybeSingle();
+   if(lookupError||!basket)return reply({ok:false,error:"Basket lookup failed"},500);
+   const rpc=async(name:string,args:unknown)=>{const {data,error}=await db.rpc(name,args);if(error)throw Error('basket_payment_rpc_failed');return data;};
+   try{
+    const evidence={id:session.id,mode:session.mode,payment_status:session.payment_status,amount_total:session.amount_total,currency:session.currency,metadata:{landerware_basket_id:basketId},livemode:session.livemode,stripeEventId:event.id};
+    const result=await settleBasket(rpc,basket,session,evidence);
+    if(result.status==="paid"){
+     const notify=nativeConfirmationPostcommit({service:nativeConfirmationService({rpc,env:(name:string)=>Deno.env.get(name),request:fetch,report:(r:unknown)=>console.error(JSON.stringify(r))}),waitUntil:typeof EdgeRuntime!=="undefined"?(p:Promise<unknown>)=>EdgeRuntime.waitUntil(p):undefined});
+     for(const item of result.items||[])await notify(item.orderId);
+    }
+    return reply({ok:true,status:result.status});
+   }catch{return reply({ok:false,error:"Basket payment reconciliation failed"},500);}
+  }
   if(retailOrderId){
     // Public class orders share the metadata key with retail. Route by the
     // canonical record before invoking either finalizer; never label a class

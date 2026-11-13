@@ -1,8 +1,10 @@
+import {participantMarkup,mountCourseAdditions} from './checkout-course-controls.js?v=20261113-advanced1';
 import {conditionApplies,checkoutSelection,escapeCheckoutText as esc} from './checkout-profile.js?v=20261111-native2';
 import {legacySkillsReceipt} from './checkout-receipt.js?v=20261111-native2';
 
 const API='https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/public-registration/generic';
 const app=document.getElementById('app'),params=new URLSearchParams(location.search);
+let additions=null,basketMode=false,basketModels=null;
 const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n/100);
 const originalSelection=Object.fromEntries([...params].filter(([k])=>['session','course','date','startTime','instructor','location','skillsContext','selectionId'].includes(k)));
 const selectionKey='native-checkout:'+JSON.stringify(Object.entries(originalSelection).sort());
@@ -39,15 +41,12 @@ function update(){
  document.getElementById('total').textContent=receipt?'Saved total: '+money(receipt.amountCents)+(receipt.holdExpiresAt?' - Seat hold ends '+new Date(receipt.holdExpiresAt).toLocaleTimeString('en-US',{timeZone:'America/New_York'})+' Eastern':''):'Estimated total: '+money(total);
  document.getElementById('add-student').disabled=!!receipt||cards().length>=model.profile.maxStudents;
  document.getElementById('pay').hidden=['processing','refunded'].includes(receipt?.status);
- announceSize();
+ additions?.sync();announceSize();
 }
 function addStudent(){
  if(receipt||cards().length>=model.profile.maxStudents)return;
  const index=studentCount++,card=document.createElement('fieldset');card.className='student';
- const groups=model.profile.optionGroups.map(g=>`<fieldset class="option-group"><legend>${esc(g.label)}</legend>${g.choices.map(c=>`<label class="choice"><input data-choice type="${g.type}" name="${index}-${esc(g.key)}" value="${esc(c.key)}" ${model.profile.defaultChoices.includes(c.key)?'checked':''} ${!c.available?'disabled':''}><span>${esc(c.label)}${c.amountCents?' (+'+money(c.amountCents)+')':''}${!c.available?' - unavailable':''}</span></label>`).join('')}</fieldset>`).join('');
- const fields=model.profile.fields.map(f=>`<label data-config-field="${esc(f.key)}">${esc(f.label)}${f.type==='textarea'?`<textarea data-field="${esc(f.key)}" maxlength="${f.max_length}"></textarea>`:`<input data-field="${esc(f.key)}" type="${esc(f.type)}" maxlength="${f.max_length}" autocomplete="${esc(f.autocomplete||'off')}">`}</label>`).join('');
- const uploads=model.profile.uploads.map(p=>`<label class="wide" data-upload-wrapper="${esc(p.key)}">${esc(p.label)} (${p.required?'required':'optional'})<input data-upload="${esc(p.key)}" type="file" accept="${esc(p.mimeTypes.join(','))}"><small>Maximum ${Math.round(p.maxBytes/1048576*10)/10} MB. ${p.required?'':'You may bring the document to class instead.'} Files are private; receiving a file does not mean it has been approved.</small></label>`).join('');
- card.innerHTML=`<legend>Participant ${cards().length+1}</legend><button class="remove secondary" type="button">Remove participant</button><div class="fields">${fields}</div>${groups}${uploads}`;
+ card.innerHTML=`<legend>Participant ${cards().length+1}</legend><button class="remove secondary" type="button">Remove participant</button>${participantMarkup(model.profile,index,money)}`;
  card.querySelector('.remove').addEventListener('click',()=>{if(cards().length>1&&!receipt){card.remove();update();}});
  card.addEventListener('change',update);document.getElementById('students').append(card);update();
 }
@@ -61,23 +60,24 @@ function confirmed(){
  document.getElementById('result').textContent='Payment received. Your registration is confirmed.';
  announceSize();
 }
-function rememberReceipt(){save(selectionKey,key);if(receipt.orderId)save('native-checkout-order:'+receipt.orderId,key);}
-async function status(){const p=await request('status');receipt=p.receipt;if(receipt.status==='paid')confirmed();else if(receipt.status==='refunded')message('This order was refunded; it is not a confirmed registration. Contact 910CPR for help.');else if(receipt.status==='processing')message('Payment received; registration confirmation is pending. Check payment status again or contact 910CPR. Do not pay again.');else if(['expired','payment_review','cancelled','canceled'].includes(receipt.status))throw Error(receipt.status==='expired'?'hold_expired':'payment_reconciliation_required');update();return receipt;}
+function rememberReceipt(){save(selectionKey,key);if(receipt.basketId){const u=new URL(location.href);u.search='basket='+encodeURIComponent(key);history.replaceState(null,'',u);}if(receipt.orderId)save('native-checkout-order:'+receipt.orderId,key);}
+async function status(){const p=await request(basketMode?'basket-status':'status');receipt=p.receipt;if(receipt.status==='paid')confirmed();else if(receipt.status==='refunded')message('This order was refunded; it is not a confirmed registration. Contact 910CPR for help.');else if(receipt.status==='processing')message('Payment received; registration confirmation is pending. Check payment status again or contact 910CPR. Do not pay again.');else if(['expired','payment_review','cancelled','canceled'].includes(receipt.status))throw Error(receipt.status==='expired'?'hold_expired':'payment_reconciliation_required');update();return receipt;}
 async function submit(event){
  event.preventDefault();if(busy)return;busy=true;const button=document.getElementById('pay');button.disabled=true;message('Saving your selection.');
  try{
   if(!receipt){
    const students=cards().map(card=>{const fields=inputs(card),selectedChoices=selected(card);checkoutSelection(model.profile,fields,selectedChoices);return {fields,selectedChoices};});
    key=key||crypto.randomUUID();save(selectionKey,key);
-   const p=await request('reserve',{selection:model.selection,profileKey:model.profile.profileKey,profileVersion:model.profile.profileVersion,students});receipt=p.receipt;rememberReceipt();update();
+   const primary={selection:model.selection,profileKey:model.profile.profileKey,profileVersion:model.profile.profileVersion,students};const extra=additions?.collect()||[];basketMode=extra.length>0;const p=await request(basketMode?'basket-reserve':'reserve',basketMode?{items:[primary,...extra]}:primary);receipt=p.receipt;additions?.lock();rememberReceipt();update();
   }
   if(['paid','processing','refunded'].includes((await status()).status))return;
   for(const [index,card] of cards().entries())for(const el of card.querySelectorAll('[data-upload]')){
    if(el.disabled||!el.files[0])continue;
    const policy=model.profile.uploads.find(p=>p.key===el.dataset.upload);message('Receiving your document.');
-   await request('upload',{studentIndex:index,requirementKey:policy.key,file:await filePacket(el.files[0],policy)});
+   await request(basketMode?'basket-upload':'upload',{...(basketMode?{courseIndex:0}:{}),studentIndex:index,requirementKey:policy.key,file:await filePacket(el.files[0],policy)});
   }
-  message('Opening secure payment.');const p=await request('checkout',{});
+  if(basketMode)await additions?.upload(request,filePacket);
+  message('Opening secure payment.');const p=await request(basketMode?'basket-checkout':'checkout',{});
   if(p.receipt?.status==='paid'){receipt=p.receipt;confirmed();return;}
   if(['processing','refunded'].includes(p.receipt?.status)){receipt=p.receipt;await status();return;}
   const destination=new URL(p.checkoutUrl);if(destination.origin!=='https://checkout.stripe.com')throw Error('payment_unavailable');
@@ -86,10 +86,11 @@ async function submit(event){
 }
 async function init(){
  try{
-  const order=params.get('order'),recover=params.get('recover');key=order?stored('native-checkout-order:'+order):stored(selectionKey);
+  const order=params.get('order'),recover=params.get('recover'),basketKey=params.get('basket');key=order?stored('native-checkout-order:'+order):stored(selectionKey);
   if(!key&&!order&&!recover)key=stored('skillsCheckout:'+JSON.stringify(['course','date','startTime','location','instructor','skillsContext'].map(k=>params.get(k)||'')));
   if(!key&&!order&&!recover)key=legacySkillsReceipt(sessionStorage,originalSelection);
-  if(recover){key='';model=await request('form',null,{recover});key=model.key;}
+  if(basketKey){basketMode=true;key=basketKey;const b=await request('basket-form');basketModels=b.items;model=b.items[0];model.receipt=b.receipt;}
+  else if(recover){key='';model=await request('form',null,{recover});key=model.key;}
   else if(key){try{model=await request('form');}catch(e){if(e.message!=='reservation_not_found')throw e;/* Keep the same nonce if an earlier save is still in flight. */}}
   if(!model)model=await request('form',null,originalSelection);
   if(model.nativeReady===false){
@@ -108,11 +109,15 @@ async function init(){
   const p=model.profile,date=new Date(model.session.startsAt).toLocaleString('en-US',{timeZone:'America/New_York',dateStyle:'full',timeStyle:'short'});
   const length=model.session.durationMinutes||(Date.parse(model.session.endsAt)-Date.parse(model.session.startsAt))/60000;
   const details=(Number.isFinite(length)&&length>0?'Class length: '+length+' minutes. ':'')+(model.session.capacity?'Class capacity: '+model.session.capacity+'. ':'')+(Number.isInteger(model.session.remainingSeats)?'Seats currently available: '+model.session.remainingSeats+'.':'');
-  app.innerHTML=`<header><h1>${esc(p.title)}</h1><p>${esc(date)} Eastern time</p><p>${esc(model.session.location||'')}</p><p>${esc(details)}</p></header><section class="formwrap"><p>${esc(p.description)}</p><a href="${esc(p.backUrl)}">Choose another class or time</a><form id="checkout-form"><div id="students"></div><button id="add-student" type="button" class="secondary">Add participant</button><p id="total"></p><p id="status" role="status" aria-live="polite"></p><button id="pay" type="submit">Continue to secure payment</button><button id="check-status" type="button" class="secondary">Check payment status</button></form><p id="result" role="status" aria-live="polite"></p></section>`;
+  app.innerHTML=`<header><h1>${esc(p.title)}</h1><p>${esc(date)} Eastern time</p><p>${esc(model.session.location||'')}</p><p>${esc(details)}</p></header><section class="formwrap"><p>${esc(p.description)}</p><a href="${esc(p.backUrl)}">Choose another class or time</a><form id="checkout-form"><div id="students"></div><div id="course-additions"></div><button id="add-student" type="button" class="secondary">Add participant</button><p id="total"></p><p id="status" role="status" aria-live="polite"></p><button id="pay" type="submit">Continue to secure payment</button><button id="check-status" type="button" class="secondary">Check payment status</button></form><p id="result" role="status" aria-live="polite"></p></section>`;
   // Render participants from configuration only; never put saved contact fields in HTML.
-  const saved=receipt;receipt=null;for(let i=0;i<(saved?.students?.length||1);i++)addStudent();receipt=saved;
-  if(receipt)cards().forEach((card,i)=>{if(receipt.students[i].selectedChoices.length)for(const el of card.querySelectorAll('[data-choice]'))el.checked=receipt.students[i].selectedChoices.includes(el.value);});
+  const saved=receipt;receipt=null;for(let i=0;i<((basketMode?saved?.items?.[0]?.receipt?.students?.length:saved?.students?.length)||1);i++)addStudent();receipt=saved;
+  if(receipt)cards().forEach((card,i)=>{if((basketMode?receipt.items[0].receipt:receipt).students[i].selectedChoices.length)for(const el of card.querySelectorAll('[data-choice]'))el.checked=(basketMode?receipt.items[0].receipt:receipt).students[i].selectedChoices.includes(el.value);});
   if(receipt){rememberReceipt();for(const card of cards())for(const el of card.querySelectorAll('[data-field]'))el.required=false;}
+  if(['241108','209818','209805','251496'].includes(model.selection.course)||basketMode){
+   let options=[];try{options=basketModels?basketModels.slice(1).map(m=>({courseNumber:m.selection.course,family:['209805','251496'].includes(m.selection.course)?'PALS':['241108','209818'].includes(m.selection.course)?'ACLS':'BLS',title:m.profile.title,sessions:[]})):(await request('basket-choices',null,{course:model.selection.course})).choices;}catch(e){if(e.message!=='native_registration_unavailable')document.getElementById('course-additions').textContent='Additional course options are currently unavailable.';}
+   if(options.length){additions=mountCourseAdditions({host:document.getElementById('course-additions'),choices:options,request,primaryStudents:()=>cards().map(card=>({byWire:Object.fromEntries(model.profile.fields.filter(f=>f.wire).map(f=>[f.wire,inputs(card)[f.key]]))})),money,onChange:update});if(basketModels){additions.restore(basketModels.slice(1));additions.lock();}}
+  }
   document.getElementById('add-student').addEventListener('click',addStudent);document.getElementById('checkout-form').addEventListener('submit',submit);
   document.getElementById('check-status').addEventListener('click',async()=>{if(busy||!key)return;try{const r=await status();if(!['paid','processing','refunded'].includes(r.status))message('Payment has not been confirmed. You may continue to secure payment.');}catch(e){message(errorText(e));}});
   update();if(receipt)await status();

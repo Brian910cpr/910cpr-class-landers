@@ -3,7 +3,7 @@ import {sendNativeCheckoutClaim} from './native-resend-adapter.mjs';
 
 // Existing server credentials stay inside this project. No new credential,
 // recipient, template, body or provider can be supplied by an HTTP caller.
-export function nativeConfirmationService({rpc,env,request,report=()=>{}}) {
+export function nativeConfirmationService({rpc,env,request,report=(_value)=>{}}) {
  const configured=()=>Boolean(env('RESEND_API_KEY'));
  const health=()=>rpc('native_checkout_confirmation_health',{});
  async function deliver(orderId=null,{limit=10}={}){

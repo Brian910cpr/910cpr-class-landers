@@ -2,7 +2,7 @@
 // transaction, never changes registration status, and cannot send to a caller-
 // chosen recipient. Durable queue eligibility is still checked by the service.
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-export function nativeConfirmationPostcommit({service,waitUntil,report=()=>{}}){
+export function nativeConfirmationPostcommit({service,waitUntil,report=(_value)=>{}}){
  const record=value=>{try{report(value);}catch{/* Logging cannot alter a committed booking. */}};
  return async function afterNativeCommit(orderId){
   if(typeof orderId!=='string'||!UUID.test(orderId))return;

@@ -1,0 +1,433 @@
+{
+  "schemaVersion": "native-advanced-checkout.v1",
+  "enabled": false,
+  "addedSessionDiscountBps": 1000,
+  "discountScope": "added_session_components_only",
+  "scopeId": "qualified-advanced-shipyard-b.v1",
+  "courses": [
+    {
+      "courseNumber": "241108",
+      "family": "ACLS",
+      "pageKey": "acls",
+      "title": "AHA ACLS Provider (Initial)",
+      "sessionCents": 22500,
+      "currency": "usd",
+      "allocationVersion": "session-plus-components.v1",
+      "priceEvidence": "data/config/block_schedule_pages.json:course_options.price",
+      "instructionMinutes": 240,
+      "durationEvidence": "data/inventory/course_consumption_rules.json:duration_minutes",
+      "setupMinutes": null,
+      "cleanupMinutes": null,
+      "canonicalCourseId": null,
+      "capacity": null,
+      "enabled": false,
+      "materials": [
+        {
+          "kind": "paper_book",
+          "sku": null,
+          "unitAmountCents": null,
+          "enabled": false
+        },
+        {
+          "kind": "ebook",
+          "sku": null,
+          "unitAmountCents": null,
+          "enabled": false
+        }
+      ],
+      "profileKey": "native_advanced_241108_draft",
+      "formSchema": {
+        "schemaVersion": "native-checkout.form.v1",
+        "inventory_kind": "scheduled_session_v1",
+        "description": "Choose your course materials and registration options. Additional courses keep their own class times.",
+        "max_students": 10,
+        "default_choices": [
+          "own_copy"
+        ],
+        "fields": [
+          {
+            "key": "first_name",
+            "wire": "firstName",
+            "type": "text",
+            "label": "First name",
+            "required": true
+          },
+          {
+            "key": "last_name",
+            "wire": "lastName",
+            "type": "text",
+            "label": "Last name",
+            "required": true
+          },
+          {
+            "key": "email",
+            "wire": "email",
+            "type": "email",
+            "label": "Email",
+            "required": true
+          },
+          {
+            "key": "phone",
+            "wire": "phone",
+            "type": "tel",
+            "label": "Phone",
+            "required": true
+          }
+        ],
+        "option_groups": [
+          {
+            "key": "materials",
+            "label": "ACLS course materials",
+            "type": "radio",
+            "required": true,
+            "choices": [
+              {
+                "key": "own_copy",
+                "label": "I have my own current manual",
+                "catalog_keys": []
+              },
+              {
+                "key": "paper_book",
+                "label": "Printed Provider Manual",
+                "catalog_keys": [
+                  "advanced_241108_paper_book"
+                ]
+              },
+              {
+                "key": "ebook",
+                "label": "Provider Manual eBook",
+                "catalog_keys": [
+                  "advanced_241108_ebook"
+                ]
+              }
+            ]
+          }
+        ],
+        "driver_rules": [
+          {
+            "driver": "native_order"
+          }
+        ],
+        "back_url": "/acls.html"
+      }
+    },
+    {
+      "courseNumber": "209818",
+      "family": "ACLS",
+      "pageKey": "acls",
+      "title": "AHA ACLS Provider (Renewal)",
+      "sessionCents": 22500,
+      "currency": "usd",
+      "allocationVersion": "session-plus-components.v1",
+      "priceEvidence": "data/config/block_schedule_pages.json:course_options.price",
+      "instructionMinutes": 240,
+      "durationEvidence": "data/inventory/course_consumption_rules.json:duration_minutes",
+      "setupMinutes": null,
+      "cleanupMinutes": null,
+      "canonicalCourseId": null,
+      "capacity": null,
+      "enabled": false,
+      "materials": [
+        {
+          "kind": "paper_book",
+          "sku": null,
+          "unitAmountCents": null,
+          "enabled": false
+        },
+        {
+          "kind": "ebook",
+          "sku": null,
+          "unitAmountCents": null,
+          "enabled": false
+        }
+      ],
+      "profileKey": "native_advanced_209818_draft",
+      "formSchema": {
+        "schemaVersion": "native-checkout.form.v1",
+        "inventory_kind": "scheduled_session_v1",
+        "description": "Choose your course materials and registration options. Additional courses keep their own class times.",
+        "max_students": 10,
+        "default_choices": [
+          "own_copy"
+        ],
+        "fields": [
+          {
+            "key": "first_name",
+            "wire": "firstName",
+            "type": "text",
+            "label": "First name",
+            "required": true
+          },
+          {
+            "key": "last_name",
+            "wire": "lastName",
+            "type": "text",
+            "label": "Last name",
+            "required": true
+          },
+          {
+            "key": "email",
+            "wire": "email",
+            "type": "email",
+            "label": "Email",
+            "required": true
+          },
+          {
+            "key": "phone",
+            "wire": "phone",
+            "type": "tel",
+            "label": "Phone",
+            "required": true
+          }
+        ],
+        "option_groups": [
+          {
+            "key": "materials",
+            "label": "ACLS course materials",
+            "type": "radio",
+            "required": true,
+            "choices": [
+              {
+                "key": "own_copy",
+                "label": "I have my own current manual",
+                "catalog_keys": []
+              },
+              {
+                "key": "paper_book",
+                "label": "Printed Provider Manual",
+                "catalog_keys": [
+                  "advanced_209818_paper_book"
+                ]
+              },
+              {
+                "key": "ebook",
+                "label": "Provider Manual eBook",
+                "catalog_keys": [
+                  "advanced_209818_ebook"
+                ]
+              }
+            ]
+          }
+        ],
+        "driver_rules": [
+          {
+            "driver": "native_order"
+          }
+        ],
+        "back_url": "/acls.html"
+      }
+    },
+    {
+      "courseNumber": "209805",
+      "family": "PALS",
+      "pageKey": "pals",
+      "title": "AHA PALS Provider",
+      "sessionCents": 27500,
+      "currency": "usd",
+      "allocationVersion": "session-plus-components.v1",
+      "priceEvidence": "data/config/block_schedule_pages.json:course_options.price",
+      "instructionMinutes": 240,
+      "durationEvidence": "data/inventory/course_consumption_rules.json:duration_minutes",
+      "setupMinutes": null,
+      "cleanupMinutes": null,
+      "canonicalCourseId": null,
+      "capacity": null,
+      "enabled": false,
+      "materials": [
+        {
+          "kind": "paper_book",
+          "sku": null,
+          "unitAmountCents": null,
+          "enabled": false
+        },
+        {
+          "kind": "ebook",
+          "sku": null,
+          "unitAmountCents": null,
+          "enabled": false
+        }
+      ],
+      "profileKey": "native_advanced_209805_draft",
+      "formSchema": {
+        "schemaVersion": "native-checkout.form.v1",
+        "inventory_kind": "scheduled_session_v1",
+        "description": "Choose your course materials and registration options. Additional courses keep their own class times.",
+        "max_students": 10,
+        "default_choices": [
+          "own_copy"
+        ],
+        "fields": [
+          {
+            "key": "first_name",
+            "wire": "firstName",
+            "type": "text",
+            "label": "First name",
+            "required": true
+          },
+          {
+            "key": "last_name",
+            "wire": "lastName",
+            "type": "text",
+            "label": "Last name",
+            "required": true
+          },
+          {
+            "key": "email",
+            "wire": "email",
+            "type": "email",
+            "label": "Email",
+            "required": true
+          },
+          {
+            "key": "phone",
+            "wire": "phone",
+            "type": "tel",
+            "label": "Phone",
+            "required": true
+          }
+        ],
+        "option_groups": [
+          {
+            "key": "materials",
+            "label": "PALS course materials",
+            "type": "radio",
+            "required": true,
+            "choices": [
+              {
+                "key": "own_copy",
+                "label": "I have my own current manual",
+                "catalog_keys": []
+              },
+              {
+                "key": "paper_book",
+                "label": "Printed Provider Manual",
+                "catalog_keys": [
+                  "advanced_209805_paper_book"
+                ]
+              },
+              {
+                "key": "ebook",
+                "label": "Provider Manual eBook",
+                "catalog_keys": [
+                  "advanced_209805_ebook"
+                ]
+              }
+            ]
+          }
+        ],
+        "driver_rules": [
+          {
+            "driver": "native_order"
+          }
+        ],
+        "back_url": "/pals.html"
+      }
+    },
+    {
+      "courseNumber": "251496",
+      "family": "PALS",
+      "pageKey": "pals",
+      "title": "AHA PALS Renewal",
+      "sessionCents": 22500,
+      "currency": "usd",
+      "allocationVersion": "session-plus-components.v1",
+      "priceEvidence": "data/config/block_schedule_pages.json:course_options.price",
+      "instructionMinutes": 240,
+      "durationEvidence": "data/inventory/course_consumption_rules.json:duration_minutes",
+      "setupMinutes": null,
+      "cleanupMinutes": null,
+      "canonicalCourseId": null,
+      "capacity": null,
+      "enabled": false,
+      "materials": [
+        {
+          "kind": "paper_book",
+          "sku": null,
+          "unitAmountCents": null,
+          "enabled": false
+        },
+        {
+          "kind": "ebook",
+          "sku": null,
+          "unitAmountCents": null,
+          "enabled": false
+        }
+      ],
+      "profileKey": "native_advanced_251496_draft",
+      "formSchema": {
+        "schemaVersion": "native-checkout.form.v1",
+        "inventory_kind": "scheduled_session_v1",
+        "description": "Choose your course materials and registration options. Additional courses keep their own class times.",
+        "max_students": 10,
+        "default_choices": [
+          "own_copy"
+        ],
+        "fields": [
+          {
+            "key": "first_name",
+            "wire": "firstName",
+            "type": "text",
+            "label": "First name",
+            "required": true
+          },
+          {
+            "key": "last_name",
+            "wire": "lastName",
+            "type": "text",
+            "label": "Last name",
+            "required": true
+          },
+          {
+            "key": "email",
+            "wire": "email",
+            "type": "email",
+            "label": "Email",
+            "required": true
+          },
+          {
+            "key": "phone",
+            "wire": "phone",
+            "type": "tel",
+            "label": "Phone",
+            "required": true
+          }
+        ],
+        "option_groups": [
+          {
+            "key": "materials",
+            "label": "PALS course materials",
+            "type": "radio",
+            "required": true,
+            "choices": [
+              {
+                "key": "own_copy",
+                "label": "I have my own current manual",
+                "catalog_keys": []
+              },
+              {
+                "key": "paper_book",
+                "label": "Printed Provider Manual",
+                "catalog_keys": [
+                  "advanced_251496_paper_book"
+                ]
+              },
+              {
+                "key": "ebook",
+                "label": "Provider Manual eBook",
+                "catalog_keys": [
+                  "advanced_251496_ebook"
+                ]
+              }
+            ]
+          }
+        ],
+        "driver_rules": [
+          {
+            "driver": "native_order"
+          }
+        ],
+        "back_url": "/pals.html"
+      }
+    }
+  ]
+}

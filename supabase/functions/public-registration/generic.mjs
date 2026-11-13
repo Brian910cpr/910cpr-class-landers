@@ -1,4 +1,4 @@
-import {fullCourseOffers,fullCoursePage} from './full-course.mjs';
+import {fullCourseOffers,fullCoursePage,fullCourseOptionRpc} from './full-course.mjs';
 import {normalizeCheckoutProfile,checkoutSelection,uploadPolicies,conditionApplies} from '../_shared/checkout-profile.mjs';
 import {profileUploadInput} from '../_shared/checkout-upload.mjs';
 import {skillsOffers,CONTEXTS,BLS_PACKAGES} from '../skills-session-reservation/policy.mjs';
@@ -109,7 +109,7 @@ export function genericCheckout(deps){
   }else if(packet.profile.form_schema.inventory_kind!=='scheduled_session_v1'||(!session&&!fullOffer))throw Error('invalid_session');
   if(fullOffer){
     await rpc('native_checkout_release_abandoned',{p_starts_at:fullOffer.startsAt,p_ends_at:fullOffer.consumptionEndsAt});
-    const canonical=await rpc('native_full_course_option',{p_course_number:publicCourse,p_offer:fullOffer});
+    const canonical=await rpc(fullCourseOptionRpc(publicCourse),{p_course_number:publicCourse,p_offer:fullOffer});
    if(!canonical)throw Error('session_not_available');capacity=canonical.capacity;
    remaining=canonical.targetSessionId?(await rpc('landerware_public_seat_state',{p_session_id:canonical.targetSessionId})).remaining:capacity;
   }
@@ -147,6 +147,14 @@ export function genericCheckout(deps){
    if(existing.kind==='public_order')await afterCommit(existing.orderId);
    return {ok:true,receipt:receiptView(existing,now())};
   }
+  const {m,expected,wire,inputs}=await prepare(body);
+  const r=await rpc(fullCourseOptionRpc(m.selection.course)==='native_advanced_full_course_option'?'reserve_native_advanced_checkout_order':'reserve_native_checkout_order',{p_key:key,p_profile_key:m.view.profileKey,p_version:m.view.profileVersion,p_context:m.context,
+   p_external_id:m.selection.session||null,p_offer:m.offer||{},p_students:wire,p_inputs:inputs,p_expected_total:expected});
+  if(r.status==='offer_required')throw Error('calendar_refresh_required');
+  await afterCommit(r.orderId);
+  return {ok:true,receipt:receiptView(r,now())};
+ }
+ async function prepare(body){
   const m=await resolve(body.selection),students=body.students;
   if(body.profileKey!==m.view.profileKey||body.profileVersion!==m.view.profileVersion)throw Error('profile_changed');
   if(!Array.isArray(students)||!students.length||students.length>m.view.maxStudents)throw Error('invalid_request');
@@ -158,11 +166,7 @@ export function genericCheckout(deps){
    Object.assign(w,selected.bindings,{addons:selected.addons,skillsContext:m.context,selectorSelectionId:m.offer?.selectionId||null});
    expected+=selected.amountCents;wire.push(w);inputs.push({...selected,wire:w,submitted:{fields:selected.fields,selectedChoices:selected.selectedChoices}});
   }
-  const r=await rpc('reserve_native_checkout_order',{p_key:key,p_profile_key:m.view.profileKey,p_version:m.view.profileVersion,p_context:m.context,
-   p_external_id:m.selection.session||null,p_offer:m.offer||{},p_students:wire,p_inputs:inputs,p_expected_total:expected});
-  if(r.status==='offer_required')throw Error('calendar_refresh_required');
-  await afterCommit(r.orderId);
-  return {ok:true,receipt:receiptView(r,now())};
+  return {m,expected,wire,inputs};
  }
  async function status(key){
   let r=await receipt(key);
@@ -195,7 +199,7 @@ export function genericCheckout(deps){
   const result=await rpc('native_checkout_finish_upload',{p_intent_id:intent.id});
   return {ok:true,evidenceStatus:result.evidenceStatus,approved:false};
  }
- return {model,resume,reserve,status,checkout,upload};
+ return {model,resume,reserve,status,checkout,upload,prepare};
 }
 
 // Limit before parsing, including chunked requests with no content-length.

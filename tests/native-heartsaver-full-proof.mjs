@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {preProfileFiles,profileMigration,fullCourseMigration} from './helpers/native-checkout-migration-plan.mjs';
-const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8').replaceAll('\r\n','\n');
 const migration='supabase/migrations/20261111220000_native_heartsaver_full_course_scopes.sql';
 const ids={'209809':'23dfcfa7-4224-46ed-8d45-64d43d5425db','344085':'306bc81a-0e09-49e1-8910-e05501222eb4'};
 export async function proveHeartsaverScopes(db,race=null){
