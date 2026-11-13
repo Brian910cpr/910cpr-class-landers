@@ -1,0 +1,25 @@
+name: Verify isolated local Supabase services
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/checkout-pg17-validation-advanced-20261113]
+    paths: [.github/workflows/verify-checkout-local-stack.yml, scripts/run-checkout-local-stack.sh, tests/local-supabase-service-proof.mjs]
+permissions:
+  contents: read
+jobs:
+  local-stack:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            scripts/run-checkout-local-stack.sh
+            tests/local-supabase-service-proof.mjs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Start disposable native stack and verify real local service privacy
+        run: bash scripts/run-checkout-local-stack.sh
