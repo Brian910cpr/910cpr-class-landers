@@ -1,6 +1,12 @@
 import unittest
+import io
+import json
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
 from datetime import datetime, timezone
 from scripts.audit_family_publication_coverage import summarize, continuity_incident, parse_arguments
+from scripts import audit_family_publication_coverage as audit
 
 
 class ObservationDateTests(unittest.TestCase):
@@ -31,6 +37,52 @@ class ObservationDateTests(unittest.TestCase):
         }
         for instant,day in cases.items():
             with self.subTest(instant=instant):self.assertEqual(self.day(instant),day)
+
+
+class ScheduledObservationDateTests(unittest.TestCase):
+    def test_scheduled_command_uses_operational_day_preserves_override_and_keeps_alerts(self):
+        observed = datetime(2026, 11, 13, 2, 0, tzinfo=timezone.utc)
+
+        class FixedClock(datetime):
+            @classmethod
+            def now(cls, tz=None):
+                return observed.astimezone(tz) if tz is not None else observed.replace(tzinfo=None)
+
+        feed = {'generatedAt': observed.isoformat(), 'validUntil': '2026-11-13T02:10:00Z',
+                'counts': {'failed_windows': 1}, 'dates': [
+                    {'date': '2026-11-12', 'startTimes': [{'startTime': '22:00', 'courses': [
+                        {'courseId': 'fixture', 'offerType': 'dynamic_appointment'},
+                        {'courseId': 'second-fixture', 'offerType': 'dynamic_appointment'}]}]},
+                    {'date': '2026-10-14', 'startTimes': [{'startTime': '09:00', 'courses': [
+                        {'courseId': 'historical-fixture', 'offerType': 'dynamic_appointment'}]}]}]}
+        landscape = {'cells': [{'date': '2026-11-12', 'result': 'fixture-current'},
+                               {'date': '2026-10-14', 'result': 'fixture-historical'}], 'sourcePages': {}}
+
+        def read_fixture(url, timeout):
+            self.assertEqual(timeout, 30)
+            self.assertIn('coverage=' + observed.isoformat(), url)
+            return io.BytesIO(json.dumps(landscape if 'scheduling_landscape.json' in url else feed).encode())
+
+        with TemporaryDirectory() as folder:
+            for override, expected_day, offers, cell in [
+                    ([], '2026-11-12', 2, 'fixture-current'),
+                    (['--day', '2026-10-14'], '2026-10-14', 1, 'fixture-historical')]:
+                with self.subTest(override=override):
+                    output = Path(folder) / 'observation.json'
+                    argv = ['audit', '--live', '--continuity', '--output', str(output), *override]
+                    with patch('sys.argv', argv), patch.object(audit, 'datetime', FixedClock), \
+                            patch.object(audit, 'urlopen', side_effect=read_fixture) as mocked, \
+                            patch('sys.stdout', new_callable=io.StringIO):
+                        self.assertEqual(audit.main(), 1, 'real coverage alerts must remain failures')
+                    result = json.loads(output.read_text(encoding='utf-8'))
+                    self.assertEqual(result['observedAt'], observed.isoformat())
+                    self.assertEqual(result['mode'], 'live-read-only')
+                    self.assertEqual(mocked.call_count, len(audit.FAMILIES) + 1)
+                    for family in result['families'].values():
+                        self.assertEqual((family['day'], family['dayOffers']), (expected_day, offers))
+                        self.assertTrue(family['coverageAlert'])
+                    self.assertEqual(result['landscape']['dayCellResults'], {cell: 1})
+                    self.assertIsNone(result['incident'])
 
 
 class WindowDiagnosticTests(unittest.TestCase):
