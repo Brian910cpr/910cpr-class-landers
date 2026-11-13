@@ -1,0 +1,33 @@
+// Separate NEW empty PostgreSQL17 fixture DB; never targets a Supabase stack.
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {independentPg17} from './helpers/independent-pg17-client.mjs';
+import {prepareCombinedCheckout} from './combined-checkout-proof.mjs';
+const {db,run}=await independentPg17('skills_claim_test_991115');
+const migration=readFileSync(new URL('../supabase/migrations/20261113133919_native_combined_checkout_guarded.sql',import.meta.url),'utf8');
+const scalar=async(q,args=[])=>Object.values((await db.query(q,args)).rows[0])[0];
+await db.exec("create table public.fixture_preserve_sentinel(id integer primary key,note text);insert into public.fixture_preserve_sentinel values(42,'synthetic-only');");
+await assert.rejects(run(migration),/basket_install_missing_prerequisite/);
+assert.equal(await scalar('select note from fixture_preserve_sentinel where id=42'),'synthetic-only');
+assert.equal(await scalar("select to_regclass('public.native_checkout_baskets')"),null);
+await prepareCombinedCheckout(db);
+const membership=await scalar("select pg_get_functiondef('public.native_checkout_basket_contains_order(uuid)'::regprocedure)");
+await db.exec("create table native_checkout_baskets(sentinel text);insert into native_checkout_baskets values('keep');");
+await assert.rejects(run(migration),/basket_install_existing_object/);
+assert.equal(await scalar('select sentinel from native_checkout_baskets'),'keep');
+// Remove only the sentinel object created by this test in this disposable DB.
+await db.exec('drop table native_checkout_baskets;');
+await db.exec("create or replace function public.native_checkout_basket_contains_order(p_order_id uuid) returns boolean language sql as 'select false';");
+await assert.rejects(run(migration),/basket_install_membership_source_drift/);
+assert.equal(await scalar("select to_regclass('public.native_checkout_basket_items')"),null);
+await db.exec(membership);
+const original=await scalar("select pg_get_functiondef('public.native_checkout_finalize_order(uuid,text,jsonb)'::regprocedure)");
+const changed=original.replaceAll('payment_evidence_mismatch','fixture_changed_guard');assert.notEqual(changed,original);await db.exec(changed);
+const before=(await db.query('select to_jsonb(c) as row from courses c order by id')).rows;
+await assert.rejects(run(migration),/basket_finalizer_source_drift/);
+for(const table of ['native_checkout_baskets','native_checkout_basket_items','native_checkout_basket_course_policy','native_checkout_basket_component_policy'])assert.equal(await scalar('select to_regclass($1)',['public.'+table]),null);
+assert.equal(await scalar("select pg_get_functiondef('public.native_checkout_finalize_order(uuid,text,jsonb)'::regprocedure)"),changed);
+assert.equal(await scalar("select pg_get_functiondef('public.native_checkout_basket_contains_order(uuid)'::regprocedure)"),membership);
+assert.deepEqual((await db.query('select to_jsonb(c) as row from courses c order by id')).rows,before);
+assert.equal(await scalar('select note from fixture_preserve_sentinel where id=42'),'synthetic-only');
+console.log('PASS independent PostgreSQL17 missing prerequisite, partial install, membership drift and late-source failure rollback; existing data/functions preserved');

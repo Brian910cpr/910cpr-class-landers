@@ -1,0 +1,42 @@
+name: Verify guarded checkout migration on PostgreSQL17
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/checkout-pg17-validation-advanced-20261113]
+    paths: [.github/workflows/verify-checkout-pg17-migration.yml, tests/combined-checkout-concurrency.mjs, tests/combined-checkout-pg17-rollback.mjs, tests/helpers/independent-pg17-client.mjs, supabase/migrations/*native_combined_checkout_guarded.sql]
+permissions:
+  contents: read
+jobs:
+  pg17-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_DB: skills_claim_test_991113
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            tests/
+            supabase/
+            data/config/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Independent claims, finalization, capacity and completed-order preservation
+        env:
+          NATIVE_TEST_POSTGRES_CONTAINER_ID: ${{ job.services.postgres.id }}
+        run: node tests/combined-checkout-concurrency.mjs
+      - name: Transactional migration failure and rollback preservation
+        env:
+          NATIVE_TEST_POSTGRES_CONTAINER_ID: ${{ job.services.postgres.id }}
+        run: |
+          createdb -h 127.0.0.1 -U postgres skills_claim_test_991115
+          node tests/combined-checkout-pg17-rollback.mjs

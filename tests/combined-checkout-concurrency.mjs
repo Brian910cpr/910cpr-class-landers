@@ -1,25 +1,9 @@
 // Fresh, isolated loopback PostgreSQL17 only. Synthetic data, no hosted URLs or sends.
 import assert from 'node:assert/strict';
-import {spawn} from 'node:child_process';
-import {localPsql,assertLocalTargetServer} from './helpers/local-postgres.mjs';
-import {assertIsolatedPostgresServerAddress} from './helpers/isolated-postgres-address.mjs';
+import {independentPg17} from './helpers/independent-pg17-client.mjs';
+import {readFileSync} from 'node:fs';
 import {proveCombinedCheckout} from './combined-checkout-proof.mjs';
-const database='skills_claim_test_991113',psql=localPsql(database);
-const quote=v=>v==null?'null':typeof v==='number'?String(v):"'"+String(v).replaceAll("'","''")+"'";
-const bind=(sql,args=[])=>sql.replace(/\$(\d+)\b/g,(_,i)=>quote(args[Number(i)-1]));
-function run(sql){return new Promise((resolve,reject)=>{const p=spawn(psql.command,psql.args,{env:psql.env,stdio:['pipe','pipe','pipe']});let out='',err='';p.stdout.on('data',v=>out+=v);p.stderr.on('data',v=>err+=v);p.on('error',reject);p.on('close',code=>code===0?resolve(out.trim()):reject(Error(err)));p.stdin.end(sql);});}
-let role=null;
-const prefix=()=>role?`set role ${role};`:'';
-const db={exec:async sql=>{
- if(/^set role service_role;?$/i.test(sql.trim())){role='service_role';return '';}
- if(/^reset role;?$/i.test(sql.trim())){role=null;return '';}
- return run(prefix()+sql);
-},query:async(sql,args)=>{const s=bind(sql,args).trim().replace(/;$/,'');const query=/^select\b/i.test(s)?`select row_to_json(q) from (${s}) q;`:/\breturning\b/i.test(s)?`with q as (${s}) select row_to_json(q) from q;`:s;
- const out=await run(prefix()+query);return {rows:out?out.split('\n').filter(v=>v.startsWith('{')).map(v=>JSON.parse(v)):[]};}};
-const server=(await db.query("select current_database() as database,current_setting('server_version_num')::int as version,pg_is_in_recovery() as recovery,host(inet_server_addr()) as address")).rows[0];
-assertLocalTargetServer(server,database);await assertIsolatedPostgresServerAddress(server.address,{args:psql.args,env:psql.env,port:Number(process.env.SKILLS_TEST_PORT||5432),database});
-assert.equal(await run("select count(*) from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname not in ('pg_catalog','information_schema') and n.nspname not like 'pg_toast%';"),'0');
-assert.equal(await run("select count(*) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname not in ('pg_catalog','information_schema');"),'0');
+const {db,run,server,quote}=await independentPg17('skills_claim_test_991113');
 
 await proveCombinedCheckout(db,async({items,saved,scalar})=>{
  const key=n=>`99111300-0000-4000-8000-${String(n).padStart(12,'0')}`;
@@ -61,3 +45,12 @@ await proveCombinedCheckout(db,async({items,saved,scalar})=>{
 
 });
 console.log(JSON.stringify({state:'LOCAL_PROVEN',server,hostedCalls:0,payments:0,mailSends:0,activation:false}));
+
+// Rejecting a migration replay must preserve real completed synthetic orders.
+const tables=['landerware_public_orders','landerware_public_order_students','registrations','class_sessions','product_inventory_units','native_checkout_baskets','native_checkout_basket_items','native_checkout_basket_course_policy'];
+const snapshot=async()=>Object.fromEntries(await Promise.all(tables.map(async name=>[name,(await db.query(`select to_jsonb(t) as value from public.${name} t order by to_jsonb(t)::text`)).rows])));
+const before=await snapshot();
+const migration=readFileSync(new URL('../supabase/migrations/20261113133919_native_combined_checkout_guarded.sql',import.meta.url),'utf8');
+await assert.rejects(run(migration),/basket_install_existing_object/);
+assert.deepEqual(await snapshot(),before);
+console.log('PASS PostgreSQL17 migration replay preserves completed orders, seats, registrations, inventory and basket policies');
