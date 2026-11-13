@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {processorDatabaseSnapshot} from './helpers/processor-database-snapshot.mjs';
 import {proveLocalRecoveryCapture} from './local-native-mail-capture.mjs';
 import {readFileSync,realpathSync,statSync} from 'node:fs';
 import {homedir} from 'node:os';
@@ -59,6 +60,9 @@ const body={selection,profileKey:model.profile.profileKey,profileVersion:model.p
 const reserve=()=>request(path+'reserve',{method:'POST',headers:{apikey:anon,'content-type':'application/json','idempotency-key':idempotency},body:JSON.stringify(body)});
 response=await reserve();let result=await response.json();assert.equal(response.status,200,'actual Edge reserve: '+String(result.error||''));assert.equal(result.receipt.amountCents,7500);assert.equal(result.receipt.status,'held');const order=result.receipt.orderId;
 response=await reserve();result=await response.json();assert.equal(response.status,200);assert.equal(result.receipt.orderId,order);assert.equal(sql('select count(*) from landerware_public_orders;'),'1','retry must not create a second hold');
+const persistenceSnapshot=processorDatabaseSnapshot({query:q=>db.query(q),orderId:order});
+const persistedHold=await persistenceSnapshot();assert.equal(persistedHold.status,'held');assert.equal(persistedHold.amountCents,7500);assert.equal(persistedHold.course,'209806');assert.deepEqual(persistedHold.registrationIds,[]);assert.equal(persistedHold.occupiedSeats,0);assert.equal(persistedHold.confirmationCount,0);
+console.log('PASS: actual database snapshot adapter sees persisted unpaid hold, no canonical seat or paid-confirmation fabrication.');
 const restore=await request(path+'form',{headers:{apikey:anon,'idempotency-key':idempotency}});assert.equal(restore.status,200,'actual Edge saved form recovery');
 const tamper=await request(path+'reserve',{method:'POST',headers:{apikey:anon,'content-type':'application/json','idempotency-key':'cccccccc-cccc-4ccc-8ccc-cccccccccccc'},body:JSON.stringify({...body,profileVersion:body.profileVersion+1})});assert.equal(tamper.status,400);assert.equal((await tamper.json()).error,'profile_changed');
 console.log('PASS: actual candidate Edge + PostgREST + PostgreSQL bootstrap/form/$75 hold/idempotent retry/saved recovery/profile-change rejection.');
