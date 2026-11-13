@@ -87,6 +87,20 @@ if(invalid?.status!==400){
  const log=readFileSync(join(process.env.RUNNER_TEMP,'checkout-functions-private.log'),'utf8');
  const markers=[['remote_import',/import|module|dependency/i],['esm_dependency',/esm\.sh/],['tls_certificate',/certificate|UnknownIssuer|TLS/i],['network_fetch',/fetch|network|connection|dns/i],['missing_service_key',/supabaseKey is required|supabaseUrl is required/],['boot_failure',/boot|worker/i]].filter(([,pattern])=>pattern.test(log)).map(([name])=>name);
  console.log('SAFE webhook startup categories: '+markers.join(','));
+ // Only dependency/startup error lines; remove every generated credential first.
+ const privateValues=[];
+ const collect=value=>{if(typeof value==='string'&&value.length>=16)privateValues.push(value);else if(value&&typeof value==='object')for(const child of Object.values(value))collect(child);};collect(raw);privateValues.push(webhookSecret);
+ const diagnostics=[];
+ for(let line of log.split('\n')){
+  if(!/\b(?:Error|SyntaxError|TypeError|ReferenceError):|worker boot error|Module not found|does not provide an export/.test(line))continue;
+  for(const value of privateValues)line=line.split(value).join('<private>');
+  if(/secret|token|authorization|api.?key|eyJ|whsec_|sb_secret_/i.test(line))continue;
+  line=line.replace(/\x1b\[[0-9;]*m/g,'').replace(/\/home\/runner\/[^\s:]+/g,'<runtime>');
+  if(!diagnostics.includes(line))diagnostics.push(line.slice(0,350));
+  if(diagnostics.length===4)break;
+ }
+ for(const line of diagnostics)console.log('SAFE dependency error: '+line);
+
  const body=await invalid?.json().catch(()=>({}));if(/^[A-Z_]{3,50}$/.test(body?.code||''))console.log('SAFE webhook response code: '+body.code);
 }
 assert.equal(invalid?.status,400,'actual webhook must reject invalid signature');
