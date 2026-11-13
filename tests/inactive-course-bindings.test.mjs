@@ -1,7 +1,11 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';
-const sql=readFileSync(new URL('../supabase/reviewed/native-verified-inactive-course-bindings.sql',import.meta.url),'utf8');
-const rows=[['209806','aha-bls-provider','native_bls_209806_v1'],['359474','aha-bls-provider-renewal','native_bls_359474_v1'],['509474','skills-session-only','native_skills_shared']];
-test('verified inactive bindings preserve business/session policy, are repeatable, and fail atomically on identity drift',async()=>{
+const fixtures=[
+ {name:'BLS and shared Skills',file:'native-verified-inactive-course-bindings.sql',rows:[['209806','aha-bls-provider','native_bls_209806_v1'],['359474','aha-bls-provider-renewal','native_bls_359474_v1'],['509474','skills-session-only','native_skills_shared']]},
+ {name:'Heartsaver in-person',file:'native-heartsaver-inactive-course-bindings.sql',rows:[['209809','aha-heartsaver-fa-cpr-aed','native_heartsaver_209809_draft'],['351632','aha-heartsaver-pediatric-fa-cpr-aed','native_heartsaver_351632_draft']]}
+];
+for(const {name,file,rows} of fixtures){
+const sql=readFileSync(new URL('../supabase/reviewed/'+file,import.meta.url),'utf8');
+test(name+': verified inactive bindings preserve business/session policy, are repeatable, and fail atomically on identity drift',async()=>{
  const {PGlite}=await import(process.env.SKILLS_PGLITE_MODULE||'@electric-sql/pglite');const db=new PGlite();
  try{
   await db.exec(`create table courses(id integer primary key,course_key text,enrollware_course_id text,registration_profile_key text,duration_minutes integer,max_students_default integer,cleanup_buffer_minutes integer,visibility text,base_price numeric);
@@ -14,9 +18,10 @@ test('verified inactive bindings preserve business/session policy, are repeatabl
   const before=await business();await db.exec(sql);await db.exec(sql);assert.deepEqual(await business(),before);
   assert.deepEqual((await db.query('select registration_profile_key from courses order by id')).rows.map(r=>r.registration_profile_key),rows.map(r=>r[2]));
   assert.equal((await db.query('select bool_or(active) as active from landerware_registration_profiles')).rows[0].active,false);
-  for(const mutation of ["update courses set registration_profile_key='other-owner' where id=2", "update landerware_registration_profiles set active=true where course_id='skills-session-only'", "update courses set course_key='unverified' where id=2"]){
+  for(const mutation of [`update courses set registration_profile_key='other-owner' where id=${rows.length-1}`, `update landerware_registration_profiles set active=true where course_id='${rows.at(-1)[1]}'`, `update courses set course_key='unverified' where id=${rows.length-1}`]){
    await db.exec('begin');await db.exec('update courses set registration_profile_key=null');await db.exec(mutation);
    await assert.rejects(db.exec(sql),/native_binding_/);await db.exec('rollback');assert.deepEqual(await business(),before);assert.deepEqual((await db.query('select registration_profile_key from courses order by id')).rows.map(r=>r.registration_profile_key),rows.map(r=>r[2]));
   }
  }finally{await db.close();}
 });
+}
