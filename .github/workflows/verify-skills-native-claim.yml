@@ -126,7 +126,7 @@ jobs:
         run: python -B -m unittest tests.test_native_advanced_publication_browser -v
       - name: Verify native Heartsaver selectors without external requests
         run: python -B -m unittest tests.test_native_heartsaver_publication_browser -v
-      - name: Verify combined course form with in-memory API and payment boundaries
+      - name: Verify existing and shared course forms with in-memory API and payment boundaries
         run: python -B -m unittest tests.test_combined_checkout_browser -v
       - name: Verify native BLS packages and legacy55 links without external requests
         run: python -B -m unittest tests.test_native_bls_browser_fixtures tests.test_native_bls_publication_browser -v

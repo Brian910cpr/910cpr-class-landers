@@ -32,7 +32,43 @@ class CombinedCheckoutBrowserTests(unittest.TestCase):
         self.exercise_flow(False)
     def test_lost_response_reload_resumes_original_basket_without_new_hold(self):
         self.exercise_flow(True)
-    def exercise_flow(self,reload):
+    def test_existing_register_page_uses_shared_options_and_basket_driver(self):
+        self.exercise_flow(False, '/register/')
+    def test_existing_form_catalog_options_across_families_and_repeat_student_choices(self):
+        with sync_playwright() as pw:
+            browser=pw.chromium.launch(headless=True)
+            context=browser.new_context(service_workers='block',viewport={'width':390,'height':844})
+            page=context.new_page()
+            state={'course':'209806','requests':[]}
+            def route_request(route):
+                url=route.request.url
+                if '/functions/v1/public-registration/session/' in url:
+                    route.fulfill(json={'ok':True,'session':{'id':'123456','courseId':state['course'],'course':'Synthetic course','price':75,'startsAt':'2030-12-26T15:00:00Z','endsAt':'2030-12-26T17:00:00Z','location':'Synthetic location','nativeReady':False,'addons':[{'key':'fixture_book','display_name':'Synthetic paper book','description':'Synthetic catalog option','unit_amount':2345,'active':True}]}});return
+                if '/functions/v1/public-registration/start' in url:
+                    state['requests'].append(route.request.post_data_json)
+                    route.fulfill(json={'ok':True,'checkoutUrl':self.origin+'/fixture-payment'});return
+                if url.startswith(self.origin+'/'):route.continue_();return
+                route.abort()
+            context.route('**/*',route_request)
+            for course in ['209806','359474','209809','351632','241108','209818','209805','251496','arc-fixture','hsi-fixture']:
+                with self.subTest(course=course):
+                    state['course']=course
+                    page.goto(self.origin+'/register/?session=123456')
+                    page.locator('[data-catalog-choice]').check()
+                    self.assertIn('$98.45',page.locator('#order-total').inner_text())
+                    page.locator('[data-same-for-all]').check()
+                    page.locator('#add-student').click()
+                    self.assertTrue(page.locator('.student').nth(1).locator('[data-catalog-choice]').is_checked())
+                    self.assertIn('$196.90',page.locator('#order-total').inner_text())
+                    page.locator('.student').nth(1).locator('.remove').click()
+                    for field,value in [('firstName','Synthetic'),('lastName','Fixture'),('email','synthetic@example.invalid'),('phone','2025550100')]:
+                        page.locator(f'[data-field={field}]').fill(value)
+                    self.assertLessEqual(page.evaluate('document.documentElement.scrollWidth'),390)
+                    page.locator('#continue').click()
+                    page.wait_for_url(self.origin+'/fixture-payment')
+                    self.assertEqual(state['requests'][-1]['students'][0]['addons'],[{'key':'fixture_book','quantity':1}])
+            browser.close()
+    def exercise_flow(self,reload,entry='/register/checkout/'):
         primary={'ok':True,'profile':profile('fixture-acls','Fixture ACLS',22500),'selection':{'course':'241108','session':'fixture-A'},'session':{'startsAt':'2030-12-26T19:00:00Z','endsAt':'2030-12-26T23:00:00Z','location':'Fixture location','capacity':2,'durationMinutes':240}}
         added={'ok':True,'profile':profile('fixture-bls','Fixture BLS',7500),'selection':{'course':'209806','session':'fixture-B'},'session':{'startsAt':'2030-12-27T15:00:00Z','endsAt':'2030-12-27T17:00:00Z','location':'Fixture location','capacity':2,'durationMinutes':120}}
         state={'receipt':None,'saved':None,'reserve_attempts':0,'paid':False,'outside':[]}
@@ -73,11 +109,13 @@ class CombinedCheckoutBrowserTests(unittest.TestCase):
                     else:
                         self.fail(f'Unexpected API action: {action}')
                     route.fulfill(status=200,json=result);return
+                if url.startswith('https://www.googletagmanager.com/'):
+                    route.abort();return
                 if url.startswith(self.origin+'/'): route.continue_();return
                 if url=='https://checkout.stripe.com/c/pay/synthetic-fixture':route.fulfill(status=200,body='Synthetic hosted checkout boundary. No payment.');return
                 state['outside'].append(url);route.abort()
             context.route('**/*',route_request)
-            page.goto(self.origin+'/register/checkout/?course=241108&session=fixture-A')
+            page.goto(self.origin+entry+'?course=241108&session=fixture-A')
             page.locator('#students [data-field=first_name]').fill('Synthetic')
             page.locator('#students [data-field=last_name]').fill('Fixture')
             page.locator('#students [data-field=email]').fill('synthetic@example.invalid')

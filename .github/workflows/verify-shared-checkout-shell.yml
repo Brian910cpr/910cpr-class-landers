@@ -2,10 +2,10 @@ name: Verify shared checkout shell
 on:
   workflow_dispatch:
   pull_request:
-    paths: ['docs/register/checkout/**','docs/assets/generic-checkout.js','docs/assets/checkout-profile.js','docs/assets/checkout-receipt.js','supabase/functions/_shared/checkout-profile.mjs','tests/skills-checkout-form.test.mjs','.github/workflows/verify-shared-checkout-shell.yml']
+    paths: ['docs/register/**','docs/assets/checkout-catalog-options.js','docs/assets/generic-checkout.js','docs/assets/checkout-profile.js','docs/assets/checkout-receipt.js','supabase/functions/_shared/checkout-profile.mjs','tests/skills-checkout-form.test.mjs','tests/checkout-catalog-options.test.mjs','tests/test_combined_checkout_browser.py','.github/workflows/verify-shared-checkout-shell.yml']
   push:
     branches: [main]
-    paths: ['docs/register/checkout/**','docs/assets/generic-checkout.js','docs/assets/checkout-profile.js','docs/assets/checkout-receipt.js','supabase/functions/_shared/checkout-profile.mjs','tests/skills-checkout-form.test.mjs','.github/workflows/verify-shared-checkout-shell.yml']
+    paths: ['docs/register/**','docs/assets/checkout-catalog-options.js','docs/assets/generic-checkout.js','docs/assets/checkout-profile.js','docs/assets/checkout-receipt.js','supabase/functions/_shared/checkout-profile.mjs','tests/skills-checkout-form.test.mjs','tests/checkout-catalog-options.test.mjs','tests/test_combined_checkout_browser.py','.github/workflows/verify-shared-checkout-shell.yml']
 permissions:
   contents: read
 jobs:
@@ -19,4 +19,17 @@ jobs:
           node-version: '24'
       - run: node --check docs/assets/generic-checkout.js
       - run: node --check docs/assets/checkout-receipt.js
-      - run: node --test tests/skills-checkout-form.test.mjs
+      - run: node --check docs/assets/checkout-catalog-options.js
+      - run: node --test tests/skills-checkout-form.test.mjs tests/checkout-catalog-options.test.mjs tests/checkout-components.test.mjs
+  existing-form-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install playwright==1.56.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Exercise original and shared forms with isolated API and payment fixtures
+        run: python -B -m unittest tests.test_combined_checkout_browser -v
