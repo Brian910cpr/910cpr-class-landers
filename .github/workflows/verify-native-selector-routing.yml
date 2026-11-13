@@ -1,0 +1,22 @@
+name: Verify native selector routing
+on:
+  push:
+    paths: ['scripts/build_bls_block_schedule_pilot.py', 'docs/assets/resolved-selector-availability.js', 'tests/selector_native_routing.test.cjs', '.github/workflows/verify-native-selector-routing.yml']
+  pull_request:
+    paths: ['scripts/build_bls_block_schedule_pilot.py', 'docs/assets/resolved-selector-availability.js', 'tests/selector_native_routing.test.cjs', '.github/workflows/verify-native-selector-routing.yml']
+permissions:
+  contents: read
+jobs:
+  routing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install openpyxl python-dateutil tzdata
+      - run: node --test tests/selector_native_routing.test.cjs tests/resolved_selector_availability.test.mjs
