@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+umask 077
 # One disposable runner; never links or deploys a hosted Supabase project.
 STACK_ROOT="${RUNNER_TEMP:?}/checkout-local-stack"
 export SUPABASE_HOME="$RUNNER_TEMP/checkout-supabase-home"
@@ -12,7 +13,7 @@ CLI="$RUNNER_TEMP/checkout-cli/supabase"
 "$CLI" --version
 # Fresh project only: no repository migration auto-application, no hosted link.
 cp -R "$GITHUB_WORKSPACE/supabase/functions" "$STACK_ROOT/supabase/"
-printf '[experimental]\nstack = true\n[db]\nmajor_version = 17\n[functions.public-registration]\nverify_jwt = false\n' > "$STACK_ROOT/supabase/config.toml"
+printf '[experimental]\nstack = true\n[db]\nmajor_version = 17\n[functions.public-registration]\nverify_jwt = false\n[functions.stripe-registration-webhook]\nverify_jwt = false\n' > "$STACK_ROOT/supabase/config.toml"
 cd "$STACK_ROOT"
 "$CLI" start --help > "$RUNNER_TEMP/checkout-cli/start-help.txt"
 grep -q -- '--runtime' "$RUNNER_TEMP/checkout-cli/start-help.txt"
@@ -21,9 +22,10 @@ grep -q -- '--output-format' "$RUNNER_TEMP/checkout-cli/start-help.txt"
 "$CLI" start --runtime native --exclude studio,realtime,analytics,pooler,mail --output-format json > "$RUNNER_TEMP/checkout-stack-private.json" 2> "$RUNNER_TEMP/checkout-stack-start-private.log"
 node "$GITHUB_WORKSPACE/tests/local-supabase-service-proof.mjs" "$RUNNER_TEMP/checkout-stack-private.json"
 printf 'STRIPE_EXPECTED_LIVEMODE=false\nNATIVE_COURSE_BASKETS_ENABLED=true\n' > "$RUNNER_TEMP/checkout-test.env"
-"$CLI" functions serve public-registration --env-file "$RUNNER_TEMP/checkout-test.env" > "$RUNNER_TEMP/checkout-functions-private.log" 2>&1 &
+node -e 'process.stdout.write("STRIPE_WEBHOOK_SECRET=whsec_local_"+require("node:crypto").randomBytes(32).toString("hex")+"\n")' >> "$RUNNER_TEMP/checkout-test.env"
+"$CLI" functions serve --env-file "$RUNNER_TEMP/checkout-test.env" > "$RUNNER_TEMP/checkout-functions-private.log" 2>&1 &
 FUNCTION_PID=$!
-node "$GITHUB_WORKSPACE/tests/local-supabase-application-proof.mjs" "$RUNNER_TEMP/checkout-stack-private.json"
+node "$GITHUB_WORKSPACE/tests/local-supabase-application-proof.mjs" "$RUNNER_TEMP/checkout-stack-private.json" "$RUNNER_TEMP/checkout-test.env"
 kill "$FUNCTION_PID" 2>/dev/null || true
 "$CLI" stop > /dev/null 2>&1
 printf 'Disposable local Supabase services stopped; runner teardown removes this test workspace.\n'

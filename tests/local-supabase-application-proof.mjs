@@ -4,6 +4,7 @@ import {readFileSync,realpathSync,statSync} from 'node:fs';
 import {homedir} from 'node:os';
 import {resolve,sep,join} from 'node:path';
 import {spawnSync} from 'node:child_process';
+import {createHmac} from 'node:crypto';
 import {proveCombinedCheckout} from './combined-checkout-proof.mjs';
 import {adaptLocalSupabaseFixture,localSupabaseFixtureAdmission} from './helpers/local-supabase-fixture-plan.mjs';
 let raw;try{raw=JSON.parse(readFileSync(process.argv[2],'utf8'));}catch{throw Error('invalid_private_stack_metadata');}
@@ -74,3 +75,17 @@ const actualRpc=async(name,body)=>{
  assert.equal(response.status,200,'isolated notification RPC '+name);return response.json();
 };
 await proveLocalRecoveryCapture({orderId:order,sql,rpc:actualRpc});
+
+const webhookSecret=readFileSync(process.argv[3],'utf8').split('\n').find(x=>x.startsWith('STRIPE_WEBHOOK_SECRET='))?.slice('STRIPE_WEBHOOK_SECRET='.length);
+assert(/^whsec_local_[a-f0-9]{64}$/.test(webhookSecret||''),'generated local signing binding required');console.log('::add-mask::'+webhookSecret);
+const rawEvent=JSON.stringify({id:'evt_local_synthetic_unpaid',type:'checkout.session.completed',livemode:false,data:{object:{id:'cs_test_local_synthetic',mode:'payment',payment_status:'unpaid',livemode:false}}});
+const stamp=String(Math.floor(Date.now()/1000));
+const signature=createHmac('sha256',webhookSecret).update(stamp+'.'+rawEvent).digest('hex');
+const webhook=(value)=>request('/functions/v1/stripe-registration-webhook',{method:'POST',headers:{'content-type':'application/json','stripe-signature':value},body:rawEvent});
+let invalid;for(let n=0;n<30;n++){try{invalid=await webhook('t='+stamp+',v1=invalid');if(invalid.status===400)break;}catch{}await new Promise(resolve=>setTimeout(resolve,1000));}
+assert.equal(invalid?.status,400,'actual webhook must reject invalid signature');
+const signed=await webhook('t='+stamp+',v1='+signature);assert.equal(signed.status,200,'actual webhook must accept locally signed unpaid event');assert.equal((await signed.json()).ok,true);
+assert.equal(sql("select count(*) from landerware_public_orders where status='paid' or payment_evidence<>'{}'::jsonb;"),'0');
+assert.equal(sql('select count(*) from registrations;'),'0');
+console.log('PASS: actual webhook handler/local signing binding rejects invalid signature and safely ignores valid synthetic unpaid event.');
+console.log('NOT PROVEN: Stripe-origin delivery, real test payment settlement or paid-class confirmation.');
