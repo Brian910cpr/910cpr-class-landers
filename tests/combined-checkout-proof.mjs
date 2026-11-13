@@ -4,8 +4,9 @@ const load=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8').replaceAll('
 export async function proveCombinedCheckout(db,race=null){
   for(const p of preProfileFiles)await db.exec(load(p));
   await db.exec("insert into courses(course_key,name,enrollware_course_id,duration_minutes,cleanup_buffer_minutes,max_students_default,base_price) values('aha-bls-provider','Fixture BLS','209806',120,30,6,75),('aha-bls-provider-renewal','Fixture Renewal','359474',120,30,6,75); insert into people(person_key,display_name) values('brian','Brian Ennis');");
-  for(const p of [profileMigration,'supabase/migrations/20261110231103_native_checkout_generated_session_lifecycle.sql',fullCourseMigration,'supabase/migrations/20261111190525_native_full_course_policy_service_access.sql','supabase/migrations/20261111195655_native_full_course_v2_policy.sql','supabase/reviewed/native-advanced-course-checkout.sql',codeDeliveryMigration,'supabase/reviewed/native-combined-checkout.sql'])await db.exec(load(p));
+  for(const p of [profileMigration,'supabase/migrations/20261110231103_native_checkout_generated_session_lifecycle.sql',fullCourseMigration,'supabase/migrations/20261111190525_native_full_course_policy_service_access.sql','supabase/migrations/20261111195655_native_full_course_v2_policy.sql','supabase/migrations/20261111185724_native_session_authority_cutover.sql','supabase/reviewed/native-advanced-readonly-prerequisites.sql','supabase/reviewed/native-advanced-course-checkout.sql',codeDeliveryMigration,'supabase/reviewed/native-combined-checkout.sql'])await db.exec(load(p));
   const scalar=async(q,args=[])=>Object.values((await db.query(q,args)).rows[0])[0];
+  assert.equal(await scalar("select md5(pg_get_functiondef('landerware_public_seat_state(uuid)'::regprocedure))"),'193f53e98ce47503390188674ed65151','proof preserves exact hosted owner-cutover seat reader');
   assert.equal(await scalar('select count(*) from native_checkout_basket_course_policy'),0,'no invented activation/mappings');
   await db.exec(`insert into landerware_registration_profiles select (jsonb_populate_record(null::landerware_registration_profiles,to_jsonb(p)||'{"profile_key":"fixture_acls","course_id":"fixture-acls","active":true}')).* from landerware_registration_profiles p where profile_key='native_bls_initial';
    insert into courses(course_key,name,enrollware_course_id,duration_minutes,cleanup_buffer_minutes,max_students_default,base_price,registration_profile_key) values('fixture-acls','Fixture ACLS','241108',240,0,2,225,'fixture_acls');
@@ -30,6 +31,27 @@ export async function proveCombinedCheckout(db,race=null){
   items[1].students=[{...student,manualChoice:'ebook',addons:[{key:'aha_bls_provider_manual_ebook',quantity:1}]}];items[1].inputs=[{...input,wire:items[1].students[0],selectedChoices:['manual_ebook','no_first_aid'],submitted:{...input.submitted,selectedChoices:['manual_ebook','no_first_aid']}}];items[1].expectedTotal=9500;
   const key='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
   const reserve=(k=key,x=items)=>scalar('select reserve_native_checkout_basket($1,$2::jsonb)',[k,JSON.stringify(x)]);
+  // Actual hosted reader includes owner-adopted reserved seats and capacity
+  // ceilings. Synthetic authority events below roll back inside the probe.
+  await db.exec(`create function skills_test.basket_adopted_capacity_probe(p_items jsonb,p_ceiling integer,p_reserved integer) returns boolean language plpgsql as $$
+   declare s public.class_sessions; state jsonb;
+   begin
+    select * into s from public.class_sessions where external_class_id=p_items->0->>'externalId';
+    if s.id is null then raise exception 'fixture_class_missing'; end if;
+    insert into public.landerware_session_authority_events(class_session_id,revision,enabled,decision_id,snapshot_fingerprint,session_identity,capacity_ceiling,retained_source_observed_at,retained_external_ids,unmatched_external_ids,anonymous_reserved_seats,canonical_registered_at_cutover)
+    values(s.id,1,true,'99111400-0000-4000-8000-000000000001',repeat('a',32),jsonb_build_array(s.course_id,s.start_at,s.end_at,s.consumption_start_at,s.consumption_end_at,s.lead_instructor_id,s.location_id,s.resource_id,s.organization_id,s.external_class_id,s.record_scope),p_ceiling,now(),array[]::text[],array[]::text[],p_reserved,0);
+    state:=public.landerware_public_seat_state(s.id);
+    if (state->>'capacity')::integer is distinct from p_ceiling or (state->>'remaining')::integer is distinct from p_ceiling-p_reserved then raise exception 'adopted_seat_state_mismatch'; end if;
+    begin
+     perform public.reserve_native_checkout_basket('99111400-0000-4000-8000-000000000002',p_items);
+     raise exception 'unexpected_adopted_capacity_admission';
+    exception when others then if SQLERRM<>'insufficient_seats' then raise; end if; end;
+    if exists(select 1 from public.landerware_public_orders) or exists(select 1 from public.native_checkout_baskets) then raise exception 'adopted_capacity_partial_save'; end if;
+    raise exception using errcode='ZX001',message='rollback synthetic adopted capacity';
+   exception when sqlstate 'ZX001' then return true; end $$;`);
+  assert.equal(await scalar('select skills_test.basket_adopted_capacity_probe($1::jsonb,2,2)',[JSON.stringify(items)]),true,'reserved imported seats cannot be resold by a native basket');
+  const doubled=items.map(item=>({...item,expectedTotal:item.expectedTotal*2,students:[item.students[0],{...item.students[0],email:'second-fixture@example.invalid'}],inputs:[item.inputs[0],{...item.inputs[0],wire:{...item.inputs[0].wire,email:'second-fixture@example.invalid'},submitted:{...item.inputs[0].submitted,fields:{...item.inputs[0].submitted.fields,email:'second-fixture@example.invalid'}}}]}));
+  assert.equal(await scalar('select skills_test.basket_adopted_capacity_probe($1::jsonb,1,0)',[JSON.stringify(doubled)]),true,'adopted ceiling is honored across the combined registration');
   const saved=await reserve();assert.equal(saved.amountCents,31250);assert.equal(saved.items.length,2);assert.equal(saved.lines.filter(l=>l.kind==='session')[1].discountCents,750);assert.equal(saved.lines.find(l=>l.kind==='ebook').totalCents,2000);assert.equal(saved.lines.find(l=>l.primary).discountCents,0);
   assert.equal((await reserve()).basketId,saved.basketId);assert.equal(await scalar('select count(*) from landerware_public_orders'),2);
   await assert.rejects(reserve(key,[...items].reverse()),/idempotency_conflict/);
