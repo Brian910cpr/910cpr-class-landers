@@ -110,14 +110,16 @@ try {
     WHERE n.nspname NOT IN ('pg_catalog','information_schema');`);
   assert.equal(routines, '0', 'database must have no existing user routines');
   const fixture = await readFile(resolve(root, 'tests/helpers/native-demand-snapshot-schema.sql'), 'utf8');
-  const migration = await readFile(resolve(root, 'supabase/migrations/20261111200810_native_scheduling_seat_snapshot.sql'), 'utf8');
+  const migration = await readFile(resolve(root, 'supabase/reviewed/native-advanced-readonly-prerequisites.sql'), 'utf8');
   assert(migration.trim(), 'migration is empty');
   await writer.query(fixture);
+  await writer.query("ALTER TABLE landerware_public_orders ADD COLUMN checkout_runtime_version text, ADD COLUMN reconciliation_error text, ADD COLUMN stripe_payment_intent_id text;");
   const fingerprintSql = `SELECT coalesce(jsonb_agg(jsonb_build_object('oid',p.oid,'definition',pg_get_functiondef(p.oid)) ORDER BY p.oid)::text,'[]')
     FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace WHERE n.nspname='public'
     AND p.proname IN ('landerware_public_seat_state','native_session_authority_state');`;
   const fingerprints = await writer.query(fingerprintSql);
   await writer.query(migration);
+  await writer.query(migration); // Exact-source idempotent installer, not replacement.
   assert.equal(await writer.query(fingerprintSql), fingerprints, 'migration changed existing helper definitions');
   // The fixture-specific race cases are below. Never use pg_sleep for ordering.
   assert.notEqual(fingerprints, '[]', 'fixture must include the original mutation readers');
