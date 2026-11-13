@@ -241,7 +241,7 @@ class HeartsaverPublicationTests(unittest.TestCase):
                 self.assertEqual(workflow_report_paths(evidence),
                     'paths<<NATIVE_PUBLICATION_PATHS\n' + '\n'.join(runner.publication_paths(skills,True)) + '\nNATIVE_PUBLICATION_PATHS\n')
                 self.assertEqual({str(path.relative_to(root)) for path in (root/'docs').rglob('*') if path.is_file()},set(evidence['files']))
-                html=(root/'docs/heartsaver.html').read_text();self.assertIn('20261111-native-heartsaver1',html)
+                html=(root/'docs/heartsaver.html').read_text();self.assertIn('20261113-native-routing1',html)
                 self.assertIn('First Aid CPR AED',html);self.assertIn('CPR AED',html)
                 self.assertNotIn('"courseId": "209808"',html);self.assertNotIn('"courseId": "351632"',html)
                 self.assertEqual('"courseId": "509474"' in html,skills)

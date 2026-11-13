@@ -5,6 +5,37 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   "use strict";
 
+  // Preserve native destinations through every selector rebuild. The original
+  // BLS Initial seated-class route is supported by the existing retail checkout;
+  // other unconverted offers retain their current backend until explicitly ready.
+  function registrationDestination(course) {
+    const owned = value => {
+      if (typeof value !== 'string' || !value) return null;
+      try {
+        const url = new URL(value, 'https://www.910cpr.com');
+        if (url.protocol !== 'https:' || !['www.910cpr.com', '910cpr.com'].includes(url.host) ||
+            url.username || url.password || url.hash ||
+            !['/register/', '/register/checkout/', '/register/skills-session/'].includes(url.pathname)) return null;
+        const session = url.searchParams.getAll('session');
+        if (session.length > 1 || (session.length && !/^(?:\d+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/i.test(session[0]))) return null;
+        if (!session.length && !/^\d+$/.test(url.searchParams.get('course') || '')) return null;
+        return url.pathname + url.search;
+      } catch { return null; }
+    };
+    const native = owned(course.registrationUrl) || owned(course.appointmentUrl);
+    if (native) return native;
+    if (String(course.courseId) === '209806' && course.offerType === 'seated_class') {
+      try {
+        const url = new URL(course.appointmentUrl);
+        const ids = url.searchParams.getAll('id');
+        if (url.protocol === 'https:' && url.host === 'coastalcprtraining.enrollware.com' &&
+            !url.username && !url.password && !url.hash && url.pathname === '/enroll' &&
+            ids.length === 1 && /^\d+$/.test(ids[0])) return '/register/?session=' + encodeURIComponent(ids[0]);
+      } catch { /* Incomplete legacy identity cannot invent a native session. */ }
+    }
+    return course.appointmentUrl || course.registrationUrl || '';
+  }
+
   function businessNow(timeZone = "America/New_York", now = new Date()) {
     const parts = new Intl.DateTimeFormat("en-CA", {
       timeZone,
@@ -253,6 +284,7 @@
   return {
     schemaVersion: "selector-resolved-availability.v1",
     businessNow,
+    registrationDestination,
     startMinutes,
     isPastStart,
     selectableStartTimes,

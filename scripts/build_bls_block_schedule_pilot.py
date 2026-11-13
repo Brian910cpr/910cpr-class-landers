@@ -1097,6 +1097,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     "schedulerConsumptionEnd": course.get("schedulerConsumptionEnd"),
                     **({"appointmentDayId": course["appointmentDayId"]} if "appointmentDayId" in course else {}),
                     "appointmentUrl": course["appointmentUrl"],
+                    "registrationUrl": course.get("registrationUrl") or course["appointmentUrl"],
                     "location": course["location"],
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "sourceAvailabilityBlock": course.get("sourceAvailabilityBlock", {}),
@@ -1486,7 +1487,7 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v={"20261113-native-advanced1" if page_config.get("native_advanced_publication") else "20261111-native-heartsaver1" if page_config.get("native_heartsaver_publication") else "20261111-native-skills-seats2"}"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261113-native-routing1"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
@@ -2309,7 +2310,7 @@ def render_html(payload: dict[str, Any]) -> str:
         const link = document.createElement('a');
         link.className = 'register-link';
         const config = courseOptions.find(option => option.courseId === course.courseId);
-        link.href = course.appointmentUrl;
+        link.href = ResolvedSelectorAvailability.registrationDestination(course);
         if (config?.nativeRegistrationPath) {{
           const selection = new URLSearchParams({{course: course.courseId, date: selectedDate,
             startTime: slot.startTime, location: course.location,
