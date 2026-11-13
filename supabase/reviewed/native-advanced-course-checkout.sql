@@ -24,11 +24,24 @@ insert into public.landerware_registration_profiles(profile_key,version,course_i
 ('native_advanced_209805_draft',1,'unmapped_advanced_209805','AHA PALS Provider',false,'native_public_checkout','required',array[]::text[],'["first_name","last_name","email","phone"]'::jsonb,'[]'::jsonb,'[]'::jsonb,'{"mode":"customer_pays"}'::jsonb,'{"mode":"catalog_options"}'::jsonb,'native-checkout-profile-v1','{"schemaVersion":"native-checkout.form.v1","inventory_kind":"scheduled_session_v1","description":"Choose your course materials and registration options. Additional courses keep their own class times.","max_students":10,"default_choices":["own_copy"],"fields":[{"key":"first_name","wire":"firstName","type":"text","label":"First name","required":true},{"key":"last_name","wire":"lastName","type":"text","label":"Last name","required":true},{"key":"email","wire":"email","type":"email","label":"Email","required":true},{"key":"phone","wire":"phone","type":"tel","label":"Phone","required":true}],"option_groups":[{"key":"materials","label":"PALS course materials","type":"radio","required":true,"choices":[{"key":"own_copy","label":"I have my own current manual","catalog_keys":[]},{"key":"paper_book","label":"Printed Provider Manual","catalog_keys":["advanced_209805_paper_book"]},{"key":"ebook","label":"Provider Manual eBook","catalog_keys":["advanced_209805_ebook"]}]}],"driver_rules":[{"driver":"native_order"}],"back_url":"/pals.html"}'::jsonb,false),
 ('native_advanced_251496_draft',1,'unmapped_advanced_251496','AHA PALS Renewal',false,'native_public_checkout','required',array[]::text[],'["first_name","last_name","email","phone"]'::jsonb,'[]'::jsonb,'[]'::jsonb,'{"mode":"customer_pays"}'::jsonb,'{"mode":"catalog_options"}'::jsonb,'native-checkout-profile-v1','{"schemaVersion":"native-checkout.form.v1","inventory_kind":"scheduled_session_v1","description":"Choose your course materials and registration options. Additional courses keep their own class times.","max_students":10,"default_choices":["own_copy"],"fields":[{"key":"first_name","wire":"firstName","type":"text","label":"First name","required":true},{"key":"last_name","wire":"lastName","type":"text","label":"Last name","required":true},{"key":"email","wire":"email","type":"email","label":"Email","required":true},{"key":"phone","wire":"phone","type":"tel","label":"Phone","required":true}],"option_groups":[{"key":"materials","label":"PALS course materials","type":"radio","required":true,"choices":[{"key":"own_copy","label":"I have my own current manual","catalog_keys":[]},{"key":"paper_book","label":"Printed Provider Manual","catalog_keys":["advanced_251496_paper_book"]},{"key":"ebook","label":"Provider Manual eBook","catalog_keys":["advanced_251496_ebook"]}]}],"driver_rules":[{"driver":"native_order"}],"back_url":"/pals.html"}'::jsonb,false)
 on conflict(profile_key) do nothing;
+insert into public.landerware_registration_catalog(course_id,source,course_name,unit_amount,currency,addons,active,source_snapshot) values
+('241108','first_party_course_options','AHA ACLS Provider (Initial)',22500,'usd','[]'::jsonb,false,'{"price_evidence":"data/config/block_schedule_pages.json"}'::jsonb),
+('209818','first_party_course_options','AHA ACLS Provider (Renewal)',22500,'usd','[]'::jsonb,false,'{"price_evidence":"data/config/block_schedule_pages.json"}'::jsonb),
+('209805','first_party_course_options','AHA PALS Provider',27500,'usd','[]'::jsonb,false,'{"price_evidence":"data/config/block_schedule_pages.json"}'::jsonb),
+('251496','first_party_course_options','AHA PALS Renewal',22500,'usd','[]'::jsonb,false,'{"price_evidence":"data/config/block_schedule_pages.json"}'::jsonb)
+on conflict(course_id) do nothing;
 create table public.native_advanced_instructor_scopes(
  course_number text not null references public.native_advanced_course_policy,
  instructor_id uuid not null references public.people(id),availability_person_id text not null,
  calendar_source_keys text[] not null,verified boolean not null default false,evidence text,
  primary key(course_number,instructor_id)
+);
+-- Exact canonical venue identities only. No inferred label aliases or seeded
+-- zero-minute travel. Missing directional policy fails closed at admission.
+create table public.native_advanced_travel_policy(
+ from_location_id uuid not null references public.locations,to_location_id uuid not null references public.locations,
+ minutes integer not null check(minutes>=0),verified boolean not null default false,evidence text,
+ primary key(from_location_id,to_location_id),check(from_location_id<>to_location_id)
 );
 create table public.native_advanced_offer_leases(
  selection_id text primary key check(selection_id~'^native-full:[a-f0-9]{64}$'),
@@ -38,9 +51,10 @@ create table public.native_advanced_offer_leases(
 );
 alter table public.native_advanced_course_policy enable row level security;
 alter table public.native_advanced_instructor_scopes enable row level security;
+alter table public.native_advanced_travel_policy enable row level security;
 alter table public.native_advanced_offer_leases enable row level security;
-revoke all on public.native_advanced_course_policy,public.native_advanced_instructor_scopes,public.native_advanced_offer_leases from public,anon,authenticated;
-grant select,insert,update,delete on public.native_advanced_course_policy,public.native_advanced_instructor_scopes,public.native_advanced_offer_leases to service_role;
+revoke all on public.native_advanced_course_policy,public.native_advanced_instructor_scopes,public.native_advanced_travel_policy,public.native_advanced_offer_leases from public,anon,authenticated;
+grant select,insert,update,delete on public.native_advanced_course_policy,public.native_advanced_instructor_scopes,public.native_advanced_travel_policy,public.native_advanced_offer_leases to service_role;
 
 create function public.native_advanced_course_runtime_policy(p_course_number text) returns jsonb
 language plpgsql stable security invoker set search_path='' as $$
@@ -107,6 +121,7 @@ end $$;
 create function public.native_advanced_full_course_option(p_course_number text,p_offer jsonb) returns jsonb
 language plpgsql stable security invoker set search_path='' as $$
 declare p public.native_advanced_course_policy; policy jsonb; teacher jsonb; target public.class_sessions;
+ neighbor public.class_sessions; travel integer;
  starts timestamptz; ends timestamptz; occupied_start timestamptz; occupied_end timestamptz; external_id text; count_matches integer; seats jsonb;
 begin
  policy:=public.native_advanced_course_runtime_policy(p_course_number);
@@ -140,6 +155,28 @@ begin
   and coalesce(s.consumption_start_at,s.start_at)<occupied_end and coalesce(s.consumption_end_at,s.end_at,s.start_at+interval '1 day')>occupied_start) then return null; end if;
  if exists(select 1 from public.class_sessions s where s.record_scope='operational' and s.id is distinct from target.id and s.course_id=p.course_id
   and s.lead_instructor_id=(teacher->>'id')::uuid and s.status in ('scheduled','active','tentative','pending','proposed_window') and (s.start_at at time zone 'America/New_York')::date=(starts at time zone 'America/New_York')::date) then return null; end if;
+ -- Recheck the nearest real commitments in each direction under the same
+ -- materialization lock. Occupied bounds already include setup/cleanup.
+ for neighbor in
+  (select cs.* from public.class_sessions cs where cs.record_scope='operational' and cs.id is distinct from target.id
+   and cs.lead_instructor_id=(teacher->>'id')::uuid and cs.status in ('scheduled','active','tentative','pending','proposed_window')
+   and coalesce(cs.consumption_end_at,cs.end_at,cs.start_at+interval '1 day')<=occupied_start
+   order by coalesce(cs.consumption_end_at,cs.end_at,cs.start_at+interval '1 day') desc limit 1)
+  union all
+  (select cs.* from public.class_sessions cs where cs.record_scope='operational' and cs.id is distinct from target.id
+   and cs.lead_instructor_id=(teacher->>'id')::uuid and cs.status in ('scheduled','active','tentative','pending','proposed_window')
+   and coalesce(cs.consumption_start_at,cs.start_at)>=occupied_end order by coalesce(cs.consumption_start_at,cs.start_at) limit 1)
+ loop
+  if neighbor.location_id is distinct from p.location_id then
+   if coalesce(neighbor.consumption_end_at,neighbor.end_at,neighbor.start_at+interval '1 day')<=occupied_start then
+    select minutes into travel from public.native_advanced_travel_policy where from_location_id=neighbor.location_id and to_location_id=p.location_id and verified and nullif(trim(evidence),'') is not null;
+    if travel is null or coalesce(neighbor.consumption_end_at,neighbor.end_at,neighbor.start_at+interval '1 day')+make_interval(mins=>travel)>occupied_start then return null; end if;
+   else
+    select minutes into travel from public.native_advanced_travel_policy where from_location_id=p.location_id and to_location_id=neighbor.location_id and verified and nullif(trim(evidence),'') is not null;
+    if travel is null or occupied_end+make_interval(mins=>travel)>coalesce(neighbor.consumption_start_at,neighbor.start_at) then return null; end if;
+   end if;
+  end if;
+ end loop;
  if exists(select 1 from jsonb_array_elements(public.public_registration_closure_policy()->'closures') closure where occupied_start<(closure->>'endsAt')::timestamptz and occupied_end>(closure->>'startsAt')::timestamptz)
   or exists(select 1 from public.registration_reschedule_blocks b join public.class_sessions s on s.id=b.class_session_id where s.course_id=p.course_id and s.start_at=starts) then return null; end if;
  return p_offer||jsonb_build_object('targetSessionId',target.id,'externalId',external_id,'courseId',p.course_id,'locationId',p.location_id,'capacity',coalesce((seats->>'capacity')::integer,p.max_students),'course',(select name from public.courses where id=p.course_id),'pageKey',p.page_key,'sessionCents',p.session_cents);
@@ -151,7 +188,7 @@ language plpgsql security invoker set search_path='' as $$
 declare option jsonb; target uuid;
 begin
  lock table public.class_sessions in share row exclusive mode;
- lock table public.native_advanced_course_policy,public.native_advanced_instructor_scopes,public.native_advanced_offer_leases,public.courses,public.people,public.locations,public.instructor_qualifications in share mode;
+ lock table public.native_advanced_course_policy,public.native_advanced_instructor_scopes,public.native_advanced_travel_policy,public.native_advanced_offer_leases,public.courses,public.people,public.locations,public.instructor_qualifications in share mode;
  option:=public.native_advanced_full_course_option(p_course_number,p_offer);
  if option is null then raise exception 'session_not_available'; end if;
  target:=(option->>'targetSessionId')::uuid;
@@ -173,6 +210,22 @@ begin
  return option||jsonb_build_object('targetSessionId',target);
 end $$;
 
+create function public.native_advanced_existing_session_ready(p_course_number text,p_external_id text) returns boolean
+language plpgsql stable security invoker set search_path='' as $$
+declare p public.native_advanced_course_policy; policy jsonb; s public.class_sessions;
+begin
+ policy:=public.native_advanced_course_runtime_policy(p_course_number);
+ if policy->>'materializationEnabled' is distinct from 'true' then return false; end if;
+ select * into p from public.native_advanced_course_policy where course_number=p_course_number;
+ if (select count(*) from public.class_sessions where external_class_id=p_external_id and record_scope='operational')<>1 then return false; end if;
+ select * into s from public.class_sessions where external_class_id=p_external_id and record_scope='operational';
+ return coalesce(s.course_id=p.course_id and s.location_id=p.location_id and s.registration_backend='landerware' and s.visibility='public'
+  and s.registration_status='open' and s.status in ('scheduled','active') and s.start_at>now()
+  and s.end_at=s.start_at+make_interval(mins=>p.instruction_minutes)
+  and s.consumption_start_at=s.start_at-make_interval(mins=>p.setup_minutes) and s.consumption_end_at=s.end_at+make_interval(mins=>p.cleanup_minutes)
+  and exists(select 1 from jsonb_array_elements(policy->'instructors') t where t->>'id'=s.lead_instructor_id::text and (t->>'qualificationValidThrough')::timestamptz>=s.consumption_end_at),false);
+end $$;
+
 create function public.reserve_native_advanced_checkout_order(p_key text,p_profile_key text,p_version integer,p_context text,p_external_id text,p_offer jsonb,p_students jsonb,p_inputs jsonb,p_expected_total integer)
 returns jsonb language plpgsql security invoker set search_path='' as $$
 declare p public.native_advanced_course_policy; option jsonb;
@@ -182,14 +235,17 @@ begin
  if exists(select 1 from public.landerware_public_orders where idempotency_key='public-order:'||p_key) then
   return public.reserve_native_checkout_order(p_key,p_profile_key,p_version,p_context,p_external_id,p_offer,p_students,p_inputs,p_expected_total);
  end if;
+ lock table public.class_sessions in share row exclusive mode;
+ lock table public.native_advanced_course_policy,public.native_advanced_instructor_scopes,public.native_advanced_travel_policy,public.courses,public.people,public.locations,public.instructor_qualifications in share mode;
  select * into p from public.native_advanced_course_policy where profile_key=p_profile_key;
  if p.course_number is null or public.native_advanced_course_runtime_policy(p.course_number)->>'materializationEnabled' is distinct from 'true' then raise exception 'native_profile_not_configured'; end if;
  if nullif(p_external_id,'') is null then
   option:=public.materialize_native_advanced_checkout(p.course_number,p_offer);p_external_id:=option->>'externalId';
  end if;
+ if not public.native_advanced_existing_session_ready(p.course_number,p_external_id) then raise exception 'session_not_available'; end if;
  return public.reserve_native_checkout_order(p_key,p_profile_key,p_version,p_context,p_external_id,p_offer,p_students,p_inputs,p_expected_total);
 end $$;
 
-revoke all on function public.native_advanced_course_runtime_policy(text),public.native_publish_advanced_offers(jsonb),public.native_advanced_full_course_option(text,jsonb),public.materialize_native_advanced_checkout(text,jsonb),public.reserve_native_advanced_checkout_order(text,text,integer,text,text,jsonb,jsonb,jsonb,integer) from public,anon,authenticated;
-grant execute on function public.native_advanced_course_runtime_policy(text),public.native_publish_advanced_offers(jsonb),public.native_advanced_full_course_option(text,jsonb),public.materialize_native_advanced_checkout(text,jsonb),public.reserve_native_advanced_checkout_order(text,text,integer,text,text,jsonb,jsonb,jsonb,integer) to service_role;
+revoke all on function public.native_advanced_existing_session_ready(text,text),public.native_advanced_course_runtime_policy(text),public.native_publish_advanced_offers(jsonb),public.native_advanced_full_course_option(text,jsonb),public.materialize_native_advanced_checkout(text,jsonb),public.reserve_native_advanced_checkout_order(text,text,integer,text,text,jsonb,jsonb,jsonb,integer) from public,anon,authenticated;
+grant execute on function public.native_advanced_existing_session_ready(text,text),public.native_advanced_course_runtime_policy(text),public.native_publish_advanced_offers(jsonb),public.native_advanced_full_course_option(text,jsonb),public.materialize_native_advanced_checkout(text,jsonb),public.reserve_native_advanced_checkout_order(text,text,integer,text,text,jsonb,jsonb,jsonb,integer) to service_role;
 commit;

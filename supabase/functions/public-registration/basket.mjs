@@ -9,7 +9,7 @@ export function nativeBasketCheckout({generic,rpc,checkout,verify,afterCommit,no
  const receipt=key=>{if(!KEY.test(key||''))throw Error('invalid_request');return rpc('native_checkout_basket_receipt',{p_key:key});};
  const notify=async r=>{if(r.status==='paid')for(const i of r.items||[])try{await afterCommit?.(i.orderId);}catch{/* Durable outboxes retain retry state. */}};
  return {
-  async choices(course){if(!/^\d+$/.test(course||''))throw Error('invalid_course');return {ok:true,choices:await rpc('native_checkout_basket_choices',{p_primary_course:course})};},
+  async choices(course){if(!/^\d+$/.test(course||''))throw Error('invalid_course');const choices=await rpc('native_checkout_basket_choices',{p_primary_course:course});for(const c of choices){if(c.inventoryKind==='leased_skills_v1')c.sessions=await generic.availableSelections(c.courseNumber,c.context);}return {ok:true,choices};},
   async reserve(key,body){
    if(!KEY.test(key||'')||!Array.isArray(body.items)||body.items.length<2||body.items.length>3||['amountCents','total','discount','discountBps','price'].some(k=>Object.hasOwn(body,k)))throw Error('invalid_request');
    let old;try{old=await rpc('native_checkout_basket_replay',{p_key:key,p_request:body});}catch(e){if(e.message!=='reservation_not_found')throw e;}

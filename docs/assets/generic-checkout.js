@@ -105,6 +105,7 @@ async function init(){
    if(recovery.checkoutUrl){const destination=new URL(recovery.checkoutUrl);if(destination.origin!=='https://checkout.stripe.com')throw Error('payment_unavailable');const link=document.createElement('a');link.href=destination.href;link.target='_top';link.textContent='Continue to secure payment';app.querySelector('section').append(link);}
    announceSize();return;
   }
+  if(model.basketResume){basketMode=true;basketModels=model.items;const parentReceipt=model.receipt;model=basketModels[0];model.receipt=parentReceipt;}
   receipt=model.receipt;
   const p=model.profile,date=new Date(model.session.startsAt).toLocaleString('en-US',{timeZone:'America/New_York',dateStyle:'full',timeStyle:'short'});
   const length=model.session.durationMinutes||(Date.parse(model.session.endsAt)-Date.parse(model.session.startsAt))/60000;

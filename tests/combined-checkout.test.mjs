@@ -28,3 +28,18 @@ test('one participant renderer uses per-course option/upload configuration, esca
  const p={fields:[{key:'name',label:'<script>unsafe</script>',type:'text',max_length:100}],optionGroups:[{key:'materials',label:'Materials',type:'radio',choices:[{key:'paper',label:'Paper book',amountCents:4500,available:false},{key:'ebook',label:'eBook',amountCents:4000,available:true}]}],defaultChoices:[],uploads:[{key:'certificate',label:'Completion certificate',required:false,maxBytes:2097152,mimeTypes:['application/pdf']}],baseCents:22500};const html=participantMarkup(p,'courseA',n=>'$'+n/100);assert.equal(html.includes('<script>'),false);assert.match(html,/&lt;script&gt;/);assert.match(html,/Paper book.*unavailable/);assert.match(html,/optional/);assert.match(html,/bring the document to class/);
  assert.deepEqual(additionalEstimate(p,['ebook'],1),{sessionCents:22500,discountCents:2250,componentsCents:4000,totalCents:24250});
 });
+import {genericCheckout} from '../supabase/functions/public-registration/generic.mjs';
+import {BLS_PACKAGES} from '../supabase/functions/skills-session-reservation/policy.mjs';
+test('BLS additions use exact leased skills/bundle identity and never a fabricated concrete appointment',async()=>{
+ const now=Date.parse('2030-01-01T00:00:00Z'),stamp=n=>new Date(n).toISOString();let enabled=true,bundle=true;
+ for(const course of ['509474','210549']){
+  const packageKey=BLS_PACKAGES[course],id='native-skills:'+'a'.repeat(64);
+  const row={courseId:course,publicCourseId:course,physicalCourseId:'509474',checkoutPackage:packageKey,profileKey:'native_skills_shared',profileVersion:2,selectionId:'skills:'+id+':bls-skills:'+packageKey,calendarProofObservedAt:stamp(now-60000),policyProofObservedAt:stamp(now-60000),proofObservedAt:stamp(now-60000),offerType:'dynamic_appointment',authority:'native-skills-publication.v1',nativeScopeId:'brian-shipyard-b.v1',nativeOfferId:id,qualificationPolicy:'skills-session-policy.v1',skillsContexts:['bls-skills'],capacity:2,publicSelectable:true,instructor:'Brian Ennis',resource:':: Wilmington; Shipyard Blvd - B',location:':: Wilmington; Shipyard Blvd',availabilityBlockId:'fixture',sourceSessionIds:[],durationMinutes:45,schedulerConsumptionMinutes:60,cleanupBufferMinutes:15,setupBufferMinutes:0,occupiedUntil:'2030-01-03T16:00:00Z',validUntil:stamp(now+600000)};
+  const feed={pageKey:'bls',schemaVersion:'selector-resolved-availability.v1',generatedAt:stamp(now),validUntil:stamp(now+600000),dates:[{date:'2030-01-03',startTimes:[{startTime:'10:00',courses:[row]}]}]};
+  const api=genericCheckout({now:()=>now,publication:async page=>{assert.equal(page,'bls');return feed;},skillsPolicy:async()=>({nativePublicationEnabled:false}),blsSkillsPolicy:async()=>({skillsEnabled:enabled,bundleEnabled:bundle,profileVersion:2})});
+  enabled=true;bundle=true;const rows=await api.availableSelections(course,'bls-skills');assert.equal(rows.length,1);assert.deepEqual(rows[0].selection,{course,skillsContext:'bls-skills',selectionId:row.selectionId});assert.equal(rows[0].session,undefined);
+  enabled=false;assert.equal((await api.availableSelections(course,'bls-skills')).length,0);enabled=true;
+  bundle=false;assert.equal((await api.availableSelections(course,'bls-skills')).length,course==='210549'?0:1);
+  assert.deepEqual(await api.availableSelections(course,'arc-blended'),[]);
+ }
+});

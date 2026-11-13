@@ -168,6 +168,7 @@ test('leased full BLS materialization uses fresh server source at both display a
 test('other configured course families resolve existing appointments through the same profile without dynamic creation',async()=>{
  const f=fixture();let lookup=0;
  f.packet.physicalCourseId='241108';f.catalog.course_id='241108';
+ const originalRpc=f.deps.rpc;f.deps.rpc=async(name,args)=>name==='native_advanced_existing_session_ready'?true:originalRpc(name,args);f.api=genericCheckout(f.deps);
  f.deps.appointmentSession=async selection=>{lookup++;assert.equal(selection.course,'241108');return 'canonical-acls-fixture';};
  f.deps.scheduleSession=async()=>({nativeReady:true,course_id:'241108',start_at:'2031-01-01T14:00:00Z',end_at:'2031-01-01T18:00:00Z',seats:{capacity:12,remaining:7}});
  const model=await f.api.model({course:'241108',date:'2031-01-01',startTime:'09:00'});

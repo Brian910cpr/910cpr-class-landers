@@ -29,6 +29,10 @@ class CombinedCheckoutBrowserTests(unittest.TestCase):
     def tearDownClass(cls):
         cls.server.shutdown();cls.server.server_close();cls.thread.join()
     def test_shared_form_addition_discount_replay_and_resume_without_external_requests(self):
+        self.exercise_flow(False)
+    def test_lost_response_reload_resumes_original_basket_without_new_hold(self):
+        self.exercise_flow(True)
+    def exercise_flow(self,reload):
         primary={'ok':True,'profile':profile('fixture-acls','Fixture ACLS',22500),'selection':{'course':'241108','session':'fixture-A'},'session':{'startsAt':'2030-12-26T19:00:00Z','endsAt':'2030-12-26T23:00:00Z','location':'Fixture location','capacity':2,'durationMinutes':240}}
         added={'ok':True,'profile':profile('fixture-bls','Fixture BLS',7500),'selection':{'course':'209806','session':'fixture-B'},'session':{'startsAt':'2030-12-27T15:00:00Z','endsAt':'2030-12-27T17:00:00Z','location':'Fixture location','capacity':2,'durationMinutes':120}}
         state={'receipt':None,'saved':None,'reserve_attempts':0,'paid':False,'outside':[]}
@@ -42,14 +46,19 @@ class CombinedCheckoutBrowserTests(unittest.TestCase):
                     action=url.split('/generic/')[1].split('?')[0];body=request.post_data_json if request.method=='POST' else None
                     from urllib.parse import urlparse,parse_qs
                     query=parse_qs(urlparse(url).query)
-                    if action=='form': result=added if query.get('course')==['209806'] else primary
+                    if action=='form':
+                        if state['saved'] is not None and not query:
+                            models=copy.deepcopy([primary,added])
+                            for i,m in enumerate(models):m['receipt']=state['receipt']['items'][i]['receipt']
+                            result={'ok':True,'basketResume':True,'receipt':state['receipt'],'items':models}
+                        else: result=added if query.get('course')==['209806'] else primary
                     elif action=='basket-choices': result={'ok':True,'choices':[{'courseNumber':'209806','family':'BLS','title':'Fixture BLS','sessions':[{'session':'fixture-B','startsAt':'2030-12-27T15:00:00Z','endsAt':'2030-12-27T17:00:00Z','location':'Fixture location'}]}]}
                     elif action=='basket-reserve':
                         state['reserve_attempts']+=1
                         if state['saved'] is None:
                             state['saved']=copy.deepcopy(body)
                             self.assertEqual(len(body['items']),2)
-                            self.assertEqual(body['items'][1]['students'][0]['fields']['email'],'synthetic@example.invalid')
+                            self.assertEqual(body['items'][1]['students'][0]['fields']['email'],'updated-synthetic@example.invalid')
                             state['receipt']={'kind':'course_basket','basketId':'fixture-basket','status':'held','amountCents':31250,'currency':'usd','holdExpiresAt':'2030-12-26T14:00:00Z','lines':[], 'items':[{'position':i,'courseNumber':c,'orderId':str(i),'receipt':{'status':'held','students':[{'selectedChoices':body['items'][i]['students'][0]['selectedChoices'],'uploads':{}}]}} for i,c in enumerate(['241108','209806'])]}
                             route.fulfill(status=503,json={'error':'service_unavailable'});return
                         self.assertEqual(state['saved'],body)
@@ -76,14 +85,21 @@ class CombinedCheckoutBrowserTests(unittest.TestCase):
             page.locator('[data-course]').select_option('209806')
             page.locator('[data-time]').select_option('fixture-B')
             page.locator('.extra-participant [data-choice][value=ebook]').check()
+            page.locator('#students [data-field=email]').fill('updated-synthetic@example.invalid')
+            page.locator('#students [data-field=phone]').click()
+            self.assertEqual(page.locator('.extra-participant [data-field=email]').input_value(),'updated-synthetic@example.invalid')
             self.assertIn('Added session discount: $7.50',page.locator('[data-detail]').inner_text())
             self.assertIn('Materials/access: $20.00',page.locator('[data-detail]').inner_text())
             page.locator('#pay').click()
             page.wait_for_function("document.querySelector('#status').textContent.includes('could not complete')")
             key=page.evaluate("sessionStorage.getItem(Object.keys(sessionStorage).find(k=>k.startsWith('native-checkout:')))")
+            if reload:
+                page.reload()
+                page.locator('#total').wait_for()
+                self.assertIn('Saved total: $312.50',page.locator('#total').inner_text())
             page.locator('#pay').click()
             page.wait_for_url('https://checkout.stripe.com/c/pay/synthetic-fixture')
-            self.assertEqual(state['reserve_attempts'],2)
+            self.assertEqual(state['reserve_attempts'],1 if reload else 2)
             from urllib.parse import urlparse,parse_qs
             # The current nonce was saved before the simulated lost response.
             page.goto(self.origin+'/register/checkout/?basket='+key)

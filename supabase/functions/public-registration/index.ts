@@ -50,13 +50,13 @@ function checkoutParams(o:any,c:any){const p=new URLSearchParams();p.set("line_i
  // https://docs.stripe.com/api/checkout/sessions/create#expires_at
  p.set("expires_at",String(Math.floor(Date.parse(o.hold_expires_at)/1000)+31*60));p.set("metadata[landerware_order_id]",o.id);p.set("metadata[landerware_order_type]","public");p.set("integration_identifier",`910cpr_public_${o.id.replace(/[^a-z]/g,"").slice(0,8).padEnd(8,"x")}`);return p}
 async function createCheckout(o:any,c:any){
- if(await rpc("native_checkout_basket_contains_order",{p_order_id:o.id}))throw Error("basket_checkout_required");
  if(o.status==="paid")return {url:`${ORIGIN}${publicOrderReturnPath(o)}?recover=${o.recovery_token}&paid=1`};
  if(o.reconciliation_error)throw Error("payment_reconciliation_required");
  if(!["held","checkout_open"].includes(o.status)||Date.parse(o.hold_expires_at)<=Date.now())throw Error("hold_expired");
  // A closure published after the hold must still block a new payment path.
  // Already-paid recovery is handled above, preserving existing paid bookings.
  await rpc("assert_public_registration_open",{p_start:null,p_end:null,p_external_id:o.external_class_id});
+ if(await rpc("native_checkout_basket_contains_order",{p_order_id:o.id}))throw Error("basket_checkout_required");
  const current=await db(`class_sessions?id=eq.${encodeURIComponent(o.class_session_id)}&select=id,status,registration_status,start_at,record_scope&limit=1`);
  if(current.length!==1||current[0].record_scope!=="operational"||!["scheduled","active"].includes(current[0].status)||current[0].registration_status!=="open"||Date.parse(current[0].start_at)<=Date.now())throw Error("session_not_open");
  if(o.registration_profile_snapshot?.profile&&!await rpc("native_checkout_payment_allowed",{p_key:o.idempotency_key.replace(/^public-order:/,"")}))throw Error("required_document_missing");
@@ -162,9 +162,13 @@ async function createBasketCheckout(id:string){
  const rows=await db(`native_checkout_baskets?id=eq.${b.id}&status=in.(held,checkout_open)`,{method:"PATCH",body:JSON.stringify({stripe_checkout_session_id:session.id,checkout_url:session.url,status:"checkout_open"})});if(rows.length!==1)throw Error("payment_reconciliation_required");return session;
 }
 const baskets=nativeBasketCheckout({generic,rpc,checkout:createBasketCheckout,verify:verifyBasket,afterCommit:afterNativeCommit});
+async function basketResume(key:string){const r=await baskets.owned(key);return {ok:true,basketResume:true,receipt:(await baskets.status(key)).receipt,items:await Promise.all(r.items.map(async(i:any)=>{const m=await generic.resume(await basketChildKey(i.orderId));return {...m,selection:{course:i.courseNumber,session:m.selection?.externalId,skillsContext:m.context||""}};}))};}
 async function genericRoute(req:Request,route:string[],origin:string){
  const action=route[1],url=new URL(req.url),key=req.headers.get("idempotency-key")||"";
  if(req.method==="GET"&&action==="form"){
+  if(key&&!url.searchParams.has("session")&&!url.searchParams.has("course")&&Deno.env.get("NATIVE_COURSE_BASKETS_ENABLED")==="true"){
+   try{return json(origin,await basketResume(key));}catch(e){if(!(e instanceof Error)||e.message!=="reservation_not_found")throw e;}
+  }
   const recoverToken=url.searchParams.get("recover");
   if(recoverToken){if(!/^[0-9a-f-]{36}$/i.test(recoverToken))throw Error("invalid_recovery_token");const rows=await db(`landerware_public_orders?recovery_token=eq.${recoverToken}&select=idempotency_key,checkout_runtime_version,registration_profile_snapshot&limit=1`);if(!rows[0])throw Error("order_not_found");if(publicOrderVersion(rows[0])==='legacy'){const response=await recover(recoverToken,origin);return json(origin,{legacyRecovery:await response.json()});}const recovered=rows[0].idempotency_key.replace(/^public-order:/,"");return json(origin,{...await generic.resume(recovered),key:recovered})}
   return json(origin,key&&!url.searchParams.has("session")&&!url.searchParams.has("course")?await generic.resume(key):await generic.model(Object.fromEntries(url.searchParams)));
@@ -173,7 +177,7 @@ async function genericRoute(req:Request,route:string[],origin:string){
   if(Deno.env.get("NATIVE_COURSE_BASKETS_ENABLED")!=="true")throw Error("native_registration_unavailable");
   if(req.method==="GET"&&action==="basket-choices")return json(origin,await baskets.choices(url.searchParams.get("course")||""));
   if(req.method==="GET"&&action==="basket-status")return json(origin,await baskets.status(key));
-  if(req.method==="GET"&&action==="basket-form"){const r=await baskets.owned(key);return json(origin,{ok:true,receipt:(await baskets.status(key)).receipt,items:await Promise.all(r.items.map(async(i:any)=>{const m=await generic.resume(await basketChildKey(i.orderId));return {...m,selection:{course:i.courseNumber,session:m.selection?.externalId,skillsContext:m.context||""}};}))});}
+  if(req.method==="GET"&&action==="basket-form")return json(origin,await basketResume(key));
   if(req.method!=="POST")throw Error("invalid_request");
   const body=await boundedCheckoutJSON(req,action==="basket-upload"?14000000:98304);
   if(action==="basket-reserve")return json(origin,await baskets.reserve(key,body));

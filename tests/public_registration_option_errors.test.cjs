@@ -1,3 +1,4 @@
+const {nativeBasketCheckout,basketCheckoutParams,settleBasket}=require('../supabase/functions/public-registration/basket.mjs');
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
@@ -8,7 +9,7 @@ const source=fs.readFileSync(path.join(__dirname,'../supabase/functions/public-r
 const entry=source.slice(source.lastIndexOf('Deno.serve('));
 test('session catalog disables stale options using server sellability, never browser assertions',async()=>{
  const calls=[];
- const context=vm.createContext({AbortSignal,genericCheckout:()=>({}),URL,URLSearchParams,Response,Error,Set,Promise,
+ const context=vm.createContext({nativeBasketCheckout,basketCheckoutParams,settleBasket,AbortSignal,genericCheckout:()=>({}),URL,URLSearchParams,Response,Error,Set,Promise,
   Deno:{env:{get:k=>({SUPABASE_URL:'https://fixture-db.test',SUPABASE_SERVICE_ROLE_KEY:'fixture-only'})[k]},serve:()=>{}},
   fetch:async(url,init={})=>{
    if(String(url).includes('/landerware_registration_catalog?'))return Response.json([{course_id:'synthetic',currency:'usd',addons:[
@@ -28,7 +29,7 @@ test('session catalog disables stale options using server sellability, never bro
 for(const error of ['physical_manual_unavailable','duplicate_addon','invalid_addon_quantity','invalid_addon_price','addon_fulfillment_unavailable','addon_inventory_exhausted','duplicate_product_addon']){
  test(`${error} is a validation response, not a server failure`,async()=>{
    let handler;
-   const context=vm.createContext({AbortSignal,genericCheckout:()=>({}),URL,Response,Error,Set,
+   const context=vm.createContext({nativeBasketCheckout,basketCheckoutParams,settleBasket,AbortSignal,genericCheckout:()=>({}),URL,Response,Error,Set,
      ALLOWED:new Set(['https://www.910cpr.com']),
      publishedSession:async()=>{throw new Error(error)},
      json:(_origin,payload,status=200)=>new Response(JSON.stringify(payload),{status}),
@@ -43,7 +44,7 @@ for(const error of ['physical_manual_unavailable','duplicate_addon','invalid_add
 test('asynchronous checkout failures retain current-main validation and date closure responses',async()=>{
  for(const [error,status] of [['invalid_addon',400],['registration_date_closed',409]]){
   let handler;
-  const context=vm.createContext({AbortSignal,genericCheckout:()=>({}),URL,Response,Error,Set,ALLOWED:new Set(['https://www.910cpr.com']),
+  const context=vm.createContext({nativeBasketCheckout,basketCheckoutParams,settleBasket,AbortSignal,genericCheckout:()=>({}),URL,Response,Error,Set,ALLOWED:new Set(['https://www.910cpr.com']),
     start:async()=>{await Promise.resolve();throw new Error(error)},
     json:(_origin,payload,status=200)=>new Response(JSON.stringify(payload),{status}),Deno:{serve:fn=>{handler=fn}}});
   vm.runInContext(stripTypeScriptTypes(entry),context);
@@ -53,7 +54,7 @@ test('asynchronous checkout failures retain current-main validation and date clo
 });
 
 test('unverified mixed-source class retains its published legacy booking route',async()=>{
- const context=vm.createContext({AbortSignal,genericCheckout:()=>({}),URL,URLSearchParams,Request,Response,Date,Error,Set,console,
+ const context=vm.createContext({nativeBasketCheckout,basketCheckoutParams,settleBasket,AbortSignal,genericCheckout:()=>({}),URL,URLSearchParams,Request,Response,Date,Error,Set,console,
    Deno:{env:{get:k=>({SUPABASE_URL:'https://fixture-db.test',SUPABASE_SERVICE_ROLE_KEY:'fixture-only'})[k]},serve:()=>{}},
    fetch:async url=>{
     const value=String(url);

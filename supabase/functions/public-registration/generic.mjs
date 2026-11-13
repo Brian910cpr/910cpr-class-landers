@@ -77,6 +77,7 @@ export function genericCheckout(deps){
    publicCourse=actualCourse;
   }
   const packet=await rpc('native_checkout_profile',{p_public_course_id:publicCourse,p_context:context});
+  if(session&&fullCourseOptionRpc(publicCourse)==='native_advanced_full_course_option'&&!await rpc('native_advanced_existing_session_ready',{p_course_number:publicCourse,p_external_id:String(selection.session)}))throw Error('session_not_available');
   packet.catalog=await deps.catalog(packet.physicalCourseId);
   const view=normalizeCheckoutProfile(packet.profile,packet.catalog,{context,publicCourse});
   let offer=fullOffer,capacity=session?.seats?.capacity,remaining=session?.seats?.remaining;
@@ -119,6 +120,15 @@ export function genericCheckout(deps){
   return {packet,view,context,offer,selection:{course:publicCourse,skillsContext:context,...(session?{session:String(selection.session)}:{selectionId:offer.selectionId})},
    session:{startsAt,endsAt,location:session?.location_name||session?.location_display||offer?.location,
     ...(Number.isFinite(durationMinutes)&&durationMinutes>0?{durationMinutes}:{}),...(Number.isInteger(capacity)&&capacity>0?{capacity}:{}),...(Number.isInteger(remaining)?{remainingSeats:remaining}:{})}};
+ }
+ // Only first-party BLS package offers enter a basket's skills additions.
+ // The selected offer is independently re-resolved/canonically revalidated at save.
+ async function availableSelections(course,context){
+  if(!['509474','210549'].includes(course)||context!=='bls-skills')return [];
+  const publication=await deps.publication('bls'),skillsPolicy=await deps.skillsPolicy(),blsPolicy=await deps.blsSkillsPolicy();
+  const offers=skillsOffers(publication,context,now(),course,{nativePublicationEnabled:skillsPolicy.nativePublicationEnabled===true,
+   blsSkillsEnabled:blsPolicy.skillsEnabled===true,blsBundleEnabled:blsPolicy.bundleEnabled===true,profileVersion:blsPolicy.profileVersion});
+  return offers.filter(o=>o.publicCourseId===course&&o.physicalCourseId==='509474'&&o.profileKey==='native_skills_shared'&&o.profileVersion===blsPolicy.profileVersion).slice(0,100).map(o=>({selection:{course,skillsContext:context,selectionId:o.selectionId},startsAt:o.startsAt,endsAt:o.endsAt,location:o.location}));
  }
  async function model(selection){
   const m=await resolve(selection);return {ok:true,profile:m.view,selection:m.selection,session:m.session};
@@ -199,7 +209,7 @@ export function genericCheckout(deps){
   const result=await rpc('native_checkout_finish_upload',{p_intent_id:intent.id});
   return {ok:true,evidenceStatus:result.evidenceStatus,approved:false};
  }
- return {model,resume,reserve,status,checkout,upload,prepare};
+ return {model,resume,reserve,status,checkout,upload,prepare,availableSelections};
 }
 
 // Limit before parsing, including chunked requests with no content-length.

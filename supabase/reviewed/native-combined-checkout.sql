@@ -4,7 +4,7 @@ create table public.native_checkout_basket_course_policy(
  public_course_id text primary key,family text not null check(family in ('BLS','ACLS','PALS')),
  physical_course_id text not null,profile_key text not null references public.landerware_registration_profiles,
  session_cents integer not null check(session_cents>0),access_addon_key text,
- enabled boolean not null default false,verified boolean not null default false,evidence text,
+ enabled boolean not null default false,verified boolean not null default false,evidence text,entry_context text not null default '',
  check(not enabled or (verified and nullif(trim(evidence),'') is not null))
 );
 create table public.native_checkout_basket_component_policy(
@@ -56,7 +56,7 @@ declare b public.native_checkout_baskets;
 begin
  select * into b from public.native_checkout_baskets where request_key=p_key;
  if b.id is null then raise exception 'reservation_not_found'; end if;
- if b.request_hash is distinct from md5(p_request::text) then raise exception 'idempotency_conflict'; end if;
+ if b.request_hash is distinct from encode(sha256(convert_to(p_request::text,'UTF8')),'hex') then raise exception 'idempotency_conflict'; end if;
  return public.native_checkout_basket_receipt(p_key);
 end $$;
 
@@ -66,9 +66,9 @@ declare primary_family text;
 begin
  select family into primary_family from public.native_checkout_basket_course_policy where public_course_id=p_primary_course and enabled and verified;
  if primary_family not in ('ACLS','PALS') or primary_family is null then return '[]'; end if;
- return (select coalesce(jsonb_agg(jsonb_build_object('courseNumber',p.public_course_id,'family',p.family,'title',c.name,
+ return (select coalesce(jsonb_agg(jsonb_build_object('courseNumber',p.public_course_id,'family',p.family,'title',c.name,'context',p.entry_context,'inventoryKind',f.form_schema->>'inventory_kind',
   'sessions',(select coalesce(jsonb_agg(jsonb_build_object('session',x.external_class_id,'startsAt',x.start_at,'endsAt',x.end_at,'location',x.source_location_label) order by x.start_at),'[]') from
-   (select s.* from public.class_sessions s where s.course_id=c.id and s.status in ('scheduled','active') and s.registration_backend='landerware' and s.registration_status='open' and s.record_scope='operational' and s.visibility='public' and s.start_at>now()+interval '24 hours' and s.start_at<now()+interval '90 days' and s.consumption_start_at is not null and s.consumption_end_at is not null and s.external_class_id is not null order by s.start_at limit 100) x))), '[]')
+   (select s.* from public.class_sessions s where f.form_schema->>'inventory_kind'='scheduled_session_v1' and s.course_id=c.id and s.status in ('scheduled','active') and s.registration_backend='landerware' and s.registration_status='open' and s.record_scope='operational' and s.visibility='public' and s.start_at>now()+interval '24 hours' and s.start_at<now()+interval '90 days' and s.consumption_start_at is not null and s.consumption_end_at is not null and s.external_class_id is not null order by s.start_at limit 100) x))), '[]')
   from public.native_checkout_basket_course_policy p join public.courses c on c.enrollware_course_id=p.physical_course_id and c.registration_profile_key=p.profile_key
   join public.landerware_registration_profiles f on f.profile_key=p.profile_key and f.course_id=c.course_key and f.active and f.registration_mode='native_public_checkout'
   where p.enabled and p.verified and p.family<>primary_family);
@@ -82,7 +82,7 @@ declare b public.native_checkout_baskets; item jsonb; policy public.native_check
  v_lines jsonb:='[]'; line jsonb; component public.native_checkout_basket_component_policy; access_count integer; expected integer; payer text; participant_hash text;
 begin
  if p_key is null or jsonb_typeof(p_items) is distinct from 'array' or jsonb_array_length(p_items) not between 2 and 3 then raise exception 'invalid_course_combination'; end if;
- fingerprint:=md5(coalesce(p_request,p_items)::text);
+ fingerprint:=encode(sha256(convert_to(coalesce(p_request,p_items)::text,'UTF8')),'hex');
  perform pg_advisory_xact_lock(hashtextextended('native-basket|'||p_key::text,0));
  select * into b from public.native_checkout_baskets where request_key=p_key for update;
  if b.id is not null then
@@ -184,7 +184,7 @@ begin
  -- Match every seat allocator's session-before-order lock ordering.
  perform 1 from public.class_sessions cs join public.landerware_public_orders co on co.class_session_id=cs.id join public.native_checkout_basket_items ci on ci.order_id=co.id where ci.basket_id=p_basket_id order by cs.id for update of cs;
  select * into b from public.native_checkout_baskets where id=p_basket_id for update;
- if b.id is null or b.stripe_checkout_session_id is null or p_evidence->>'id' is distinct from b.stripe_checkout_session_id or p_evidence->>'mode' is distinct from 'payment' or p_evidence->>'payment_status' is distinct from 'paid' or p_evidence->'metadata'->>'landerware_basket_id' is distinct from b.id::text or (p_evidence->>'amount_total')::integer is distinct from b.total or p_evidence->>'currency' is distinct from b.currency or p_intent is null or p_intent not like 'pi_%' or (b.stripe_payment_intent_id is not null and b.stripe_payment_intent_id<>p_intent) then raise exception 'payment_evidence_mismatch'; end if;
+ if jsonb_typeof(p_evidence->'livemode') is distinct from 'boolean' or b.id is null or b.stripe_checkout_session_id is null or p_evidence->>'id' is distinct from b.stripe_checkout_session_id or p_evidence->>'mode' is distinct from 'payment' or p_evidence->>'payment_status' is distinct from 'paid' or p_evidence->'metadata'->>'landerware_basket_id' is distinct from b.id::text or (p_evidence->>'amount_total')::integer is distinct from b.total or p_evidence->>'currency' is distinct from b.currency or p_intent is null or p_intent not like 'pi_%' or (b.stripe_payment_intent_id is not null and b.stripe_payment_intent_id<>p_intent) then raise exception 'payment_evidence_mismatch'; end if;
  if b.status in ('cancelled','refunded') then return jsonb_build_object('status',b.status); end if;
  if b.payment_evidence->>'payment_status'='paid' then return jsonb_build_object('recorded',true,'replay',true); end if;
  update public.native_checkout_baskets set payment_evidence=p_evidence,stripe_payment_intent_id=p_intent where id=b.id;

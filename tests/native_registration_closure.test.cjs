@@ -1,3 +1,4 @@
+const {nativeBasketCheckout,basketCheckoutParams,settleBasket}=require('../supabase/functions/public-registration/basket.mjs');
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -26,7 +27,7 @@ function endpoint({start='2026-10-21T12:00:00-04:00',end='2026-10-21T14:00:00-04
     if(url.includes('landerware_public_orders?'))return Response.json([{id:'00000000-0000-4000-8000-000000000001',external_class_id:id,status:paid?'paid':'held',hold_expires_at:'2030-01-01T00:00:00Z'}]);
     throw Error('Unexpected side effect or request: '+url);
   };
-  const context=vm.createContext({genericCheckout,boundedCheckoutJSON,fullAppointmentSession,publicOrderVersion,publicOrderReturnPath,settlePublicOrder,AbortSignal,URL,URLSearchParams,Date,Request,Response,crypto:globalThis.crypto,fetch,console,
+  const context=vm.createContext({nativeBasketCheckout,basketCheckoutParams,settleBasket,genericCheckout,boundedCheckoutJSON,fullAppointmentSession,publicOrderVersion,publicOrderReturnPath,settlePublicOrder,AbortSignal,URL,URLSearchParams,Date,Request,Response,crypto:globalThis.crypto,fetch,console,
     Deno:{serve(fn){handler=fn},env:{get:key=>({SUPABASE_URL:'https://fixture.test',SUPABASE_SERVICE_ROLE_KEY:'fixture-only'})[key]}}});
   vm.runInContext(stripTypeScriptTypes(source),context);
   const call=(path,method='GET',body)=>handler(new Request('https://fixture.test/functions/v1/public-registration/'+path,{method,headers:{Origin:'https://www.910cpr.com','content-type':'application/json','idempotency-key':'fixture-only'},...(body?{body:JSON.stringify(body)}:{})}));
