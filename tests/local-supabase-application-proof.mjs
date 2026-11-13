@@ -83,6 +83,12 @@ const stamp=String(Math.floor(Date.now()/1000));
 const signature=createHmac('sha256',webhookSecret).update(stamp+'.'+rawEvent).digest('hex');
 const webhook=(value)=>request('/functions/v1/stripe-registration-webhook',{method:'POST',headers:{'content-type':'application/json','stripe-signature':value},body:rawEvent});
 let invalid;for(let n=0;n<30;n++){try{invalid=await webhook('t='+stamp+',v1=invalid');if(invalid.status===400)break;}catch{}await new Promise(resolve=>setTimeout(resolve,1000));}
+if(invalid?.status!==400){
+ const log=readFileSync(join(process.env.RUNNER_TEMP,'checkout-functions-private.log'),'utf8');
+ const markers=[['remote_import',/import|module|dependency/i],['esm_dependency',/esm\.sh/],['tls_certificate',/certificate|UnknownIssuer|TLS/i],['network_fetch',/fetch|network|connection|dns/i],['missing_service_key',/supabaseKey is required|supabaseUrl is required/],['boot_failure',/boot|worker/i]].filter(([,pattern])=>pattern.test(log)).map(([name])=>name);
+ console.log('SAFE webhook startup categories: '+markers.join(','));
+ const body=await invalid?.json().catch(()=>({}));if(/^[A-Z_]{3,50}$/.test(body?.code||''))console.log('SAFE webhook response code: '+body.code);
+}
 assert.equal(invalid?.status,400,'actual webhook must reject invalid signature');
 const signed=await webhook('t='+stamp+',v1='+signature);assert.equal(signed.status,200,'actual webhook must accept locally signed unpaid event');assert.equal((await signed.json()).ok,true);
 assert.equal(sql("select count(*) from landerware_public_orders where status='paid' or payment_evidence<>'{}'::jsonb;"),'0');
