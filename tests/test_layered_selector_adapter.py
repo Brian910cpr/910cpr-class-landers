@@ -110,6 +110,34 @@ class LayeredAdapterTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'missing directional travel'):
             self.report()
 
+    def test_winter_evening_adr_overlap_and_travel_reject_new_offer_preserve_imports(self):
+        from copy import deepcopy
+        at=lambda value:datetime.fromisoformat(value)
+        window=dict(self.window,start='2026-12-07T17:30:00-05:00',end='2026-12-07T21:00:00-05:00')
+        shift=dict(start=at('2026-12-07T18:00:00-05:00'),end=at('2026-12-08T06:00:00-05:00'),
+            instructor='Brian Ennis',location='fixture-offsite-ADR',kind='commitment',
+            course_title='ADR shift',source_file='fixture_blocked_commitments',source_event_id='fixture-ADR')
+        room=self.policy['primary_resource']
+        travel={room+'->fixture-offsite-ADR':20,'fixture-offsite-ADR->'+room:20} # Test-only; not a real travel rule.
+        def inspect(rows):
+            return build_shadow([window],rows,self.courses,self.policy,self.resources,
+                at('2026-11-13T12:00:00-05:00'),lambda w:(at(w['start']),at(w['end'])),lambda w,c:False,travel_minutes=travel)
+        report=inspect([shift])
+        self.assertFalse(any(c['course']=='209806' for c in report['accepted']))
+        blocker=next(b for row in report['resource_availability'] for b in row['blockers'] if b['source_id']=='fixture-ADR')
+        self.assertEqual(blocker['start'],at('2026-12-07T17:40:00-05:00'))
+        self.assertEqual(blocker['reason'],'occupied_with_transition')
+        imported=dict(start=at(window['start']),end=at('2026-12-07T20:00:00-05:00'),instructor='Brian Ennis',
+            resource=room,location_resolution='location_resource_map',course_id='209806',active_registration_count=1,
+            source_file='canonical_class_sessions',source_event_id='fixture-imported-BLS')
+        rows=[imported,shift];before=deepcopy(rows);report=inspect(rows)
+        self.assertEqual(rows,before)
+        self.assertEqual({s['id'] for s in report['normalized_occupancy']},{'fixture-imported-BLS','fixture-ADR'})
+        self.assertEqual({b['source_id'] for row in report['resource_availability'] for b in row['blockers']},
+                         {'fixture-imported-BLS','fixture-ADR'})
+        existing=next(s for s in report['normalized_occupancy'] if s['id']=='fixture-imported-BLS')
+        self.assertEqual((existing['start'],existing['end']),(imported['start'],imported['end']))
+
     def test_proven_native_venue_label_reserves_primary_without_claiming_room(self):
         from scripts.generate_dynamic_offers import normalize_location_resource
         label = '4018 Shipyard Blvd, Room B, 910CPR Office'

@@ -200,7 +200,7 @@ def run(fixture):
             left, right = busy['start'] - minutes(before), busy['end'] + minutes(after)
             if left < we and right > ws:
                 blockers.append({'source_id': busy['id'], 'start': left, 'end': right,
-                                 'kind': busy['kind'], 'reason': busy.get('uncertainty_reason', 'occupied_with_transition')})
+                                 'kind': busy['kind'], 'reason': busy.get('uncertainty_reason') or 'occupied_with_transition'})
             revised = []
             for a, b in intervals:
                 if right <= a or left >= b:

@@ -50,6 +50,25 @@ test('actual full-course SQL materializes idempotently, preserves existing recor
   assert.equal((await opt()).capacity,6);
   for(const [k,v] of Object.entries({authority:'wrong',courseNumber:'359474',localStart:'2000-01-01T10:00',instructor:'Other',validUntil:'2000-01-01T00:00:00Z',endsAt:offer.startsAt}))assert.equal(await opt({...offer,[k]:v}),null);
   assert.equal(await opt(offer,'unknown'),null);
+  // Synthetic equivalent of a winter17:30 BLS crossing an18:00 overnight
+  // offsite commitment. No actual imported booking or ADR record is accessed.
+  await db.exec('begin');
+  try{
+   const local=offer.localStart.slice(0,10)+'T17:30',starts=easternInstant(local);
+   const evening={...offer,localStart:local,startsAt:starts,endsAt:new Date(Date.parse(starts)+120*60000).toISOString(),consumptionEndsAt:new Date(Date.parse(starts)+150*60000).toISOString(),selectionId:'dynamic:fixture-evening'};
+   assert.ok(await opt(evening),'fixture publication is otherwise eligible before commitment');
+   await db.query(`insert into locations(location_key,name,scheduling_status) values('fixture-ADR-offsite','Synthetic offsite','active')`);
+   await db.query(`insert into class_sessions(source,status,record_scope,course_id,start_at,end_at,consumption_start_at,consumption_end_at,timezone,location_id,lead_instructor_id,visibility,registration_backend,registration_status,max_students,external_class_id)
+    select 'manual','scheduled','operational',c.id,$1,$2,$1,$2,'America/New_York',l.id,p.id,'private','manual','closed',1,'fixture-ADR-only'
+    from courses c cross join locations l cross join people p where c.enrollware_course_id='359474' and l.location_key='fixture-ADR-offsite' and p.person_key='brian'`,[new Date(Date.parse(starts)+30*60000).toISOString(),new Date(Date.parse(starts)+12.5*3600000).toISOString()]);
+   const original=await scalar("select to_jsonb(s) from class_sessions s where external_class_id='fixture-ADR-only'");
+   assert.equal(await opt(evening),null,'same instructor overlap rejects despite different physical venue');
+   await db.exec('savepoint rejected_claim');
+   await assert.rejects(()=>mat(evening),/session_not_available/);
+   await db.exec('rollback to savepoint rejected_claim');
+   assert.deepEqual(await scalar("select to_jsonb(s) from class_sessions s where external_class_id='fixture-ADR-only'"),original,'conflicting imported commitment is never moved or canceled');
+   assert.equal(await scalar('select count(*) from class_sessions'),1,'rejected booking created no class');
+  }finally{await db.exec('rollback');}
   const created=await mat(),again=await mat();assert.equal(created.targetSessionId,again.targetSessionId);
   assert.equal(await scalar('select count(*) from class_sessions'),1);assert.equal(await scalar('select count(*) from landerware_sessions'),1);
   assert.equal(await scalar('select max_students from class_sessions'),6);assert.equal(Number(await scalar("select extract(epoch from end_at-start_at)/60 from class_sessions")),120);
