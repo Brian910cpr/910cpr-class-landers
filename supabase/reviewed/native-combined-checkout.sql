@@ -146,8 +146,12 @@ begin
  return public.native_checkout_basket_receipt(p_key);
 end $$;
 
-create function public.native_checkout_basket_contains_order(p_order_id uuid) returns boolean
-language sql stable security invoker set search_path='' as $$select exists(select 1 from public.native_checkout_basket_items where order_id=p_order_id)$$;
+create or replace function public.native_checkout_basket_contains_order(p_order_id uuid) returns boolean
+language plpgsql stable security invoker set search_path='' as $membership$
+begin
+ if to_regclass('public.native_checkout_basket_items') is null then return false; end if;
+ return (select exists(select 1 from public.native_checkout_basket_items where order_id=p_order_id));
+end $membership$;
 create function public.native_checkout_basket_payment_valid(p_order_id uuid,p_intent text,p_evidence jsonb) returns boolean
 language sql stable security invoker set search_path='' as $$
  select exists(select 1 from public.native_checkout_basket_items i join public.native_checkout_baskets b on b.id=i.basket_id join public.landerware_public_orders o on o.id=i.order_id
