@@ -29,7 +29,9 @@ if(backend.address===null){
  assert.equal(statSync(directory).uid,process.getuid(),'native database must belong to runner');
  const pid=Number(readFileSync(join(directory,'postmaster.pid'),'utf8').split('\n')[0]);assert(Number.isSafeInteger(pid)&&pid>1);
  assert.equal(statSync('/proc/'+pid).uid,process.getuid());
- assert(realpathSync('/proc/'+pid+'/exe').endsWith('/postgres'),'owned native PostgreSQL process required');
+ const executable=realpathSync('/proc/'+pid+'/exe');
+ const caches=[resolve(process.env.SUPABASE_HOME,'cache/stack'),resolve(homedir(),'.supabase/cache/stack')];
+ assert(caches.some(root=>executable.startsWith(root+sep)),'PostgreSQL executable must come from verified native stack cache');
  const args=readFileSync('/proc/'+pid+'/cmdline','utf8').split('\0');
  assert(args.includes(backend.directory)||args.includes(directory),'process must own exact database directory');
  verifiedNativeSocket=true;
