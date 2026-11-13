@@ -1,24 +1,27 @@
 """Actual advanced selector HTML, local fixture routes only; no hosted writes."""
 import json,mimetypes,unittest
+from copy import deepcopy
 from pathlib import Path
 from urllib.parse import urlsplit,parse_qs
 from playwright.sync_api import sync_playwright
-from tests.test_native_advanced_publication import AdvancedPublicationTests
+from tests import test_native_advanced_publication as fixtures
 from scripts.build_bls_block_schedule_pilot import render_html,public_selector_availability_payload
 from scripts.run_native_publication import native_page_config
 ROOT=Path(__file__).resolve().parents[1]
 class AdvancedSelectorBrowserTests(unittest.TestCase):
  def test_native_routes_and_original_expiry_on_phone_and_desktop(self):
-  fixture=AdvancedPublicationTests();fixture.setUp();payload=fixture.build()
+  fixture=fixtures.AdvancedPublicationTests();fixture.setUp();payload=fixture.build()
   config=json.loads((ROOT/'data/config/block_schedule_pages.json').read_text())['pages']['acls'];payload['pageConfig']=native_page_config(config,'acls',advanced_enabled=True)
-  html=render_html(payload);feed=public_selector_availability_payload(payload);origin='https://advanced-fixture.invalid'
+  html=render_html(payload);original_feed=public_selector_availability_payload(payload);origin='https://advanced-fixture.invalid'
   self.assertNotIn('PRIVATE-contact',html)
   with sync_playwright() as pw:
    browser=pw.chromium.launch(headless=True)
    for width in [390,1280]:
+    feed=deepcopy(original_feed)
     context=browser.new_context(viewport={'width':width,'height':900},service_workers='block');outside=[];errors=[]
     def serve(route):
      url=urlsplit(route.request.url)
+     if url.netloc=='www.googletagmanager.com' and url.path=='/gtm.js':route.fulfill(body='',content_type='application/javascript');return
      if url.netloc!=urlsplit(origin).netloc or route.request.method!='GET':outside.append(route.request.url);route.abort();return
      if url.path=='/acls.html':route.fulfill(body=html,content_type='text/html');return
      if url.path=='/data/block-selector-availability/acls.json':route.fulfill(json=feed);return
