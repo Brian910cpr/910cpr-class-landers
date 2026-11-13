@@ -34,6 +34,8 @@ class CombinedCheckoutBrowserTests(unittest.TestCase):
         self.exercise_flow(True)
     def test_existing_register_page_uses_shared_options_and_basket_driver(self):
         self.exercise_flow(False, '/register/')
+    def test_existing_form_required_upload_recovery_and_mocked_payment_handoff(self):
+        self.exercise_flow(False, '/register/', required_upload=True)
     def test_existing_form_catalog_options_across_families_and_repeat_student_choices(self):
         with sync_playwright() as pw:
             browser=pw.chromium.launch(headless=True)
@@ -68,14 +70,17 @@ class CombinedCheckoutBrowserTests(unittest.TestCase):
                     page.wait_for_url(self.origin+'/fixture-payment')
                     self.assertEqual(state['requests'][-1]['students'][0]['addons'],[{'key':'fixture_book','quantity':1}])
             browser.close()
-    def exercise_flow(self,reload,entry='/register/checkout/'):
+    def exercise_flow(self,reload,entry='/register/checkout/',required_upload=False):
         primary={'ok':True,'profile':profile('fixture-acls','Fixture ACLS',22500),'selection':{'course':'241108','session':'fixture-A'},'session':{'startsAt':'2030-12-26T19:00:00Z','endsAt':'2030-12-26T23:00:00Z','location':'Fixture location','capacity':2,'durationMinutes':240}}
         added={'ok':True,'profile':profile('fixture-bls','Fixture BLS',7500),'selection':{'course':'209806','session':'fixture-B'},'session':{'startsAt':'2030-12-27T15:00:00Z','endsAt':'2030-12-27T17:00:00Z','location':'Fixture location','capacity':2,'durationMinutes':120}}
-        state={'receipt':None,'saved':None,'reserve_attempts':0,'paid':False,'outside':[]}
+        if required_upload:
+            primary['profile']['uploads']=[{'key':'completion','label':'Synthetic required certificate','required':True,'maxBytes':2097152,'mimeTypes':['application/pdf']}]
+        state={'receipt':None,'saved':None,'reserve_attempts':0,'paid':False,'outside':[],'uploads':0,'checkout_attempts':0}
         with sync_playwright() as pw:
-            browser=pw.chromium.launch(headless=True)
+            browser=pw.chromium.launch(headless=True,timeout=15000)
             context=browser.new_context(service_workers='block',viewport={'width':390,'height':844})
             page=context.new_page()
+            page.set_default_timeout(15000)
             def route_request(route):
                 request=route.request;url=request.url
                 if '/functions/v1/public-registration/generic/' in url:
@@ -101,7 +106,19 @@ class CombinedCheckoutBrowserTests(unittest.TestCase):
                         result={'ok':True,'receipt':state['receipt']}
                     elif action=='basket-status':
                         receipt=copy.deepcopy(state['receipt']);receipt['status']='paid' if state['paid'] else 'held';result={'ok':True,'receipt':receipt}
-                    elif action=='basket-checkout': result={'ok':True,'checkoutUrl':'https://checkout.stripe.com/c/pay/synthetic-fixture'}
+                    elif action=='basket-upload':
+                        self.assertTrue(required_upload)
+                        self.assertEqual((body['courseIndex'],body['studentIndex'],body['requirementKey']),(0,0,'completion'))
+                        self.assertEqual(body['file']['type'],'application/pdf')
+                        state['uploads']+=1
+                        if state['uploads']==1:
+                            route.fulfill(status=503,json={'error':'document_storage_pending'});return
+                        state['receipt']['items'][0]['receipt']['students'][0]['uploads']['completion']={'evidenceStatus':'received','approved':False}
+                        result={'ok':True,'evidenceStatus':'received','approved':False}
+                    elif action=='basket-checkout':
+                        state['checkout_attempts']+=1
+                        if required_upload:self.assertEqual(state['uploads'],2)
+                        result={'ok':True,'checkoutUrl':'https://checkout.stripe.com/c/pay/synthetic-fixture'}
                     elif action=='basket-form':
                         models=copy.deepcopy([primary,added])
                         for i,m in enumerate(models):m['receipt']=state['receipt']['items'][i]['receipt']
@@ -128,6 +145,11 @@ class CombinedCheckoutBrowserTests(unittest.TestCase):
             self.assertEqual(page.locator('.extra-participant [data-field=email]').input_value(),'updated-synthetic@example.invalid')
             self.assertIn('Added session discount: $7.50',page.locator('[data-detail]').inner_text())
             self.assertIn('Materials/access: $20.00',page.locator('[data-detail]').inner_text())
+            if required_upload:
+                # Browser validation must reject a missing required document before save.
+                page.locator('#pay').click()
+                self.assertEqual(state['reserve_attempts'],0)
+                page.locator('#students [data-upload=completion]').set_input_files({'name':'synthetic-completion.pdf','mimeType':'application/pdf','buffer':b'%PDF-1.4\nSYNTHETIC TEST ONLY\n%%EOF'})
             page.locator('#pay').click()
             page.wait_for_function("document.querySelector('#status').textContent.includes('could not complete')")
             key=page.evaluate("sessionStorage.getItem(Object.keys(sessionStorage).find(k=>k.startsWith('native-checkout:')))")
@@ -136,7 +158,18 @@ class CombinedCheckoutBrowserTests(unittest.TestCase):
                 page.locator('#total').wait_for()
                 self.assertIn('Saved total: $312.50',page.locator('#total').inner_text())
             page.locator('#pay').click()
+            if required_upload:
+                page.wait_for_function("document.querySelector('#status').textContent.includes('not received')")
+                self.assertEqual(state['checkout_attempts'],0)
+                self.assertEqual(state['reserve_attempts'],2)
+                self.assertTrue(page.locator('.extra-participant [data-choice][value=ebook]').is_checked())
+                self.assertIn('Saved total: $312.50',page.locator('#total').inner_text())
+                page.locator('#pay').click()
             page.wait_for_url('https://checkout.stripe.com/c/pay/synthetic-fixture')
+            if required_upload:
+                self.assertEqual(state['uploads'],2)
+                self.assertEqual(state['checkout_attempts'],1)
+                self.assertEqual(state['receipt']['items'][0]['receipt']['students'][0]['uploads']['completion']['approved'],False)
             self.assertEqual(state['reserve_attempts'],1 if reload else 2)
             from urllib.parse import urlparse,parse_qs
             # The current nonce was saved before the simulated lost response.
@@ -145,6 +178,8 @@ class CombinedCheckoutBrowserTests(unittest.TestCase):
             self.assertIn('Saved total: $312.50',page.locator('#total').inner_text())
             self.assertEqual(page.locator('.extra-participant [data-choice][value=ebook]').is_checked(),True)
             self.assertEqual(page.locator('[data-course]').is_disabled(),True)
+            if required_upload:
+                self.assertFalse(page.locator('#students [data-upload=completion]').evaluate('(el)=>el.required'),'a received basket document must not require choosing the file again after reload')
             self.assertLessEqual(page.evaluate('document.documentElement.scrollWidth'),390)
             state['paid']=True;page.locator('#check-status').click()
             page.wait_for_function("document.querySelector('#result').textContent.includes('registration is confirmed')")

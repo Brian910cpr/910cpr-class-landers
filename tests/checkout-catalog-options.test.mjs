@@ -27,6 +27,6 @@ test('legacy option wires preserve existing server contract and reject incompati
 });
 test('original checkout shell remains, with configured options and version-aware native driver',()=>{
  const page=readFileSync(new URL('../docs/register/index.html',import.meta.url),'utf8');
- for(const retained of ['COMPANY_BILLING_CODES','billing-suggestions','student-body','registrationOrder:','catalogOptionsMarkup','catalogOptionSelections','p.session.nativeReady===true','/assets/generic-checkout.js?v=20261113-existing1'])assert.ok(page.includes(retained),retained);
+ for(const retained of ['COMPANY_BILLING_CODES','billing-suggestions','student-body','registrationOrder:','catalogOptionsMarkup','catalogOptionSelections','p.session.nativeReady===true','/assets/generic-checkout.js?v=20261113-basket-upload1'])assert.ok(page.includes(retained),retained);
  assert.doesNotMatch(page,/17\.49|data-manual-choice|String\(session.courseId\)!==/);
 });

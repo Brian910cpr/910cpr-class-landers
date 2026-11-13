@@ -30,6 +30,38 @@ test('one participant renderer uses per-course option/upload configuration, esca
 });
 import {genericCheckout} from '../supabase/functions/public-registration/generic.mjs';
 import {BLS_PACKAGES} from '../supabase/functions/skills-session-reservation/policy.mjs';
+import {quoteCourseRegistration} from '../supabase/functions/_shared/checkout-components.mjs';
+
+test('expired mixed-order replay retains materials and session-only discount without reopening payment or claiming again',async()=>{
+ const now=Date.parse('2030-01-02T00:00:00Z');
+ const component=(kind,unitAmountCents)=>({kind,sku:'TEST-'+kind,unitAmountCents,verified:true,active:true});
+ const quote=quoteCourseRegistration([
+  {courseNumber:'241108',allocationVersion:'session-plus-components.v1',priceEvidence:'TEST ONLY',sessionCents:22500,components:[component('paper_book',4500)]},
+  {courseNumber:'210549',allocationVersion:'session-plus-components.v1',priceEvidence:'TEST ONLY',sessionCents:5500,components:[component('heartcode_access',4000),component('ebook',2000)]}
+ ]);
+ assert.equal(quote.totalCents,37950);assert.equal(quote.discountCents,550);
+ assert.ok(quote.lines.filter(l=>l.primary||l.kind!=='session').every(l=>l.discountCents===0));
+ const body={items:[{selection:{course:'241108',session:'primary'},students:[{selectedChoices:['paper']}]},{selection:{course:'210549',session:'added'},students:[{selectedChoices:['online','ebook']}]}]};
+ for(const [paymentObserved,status,expected] of [[false,'held','expired'],[true,'held','processing'],[true,'cancelled','cancelled'],[true,'refunded','refunded']]){
+  let preparations=0,payments=0,claims=0;
+  const raw={basketId:'saved',status,paymentObserved,amountCents:quote.totalCents,currency:'usd',lines:quote.lines,holdExpiresAt:'2030-01-01T00:00:00Z',items:body.items.map((item,position)=>({position,courseNumber:item.selection.course,orderId:'child-'+position,receipt:{status,paymentObserved,holdExpiresAt:'2030-01-01T00:00:00Z',profileSnapshot:{inputs:item.students},students:[{options:{}}]}}))};
+  const api=nativeBasketCheckout({now:()=>now,generic:{prepare:async()=>{preparations++;throw Error('unexpected_prepare');}},checkout:async()=>{payments++;throw Error('unexpected_payment');},rpc:async(name,args)=>{
+   if(name==='native_checkout_basket_replay'){if(JSON.stringify(args.p_request)!==JSON.stringify(body))throw Error('idempotency_conflict');return structuredClone(raw);}
+   if(name==='native_checkout_basket_receipt')return structuredClone(raw);
+   claims++;throw Error('unexpected_claim');
+  }});
+  for(let attempt=0;attempt<2;attempt++){
+   const saved=(await api.reserve(key,structuredClone(body))).receipt;
+   assert.equal(saved.status,expected);assert.equal(saved.amountCents,37950);assert.deepEqual(saved.lines,quote.lines);
+   assert.deepEqual(saved.items.map(i=>i.receipt.students[0].selectedChoices),[['paper'],['online','ebook']]);
+  }
+  if(expected==='expired')await assert.rejects(api.checkout(key),/hold_expired/);
+  else assert.equal((await api.checkout(key)).receipt.status,expected);
+  const changed=structuredClone(body);changed.items[1].students[0].selectedChoices=['online','paper'];
+  await assert.rejects(api.reserve(key,changed),/idempotency_conflict/);
+  assert.equal(preparations,0);assert.equal(payments,0);assert.equal(claims,0);
+ }
+});
 test('BLS additions use exact leased skills/bundle identity and never a fabricated concrete appointment',async()=>{
  const now=Date.parse('2030-01-01T00:00:00Z'),stamp=n=>new Date(n).toISOString();let enabled=true,bundle=true;
  for(const course of ['509474','210549']){
