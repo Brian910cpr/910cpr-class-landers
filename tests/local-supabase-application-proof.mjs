@@ -45,6 +45,7 @@ assert.equal(sql('select count(*) from landerware_public_orders;'),'0','seed con
 await db.exec(`alter table class_sessions add constraint class_sessions_course_id_fkey foreign key(course_id) references courses(id);
  alter table class_sessions add constraint class_sessions_location_id_fkey foreign key(location_id) references locations(id);
  alter table class_sessions add constraint class_sessions_lead_instructor_id_fkey foreign key(lead_instructor_id) references people(id);
+ alter table landerware_public_order_students add constraint landerware_public_order_students_order_id_fkey foreign key(order_id) references landerware_public_orders(id);
  notify pgrst,'reload schema';`);
 const path='/functions/v1/public-registration/generic/',selection={course:'209806',session:'lw-22222222-2222-4222-8222-222222222222'};
 const getForm=()=>request(path+'form?'+new URLSearchParams(selection),{headers:{apikey:anon}});
@@ -58,10 +59,10 @@ response=await reserve();let result=await response.json();assert.equal(response.
 response=await reserve();result=await response.json();assert.equal(response.status,200);assert.equal(result.receipt.orderId,order);assert.equal(sql('select count(*) from landerware_public_orders;'),'1','retry must not create a second hold');
 const restore=await request(path+'form',{headers:{apikey:anon,'idempotency-key':idempotency}});assert.equal(restore.status,200,'actual Edge saved form recovery');
 const tamper=await request(path+'reserve',{method:'POST',headers:{apikey:anon,'content-type':'application/json','idempotency-key':'cccccccc-cccc-4ccc-8ccc-cccccccccccc'},body:JSON.stringify({...body,profileVersion:body.profileVersion+1})});assert.equal(tamper.status,400);assert.equal((await tamper.json()).error,'profile_changed');
+console.log('PASS: actual candidate Edge + PostgREST + PostgreSQL bootstrap/form/$75 hold/idempotent retry/saved recovery/profile-change rejection.');
 // No test credential is supplied: fail honestly rather than charge or invent payment.
 const payment=await request(path+'checkout',{method:'POST',headers:{apikey:anon,'content-type':'application/json','idempotency-key':idempotency},body:'{}'});assert.equal(payment.status,500);assert.equal((await payment.json()).error,'stripe_unavailable');
 assert.equal(sql('select count(*) from registrations;'),'0','unpaid hold is not registration');
 assert.equal(sql("select count(*) from landerware_public_orders where status='paid' or stripe_checkout_session_id is not null or payment_evidence<>'{}'::jsonb;"),'0','no processor receipt or paid-state fabrication');
-console.log('PASS: actual candidate Edge + PostgREST + PostgreSQL bootstrap/form/$75 hold/idempotent retry/saved recovery/profile-change rejection.');
 console.log('PASS: missing Stripe credential fails closed; no paid registration or processor evidence fabricated.');
 console.log('NOT RUN: real Stripe test payment/webhook and confirmation delivery; secure test runtime/provider bindings absent.');
