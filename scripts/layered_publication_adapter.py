@@ -338,13 +338,13 @@ def finalize(payload, now=None):
     original=result.get("offers", [])
     kept=[]
     for offer in original:
-        if offer.get("offerType")=="seated_class" and offer.get("authority") not in {"native-skills-seated.v1", "native-heartsaver-session-booking.v1"}:
+        if offer.get("offerType")=="seated_class" and offer.get("authority") not in {"native-skills-seated.v1", "native-heartsaver-session-booking.v1", "native-advanced-session-booking.v1"}:
             kept.append(offer)
         elif offer.get("validUntil") and aware(offer["validUntil"]) > now:
             kept.append(offer)
         else:
             result.setdefault("rejectedCourseStartTimes", []).append(dict(offer,reasons=["expired_or_missing_scoped_lease"]))
-    result["validUntil"] = max((o["validUntil"] for o in kept if o.get("offerType")!="seated_class" or o.get("authority") in {"native-skills-seated.v1", "native-heartsaver-session-booking.v1"}),default=now.isoformat())
+    result["validUntil"] = max((o["validUntil"] for o in kept if o.get("offerType")!="seated_class" or o.get("authority") in {"native-skills-seated.v1", "native-heartsaver-session-booking.v1", "native-advanced-session-booking.v1"}),default=now.isoformat())
     result["anchor_policy"] = dict(mode=SCHEMA,finalized=True)
     from scripts.public_registration_closures import apply_closures
     return apply_closures(_rebuild_dates(result,kept))[0]

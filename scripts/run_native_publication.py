@@ -316,7 +316,7 @@ def retire_released_occurrences(rows, demand):
     return kept, retired
 
 
-def retained_projection(retained, demand, *, skills_enabled=False, heartsaver_enabled=False, bls_skills_enabled=False, bls_bundle_enabled=False, now=None):
+def retained_projection(retained, demand, *, skills_enabled=False, heartsaver_enabled=False, bls_skills_enabled=False, bls_bundle_enabled=False, advanced_enabled=False, now=None):
     now = now or datetime.now(timezone.utc)
     if heartsaver_enabled:
         scope.validate_heartsaver_proof(demand.get('native_heartsaver_policy_proof'), now)
@@ -357,6 +357,9 @@ def retained_projection(retained, demand, *, skills_enabled=False, heartsaver_en
             if not skills['skillsContexts']:
                 skills = None
         heartsaver = heartsaver_session_admission(row, source, demand['generated_at'], demand.get('native_heartsaver_policy_proof'), now) if heartsaver_enabled else None
+        advanced_booking=advanced.seated_admission(row,source,demand['generated_at'],demand.get('native_advanced_policy_proof'),now) if advanced_enabled else None
+        if advanced_booking:
+            row.update(native_advanced_booking_admission=advanced_booking,public_direct_booking=True,registration_url='/register/checkout/?course='+str(row['course_id'])+'&session='+str(row['session_id']))
         if heartsaver:
             row.update(native_heartsaver_booking_admission=heartsaver, public_direct_booking=True,
                        registration_url='/register/?session='+str(row['session_id']))
@@ -376,7 +379,7 @@ def retained_projection(retained, demand, *, skills_enabled=False, heartsaver_en
 def prepare():
     require(policy_enabled(read(POLICY)), 'native_publication_disabled')
     demand = load_publication_demand(ROOT)
-    output = retained_projection(read('docs/data/schedule_future.json'), demand, skills_enabled=read(POLICY).get('skillsEnabled', False), heartsaver_enabled=read(POLICY).get('heartsaverFullEnabled', False), bls_skills_enabled=read(POLICY).get('blsSkillsEnabled', False), bls_bundle_enabled=read(POLICY).get('blsBundleEnabled', False))
+    output = retained_projection(read('docs/data/schedule_future.json'), demand, skills_enabled=read(POLICY).get('skillsEnabled', False), heartsaver_enabled=read(POLICY).get('heartsaverFullEnabled', False), bls_skills_enabled=read(POLICY).get('blsSkillsEnabled', False), bls_bundle_enabled=read(POLICY).get('blsBundleEnabled', False),advanced_enabled=read(POLICY).get('advancedFullEnabled',False))
     write('data/sessions_current.json', output)
     write('docs/data/schedule_future.json', output)
     return output
@@ -442,7 +445,8 @@ def validate(*, now=None, margin=300):
             for slot in day['startTimes']:
                 for offer in slot['courses']:
                     if page_key in ('acls','pals'):
-                        advanced.validate_public(dict(offer,date=day['date'],startTime=slot['startTime']),selector['generatedAt'],demand.get('native_advanced_policy_proof'),now)
+                        if offer.get('offerType')=='seated_class':advanced.validate_seated(dict(offer,date=day['date'],startTime=slot['startTime']),schedule,demand,now)
+                        else:advanced.validate_public(dict(offer,date=day['date'],startTime=slot['startTime']),selector['generatedAt'],demand.get('native_advanced_policy_proof'),now)
                         check_budget(offer['validUntil'],now,margin)
                         advanced_observations.append(scope.instant(offer['proofObservedAt']))
                         expiry=min(expiry,scope.instant(offer['validUntil']));full_count+=1
@@ -501,6 +505,10 @@ def annotate_seated_offers(payload, schedule):
             continue
         sid = str((offer.get('sourceAvailabilityBlock') or {}).get('sessionId') or '')
         row = rows.get(sid, {})
+        if offer.get('courseId') in advanced.COURSES:
+            require(row.get('public_direct_booking') is True and row.get('native_advanced_booking_admission'),'unadmitted_advanced_seated_offer')
+            advanced.annotate_seated(offer,row)
+            continue
         if str(offer.get('courseId')) in scope.HEARTSAVER:
             admission = row.get('native_heartsaver_booking_admission') or {}
             require(row.get('public_direct_booking') is True and admission, 'unadmitted_heartsaver_seated_offer')
@@ -532,7 +540,7 @@ def annotate_seated_offers(payload, schedule):
             capacity=admission['capacity'], remainingSeats=admission['remaining'],
             proofObservedAt=admission['proofObservedAt'], validUntil=admission['validUntil'])
     # Seated-only pages still carry a bounded native lease through finalization.
-    leases = [offer['validUntil'] for offer in payload.get('offers', []) if offer.get('authority') in {'native-skills-seated.v1','native-heartsaver-session-booking.v1'}]
+    leases = [offer['validUntil'] for offer in payload.get('offers', []) if offer.get('authority') in {'native-skills-seated.v1','native-heartsaver-session-booking.v1','native-advanced-session-booking.v1'}]
     if leases:
         payload['validUntil'] = max([payload.get('validUntil') or min(leases), *leases], key=scope.instant)
     return payload
@@ -686,7 +694,7 @@ def native_page_config(config, page_key='bls', *, skills_enabled=True, heartsave
     require(config.get('page_key') == page_key and page_key in PAGE_PATHS, 'unexpected_publication_page')
     if page_key in ('acls','pals') and advanced_enabled:
         allowed={cid for cid,page in advanced.COURSES.items() if page==page_key}
-        config.update(native_advanced_publication=True,allowed_course_ids=sorted(allowed),include_seated_classes=False,default_course_id=sorted(allowed)[0],compare_mode={'enabled':False},show_all_enabled=False)
+        config.update(native_advanced_publication=True,allowed_course_ids=sorted(allowed),include_seated_classes=True,default_course_id=sorted(allowed)[0],compare_mode={'enabled':False},show_all_enabled=False)
         config['course_options']=[c for c in config.get('course_options',[]) if str(c.get('course_id')) in allowed]
         return config
     if page_key == 'heartsaver' and heartsaver_enabled:
@@ -833,6 +841,7 @@ def admit_advanced(report,policy):
         for day in payload['dates']:
             for slot in day['startTimes']:
                 for offer in slot['courses']:
+                    if offer.get('offerType')=='seated_class':continue
                     offers.append(advanced.validate_public(dict(offer,date=day['date'],startTime=slot['startTime']),payload['generatedAt'],proof,now))
     for offset in range(0,len(offers),128):
         batch=offers[offset:offset+128]

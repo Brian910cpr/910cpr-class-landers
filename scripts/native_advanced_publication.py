@@ -107,3 +107,63 @@ def validate_public(offer,generated,proof,now):
     selection='native-full:'+sha256(json.dumps(raw,separators=(',',':')).encode()).hexdigest()
     if offer.get('selectionId')!=selection or offer.get('registrationUrl')!='/register/checkout/?'+urlencode({'course':cid,'selectionId':selection}):raise ValueError('advanced_offer_identity_changed')
     return dto
+
+
+def seated_admission(row,source,observed,proof,now):
+    """A previous public projection cannot renew native seated admission."""
+    try:
+        validate_proof(proof,now);cid=str(row['course_id']);p=course_policy({'_advancedProof':proof},cid,now)
+        b=source.get('native_advanced_booking_admission')
+        if not p or not isinstance(b,dict):return None
+        count,cap,remaining=source['active_registration_count'],b['capacity'],b['remaining']
+        start,end=instant(source['start_at']),instant(source['consumption_end_at'])
+        teacher=[t for t in p['instructors'] if t['id']==source.get('lead_instructor_id') and t['name']==source.get('lead_instructor_name')]
+        if not (source.get('registration_authority') in {'landerware-generated-session.v1','landerware-session-authority.v1'}
+          and source.get('registration_backend')=='landerware' and source.get('session_status') in {'scheduled','active'}
+          and source.get('registration_status')=='open' and source.get('visibility')=='public' and source.get('count_available') is True
+          and source.get('workspace_projection_status')=='current' and row.get('demand_status')=='current'
+          and b.get('schemaVersion')=='native-advanced-session-booking.v1' and b.get('publicCourseId')==cid==str(source.get('external_course_id'))
+          and b.get('canonicalCourseId')==p['canonicalCourseId'] and b.get('coursePolicyKey')==p['coursePolicyKey']
+          and b.get('sourceSessionId')==row.get('session_id')==source.get('external_class_id')
+          and re.fullmatch(r'(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})',b['sourceSessionId'])
+          and re.fullmatch(r'[a-f0-9]{32}',b.get('identityWitness',''))
+          and all(type(v) is int for v in [count,cap,remaining,b.get('profileVersion')])
+          and 0<=count<cap<=p['maxStudents'] and remaining==cap-count and b['profileVersion']>0
+          and b.get('instructionMinutes')==240 and b.get('setupMinutes')==p['setupMinutes'] and b.get('cleanupMinutes')==p['cleanupMinutes']
+          and all(instant(row[k])==instant(source[k]) for k in ['start_at','end_at','consumption_start_at','consumption_end_at'])
+          and instant(source['end_at'])==start+timedelta(minutes=240) and instant(source['consumption_start_at'])==start
+          and end==start+timedelta(minutes=240+p['cleanupMinutes']) and start>instant(now)
+          and row.get('location_name')==source.get('location_name')==p['location']
+          and row.get('lead_instructor_name')==source.get('lead_instructor_name')
+          and len(teacher)==1 and instant(teacher[0]['qualificationValidThrough'])>=end):return None
+        seen=min(instant(observed),instant(proof['observedAt']))
+        until=min(instant(observed)+timedelta(minutes=15),instant(proof['validUntil']))
+        if not seen<=instant(now)<until:return None
+        return dict(b,proofObservedAt=seen.isoformat(),validUntil=until.isoformat(),instructorId=teacher[0]['id'],resource=p['resource'],location=p['location'])
+    except (KeyError,TypeError,ValueError):return None
+
+
+def annotate_seated(offer,row):
+    b=row['native_advanced_booking_admission'];sid=b['sourceSessionId'];cid=b['publicCourseId']
+    for key in ['appointmentDayId','matchedContainerId']:offer.pop(key,None)
+    url='/register/checkout/?'+urlencode({'course':cid,'session':sid})
+    offer.update(authority='native-advanced-session-booking.v1',nativeScopeId=SCOPE,coursePolicyKey=b['coursePolicyKey'],canonicalCourseId=b['canonicalCourseId'],
+      session_id=sid,sourceSessionIds=[sid],availabilityBlockId='seated:'+sid,capacity=b['capacity'],remainingSeats=b['remaining'],profileVersion=b['profileVersion'],
+      identityWitness=b['identityWitness'],instructorId=b['instructorId'],resource=b['resource'],location=b['location'],durationMinutes=240,setupBufferMinutes=0,
+      cleanupBufferMinutes=b['cleanupMinutes'],schedulerConsumptionMinutes=240+b['cleanupMinutes'],occupiedFrom=row['consumption_start_at'],occupiedUntil=row['consumption_end_at'],
+      proofObservedAt=b['proofObservedAt'],validUntil=b['validUntil'],appointmentUrl=url,registrationUrl=url,sourceAvailabilityBlock={})
+    return offer
+
+
+def validate_seated(offer,schedule,demand,now):
+    rows=[r for r in schedule.get('sessions',[]) if r.get('session_id')==offer.get('session_id')]
+    if len(rows)!=1:raise ValueError('advanced_seated_identity_missing')
+    row=rows[0];sources=[r for r in demand['sessions'] if r.get('canonical_session_id')==row.get('canonical_session_id')]
+    if len(sources)!=1:raise ValueError('advanced_seated_source_missing')
+    admission=seated_admission(row,sources[0],demand['generated_at'],demand.get('native_advanced_policy_proof'),now)
+    if admission is None:raise ValueError('advanced_seated_admission_expired')
+    from zoneinfo import ZoneInfo
+    start=instant(row['start_at']).astimezone(ZoneInfo('America/New_York'))
+    expected=annotate_seated(dict(courseId=str(row['course_id']),date=start.date().isoformat(),startTime=start.strftime('%H:%M'),offerType='seated_class',publicSelectable=True,instructor=row['lead_instructor_name']),dict(row,native_advanced_booking_admission=admission))
+    if any(offer.get(k)!=v for k,v in expected.items() if k!='sourceAvailabilityBlock'):raise ValueError('advanced_seated_public_identity_changed')
+    return admission

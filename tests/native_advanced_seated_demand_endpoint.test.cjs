@@ -1,0 +1,12 @@
+const test=require('node:test'),assert=require('node:assert/strict');
+const {loadEndpoint}=require('./helpers/canonical_demand_endpoint.cjs');
+const api=loadEndpoint(()=>{throw Error('Unexpected network');});
+const id='lw-11111111-1111-4111-8111-111111111111';
+const row={id:'session',course_id:'22222222-2222-4222-8222-222222222222',external_course_id:'241108',start_at:'2030-01-01T15:00:00Z',end_at:'2030-01-01T19:00:00Z',consumption_start_at:'2030-01-01T15:00:00Z',consumption_end_at:'2030-01-01T19:15:00Z',lead_instructor_id:'fixture-instructor',location_id:'fixture-room',resource_id:null,organization_id:null,external_class_id:id,record_scope:'operational',registration_backend:'landerware',source:'landerware_event',status:'scheduled',registration_status:'open',visibility:'public',external_session_evidence:{materializedBy:'native_full_course'},native_checkout_generated_sessions:{identity_hash:'a'.repeat(32),state:'holding'}};
+const booking={schemaVersion:'native-advanced-session-booking.v1',publicCourseId:'241108',canonicalCourseId:row.course_id,coursePolicyKey:'advanced-full:241108.v1',profileKey:'fixture_advanced',profileVersion:1,sourceSessionId:id,identityWitness:'a'.repeat(32),capacity:3,remaining:1,instructionMinutes:240,setupMinutes:0,cleanupMinutes:15};
+const seats={registrationAuthority:'landerware-generated-session.v1',authorityRevision:null,generatedIdentity:'a'.repeat(32),sessionIdentity:[row.course_id,row.start_at,row.end_at,row.consumption_start_at,row.consumption_end_at,row.lead_instructor_id,row.location_id,null,null,id,'operational'],sessionStatus:'scheduled',registrationStatus:'open',visibility:'public',capacity:3,registered:1,holds:1,unreconciledReserved:0,advancedBooking:booking};
+test('advanced seated demand admits exact canonical DTO and rejects capacity, identity, duration and profile tampering',()=>{
+ const out=api.projectDemand(row,seats);assert.equal(out.native_advanced_booking_admission.remaining,1);assert.equal(out.active_registration_count,2);
+ for(const patch of [{publicCourseId:'209806'},{canonicalCourseId:'wrong'},{profileVersion:0},{capacity:4},{remaining:2},{identityWitness:'b'.repeat(32)},{instructionMinutes:120},{setupMinutes:15},{cleanupMinutes:0},{extra:true}])assert.throws(()=>api.projectDemand(row,{...seats,advancedBooking:{...booking,...patch}}));
+ const closed=api.projectDemand(row,{...seats,advancedBooking:null});assert.equal(closed.native_advanced_booking_admission,null);assert.equal(closed.active_registration_count,2);
+});

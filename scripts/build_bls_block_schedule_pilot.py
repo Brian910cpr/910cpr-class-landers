@@ -108,16 +108,16 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "date": day.get("date"),
                     "startTime": slot.get("startTime"),
                 }
-                if course.get('authority') in {'native-full-course.v2', 'native-full-course.v3', 'native-skills-publication.v1', 'native-skills-seated.v1', 'native-heartsaver-session-booking.v1'}:
+                if course.get('authority') in {'native-full-course.v2', 'native-full-course.v3', 'native-skills-publication.v1', 'native-skills-seated.v1', 'native-heartsaver-session-booking.v1','native-advanced-session-booking.v1'}:
                     compact_course.pop('appointmentDayId', None)
                     compact_course.update({key: course.get(key) for key in
                         ('authority', 'nativeScopeId', 'selectionId', 'publicSelectable', 'proofObservedAt',
                          'nativeOfferId', 'qualificationPolicy', 'skillsContexts', 'capacity', 'remainingSeats', 'profileVersion', 'identityWitness',
                          'coursePolicyKey', 'calendarProofObservedAt', 'policyProofObservedAt',
                          'publicCourseId', 'physicalCourseId', 'checkoutPackage', 'profileKey')})
-                if course.get('authority') == 'native-full-course.v3':
+                if course.get('authority') in {'native-full-course.v3','native-advanced-session-booking.v1'}:
                     compact_course.update({key:course.get(key) for key in ('canonicalCourseId','instructorId','availabilityPersonId','calendarSourceKey','availabilityStartsAt','availabilityEndsAt','occupiedFrom')})
-                if course.get('authority') == 'native-heartsaver-session-booking.v1':
+                if course.get('authority') in {'native-heartsaver-session-booking.v1','native-advanced-session-booking.v1'}:
                     compact_course['session_id'] = course.get('session_id')
                 if course.get('authority') == 'native-session-booking.v1':
                     compact_course.update({key: course.get(key) for key in

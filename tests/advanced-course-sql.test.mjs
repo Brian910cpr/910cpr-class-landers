@@ -64,6 +64,34 @@ test('advanced proposal installs behind disabled policy with no invented identit
   assert.equal(repeated.targetSessionId,created.targetSessionId);assert.equal(await scalar('select count(*) from class_sessions'),3,'two cancelled fixture commitments retain their identities');
   assert.equal(await scalar('select max_students from class_sessions where id=$1',[created.targetSessionId]),2);
   assert.equal(await scalar('select extract(epoch from end_at-start_at)/60 from class_sessions where id=$1',[created.targetSessionId]),'240.0000000000000000');
+  const existingReady=()=>scalar("select native_advanced_existing_session_ready('241108',$1)",[created.externalId]);
+  assert.equal(await existingReady(),true);
+  for(const file of ['supabase/migrations/20261111185724_native_session_authority_cutover.sql','supabase/migrations/20261111200810_native_scheduling_seat_snapshot.sql','supabase/migrations/20261111200908_native_full_course_lifecycle_hooks.sql','supabase/migrations/20261111202622_native_skills_publication_guard.sql'])await db.exec(load(file));
+  const snapshot=()=>scalar('select native_advanced_scheduling_seat_snapshot($1)',[created.targetSessionId]);
+  const originalSeats=await scalar('select native_scheduling_seat_snapshot($1)',[created.targetSessionId]);
+  const admitted=await snapshot();assert.equal(admitted.advancedBooking.remaining,2);assert.equal(admitted.advancedBooking.publicCourseId,'241108');
+  const {advancedBooking,...unchangedSeats}=admitted;assert.deepEqual(unchangedSeats,originalSeats,'additive admission preserves canonical occupancy');
+  for(const role of ['anon','authenticated'])assert.equal(await scalar("select has_function_privilege($1,'native_advanced_scheduling_seat_snapshot(uuid)','EXECUTE')",[role]),false);
+  assert.equal(await scalar("select provolatile from pg_proc where oid='native_advanced_scheduling_seat_snapshot(uuid)'::regprocedure"),'s');
+  const original=await scalar('select to_jsonb(s) from class_sessions s where id=$1',[created.targetSessionId]);
+  await db.exec('begin');
+  try{
+   await commitment('fixture-overlapping-shift',new Date(start+30*60000).toISOString(),new Date(start+12.5*3600000).toISOString());
+   assert.equal(await existingReady(),false,'seated checkout cannot bypass a conflicting same-instructor offsite shift');
+   assert.equal((await snapshot()).advancedBooking,null,'conflict removes CTA, not canonical occupancy');
+   assert.deepEqual(await scalar('select to_jsonb(s) from class_sessions s where id=$1',[created.targetSessionId]),original,'existing class is diagnosed, never moved or canceled');
+  }finally{await db.exec('rollback');}
+  for(const change of ["update native_advanced_course_policy set publication_enabled=false", "update landerware_registration_profiles set active=false where profile_key='fixture_advanced'", "update native_advanced_course_policy set max_students=1", "update instructor_qualifications set status='revoked' where course_id=(select id from courses where course_key='fixture-acls')"]){
+   await db.exec('begin');try{await db.exec(change);const closed=await snapshot();assert.equal(closed.advancedBooking,null);assert.equal(closed.capacity,originalSeats.capacity);assert.equal(closed.registered,originalSeats.registered);}finally{await db.exec('rollback');}
+  }
+  await db.exec('begin');
+  try{
+   await commitment('fixture-following-shift',new Date(end+30*60000).toISOString(),new Date(end+12.5*3600000).toISOString());
+   assert.equal(await existingReady(),false,'missing directional travel remains closed for existing classes');
+   await db.exec("insert into native_advanced_travel_policy select b.id,a.id,31,true,'EXPLICIT LOCAL FIXTURE ONLY' from locations a cross join locations b where a.location_key='fixture-other-room' and b.location_key='910cpr-office-shipyard'");
+   assert.equal(await existingReady(),false,'insufficient travel gap is rejected');
+   await db.exec('update native_advanced_travel_policy set minutes=20');assert.equal(await existingReady(),true);
+  }finally{await db.exec('rollback');}
   await db.exec("update instructor_qualifications set status='revoked' where course_id=(select id from courses where course_key='fixture-acls')");
   assert.equal(await option(offer),null,'qualification revocation invalidates existing published lease');
   assert.equal(await scalar("select native_advanced_existing_session_ready('241108',$1)",[created.externalId]),false,'existing-session checkout also rejects a revoked qualification');

@@ -126,6 +126,44 @@ begin
  return n;
 end $$;
 
+-- One read-only interval guard shared by dynamic creation and seated admission.
+create function public.native_advanced_interval_ready(p_target_id uuid,p_course_id uuid,p_instructor_id uuid,p_location_id uuid,teaching_start timestamptz,occupied_start timestamptz,occupied_end timestamptz) returns boolean
+language plpgsql stable security invoker set search_path='' as $$
+declare neighbor public.class_sessions; travel integer;
+begin
+ if occupied_start is null or occupied_end is null or occupied_end<=occupied_start then return false; end if;
+ if exists(select 1 from public.class_sessions s where s.record_scope='operational' and s.id is distinct from p_target_id
+  and s.status in ('scheduled','active','tentative','pending','proposed_window') and (s.location_id=p_location_id or s.lead_instructor_id=p_instructor_id)
+  and coalesce(s.consumption_start_at,s.start_at)<occupied_end and coalesce(s.consumption_end_at,s.end_at,s.start_at+interval '1 day')>occupied_start) then return false; end if;
+ -- Recheck the nearest real commitments in each direction under the same
+ -- materialization lock. Occupied bounds already include setup/cleanup.
+ for neighbor in
+  (select cs.* from public.class_sessions cs where cs.record_scope='operational' and cs.id is distinct from p_target_id
+   and cs.lead_instructor_id=p_instructor_id and cs.status in ('scheduled','active','tentative','pending','proposed_window')
+   and coalesce(cs.consumption_end_at,cs.end_at,cs.start_at+interval '1 day')<=occupied_start
+   order by coalesce(cs.consumption_end_at,cs.end_at,cs.start_at+interval '1 day') desc limit 1)
+  union all
+  (select cs.* from public.class_sessions cs where cs.record_scope='operational' and cs.id is distinct from p_target_id
+   and cs.lead_instructor_id=p_instructor_id and cs.status in ('scheduled','active','tentative','pending','proposed_window')
+   and coalesce(cs.consumption_start_at,cs.start_at)>=occupied_end order by coalesce(cs.consumption_start_at,cs.start_at) limit 1)
+ loop
+  if neighbor.location_id is distinct from p_location_id then
+   if coalesce(neighbor.consumption_end_at,neighbor.end_at,neighbor.start_at+interval '1 day')<=occupied_start then
+    select minutes into travel from public.native_advanced_travel_policy where from_location_id=neighbor.location_id and to_location_id=p_location_id and verified and nullif(trim(evidence),'') is not null;
+    if travel is null or coalesce(neighbor.consumption_end_at,neighbor.end_at,neighbor.start_at+interval '1 day')+make_interval(mins=>travel)>occupied_start then return false; end if;
+   else
+    select minutes into travel from public.native_advanced_travel_policy where from_location_id=p_location_id and to_location_id=neighbor.location_id and verified and nullif(trim(evidence),'') is not null;
+    if travel is null or occupied_end+make_interval(mins=>travel)>coalesce(neighbor.consumption_start_at,neighbor.start_at) then return false; end if;
+   end if;
+  end if;
+ end loop;
+ if exists(select 1 from jsonb_array_elements(public.public_registration_closure_policy()->'closures') closure where occupied_start<(closure->>'endsAt')::timestamptz and occupied_end>(closure->>'startsAt')::timestamptz)
+  or exists(select 1 from public.registration_reschedule_blocks b join public.class_sessions s on s.id=b.class_session_id where s.course_id=p_course_id and s.start_at=teaching_start) then return false; end if;
+ return true;
+end $$;
+revoke all on function public.native_advanced_interval_ready(uuid,uuid,uuid,uuid,timestamptz,timestamptz,timestamptz) from public,anon,authenticated;
+grant execute on function public.native_advanced_interval_ready(uuid,uuid,uuid,uuid,timestamptz,timestamptz,timestamptz) to service_role;
+
 create function public.native_advanced_full_course_option(p_course_number text,p_offer jsonb) returns jsonb
 language plpgsql stable security invoker set search_path='' as $$
 declare p public.native_advanced_course_policy; policy jsonb; teacher jsonb; target public.class_sessions;
@@ -158,35 +196,9 @@ begin
   external_id:=target.external_class_id;seats:=public.landerware_public_seat_state(target.id);
   if coalesce((seats->>'remaining')::integer,0)<1 then return null; end if;
  end if;
- if exists(select 1 from public.class_sessions s where s.record_scope='operational' and s.id is distinct from target.id
-  and s.status in ('scheduled','active','tentative','pending','proposed_window') and (s.location_id=p.location_id or s.lead_instructor_id=(teacher->>'id')::uuid)
-  and coalesce(s.consumption_start_at,s.start_at)<occupied_end and coalesce(s.consumption_end_at,s.end_at,s.start_at+interval '1 day')>occupied_start) then return null; end if;
+ if not public.native_advanced_interval_ready(target.id,p.course_id,(teacher->>'id')::uuid,p.location_id,starts,occupied_start,occupied_end) then return null; end if;
  if exists(select 1 from public.class_sessions s where s.record_scope='operational' and s.id is distinct from target.id and s.course_id=p.course_id
   and s.lead_instructor_id=(teacher->>'id')::uuid and s.status in ('scheduled','active','tentative','pending','proposed_window') and (s.start_at at time zone 'America/New_York')::date=(starts at time zone 'America/New_York')::date) then return null; end if;
- -- Recheck the nearest real commitments in each direction under the same
- -- materialization lock. Occupied bounds already include setup/cleanup.
- for neighbor in
-  (select cs.* from public.class_sessions cs where cs.record_scope='operational' and cs.id is distinct from target.id
-   and cs.lead_instructor_id=(teacher->>'id')::uuid and cs.status in ('scheduled','active','tentative','pending','proposed_window')
-   and coalesce(cs.consumption_end_at,cs.end_at,cs.start_at+interval '1 day')<=occupied_start
-   order by coalesce(cs.consumption_end_at,cs.end_at,cs.start_at+interval '1 day') desc limit 1)
-  union all
-  (select cs.* from public.class_sessions cs where cs.record_scope='operational' and cs.id is distinct from target.id
-   and cs.lead_instructor_id=(teacher->>'id')::uuid and cs.status in ('scheduled','active','tentative','pending','proposed_window')
-   and coalesce(cs.consumption_start_at,cs.start_at)>=occupied_end order by coalesce(cs.consumption_start_at,cs.start_at) limit 1)
- loop
-  if neighbor.location_id is distinct from p.location_id then
-   if coalesce(neighbor.consumption_end_at,neighbor.end_at,neighbor.start_at+interval '1 day')<=occupied_start then
-    select minutes into travel from public.native_advanced_travel_policy where from_location_id=neighbor.location_id and to_location_id=p.location_id and verified and nullif(trim(evidence),'') is not null;
-    if travel is null or coalesce(neighbor.consumption_end_at,neighbor.end_at,neighbor.start_at+interval '1 day')+make_interval(mins=>travel)>occupied_start then return null; end if;
-   else
-    select minutes into travel from public.native_advanced_travel_policy where from_location_id=p.location_id and to_location_id=neighbor.location_id and verified and nullif(trim(evidence),'') is not null;
-    if travel is null or occupied_end+make_interval(mins=>travel)>coalesce(neighbor.consumption_start_at,neighbor.start_at) then return null; end if;
-   end if;
-  end if;
- end loop;
- if exists(select 1 from jsonb_array_elements(public.public_registration_closure_policy()->'closures') closure where occupied_start<(closure->>'endsAt')::timestamptz and occupied_end>(closure->>'startsAt')::timestamptz)
-  or exists(select 1 from public.registration_reschedule_blocks b join public.class_sessions s on s.id=b.class_session_id where s.course_id=p.course_id and s.start_at=starts) then return null; end if;
  return p_offer||jsonb_build_object('targetSessionId',target.id,'externalId',external_id,'courseId',p.course_id,'locationId',p.location_id,'capacity',coalesce((seats->>'capacity')::integer,p.max_students),'course',(select name from public.courses where id=p.course_id),'pageKey',p.page_key,'sessionCents',p.session_cents);
 exception when invalid_text_representation or datetime_field_overflow then return null;
 end $$;
@@ -227,12 +239,42 @@ begin
  select * into p from public.native_advanced_course_policy where course_number=p_course_number;
  if (select count(*) from public.class_sessions where external_class_id=p_external_id and record_scope='operational')<>1 then return false; end if;
  select * into s from public.class_sessions where external_class_id=p_external_id and record_scope='operational';
+ if not public.native_advanced_interval_ready(s.id,s.course_id,s.lead_instructor_id,s.location_id,s.start_at,s.consumption_start_at,s.consumption_end_at) then return false; end if;
  return coalesce(s.course_id=p.course_id and s.location_id=p.location_id and s.registration_backend='landerware' and s.visibility='public'
   and s.registration_status='open' and s.status in ('scheduled','active') and s.start_at>now()
   and s.end_at=s.start_at+make_interval(mins=>p.instruction_minutes)
   and s.consumption_start_at=s.start_at-make_interval(mins=>p.setup_minutes) and s.consumption_end_at=s.end_at+make_interval(mins=>p.cleanup_minutes)
   and exists(select 1 from jsonb_array_elements(policy->'instructors') t where t->>'id'=s.lead_instructor_id::text and (t->>'qualificationValidThrough')::timestamptz>=s.consumption_end_at),false);
 end $$;
+
+-- Additive seated admission: retain the established one-statement occupancy
+-- snapshot unchanged, and append a separately gated booking DTO. Not a mutation
+-- reader and never an external-proof shortcut for imported classes.
+create function public.native_advanced_scheduling_seat_snapshot(p_session_id uuid) returns jsonb
+language plpgsql stable security invoker set search_path='' as $$
+declare snapshot jsonb; booking jsonb; s public.class_sessions; policy public.native_advanced_course_policy;
+begin
+ snapshot:=public.native_scheduling_seat_snapshot(p_session_id);
+ select * into s from public.class_sessions where id=p_session_id;
+ select * into policy from public.native_advanced_course_policy where course_id=s.course_id;
+ if policy.course_number is not null and policy.publication_enabled
+  and public.native_advanced_existing_session_ready(policy.course_number,s.external_class_id)
+  and (snapshot->>'remaining')::integer>0 and (snapshot->>'capacity')::integer<=policy.max_students
+  and not exists(select 1 from public.landerware_public_orders o where o.class_session_id=s.id and public.native_checkout_unresolved_payment(o)) then
+  select jsonb_build_object('schemaVersion','native-advanced-session-booking.v1',
+   'publicCourseId',policy.course_number,'canonicalCourseId',policy.course_id,
+   'coursePolicyKey','advanced-full:'||policy.course_number||'.v1','profileKey',p.profile_key,'profileVersion',p.version,
+   'sourceSessionId',s.external_class_id,'identityWitness',coalesce(snapshot->>'generatedIdentity',md5((snapshot->'sessionIdentity')::text)),
+   'capacity',(snapshot->>'capacity')::integer,'remaining',(snapshot->>'remaining')::integer,
+   'instructionMinutes',policy.instruction_minutes,'setupMinutes',policy.setup_minutes,'cleanupMinutes',policy.cleanup_minutes)
+   into booking from public.landerware_registration_profiles p where p.profile_key=policy.profile_key
+   and p.active and p.version>0 and p.form_schema->>'schemaVersion'='native-checkout.form.v1'
+   and p.form_schema->>'inventory_kind'='scheduled_session_v1';
+ end if;
+ return snapshot||jsonb_build_object('advancedBooking',booking);
+end $$;
+revoke all on function public.native_advanced_scheduling_seat_snapshot(uuid) from public,anon,authenticated;
+grant execute on function public.native_advanced_scheduling_seat_snapshot(uuid) to service_role;
 
 create function public.reserve_native_advanced_checkout_order(p_key text,p_profile_key text,p_version integer,p_context text,p_external_id text,p_offer jsonb,p_students jsonb,p_inputs jsonb,p_expected_total integer)
 returns jsonb language plpgsql security invoker set search_path='' as $$

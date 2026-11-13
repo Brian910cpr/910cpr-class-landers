@@ -114,6 +114,23 @@
     return (Array.isArray(dates) ? dates : []).map(day => ({...day,
       startTimes: (day.startTimes || []).map(slot => ({...slot,
         courses: (slot.courses || []).filter(course => {
+          if(course.authority==='native-advanced-session-booking.v1') {
+            const observed=Date.parse(course.proofObservedAt),expiry=Date.parse(course.validUntil),start=Date.parse(course.occupiedFrom),end=Date.parse(course.occupiedUntil);
+            const parts=Number.isFinite(start)?Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(start)).map(p=>[p.type,p.value])):{};
+            return ['241108','209818','209805','251496'].includes(course.courseId)&&course.nativeScopeId==='qualified-advanced-shipyard-b.v1'
+              &&course.coursePolicyKey==='advanced-full:'+course.courseId+'.v1'&&course.offerType==='seated_class'&&course.publicSelectable===true
+              &&/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(course.canonicalCourseId||'')&&/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(course.instructorId||'')
+              &&/^(?:[0-9]+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/.test(course.session_id||'')&&/^[a-f0-9]{32}$/.test(course.identityWitness||'')
+              &&course.availabilityBlockId==='seated:'+course.session_id&&JSON.stringify(course.sourceSessionIds)===JSON.stringify([course.session_id])
+              &&Number.isInteger(course.profileVersion)&&course.profileVersion>0&&Number.isInteger(course.capacity)&&course.capacity>0
+              &&Number.isInteger(course.remainingSeats)&&course.remainingSeats>0&&course.remainingSeats<=course.capacity
+              &&course.durationMinutes===240&&course.setupBufferMinutes===0&&Number.isInteger(course.cleanupBufferMinutes)&&course.cleanupBufferMinutes>=0
+              &&course.schedulerConsumptionMinutes===240+course.cleanupBufferMinutes&&end-start===course.schedulerConsumptionMinutes*60000
+              &&day.date===parts.year+'-'+parts.month+'-'+parts.day&&slot.startTime===parts.hour+':'+parts.minute
+              &&Number.isFinite(observed)&&observed<=instant&&live(validUntil)&&live(course.validUntil)&&expiry<=observed+900000&&expiry<=Date.parse(validUntil)
+              &&!Object.hasOwn(course,'appointmentDayId')&&!Object.hasOwn(course,'matchedContainerId')&&course.appointmentUrl===course.registrationUrl
+              &&course.registrationUrl==='/register/checkout/?'+new URLSearchParams({course:course.courseId,session:course.session_id});
+          }
           if (course.authority === 'native-full-course.v3') {
             const observed=Date.parse(course.proofObservedAt),expiry=Date.parse(course.validUntil),start=Date.parse(course.occupiedFrom),end=Date.parse(course.occupiedUntil);
             const parts=Number.isFinite(start)?Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(start)).map(p=>[p.type,p.value])):{};

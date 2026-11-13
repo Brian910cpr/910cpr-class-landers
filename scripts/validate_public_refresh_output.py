@@ -148,7 +148,10 @@ def validate_selector(page_key: str, public_session_ids: set[str], *, now=None) 
                     ), f"{page_key}: orphan synthetic offer on occupied date {day['date']}")
                     # matchedContainerId is an internal planning field and is omitted
                     # from the compact public selector contract.
-                    if course.get('authority') == 'native-full-course.v3':
+                    if course.get('authority') == 'native-advanced-session-booking.v1':
+                        from scripts.native_advanced_publication import validate_seated
+                        validate_seated(dict(course,date=day['date'],startTime=slot['startTime']),{'sessions':session_rows(json.loads((ROOT/'docs/data/schedule_future.json').read_text(encoding='utf-8')))},load_publication_demand(ROOT),now)
+                    elif course.get('authority') == 'native-full-course.v3':
                         from scripts.native_advanced_publication import validate_public
                         validate_public(dict(course,date=day['date'],startTime=slot['startTime']),payload['generatedAt'],load_publication_demand(ROOT).get('native_advanced_policy_proof'),now)
                     elif course.get('authority') == 'native-full-course.v2':

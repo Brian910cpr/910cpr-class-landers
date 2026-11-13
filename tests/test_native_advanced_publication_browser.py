@@ -10,7 +10,11 @@ from scripts.run_native_publication import native_page_config
 ROOT=Path(__file__).resolve().parents[1]
 class AdvancedSelectorBrowserTests(unittest.TestCase):
  def test_native_routes_and_original_expiry_on_phone_and_desktop(self):
-  fixture=fixtures.AdvancedPublicationTests();fixture.setUp();payload=fixture.build()
+  self.check_routes()
+ def test_seated_native_routes_capacity_and_expiry_on_phone_and_desktop(self):
+  self.check_routes(seated=True)
+ def check_routes(self,seated=False):
+  fixture=fixtures.AdvancedPublicationTests();fixture.setUp();payload=fixture.seated_fixture()[3] if seated else fixture.build()
   config=json.loads((ROOT/'data/config/block_schedule_pages.json').read_text())['pages']['acls'];payload['pageConfig']=native_page_config(config,'acls',advanced_enabled=True)
   html=render_html(payload);original_feed=public_selector_availability_payload(payload);origin='https://advanced-fixture.invalid'
   self.assertNotIn('PRIVATE-contact',html)
@@ -32,8 +36,8 @@ class AdvancedSelectorBrowserTests(unittest.TestCase):
      outside.append(route.request.url);route.abort()
     context.route('**/*',serve);page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)));page.clock.install(time=fixture.now)
     page.goto(origin+'/acls.html');page.wait_for_function("availabilityState === 'ready'")
-    for cid in ['241108','209818']:
-     page.locator('[data-course-id="'+cid+'"]').first.click();link=page.locator('#course-list a.register-link').first;link.wait_for();url=urlsplit(link.get_attribute('href'));self.assertEqual(url.path,'/register/checkout/');self.assertEqual(parse_qs(url.query)['course'],[cid]);self.assertTrue(parse_qs(url.query)['selectionId'][0].startswith('native-full:'))
+    for cid in (['241108'] if seated else ['241108','209818']):
+     page.locator('[data-course-id="'+cid+'"]').first.click();link=page.locator('#course-list a.register-link').first;link.wait_for();url=urlsplit(link.get_attribute('href'));self.assertEqual(url.path,'/register/checkout/');self.assertEqual(parse_qs(url.query)['course'],[cid]);self.assertTrue(parse_qs(url.query)['session'][0].startswith('lw-')) if seated else self.assertTrue(parse_qs(url.query)['selectionId'][0].startswith('native-full:'))
     self.assertEqual(errors,[]);self.assertLessEqual(page.evaluate('document.documentElement.scrollWidth'),width)
     # A top-level restamp cannot renew the original course proof.
     feed['validUntil']='2099-01-01T00:00:00Z';page.clock.fast_forward(16*60*1000);page.evaluate('loadResolvedAvailability()');page.wait_for_function("availabilityState === 'ready'");self.assertEqual(page.locator('#course-list a.register-link').count(),0);self.assertEqual(outside,[]);context.close()

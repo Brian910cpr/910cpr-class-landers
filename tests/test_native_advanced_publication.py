@@ -61,6 +61,37 @@ class AdvancedPublicationTests(unittest.TestCase):
   for patch in [{'selectionId':'native-full:'+'f'*64},{'instructorId':'different'},{'occupiedUntil':'2030-01-03T23:59:00Z'},{'validUntil':(self.now+timedelta(minutes=16)).isoformat()},{'calendarSourceKey':'PRIVATE@example.invalid'}]:
    with self.assertRaises(ValueError):advanced.validate_public(dict(offer,**patch),payload['generatedAt'],self.proof,self.now)
   self.coverage=[];self.assertFalse(self.build()['offers'])
+ def seated_fixture(self):
+  from scripts import run_native_publication as runner
+  from scripts.block_start_time_selector import seated_class_selector_offers
+  p=self.proof['courses']['241108'];teacher=p['instructors'][0];sid='lw-11111111-1111-4111-8111-111111111111'
+  b=dict(schemaVersion='native-advanced-session-booking.v1',publicCourseId='241108',canonicalCourseId=p['canonicalCourseId'],coursePolicyKey=p['coursePolicyKey'],profileKey='fixture_advanced',profileVersion=1,sourceSessionId=sid,identityWitness='a'*32,capacity=2,remaining=1,instructionMinutes=240,setupMinutes=0,cleanupMinutes=0)
+  source=dict(canonical_session_id='fixture-canonical',external_class_id=sid,external_course_id='241108',course_id=p['canonicalCourseId'],source='landerware_event',registration_backend='landerware',registration_authority='landerware-generated-session.v1',session_status='scheduled',registration_status='open',visibility='public',workspace_projection_status='current',count_available=True,active_registration_count=1,canonical_registered_count=1,held_seat_count=0,unreconciled_reserved_count=0,start_at=self.window['start'],end_at='2030-01-03T17:00:00-05:00',consumption_start_at=self.window['start'],consumption_end_at='2030-01-03T17:00:00-05:00',location_name=p['location'],lead_instructor_id=teacher['id'],lead_instructor_name=teacher['name'],course_name='Synthetic ACLS',native_advanced_booking_admission=b)
+  demand=dict(generated_at=self.now.isoformat(),sessions=[source],native_advanced_policy_proof=self.proof)
+  schedule=runner.retained_projection({'sessions':[]},demand,advanced_enabled=True,now=self.now)
+  courses=[dict(course_id='241108',course_family='ACLS',kind='full')]
+  offers=seated_class_selector_offers(schedule_future_payload=schedule,selected_courses=courses,selected_course_ids={'241108'},course_rules={'241108':{'scheduler_consumption_minutes':240}})
+  from scripts.apply_anchor_policy import _rebuild_dates
+  payload=_rebuild_dates(dict(pageKey='acls',generatedAt=self.now.isoformat(),validUntil=self.now.isoformat()),offers)
+  payload['offers']=offers
+  runner.annotate_seated_offers(payload,schedule)
+  payload=_rebuild_dates(payload,payload['offers'])
+  return source,demand,schedule,payload
+ def test_seated_native_publication_preserves_identity_capacity_and_revalidates_original_source(self):
+  source,demand,schedule,payload=self.seated_fixture()
+  self.assertTrue(schedule['sessions'][0]['public_direct_booking']);self.assertEqual(len(payload['offers']),1)
+  compact=public_selector_availability_payload(payload)
+  for row in payload['offers']:advanced.validate_seated(row,schedule,demand,self.now)
+  row=compact['dates'][0]['startTimes'][0]['courses'][0]
+  self.assertEqual(row['remainingSeats'],1);self.assertEqual(row['capacity'],2)
+  advanced.validate_seated(dict(row,date=payload['offers'][0]['date'],startTime=payload['offers'][0]['startTime']),schedule,demand,self.now)
+  self.assertEqual(row['registrationUrl'],'/register/checkout/?course=241108&session='+source['external_class_id'])
+  for patch in [{'count_available':False},{'active_registration_count':None},{'workspace_projection_status':'stale'},{'native_advanced_booking_admission':None}]:
+   bad=deepcopy(source);bad.update(patch)
+   self.assertIsNone(advanced.seated_admission(schedule['sessions'][0],bad,demand['generated_at'],self.proof,self.now))
+  with self.assertRaises(ValueError):advanced.validate_seated(dict(payload['offers'][0],remainingSeats=2),schedule,demand,self.now)
+  with self.assertRaises(ValueError):advanced.validate_seated(payload['offers'][0],schedule,demand,self.now+timedelta(minutes=16))
+  self.assertNotIn('native_advanced_booking_admission',__import__('scripts.run_native_publication',fromlist=['retained_projection']).retained_projection(schedule,demand,now=self.now)['sessions'][0])
  def test_dst_gap_and_fold_are_rejected(self):
   for day,clock in [('2030-03-10','02:30'),('2030-11-03','01:30')]:
    with self.assertRaises(ValueError):advanced._offset(day,clock)
@@ -69,5 +100,5 @@ class AdvancedPublicationTests(unittest.TestCase):
   self.assertEqual(publication_pages(),('bls',));self.assertEqual(publication_pages(advanced_enabled=True),('bls','acls','pals'))
   config=json.loads((ROOT/'data/config/block_schedule_pages.json').read_text())['pages']['acls']
   native=native_page_config(config,'acls',advanced_enabled=True)
-  self.assertEqual(set(native['allowed_course_ids']),{'241108','209818'});self.assertFalse(native['include_seated_classes'])
+  self.assertEqual(set(native['allowed_course_ids']),{'241108','209818'});self.assertTrue(native['include_seated_classes'])
 if __name__=='__main__':unittest.main()

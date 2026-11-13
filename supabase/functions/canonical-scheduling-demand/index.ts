@@ -166,6 +166,24 @@ export function projectDemand(row: any, seats: any = null) {
         || row.resource_id !== null || row.visibility !== "public" || row.registration_status !== "open" || !["scheduled","active"].includes(row.status))
       throw new Error("Native Heartsaver admission is unavailable");
   }
+  const advanced = native ? seats.advancedBooking : null;
+  if (advanced != null) {
+    const fields=["schemaVersion","publicCourseId","canonicalCourseId","coursePolicyKey","profileKey","profileVersion","sourceSessionId","identityWitness","capacity","remaining","instructionMinutes","setupMinutes","cleanupMinutes"];
+    if(Object.keys(advanced).length!==fields.length||fields.some(k=>!Object.hasOwn(advanced,k))
+      || advanced.schemaVersion!=="native-advanced-session-booking.v1"||!["241108","209818","209805","251496"].includes(advanced.publicCourseId)
+      || advanced.publicCourseId!==row.external_course_id||advanced.canonicalCourseId!==row.course_id
+      || advanced.coursePolicyKey!==`advanced-full:${advanced.publicCourseId}.v1`||typeof advanced.profileKey!=="string"||!advanced.profileKey
+      || !Number.isSafeInteger(advanced.profileVersion)||advanced.profileVersion<1||advanced.sourceSessionId!==row.external_class_id
+      || !/^[a-f0-9]{32}$/.test(advanced.identityWitness||"")||(!adopted&&advanced.identityWitness!==generatedIdentity)
+      || advanced.capacity!==seats.capacity||advanced.remaining!==seats.capacity-seats.registered-seats.holds-seats.unreconciledReserved
+      || !Number.isSafeInteger(advanced.remaining)||advanced.remaining<1||advanced.instructionMinutes!==240
+      || [advanced.setupMinutes,advanced.cleanupMinutes].some(v=>!Number.isSafeInteger(v)||v<0)
+      || timestampIdentity(row.end_at)!==timestampIdentity(row.start_at)!+240n*60000000n
+      || timestampIdentity(row.consumption_start_at)!==timestampIdentity(row.start_at)!-BigInt(advanced.setupMinutes)*60000000n
+      || timestampIdentity(row.consumption_end_at)!==timestampIdentity(row.end_at)!+BigInt(advanced.cleanupMinutes)*60000000n
+      || row.visibility!=="public"||row.registration_status!=="open"||!["scheduled","active"].includes(row.status))
+      throw new Error("Native advanced admission is unavailable");
+  }
   const proof = native ? {
     count_available: true, demand_status: "current", source_observed_at: null,
     reconciled_at: null, source_sha256: null, freshness_minutes: null,
@@ -182,6 +200,7 @@ export function projectDemand(row: any, seats: any = null) {
       qualificationPolicy: skills.qualificationPolicy,
     },
     native_heartsaver_booking_admission: heartsaver == null ? null : {...heartsaver},
+    native_advanced_booking_admission: advanced == null ? null : {...advanced},
     authority_revision: seats.authorityRevision,
     canonical_registered_count: seats.registered,
     held_seat_count: seats.holds,
@@ -224,7 +243,7 @@ export function projectDemand(row: any, seats: any = null) {
   };
 }
 
-export async function loadDemand(start: string, stop: string) {
+export async function loadDemand(start: string, stop: string, advancedEnabled = false) {
   const { url, key } = serviceConfig();
   const select = [
     "id", "course_id", "resource_id", "organization_id", "record_scope", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "external_session_evidence", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
@@ -255,7 +274,8 @@ export async function loadDemand(start: string, stop: string) {
     for (let index = 0; index < body.length; index += 10) {
       sessions.push(...await Promise.all(body.slice(index, index + 10).map(async (row: any) => {
         if (!hasNativeAuthority(row) && !hasGeneratedMaterialization(row)) return projectDemand(row);
-        const result = await fetch(`${url}/rest/v1/rpc/native_scheduling_seat_snapshot`, {
+        const snapshotRpc = advancedEnabled && ["241108","209818","209805","251496"].includes(row.external_course_id) ? "native_advanced_scheduling_seat_snapshot" : "native_scheduling_seat_snapshot";
+        const result = await fetch(`${url}/rest/v1/rpc/${snapshotRpc}`, {
           method: "POST", headers: { apikey: key, authorization: `Bearer ${key}`, "content-type": "application/json" },
           body: JSON.stringify({ p_session_id: row.id }), signal: AbortSignal.timeout(20000),
         });
@@ -436,7 +456,7 @@ export async function handleRequest(req: Request) {
       generated_at: new Date().toISOString(),
       active_registration_statuses: [...ACTIVE],
       native_active_registration_statuses: [...ACTIVE, "active"],
-      sessions: await loadDemand(range.start, range.stop),
+      sessions: await loadDemand(range.start, range.stop, params.get("native_advanced")==="1"),
       non_session_sources: await loadNonSessionSources(range.start, range.stop),
       // History is not publication input. The client asks only for IDs still
       // present in its retained schedule, in bounded explicit proof requests.
