@@ -14,7 +14,7 @@
   function invalidate(reason){generation++;for(const c of pending)c.abort();pending.clear();window.dispatchEvent(new CustomEvent('admin-auth-lock',{detail:{reason}}))}
   function forget(){try{localStorage.removeItem(KEY)}catch{}sessionStorage.removeItem(KEY);sessionStorage.removeItem('hotSyncAdminKey');invalidate('signed-out')}
   function clear(){const token=get();forget();if(token)fetch(ACCESS+'/logout',{method:'POST',headers:{[HEADER]:token},cache:'no-store',redirect:'error',keepalive:true}).catch(()=>{});signIn()}
-  function allowed(value){const url=new URL(value,location.href);if(url.username||url.password)return false;if(url.origin==='https://schedule.910cpr.com')return url.pathname.startsWith('/admin/');const p=url.pathname.split('/');return url.origin===EDGE&&p[1]==='functions'&&p[2]==='v1'&&services.has(p[3])}
+  function allowed(value){const url=new URL(value,location.href);if(url.username||url.password)return false;if(url.origin==='https://schedule.910cpr.com')return url.pathname.startsWith('/admin/');const p=url.pathname.split('/');return url.origin===EDGE&&p[1]==='functions'&&p[2]==='v1'&&(services.has(p[3])||(p[3]==='customer-interactions'&&p.length===4&&location.pathname==='/admin/customer-learning.html'&&typeof document!=='undefined'&&document.querySelector('meta[name="landerware-durable-crm"]')?.content==='enabled'))}
   async function refresh(){
     const s=read();if(!get()||Date.parse(s.expiresAt)-Date.now()>7*86400000)return;
     if(refreshing)return refreshing;

@@ -1,0 +1,397 @@
+{
+  "project_id": "wktwgcnwdvbebcobgyey",
+  "query": "select now() as observed_at, current_setting('server_version') as server_version,\n(select jsonb_agg(jsonb_build_object('schema',n.nspname,'owner',r.rolname,'type',d.defaclobjtype,'acl',d.defaclacl::text)) from pg_default_acl d left join pg_namespace n on n.oid=d.defaclnamespace join pg_roles r on r.oid=d.defaclrole) as default_acl,\n(select jsonb_agg(jsonb_build_object('name',c.relname,'rls',c.relrowsecurity,'acl',c.relacl::text)) from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and c.relname in ('customer_cases','customer_interactions','customer_follow_up_tasks','customer_interaction_events','customer_interruption_events','customer_task_events','owner_browser_sessions','owner_access_grants')) as tables,\n(select jsonb_agg(jsonb_build_object('table',tablename,'policy',policyname,'roles',roles,'cmd',cmd,'using',qual,'check',with_check)) from pg_policies where schemaname='public' and tablename in ('owner_browser_sessions','owner_access_grants','landerware_people')) as policies,\n(select jsonb_agg(jsonb_build_object('column',column_name,'type',data_type,'nullable',is_nullable)) from information_schema.columns where table_schema='public' and table_name='landerware_people') as person_columns,\n(select jsonb_agg(jsonb_build_object('name',p.proname,'args',pg_get_function_identity_arguments(p.oid),'definer',p.prosecdef,'acl',p.proacl::text)) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname in ('save_customer_interaction','switch_customer_interaction','save_customer_follow_up_task')) as functions;",
+  "metadata": [
+    {
+      "observed_at": "2026-10-12 13:42:03.729321+00",
+      "server_version": "17.6",
+      "default_acl": [
+        {
+          "acl": "{postgres=X/supabase_admin,anon=X/supabase_admin,authenticated=X/supabase_admin,service_role=X/supabase_admin}",
+          "type": "f",
+          "owner": "supabase_admin",
+          "schema": "public"
+        },
+        {
+          "acl": "{postgres=arwdDxtm/supabase_admin,anon=arwdDxtm/supabase_admin,authenticated=arwdDxtm/supabase_admin,service_role=arwdDxtm/supabase_admin}",
+          "type": "r",
+          "owner": "supabase_admin",
+          "schema": "public"
+        },
+        {
+          "acl": "{postgres=rwU/supabase_admin,anon=rwU/supabase_admin,authenticated=rwU/supabase_admin,service_role=rwU/supabase_admin}",
+          "type": "S",
+          "owner": "supabase_admin",
+          "schema": "public"
+        },
+        {
+          "acl": "{postgres=rwU/postgres,anon=rwU/postgres,authenticated=rwU/postgres,service_role=rwU/postgres}",
+          "type": "S",
+          "owner": "postgres",
+          "schema": "public"
+        },
+        {
+          "acl": "{postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+          "type": "f",
+          "owner": "postgres",
+          "schema": "public"
+        },
+        {
+          "acl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+          "type": "r",
+          "owner": "postgres",
+          "schema": "public"
+        },
+        {
+          "acl": "{postgres=r*w*U*/supabase_admin}",
+          "type": "S",
+          "owner": "supabase_admin",
+          "schema": "extensions"
+        },
+        {
+          "acl": "{postgres=X*/supabase_admin}",
+          "type": "f",
+          "owner": "supabase_admin",
+          "schema": "extensions"
+        },
+        {
+          "acl": "{postgres=a*r*w*d*D*x*t*m*/supabase_admin}",
+          "type": "r",
+          "owner": "supabase_admin",
+          "schema": "extensions"
+        },
+        {
+          "acl": "{postgres=X/supabase_admin,anon=X/supabase_admin,authenticated=X/supabase_admin,service_role=X/supabase_admin}",
+          "type": "f",
+          "owner": "supabase_admin",
+          "schema": "graphql_public"
+        },
+        {
+          "acl": "{postgres=arwdDxtm/supabase_admin,anon=arwdDxtm/supabase_admin,authenticated=arwdDxtm/supabase_admin,service_role=arwdDxtm/supabase_admin}",
+          "type": "r",
+          "owner": "supabase_admin",
+          "schema": "graphql_public"
+        },
+        {
+          "acl": "{postgres=rwU/supabase_admin,anon=rwU/supabase_admin,authenticated=rwU/supabase_admin,service_role=rwU/supabase_admin}",
+          "type": "S",
+          "owner": "supabase_admin",
+          "schema": "graphql_public"
+        },
+        {
+          "acl": "{postgres=rwU/supabase_admin,anon=rwU/supabase_admin,authenticated=rwU/supabase_admin,service_role=rwU/supabase_admin}",
+          "type": "S",
+          "owner": "supabase_admin",
+          "schema": "graphql"
+        },
+        {
+          "acl": "{postgres=X/supabase_admin,anon=X/supabase_admin,authenticated=X/supabase_admin,service_role=X/supabase_admin}",
+          "type": "f",
+          "owner": "supabase_admin",
+          "schema": "graphql"
+        },
+        {
+          "acl": "{postgres=arwdDxtm/supabase_admin,anon=arwdDxtm/supabase_admin,authenticated=arwdDxtm/supabase_admin,service_role=arwdDxtm/supabase_admin}",
+          "type": "r",
+          "owner": "supabase_admin",
+          "schema": "graphql"
+        },
+        {
+          "acl": "{postgres=X/supabase_auth_admin,dashboard_user=X/supabase_auth_admin}",
+          "type": "f",
+          "owner": "supabase_auth_admin",
+          "schema": "auth"
+        },
+        {
+          "acl": "{postgres=rwU/supabase_auth_admin,dashboard_user=rwU/supabase_auth_admin}",
+          "type": "S",
+          "owner": "supabase_auth_admin",
+          "schema": "auth"
+        },
+        {
+          "acl": "{postgres=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}",
+          "type": "r",
+          "owner": "supabase_auth_admin",
+          "schema": "auth"
+        },
+        {
+          "acl": "{postgres=rwU/postgres,anon=rwU/postgres,authenticated=rwU/postgres,service_role=rwU/postgres}",
+          "type": "S",
+          "owner": "postgres",
+          "schema": "storage"
+        },
+        {
+          "acl": "{postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}",
+          "type": "f",
+          "owner": "postgres",
+          "schema": "storage"
+        },
+        {
+          "acl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+          "type": "r",
+          "owner": "postgres",
+          "schema": "storage"
+        },
+        {
+          "acl": "{postgres=a*r*wdDxtm/supabase_admin,dashboard_user=arwdDxtm/supabase_admin}",
+          "type": "r",
+          "owner": "supabase_admin",
+          "schema": "realtime"
+        },
+        {
+          "acl": "{postgres=X/supabase_admin,dashboard_user=X/supabase_admin}",
+          "type": "f",
+          "owner": "supabase_admin",
+          "schema": "realtime"
+        },
+        {
+          "acl": "{postgres=rwU/supabase_admin,dashboard_user=rwU/supabase_admin}",
+          "type": "S",
+          "owner": "supabase_admin",
+          "schema": "realtime"
+        }
+      ],
+      "tables": [
+        {
+          "acl": "{postgres=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+          "rls": true,
+          "name": "owner_access_grants"
+        },
+        {
+          "acl": "{postgres=arwdDxtm/postgres,service_role=arwdDxtm/postgres}",
+          "rls": true,
+          "name": "owner_browser_sessions"
+        }
+      ],
+      "policies": null,
+      "person_columns": [
+        {
+          "type": "uuid",
+          "column": "id",
+          "nullable": "NO"
+        },
+        {
+          "type": "text",
+          "column": "current_first_name",
+          "nullable": "NO"
+        },
+        {
+          "type": "text",
+          "column": "current_last_name",
+          "nullable": "NO"
+        },
+        {
+          "type": "text",
+          "column": "current_email",
+          "nullable": "YES"
+        },
+        {
+          "type": "text",
+          "column": "current_phone",
+          "nullable": "YES"
+        },
+        {
+          "type": "jsonb",
+          "column": "prior_names",
+          "nullable": "NO"
+        },
+        {
+          "type": "jsonb",
+          "column": "prior_contacts",
+          "nullable": "NO"
+        },
+        {
+          "type": "text",
+          "column": "searchable_text",
+          "nullable": "NO"
+        },
+        {
+          "type": "timestamp with time zone",
+          "column": "archived_at",
+          "nullable": "YES"
+        },
+        {
+          "type": "jsonb",
+          "column": "document_ids",
+          "nullable": "NO"
+        },
+        {
+          "type": "timestamp with time zone",
+          "column": "created_at",
+          "nullable": "NO"
+        },
+        {
+          "type": "timestamp with time zone",
+          "column": "updated_at",
+          "nullable": "NO"
+        }
+      ],
+      "functions": null
+    }
+  ],
+  "edge_functions": [
+    {
+      "slug": "maxim-portal",
+      "version": 24,
+      "verify_jwt": false,
+      "ezbr_sha256": "c55cae6551883603f55617857340cd93d70551a7264937057cda6f634c2fbd2e"
+    },
+    {
+      "slug": "requirement-inquiry",
+      "version": 6,
+      "verify_jwt": false,
+      "ezbr_sha256": "ab765c501ad069a5c258ee38d159e9d4a4af26fd7edb06f9d02e40c0b59994e8"
+    },
+    {
+      "slug": "production-board",
+      "version": 13,
+      "verify_jwt": false,
+      "ezbr_sha256": "1694f8343d511d4a03245297c6060772f4e64375e7ec4574cfaea2353ef1abf9"
+    },
+    {
+      "slug": "nhcso-workspace",
+      "version": 22,
+      "verify_jwt": false,
+      "ezbr_sha256": "9ac45d7d9143fd0c154b71f0ee69ab81a76f4a98a01c6bd3477f94319e75c19c"
+    },
+    {
+      "slug": "maxim-link-email",
+      "version": 6,
+      "verify_jwt": false,
+      "ezbr_sha256": "cbcc73159b678482b87832b49e609b8ee31df7a5dbbff8c5aa5c9a373ee46b58"
+    },
+    {
+      "slug": "maxim-scheduler",
+      "version": 7,
+      "verify_jwt": false,
+      "ezbr_sha256": "a92a0c101df014fcc869fed74edd6f48be4373dd1ee39b0ea04f0381a274a0c2"
+    },
+    {
+      "slug": "public-event-registration",
+      "version": 15,
+      "verify_jwt": false,
+      "ezbr_sha256": "67f91f26cc8d2ee7614fbbdc451556023078b7b3dd098765c270a09996994a38"
+    },
+    {
+      "slug": "stripe-registration-webhook",
+      "version": 10,
+      "verify_jwt": false,
+      "ezbr_sha256": "037fbc6df465fec718ef99035a9fc08723ee72e908dacd9077188a57e526b287"
+    },
+    {
+      "slug": "one-time-nhcso-packet",
+      "version": 6,
+      "verify_jwt": true,
+      "ezbr_sha256": "d7c8a14347ddffbd2597f875e2158308cb9070d4c2adf610df5dd032c15a7ff7"
+    },
+    {
+      "slug": "historical-class-import",
+      "version": 5,
+      "verify_jwt": false,
+      "ezbr_sha256": "b1d69163b5bf77a3d1b8b1156d9ab10c4b7e821ff39cef68fd3dcc8a3b306b13"
+    },
+    {
+      "slug": "historical-class-import-temp",
+      "version": 6,
+      "verify_jwt": true,
+      "ezbr_sha256": "cbdd85f1250ce14ff7fd76efe9c3111091146ddce35b96a9391b0892b52b8ad2"
+    },
+    {
+      "slug": "landerware-ingest-ai",
+      "version": 5,
+      "verify_jwt": true,
+      "ezbr_sha256": "a40569dc32f0976b2fb2d19db38c7bf8fcea36bea7d84aff8c09723ac229cf32"
+    },
+    {
+      "slug": "instructor-workbench",
+      "version": 13,
+      "verify_jwt": false,
+      "ezbr_sha256": "5f537b0938c5ccc9bd9b4c715407fba5f4bdd9b11211461387d22b3006de2992"
+    },
+    {
+      "slug": "canonical-session-workspace",
+      "version": 13,
+      "verify_jwt": false,
+      "ezbr_sha256": "cc94d1da27b126ed7d4ba19d63de89556da7d31b85d35c510c38001730396a3a"
+    },
+    {
+      "slug": "public-registration",
+      "version": 18,
+      "verify_jwt": false,
+      "ezbr_sha256": "d4872724a27a20bbb30d11bcea4717124f64fb66d16e8878c11ca5a81b2b411b"
+    },
+    {
+      "slug": "class-registry",
+      "version": 10,
+      "verify_jwt": false,
+      "ezbr_sha256": "da19d024f6d8e83804998a88c76c12a20484f8c7ebdceccf6c51aa74f63600ad"
+    },
+    {
+      "slug": "landerware-registration",
+      "version": 5,
+      "verify_jwt": false,
+      "ezbr_sha256": "a1fe241f0da918e75b728819e55d0bbb9be6a9a365d7db9958b442c37031667b"
+    },
+    {
+      "slug": "provision-registration-webhook",
+      "version": 6,
+      "verify_jwt": true,
+      "ezbr_sha256": "f9ed8d5fd4637a24d5a571b5960f2a05e660ecb370a90756ea4783e2d35cbfa5"
+    },
+    {
+      "slug": "session-workspace",
+      "version": 6,
+      "verify_jwt": false,
+      "ezbr_sha256": "7dd29aed182e3fe1880993adb44f2cbf869c05cc11eee9f1501408a7205d11fb"
+    },
+    {
+      "slug": "owner-dashboard",
+      "version": 11,
+      "verify_jwt": false,
+      "ezbr_sha256": "ef922c7c94bcf21498f464286b0e0abaa01b537336d97924b6cf5d8134a28f15"
+    },
+    {
+      "slug": "group-request",
+      "version": 7,
+      "verify_jwt": true,
+      "ezbr_sha256": "efb950c2452f4c83bc210f649d9dbb853a6425236fb5a03b45e183008c5443d6"
+    },
+    {
+      "slug": "owner-operations",
+      "version": 6,
+      "verify_jwt": true,
+      "ezbr_sha256": "6a95e9fdedcbffa5861bcd346e9f4904f97e34c1d000ca0774a0eb5ec79da972"
+    },
+    {
+      "slug": "owner-access",
+      "version": 5,
+      "verify_jwt": false,
+      "ezbr_sha256": "abc1bddf7996119d8a3a711384b3f2a8606f4199107a1e3522da9ea24d991a8c"
+    },
+    {
+      "slug": "cap-nc160-registration",
+      "version": 7,
+      "verify_jwt": false,
+      "ezbr_sha256": "bb9c85a02f18b249beda1439dba6ea0a907e188d8d51fc2e4507432adef16c18"
+    },
+    {
+      "slug": "canonical-scheduling-demand",
+      "version": 9,
+      "verify_jwt": false,
+      "ezbr_sha256": "7fe8b356e359ecbeb9b5d581c931faafa4f60126d75cc876b607415223c884f3"
+    },
+    {
+      "slug": "resend-domain-repair",
+      "version": 6,
+      "verify_jwt": false,
+      "ezbr_sha256": "6fb11ba6ae28667253ea4d7741fec7876830bb8b9dae97b645e443c80fcc3c2b"
+    },
+    {
+      "slug": "landerware-calendar",
+      "version": 1,
+      "verify_jwt": false,
+      "ezbr_sha256": "5cf8faee7f526439f0e9ef0a72bad61e63457ce1b26955ec7050041761857af6"
+    }
+  ],
+  "scope": "Read-only catalog metadata; no row content or secrets collected."
+}
