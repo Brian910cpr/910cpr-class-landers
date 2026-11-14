@@ -1,14 +1,14 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-11-14T12:13:08.602845+00:00",
+  "generated_at": "2026-11-14T12:21:49.672204+00:00",
   "read_only_snapshot": true,
   "calendar_source_id": "amy_availability",
   "calendar_id": "c_94724071aa31a0063fbc48be80fdc73d76e604cad5043ff088156eb97e50be97@group.calendar.google.com",
   "source_type": "google_calendar",
   "source_display_name": "910CPR - Amy Availability",
   "date_range": {
-    "start": "2026-11-14T12:13:08.381556+00:00",
-    "end": "2027-02-12T12:13:08.381556+00:00",
+    "start": "2026-11-14T12:21:49.404406+00:00",
+    "end": "2027-02-12T12:21:49.404406+00:00",
     "days": 90
   },
   "export_status": "ok",
@@ -19,7 +19,7 @@
       "raw_properties": {
         "DTSTART": "20261226T180000Z",
         "DTEND": "20261226T230000Z",
-        "DTSTAMP": "20261114T121308Z",
+        "DTSTAMP": "20261114T122149Z",
         "UID": "57r481d5q3i9vj1rmrua1vpjul@google.com",
         "ATTENDEE": "mailto:c_94724071aa31a0063fbc48be80fdc73d76e604cad5043ff088156eb97e50be97@group.calendar.google.com",
         "SUMMARY": "Busy"
@@ -35,7 +35,7 @@
       "end_raw": "20261226T230000Z",
       "end_params": {},
       "end": "2026-12-26T23:00:00+00:00",
-      "updated": "2026-11-14T12:13:08+00:00",
+      "updated": "2026-11-14T12:21:49+00:00",
       "event_id": "57r481d5q3i9vj1rmrua1vpjul@google.com",
       "title": "Busy",
       "summary": "Busy",
