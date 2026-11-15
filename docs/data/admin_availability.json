@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-11-15T18:46:54.551540+00:00",
+  "generated_at": "2026-11-15T19:01:06.408488+00:00",
   "purpose": "Read-only sanitized calendar visibility for the 910CPR admin dashboard.",
   "sources": [
     {
@@ -8,7 +8,7 @@
       "display_name": "910CPR - Amy Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-15T18:46:54.016962+00:00",
+      "generated_at": "2026-11-15T19:01:05.801151+00:00",
       "event_count": 1
     },
     {
@@ -16,15 +16,15 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-15T18:46:54.551540+00:00",
-      "event_count": 97
+      "generated_at": "2026-11-15T19:01:06.408488+00:00",
+      "event_count": 98
     },
     {
       "source_key": "nick_availability",
       "display_name": "910CPR - Nick Availability",
       "source_type": "google_calendar",
       "export_status": "ok",
-      "generated_at": "2026-11-15T18:46:54.212697+00:00",
+      "generated_at": "2026-11-15T19:01:06.027718+00:00",
       "event_count": 0
     }
   ],
@@ -287,6 +287,17 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
+      "title": "Shift: ADR",
+      "start": "2026-12-01T23:00:00+00:00",
+      "end": "2026-12-02T11:00:00+00:00",
+      "location": "Riegelwood\\, NC 28456",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-12-02T06:30:00-05:00",
       "end": "2026-12-02T07:30:00-05:00",
@@ -314,6 +325,17 @@
       "end": "2026-12-03T22:45:00+00:00",
       "location": "",
       "status": "UNKNOWN"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Shift: ADR",
+      "start": "2026-12-03T23:00:00+00:00",
+      "end": "2026-12-04T11:00:00+00:00",
+      "location": "Riegelwood\\, NC 28456",
+      "status": "CONFIRMED"
     },
     {
       "source_key": "brian_do_not_schedule",
@@ -474,17 +496,6 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "Shift: ADR",
-      "start": "2026-12-13T23:00:00+00:00",
-      "end": "2026-12-14T11:00:00+00:00",
-      "location": "Riegelwood\\, NC 28456",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-12-14T06:30:00-05:00",
       "end": "2026-12-14T07:30:00-05:00",
@@ -554,6 +565,17 @@
       "title": "Shift: ADR",
       "start": "2026-12-18T23:00:00+00:00",
       "end": "2026-12-19T11:00:00+00:00",
+      "location": "Riegelwood\\, NC 28456",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Shift: ADR",
+      "start": "2026-12-20T23:00:00+00:00",
+      "end": "2026-12-21T11:00:00+00:00",
       "location": "Riegelwood\\, NC 28456",
       "status": "CONFIRMED"
     },
@@ -650,32 +672,10 @@
       "display_name": "910CPR - Brian DoNotSchedule",
       "source_type": "inverse_google_calendar",
       "instructor_key": "brian",
-      "title": "Shift: ADR",
-      "start": "2026-12-27T23:00:00+00:00",
-      "end": "2026-12-28T11:00:00+00:00",
-      "location": "Riegelwood\\, NC 28456",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
       "title": "CFA Drop Off",
       "start": "2026-12-28T06:30:00-05:00",
       "end": "2026-12-28T07:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
-      "status": "CONFIRMED"
-    },
-    {
-      "source_key": "brian_do_not_schedule",
-      "display_name": "910CPR - Brian DoNotSchedule",
-      "source_type": "inverse_google_calendar",
-      "instructor_key": "brian",
-      "title": "Shift: ADR",
-      "start": "2026-12-28T23:00:00+00:00",
-      "end": "2026-12-29T11:00:00+00:00",
-      "location": "Riegelwood\\, NC 28456",
       "status": "CONFIRMED"
     },
     {
@@ -709,6 +709,17 @@
       "start": "2026-12-31T06:30:00-05:00",
       "end": "2026-12-31T07:30:00-05:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
+      "status": "CONFIRMED"
+    },
+    {
+      "source_key": "brian_do_not_schedule",
+      "display_name": "910CPR - Brian DoNotSchedule",
+      "source_type": "inverse_google_calendar",
+      "instructor_key": "brian",
+      "title": "Shift: ADR",
+      "start": "2026-12-31T23:00:00+00:00",
+      "end": "2027-01-01T11:00:00+00:00",
+      "location": "Riegelwood\\, NC 28456",
       "status": "CONFIRMED"
     },
     {
