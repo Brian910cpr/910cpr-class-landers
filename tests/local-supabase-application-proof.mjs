@@ -103,6 +103,13 @@ assert.equal(basket.lines.find(l=>l.kind==='ebook').discountCents,0);
 assert.equal((await basketReserve()).basketId,basket.basketId);
 assert.equal(sql('select count(*) from landerware_public_orders;'),'3','single hold plus exactly two basket children');
 const child=JSON.parse(sql(`select row_to_json(q) from (select o.id,o.class_session_id,o.hold_expires_at,s.max_students from native_checkout_basket_items i join landerware_public_orders o on o.id=i.order_id join class_sessions s on s.id=o.class_session_id where i.basket_id=${quote(basket.basketId)} and i.position=1) q;`));
+// Stock is reserved with the unpaid hold, not fulfilled or disclosed. Inspect
+// only non-secret ownership/lifecycle fields, and retain the same unit on retry.
+const inventorySnapshot=()=>JSON.parse(sql(`select json_agg(q order by q.id) from (select u.id,u.status,st.order_id,u.reserved_for_registration_id,u.exposed_at,u.fulfilled_at,u.public_order_payment_observed from product_inventory_units u left join landerware_public_order_students st on st.id=u.public_order_student_id) q;`));
+const heldInventory=inventorySnapshot();assert.equal(heldInventory.length,3);
+assert.equal(heldInventory.filter(u=>u.status==='available').length,2);
+const reservedInventory=heldInventory.filter(u=>u.status==='reserved');assert.equal(reservedInventory.length,1);assert.equal(reservedInventory[0].order_id,child.id);
+assert(heldInventory.every(u=>u.reserved_for_registration_id===null&&u.exposed_at===null&&u.fulfilled_at===null&&!u.public_order_payment_observed),'unpaid stock must not be fulfilled, exposed or payment-protected');
 const paymentError=async expected=>{const r=await basketRequest('basket-checkout');const p=await r.json();assert.equal(r.ok,false);assert.equal(p.error,expected);};
 // A healthy basket reaches only the missing-key boundary, never a processor.
 await paymentError('stripe_unavailable');
@@ -118,7 +125,7 @@ await paymentError('stripe_unavailable');
 assert.equal((await basketReserve()).basketId,basket.basketId,'retry retains original materials and reservations');
 assert.equal(sql('select count(*) from registrations;'),'0');
 assert.equal(sql("select count(*) from landerware_public_orders where status='paid' or stripe_checkout_session_id is not null or payment_evidence<>'{}'::jsonb;"),'0');
-assert.equal(sql("select count(*) from product_inventory_units where status='available';"),'3','no synthetic code stock assigned before payment');
+assert.deepEqual(inventorySnapshot(),heldInventory,'retries and rejected payment attempts retain the same reserved unit and ownership without disclosure');
 console.log('PASS: actual basket HTTP/SQL reserve/retry, session-only discount, material retention, capacity-loss and expired-child payment admission; no processor/payment/registration fabricated.');
 
 const webhookSecret=readFileSync(process.argv[3],'utf8').split('\n').find(x=>x.startsWith('STRIPE_WEBHOOK_SECRET='))?.slice('STRIPE_WEBHOOK_SECRET='.length);
