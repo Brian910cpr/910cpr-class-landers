@@ -39,3 +39,23 @@ test('server upload policy blocks disabled or spoofed files and is independent o
  assert.throws(()=>profileUploadInput({type:'application/pdf',base64:btoa('<script>')},policy),/invalid_document/);
  assert.equal(escapeCheckoutText('<img src=x onerror="x">'), '&lt;img src=x onerror=&quot;x&quot;&gt;');
 });
+
+
+test('required course-material group cannot disappear when all choices are context-ineligible',()=>{
+ const p=profile();p.form_schema.default_choices=[];
+ const group=p.form_schema.option_groups[0];group.key='materials';group.label='Course materials';
+ group.choices=group.choices.filter(c=>c.key==='online');
+ // No default is valid when the customer must explicitly pick a required option.
+ // In this context none of the configured choices applies; it must fail closed.
+ assert.throws(()=>normalizeCheckoutProfile(p,catalog(),{context:'hsi-blended'}),/invalid_checkout_profile/);
+ // A genuinely optional group may be omitted without adding a component/price.
+ group.required=false;
+ const optional=normalizeCheckoutProfile(p,catalog(),{context:'hsi-blended'});
+ assert.deepEqual(optional.optionGroups,[]);
+ assert.equal(checkoutSelection(optional,{first_name:'Fixture',email:'fixture@example.invalid',online_completed:true},[]).amountCents,5500);
+ // In its eligible context, the unchanged configured component still costs $40.
+ group.required=true;
+ const eligible=normalizeCheckoutProfile(p,catalog(),{context:'bls-skills'});
+ assert.throws(()=>checkoutSelection(eligible,{first_name:'Fixture',email:'fixture@example.invalid'},[]),/invalid_course_option/);
+ assert.equal(checkoutSelection(eligible,{first_name:'Fixture',email:'fixture@example.invalid',online_access_ack:true},['online']).amountCents,9500);
+});

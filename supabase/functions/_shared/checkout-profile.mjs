@@ -47,6 +47,8 @@ export function normalizeCheckoutProfile(profile,catalog,{context='',publicCours
       if(!Number.isSafeInteger(amount)||amount>10000000)fail();
       return {...c,label:String(c.label||c.key),catalog_keys:array(c.catalog_keys),amountCents:amount,available};
     });
+    // A required component must not vanish because its choices were filtered.
+    if(g.required===true&&!choices.length)fail();
     return {key:g.key,label:String(g.label||g.key),type:g.type,required:g.required===true,priceMode:g.price_mode||'addition',choices};
   }).filter(g=>g.choices.length);
   const driverRules=array(schema.driver_rules);
@@ -78,7 +80,15 @@ export function checkoutSelection(view,fields,selected){
     values[f.key]=v;
   }
   let amountCents=view.baseCents;const addons=[],bindings={};
-  for(const id of selected){const c=known.get(id);amountCents+=c.amountCents;Object.assign(bindings,c.bindings||{});for(const key of c.catalog_keys)addons.push({key,quantity:1});}
+  for(const id of selected){
+    const c=known.get(id);amountCents+=c.amountCents;
+    // Choice order must not silently decide conflicting registration semantics.
+    for(const [key,value] of Object.entries(c.bindings||{})){
+      if(Object.hasOwn(bindings,key)&&!Object.is(bindings[key],value))throw Error('invalid_course_option');
+      bindings[key]=value;
+    }
+    for(const key of c.catalog_keys)addons.push({key,quantity:1});
+  }
   if(new Set(addons.map(a=>a.key)).size!==addons.length||!Number.isSafeInteger(amountCents)||amountCents>10000000)throw Error('invalid_course_option');
   const driver=view.driverRules.find(r=>!r.when_choice||selected.includes(r.when_choice))?.driver;
   if(!driver)throw Error('invalid_checkout_profile');

@@ -215,3 +215,21 @@ test('async backend policy is awaited; native publication gate is independent an
  policy={materializationEnabled:false,nativePublicationEnabled:false};await api.reserve(key,{...f.body(),selection:m.selection});assert.equal(policyCalls,4,'nonce replay precedes policy/publication fetch');
  f.deps.fullPolicy=async()=>{throw Error('backend_unavailable');};await assert.rejects(api.model(selection),/backend_unavailable/);
 });
+
+
+test('conflicting configured option bindings reject in either order before claiming a seat',async()=>{
+ const f=fixture();
+ f.profile.form_schema.option_groups.push({key:'extra_path',type:'checkbox',choices:[
+  {key:'conflicting_path',catalog_keys:[],bindings:{learningPath:'skills-only'}},
+  {key:'matching_path',catalog_keys:[],bindings:{learningPath:'online-and-skills'}}
+ ]});
+ for(const selectedChoices of [['online','conflicting_path'],['conflicting_path','online']]){
+  await assert.rejects(f.api.reserve(key,f.body({...f.student,selectedChoices})),/invalid_course_option/);
+ }
+ assert.equal(f.calls.filter(c=>c.name==='reserve_native_checkout_order').length,0);
+ const result=await f.api.reserve(key,f.body({...f.student,selectedChoices:['online','matching_path']}));
+ assert.equal(result.receipt.amountCents,9500);
+ const saved=f.calls.find(c=>c.name==='reserve_native_checkout_order').args;
+ assert.equal(saved.p_students[0].learningPath,'online-and-skills');
+ assert.deepEqual(saved.p_students[0].addons,[{key:'code',quantity:1}]);
+});

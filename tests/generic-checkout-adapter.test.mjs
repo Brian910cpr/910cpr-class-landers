@@ -13,20 +13,37 @@ import {fullCoursePolicyRpcArgs} from '../supabase/functions/public-registration
 import {genericCheckout,boundedCheckoutJSON,fullAppointmentSession} from '../supabase/functions/public-registration/generic.mjs';
 const source=readFileSync(new URL('../supabase/functions/public-registration/index.ts',import.meta.url),'utf8').replace(/^import .*;\r?\n/gm,'');
 const key='11111111-1111-4111-8111-111111111111';
-function harness({legacyURL=null,course='fixture-course',profileReady=true,invoice=false,uploads=false,mail=false}={}){
- const calls=[],queued=new Map(),background=[];let mailClaimed=false,mailAccepted=0,handler,order,receipt,required=false,sessionResponse,currentStatus='scheduled',storageFails=false,finishCount=0;
+function harness({legacyURL=null,course='fixture-course',profileReady=true,invoice=false,uploads=false,mail=false,basket=false}={}){
+ const calls=[],queued=new Map(),background=[];let mailClaimed=false,mailAccepted=0,handler,order,receipt,required=false,sessionResponse,currentStatus='scheduled',storageFails=false,finishCount=0,seatResponse=null,registrationRows=null;
  const profile={profile_key:'fixture_generic',version:1,active:true,course_id:'fixture-course',display_name:'Fixture title',requirements:[],form_schema:{schemaVersion:'native-checkout.form.v1',inventory_kind:'scheduled_session_v1',fields:[{key:'first_name',wire:'firstName',type:'text',required:true},{key:'email',wire:'email',type:'email',required:true}],option_groups:[],driver_rules:[{driver:'native_order'}],default_choices:[]}};
  const catalog={course_id:course,course_name:'Fixture title',unit_amount:7500,currency:'usd',addons:[],billing_codes:[{code:'PRIVATE'}]};
  if(uploads)profile.requirements=[{key:'completion',type:'online_completion',display_name:'Completion certificate',upload_now:true,required_before_registration:false,upload:{enabled:true,max_bytes:2097152,mime_types:['application/pdf']}}];
  const packet={profile,physicalCourseId:'fixture-course',catalog};
+ const children=[],childSeats=new Map();let basketRow;
+ if(basket){
+  for(let i=0;i<2;i++)children.push({id:i?'99999999-9999-4999-8999-999999999999':'88888888-8888-4888-8888-888888888888',class_session_id:'fixture-class-'+i,external_class_id:String(700000+i),idempotency_key:'public-order:'+(i?'33333333-3333-4333-8333-333333333333':'22222222-2222-4222-8222-222222222222'),status:'held',total:i?8750:22500,currency:'usd',payer_email:'fixture@example.invalid',hold_expires_at:new Date(Date.now()+5*60000).toISOString(),registration_profile_snapshot:{profile},landerware_public_order_students:[{}]});
+  basketRow={id:'77777777-7777-4777-8777-777777777777',request_key:key,status:'held',total:31250,currency:'usd',hold_expires_at:new Date(Date.now()+5*60000).toISOString(),lines:[{courseNumber:'241108',kind:'session',primary:true,totalCents:22500,discountCents:0},{courseNumber:'209806',kind:'session',primary:false,totalCents:6750,discountCents:750},{courseNumber:'209806',kind:'ebook',primary:false,totalCents:2000,discountCents:0}]};
+ }
  const ctx=vm.createContext({nativeBasketCheckout,basketCheckoutParams,settleBasket,fullCoursePolicyRpcArgs,nativeConfirmationService,nativeConfirmationPostcommit,EdgeRuntime:mail?{waitUntil:p=>background.push(p)}:undefined,publicOrderVersion,publicOrderReturnPath,settlePublicOrder,genericCheckout,boundedCheckoutJSON,fullAppointmentSession,URL,URLSearchParams,Request,Response,Headers,Date,Error,Set,Promise,JSON,Object,Array,Number,String,Uint8Array,crypto:webcrypto,AbortSignal,console,
-  Deno:{env:{get:k=>({SUPABASE_URL:'https://fixture-db.invalid',SUPABASE_SERVICE_ROLE_KEY:'server-only-fixture',STRIPE_SECRET_KEY:'sk_test_fixture',RESEND_API_KEY:mail?'fixture-mail-key':undefined})[k]},serve:fn=>handler=fn},
+  Deno:{env:{get:k=>({SUPABASE_URL:'https://fixture-db.invalid',SUPABASE_SERVICE_ROLE_KEY:'server-only-fixture',STRIPE_SECRET_KEY:'sk_test_fixture',RESEND_API_KEY:mail?'fixture-mail-key':undefined,NATIVE_COURSE_BASKETS_ENABLED:basket?'true':undefined})[k]},serve:fn=>handler=fn},
   fetch:async(url,init={})=>{
    const u=String(url),body=init.body&&typeof init.body==='string'?JSON.parse(init.body):null;calls.push({url:u,init});
+   if(basket&&u.startsWith('https://api.stripe.com/')){
+    if(init.method==='POST'){const p=new URLSearchParams(init.body);assert.equal(init.headers['idempotency-key'],'landerware-basket-'+basketRow.id);assert.equal(p.get('line_items[0][price_data][unit_amount]'),'22500');assert.equal(p.get('line_items[1][price_data][unit_amount]'),'6750');assert.equal(p.get('line_items[2][price_data][unit_amount]'),'2000');}
+    return Response.json(sessionResponse||{id:'cs_fixture',url:'https://checkout.stripe.com/c/pay/fixture',mode:'payment',status:'open',payment_status:'unpaid',livemode:false,amount_total:31250,currency:'usd',metadata:{landerware_basket_id:basketRow.id}});
+   }
    if(u==='https://api.resend.com/emails'){assert.equal(body.to[0],'fixture@example.invalid');assert.match(body.text,/Finish registration/i);assert.match(init.headers['idempotency-key'],/^native-checkout-/);return Response.json({id:'fixture_native_mail_receipt'});}
    if(u.startsWith('https://api.stripe.com/')){const p=new URLSearchParams(init.body);if(init.method==='POST'){assert.equal(p.get('line_items[0][price_data][unit_amount]'),'7500');assert.equal(init.headers['idempotency-key'],'landerware-public-'+order.id);assert.equal(new URL(p.get('success_url')).pathname,publicOrderReturnPath(order));assert.equal(new URL(p.get('cancel_url')).pathname,publicOrderReturnPath(order));assert.ok(+p.get('expires_at')*1000-Date.now()>30*60000,'upload delays must not produce an invalid Stripe expiration');}return Response.json(sessionResponse||{id:'cs_fixture',url:'https://checkout.stripe.com/c/pay/fixture',mode:'payment',status:'open',payment_status:'unpaid',livemode:false,amount_total:7500,currency:'usd',metadata:{landerware_order_id:mail?'33333333-3333-4333-8333-333333333333':'fixture-order'}});}
    if(u.endsWith('/data/schedule_future.json'))return Response.json({sessions:[{session_id:'123456',course_id:'209806',start_at:'2031-01-01T14:00:00Z',end_at:'2031-01-01T16:00:00Z',public_direct_booking:true,registration_status:'open',registration_url:legacyURL,location_display:':: Wilmington; Shipyard Blvd'}]});
    assert.equal(init.headers.apikey,'server-only-fixture');
+   if(basket){
+    if(u.includes('/native_checkout_baskets?')){if(init.method==='PATCH')Object.assign(basketRow,body);return Response.json([basketRow]);}
+    if(u.includes('/native_checkout_basket_items?'))return Response.json(children.map(c=>({order_id:c.id})));
+    if(u.includes('/landerware_public_orders?')){const id=new URL(u).searchParams.get('id')?.replace(/^eq\./,'');return Response.json(children.filter(c=>c.id===id));}
+    if(u.includes('/class_sessions?'))return Response.json([{status:currentStatus,registration_status:'open',start_at:'2031-01-01T14:00:00Z',record_scope:'operational'}]);
+    if(u.endsWith('/rpc/native_checkout_basket_receipt'))return Response.json({basketId:basketRow.id,status:basketRow.status,amountCents:basketRow.total,currency:'usd',holdExpiresAt:basketRow.hold_expires_at,lines:basketRow.lines,items:children.map((c,i)=>({position:i,courseNumber:i?'209806':'241108',orderId:c.id,receipt:{status:c.status,orderId:c.id,students:[]}}))});
+    if(u.endsWith('/rpc/landerware_public_seat_state')){const state=childSeats.get(body.p_session_id)||{capacity:1,registered:0,holds:1,remaining:0};return typeof state==='string'?Response.json({message:state},{status:400}):Response.json(state);}
+   }
    if(u.includes('/storage/v1/object/')){
     assert.equal(init.headers.authorization,'Bearer server-only-fixture');assert.equal(init.headers['x-upsert'],'false');
     assert.equal(init.headers['content-type'],'application/pdf');assert.ok(init.body instanceof Uint8Array);
@@ -38,9 +55,9 @@ function harness({legacyURL=null,course='fixture-course',profileReady=true,invoi
    if(u.includes('/landerware_registration_catalog?'))return Response.json([catalog]);
    if(u.includes('/landerware_public_orders?')){if(init.method==='PATCH'){Object.assign(order,body);return Response.json([order]);}const projection=new URL(u).searchParams.get('select');if(projection?.startsWith('idempotency_key,'))return Response.json([Object.fromEntries(projection.split(',').map(k=>[k,order[k]]))]);return Response.json([order]);}
    const rpc=u.split('/rpc/')[1];
-   if(rpc==='landerware_create_public_order'){assert.equal(body.p_offer.kind,'bls_initial_offer');assert.equal(body.p_offer.capacity,6);order={id:mail?'33333333-3333-4333-8333-333333333333':'fixture-order',class_session_id:'class',external_class_id:'123456',idempotency_key:body.p_idempotency_key,status:'held',total:invoice?0:7500,currency:'usd',payer_email:'fixture@example.invalid',hold_expires_at:new Date(Date.now()+30*60000).toISOString(),recovery_token:'fixture-recovery',registration_profile_snapshot:{},landerware_public_order_students:[]};return Response.json({orderId:order.id,idempotentReplay:false});}
+   if(rpc==='landerware_create_public_order'){assert.equal(body.p_offer.kind,'bls_initial_offer');assert.equal(body.p_offer.capacity,6);order={id:mail?'33333333-3333-4333-8333-333333333333':'fixture-order',class_session_id:'class',external_class_id:'123456',idempotency_key:body.p_idempotency_key,status:'held',total:invoice?0:7500,currency:'usd',payer_email:'fixture@example.invalid',hold_expires_at:new Date(Date.now()+30*60000).toISOString(),recovery_token:'fixture-recovery',registration_profile_snapshot:{},landerware_public_order_students:body.p_students.map(st=>({first_name:st.firstName,last_name:st.lastName,email:st.email,selected_addons:st.addons||[],selected_options:{}}))};return Response.json({orderId:order.id,idempotentReplay:false});}
    if(rpc==='landerware_finalize_public_order'){assert.equal(body.p_stripe_payment_intent_id,'no_payment_required');order.status='paid';return Response.json({status:'paid'});}
-   if(u.includes('/registrations?'))return Response.json([{id:'44444444-4444-4444-8444-444444444444',status:'registered'}]);
+   if(u.includes('/registrations?'))return Response.json(registrationRows||[{id:'44444444-4444-4444-8444-444444444444',status:'registered',class_session_id:order?.class_session_id||'class'}]);
    if(u.endsWith('/landerware_messages')&&init.method==='POST'){if(!queued.has(body.idempotency_key))queued.set(body.idempotency_key,body);return Response.json([]);}
    if(rpc==='native_checkout_record_payment'){order.payment_evidence=body.p_evidence;return Response.json({recorded:true});}
    if(rpc==='native_checkout_finalize_legacy_order'||rpc==='native_checkout_finalize_order'){order.status='paid';return Response.json({status:'paid'});}
@@ -52,7 +69,7 @@ function harness({legacyURL=null,course='fixture-course',profileReady=true,invoi
    if(rpc==='native_full_course_runtime_policy')return Response.json({materializationEnabled:false,nativePublicationEnabled:false,nativeScopeId:'brian-shipyard-b.v1'});
    if(rpc==='native_checkout_profile')return profileReady?Response.json(packet):Response.json({message:'native_profile_not_configured'},{status:400});
    if(rpc==='assert_public_registration_open')return Response.json(true);
-   if(rpc==='landerware_public_seat_state')return Response.json({remaining:2});
+   if(rpc==='landerware_public_seat_state'){if(typeof seatResponse==='string')return Response.json({message:seatResponse},{status:400});const holds=order?.landerware_public_order_students?.length||0;return Response.json(seatResponse||{capacity:3,registered:0,holds,remaining:3-holds});}
    if(rpc==='native_checkout_receipt')return receipt?Response.json(receipt):Response.json({message:'reservation_not_found'},{status:400});
    if(rpc==='native_checkout_basket_contains_order')return Response.json(false);
    if(rpc==='native_checkout_payment_allowed')return Response.json(!required);
@@ -69,8 +86,29 @@ function harness({legacyURL=null,course='fixture-course',profileReady=true,invoi
   }});
  vm.runInContext(stripTypeScriptTypes(source),ctx);
  const send=(action,body,origin='https://www.910cpr.com')=>handler(new Request('https://fixture.invalid/public-registration/generic/'+action,{method:body?'POST':'GET',headers:{origin,'content-type':'application/json',...(action.startsWith('form?')?{}:{'idempotency-key':key})},...(body?{body:JSON.stringify(body)}:{})}));
- return {send,flushMail:()=>Promise.all(background),mailAccepted:()=>mailAccepted,messages:()=>[...queued.values()],raw:(path,body)=>handler(new Request('https://fixture.invalid/public-registration/'+path,{method:body?'POST':'GET',headers:{origin:'https://www.910cpr.com','content-type':'application/json','idempotency-key':key},...(body?{body:JSON.stringify(body)}:{})})),calls,currentStatus:v=>currentStatus=v,saved:v=>order=v,required:v=>required=v,stripe:v=>sessionResponse=v,storageFailure:v=>storageFails=v,finishedUploads:()=>finishCount};
+ return {send,flushMail:()=>Promise.all(background),mailAccepted:()=>mailAccepted,messages:()=>[...queued.values()],raw:(path,body)=>handler(new Request('https://fixture.invalid/public-registration/'+path,{method:body?'POST':'GET',headers:{origin:'https://www.910cpr.com','content-type':'application/json','idempotency-key':key},...(body?{body:JSON.stringify(body)}:{})})),calls,currentStatus:v=>currentStatus=v,seatState:v=>seatResponse=v,registrations:v=>registrationRows=v,stored:()=>order,saved:v=>order=v,required:v=>required=v,stripe:v=>sessionResponse=v,storageFailure:v=>storageFails=v,finishedUploads:()=>finishCount,children:()=>children,basketStored:()=>basketRow,childSeatState:(i,state)=>childSeats.set(children[i].class_session_id,state)};
 }
+
+test('basket checkout refuses one unsafe child before any new or resumed Stripe request',async()=>{
+ const bad=[h=>h.childSeatState(1,'external_reconciliation_required'),h=>h.childSeatState(1,{capacity:1,registered:1,holds:1,remaining:0}),h=>h.childSeatState(1,{capacity:2,registered:0,holds:0,remaining:2}),h=>h.childSeatState(1,{capacity:2,registered:0,holds:1,remaining:2}),h=>h.childSeatState(1,{capacity:1,registered:0,holds:1,remaining:0,unreconciledReserved:1}),h=>h.childSeatState(1,{remaining:1}),h=>h.children()[1].landerware_public_order_students[0].registration_id='already-linked',h=>h.children()[1].landerware_public_order_students=[],h=>delete h.children()[1].landerware_public_order_students,h=>h.children()[1].hold_expires_at='2020-01-01T00:00:00Z',h=>h.children()[1].hold_expires_at='invalid',h=>h.children()[1].paid_at='2026-01-01T00:00:00Z'];
+ for(const resumed of [false,true])for(const mutate of bad){const h=harness({basket:true});if(resumed)h.basketStored().stripe_checkout_session_id='cs_fixture';mutate(h);const r=await h.send('basket-checkout',{});assert.notEqual(r.status,200,JSON.stringify(await r.json()));assert.equal(h.calls.some(c=>c.url.startsWith('https://api.stripe.com/')),false);assert.equal(h.basketStored().status,'held');}
+});
+
+test('basket payment preserves disabled activation, closure, upload and terminal-child guards',async()=>{
+ const disabled=harness();assert.notEqual((await disabled.send('basket-checkout',{})).status,200);assert.equal(disabled.calls.length,0);
+ for(const mutate of [h=>h.required(true),h=>h.currentStatus('canceled'),h=>h.children()[1].status='refunded',h=>h.children()[1].payment_evidence={payment_status:'paid'},h=>h.children()[1].payer_email='other@example.invalid']){
+  const h=harness({basket:true});mutate(h);assert.notEqual((await h.send('basket-checkout',{})).status,200);assert.equal(h.calls.some(c=>c.url.startsWith('https://api.stripe.com/')),false);
+ }
+});
+
+test('basket pre-payment rechecks every own hold, preserves totals, and resumes one checkout',async()=>{
+ const h=harness({basket:true});const first=await h.send('basket-checkout',{});assert.equal(first.status,200,JSON.stringify(await first.clone().json()));assert.match((await first.json()).checkoutUrl,/checkout.stripe.com/);
+ const second=await h.send('basket-checkout',{});assert.equal(second.status,200,JSON.stringify(await second.clone().json()));
+ const stripe=h.calls.filter(c=>c.url.startsWith('https://api.stripe.com/'));assert.equal(stripe.filter(c=>c.init.method==='POST').length,1);assert.equal(stripe.filter(c=>c.init.method!=='POST').length,1);
+ const reads=h.calls.filter(c=>c.url.endsWith('/rpc/landerware_public_seat_state')).map(c=>JSON.parse(c.init.body).p_session_id);assert.deepEqual(reads,['fixture-class-0','fixture-class-1','fixture-class-0','fixture-class-1']);
+ for(const request of stripe){const before=h.calls.slice(0,h.calls.indexOf(request));assert.equal(before.filter(c=>c.url.endsWith('/rpc/landerware_public_seat_state')).length,request.init.method==='POST'?2:4);}
+ assert.equal(h.calls.some(c=>c.url.includes('messages')),false);assert.equal(h.basketStored().total,31250);
+});
 test('deployed HTTP form/claim/Stripe adapter keeps service credentials and contact fields private and gates payment',async()=>{
  const h=harness();const form=await h.send('form?session=123456');const m=await form.json();assert.equal(form.status,200,JSON.stringify(m));assert.equal(m.profile.baseCents,7500);assert.equal(JSON.stringify(m).includes('PRIVATE'),false);
  const r=await h.send('reserve',{selection:{session:'123456'},profileKey:'fixture_generic',profileVersion:1,students:[{fields:{first_name:'Fixture',email:'fixture@example.invalid',amountCents:1},selectedChoices:[]}]});assert.equal(r.status,200);assert.equal(JSON.stringify(await r.json()).includes('fixture@example.invalid'),false);
@@ -207,4 +245,38 @@ test('actual native reserve HTTP adapter schedules an enabled mocked sender only
  await h.flushMail();assert.equal(h.mailAccepted(),1);
  const urls=h.calls.map(c=>c.url),reserve=urls.findIndex(u=>u.endsWith('/rpc/reserve_native_checkout_order')),claim=urls.findIndex(u=>u.endsWith('/rpc/native_checkout_claim_confirmation')),provider=urls.indexOf('https://api.resend.com/emails'),settle=urls.findIndex(u=>u.endsWith('/rpc/native_checkout_settle_confirmation'));
  assert.ok(reserve>=0&&reserve<claim&&claim<provider&&provider<settle);
+});
+
+
+test('legacy checkout refuses unsafe seat evidence before any Stripe request',async()=>{
+ for(const state of ['external_reconciliation_required',{capacity:1,registered:1,holds:1,remaining:0},{capacity:3,registered:0,holds:0,remaining:3},{remaining:2}]){
+  const h=harness({course:'209806',profileReady:false});h.seatState(state);
+  const r=await h.raw('start',{sessionId:'123456',students:[{firstName:'Fixture',lastName:'Student',email:'fixture@example.invalid',phone:'2025550100'}]});
+  assert.notEqual(r.status,200);assert.equal(h.calls.some(c=>c.url.startsWith('https://api.stripe.com/')),false);
+ }
+});
+
+test('native held checkout rechecks authoritative seats and cannot repay observed payment or partial registration',async()=>{
+ for(const mutate of [h=>h.seatState('external_reconciliation_required'),h=>h.seatState({capacity:2,registered:1,holds:1,remaining:0,unreconciledReserved:1}),h=>h.stored().payment_evidence={payment_status:'paid'},h=>h.stored().landerware_public_order_students[0].registration_id='already-linked']){
+  const h=harness();await h.send('reserve',{selection:{session:'123456'},profileKey:'fixture_generic',profileVersion:1,students:[{fields:{first_name:'Fixture',email:'fixture@example.invalid'},selectedChoices:[]}]});mutate(h);
+  const r=await h.send('checkout',{});assert.notEqual(r.status,200);assert.equal(h.calls.some(c=>c.url.startsWith('https://api.stripe.com/')),false);
+ }
+});
+
+test('a valid own hold can open checkout when remaining unheld seats are zero',async()=>{
+ const h=harness();await h.send('reserve',{selection:{session:'123456'},profileKey:'fixture_generic',profileVersion:1,students:[{fields:{first_name:'Fixture',email:'fixture@example.invalid'},selectedChoices:[]}]});
+ h.seatState({capacity:1,registered:0,holds:1,remaining:0});assert.equal((await h.send('checkout',{})).status,200);
+ const urls=h.calls.map(c=>c.url),stripe=urls.findIndex(u=>u.startsWith('https://api.stripe.com/'));assert(stripe>0);assert(urls.slice(0,stripe).some(u=>u.endsWith('/rpc/landerware_public_seat_state')));
+});
+
+
+test('legacy paid recovery cannot generate an original-date notice for a moved or unverified registration',async()=>{
+ for(const class_session_id of ['moved-session',undefined]){
+  const h=harness(),id='55555555-5555-4555-8555-555555555555';
+  h.saved({id,class_session_id:'original-session',external_class_id:'123456',idempotency_key:'public-order:'+key,status:'paid',total:0,currency:'usd',recovery_token:'66666666-6666-4666-8666-666666666666',checkout_runtime_version:'legacy',registration_profile_snapshot:{},landerware_public_order_students:[{registration_id:'44444444-4444-4444-8444-444444444444',first_name:'Synthetic',last_name:'Fixture',email:'fixture@example.invalid',selected_addons:[],selected_options:{}}]});
+  h.registrations([{id:'44444444-4444-4444-8444-444444444444',status:'registered',class_session_id}]);
+  const r=await h.raw('order/'+id+'?requireDelivery=1');assert.notEqual(r.status,200);assert.equal((await r.json()).error,'legacy_confirmation_pending');
+  assert.equal((await h.raw('order/'+id)).status,200,'paid receipt remains available without falsely claiming fresh delivery');
+  assert.equal(h.messages().length,0);assert.equal(h.stored().status,'paid');assert.equal(h.calls.some(c=>c.url.startsWith('https://api.stripe.com')),false);
+ }
 });

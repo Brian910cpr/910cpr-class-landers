@@ -49,9 +49,19 @@ function checkoutParams(o:any,c:any){const p=new URLSearchParams();p.set("line_i
  // must atomically revalidate seats and reserved code stock.
  // https://docs.stripe.com/api/checkout/sessions/create#expires_at
  p.set("expires_at",String(Math.floor(Date.parse(o.hold_expires_at)/1000)+31*60));p.set("metadata[landerware_order_id]",o.id);p.set("metadata[landerware_order_type]","public");p.set("integration_identifier",`910cpr_public_${o.id.replace(/[^a-z]/g,"").slice(0,8).padEnd(8,"x")}`);return p}
+async function assertOrderPaymentSeats(o:any){
+ const students=o.landerware_public_order_students;
+ if(!Array.isArray(students)||students.length<1||students.length>10||students.some((st:any)=>st.registration_id!=null))throw Error("payment_reconciliation_required");
+ const seats=await rpc("landerware_public_seat_state",{p_session_id:o.class_session_id}),reserved=seats?.unreconciledReserved??0;
+ if(!seats||![seats.capacity,seats.registered,seats.holds,seats.remaining,reserved].every((n:any)=>Number.isSafeInteger(n)&&n>=0)||seats.capacity<1||seats.remaining>seats.capacity)throw Error("unverified_capacity");
+ if(seats.holds<students.length)throw Error("payment_reconciliation_required");
+ if(seats.registered+seats.holds+reserved>seats.capacity)throw Error("insufficient_seats");
+ if(seats.remaining>Math.max(seats.capacity-seats.registered-seats.holds-reserved,0))throw Error("unverified_capacity");
+}
 async function createCheckout(o:any,c:any){
  if(o.status==="paid")return {url:`${ORIGIN}${publicOrderReturnPath(o)}?recover=${o.recovery_token}&paid=1`};
  if(o.reconciliation_error)throw Error("payment_reconciliation_required");
+ if(o.payment_evidence?.payment_status==="paid"||o.paid_at)throw Error("payment_processing");
  if(!["held","checkout_open"].includes(o.status)||Date.parse(o.hold_expires_at)<=Date.now())throw Error("hold_expired");
  // A closure published after the hold must still block a new payment path.
  // Already-paid recovery is handled above, preserving existing paid bookings.
@@ -60,6 +70,9 @@ async function createCheckout(o:any,c:any){
  const current=await db(`class_sessions?id=eq.${encodeURIComponent(o.class_session_id)}&select=id,status,registration_status,start_at,record_scope&limit=1`);
  if(current.length!==1||current[0].record_scope!=="operational"||!["scheduled","active"].includes(current[0].status)||current[0].registration_status!=="open"||Date.parse(current[0].start_at)<=Date.now())throw Error("session_not_open");
  if(o.registration_profile_snapshot?.profile&&!await rpc("native_checkout_payment_allowed",{p_key:o.idempotency_key.replace(/^public-order:/,"")}))throw Error("required_document_missing");
+ // Revalidate the same authoritative reader used by finalization BEFORE a
+ // processor request. An open class alone does not establish safe occupancy.
+ await assertOrderPaymentSeats(o);
  const checkout=o.stripe_checkout_session_id?await stripeGet(`checkout/sessions/${encodeURIComponent(o.stripe_checkout_session_id)}`):await stripe("checkout/sessions",checkoutParams(o,c),`landerware-public-${o.id}`);
  const expectedLive=!stripeKey().startsWith("sk_test_")&&!stripeKey().startsWith("rk_test_");
  if(typeof checkout.id!=="string"||!checkout.id.startsWith("cs_")||checkout.livemode!==expectedLive||checkout.mode!=="payment"||checkout.amount_total!==o.total||checkout.currency!==o.currency||checkout.metadata?.landerware_order_id!==o.id)throw Error("payment_mismatch");
@@ -78,7 +91,13 @@ async function legacyPaidConfirmation(o:any){
  if(!['scheduled','active'].includes(s.status))return;
  const students=o.landerware_public_order_students||[],ids=students.map((st:any)=>st.registration_id).filter((id:unknown)=>typeof id==='string'&&/^[0-9a-f-]{36}$/i.test(id));
  if(!ids.length)return;
- const registrations=await db(`registrations?id=in.(${ids.join(',')})&select=id,status`),active=new Set(registrations.filter((r:any)=>['registered','confirmed','completed','active'].includes(r.status)).map((r:any)=>r.id));
+ const registrations=await db(`registrations?id=in.(${ids.join(',')})&select=id,status,class_session_id`);
+ const current=registrations.filter((r:any)=>['registered','confirmed','completed','active'].includes(r.status));
+ // The financial order keeps its original class after a legitimate reschedule.
+ // Do not regenerate that old class's confirmation for a moved registration.
+ // Existing reschedule notices/owner review govern the new placement instead.
+ if(current.some((r:any)=>r.class_session_id!==o.class_session_id))throw Error('legacy_confirmation_reschedule_review_required');
+ const active=new Set(current.map((r:any)=>r.id));
  const eligible=students.filter((st:any)=>active.has(st.registration_id));if(!eligible.length)return;
  await paidEmails({...o,landerware_public_order_students:eligible},{course_name:s.courses?.name||'910CPR class',start_at:s.start_at,location_name:s.locations?.name||''});
 }
@@ -151,10 +170,11 @@ async function createBasketCheckout(id:string){
  const b=await basketOrder(id);if(!["held","checkout_open"].includes(b.status)||b.payment_evidence?.payment_status==="paid"||b.reconciliation_error||Date.parse(b.hold_expires_at)<=Date.now())throw Error("payment_reconciliation_required");
  const items=await db(`native_checkout_basket_items?basket_id=eq.${id}&select=order_id&order=position.asc`);if(items.length<2||items.length>3)throw Error("invalid_order");
  let payer;
- for(const i of items){const child=await order(i.order_id);payer=payer||child.payer_email;if(payer!==child.payer_email||!["held","checkout_open"].includes(child.status)||child.reconciliation_error||child.payment_evidence?.payment_status==="paid"||!await rpc("native_checkout_payment_allowed",{p_key:child.idempotency_key.replace(/^public-order:/,"")}))throw Error("payment_reconciliation_required");
+ for(const i of items){const child=await order(i.order_id);payer=payer||child.payer_email;if(payer!==child.payer_email||!["held","checkout_open"].includes(child.status)||child.reconciliation_error||child.payment_evidence?.payment_status==="paid"||child.paid_at||!Number.isFinite(Date.parse(child.hold_expires_at))||Date.parse(child.hold_expires_at)<=Date.now()||!await rpc("native_checkout_payment_allowed",{p_key:child.idempotency_key.replace(/^public-order:/,"")}))throw Error("payment_reconciliation_required");
   await rpc("assert_public_registration_open",{p_start:null,p_end:null,p_external_id:child.external_class_id});
   const sessions=await db(`class_sessions?id=eq.${child.class_session_id}&select=status,registration_status,start_at,record_scope&limit=1`);
   if(sessions.length!==1||sessions[0].record_scope!=="operational"||!["scheduled","active"].includes(sessions[0].status)||sessions[0].registration_status!=="open"||Date.parse(sessions[0].start_at)<=Date.now())throw Error("session_not_open");
+  await assertOrderPaymentSeats(child);
  }
  const session=b.stripe_checkout_session_id?await stripeGet(`checkout/sessions/${encodeURIComponent(b.stripe_checkout_session_id)}`):await stripe("checkout/sessions",basketCheckoutParams({...b,payer_email:payer},ORIGIN),`landerware-basket-${b.id}`);
  const expectedLive=!stripeKey().startsWith("sk_test_")&&!stripeKey().startsWith("rk_test_");
