@@ -80,6 +80,47 @@ const actualRpc=async(name,body)=>{
 };
 await proveLocalRecoveryCapture({orderId:order,sql,rpc:actualRpc});
 
+// Exercise the actual basket HTTP adapter and authoritative seat reader on the
+// disposable stack. No processor key is supplied and no paid event is invented.
+const basketKey='dddddddd-dddd-4ddd-8ddd-dddddddddddd';
+const basketItems=[];
+for(const [course,session,choices] of [
+ ['241108','lw-11111111-1111-4111-8111-111111111111',['own_copy','no_first_aid']],
+ ['209806','lw-22222222-2222-4222-8222-222222222222',['manual_ebook','no_first_aid']]
+]){
+ const formResponse=await request(path+'form?'+new URLSearchParams({course,session}),{headers:{apikey:anon}});
+ const form=await formResponse.json();assert.equal(formResponse.status,200,'basket course form');
+ basketItems.push({selection:form.selection,profileKey:form.profile.profileKey,profileVersion:form.profile.profileVersion,
+  students:[{fields:{first_name:'Synthetic',last_name:'Basket',email:'basket-http@example.invalid',phone:'2025550100'},selectedChoices:choices}]});
+}
+const basketRequest=(action,body={})=>request(path+action,{method:'POST',headers:{apikey:anon,'content-type':'application/json','idempotency-key':basketKey},body:JSON.stringify(body)});
+const basketReserve=async()=>{const r=await basketRequest('basket-reserve',{items:basketItems});const p=await r.json();assert.equal(r.status,200,'actual basket reserve: '+String(p.error||''));return p.receipt;};
+const basket=await basketReserve();assert.equal(basket.amountCents,31250);
+assert.equal(basket.lines.find(l=>l.primary).discountCents,0);
+assert.equal(basket.lines.find(l=>l.kind==='session'&&!l.primary).discountCents,750);
+assert.equal(basket.lines.find(l=>l.kind==='ebook').totalCents,2000);
+assert.equal(basket.lines.find(l=>l.kind==='ebook').discountCents,0);
+assert.equal((await basketReserve()).basketId,basket.basketId);
+assert.equal(sql('select count(*) from landerware_public_orders;'),'3','single hold plus exactly two basket children');
+const child=JSON.parse(sql(`select row_to_json(q) from (select o.id,o.class_session_id,o.hold_expires_at,s.max_students from native_checkout_basket_items i join landerware_public_orders o on o.id=i.order_id join class_sessions s on s.id=o.class_session_id where i.basket_id=${quote(basket.basketId)} and i.position=1) q;`));
+const paymentError=async expected=>{const r=await basketRequest('basket-checkout');const p=await r.json();assert.equal(r.ok,false);assert.equal(p.error,expected);};
+// A healthy basket reaches only the missing-key boundary, never a processor.
+await paymentError('stripe_unavailable');
+try{
+ sql(`update class_sessions set max_students=1 where id=${quote(child.class_session_id)};`);
+ await paymentError('insufficient_seats');
+}finally{sql(`update class_sessions set max_students=${Number(child.max_students)} where id=${quote(child.class_session_id)};`);}
+try{
+ sql(`update landerware_public_orders set hold_expires_at=now()-interval '1 minute' where id=${quote(child.id)};`);
+ await paymentError('payment_reconciliation_required');
+}finally{sql(`update landerware_public_orders set hold_expires_at=${quote(child.hold_expires_at)}::timestamptz where id=${quote(child.id)};`);}
+await paymentError('stripe_unavailable');
+assert.equal((await basketReserve()).basketId,basket.basketId,'retry retains original materials and reservations');
+assert.equal(sql('select count(*) from registrations;'),'0');
+assert.equal(sql("select count(*) from landerware_public_orders where status='paid' or stripe_checkout_session_id is not null or payment_evidence<>'{}'::jsonb;"),'0');
+assert.equal(sql("select count(*) from product_inventory_units where status='available';"),'3','no synthetic code stock assigned before payment');
+console.log('PASS: actual basket HTTP/SQL reserve/retry, session-only discount, material retention, capacity-loss and expired-child payment admission; no processor/payment/registration fabricated.');
+
 const webhookSecret=readFileSync(process.argv[3],'utf8').split('\n').find(x=>x.startsWith('STRIPE_WEBHOOK_SECRET='))?.slice('STRIPE_WEBHOOK_SECRET='.length);
 assert(/^whsec_local_[a-f0-9]{64}$/.test(webhookSecret||''),'generated local signing binding required');console.log('::add-mask::'+webhookSecret);
 const rawEvent=JSON.stringify({id:'evt_local_synthetic_unpaid',type:'checkout.session.completed',livemode:false,data:{object:{id:'cs_test_local_synthetic',mode:'payment',payment_status:'unpaid',livemode:false}}});

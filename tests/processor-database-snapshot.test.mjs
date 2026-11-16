@@ -10,6 +10,15 @@ test('read-only snapshot executes against actual schema fixture and follows cano
    insert into landerware_public_order_students(order_id,first_name,last_name,email,phone,unit_amount) values('${id}','Synthetic','Fixture','synthetic@example.invalid','2025550100',7500);`);
   const snapshot=processorDatabaseSnapshot({query:sql=>db.query(sql),orderId:id});
   const held=await snapshot();assert.equal(held.status,'held');assert.deepEqual(held.registrationIds,[]);assert.equal(held.occupiedSeats,0);assert.equal(held.confirmationCount,0);
+  // Match the native-stack psql adapter's row_to_json wrapping, not only the
+  // direct PGlite result shape; exercise all three credentialless base targets.
+  const nativeQuery=async text=>db.query(`select row_to_json(q) as record from (${text}) q`);
+  const wrapped=processorDatabaseSnapshot({query:async text=>({rows:(await nativeQuery(text)).rows.map(r=>r.record)}),orderId:id});
+  for(const [course,amount] of [['209806',7500],['359474',7500],['509474',5500]]){
+   await db.query('update landerware_public_orders set course_id=$1,total=$2 where id=$3',[course,amount,id]);
+   const actual=await wrapped();assert.equal(actual.course,course);assert.equal(actual.amountCents,amount);assert.equal(actual.status,'held');assert.equal(actual.occupiedSeats,0);assert.deepEqual(actual.registrationIds,[]);
+  }
+  await db.query('update landerware_public_orders set course_id=$1,total=$2 where id=$3',['209806',7500,id]);
   // Isolated test-only rows; no processor evidence or real payment is fabricated.
   await db.exec(`update landerware_public_orders set class_session_id='11111111-1111-4111-8111-111111111111' where id='${id}';
    insert into registrations(id,customer_id,class_session_id,status,registration_source) values('cccccccc-cccc-4ccc-8ccc-cccccccccccc','dddddddd-dddd-4ddd-8ddd-dddddddddddd','11111111-1111-4111-8111-111111111111','registered','landerware_native_checkout');
