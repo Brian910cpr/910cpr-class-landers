@@ -126,7 +126,12 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         cid = str(busy.get("course_id") or "")
         kind = busy.get("kind") or ("commitment" if "blocked" in str(busy.get("source_file")) else "planted")
         count = busy.get("active_registration_count")
-        if isinstance(count, int) and count > 0 and kind == "planted":
+        # Operational canonical seats form gravity even if public/external
+        # count proof is unavailable. Never expose that private seat for sale.
+        if kind == "planted" and (
+            (type(count) is int and count > 0 and busy.get("count_available") is True)
+            or busy.get("operational_has_active_seat") is True
+        ):
             kind = "paid"
         fixture["sources"].append(dict(id=str(busy.get("source_event_id") or "occupied-"+str(index)),
             instructor=instructor, location=location, start=start.isoformat(), end=end.isoformat(),
