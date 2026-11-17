@@ -57,9 +57,10 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
                   or source.get("kind") == "paid"
                   or (source.get("count_available") is True
                       and type(count) is int and count > 0))
-        private_source = (source.get("visibility") in ("private", "unlisted")
-                          or (source.get("source_file") == "canonical_class_sessions"
-                              and source.get("visibility") != "public"))
+        # Only explicit public visibility may disclose a verified public
+        # roster or paid Anchor role. Unknown visibility from any source,
+        # including noncanonical intake, must remain blocking-only.
+        private_source = source.get("visibility") != "public"
         # Private/unlisted sources retain occupied geometry but never reveal
         # registration count, paid-anchor role or a joinable seat.
         public_count = not private_source and source.get("count_available") is True
