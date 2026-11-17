@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 from scripts.layered_publication_adapter import calculate, publish, project_sources, finalize, public_calculation_diagnostics
 from scripts.layered_selector_adapter import aware, build_shadow
-from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, render_html
+from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, public_layered_landscape, render_html
 from scripts.apply_anchor_policy import finalize_selector_payload
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -241,6 +241,35 @@ class LayeredPublicationTests(unittest.TestCase):
         # paid and available for actual collision/Anchor calculations.
         self.assertEqual(internal['projected_sources'][0]['kind'],'paid')
         self.assertEqual(internal['reports'][0]['normalized_occupancy'][0]['kind'],'paid')
+
+    def test_unknown_noncanonical_visibility_never_publishes_roster_or_paid_role(self):
+        # A source with absent visibility is not public merely because it
+        # came from an intake path rather than canonical_class_sessions.
+        unknown=dict(source_event_id='unknown-intake',source_file='confirmed_booking_intake',
+            kind='paid',count_available=True,active_registration_count=1,
+            operational_has_active_seat=True,
+            start=self.at(11,'12:00').isoformat(),end=self.at(11,'14:00').isoformat(),
+            course_id='359474',resource=self.room)
+        public=dict(unknown,source_event_id='verified-public',visibility='public')
+        internal=dict(projected_sources=[unknown,public],reports=[])
+        sanitized=public_calculation_diagnostics(internal)
+        private_report=sanitized['projected_sources'][0]
+        self.assertNotIn('operational_has_active_seat',private_report)
+        self.assertNotIn('active_registration_count',private_report)
+        self.assertFalse(private_report['count_available'])
+        self.assertEqual(private_report['kind'],'occupied')
+        landscape=public_layered_landscape(dict(layeredDiagnostics=internal))
+        unknown_landscape,public_landscape=landscape['sources']
+        self.assertEqual(unknown_landscape['role'],'blocking')
+        self.assertFalse(unknown_landscape['countAvailable'])
+        self.assertIsNone(unknown_landscape['registeredCount'])
+        self.assertEqual(public_landscape['role'],'anchor')
+        self.assertTrue(public_landscape['countAvailable'])
+        self.assertEqual(public_landscape['registeredCount'],1)
+        # Redaction applies even to the unsanitized internal input; internal
+        # proof itself remains unchanged and usable for occupancy gravity.
+        self.assertEqual(internal['projected_sources'][0]['kind'],'paid')
+        self.assertTrue(internal['projected_sources'][0]['operational_has_active_seat'])
 
     def test_same_interval_legacy_mirror_cannot_erase_private_canonical_seat(self):
         # Source identity, not identical instructor/room/clock geometry, must
