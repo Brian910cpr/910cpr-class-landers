@@ -265,8 +265,11 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse([o for o in proven['offers'] if o['date']=='2026-10-11'
                           and o['instructor']=='Brian Ennis'
                           and o.get('scheduleRole')=='open_day'])
-        self.assertTrue(any(s['kind']=='paid' for s in proven['layeredDiagnostics']['reports'][0]['normalized_occupancy']),
-                        'a verified positive seat, not a legacy shell, creates a paid Anchor')
+        self.assertTrue(any(s['kind']=='paid' for s in self.calculation()['reports'][0]['normalized_occupancy']),
+                        'internal calculation must preserve verified paid Anchor gravity')
+        self.assertFalse(any(s.get('kind')=='paid' for s in
+                         proven['layeredDiagnostics']['reports'][0]['normalized_occupancy']),
+                         'public diagnostics must not disclose private paid-seat evidence')
 
     def test_unknown_existing_seat_not_day_anchor_until_proven(self):
         self.windows=[]; self.coverage=[]; self.sources=[]
