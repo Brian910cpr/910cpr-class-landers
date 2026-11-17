@@ -39,6 +39,9 @@ def public_calculation_diagnostics(calculation):
         # Public diagnostics must not disclose that a private customer registered.
         if source.get("visibility") != "public":
             diagnostic.pop("operational_has_active_seat", None)
+            # An unknown/private visibility cannot authorize even a boolean
+            # roster-availability signal in the public calculation report.
+            diagnostic["count_available"] = False
             if diagnostic.get("kind") in {"paid", "seated"}:
                 diagnostic["kind"] = "occupied"
         # A public, independently verified roster may show its count; a
