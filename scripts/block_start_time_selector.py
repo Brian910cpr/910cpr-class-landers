@@ -761,6 +761,9 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "source_event_id": session.get("canonical_session_id"),
             "external_class_id": session.get("external_class_id"),
             "course_id": session.get("course_id") or session.get("external_course_id"),
+            # The canonical demand endpoint can carry only this stable course key.
+            # Keep it for operational Anchor geometry; it never grants public joinability.
+            "course_key": session.get("course_key"),
             "visibility": session.get("visibility"),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
             # Human source labels are not proof of a canonical instructor.
