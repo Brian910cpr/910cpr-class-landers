@@ -244,6 +244,43 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(internal['projected_sources'][0]['kind'],'paid')
         self.assertEqual(internal['reports'][0]['normalized_occupancy'][0]['kind'],'paid')
 
+    def test_rejected_existing_class_and_expired_offer_strip_private_payloads(self):
+        # Rejected existing-class rows enter the public report directly. A
+        # private booking URL or nested source metadata may never be copied
+        # into the customer feed just because a candidate was rejected.
+        seated=dict(session_id='unmatched-existing',date='2026-10-11',
+            startTime='12:00',courseId='359474',courseName='BLS Renewal',
+            offerType='seated_class',location=self.room,
+            registrationUrl='https://private.invalid/token-SECRET-BOOKING',
+            sourceAvailabilityBlock=dict(sessionId='SECRET-SESSION-ID',
+                                         studentEmail='SECRET-EMAIL'),
+            sourceSessionIds=['SECRET-SOURCE-ID'],edgeIds=['SECRET-EDGE-ID'],
+            participantName='SECRET-PARTICIPANT')
+        payload=self.payload([seated])
+        self.assertIn('unverified_existing_class_consumption_end',
+                      payload['rejectionReasonCounts'])
+        rejected=next(row for row in payload['rejectedCourseStartTimes']
+                      if 'unverified_existing_class_consumption_end' in row.get('reasons',[]))
+        self.assertEqual((rejected['date'],rejected['startTime'],rejected['courseId']),
+                         ('2026-10-11','12:00','359474'))
+        serialized=json.dumps(payload)
+        for secret in ('SECRET-BOOKING','SECRET-SESSION-ID','SECRET-EMAIL',
+                       'SECRET-SOURCE-ID','SECRET-EDGE-ID','SECRET-PARTICIPANT'):
+            self.assertNotIn(secret,serialized)
+
+        # The finalizer can append a new rejection when a previously accepted
+        # dynamic offer's lease expires; that path must obey the same boundary.
+        fresh=self.payload()
+        self.assertTrue(fresh['offers'])
+        fresh['offers'][0]['sourceAvailabilityBlock']={'customer':'SECRET-EXPIRED-CUSTOMER'}
+        expired=finalize(fresh,self.now+timedelta(hours=2))
+        self.assertFalse(expired['offers'])
+        self.assertIn('expired_or_missing_scoped_lease',
+                      [reason for row in expired['rejectedCourseStartTimes']
+                       for reason in row.get('reasons',[])])
+        self.assertNotIn('SECRET-EXPIRED-CUSTOMER',json.dumps(expired))
+
+
     def test_unknown_noncanonical_visibility_never_publishes_roster_or_paid_role(self):
         # A source with absent visibility is not public merely because it
         # came from an intake path rather than canonical_class_sessions.
