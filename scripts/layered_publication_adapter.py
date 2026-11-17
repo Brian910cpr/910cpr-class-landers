@@ -39,6 +39,8 @@ def public_calculation_diagnostics(calculation):
         # Public diagnostics must not disclose that a private customer registered.
         if source.get("visibility") != "public":
             diagnostic.pop("operational_has_active_seat", None)
+            if diagnostic.get("kind") in {"paid", "seated"}:
+                diagnostic["kind"] = "occupied"
         # A public, independently verified roster may show its count; a
         # private/unlisted or unknown-visibility roster never does.
         if source.get("visibility") == "public" and source.get("count_available") is True:
@@ -47,13 +49,14 @@ def public_calculation_diagnostics(calculation):
     result["projected_sources"] = public_sources
     for report in result.get("reports", []):
         for occupied in report.get("normalized_occupancy", []):
-            if occupied.get("evidence") == "canonical_class_sessions":
-                occupied.pop("headcount", None)
-                # The source engine needs paid gravity, but these diagnostics
-                # are public; even a boolean paid/seated marker leaks private
-                # customer participation. Keep operational facts internal.
-                if occupied.get("kind") in {"paid", "seated"}:
-                    occupied["kind"] = "occupied"
+            # This is a public, cross-source report, not a roster. Private
+            # appointments can arrive through several provenance paths and
+            # those paths need not advertise their visibility. Never expose
+            # headcounts or paid/seated markers here; keep them in the internal
+            # calculation used to enforce real occupied intervals.
+            occupied.pop("headcount", None)
+            if occupied.get("kind") in {"paid", "seated"}:
+                occupied["kind"] = "occupied"
     return result
 
 
