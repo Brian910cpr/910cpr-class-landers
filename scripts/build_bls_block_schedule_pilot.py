@@ -49,10 +49,17 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
     calculation = payload.get("layeredDiagnostics") or {}
     sources = []
     for source in calculation.get("projected_sources", []):
-        kind = source.get("kind") or ("commitment" if "blocked" in str(source.get("source_file")) or not source.get("course_id") else "planted")
+        # A legacy planted class is a real time blocker, not evidence of a
+        # registered Anchor. Private canonical seats may establish operational
+        # gravity without authorizing a public joinable roster/count.
+        count = source.get("active_registration_count")
+        proven = (source.get("operational_has_active_seat") is True
+                  or source.get("kind") == "paid"
+                  or (source.get("count_available") is True
+                      and type(count) is int and count > 0))
         sources.append({
             "sourceId": source.get("source_event_id"),
-            "role": "anchor" if kind in ("paid", "seated", "planted") else "blocking",
+            "role": "anchor" if proven else "blocking",
             "start": source.get("start"), "end": source.get("end"),
             "courseId": source.get("course_id"), "resource": source.get("resource"),
             "countAvailable": source.get("count_available") is True,
