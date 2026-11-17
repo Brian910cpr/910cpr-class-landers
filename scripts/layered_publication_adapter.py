@@ -270,15 +270,16 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     def unreconciled_private_committed_start(offer):
         """A separate confirmed private occurrence cannot license an external public seat.
 
-        Same course, physical venue and start is a potential source mirror, not
-        proof of shared registration identity. Keep both source records intact;
-        fail closed on the public choice until the occurrence is reconciled.
+        A confirmed private booking at the same start and physical venue
+        conflicts with an unrelated public seat until their identities and
+        resources are reconciled. Canonical demand can carry only a course_key
+        (not the external public courseId); course-ID equality cannot be a
+        prerequisite for reserving a real room. Preserve both source records.
         """
         try:
             offered_start = aware(str(offer["date"]) + "T" + str(offer["startTime"]))
         except (KeyError, TypeError, ValueError):
             return True
-        offered_course = str(offer.get("courseId") or "")
         offered_location = str(offer.get("location") or "").strip().casefold()
         offered_identity = str(offer.get("session_id") or offer.get("sourceSessionId")
                                or offer.get("sourceAvailabilityBlock", {}).get("sessionId") or "")
@@ -294,7 +295,10 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             proof = occupied.get("operational_has_active_seat") is True
             count = occupied.get("active_registration_count")
             proof = proof or (occupied.get("count_available") is True and type(count) is int and count > 0)
-            if not proof or str(occupied.get("course_id") or "") != offered_course:
+            # The canonical endpoint may omit external_course_id even for a
+            # confirmed one-seat class. A public seat of ANY course must not
+            # reuse the same unresolved physical room/start.
+            if not proof:
                 continue
             try:
                 if aware(occupied["start"]) != offered_start:
