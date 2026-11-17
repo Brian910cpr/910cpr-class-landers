@@ -289,7 +289,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         try:
             offered_start = aware(str(offer["date"]) + "T" + str(offer["startTime"]))
         except (KeyError, TypeError, ValueError):
-            return True
+            return "unreconciled_private_committed_public_start"
         offered_identity = str(offer.get("session_id") or offer.get("sourceSessionId")
                                or offer.get("sourceAvailabilityBlock", {}).get("sessionId") or "")
         public_source = counts.get(offered_identity)
@@ -300,16 +300,21 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         try:
             if public_source and public_source.get("start") and public_source.get("end"):
                 if aware(public_source["start"]) != offered_start:
-                    return True
+                    return "unreconciled_private_committed_public_start"
                 offered_end = aware(public_source["end"])
             elif offer.get("occupiedUntil"):
                 offered_end = aware(offer["occupiedUntil"])
             elif type(offer.get("schedulerConsumptionMinutes")) is int and offer["schedulerConsumptionMinutes"] > 0:
                 offered_end = offered_start + timedelta(minutes=offer["schedulerConsumptionMinutes"])
             if offered_end is not None and offered_end <= offered_start:
-                return True
+                return "unreconciled_private_committed_public_start"
         except (ValueError, TypeError):
-            return True
+            return "unreconciled_private_committed_public_start"
+
+        if offered_end is None:
+            # No validated class duration: a cross-midnight collision cannot
+            # be ruled out. Fail this seated link closed, not the entire day.
+            return "unverified_existing_class_consumption_end"
 
         offered_location = str(offer.get("location") or "").strip().casefold()
         for occupied in calculation["projected_sources"]:
@@ -328,9 +333,9 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             try:
                 committed_start, committed_end = aware(occupied["start"]), aware(occupied["end"])
                 if committed_end <= committed_start:
-                    return True
+                    return "unreconciled_private_committed_public_start"
             except (KeyError, ValueError, TypeError):
-                return True
+                return "unreconciled_private_committed_public_start"
             # Half-open physical intervals: touching at the end is legal.
             if committed_end <= offered_start:
                 continue
@@ -362,13 +367,14 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                     and not public_source.get("resource_uncertain")
                     and not occupied.get("resource_uncertain")):
                 continue
-            return True
-        return False
+            return "unreconciled_private_committed_public_start"
+        return None
 
     for original in seated_offers:
         source = counts.get(str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId")))
-        if unreconciled_private_committed_start(original):
-            rejected.append(dict(original, reasons=["unreconciled_private_committed_public_start"]))
+        collision_reason = unreconciled_private_committed_start(original)
+        if collision_reason:
+            rejected.append(dict(original, reasons=[collision_reason]))
         elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
         else:
