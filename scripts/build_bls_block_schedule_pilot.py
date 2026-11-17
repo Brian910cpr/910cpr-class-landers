@@ -65,7 +65,8 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
         # registration count, paid-anchor role or a joinable seat.
         public_count = not private_source and source.get("count_available") is True
         sources.append({
-            "sourceId": source.get("source_event_id"),
+            # A private/unlisted canonical source must not expose its ID in public JSON.
+            "sourceId": source.get("source_event_id") if not private_source else None,
             "role": "anchor" if proven and not private_source else "blocking",
             "start": source.get("start"), "end": source.get("end"),
             "courseId": source.get("course_id"), "resource": source.get("resource"),
@@ -79,7 +80,9 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
             key = (block.get("id"), block.get("start"), block.get("end"))
             if key in seen:continue
             seen.add(key)
-            blocks.append({k: block.get(k) for k in ("id", "start", "end", "source_ids")})
+            blocks.append({"id": "occupied-block-" + str(len(blocks) + 1),
+                           "start": block.get("start"), "end": block.get("end"),
+                           "source_ids": []})
     return {"schemaVersion": "public-layered-landscape.v1", "sources": sources,
             "occupiedBlocks": blocks, "offersAreAlternatives": True,
             "availabilityIsNotAClass": True}
