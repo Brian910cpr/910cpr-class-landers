@@ -184,10 +184,8 @@ def repeat_scope_key(course_id: str, policy: dict[str, Any]) -> tuple[str, int]:
 
 
 def in_repeat_bubble(start: datetime, anchor_start: datetime, delay_minutes: int) -> bool:
-    """Apply repeat suppression. A 1440-minute rule means the same calendar day only."""
+    """Apply the configured elapsed-time repeat window across midnight."""
     if (start.tzinfo is None) != (anchor_start.tzinfo is None):
         start = start.replace(tzinfo=None)
         anchor_start = anchor_start.replace(tzinfo=None)
-    if delay_minutes == 1440:
-        return start.date() == anchor_start.date()
     return anchor_start - timedelta(minutes=delay_minutes) <= start <= anchor_start + timedelta(minutes=delay_minutes)
