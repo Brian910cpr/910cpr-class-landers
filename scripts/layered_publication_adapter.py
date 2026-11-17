@@ -267,9 +267,43 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         for identity in [source.get("source_event_id"), source.get("external_class_id")]:
             if identity is not None and str(identity) not in counts:
                 counts[str(identity)] = source
+    def unreconciled_private_committed_start(offer):
+        """A separate confirmed private occurrence cannot license an external public seat.
+
+        Same course, physical venue and start is a potential source mirror, not
+        proof of shared registration identity. Keep both source records intact;
+        fail closed on the public choice until the occurrence is reconciled.
+        """
+        try:
+            offered_start = aware(str(offer["date"]) + "T" + str(offer["startTime"]))
+        except (KeyError, TypeError, ValueError):
+            return True
+        offered_course = str(offer.get("courseId") or "")
+        offered_location = str(offer.get("location") or "").strip().casefold()
+        for occupied in calculation["projected_sources"]:
+            if occupied.get("visibility") == "public":
+                continue
+            proof = occupied.get("operational_has_active_seat") is True
+            count = occupied.get("active_registration_count")
+            proof = proof or (occupied.get("count_available") is True and type(count) is int and count > 0)
+            if not proof or str(occupied.get("course_id") or "") != offered_course:
+                continue
+            try:
+                if aware(occupied["start"]) != offered_start:
+                    continue
+            except (KeyError, TypeError, ValueError):
+                return True
+            committed_location = str(occupied.get("location") or "").strip().casefold()
+            if committed_location and offered_location and committed_location != offered_location:
+                continue
+            return True
+        return False
+
     for original in seated_offers:
         source = counts.get(str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId")))
-        if source and source.get("count_available") is True and source.get("active_registration_count") == 0:
+        if unreconciled_private_committed_start(original):
+            rejected.append(dict(original, reasons=["unreconciled_private_committed_public_start"]))
+        elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
         else:
             accepted.append(deepcopy(original))
