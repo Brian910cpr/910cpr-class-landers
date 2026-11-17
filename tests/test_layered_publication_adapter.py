@@ -734,7 +734,9 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual([o['startTime'] for o in result['offers'] if o['courseId']=='209809'],['14:30','19:00'])
         feed=public_selector_availability_payload(result)
         full=[c for d in feed['dates'] for t in d['startTimes'] for c in t['courses'] if c['courseId']=='209809']
-        self.assertTrue(all(c['sourceSessionIds'] and c['edgeIds'] and c['occupiedUntil'] for c in full))
+        # Occupied timing is public; internal source/edge identities are not.
+        self.assertTrue(all(c['occupiedUntil'] for c in full))
+        self.assertTrue(all(not c.get('sourceSessionIds') and not c.get('edgeIds') for c in full))
         html=render_html(result)
         self.assertIn('Heartsaver',html)
         self.assertIn('layered-publication.v2',json.dumps(feed))
