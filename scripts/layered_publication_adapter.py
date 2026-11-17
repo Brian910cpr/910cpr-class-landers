@@ -232,9 +232,14 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     # Unknown external rosters continue to block their actual occupied interval
     # upstream, but cannot suppress other legal starts for an entire day.
     def proven_seated(source):
-        count = source.get('active_registration_count') if source else None
-        return (source is not None and source.get('count_available') is True
-                and type(count) is int and count > 0)
+        if source is None:
+            return False
+        # Operational private registrations never confer public joinability.
+        # The canonical active-seat flag only controls gravity/offer geometry.
+        if source.get('operational_has_active_seat') is True:
+            return True
+        count = source.get('active_registration_count')
+        return source.get('count_available') is True and type(count) is int and count > 0
 
     def seated_source(offer):
         key = str(offer.get('session_id') or offer.get('sourceSessionId')
