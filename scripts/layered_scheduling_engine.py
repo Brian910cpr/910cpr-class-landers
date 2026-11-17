@@ -216,6 +216,11 @@ def run(fixture):
     if grid is not None and (not isinstance(grid, int) or grid <= 0 or 60 % grid):
         raise ValueError('invalid slot grid')
     candidates, edges, free_intervals = [], [], []
+    # An empty or unverified legacy class consumes its actual occupied time but
+    # must not create Barnacle gravity that collapses otherwise free windows.
+    # A merged block remains an Anchor if ANY constituent is proven paid/seated.
+    proven_anchor_source_ids = {busy['id'] for busy in occupied
+                                if busy['kind'] in {'paid', 'seated'}}
     def candidate(course, start, instructor, location, origin):
         candidates.append({"id": "candidate-" + str(len(candidates) + 1), "course": course,
                            "family": courses[course]["family"], "start": start,
@@ -236,7 +241,9 @@ def run(fixture):
         local_zone = datetime.fromisoformat(window["start"].replace("Z", "+00:00")).tzinfo
         first_day = ws.astimezone(local_zone).date()
         last_day = (we - timedelta(microseconds=1)).astimezone(local_zone).date()
-        relevant = [b for b in blocks if (b["instructor"] == instructor or (policy.get("shared_room_edges")
+        relevant = [b for b in blocks if any(source_id in proven_anchor_source_ids
+                        for source_id in b["source_ids"])
+                    and (b["instructor"] == instructor or (policy.get("shared_room_edges")
                         and b["start_location"] == location and b["end_location"] == location))
                     and b["start"].astimezone(local_zone).date() <= last_day
                     and (b["end"] - timedelta(microseconds=1)).astimezone(local_zone).date() >= first_day
