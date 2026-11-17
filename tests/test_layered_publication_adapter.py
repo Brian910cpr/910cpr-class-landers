@@ -251,6 +251,50 @@ class LayeredPublicationTests(unittest.TestCase):
                             or offer['startTime'] >= '14:00',
                             'another public class must not start within private occupancy')
 
+    def test_canonical_private_intake_proves_operational_anchor_not_public_seat(self):
+        from scripts.block_start_time_selector import build_occupancy
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        demand=dict(canonical_session_id='synthetic-private-intake',
+            source='confirmed_booking_intake',session_status='scheduled',
+            visibility='private',registration_status='closed',
+            lead_instructor_name='Brian Ennis',lead_instructor_id='synthetic-instructor',
+            location_name=':: Wilmington; Shipyard Blvd',
+            external_course_id='359474',external_class_id='14925865',
+            start_at=self.at(11,'12:00').isoformat(),end_at=self.at(11,'14:00').isoformat(),
+            count_available=False,active_registration_count=None,
+            canonical_recorded_registration_count=1)
+        self.sources=build_occupancy(dict(location_resource_map=self.resources,
+            canonical_demand=dict(sessions=[demand])),{},allow_unresolved=True)
+        source=self.sources[0]
+        self.assertTrue(source['operational_has_active_seat'])
+        self.assertFalse(source['count_available'])
+        self.assertIsNone(source['active_registration_count'])
+        projected=self.calculation()['projected_sources'][0]
+        self.assertTrue(projected['operational_has_active_seat'])
+        offers=self.payload()['offers']
+        self.assertTrue(any(o.get('scheduleRole')=='barnacle' for o in offers))
+        self.assertFalse(any(o.get('scheduleRole')=='open_day' for o in offers))
+        self.assertFalse(any(o.get('offerType')=='seated_class' for o in offers))
+        self.assertFalse(any('synthetic-private-intake' in str(o.get('registrationUrl',''))
+                             or '14925865' in str(o.get('registrationUrl','')) for o in offers))
+        for offer in offers:
+            start=aware(offer['date']+'T'+offer['startTime']+':00-04:00')
+            end=aware(offer['occupiedUntil'])
+            self.assertTrue(end<=self.at(11,'12:00') or start>=self.at(11,'14:00'))
+        # Unverified/legacy source alone cannot become paid gravity.
+        demand['source']='enrollware_history'
+        self.sources=build_occupancy(dict(location_resource_map=self.resources,
+            canonical_demand=dict(sessions=[demand])),{},allow_unresolved=True)
+        self.assertFalse(self.sources[0]['operational_has_active_seat'])
+        self.assertTrue(any(o.get('scheduleRole')=='open_day' for o in self.payload()['offers']))
+        # A human source label never fills in a missing canonical instructor ID.
+        demand['source']='confirmed_booking_intake'
+        demand['lead_instructor_id']=None
+        self.sources=build_occupancy(dict(location_resource_map=self.resources,
+            canonical_demand=dict(sessions=[demand])),{},allow_unresolved=True)
+        self.assertTrue(self.sources[0]['instructor_unassigned'])
+
     def test_native_venue_alias_keeps_occupied_interval_through_publication(self):
         from scripts.block_start_time_selector import build_occupancy
         label = '4018 Shipyard Blvd, Room B, 910CPR Office'
