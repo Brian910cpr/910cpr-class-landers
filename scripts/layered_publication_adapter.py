@@ -268,45 +268,87 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             if identity is not None and str(identity) not in counts:
                 counts[str(identity)] = source
     def unreconciled_private_committed_start(offer):
-        """A separate confirmed private occurrence cannot license an external public seat.
+        """Fail closed when an unrelated private seat may physically overlap.
 
-        A confirmed private booking at the same start and physical venue
-        conflicts with an unrelated public seat until their identities and
-        resources are reconciled. Canonical demand can carry only a course_key
-        (not the external public courseId); course-ID equality cannot be a
-        prerequisite for reserving a real room. Preserve both source records.
+        Different start times can overlap a class. Only a proven independent
+        room AND instructor permits parallel bookings; a shared office label
+        or an unassigned canonical resource is never evidence of independence.
         """
         try:
             offered_start = aware(str(offer["date"]) + "T" + str(offer["startTime"]))
         except (KeyError, TypeError, ValueError):
             return True
-        offered_location = str(offer.get("location") or "").strip().casefold()
         offered_identity = str(offer.get("session_id") or offer.get("sourceSessionId")
                                or offer.get("sourceAvailabilityBlock", {}).get("sessionId") or "")
+        public_source = counts.get(offered_identity)
+        # Use the actual matching occurrence's consumed interval, not just its
+        # visible start or instruction-only duration. If no trustworthy end is
+        # available, do not assume an early public class clears a later booking.
+        offered_end = None
+        try:
+            if public_source and public_source.get("start") and public_source.get("end"):
+                if aware(public_source["start"]) != offered_start:
+                    return True
+                offered_end = aware(public_source["end"])
+            elif offer.get("occupiedUntil"):
+                offered_end = aware(offer["occupiedUntil"])
+            elif type(offer.get("schedulerConsumptionMinutes")) is int and offer["schedulerConsumptionMinutes"] > 0:
+                offered_end = offered_start + timedelta(minutes=offer["schedulerConsumptionMinutes"])
+            if offered_end is not None and offered_end <= offered_start:
+                return True
+        except (ValueError, TypeError):
+            return True
+
+        offered_location = str(offer.get("location") or "").strip().casefold()
         for occupied in calculation["projected_sources"]:
             if occupied.get("visibility") == "public":
                 continue
-            # The already-published seat with its exact same occurrence ID is
-            # not a *second* commitment. Retain existing legacy same-occurrence
-            # behavior when visibility is absent; explicitly private never joins.
+            # A genuine same-occurrence legacy mirror is not a second class.
+            # Explicit private/unlisted visibility never grants joinability.
             if (offered_identity and str(occupied.get("source_event_id") or "") == offered_identity
                     and occupied.get("visibility") not in {"private", "unlisted"}):
                 continue
-            proof = occupied.get("operational_has_active_seat") is True
             count = occupied.get("active_registration_count")
-            proof = proof or (occupied.get("count_available") is True and type(count) is int and count > 0)
-            # The canonical endpoint may omit external_course_id even for a
-            # confirmed one-seat class. A public seat of ANY course must not
-            # reuse the same unresolved physical room/start.
+            proof = (occupied.get("operational_has_active_seat") is True
+                     or (occupied.get("count_available") is True and type(count) is int and count > 0))
             if not proof:
                 continue
             try:
-                if aware(occupied["start"]) != offered_start:
-                    continue
-            except (KeyError, TypeError, ValueError):
+                committed_start, committed_end = aware(occupied["start"]), aware(occupied["end"])
+                if committed_end <= committed_start:
+                    return True
+            except (KeyError, ValueError, TypeError):
                 return True
+            # Half-open physical intervals: touching at the end is legal.
+            if committed_end <= offered_start:
+                continue
+            if offered_end is not None:
+                if committed_start >= offered_end:
+                    continue
+            elif committed_start.date() != offered_start.date():
+                continue  # Unknown offer end: bound uncertainty to its day.
+
             committed_location = str(occupied.get("location") or "").strip().casefold()
-            if committed_location and offered_location and committed_location != offered_location:
+            # Different public office spellings may still describe Shipyard.
+            same_shipyard = "shipyard" in committed_location and "shipyard" in offered_location
+            if (committed_location and offered_location
+                    and committed_location != offered_location and not same_shipyard):
+                continue
+            # Two assigned rooms and two different verified instructors are
+            # required before treating simultaneous same-venue classes as
+            # independent. The current canonical feed lacks room proof.
+            if (public_source and public_source.get("resource_assignment_verified") is True
+                    and occupied.get("resource_assignment_verified") is True
+                    and public_source.get("resource") and occupied.get("resource")
+                    and public_source["resource"] != occupied["resource"]
+                    and public_source["resource"] != "Shipyard Office"
+                    and occupied["resource"] != "Shipyard Office"
+                    and public_source.get("instructor_assignment_verified") is True
+                    and occupied.get("instructor_assignment_verified") is True
+                    and public_source.get("instructor") and occupied.get("instructor")
+                    and public_source["instructor"].strip().casefold() != occupied["instructor"].strip().casefold()
+                    and not public_source.get("resource_uncertain")
+                    and not occupied.get("resource_uncertain")):
                 continue
             return True
         return False
