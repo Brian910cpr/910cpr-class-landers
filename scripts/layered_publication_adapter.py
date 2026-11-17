@@ -280,8 +280,16 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             return True
         offered_course = str(offer.get("courseId") or "")
         offered_location = str(offer.get("location") or "").strip().casefold()
+        offered_identity = str(offer.get("session_id") or offer.get("sourceSessionId")
+                               or offer.get("sourceAvailabilityBlock", {}).get("sessionId") or "")
         for occupied in calculation["projected_sources"]:
             if occupied.get("visibility") == "public":
+                continue
+            # The already-published seat with its exact same occurrence ID is
+            # not a *second* commitment. Retain existing legacy same-occurrence
+            # behavior when visibility is absent; explicitly private never joins.
+            if (offered_identity and str(occupied.get("source_event_id") or "") == offered_identity
+                    and occupied.get("visibility") not in {"private", "unlisted"}):
                 continue
             proof = occupied.get("operational_has_active_seat") is True
             count = occupied.get("active_registration_count")
