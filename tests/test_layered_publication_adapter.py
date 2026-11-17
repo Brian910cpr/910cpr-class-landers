@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import patch
 from scripts.layered_publication_adapter import calculate, publish, project_sources, finalize
 from scripts.layered_selector_adapter import aware
-from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, render_html
+from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, public_layered_landscape, render_html
 from scripts.apply_anchor_policy import finalize_selector_payload
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -317,6 +317,50 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(self.starts())
         projected=project_sources([dict(active_registration_count=True,count_available=True)],{})
         self.assertIsNone(projected[0]['active_registration_count'])
+
+    def test_public_landscape_keeps_private_booking_geometry_but_no_identifiers(self):
+        # The actual published selector is customer-readable. A private
+        # registered class constrains time without advertising its course or
+        # confirming a participant, and an unknown-visibility row fails closed.
+        internal = {
+            'projected_sources': [
+                dict(source_event_id='SECRET-PRIVATE-ID',visibility='private',
+                     course_id='SECRET-PRIVATE-COURSE',kind='paid',
+                     operational_has_active_seat=True,count_available=True,
+                     active_registration_count=1,start='2026-11-22T15:00:00',
+                     end='2026-11-22T17:00:00',resource='Shipyard Room B'),
+                dict(source_event_id='SECRET-UNKNOWN-ID',
+                     course_id='SECRET-UNKNOWN-COURSE',kind='paid',
+                     count_available=True,active_registration_count=2,
+                     start='2026-11-23T10:00:00',end='2026-11-23T12:00:00'),
+                dict(source_event_id='PUBLIC-CLASS',visibility='public',
+                     course_id='209806',kind='paid',count_available=True,
+                     active_registration_count=1,
+                     start='2026-11-24T10:00:00',end='2026-11-24T12:00:00')],
+            'reports':[{'blocks':[dict(id='SECRET-BLOCK-ID',
+                                      source_ids=['SECRET-PRIVATE-ID'],
+                                      start='2026-11-22T15:00:00',
+                                      end='2026-11-22T17:00:00')]}],
+        }
+        landscape=public_layered_landscape({'layeredDiagnostics':internal})
+        a,b,c=landscape['sources']
+        for private in (a,b):
+            self.assertIsNone(private['sourceId'])
+            self.assertIsNone(private['courseId'])
+            self.assertEqual(private['role'],'blocking')
+            self.assertFalse(private['countAvailable'])
+            self.assertIsNone(private['registeredCount'])
+        self.assertEqual((a['start'],a['end']),
+                         ('2026-11-22T15:00:00','2026-11-22T17:00:00'))
+        self.assertEqual((c['sourceId'],c['courseId'],c['role'],c['registeredCount']),
+                         ('PUBLIC-CLASS','209806','anchor',1))
+        self.assertEqual(landscape['occupiedBlocks'][0]['source_ids'],[])
+        public_json=json.dumps(landscape)
+        for secret in ('SECRET-PRIVATE-ID','SECRET-PRIVATE-COURSE',
+                       'SECRET-UNKNOWN-ID','SECRET-UNKNOWN-COURSE','SECRET-BLOCK-ID'):
+            self.assertNotIn(secret,public_json)
+        self.assertEqual(internal['projected_sources'][0]['active_registration_count'],1)
+
 
     def test_source_records_not_mutated_and_explicit_activation_required(self):
         self.add(11,'12:00','13:00',count=1)
