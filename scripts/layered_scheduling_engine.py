@@ -266,7 +266,10 @@ def run(fixture):
         else:
             intervals = resource_availability[index]['free']
             for a, b in intervals:
-                step = 60 if b - a >= minutes(policy.get("wide_threshold_minutes", 180)) else 30
+                # Active layered public inventory follows the owner's 30-minute
+                # clear-day rule; retain the legacy lab's wide-window cadence.
+                step = grid if layered_windows and grid is not None else (
+                    60 if b - a >= minutes(policy.get("wide_threshold_minutes", 180)) else 30)
                 free_intervals.append({"start": a, "end": b, "step_minutes": step, "instructor": instructor, "location": location})
                 for course, meta in courses.items():
                     course_step = meta.get('display_step_minutes', step) if layered_windows else step
