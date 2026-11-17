@@ -69,7 +69,7 @@ def public_calculation_diagnostics(calculation):
         ]
         result["reports"].append(dict(normalized_occupancy=public_occupied,
                                       blocks=public_blocks))
-    return result
+    return encode(result)  # Dates in engine reports are not inherently JSON-safe.
 
 
 def active(policy):
