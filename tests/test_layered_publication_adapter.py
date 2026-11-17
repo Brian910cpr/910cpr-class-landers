@@ -281,8 +281,16 @@ class LayeredPublicationTests(unittest.TestCase):
             result=finalize_selector_payload(payload,[],{'sessions':[]},{'mode':'daily_anchor_stack_v1'})
         self.assertEqual([o['startTime'] for o in result['offers'] if o['courseId']=='209809'],['14:30','19:00'])
         feed=public_selector_availability_payload(result)
+        internal_full=[o for o in result['offers'] if o['courseId']=='209809']
+        # Preserve source/edge trace inside the calculated payload; only the compact
+        # customer-facing selector must omit private provenance after #467.
+        self.assertTrue(internal_full)
+        self.assertTrue(all(o['sourceSessionIds'] and o['edgeIds'] and o['occupiedUntil']
+                            for o in internal_full))
         full=[c for d in feed['dates'] for t in d['startTimes'] for c in t['courses'] if c['courseId']=='209809']
-        self.assertTrue(all(c['sourceSessionIds'] and c['edgeIds'] and c['occupiedUntil'] for c in full))
+        self.assertEqual(len(full),len(internal_full))
+        self.assertTrue(all('sourceSessionIds' not in c and 'edgeIds' not in c
+                            and c['occupiedUntil'] and c['registrationUrl'] for c in full))
         html=render_html(result)
         self.assertIn('Heartsaver',html)
         self.assertIn('layered-publication.v2',json.dumps(feed))
