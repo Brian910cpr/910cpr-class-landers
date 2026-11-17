@@ -61,11 +61,11 @@ class LayeredPublicationTests(unittest.TestCase):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
 
     def test_repeated_skills_growth_and_full_class_enlarges_block(self):
-        self.add(11,'12:00','13:00')
+        self.add(11,'12:00','13:00',count=1)
         for cid in ['210549','329495']: self.assertEqual(self.starts(cid),{'11:00','13:00'})
-        self.add(11,'13:00','14:00','329495')
+        self.add(11,'13:00','14:00','329495',count=1)
         for cid in ['210549','329495']: self.assertEqual(self.starts(cid),{'11:00','14:00'})
-        self.add(11,'11:00','12:00')
+        self.add(11,'11:00','12:00',count=1)
         self.add(11,'14:00','16:30','209809',count=1)
         for cid in ['210549','329495']: self.assertEqual(self.starts(cid),{'10:00','16:30'})
         self.assertEqual(len(self.calculation()['reports'][0]['blocks']),1)
@@ -74,9 +74,9 @@ class LayeredPublicationTests(unittest.TestCase):
         self.add(11,'17:00','19:00','359474',count=1)
         self.window(13,'07:45','15:00',next_day=False)
         self.window(13,'17:30','00:00')
-        self.add(13,'14:00','18:00','359474',name='Amy',count=None)
+        self.add(13,'14:00','18:00','359474',name='Amy',count=1)
         self.window(14,'17:30','00:00')
-        self.add(14,'17:30','19:30','329495')
+        self.add(14,'17:30','19:30','329495',count=1)
         self.assertEqual(self.starts(day=11),{'14:30','19:00'})
         self.assertEqual(self.starts(day=13),{'11:30','18:00'})
         self.assertEqual(self.starts(day=14),{'19:30'})
@@ -84,9 +84,9 @@ class LayeredPublicationTests(unittest.TestCase):
 
     def test_oct12_conflicts_eliminate_full_class_edges(self):
         self.windows=[];self.coverage=[];self.window(12)
-        self.add(12,'09:00','11:00','359474',name='Michelle')
-        self.add(12,'12:00','13:00','210549')
-        self.add(12,'17:00','19:00','359474',name='Michelle')
+        self.add(12,'09:00','11:00','359474',name='Michelle',count=1)
+        self.add(12,'12:00','13:00','210549',count=1)
+        self.add(12,'17:00','19:00','359474',name='Michelle',count=1)
         for a,b in [('06:30','07:45'),('09:00','11:00'),('15:00','17:30'),('17:00','18:00'),('18:00','23:59')]:
             self.add(12,a,b,source_file_override='calendar')
             self.sources[-1]['source_file']='live_availability_snapshot.blocked'
@@ -101,7 +101,8 @@ class LayeredPublicationTests(unittest.TestCase):
             courseId='210549',courseName='existing',offerType='seated_class')
         row['active_registration_count']=0
         self.assertFalse(any(o.get('offerType')=='seated_class' for o in self.payload([seated])['offers']))
-        self.assertEqual(self.starts('329495'),before)
+        self.assertNotIn('12:00',self.starts('329495'))
+        self.assertTrue(self.starts('329495'), 'zero-seat source blocks time but not the full day')
         row['count_available']=False
         self.assertTrue(any(o.get('offerType')=='seated_class' for o in self.payload([seated])['offers']))
         self.assertIsNone(self.calculation()['projected_sources'][0]['active_registration_count'])
@@ -138,7 +139,7 @@ class LayeredPublicationTests(unittest.TestCase):
     def test_oct14_skills_edges_preserve_canonical_two_hour_occupancy(self):
         self.windows=[];self.coverage=[];self.sources=[]
         self.window(14,'15:00','22:00',next_day=False)
-        row=self.add(14,'17:30','19:30',cid='329495',count=None)
+        row=self.add(14,'17:30','19:30',cid='329495',count=1)
         seated=dict(session_id=row['source_event_id'],date='2026-10-14',startTime='17:30',
                     courseId='329495',courseName='Existing skills',offerType='seated_class')
         payload=self.payload([seated])
@@ -182,7 +183,8 @@ class LayeredPublicationTests(unittest.TestCase):
     def test_unknown_offsite_travel_affects_only_own_instructor(self):
         self.window(11,name='Michelle')
         self.sources.append(dict(source_event_id='offsite',start=self.at(11,'09:00').isoformat(),
-            end=self.at(11,'11:00').isoformat(),instructor='Brian Ennis',location='offsite',course_id='210549'))
+            end=self.at(11,'11:00').isoformat(),instructor='Brian Ennis',location='offsite',course_id='210549',
+            count_available=True,active_registration_count=1))
         offers=self.payload()['offers']
         self.assertFalse(any(o['instructor']=='Brian Ennis' for o in offers))
         self.assertTrue(any(o['instructor']=='Michelle' for o in offers))
@@ -205,7 +207,8 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse([o for o in proven['offers'] if o['date']=='2026-10-11'
                           and o['instructor']=='Brian Ennis'
                           and o.get('scheduleRole')=='open_day'])
-        self.assertIn('anchored_day_requires_attached_offer',proven['rejectionReasonCounts'])
+        self.assertTrue(any(s['kind']=='paid' for s in proven['layeredDiagnostics']['reports'][0]['normalized_occupancy']),
+                        'a verified positive seat, not a legacy shell, creates a paid Anchor')
 
     def test_unknown_existing_seat_not_day_anchor_until_proven(self):
         self.windows=[]; self.coverage=[]; self.sources=[]
@@ -319,7 +322,7 @@ class LayeredPublicationTests(unittest.TestCase):
                 self.assertEqual(self.sources[0]['active_registration_count'], count)
 
     def test_zero_length_source_resolves_course_metadata_not_free_time(self):
-        row=self.add(11,'12:00','12:00')
+        row=self.add(11,'12:00','12:00',count=1)
         row['duration_minutes']=60
         self.assertEqual(self.starts('329495'),{'11:00','13:00'})
 
@@ -336,7 +339,7 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(self.starts('210549'),{'03:00','03:30','04:00'})
 
     def test_feed_trace_and_finalizer_keep_v2_edges_not_legacy_date_gate(self):
-        self.add(11,'17:00','19:00','359474')
+        self.add(11,'17:00','19:00','359474',count=1)
         payload=self.payload()
         # Finalizer is re-used by landscape. Freeze its clock, not the source evidence.
         with patch('scripts.layered_publication_adapter.finalize',side_effect=lambda p:finalize(p,self.now)):
@@ -355,7 +358,7 @@ class LayeredPublicationTests(unittest.TestCase):
         self.windows=[];self.coverage=[]
         self.window(11,'00:00','12:00',next_day=False)
         self.window(11,'13:00','00:00')
-        self.add(11,'12:00','13:00')
+        self.add(11,'12:00','13:00',count=1)
         self.assertEqual(self.starts('210549'),{'11:00','13:00'})
         self.assertEqual(self.starts('329495'),{'11:00','13:00'})
 
@@ -369,7 +372,9 @@ class LayeredPublicationTests(unittest.TestCase):
     def test_unknown_full_family_count_rejects_only_full_family_not_skills(self):
         self.add(11,'12:00','14:30','209809')
         self.assertFalse(self.starts('209809'))
-        self.assertEqual(self.starts('329495'),{'11:00','14:30'})
+        skills=self.starts('329495')
+        self.assertTrue(skills, 'skills remain offered outside unverified occupied time')
+        self.assertNotIn('12:00',skills)
         self.assertTrue(self.starts('359474'))
 
     def test_old_or_naive_coverage_and_bad_count_are_not_proof(self):
