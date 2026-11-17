@@ -205,26 +205,42 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertTrue(any(o['instructor']=='Michelle' for o in offers))
 
     def test_public_diagnostics_redact_private_record_fields(self):
+        # Source provenance can be canonical, intake, or external. The public
+        # report must never reveal a private paid/registered state through
+        # either source diagnostics or normalized occupied blocks.
         private=dict(source_event_id='private-record',source_file='canonical_class_sessions',
-                     visibility='private',count_available=True,active_registration_count=3,
-                     operational_has_active_seat=True,registration_url='https://private.invalid/seat',
+                     visibility='private',kind='paid',count_available=True,
+                     active_registration_count=3,operational_has_active_seat=True,
+                     registration_url='https://private.invalid/seat',
                      customer_email='private@example.invalid',customer_id='private-customer')
+        unlisted=dict(source_event_id='unlisted-record',source_file='confirmed_booking_intake',
+                      visibility='unlisted',kind='seated',count_available=True,
+                      active_registration_count=1,operational_has_active_seat=True)
         public=dict(source_event_id='public-record',source_file='canonical_class_sessions',
                     visibility='public',count_available=True,active_registration_count=2)
-        result=public_calculation_diagnostics(dict(projected_sources=[private,public],
-            reports=[dict(normalized_occupancy=[dict(evidence='canonical_class_sessions',
-                kind='paid',headcount=3)])]))
-        private_out, public_out=result['projected_sources']
-        self.assertFalse(any(field in private_out for field in
-            ('registration_url','customer_email','customer_id','active_registration_count',
-             'operational_has_active_seat')),
-            'public diagnostics must not reveal even boolean private-seat presence')
+        internal=dict(projected_sources=[private,unlisted,public],
+            reports=[dict(normalized_occupancy=[
+                dict(evidence='canonical_class_sessions',kind='paid',headcount=3),
+                dict(evidence='confirmed_booking_intake',kind='seated',headcount=1),
+                dict(evidence='schedule_future',kind='planted',headcount=None)])])
+        result=public_calculation_diagnostics(internal)
+        private_out,unlisted_out,public_out=result['projected_sources']
+        for source in (private_out,unlisted_out):
+            self.assertFalse(any(field in source for field in
+                ('registration_url','customer_email','customer_id','active_registration_count',
+                 'operational_has_active_seat')),
+                'public diagnostics must not reveal even boolean private-seat presence')
+            self.assertEqual(source['kind'],'occupied')
         self.assertEqual(public_out['active_registration_count'],2)
         self.assertEqual(private_out['visibility'],'private')
-        private_occupied=result['reports'][0]['normalized_occupancy'][0]
-        self.assertNotIn('headcount',private_occupied)
-        self.assertEqual(private_occupied['kind'],'occupied',
-            'normalized public diagnostics must not expose paid private gravity')
+        for occupied in result['reports'][0]['normalized_occupancy']:
+            self.assertNotIn('headcount',occupied)
+            self.assertNotIn(occupied['kind'],('paid','seated'),
+                'public normalized occupancy must not disclose private gravity')
+        # Only the public serialization is redacted; internal proof remains
+        # paid and available for actual collision/Anchor calculations.
+        self.assertEqual(internal['projected_sources'][0]['kind'],'paid')
+        self.assertEqual(internal['reports'][0]['normalized_occupancy'][0]['kind'],'paid')
 
     def test_same_interval_legacy_mirror_cannot_erase_private_canonical_seat(self):
         # Source identity, not identical instructor/room/clock geometry, must
