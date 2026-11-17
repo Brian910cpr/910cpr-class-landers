@@ -69,7 +69,10 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
             "sourceId": source.get("source_event_id") if not private_source else None,
             "role": "anchor" if proven and not private_source else "blocking",
             "start": source.get("start"), "end": source.get("end"),
-            "courseId": source.get("course_id"), "resource": source.get("resource"),
+            # Private operational holds may expose blocking geometry, not the
+            # private course/catalog identity (even when its roster is hidden).
+            "courseId": source.get("course_id") if not private_source else None,
+            "resource": source.get("resource"),
             "countAvailable": public_count,
             "registeredCount": count if public_count else None,
         })
