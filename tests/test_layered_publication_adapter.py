@@ -300,6 +300,9 @@ class LayeredPublicationTests(unittest.TestCase):
         landscape=public_layered_landscape(dict(layeredDiagnostics=internal))
         unknown_landscape,public_landscape=landscape['sources']
         self.assertEqual(unknown_landscape['role'],'blocking')
+        self.assertIsNone(unknown_landscape['courseId'],
+                          'private operational occupancy must not advertise its course identity')
+        self.assertEqual(public_landscape['courseId'],'359474')
         self.assertFalse(unknown_landscape['countAvailable'])
         self.assertIsNone(unknown_landscape['registeredCount'])
         self.assertEqual(public_landscape['role'],'anchor')
