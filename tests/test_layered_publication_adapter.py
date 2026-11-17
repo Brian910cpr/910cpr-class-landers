@@ -280,6 +280,10 @@ class LayeredPublicationTests(unittest.TestCase):
                          'paid Anchor collapses unattached open-day alternatives')
         self.assertFalse([o for o in offers if o.get('offerType') == 'seated_class'],
                          'private registration must not become a public joinable class')
+        private_source=public_selector_availability_payload(self.payload())['layeredLandscape']['sources'][0]
+        self.assertEqual(private_source['role'],'blocking')
+        self.assertFalse(private_source['countAvailable'])
+        self.assertIsNone(private_source['registeredCount'])
         self.assertFalse([o for o in offers
                           if private['source_event_id'] in str(o.get('registrationUrl',''))],
                          'private class identity must never be used as registration URL')
