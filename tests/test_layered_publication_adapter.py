@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 from scripts.layered_publication_adapter import calculate, publish, project_sources, finalize
-from scripts.layered_selector_adapter import aware
+from scripts.layered_selector_adapter import aware, build_shadow
 from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, render_html
 from scripts.apply_anchor_policy import finalize_selector_payload
 
@@ -187,6 +187,43 @@ class LayeredPublicationTests(unittest.TestCase):
         offers=self.payload()['offers']
         self.assertFalse(any(o['instructor']=='Brian Ennis' for o in offers))
         self.assertTrue(any(o['instructor']=='Michelle' for o in offers))
+
+    def test_same_interval_legacy_mirror_cannot_erase_private_canonical_seat(self):
+        # Source identity, not identical instructor/room/clock geometry, must
+        # decide deduplication. Public roster proof remains unavailable.
+        self.sources=[]
+        legacy=self.add(11,'12:00','13:00',cid='359474',count=None)
+        legacy.update(source_event_id='legacy-occurrence',source_file='schedule_future')
+        canonical=dict(legacy,source_event_id='canonical-occurrence',
+                       source_file='canonical_class_sessions',
+                       operational_has_active_seat=True,instructor_unassigned=True,
+                       canonical_recorded_registration_count=1,
+                       registration_url='https://private.invalid/not-a-public-booking')
+        second_legacy=dict(legacy,source_event_id='other-real-occurrence')
+        def shadow(rows):
+            return build_shadow(self.windows,rows,self.courses,self.policy,self.resources,
+                self.now,lambda w:(w['start'],w['end']),lambda w,c:True,
+                lead_minutes=0,commitment_coverage=self.coverage,
+                shared_room_edges=True)
+        for rows in ([legacy,canonical],[canonical,legacy]):
+            with self.subTest(first=rows[0]['source_file']):
+                occupied=shadow(rows)['normalized_occupancy']
+                by_id={row['id']:row for row in occupied}
+                self.assertEqual(by_id['canonical-occurrence']['kind'],'paid')
+                self.assertEqual(by_id['legacy-occurrence']['kind'],'planted')
+                self.assertTrue(any(row['kind']=='hold' and
+                    row['id'].startswith('unassigned-') for row in occupied))
+        # Exact same-source ingestion is deduped, distinct occurrences survive.
+        occupied=shadow([legacy,legacy])['normalized_occupancy']
+        self.assertEqual(sum(row['id']=='legacy-occurrence' for row in occupied),1)
+        occupied=shadow([legacy,second_legacy])['normalized_occupancy']
+        self.assertEqual({row['id'] for row in occupied},
+                         {'legacy-occurrence','other-real-occurrence'})
+        self.sources=[legacy,canonical]
+        public=self.payload()
+        self.assertNotIn('private.invalid',json.dumps(public))
+        self.assertFalse(any(row.get('offerType')=='seated_class'
+                             for row in public['offers']))
 
     def test_unverified_existing_course_blocks_time_not_whole_evening(self):
         # An unknown Enrollware roster is not evidence of a paid day Anchor.
