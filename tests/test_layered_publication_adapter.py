@@ -233,6 +233,8 @@ class LayeredPublicationTests(unittest.TestCase):
             self.assertEqual(source['kind'],'occupied')
         self.assertEqual(public_out['active_registration_count'],2)
         self.assertEqual(private_out['visibility'],'private')
+        self.assertNotIn('private-record',json.dumps(result))
+        self.assertNotIn('unlisted-record',json.dumps(result))
         for occupied in result['reports'][0]['normalized_occupancy']:
             self.assertNotIn('headcount',occupied)
             self.assertNotIn(occupied['kind'],('paid','seated'),
@@ -345,7 +347,7 @@ class LayeredPublicationTests(unittest.TestCase):
                 self.assertFalse(any('private-occurrence' in str(o.get('registrationUrl',''))
                     for o in payload['offers']))
                 public_sources=public_selector_availability_payload(payload)['layeredLandscape']['sources']
-                private_view=next(o for o in public_sources if o['sourceId']=='private-occurrence')
+                private_view=next(o for o in public_sources if str(o.get('sourceId','')).startswith('private-occupied-'))
                 self.assertEqual(private_view['role'],'blocking')
                 self.assertFalse(private_view['countAvailable'])
                 self.assertIsNone(private_view['registeredCount'])
@@ -409,7 +411,8 @@ class LayeredPublicationTests(unittest.TestCase):
                     for o in payload['offers']))
                 self.assertIn('unreconciled_private_committed_public_start',
                     payload['rejectionReasonCounts'])
-                self.assertNotIn('canonical-private',json.dumps(payload['offers']))
+                self.assertNotIn('canonical-private',json.dumps(payload),
+                    'no public selector field may reveal a private occurrence ID')
         # The same collision also exists when the private class begins first.
         private['start']=self.at(11,'10:00').isoformat()
         private['end']=self.at(11,'11:30').isoformat()
