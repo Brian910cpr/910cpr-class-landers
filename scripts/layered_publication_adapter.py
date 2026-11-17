@@ -347,14 +347,23 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     # courses. A second calendar gap does not reset an instructor's anchored day.
     anchored_days = set()
     for source in calculation['projected_sources']:
-        if (proven_seated(source) and source.get('course_id')
+        # Canonical classes may have course_key but no public catalog ID.
+        # Only a verified instructor may collapse that instructor's *day*.
+        # Unassigned/private commitments still reserve their physical occupied
+        # interval in calculate(); they cannot erase every instructor's day.
+        instructor = instructor_key(source.get('instructor'))
+        if (proven_seated(source)
+                and (source.get('course_id') or source.get('course_key'))
+                and instructor not in {'', 'unknown'}
+                and source.get('instructor_unassigned') is not True
                 and source.get('start') and source.get('end')
                 and not source.get('normalization_issue')
                 and aware(source['end']) > aware(source['start'])):
-            anchored_days.add((aware(source['start']).date().isoformat(),
-                               instructor_key(source.get('instructor'))))
+            anchored_days.add((aware(source['start']).date().isoformat(), instructor))
     for offer in accepted:
-        if offer.get('offerType') == 'seated_class' and proven_seated(seated_source(offer)):
+        if (offer.get('offerType') == 'seated_class'
+                and proven_seated(seated_source(offer))
+                and instructor_key(offer.get('instructor')) not in {'', 'unknown'}):
             anchored_days.add((offer['date'], instructor_key(offer.get('instructor'))))
     retained = []
     for offer in accepted:
@@ -366,9 +375,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         # candidate's 45-minute instruction plus 15-minute cleanup and conflicts.
         if offer.get('offerType') != 'seated_class' and (offer['date'], str(offer['courseId'])) in day_anchors and not skills_edge:
             rejected.append(dict(offer, reasons=['existing_course_day_anchor']))
-        elif offer.get('scheduleRole') == 'open_day' and (
-                (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days or
-                (offer['date'], '') in anchored_days):
+        elif (offer.get('scheduleRole') == 'open_day'
+              and (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days):
             rejected.append(dict(offer, reasons=['anchored_day_requires_attached_offer']))
         else:
             retained.append(offer)
