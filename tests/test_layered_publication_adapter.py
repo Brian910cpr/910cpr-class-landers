@@ -224,6 +224,31 @@ class LayeredPublicationTests(unittest.TestCase):
                              and o.get('instructor')=='Brian Ennis' for o in after['offers']))
         self.assertTrue(any(o.get('offerType')=='seated_class' for o in after['offers']))
 
+    def test_one_seat_private_class_anchors_operationally_without_public_join_link(self):
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        private = self.add(11,'12:00','14:00',cid='359474',count=1,
+                           visibility='private',public_direct_booking=False)
+        calculated = self.calculation()
+        source = next(s for s in calculated['projected_sources']
+                      if s.get('source_event_id') == private['source_event_id'])
+        self.assertTrue(source['count_available'])
+        self.assertEqual(source['active_registration_count'],1)
+        offers = self.payload()['offers']
+        self.assertTrue([o for o in offers if o.get('scheduleRole') == 'barnacle'],
+                        'proved operational first seat should create compatible bookends')
+        self.assertFalse([o for o in offers if o.get('scheduleRole') == 'open_day'],
+                         'paid Anchor collapses unattached open-day alternatives')
+        self.assertFalse([o for o in offers if o.get('offerType') == 'seated_class'],
+                         'private registration must not become a public joinable class')
+        self.assertFalse([o for o in offers
+                          if private['source_event_id'] in str(o.get('registrationUrl',''))],
+                         'private class identity must never be used as registration URL')
+        for offer in offers:
+            self.assertTrue(offer['startTime'] < '12:00'
+                            or offer['startTime'] >= '14:00',
+                            'another public class must not start within private occupancy')
+
     def test_native_venue_alias_keeps_occupied_interval_through_publication(self):
         from scripts.block_start_time_selector import build_occupancy
         label = '4018 Shipyard Blvd, Room B, 910CPR Office'
