@@ -119,7 +119,7 @@ class LayeredPublicationTests(unittest.TestCase):
         for cid in ['210549','209809']:
             with self.subTest(course=cid):
                 self.sources=[]
-                row=self.add(11,'12:00','13:00',cid=cid)
+                row=self.add(11,'12:00','13:00',cid=cid,count=1)
                 self.window(12)
                 seated=dict(session_id=row['source_event_id'],date='2026-10-11',startTime='12:00',
                             courseId=cid,courseName='Existing class',offerType='seated_class')
@@ -166,7 +166,7 @@ class LayeredPublicationTests(unittest.TestCase):
         self.window(11,'20:00','00:00')
         self.window(11,'20:00','00:00',name='Michelle')
         self.window(12)
-        row=self.add(11,'11:45','13:45',cid='209806')
+        row=self.add(11,'11:45','13:45',cid='209806',count=1)
         # The BLS anchor is outside the Heartsaver page's course catalog.
         seated=dict(session_id=row['source_event_id'],date='2026-10-11',startTime='11:45',
                     courseId='209806',courseName='Existing BLS',offerType='seated_class',instructor='Brian Ennis')
@@ -186,6 +186,43 @@ class LayeredPublicationTests(unittest.TestCase):
         offers=self.payload()['offers']
         self.assertFalse(any(o['instructor']=='Brian Ennis' for o in offers))
         self.assertTrue(any(o['instructor']=='Michelle' for o in offers))
+
+    def test_unverified_existing_course_blocks_time_not_whole_evening(self):
+        # An unknown Enrollware roster is not evidence of a paid day Anchor.
+        # Preserve the hard occupied interval while leaving independent legal
+        # evening availability subject to the usual instructor/room checks.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'19:00','22:00',next_day=False)
+        row=self.add(11,'11:00','13:00',cid='359474',count=None)
+        unknown=self.payload()
+        evening=[o for o in unknown['offers'] if o['date']=='2026-10-11'
+                 and o['instructor']=='Brian Ennis' and o.get('scheduleRole')=='open_day']
+        self.assertTrue(evening, 'unknown demand must not invent a daywide Anchor')
+
+        row['active_registration_count']=1
+        row['count_available']=True
+        proven=self.payload()
+        self.assertFalse([o for o in proven['offers'] if o['date']=='2026-10-11'
+                          and o['instructor']=='Brian Ennis'
+                          and o.get('scheduleRole')=='open_day'])
+        self.assertIn('anchored_day_requires_attached_offer',proven['rejectionReasonCounts'])
+
+    def test_unknown_existing_seat_not_day_anchor_until_proven(self):
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'19:00','22:00',next_day=False)
+        row=self.add(11,'11:00','13:00',cid='359474',count=None)
+        seated=dict(session_id=row['source_event_id'],date='2026-10-11',startTime='11:00',
+                    courseId='359474',courseName='Unverified legacy session',
+                    offerType='seated_class',instructor='Brian Ennis')
+        before=self.payload([seated])
+        self.assertTrue(any(o.get('offerType')=='seated_class' for o in before['offers']))
+        self.assertTrue(any(o.get('scheduleRole')=='open_day' for o in before['offers']),
+                        'a displayed unverified class is not itself canonical seat proof')
+        row['active_registration_count']=1;row['count_available']=True
+        after=self.payload([seated])
+        self.assertFalse(any(o.get('scheduleRole')=='open_day'
+                             and o.get('instructor')=='Brian Ennis' for o in after['offers']))
+        self.assertTrue(any(o.get('offerType')=='seated_class' for o in after['offers']))
 
     def test_native_venue_alias_keeps_occupied_interval_through_publication(self):
         from scripts.block_start_time_selector import build_occupancy
