@@ -35,6 +35,10 @@ def public_calculation_diagnostics(calculation):
     for source in result.get("projected_sources", []):
         diagnostic = {key: value for key, value in source.items()
                       if key in PUBLIC_SOURCE_DIAGNOSTIC_FIELDS}
+        # Operational Anchor proof is internal-only for private/unlisted sources.
+        # Public diagnostics must not disclose that a private customer registered.
+        if source.get("visibility") != "public":
+            diagnostic.pop("operational_has_active_seat", None)
         # A public, independently verified roster may show its count; a
         # private/unlisted or unknown-visibility roster never does.
         if source.get("visibility") == "public" and source.get("count_available") is True:
@@ -45,6 +49,11 @@ def public_calculation_diagnostics(calculation):
         for occupied in report.get("normalized_occupancy", []):
             if occupied.get("evidence") == "canonical_class_sessions":
                 occupied.pop("headcount", None)
+                # The source engine needs paid gravity, but these diagnostics
+                # are public; even a boolean paid/seated marker leaks private
+                # customer participation. Keep operational facts internal.
+                if occupied.get("kind") in {"paid", "seated"}:
+                    occupied["kind"] = "occupied"
     return result
 
 
