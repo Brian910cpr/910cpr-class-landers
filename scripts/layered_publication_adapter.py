@@ -31,11 +31,16 @@ PUBLIC_SOURCE_DIAGNOSTIC_FIELDS = frozenset({
 
 def public_calculation_diagnostics(calculation):
     result = encode(calculation)
-    result["projected_sources"] = [
-        {key: value for key, value in source.items()
-         if key in PUBLIC_SOURCE_DIAGNOSTIC_FIELDS}
-        for source in result.get("projected_sources", [])
-    ]
+    public_sources = []
+    for source in result.get("projected_sources", []):
+        diagnostic = {key: value for key, value in source.items()
+                      if key in PUBLIC_SOURCE_DIAGNOSTIC_FIELDS}
+        # A public, independently verified roster may show its count; a
+        # private/unlisted or unknown-visibility roster never does.
+        if source.get("visibility") == "public" and source.get("count_available") is True:
+            diagnostic["active_registration_count"] = source.get("active_registration_count")
+        public_sources.append(diagnostic)
+    result["projected_sources"] = public_sources
     for report in result.get("reports", []):
         for occupied in report.get("normalized_occupancy", []):
             if occupied.get("evidence") == "canonical_class_sessions":
