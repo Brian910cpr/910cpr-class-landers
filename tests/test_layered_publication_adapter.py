@@ -347,7 +347,7 @@ class LayeredPublicationTests(unittest.TestCase):
                 self.assertFalse(any('private-occurrence' in str(o.get('registrationUrl',''))
                     for o in payload['offers']))
                 public_sources=public_selector_availability_payload(payload)['layeredLandscape']['sources']
-                private_view=next(o for o in public_sources if str(o.get('sourceId','')).startswith('private-occupied-'))
+                private_view=next(o for o in public_sources if o.get('sourceId') is None)
                 self.assertEqual(private_view['role'],'blocking')
                 self.assertFalse(private_view['countAvailable'])
                 self.assertIsNone(private_view['registeredCount'])
