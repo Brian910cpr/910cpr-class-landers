@@ -506,6 +506,63 @@ class LayeredPublicationTests(unittest.TestCase):
             canonical_demand=dict(sessions=[demand])),{},allow_unresolved=True)
         self.assertTrue(self.sources[0]['instructor_unassigned'])
 
+    def test_course_key_only_private_seat_scopes_day_anchor_to_verified_instructor(self):
+        # Real canonical endpoint has course_key, but may have no catalog
+        # course_id/external_course_id. Publication must not lose the first seat.
+        # This isolates the publish-time day collapse from hard overlap checks;
+        # the final assertion also checks actual occupied-interval safety.
+        from scripts.block_start_time_selector import build_occupancy
+        self.windows=[];self.coverage=[];self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        free_calculation=self.calculation()
+        self.assertTrue(any(o.get('scheduleRole')=='open_day' for o in self.payload()['offers']))
+        for assigned in (True,False):
+            with self.subTest(assigned=assigned):
+                demand=dict(canonical_session_id='private-key-only',
+                    course_key='aha-bls-provider',external_course_id=None,
+                    source='confirmed_booking_intake',session_status='scheduled',
+                    visibility='private',lead_instructor_name='Brian Ennis',
+                    lead_instructor_id='verified-brian-id' if assigned else None,
+                    location_name=':: Wilmington; Shipyard Blvd',
+                    start_at=self.at(11,'12:00').isoformat(),
+                    end_at=self.at(11,'14:00').isoformat(),
+                    canonical_recorded_registration_count=1,
+                    count_available=False,active_registration_count=None)
+                source=build_occupancy(dict(location_resource_map=self.resources,
+                    canonical_demand=dict(sessions=[demand])),{},allow_unresolved=True)[0]
+                self.assertEqual(source['course_key'],'aha-bls-provider')
+                self.assertFalse(source['course_id'])
+                self.assertTrue(source['operational_has_active_seat'])
+                self.assertEqual(source['instructor_unassigned'],not assigned)
+                # Deliberately reuse clear-day proposals to isolate the
+                # publish-time Anchor filter. A real pipeline also recalculates
+                # conflicts before publish, as checked below.
+                probe=copy.deepcopy(free_calculation)
+                probe['projected_sources']=[source]
+                result=publish(probe,self.page,self.courses,self.windows,self.now,
+                    lambda w,s,c:('fixture-day','fixture-container',
+                        f'https://fixture.test/enroll?courseId={c}&startTime={s:%H:%M}',None),
+                    lambda s,c:[],())
+                roles=[o.get('scheduleRole') for o in result['offers']]
+                if assigned:
+                    self.assertNotIn('open_day',roles)
+                    self.assertIn('anchored_day_requires_attached_offer',
+                                  result['rejectionReasonCounts'])
+                else:
+                    # Unknown instructor is a real room/time hold, not proof
+                    # that every other instructor has an occupied whole day.
+                    self.assertIn('open_day',roles)
+                    self.assertNotIn('anchored_day_requires_attached_offer',
+                                     result['rejectionReasonCounts'])
+                self.sources=[source]
+                actual=self.payload()
+                self.assertFalse(any(o.get('offerType')=='seated_class'
+                                     for o in actual['offers']))
+                for offer in actual['offers']:
+                    start=aware(offer['date']+'T'+offer['startTime']+':00-04:00')
+                    end=aware(offer['occupiedUntil'])
+                    self.assertTrue(end<=self.at(11,'12:00') or start>=self.at(11,'14:00'))
+
     def test_native_venue_alias_keeps_occupied_interval_through_publication(self):
         from scripts.block_start_time_selector import build_occupancy
         label = '4018 Shipyard Blvd, Room B, 910CPR Office'
