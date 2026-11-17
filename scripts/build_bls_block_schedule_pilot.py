@@ -57,15 +57,19 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
                   or source.get("kind") == "paid"
                   or (source.get("count_available") is True
                       and type(count) is int and count > 0))
+        private_source = (source.get("visibility") in ("private", "unlisted")
+                          or (source.get("source_file") == "canonical_class_sessions"
+                              and source.get("visibility") != "public"))
+        # Private/unlisted sources retain occupied geometry but never reveal
+        # registration count, paid-anchor role or a joinable seat.
+        public_count = not private_source and source.get("count_available") is True
         sources.append({
             "sourceId": source.get("source_event_id"),
-            # Private/unlisted operational Anchors should still block public
-            # geometry, but their positive-seat status is not public metadata.
-            "role": "anchor" if proven and source.get("visibility") not in ("private", "unlisted") else "blocking",
+            "role": "anchor" if proven and not private_source else "blocking",
             "start": source.get("start"), "end": source.get("end"),
             "courseId": source.get("course_id"), "resource": source.get("resource"),
-            "countAvailable": source.get("count_available") is True,
-            "registeredCount": source.get("active_registration_count") if source.get("count_available") is True else None,
+            "countAvailable": public_count,
+            "registeredCount": count if public_count else None,
         })
     blocks = []
     seen = set()
