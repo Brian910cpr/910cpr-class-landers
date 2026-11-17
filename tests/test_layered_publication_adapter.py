@@ -359,6 +359,30 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertIn('unreconciled_private_committed_public_start',
                       payload['rejectionReasonCounts'])
 
+        # The live canonical-demand endpoint supplies course_key but can omit
+        # external_course_id (Dec 1 private/public BLS collision). A verified
+        # private registration must still protect the same unresolved room.
+        public['count_available']=False
+        public['active_registration_count']=None
+        private['course_id']=None
+        private['course_key']='aha-bls-provider'
+        for sources in ([private, public], [public, private]):
+            with self.subTest(missing_external_course_id=True,
+                              first=sources[0]['source_event_id']):
+                self.sources=sources
+                payload=self.payload([published])
+                self.assertFalse(any(o.get('offerType')=='seated_class'
+                    for o in payload['offers']))
+                self.assertIn('unreconciled_private_committed_public_start',
+                              payload['rejectionReasonCounts'])
+        # Even when the external catalog labels a course differently, a
+        # distinct same-room start cannot bypass a real private commitment.
+        private['course_id']='different-catalog-course'
+        self.sources=[public,private]
+        payload=self.payload([published])
+        self.assertIn('unreconciled_private_committed_public_start',
+                      payload['rejectionReasonCounts'])
+
     def test_unverified_existing_course_blocks_time_not_whole_evening(self):
         # An unknown Enrollware roster is not evidence of a paid day Anchor.
         # Preserve the hard occupied interval while leaving independent legal
