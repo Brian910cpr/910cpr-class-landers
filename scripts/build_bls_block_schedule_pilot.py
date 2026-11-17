@@ -117,8 +117,6 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "instructor": course.get("instructor"),
                     "schedulerConsumptionEnd": course.get("schedulerConsumptionEnd"),
                     "occupiedUntil": course.get("occupiedUntil"),
-                    "sourceSessionIds": course.get("sourceSessionIds"),
-                    "edgeIds": course.get("edgeIds"),
                     "resource": course.get("resource"),
                     "validUntil": course.get("validUntil"),
                     "date": day.get("date"),

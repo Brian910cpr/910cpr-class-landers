@@ -362,6 +362,36 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(internal['projected_sources'][0]['active_registration_count'],1)
 
 
+    def test_public_offer_omits_internal_source_and_edge_provenance(self):
+        # The full public JSON must not leak identifiers even when private
+        # sources are already masked in layeredLandscape. Provenance remains
+        # available to the internal calculation, but not the browser.
+        raw = {
+            'dates': [{'date': '2026-11-22', 'displayDate': 'Sunday, November 22, 2026',
+                       'startTimes': [{'startTime': '13:00', 'displayStartTime': '1:00 PM',
+                                       'courses': [dict(courseId='209806', courseName='BLS',
+                                                        registrationUrl='https://example.com/register',
+                                                        sourceSessionIds=['SECRET-PRIVATE-SESSION'],
+                                                        edgeIds=['SECRET-PRIVATE-EDGE'])]}]}],
+            'layeredDiagnostics': {'projected_sources': [
+                dict(source_event_id='SECRET-PRIVATE-SESSION', visibility='private',
+                     course_id='SECRET-PRIVATE-COURSE', count_available=True,
+                     active_registration_count=1, start='2026-11-22T15:00:00',
+                     end='2026-11-22T17:00:00')], 'reports': []},
+        }
+        before = copy.deepcopy(raw)
+        public = public_selector_availability_payload(raw)
+        serialized = json.dumps(public)
+        for secret in ('SECRET-PRIVATE-SESSION', 'SECRET-PRIVATE-EDGE',
+                       'SECRET-PRIVATE-COURSE'):
+            self.assertNotIn(secret, serialized)
+        shown = public['dates'][0]['startTimes'][0]['courses'][0]
+        self.assertEqual(shown['registrationUrl'], 'https://example.com/register')
+        self.assertEqual(shown['courseId'], '209806')
+        self.assertNotIn('sourceSessionIds', shown)
+        self.assertNotIn('edgeIds', shown)
+        self.assertEqual(raw, before)
+
     def test_source_records_not_mutated_and_explicit_activation_required(self):
         self.add(11,'12:00','13:00',count=1)
         before=copy.deepcopy(self.sources);self.payload();self.assertEqual(self.sources,before)
