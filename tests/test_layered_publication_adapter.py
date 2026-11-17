@@ -183,8 +183,7 @@ class LayeredPublicationTests(unittest.TestCase):
     def test_unknown_offsite_travel_affects_only_own_instructor(self):
         self.window(11,name='Michelle')
         self.sources.append(dict(source_event_id='offsite',start=self.at(11,'09:00').isoformat(),
-            end=self.at(11,'11:00').isoformat(),instructor='Brian Ennis',location='offsite',course_id='210549',
-            count_available=True,active_registration_count=1))
+            end=self.at(11,'11:00').isoformat(),instructor='Brian Ennis',location='offsite',course_id='210549'))
         offers=self.payload()['offers']
         self.assertFalse(any(o['instructor']=='Brian Ennis' for o in offers))
         self.assertTrue(any(o['instructor']=='Michelle' for o in offers))
@@ -286,7 +285,8 @@ class LayeredPublicationTests(unittest.TestCase):
 
     def test_known_directional_travel_changes_edges_and_actual_room_collision_rejects(self):
         self.sources.append(dict(source_event_id='offsite',start=self.at(11,'09:00').isoformat(),
-            end=self.at(11,'11:00').isoformat(),instructor='Brian Ennis',location='offsite',course_id='210549'))
+            end=self.at(11,'11:00').isoformat(),instructor='Brian Ennis',location='offsite',course_id='210549',
+            count_available=True,active_registration_count=1))
         self.policy['travel_minutes']={self.room+'->offsite':30,'offsite->'+self.room:30}
         self.assertEqual(self.starts('210549'),{'07:30','11:30'})
         self.add(11,'12:00','13:00',name='Michelle')
