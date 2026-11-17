@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T05:12:26.125755+00:00",
+  "generated_at": "2026-11-17T05:22:01.605931+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -2336,11 +2336,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-11-17T00:15:00",
+      "start_datetime": "2026-11-17T00:30:00",
       "end_datetime": "2026-11-17T06:30:00",
       "date": "2026-11-17",
       "end_date": "2026-11-17",
-      "start_time": "00:15",
+      "start_time": "00:30",
       "end_time": "06:30",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -6960,8 +6960,8 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "start": "2026-12-26T13:00:00-05:00",
       "end": "2026-12-26T18:00:00-05:00",
-      "observed_at": "2026-11-17T05:12:25.438555+00:00",
-      "valid_until": "2026-11-17T05:27:25.438555+00:00",
+      "observed_at": "2026-11-17T05:22:00.997798+00:00",
+      "valid_until": "2026-11-17T05:37:00.997798+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
@@ -6972,10 +6972,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-11-17T05:12:25.077663+00:00",
-      "end": "2027-02-15T05:12:25.077663+00:00",
-      "observed_at": "2026-11-17T05:12:26.037867+00:00",
-      "valid_until": "2026-11-17T05:27:26.037867+00:00",
+      "start": "2026-11-17T05:22:00.798082+00:00",
+      "end": "2027-02-15T05:22:00.798082+00:00",
+      "observed_at": "2026-11-17T05:22:01.522383+00:00",
+      "valid_until": "2026-11-17T05:37:01.522383+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
@@ -7118,7 +7118,7 @@
       "reason_code": "inverse_gap_shorter_than_minimum_consumption",
       "message": "Inverse-generated open gap is shorter than the configured minimum course consumption window.",
       "start_datetime": "2027-02-15T00:00:00",
-      "end_datetime": "2027-02-15T00:15:00"
+      "end_datetime": "2027-02-15T00:30:00"
     }
   ]
 }
