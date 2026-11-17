@@ -761,6 +761,7 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "source_event_id": session.get("canonical_session_id"),
             "external_class_id": session.get("external_class_id"),
             "course_id": session.get("course_id") or session.get("external_course_id"),
+            "visibility": session.get("visibility"),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
             # Human source labels are not proof of a canonical instructor.
             "instructor_unassigned": not session.get("lead_instructor_id"),
