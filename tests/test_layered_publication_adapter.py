@@ -426,6 +426,43 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertTrue(any(o.get('offerType')=='seated_class'
             for o in self.payload([seated])['offers']))
 
+    def test_unknown_seated_end_and_cross_midnight_overlap_fail_closed(self):
+        # An old seated URL with no verifiable occupied end is not a
+        # legitimate public option; do not guess that midnight ends its class.
+        self.windows=[];self.coverage=[];self.sources=[]
+        self.window(11,'20:00','04:00')
+        seated=dict(session_id='legacy-unmatched',date='2026-10-11',
+            startTime='23:30',courseId='359474',courseName='BLS Renewal',
+            offerType='seated_class',location=':: Wilmington; Shipyard Blvd',
+            registrationUrl='https://example.test/legacy-unmatched')
+        unknown=self.payload([seated])
+        self.assertFalse(any(o.get('offerType')=='seated_class'
+            for o in unknown['offers']))
+        self.assertIn('unverified_existing_class_consumption_end',
+            unknown['rejectionReasonCounts'])
+        self.assertTrue(any(o.get('scheduleRole')=='open_day'
+            for o in unknown['offers']),
+            'an unverified seated link must not sterilize unrelated open hours')
+
+        # Explicit duration makes an overnight candidate evaluable. The
+        # private class starts the NEXT date while this candidate is running.
+        seated['schedulerConsumptionMinutes']=90
+        private=self.add(12,'00:00','01:00',cid='359474',count=None)
+        private.update(source_event_id='private-after-midnight',
+            visibility='private',operational_has_active_seat=True,
+            instructor_unassigned=True)
+        overlap=self.payload([seated])
+        self.assertFalse(any(o.get('offerType')=='seated_class'
+            for o in overlap['offers']))
+        self.assertIn('unreconciled_private_committed_public_start',
+            overlap['rejectionReasonCounts'])
+        # Adjacent at 01:00 is a legal half-open boundary.
+        private['start']=self.at(12,'01:00').isoformat()
+        private['end']=self.at(12,'02:00').isoformat()
+        touching=self.payload([seated])
+        self.assertTrue(any(o.get('offerType')=='seated_class'
+            for o in touching['offers']))
+
     def test_independent_room_exception_requires_two_verified_assignments(self):
         self.windows=[];self.coverage=[];self.sources=[]
         self.window(11,'08:00','18:00',next_day=False)
