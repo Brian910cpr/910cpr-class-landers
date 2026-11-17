@@ -17,6 +17,30 @@ def encode(value):
 
 SCHEMA = "layered-publication.v2"
 
+# This report is embedded in public selector JSON. Source DTOs can carry
+# private URLs and participant fields, so diagnostics must be allowlisted.
+PUBLIC_SOURCE_DIAGNOSTIC_FIELDS = frozenset({
+    "source_event_id", "external_class_id", "source_file", "start", "end",
+    "instructor", "course_id", "resource", "location_resolution",
+    "availability_location_mode", "kind", "count_available",
+    "operational_has_active_seat", "instructor_unassigned", "resource_uncertain",
+    "uncertainty_reason", "duration_resolution", "normalization_issue",
+})
+
+
+def public_calculation_diagnostics(calculation):
+    result = encode(calculation)
+    result["projected_sources"] = [
+        {key: value for key, value in source.items()
+         if key in PUBLIC_SOURCE_DIAGNOSTIC_FIELDS}
+        for source in result.get("projected_sources", [])
+    ]
+    for report in result.get("reports", []):
+        for occupied in report.get("normalized_occupancy", []):
+            if occupied.get("evidence") == "canonical_class_sessions":
+                occupied.pop("headcount", None)
+    return result
+
 
 def active(policy):
     return policy.get("mode") == "active_local_v2"
@@ -292,7 +316,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         whole_block_presented_as_class=False, availability_source_used="explicit_layered_coverage",
         availability_fallback_used=False, horizonDays=0, minimumLeadHours=0,
         rejectedCourseStartTimes=rejected, rejectionReasonCounts=dict(Counter(reason for row in rejected for reason in row.get("reasons",[]))),
-        reconciliationIssues=calculation["issues"], layeredDiagnostics=encode(calculation),
+        reconciliationIssues=calculation["issues"], layeredDiagnostics=public_calculation_diagnostics(calculation),
         proof=dict(whole_block_presented_as_class=False, availability_windows_are_not_rendered_as_class_times=True))
     _rebuild_dates(payload,unique)
     payload["counts"].update(calculation["counts"])
