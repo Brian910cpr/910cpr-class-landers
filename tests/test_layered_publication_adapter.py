@@ -274,7 +274,8 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertTrue(projected['operational_has_active_seat'])
         proven_payload=self.payload()
         proven_landscape=public_selector_availability_payload(proven_payload)['layeredLandscape']
-        self.assertEqual(proven_landscape['sources'][0]['role'],'anchor')
+        self.assertEqual(proven_landscape['sources'][0]['role'],'blocking',
+                         'private occupied class must not expose its registered Anchor status')
         self.assertFalse(proven_landscape['sources'][0]['countAvailable'])
         self.assertIsNone(proven_landscape['sources'][0]['registeredCount'])
         offers=proven_payload['offers']
