@@ -228,11 +228,22 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
         else:
             accepted.append(deepcopy(original))
-    # Every retained existing class is that exact course's day anchor,
-    # including when its roster count is unknown. Consolidate across separate
-    # Google availability gaps without suppressing different course formats.
+    # A published existing-class row is not proof of a paid/registered Anchor.
+    # Unknown external rosters continue to block their actual occupied interval
+    # upstream, but cannot suppress other legal starts for an entire day.
+    def proven_seated(source):
+        count = source.get('active_registration_count') if source else None
+        return (source is not None and source.get('count_available') is True
+                and type(count) is int and count > 0)
+
+    def seated_source(offer):
+        key = str(offer.get('session_id') or offer.get('sourceSessionId')
+                  or offer.get('sourceAvailabilityBlock', {}).get('sessionId') or '')
+        return counts.get(key)
+
     day_anchors = {(o['date'], str(o['courseId'])) for o in accepted
-                   if o.get('offerType') == 'seated_class'}
+                   if o.get('offerType') == 'seated_class'
+                   and proven_seated(seated_source(o))}
     def instructor_key(name):
         key = str(name or '').strip().casefold()
         return 'brian ennis' if key == 'brian' else key
@@ -240,12 +251,14 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     # courses. A second calendar gap does not reset an instructor's anchored day.
     anchored_days = set()
     for source in calculation['projected_sources']:
-        if (source.get('course_id') and source.get('start') and source.get('end') and
-                not source.get('normalization_issue') and aware(source['end']) > aware(source['start'])):
+        if (proven_seated(source) and source.get('course_id')
+                and source.get('start') and source.get('end')
+                and not source.get('normalization_issue')
+                and aware(source['end']) > aware(source['start'])):
             anchored_days.add((aware(source['start']).date().isoformat(),
                                instructor_key(source.get('instructor'))))
     for offer in accepted:
-        if offer.get('offerType') == 'seated_class':
+        if offer.get('offerType') == 'seated_class' and proven_seated(seated_source(offer)):
             anchored_days.add((offer['date'], instructor_key(offer.get('instructor'))))
     retained = []
     for offer in accepted:
