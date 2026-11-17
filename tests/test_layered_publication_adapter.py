@@ -195,12 +195,20 @@ class LayeredPublicationTests(unittest.TestCase):
                      customer_email='private@example.invalid',customer_id='private-customer')
         public=dict(source_event_id='public-record',source_file='canonical_class_sessions',
                     visibility='public',count_available=True,active_registration_count=2)
-        result=public_calculation_diagnostics(dict(projected_sources=[private,public],reports=[]))
+        result=public_calculation_diagnostics(dict(projected_sources=[private,public],
+            reports=[dict(normalized_occupancy=[dict(evidence='canonical_class_sessions',
+                kind='paid',headcount=3)])]))
         private_out, public_out=result['projected_sources']
         self.assertFalse(any(field in private_out for field in
-            ('registration_url','customer_email','customer_id','active_registration_count')))
+            ('registration_url','customer_email','customer_id','active_registration_count',
+             'operational_has_active_seat')),
+            'public diagnostics must not reveal even boolean private-seat presence')
         self.assertEqual(public_out['active_registration_count'],2)
         self.assertEqual(private_out['visibility'],'private')
+        private_occupied=result['reports'][0]['normalized_occupancy'][0]
+        self.assertNotIn('headcount',private_occupied)
+        self.assertEqual(private_occupied['kind'],'occupied',
+            'normalized public diagnostics must not expose paid private gravity')
 
     def test_same_interval_legacy_mirror_cannot_erase_private_canonical_seat(self):
         # Source identity, not identical instructor/room/clock geometry, must
