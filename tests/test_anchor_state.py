@@ -107,6 +107,23 @@ class AnchorStateTests(unittest.TestCase):
         self.assertTrue(in_repeat_bubble(datetime.fromisoformat("2026-08-05T16:00:00-04:00"), anchor, 240))
         self.assertFalse(in_repeat_bubble(datetime.fromisoformat("2026-08-05T16:30:00-04:00"), anchor, 240))
 
+    def test_full_course_24_hour_repeat_window_crosses_midnight(self):
+        anchor = datetime.fromisoformat("2026-11-17T23:30:00-05:00")
+        cases = (
+            ("2026-11-16T23:29:00-05:00", False),
+            ("2026-11-16T23:30:00-05:00", True),
+            ("2026-11-16T23:31:00-05:00", True),
+            ("2026-11-18T23:29:00-05:00", True),
+            ("2026-11-18T23:30:00-05:00", True),
+            ("2026-11-18T23:31:00-05:00", False),
+        )
+        for timestamp, expected in cases:
+            with self.subTest(timestamp=timestamp):
+                self.assertIs(
+                    in_repeat_bubble(datetime.fromisoformat(timestamp), anchor, 1440),
+                    expected,
+                )
+
     def test_shared_bls_family_and_exact_low_demand_scopes(self):
         policy = {
             "families": {"bls": {"course_ids": ["209806", "359474"], "repeat_delay_minutes": 240}},
