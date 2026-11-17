@@ -45,27 +45,43 @@ def selector_availability_path(page_key: str) -> Path:
 
 
 def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
-    """Public geometry from production decisions; no calendar titles or participants."""
+    """Public geometry only; private source IDs, course types and rosters stay hidden.
+
+    Operational commitments must still block real time in the internal
+    calculation. Only explicitly public records may expose joinability
+    metadata; unknown visibility is nonpublic by default.
+    """
     calculation = payload.get("layeredDiagnostics") or {}
     sources = []
     for source in calculation.get("projected_sources", []):
-        kind = source.get("kind") or ("commitment" if "blocked" in str(source.get("source_file")) or not source.get("course_id") else "planted")
+        visibility_public = source.get("visibility") == "public"
+        count = source.get("active_registration_count")
+        known_count = source.get("count_available") is True
+        proven = (source.get("operational_has_active_seat") is True
+                  or source.get("kind") == "paid"
+                  or (known_count and type(count) is int and count > 0))
         sources.append({
-            "sourceId": source.get("source_event_id"),
-            "role": "anchor" if kind in ("paid", "seated", "planted") else "blocking",
+            "sourceId": source.get("source_event_id") if visibility_public else None,
+            "role": "anchor" if visibility_public and proven else "blocking",
             "start": source.get("start"), "end": source.get("end"),
-            "courseId": source.get("course_id"), "resource": source.get("resource"),
-            "countAvailable": source.get("count_available") is True,
-            "registeredCount": source.get("active_registration_count") if source.get("count_available") is True else None,
+            "courseId": source.get("course_id") if visibility_public else None,
+            "resource": source.get("resource"),
+            "countAvailable": visibility_public and known_count,
+            "registeredCount": count if visibility_public and known_count else None,
         })
     blocks = []
     seen = set()
     for report in calculation.get("reports", []):
         for block in report.get("blocks", []):
             key = (block.get("id"), block.get("start"), block.get("end"))
-            if key in seen:continue
+            if key in seen:
+                continue
             seen.add(key)
-            blocks.append({k: block.get(k) for k in ("id", "start", "end", "source_ids")})
+            blocks.append({
+                "id": "occupied-block-" + str(len(blocks) + 1),
+                "start": block.get("start"), "end": block.get("end"),
+                "source_ids": [],
+            })
     return {"schemaVersion": "public-layered-landscape.v1", "sources": sources,
             "occupiedBlocks": blocks, "offersAreAlternatives": True,
             "availabilityIsNotAClass": True}
