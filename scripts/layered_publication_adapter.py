@@ -30,36 +30,45 @@ PUBLIC_SOURCE_DIAGNOSTIC_FIELDS = frozenset({
 
 
 def public_calculation_diagnostics(calculation):
-    result = encode(calculation)
-    public_sources = []
-    for source in result.get("projected_sources", []):
+    """Public geometry only; private source IDs and nested edge IDs stay internal.
+
+    The internal calculation retains full provenance for conflicts, tests and
+    operator audit. This is an allowlisted customer serialization, not a roster.
+    """
+    result = dict(schema=calculation.get("schema"),
+                  counts=encode(calculation.get("counts", {})),
+                  projected_sources=[], reports=[], issues=[])
+    for index, source in enumerate(calculation.get("projected_sources", []), start=1):
         diagnostic = {key: value for key, value in source.items()
                       if key in PUBLIC_SOURCE_DIAGNOSTIC_FIELDS}
-        # Operational Anchor proof is internal-only for private/unlisted sources.
-        # Public diagnostics must not disclose that a private customer registered.
         if source.get("visibility") != "public":
+            # This opaque display-local label cannot resolve to a canonical
+            # private booking, registration, or legacy external class.
+            diagnostic["source_event_id"] = "private-occupied-" + str(index)
+            diagnostic.pop("external_class_id", None)
+            diagnostic.pop("course_id", None)
             diagnostic.pop("operational_has_active_seat", None)
-            # An unknown/private visibility cannot authorize even a boolean
-            # roster-availability signal in the public calculation report.
             diagnostic["count_available"] = False
             if diagnostic.get("kind") in {"paid", "seated"}:
                 diagnostic["kind"] = "occupied"
-        # A public, independently verified roster may show its count; a
-        # private/unlisted or unknown-visibility roster never does.
-        if source.get("visibility") == "public" and source.get("count_available") is True:
+        elif source.get("count_available") is True:
             diagnostic["active_registration_count"] = source.get("active_registration_count")
-        public_sources.append(diagnostic)
-    result["projected_sources"] = public_sources
-    for report in result.get("reports", []):
+        result["projected_sources"].append(diagnostic)
+    for report in calculation.get("reports", []):
+        public_occupied = []
         for occupied in report.get("normalized_occupancy", []):
-            # This is a public, cross-source report, not a roster. Private
-            # appointments can arrive through several provenance paths and
-            # those paths need not advertise their visibility. Never expose
-            # headcounts or paid/seated markers here; keep them in the internal
-            # calculation used to enforce real occupied intervals.
-            occupied.pop("headcount", None)
-            if occupied.get("kind") in {"paid", "seated"}:
-                occupied["kind"] = "occupied"
+            public_occupied.append({key: value for key, value in occupied.items()
+                                    if key in {"start", "end", "instructor", "location", "resource_uncertain", "kind"}
+                                    and value is not None})
+            if public_occupied[-1].get("kind") in {"paid", "seated"}:
+                public_occupied[-1]["kind"] = "occupied"
+        public_blocks = [
+            dict(id="occupied-block-" + str(index), start=block.get("start"),
+                 end=block.get("end"), source_ids=[])
+            for index, block in enumerate(report.get("blocks", []), start=1)
+        ]
+        result["reports"].append(dict(normalized_occupancy=public_occupied,
+                                      blocks=public_blocks))
     return result
 
 
@@ -258,7 +267,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 appointmentUrl=url, registrationUrl=url, availabilityBlockId=report["availability_window"],
                 availabilityWindow=report["availability_window"], sourceAvailabilityBlock=window.get("source_live_availability_block", {}),
                 offerType="dynamic_appointment", scheduleRole="barnacle" if candidate["mode"]=="barnacle" else "open_day",
-                sourceSessionIds=candidate["source_ids"], edgeIds=candidate["edge_ids"],
+                sourceSessionIds=[], edgeIds=[],
                 validUntil=report["valid_until"].isoformat(), publicSelectable=True))
     # Never retire a source record. Confirmed-zero booking choices are retired
     # only from this projection; their occupied interval remains in calculation.
@@ -433,7 +442,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         whole_block_presented_as_class=False, availability_source_used="explicit_layered_coverage",
         availability_fallback_used=False, horizonDays=0, minimumLeadHours=0,
         rejectedCourseStartTimes=rejected, rejectionReasonCounts=dict(Counter(reason for row in rejected for reason in row.get("reasons",[]))),
-        reconciliationIssues=calculation["issues"], layeredDiagnostics=public_calculation_diagnostics(calculation),
+        reconciliationIssues=[{"reason":issue.get("reason")} for issue in calculation["issues"]], layeredDiagnostics=public_calculation_diagnostics(calculation),
         proof=dict(whole_block_presented_as_class=False, availability_windows_are_not_rendered_as_class_times=True))
     _rebuild_dates(payload,unique)
     payload["counts"].update(calculation["counts"])
