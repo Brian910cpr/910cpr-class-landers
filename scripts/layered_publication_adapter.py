@@ -227,7 +227,10 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     origins = {str(w.get("source_availability_window", i)): w for i, w in enumerate(windows)}
     accepted, rejected = [], []
     def diagnostic(candidate):
-        row = encode(candidate)
+        # Candidate edges contain private occupied-source IDs. The rejection
+        # report is public, so retain why/when, never internal provenance.
+        row = {key: value for key, value in encode(candidate).items()
+               if key not in {"source_ids", "edge_ids", "edge_id", "block_id"}}
         start = aware(candidate["start"])
         course = catalog.get(candidate["course"], {})
         row.update(date=start.date().isoformat(), startTime=start.strftime("%H:%M"),
