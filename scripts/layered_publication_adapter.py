@@ -72,6 +72,24 @@ def public_calculation_diagnostics(calculation):
     return encode(result)  # Dates in engine reports are not inherently JSON-safe.
 
 
+# Rejection telemetry is also shipped inside the customer-facing feed.
+# An existing class rejected for a room conflict can carry source DTOs,
+# registration URLs, customer fields, and nested intake metadata. Preserve
+# only the public date/course/reason summary; never publish raw rejected DTOs.
+PUBLIC_REJECTION_DIAGNOSTIC_FIELDS = frozenset({
+    "date", "startTime", "courseId", "courseFamily", "courseName",
+    "offerType", "scheduleRole", "reasons",
+})
+
+
+def public_rejection_diagnostics(rows):
+    return encode([
+        {key: value for key, value in row.items()
+         if key in PUBLIC_REJECTION_DIAGNOSTIC_FIELDS}
+        for row in rows
+    ])
+
+
 def active(policy):
     return policy.get("mode") == "active_local_v2"
 
@@ -476,4 +494,7 @@ def finalize(payload, now=None):
     result["validUntil"] = max((o["validUntil"] for o in kept if o.get("offerType")!="seated_class"),default=now.isoformat())
     result["anchor_policy"] = dict(mode=SCHEMA,finalized=True)
     from scripts.public_registration_closures import apply_closures
-    return apply_closures(_rebuild_dates(result,kept))[0]
+    result = apply_closures(_rebuild_dates(result,kept))[0]
+    result["rejectedCourseStartTimes"] = public_rejection_diagnostics(
+        result.get("rejectedCourseStartTimes", []))
+    return result
