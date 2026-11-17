@@ -308,6 +308,57 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(any(row.get('offerType')=='seated_class'
                              for row in public['offers']))
 
+    def test_private_paid_occurrence_conflicting_public_empty_class_is_not_joinable(self):
+        # A later public zero-seat container is not proof that a distinct
+        # private registered occurrence at the same start has become public.
+        # Dec 1 real-world pattern: same BLS, venue, start; different IDs.
+        self.windows=[];self.coverage=[];self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        private=self.add(11,'11:00','13:00',cid='359474',count=None)
+        private.update(source_event_id='private-occurrence',visibility='private',
+            location=':: Wilmington; Shipyard Blvd',operational_has_active_seat=True,
+            instructor_unassigned=True,source_file='canonical_class_sessions')
+        public=dict(private,source_event_id='public-empty-offer',
+            external_class_id='14996400',visibility='public',count_available=False,
+            active_registration_count=None,operational_has_active_seat=False,
+            instructor_unassigned=False,source_file='canonical_class_sessions')
+        published=dict(session_id='14996400',date='2026-10-11',
+            startTime='11:00',courseId='359474',courseName='BLS Renewal',
+            offerType='seated_class',location=':: Wilmington; Shipyard Blvd',
+            registrationUrl='https://enroll.example.test/public-empty-offer')
+        for sources in ([private,public],[public,private]):
+            with self.subTest(first=sources[0]['source_event_id']):
+                self.sources=sources
+                calc=self.calculation()
+                occupied=calc['reports'][0]['normalized_occupancy']
+                self.assertTrue(any(o['kind']=='paid'
+                    and o['id']=='private-occurrence' for o in occupied))
+                self.assertTrue(any(o['kind']=='hold'
+                    and o['id'].startswith('unassigned-') for o in occupied))
+                payload=self.payload([published])
+                self.assertFalse(any(o.get('offerType')=='seated_class'
+                    for o in payload['offers']))
+                self.assertIn('unreconciled_private_committed_public_start',
+                              payload['rejectionReasonCounts'])
+                self.assertFalse(any(o.get('scheduleRole')=='open_day'
+                    for o in payload['offers']))
+                self.assertFalse(any('private-occurrence' in str(o.get('registrationUrl',''))
+                    for o in payload['offers']))
+                public_sources=public_selector_availability_payload(payload)['layeredLandscape']['sources']
+                private_view=next(o for o in public_sources if o['sourceId']=='private-occurrence')
+                self.assertEqual(private_view['role'],'blocking')
+                self.assertFalse(private_view['countAvailable'])
+                self.assertIsNone(private_view['registeredCount'])
+        # Even when the later public container has verified zero enrollment,
+        # it cannot displace the private commitment or become a seated Anchor.
+        public['count_available']=True;public['active_registration_count']=0
+        self.sources=[public,private]
+        payload=self.payload([published])
+        self.assertFalse(any(o.get('offerType')=='seated_class'
+            for o in payload['offers']))
+        self.assertIn('unreconciled_private_committed_public_start',
+                      payload['rejectionReasonCounts'])
+
     def test_unverified_existing_course_blocks_time_not_whole_evening(self):
         # An unknown Enrollware roster is not evidence of a paid day Anchor.
         # Preserve the hard occupied interval while leaving independent legal
