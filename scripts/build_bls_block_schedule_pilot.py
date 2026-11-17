@@ -59,7 +59,9 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
                       and type(count) is int and count > 0))
         sources.append({
             "sourceId": source.get("source_event_id"),
-            "role": "anchor" if proven else "blocking",
+            # Private/unlisted operational Anchors should still block public
+            # geometry, but their positive-seat status is not public metadata.
+            "role": "anchor" if proven and source.get("visibility") not in ("private", "unlisted") else "blocking",
             "start": source.get("start"), "end": source.get("end"),
             "courseId": source.get("course_id"), "resource": source.get("resource"),
             "countAvailable": source.get("count_available") is True,
