@@ -383,6 +383,77 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertIn('unreconciled_private_committed_public_start',
                       payload['rejectionReasonCounts'])
 
+    def test_private_partial_overlap_rejects_distinct_public_seated_starts(self):
+        # Real records can start at different times and still consume the
+        # same room. A seat cannot be sold because start timestamps differ.
+        self.windows=[];self.coverage=[];self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        private=self.add(11,'12:00','14:00',cid='359474',count=None)
+        private.update(source_event_id='canonical-private',visibility='private',
+            course_id=None,course_key='aha-bls-provider',
+            operational_has_active_seat=True,instructor_unassigned=True,
+            location=':: Wilmington; Shipyard Blvd')
+        public=self.add(11,'11:00','13:00',cid='359474',count=None)
+        public.update(source_event_id='public-seated',visibility='public',
+            location=':: Wilmington; Shipyard Blvd',
+            instructor_unassigned=False)
+        seated=dict(session_id='public-seated',date='2026-10-11',startTime='11:00',
+            courseId='359474',courseName='BLS Renewal',offerType='seated_class',
+            location=':: Wilmington; Shipyard Blvd',
+            registrationUrl='https://example.test/register/public-seated')
+        for sequence in ([private,public],[public,private]):
+            with self.subTest(first=sequence[0]['source_event_id']):
+                self.sources=sequence
+                payload=self.payload([seated])
+                self.assertFalse(any(o.get('offerType')=='seated_class'
+                    for o in payload['offers']))
+                self.assertIn('unreconciled_private_committed_public_start',
+                    payload['rejectionReasonCounts'])
+                self.assertNotIn('canonical-private',json.dumps(payload['offers']))
+        # The same collision also exists when the private class begins first.
+        private['start']=self.at(11,'10:00').isoformat()
+        private['end']=self.at(11,'11:30').isoformat()
+        self.sources=[private,public]
+        self.assertFalse(any(o.get('offerType')=='seated_class'
+            for o in self.payload([seated])['offers']))
+        # Touching is legal; room consumption has ended before the offer.
+        public['start']=self.at(11,'14:00').isoformat()
+        public['end']=self.at(11,'16:00').isoformat()
+        seated['startTime']='14:00'
+        self.assertTrue(any(o.get('offerType')=='seated_class'
+            for o in self.payload([seated])['offers']))
+
+    def test_independent_room_exception_requires_two_verified_assignments(self):
+        self.windows=[];self.coverage=[];self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        private=self.add(11,'12:00','14:00',cid='359474',count=None)
+        private.update(source_event_id='private-room-a',visibility='private',
+            operational_has_active_seat=True,resource=':: Wilmington; Shipyard Blvd - A',
+            instructor='Michelle',instructor_unassigned=False,
+            resource_assignment_verified=True,instructor_assignment_verified=True)
+        public=self.add(11,'11:00','13:00',cid='359474',count=None)
+        public.update(source_event_id='public-room-b',visibility='public',
+            resource=':: Wilmington; Shipyard Blvd - B',
+            instructor='Brian Ennis',instructor_unassigned=False,
+            resource_assignment_verified=True,instructor_assignment_verified=True)
+        seated=dict(session_id='public-room-b',date='2026-10-11',startTime='11:00',
+            courseId='359474',courseName='BLS Renewal',offerType='seated_class',
+            location=':: Wilmington; Shipyard Blvd',
+            registrationUrl='https://example.test/register/public-room-b')
+        self.sources=[private,public]
+        self.assertTrue(any(o.get('offerType')=='seated_class'
+            for o in self.payload([seated])['offers']),
+            'two explicitly verified distinct rooms and instructors remain legal')
+        for field in ('resource_assignment_verified','instructor_assignment_verified'):
+            private[field]=False
+            self.assertFalse(any(o.get('offerType')=='seated_class'
+                for o in self.payload([seated])['offers']),field)
+            private[field]=True
+        private['instructor']='Brian Ennis'
+        self.assertFalse(any(o.get('offerType')=='seated_class'
+            for o in self.payload([seated])['offers']),
+            'different rooms never override an instructor conflict')
+
     def test_unverified_existing_course_blocks_time_not_whole_evening(self):
         # An unknown Enrollware roster is not evidence of a paid day Anchor.
         # Preserve the hard occupied interval while leaving independent legal
