@@ -60,6 +60,22 @@ class LayeredPublicationTests(unittest.TestCase):
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
 
+    def test_clear_day_lists_every_qualified_course_on_half_hour_grid(self):
+        # An eight-hour-plus free period must not silently switch to hourly
+        # retail starts. Owner doctrine #16 requires 30-minute clear-day offers.
+        self.windows=[];self.coverage=[];self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        for course in self.courses:
+            cid=course['course_id']
+            last=18 if course['kind']=='skills' else 15  # 60m / 150m occupied
+            expected={(self.at(11,'08:00')+timedelta(minutes=30*i)).strftime('%H:%M')
+                      for i in range(last+1)}
+            with self.subTest(course=cid):
+                self.assertEqual(self.starts(cid,day=11),expected)
+        self.assertTrue(all(row['step_minutes']==30
+            for report in self.calculation()['reports']
+            for row in report['free_intervals']))
+
     def test_repeated_skills_growth_and_full_class_enlarges_block(self):
         self.add(11,'12:00','13:00',count=1)
         for cid in ['210549','329495']: self.assertEqual(self.starts(cid),{'11:00','13:00'})
