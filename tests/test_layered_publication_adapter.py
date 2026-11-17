@@ -461,7 +461,7 @@ class LayeredPublicationTests(unittest.TestCase):
         row['duration_minutes']=60
         self.assertEqual(self.starts('329495'),{'11:00','13:00'})
 
-    def test_overnight_full_offer_preserves_next_date_end_and_free_day_thinning(self):
+    def test_overnight_full_offer_and_half_hour_clear_day(self):
         self.add(11,'20:00','21:30','359474')
         self.windows[0]['end']=self.at(12,'06:00').isoformat()
         self.coverage[0]['end']=self.windows[0]['end']
@@ -469,7 +469,8 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertTrue(full['occupiedUntil'].startswith('2026-10-12T00:00'))
         self.sources=[]
         self.assertIn('00:00',self.starts('210549'))
-        self.assertNotIn('00:30',self.starts('210549'))
+        self.assertIn('00:30',self.starts('210549'))
+        self.assertIn('23:30',self.starts('210549'))
         self.windows=[];self.coverage=[];self.window(11,'03:00','05:00',next_day=False)
         self.assertEqual(self.starts('210549'),{'03:00','03:30','04:00'})
 
