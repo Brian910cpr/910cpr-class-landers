@@ -25,6 +25,7 @@ PUBLIC_SOURCE_DIAGNOSTIC_FIELDS = frozenset({
     "availability_location_mode", "kind", "count_available",
     "operational_has_active_seat", "instructor_unassigned", "resource_uncertain",
     "uncertainty_reason", "duration_resolution", "normalization_issue",
+    "visibility",
 })
 
 
