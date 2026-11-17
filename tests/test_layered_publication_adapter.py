@@ -272,7 +272,12 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertIsNone(source['active_registration_count'])
         projected=self.calculation()['projected_sources'][0]
         self.assertTrue(projected['operational_has_active_seat'])
-        offers=self.payload()['offers']
+        proven_payload=self.payload()
+        proven_landscape=public_selector_availability_payload(proven_payload)['layeredLandscape']
+        self.assertEqual(proven_landscape['sources'][0]['role'],'anchor')
+        self.assertFalse(proven_landscape['sources'][0]['countAvailable'])
+        self.assertIsNone(proven_landscape['sources'][0]['registeredCount'])
+        offers=proven_payload['offers']
         self.assertTrue(any(o.get('scheduleRole')=='barnacle' for o in offers))
         self.assertFalse(any(o.get('scheduleRole')=='open_day' for o in offers))
         self.assertFalse(any(o.get('offerType')=='seated_class' for o in offers))
@@ -287,7 +292,10 @@ class LayeredPublicationTests(unittest.TestCase):
         self.sources=build_occupancy(dict(location_resource_map=self.resources,
             canonical_demand=dict(sessions=[demand])),{},allow_unresolved=True)
         self.assertFalse(self.sources[0]['operational_has_active_seat'])
-        self.assertTrue(any(o.get('scheduleRole')=='open_day' for o in self.payload()['offers']))
+        unknown_payload=self.payload()
+        self.assertEqual(public_selector_availability_payload(unknown_payload)
+                         ['layeredLandscape']['sources'][0]['role'],'blocking')
+        self.assertTrue(any(o.get('scheduleRole')=='open_day' for o in unknown_payload['offers']))
         # A human source label never fills in a missing canonical instructor ID.
         demand['source']='confirmed_booking_intake'
         demand['lead_instructor_id']=None
