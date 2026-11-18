@@ -5,7 +5,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 from datetime import datetime, timezone
-from scripts.audit_family_publication_coverage import summarize, continuity_incident, parse_arguments
+from scripts.audit_family_publication_coverage import summarize, continuity_incident, parse_arguments, public_landscape_diagnostics_safe
 from scripts import audit_family_publication_coverage as audit
 
 
@@ -116,6 +116,62 @@ class CoverageCheckpointTests(unittest.TestCase):
                 reported = summarize({'reconciliationIssues': [bad]}, '2026-12-06')
                 self.assertFalse(reported['publicDiagnosticsSafe'])
         self.assertTrue(summarize({'reconciliationIssues': []}, '2026-12-06')['publicDiagnosticsSafe'])
+
+
+    def test_host_observer_rejects_public_landscape_private_diagnostics(self):
+        safe = {
+            "cells": [{"date": "2026-11-25", "startTime": "09:30",
+                       "courseId": "209806", "result": "suppressed",
+                       "reasons": ["availability_restricted"]}],
+            "laneCells": [{"date": "2026-11-25", "startTime": "09:30",
+                           "laneId": "enrollware", "sourceLabel": "Committed class",
+                           "items": [{"title": "Occupied interval"}]}],
+            "dailyTruth": {"2026-11-25": {"classes": [{
+                "courseName": "Committed class", "registeredCount": "Restricted",
+                "start": "2026-11-25T09:30:00-05:00",
+                "end": "2026-11-25T11:30:00-05:00"}],
+                "hardBlocks": [{"label": "Unavailable time",
+                                "start": "2026-11-25T09:30:00-05:00",
+                                "end": "2026-11-25T11:30:00-05:00"}]}},
+            "reconciliationIssues": [{
+                "date": "2026-11-25", "code": "AVAILABILITY_COVERAGE_UNKNOWN",
+                "reason": "Availability requires operational review",
+                "blocksSynthesis": True}],
+            "sourcePages": {"bls": {
+                "generatedAt": "2026-11-18T15:00:00Z",
+                "rejectionReasonCounts": {"restricted": 2},
+                "layeredLandscape": {
+                    "sources": [{"role": "blocking", "start": "2026-11-25T09:30:00",
+                                 "end": "2026-11-25T11:30:00"}],
+                    "occupiedBlocks": []}}},
+        }
+        self.assertTrue(public_landscape_diagnostics_safe(safe))
+        for category, changes in [
+            ("external source paths", {"operationalLaneSources": {"private": "/private/path"}}),
+            ("raw issue", {"reconciliationIssues": [{
+                "reason": "private instructor private trip", "resource": "Internal room"}]}),
+            ("raw intake lane", {"laneCells": [{
+                "date": "2026-11-25", "startTime": "09:30",
+                "laneId": "enrollware", "items": [{
+                    "title": "Occupied interval", "sessionId": "restricted"}]}]}),
+            ("raw canonical names", {"dailyTruth": {"2026-11-25": {
+                "hardBlocks": [], "classes": [{
+                    "courseName": "Named private session",
+                    "start": "2026-11-25T09:30:00-05:00", "end": "2026-11-25T11:30:00-05:00",
+                    "registeredCount": 1, "canonicalSessionId": "restricted"}]}}}),
+            ("internal offer trace", {"cells": [{
+                "date": "2026-11-25", "startTime": "09:30",
+                "courseId": "209806", "result": "seated",
+                "sessionId": "private", "edgeIds": ["private"]}]}),
+            ("nonanonymous source page", {"sourcePages": {"bls": {
+                "rejectionReasonCounts": {"private_name": 1},
+                "layeredLandscape": {"sources": [{
+                    "sourceId": "private", "role": "blocking",
+                    "start": "2026-11-25T09:30:00",
+                    "end": "2026-11-25T11:30:00"}]}}}}),
+        ]:
+            with self.subTest(category=category):
+                self.assertFalse(public_landscape_diagnostics_safe({**safe, **changes}))
 
     def test_empty_day_is_unknown_coverage_not_inferred_occupancy(self):
         result = summarize({'counts': {'failed_windows': 0}}, '2026-10-14')
