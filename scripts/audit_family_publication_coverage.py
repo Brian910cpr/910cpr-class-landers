@@ -9,12 +9,33 @@ from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 import hashlib
 import json
+import re
 from pathlib import Path
 from urllib.request import urlopen
 from concurrent.futures import ThreadPoolExecutor
 
 ROOT = Path(__file__).resolve().parents[1]
 FAMILIES = ('bls', 'heartsaver', 'acls', 'pals', 'arc', 'hsi', 'uscg_first_aid_cpr_aed', 'family_cpr')
+
+
+def public_diagnostics_safe(issues):
+    """Fail closed if a public selector exposes operational issue metadata.
+
+    Public issue entries can carry only a coarse reason code and an optional
+    Eastern date. Never echo a rejected raw issue into observer artifacts.
+    """
+    allowed_reasons = {"missing_directional_travel_rule", "availability_coverage_unknown"}
+    for issue in issues:
+        if not isinstance(issue, dict) or not set(issue).issubset({"reason", "start"}):
+            return False
+        if issue.get("reason") not in allowed_reasons:
+            return False
+        if "start" in issue and (
+            not isinstance(issue["start"], str)
+            or re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", issue["start"]) is None
+        ):
+            return False
+    return True
 
 
 def summarize(payload, day, now=None):
@@ -59,6 +80,7 @@ def summarize(payload, day, now=None):
         'failedWindowReasons': dict(Counter(i.get('reason', 'unknown') for i in failures)),
         'dayFailedWindows': sum(str(i.get('start', '')).startswith(day) for i in failures),
         'coverageAlert': bool((payload.get('counts') or {}).get('failed_windows')),
+        'publicDiagnosticsSafe': public_diagnostics_safe(failures),
     }
 
 
@@ -119,14 +141,19 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     print(json.dumps({k: dict(
-        {f: v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','coverageAlert')},
+        {f: v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','coverageAlert','publicDiagnosticsSafe')},
         nextThreeDayOffers={day: item['publishedOffers'] for day, item in v['nextThreeDays'].items()})
         for k,v in feeds.items()}, indent=2))
     if incident:
         print('::error title=P0 public booking outage::' +
               ', '.join(f"{f['family']}: {f['reason']}" for f in incident['failures']) +
               '. Immediate recovery required; remaining seated classes do not resolve this failure.')
-    return int(any(v['coverageAlert'] for v in feeds.values()) or bool(incident))
+    unsafe_families = [family for family, feed in feeds.items() if not feed['publicDiagnosticsSafe']]
+    if unsafe_families:
+        print('::error title=Public selector diagnostic privacy gate::' +
+              ', '.join(unsafe_families) +
+              ' returned sensitive or unapproved issue structure; inspect restricted evidence and regenerate sanitized publication.')
+    return int(any(v['coverageAlert'] for v in feeds.values()) or bool(incident) or bool(unsafe_families))
 
 
 if __name__ == '__main__':
