@@ -33,6 +33,9 @@ def summarize(payload, day, now=None):
             'publishedTimes': sorted({t for d, t, _ in rows if d == date}),
             'perCourse': dict(Counter(str(c['courseId']) for d, _, c in rows if d == date)),
             'failedWindows': sum(str(i.get('start', '')).startswith(date) for i in failures),
+            'failedWindowReasons': dict(Counter(
+                str(i.get('reason') or 'unknown') for i in failures
+                if str(i.get('start', '')).startswith(date))),
         }
         for date in next_days
     }
