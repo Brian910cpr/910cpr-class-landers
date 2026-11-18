@@ -96,7 +96,7 @@ class LayeredPublicationTests(unittest.TestCase):
             'full_course_already_paid_seated' in r.get('reasons',[])
             for r in report['rejected']))
         public=public_calculation_diagnostics(calculation)
-        projected=[x for x in public['projected_sources'] if x.get('source_file')=='canonical_class_sessions']
+        projected=[x for x in public['projected_sources'] if x.get('source_event_id','').startswith('private-occupied-')]
         self.assertEqual(len(projected),1)
         self.assertNotIn('course_id',projected[0])
         self.assertNotIn('operational_has_active_seat',projected[0])
@@ -248,15 +248,20 @@ class LayeredPublicationTests(unittest.TestCase):
                      visibility='private',kind='paid',count_available=True,
                      active_registration_count=3,operational_has_active_seat=True,
                      registration_url='https://private.invalid/seat',
-                     customer_email='private@example.invalid',customer_id='private-customer')
+                     customer_email='private@example.invalid',customer_id='private-customer',
+                     instructor='PRIVATE-STAFF-NAME',resource='PRIVATE-ROOM-LABEL',
+                     location_resolution='PRIVATE-LOCATION-MODE',
+                     uncertainty_reason='PRIVATE-INTERNAL-CASE')
         unlisted=dict(source_event_id='unlisted-record',source_file='confirmed_booking_intake',
                       visibility='unlisted',kind='seated',count_available=True,
-                      active_registration_count=1,operational_has_active_seat=True)
+                      active_registration_count=1,operational_has_active_seat=True,
+                      instructor='UNLISTED-STAFF-NAME',resource='UNLISTED-ROOM')
         public=dict(source_event_id='public-record',source_file='canonical_class_sessions',
                     visibility='public',count_available=True,active_registration_count=2)
         internal=dict(projected_sources=[private,unlisted,public],
             reports=[dict(normalized_occupancy=[
-                dict(evidence='canonical_class_sessions',kind='paid',headcount=3),
+                dict(evidence='canonical_class_sessions',kind='paid',headcount=3,
+                     instructor='PRIVATE-STAFF-NORMALIZED',location='PRIVATE-LOCATION-NORMALIZED'),
                 dict(evidence='confirmed_booking_intake',kind='seated',headcount=1),
                 dict(evidence='schedule_future',kind='planted',headcount=None)])])
         result=public_calculation_diagnostics(internal)
@@ -268,7 +273,13 @@ class LayeredPublicationTests(unittest.TestCase):
                 'public diagnostics must not reveal even boolean private-seat presence')
             self.assertEqual(source['kind'],'occupied')
         self.assertEqual(public_out['active_registration_count'],2)
-        self.assertEqual(private_out['visibility'],'private')
+        for field in ('visibility','source_file','instructor','resource','course_id',
+                      'location_resolution','uncertainty_reason','count_available'):
+            self.assertNotIn(field,private_out)
+        for secret in ('PRIVATE-STAFF-NAME','PRIVATE-ROOM-LABEL','PRIVATE-LOCATION-MODE',
+                       'PRIVATE-INTERNAL-CASE','UNLISTED-STAFF-NAME','UNLISTED-ROOM',
+                       'PRIVATE-STAFF-NORMALIZED','PRIVATE-LOCATION-NORMALIZED'):
+            self.assertNotIn(secret,json.dumps(result))
         self.assertNotIn('private-record',json.dumps(result))
         self.assertNotIn('unlisted-record',json.dumps(result))
         for occupied in result['reports'][0]['normalized_occupancy']:
@@ -331,7 +342,9 @@ class LayeredPublicationTests(unittest.TestCase):
         private_report=sanitized['projected_sources'][0]
         self.assertNotIn('operational_has_active_seat',private_report)
         self.assertNotIn('active_registration_count',private_report)
-        self.assertFalse(private_report['count_available'])
+        self.assertNotIn('count_available',private_report)
+        self.assertNotIn('source_file',private_report)
+        self.assertNotIn('resource',private_report)
         self.assertEqual(private_report['kind'],'occupied')
         landscape=public_layered_landscape(dict(layeredDiagnostics=internal))
         unknown_landscape,public_landscape=landscape['sources']
