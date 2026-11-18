@@ -113,6 +113,24 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertEqual(1, ambiguous["ambiguous_positive"])
         self.assertEqual(1, ambiguous["v1_identity_gap_positive"])
 
+    def test_private_recorded_seat_counts_without_external_roster_authority(self):
+        private = demand(
+            session_status="active", visibility="private",
+            canonical_recorded_registration_count=1,
+            active_registration_count=None, count_available=False,
+            demand_basis="unknown",
+        )
+        _, audit = resolve_canonical_demand([], [private])
+        summary = summarize_positive_v1_attribution([private], audit)
+        self.assertEqual(1, summary["positive_active_sessions"])
+        self.assertEqual(1, summary["positive_recorded_without_external_roster_proof"])
+        self.assertEqual(1, summary["unmatched_positive"])
+        self.assertNotIn(private["canonical_session_id"], str(summary))
+        self.assertEqual(0, summarize_positive_v1_attribution(
+            [dict(private, session_status="canceled")], audit)["positive_active_sessions"])
+        self.assertEqual(0, summarize_positive_v1_attribution(
+            [dict(private, canonical_recorded_registration_count=True)], audit)["positive_active_sessions"])
+
     def test_v1_audit_excludes_provisional_and_canceled_or_unproven_seats(self):
         rows = [
             demand(session_status="active", count_available=True,
