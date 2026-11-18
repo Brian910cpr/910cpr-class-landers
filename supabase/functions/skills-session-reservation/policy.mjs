@@ -12,7 +12,7 @@ export function skillsOffers(payload,context,now=Date.now()) {
     if(c.courseId!=='509474'||(!seated&&c.offerType!=='dynamic_appointment')||c.publicSelectable!==true||
        c.durationMinutes!==45||c.schedulerConsumptionMinutes!==60||c.cleanupBufferMinutes!==15||
        !c.availabilityBlockId||!c.instructor||c.resource!==':: Wilmington; Shipyard Blvd - B'||
-       c.location!==':: Wilmington; Shipyard Blvd'||!Array.isArray(c.sourceSessionIds)||
+       c.location!==':: Wilmington; Shipyard Blvd'||
        (seated&&(!sourceSessionId||c.availabilityBlockId!=='seated:'+sourceSessionId)))continue;
     const local=day.date+'T'+slot.startTime;
     if(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(local))continue;
@@ -22,7 +22,10 @@ export function skillsOffers(payload,context,now=Date.now()) {
     offers.push({kind:'dynamic',offerType:c.offerType,sourceSessionId:seated?sourceSessionId:null,courseNumber:'509474',context,selectionId,localStart:local,startsAt,
       endsAt:new Date(start+45*60000).toISOString(),consumptionEndsAt:new Date(start+60*60000).toISOString(),
       instructor:c.instructor,resource:c.resource,location:c.location,availabilityBlockId:c.availabilityBlockId,
-      sourceSessionIds:c.sourceSessionIds,generatedAt:new Date(generated).toISOString(),validUntil:new Date(validUntil).toISOString()});
+      // The published selector deliberately omits internal provenance. Retain an
+      // empty source trace for the backend claim contract; seated identity comes
+      // only from the public seated class ID and is verified transactionally.
+      sourceSessionIds:[],generatedAt:new Date(generated).toISOString(),validUntil:new Date(validUntil).toISOString()});
   }
   return offers;
 }
