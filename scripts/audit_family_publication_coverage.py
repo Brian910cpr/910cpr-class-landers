@@ -38,6 +38,113 @@ def public_diagnostics_safe(issues):
     return True
 
 
+
+def public_landscape_diagnostics_safe(payload):
+    """Audit the actual publicly hosted admin-named JSON without logging private values."""
+    if not isinstance(payload, dict):
+        return False
+    if not set(payload).issubset({
+        "schemaVersion", "generatedAt", "builtAt", "buildId", "pageId",
+        "timezone", "window", "timeGrid", "courses", "lanes", "laneCells",
+        "cells", "sourcePages", "reconciliationIssues", "dailyTruth",
+        "authority", "note",
+    }):
+        return False
+
+    def rows_with_fields(rows, allowed):
+        return isinstance(rows, list) and all(
+            isinstance(row, dict) and set(row).issubset(allowed) for row in rows
+        )
+
+    if not rows_with_fields(payload.get("cells", []), {
+        "date", "startTime", "courseId", "courseFamily", "pageKey",
+        "result", "reasons",
+    }):
+        return False
+    allowed_reasons = {
+        "public_selectable", "dynamic_appointment", "seated_class",
+        "synthetic_offer", "ORPHAN_SYNTHETIC_OFFER",
+        "RECONCILIATION_REQUIRED", "availability_restricted",
+    }
+    for cell in payload.get("cells", []):
+        if not isinstance(cell.get("reasons", []), list) or not all(
+            isinstance(reason, str) and reason in allowed_reasons
+            for reason in cell.get("reasons", [])
+        ):
+            return False
+
+    if not rows_with_fields(payload.get("laneCells", []), {
+        "date", "startTime", "laneId", "result", "sourceLabel",
+        "items", "reasons",
+    }):
+        return False
+    for row in payload.get("laneCells", []):
+        if row.get("laneId") not in ("brian", "enrollware"):
+            return False
+        if not rows_with_fields(row.get("items", []), {"title"}):
+            return False
+        if any(item.get("title") != "Occupied interval" for item in row.get("items", [])):
+            return False
+        if row.get("sourceLabel") not in ("Unavailable time", "Committed class"):
+            return False
+
+    daily = payload.get("dailyTruth", {})
+    if not isinstance(daily, dict):
+        return False
+    for day, facts in daily.items():
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", day) is None or not isinstance(facts, dict):
+            return False
+        if set(facts) != {"hardBlocks", "classes"}:
+            return False
+        if not rows_with_fields(facts["hardBlocks"], {"label", "start", "end"}):
+            return False
+        if not rows_with_fields(facts["classes"], {"courseName", "start", "end", "registeredCount"}):
+            return False
+        if any(x.get("label") != "Unavailable time" for x in facts["hardBlocks"]):
+            return False
+        if any(x.get("courseName") != "Committed class"
+               or x.get("registeredCount") != "Restricted" for x in facts["classes"]):
+            return False
+
+    issues = payload.get("reconciliationIssues", [])
+    if not rows_with_fields(issues, {"date", "code", "reason", "blocksSynthesis"}):
+        return False
+    for issue in issues:
+        if issue.get("reason") != "Availability requires operational review":
+            return False
+        if issue.get("code") not in (
+            "ORPHAN_SYNTHETIC_OFFER", "HARD_BLOCK_COLLISION",
+            "RECONCILIATION_REQUIRED", "AVAILABILITY_COVERAGE_UNKNOWN",
+        ):
+            return False
+
+    pages = payload.get("sourcePages", {})
+    if not isinstance(pages, dict):
+        return False
+    for family, row in pages.items():
+        if family not in FAMILIES or not isinstance(row, dict):
+            return False
+        if not set(row).issubset({
+            "generatedAt", "schedulingModel", "counts", "rejectionReasonCounts",
+            "layeredLandscape",
+        }):
+            return False
+        if not isinstance(row.get("rejectionReasonCounts"), dict) or not set(
+            row["rejectionReasonCounts"]
+        ).issubset({"restricted"}):
+            return False
+        landscape = row.get("layeredLandscape", {})
+        if not isinstance(landscape, dict) or not set(landscape).issubset({
+            "sources", "occupiedBlocks", "offersAreAlternatives", "availabilityIsNotAClass",
+        }):
+            return False
+        if not rows_with_fields(landscape.get("sources", []), {"role", "start", "end"}):
+            return False
+        if not rows_with_fields(landscape.get("occupiedBlocks", []), {"start", "end"}):
+            return False
+    return True
+
+
 def summarize(payload, day, now=None):
     rows = [(d['date'], t['startTime'], c) for d in payload.get('dates', [])
             for t in d.get('startTimes', []) for c in t.get('courses', [])]
@@ -130,6 +237,7 @@ def main():
     report = dict(observedAt=stamp, mode='live-read-only' if args.live else 'local-pinned', families=feeds,
         incident=incident,
         landscape=dict(buildId=landscape.get('buildId'), builtAt=landscape.get('builtAt'),
+            publicDiagnosticsSafe=public_landscape_diagnostics_safe(landscape),
             sha256=hashlib.sha256(raw).hexdigest(),
             dayCellResults=dict(Counter(c['result'] for c in landscape['cells'] if c['date'] == args.day)),
             sourcePages={k: dict(generatedAt=v.get('generatedAt'), counts=v.get('counts'),
@@ -153,7 +261,12 @@ def main():
         print('::error title=Public selector diagnostic privacy gate::' +
               ', '.join(unsafe_families) +
               ' returned sensitive or unapproved issue structure; inspect restricted evidence and regenerate sanitized publication.')
-    return int(any(v['coverageAlert'] for v in feeds.values()) or bool(incident) or bool(unsafe_families))
+    landscape_safe = public_landscape_diagnostics_safe(landscape)
+    if not landscape_safe:
+        print('::error title=Public scheduling landscape privacy gate::'
+              ' Public diagnostic contains restricted structure; repair publication and verify actual host.')
+    return int(any(v['coverageAlert'] for v in feeds.values()) or bool(incident)
+               or bool(unsafe_families) or not landscape_safe)
 
 
 if __name__ == '__main__':
