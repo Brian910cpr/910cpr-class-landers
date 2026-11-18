@@ -65,7 +65,7 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
             "role": "anchor" if visibility_public and proven else "blocking",
             "start": source.get("start"), "end": source.get("end"),
             "courseId": source.get("course_id") if visibility_public else None,
-            "resource": source.get("resource"),
+            "resource": source.get("resource") if visibility_public else None,
             "countAvailable": visibility_public and known_count,
             "registeredCount": count if visibility_public and known_count else None,
         })
@@ -85,6 +85,33 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
     return {"schemaVersion": "public-layered-landscape.v1", "sources": sources,
             "occupiedBlocks": blocks, "offersAreAlternatives": True,
             "availabilityIsNotAClass": True}
+
+
+def public_reconciliation_issues(issues: list[dict[str, Any]]) -> list[dict[str, str]]:
+    """Keep date-scoped coverage alarms, never expose private travel/staff details.
+
+    Full reasons, named rooms, instructors and precise unavailable intervals stay
+    in restricted operational diagnostics. Only coarse reason categories and dates
+    belong in a customer-accessible selector JSON feed.
+    """
+    safe = []
+    for issue in issues:
+        if not isinstance(issue, dict):
+            safe.append({"reason": "availability_coverage_unknown"})
+            continue
+        raw_reason = str(issue.get("reason") or "")
+        code = ("missing_directional_travel_rule"
+                if raw_reason.lower().startswith("missing directional travel rule")
+                else "availability_coverage_unknown")
+        row = {"reason": code}
+        start = issue.get("start")
+        if isinstance(start, str) and len(start) >= 10:
+            day = start[:10]
+            if (day[4:5] == "-" and day[7:8] == "-"
+                    and (day[:4] + day[5:7] + day[8:10]).isdigit()):
+                row["start"] = day
+        safe.append(row)
+    return safe
 
 
 def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, Any]:
@@ -162,7 +189,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
         "anchor_policy": payload.get("anchor_policy", {}),
         "synthesisBlockedDates": payload.get("synthesisBlockedDates", []),
         "occupiedDates": payload.get("occupiedDates", []),
-        "reconciliationIssues": payload.get("reconciliationIssues", []),
+        "reconciliationIssues": public_reconciliation_issues(payload.get("reconciliationIssues", [])),
         "dates": compact_dates,
     }
 

@@ -130,6 +130,41 @@ class LayeredPipelineTests(unittest.TestCase):
         self.assertTrue(any(c.get('cleanupBufferMinutes')==30 for c in offers))
         self.assertTrue(feed['layeredLandscape']['offersAreAlternatives'])
 
+    def test_public_feed_redacts_private_travel_reasons_and_room_identity(self):
+        # Public customers need the coverage alert, not private offsite partner
+        # names, staff identity, exact travel interval, or room assignment.
+        payload = {
+            'dates': [],
+            'reconciliationIssues': [
+                {'reason': 'missing directional travel rule: Sensitive Client Site->Private Office',
+                 'instructor': 'private staff member', 'resource': 'Private Room B',
+                 'start': '2026-12-06T00:00:00-05:00', 'end': '2026-12-06T07:30:00-05:00'},
+                {'reason': 'Sensitive internal source failure Private Client',
+                 'start': '2026-12-10T18:30:00-05:00'},
+            ],
+            'layeredDiagnostics': {
+                'projected_sources': [{
+                    'visibility': 'private', 'resource': 'Private Room B',
+                    'source_event_id': 'private-appointment-id',
+                    'start': '2026-12-06T00:00:00-05:00',
+                    'end': '2026-12-06T07:30:00-05:00',
+                }],
+            },
+        }
+        feed = public_selector_availability_payload(payload)
+        self.assertEqual(feed['reconciliationIssues'], [
+            {'reason': 'missing_directional_travel_rule', 'start': '2026-12-06'},
+            {'reason': 'availability_coverage_unknown', 'start': '2026-12-10'},
+        ])
+        source = feed['layeredLandscape']['sources'][0]
+        self.assertEqual(source['role'], 'blocking')
+        self.assertIsNone(source['resource'])
+        encoded = json.dumps(feed)
+        for value in ('Sensitive Client', 'Sensitive internal', 'private staff member',
+                      'Private Room B', 'private-appointment-id',
+                      '2026-12-06T00:00:00'):
+            self.assertNotIn(value, encoded)
+
     def test_public_landscape_keeps_unknown_count_and_generic_blocking(self):
         from scripts.build_bls_block_schedule_pilot import public_layered_landscape
         payload={'layeredDiagnostics':{'projected_sources':[{'source_event_id':'unknown','course_id':'209806','count_available':False,'active_registration_count':0},{'source_event_id':'calendar','source_file':'calendar_blocked','description':'private'}]}}
