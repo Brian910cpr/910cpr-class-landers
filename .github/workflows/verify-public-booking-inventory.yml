@@ -2,6 +2,11 @@ name: Verify public booking inventory
 on:
   schedule:
     - cron: '*/5 * * * *'
+  # A successful source refresh supplies a second observation heartbeat when cron is delayed.
+  workflow_run:
+    workflows: ['Refresh admin availability']
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
@@ -10,6 +15,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   observe:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
