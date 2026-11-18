@@ -51,9 +51,12 @@ on:
       - '.github/workflows/anchor-policy-ci.yml'
   push:
     branches:
+      - 'codex/p0-proven-anchor-only-v2-20261117'
       - 'codex/anchor-promotion-pipeline'
       - 'codex/issue-157-runtime-projection'
     paths:
+      - 'scripts/layered_selector_adapter.py'
+      - 'tests/test_layered_publication_adapter.py'
       - 'scripts/anchor_state.py'
       - 'scripts/apply_anchor_seat_overrides.py'
       - 'scripts/apply_anchor_policy.py'
