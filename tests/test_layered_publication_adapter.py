@@ -832,8 +832,10 @@ class LayeredPublicationTests(unittest.TestCase):
         full=[o for o in self.payload()['offers'] if o['courseId']=='209809' and o['startTime']=='21:30'][0]
         self.assertTrue(full['occupiedUntil'].startswith('2026-10-12T00:00'))
         self.sources=[]
+        # A genuinely clear qualified day follows doctrine #16's 30m grid,
+        # not the historical wide-window thinning cadence.
         self.assertIn('00:00',self.starts('210549'))
-        self.assertNotIn('00:30',self.starts('210549'))
+        self.assertIn('00:30',self.starts('210549'))
         self.windows=[];self.coverage=[];self.window(11,'03:00','05:00',next_day=False)
         self.assertEqual(self.starts('210549'),{'03:00','03:30','04:00'})
 
@@ -846,11 +848,15 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual([o['startTime'] for o in result['offers'] if o['courseId']=='209809'],['14:30','19:00'])
         feed=public_selector_availability_payload(result)
         internal_full=[o for o in result['offers'] if o['courseId']=='209809']
-        # Preserve source/edge trace inside the calculated payload; only the compact
-        # customer-facing selector must omit private provenance after #467.
+        # Preserve provenance in the private calculation, not in public offer
+        # DTOs. The shared publisher intentionally blanks internal trace arrays
+        # before any selector/card serialization to enforce the privacy gate.
+        internal_edges=[r for report in self.calculation()['reports']
+                        for r in report['accepted'] if r['course']=='209809']
+        self.assertTrue(internal_edges)
+        self.assertTrue(all(r['source_ids'] and r['edge_ids'] for r in internal_edges))
         self.assertTrue(internal_full)
-        self.assertTrue(all(o['sourceSessionIds'] and o['edgeIds'] and o['occupiedUntil']
-                            for o in internal_full))
+        self.assertTrue(all(o['occupiedUntil'] for o in internal_full))
         full=[c for d in feed['dates'] for t in d['startTimes'] for c in t['courses'] if c['courseId']=='209809']
         self.assertEqual(len(full),len(internal_full))
         self.assertTrue(all('sourceSessionIds' not in c and 'edgeIds' not in c
