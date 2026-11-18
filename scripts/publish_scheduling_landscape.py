@@ -257,6 +257,136 @@ def publication_contradictions(cells: list[dict[str, Any]], truth: dict[str, Any
     return issues
 
 
+
+def public_scheduling_landscape(payload: dict[str, Any]) -> dict[str, Any]:
+    """Publish only anonymous grid geometry and public catalog facts.
+
+    docs/data/admin is static/public even though the dashboard is called
+    "admin". Keep private source/roster/room/instructor details out of that
+    CDN file; the full input is used only transiently for conflict decisions.
+    """
+    import re
+
+    def safe_day(value: Any) -> str | None:
+        value = str(value or "")
+        return value if re.fullmatch(r"\d{4}-\d{2}-\d{2}", value) else None
+
+    safe_reasons = {
+        "public_selectable", "dynamic_appointment", "seated_class",
+        "synthetic_offer", "ORPHAN_SYNTHETIC_OFFER", "RECONCILIATION_REQUIRED",
+    }
+    cells = []
+    for row in payload.get("cells", []):
+        if not isinstance(row, dict):
+            continue
+        result = row.get("result")
+        if result not in {"seated", "offered", "joinable", "suppressed"}:
+            continue
+        # All identities, resource names, public URL fragments and arbitrary
+        # free-text rejection explanations are prohibited in this mirror.
+        cell = {key: row.get(key) for key in (
+            "date", "startTime", "courseId", "courseFamily", "pageKey", "result",
+        )}
+        cell["reasons"] = [
+            reason for reason in row.get("reasons", [])
+            if isinstance(reason, str) and reason in safe_reasons
+        ] or (["availability_restricted"] if result == "suppressed"
+               else ["public_selectable"])
+        cells.append(cell)
+
+    lanes = []
+    for row in payload.get("laneCells", []):
+        if not isinstance(row, dict) or row.get("laneId") not in {"enrollware", "brian"}:
+            continue
+        items = row.get("items") if isinstance(row.get("items"), list) else []
+        lanes.append({
+            "date": row.get("date"), "startTime": row.get("startTime"),
+            "laneId": row["laneId"], "result": (
+                "unavailable" if row["laneId"] == "brian" else "occupied"
+            ),
+            "sourceLabel": "Unavailable time" if row["laneId"] == "brian" else "Committed class",
+            "items": [{"title": "Occupied interval"} for _ in items],
+            "reasons": ["occupied_time"],
+        })
+
+    daily = {}
+    for day, facts in payload.get("dailyTruth", {}).items():
+        if not safe_day(day) or not isinstance(facts, dict):
+            continue
+        daily[day] = {
+            "hardBlocks": [{
+                "label": "Unavailable time",
+                "start": row.get("start"), "end": row.get("end"),
+            } for row in facts.get("hardBlocks", []) if isinstance(row, dict)],
+            "classes": [{
+                "courseName": "Committed class",
+                "start": row.get("start"), "end": row.get("end"),
+                "registeredCount": "Restricted",
+            } for row in facts.get("classes", []) if isinstance(row, dict)],
+        }
+
+    issues = []
+    for row in payload.get("reconciliationIssues", []):
+        if not isinstance(row, dict):
+            continue
+        day = safe_day(row.get("date")) or safe_day(str(row.get("start") or "")[:10])
+        if day is None:
+            continue
+        issues.append({
+            "date": day,
+            "code": (row.get("code") if row.get("code") in {
+                "ORPHAN_SYNTHETIC_OFFER", "HARD_BLOCK_COLLISION",
+                "RECONCILIATION_REQUIRED"
+            } else "AVAILABILITY_COVERAGE_UNKNOWN"),
+            "reason": "Availability requires operational review",
+            "blocksSynthesis": bool(row.get("blocksSynthesis", True)),
+        })
+
+    sources = {}
+    for family, record in payload.get("sourcePages", {}).items():
+        if not isinstance(record, dict):
+            continue
+        landscape = record.get("layeredLandscape") or {}
+        counters = record.get("counts") or {}
+        sources[family] = {
+            "generatedAt": record.get("generatedAt"),
+            "schedulingModel": "layered-publication.v2",
+            "counts": {k: v for k, v in counters.items()
+                       if isinstance(v, int) and not isinstance(v, bool)},
+            "rejectionReasonCounts": {
+                "restricted": sum(v for v in (record.get("rejectionReasonCounts") or {}).values()
+                                  if isinstance(v, int) and not isinstance(v, bool))
+            },
+            "layeredLandscape": {
+                "sources": [{
+                    "role": "blocking",
+                    "start": x.get("start"), "end": x.get("end"),
+                } for x in landscape.get("sources", []) if isinstance(x, dict)],
+                "occupiedBlocks": [{
+                    "start": x.get("start"), "end": x.get("end"),
+                } for x in landscape.get("occupiedBlocks", []) if isinstance(x, dict)],
+                "offersAreAlternatives": True, "availabilityIsNotAClass": True,
+            },
+        }
+
+    return {
+        "schemaVersion": payload.get("schemaVersion"),
+        "generatedAt": payload.get("generatedAt"),
+        "builtAt": payload.get("builtAt"), "buildId": payload.get("buildId"),
+        "pageId": payload.get("pageId"), "timezone": payload.get("timezone"),
+        "window": payload.get("window"), "timeGrid": payload.get("timeGrid"),
+        "courses": payload.get("courses", []),
+        "lanes": [
+            {"laneId": "enrollware", "label": "Occupied classes", "description": "Committed time"},
+            {"laneId": "brian", "label": "Unavailable time", "description": "Blocked time"},
+        ],
+        "laneCells": lanes, "cells": cells,
+        "sourcePages": sources, "reconciliationIssues": issues, "dailyTruth": daily,
+        "authority": payload.get("authority"),
+        "note": "Public-safe, anonymous scheduling diagnostic. Not booking authority.",
+    }
+
+
 def main() -> None:
     configs = load_block_schedule_page_configs()
     today = date.today()
@@ -341,7 +471,7 @@ def main() -> None:
         "note": "Internal diagnostic only. This feed mirrors selector decisions and does not change customer-facing schedule behavior.",
     }
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT.write_text(json.dumps(payload, separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
+    OUTPUT.write_text(json.dumps(public_scheduling_landscape(payload), separators=(",", ":"), ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Published {len(payload['courses'])} courses and {len(payload['cells'])} evaluated course/time cells -> {OUTPUT}")
 
 
