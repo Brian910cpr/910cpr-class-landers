@@ -76,6 +76,42 @@ class LayeredPublicationTests(unittest.TestCase):
             for report in self.calculation()['reports']
             for row in report['free_intervals']))
 
+    def test_canonical_private_seat_course_key_preserves_family_gravity_without_public_join(self):
+        # Real native appointments can have only a durable course_key; the
+        # legacy external course ID and public roster proof are unavailable.
+        self.windows=[];self.coverage=[];self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        self.courses[-1]['course_key']='aha_bls_provider_renewal'
+        private=self.add(11,'12:00','14:30',cid=None,count=None,
+            visibility='private',course_key='aha_bls_provider_renewal',
+            operational_has_active_seat=True)
+        private['count_available']=False
+        private['active_registration_count']=None
+        calculation=self.calculation()
+        report=calculation['reports'][0]
+        paid=[r for r in report['source_truth'] if r.get('id')==private['source_event_id']]
+        self.assertEqual(len(paid),1)
+        self.assertEqual((paid[0]['kind'],paid[0]['course']),('paid','359474'))
+        self.assertTrue(any(r.get('course')=='359474' and
+            'full_course_already_paid_seated' in r.get('reasons',[])
+            for r in report['rejected']))
+        public=public_calculation_diagnostics(calculation)
+        projected=[x for x in public['projected_sources'] if x.get('source_file')=='canonical_class_sessions']
+        self.assertEqual(len(projected),1)
+        self.assertNotIn('course_id',projected[0])
+        self.assertNotIn('operational_has_active_seat',projected[0])
+        self.assertNotEqual(projected[0].get('source_event_id'),private['source_event_id'])
+
+        # Ambiguous catalog identity must NOT guess a course/family, but the
+        # private paid occupied interval remains a physical room constraint.
+        self.courses.append(dict(self.courses[-1],course_id='999999'))
+        unresolved=self.calculation()['reports'][0]
+        paid=[r for r in unresolved['source_truth'] if r.get('id')==private['source_event_id']]
+        self.assertEqual(len(paid),1)
+        self.assertEqual((paid[0]['kind'],paid[0]['course']),('paid',None))
+        self.assertTrue(any(r.get('id')==private['source_event_id']
+            for r in unresolved['normalized_occupancy']))
+
     def test_repeated_skills_growth_and_full_class_enlarges_block(self):
         self.add(11,'12:00','13:00',count=1)
         for cid in ['210549','329495']: self.assertEqual(self.starts(cid),{'11:00','13:00'})
