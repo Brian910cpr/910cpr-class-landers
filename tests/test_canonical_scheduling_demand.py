@@ -2,7 +2,7 @@ import unittest
 from pathlib import Path
 
 from scripts.anchor_state import promote_seated_sessions
-from scripts.canonical_scheduling_demand import resolve_canonical_demand
+from scripts.canonical_scheduling_demand import resolve_canonical_demand, summarize_positive_v1_attribution
 
 
 def occurrence(**overrides):
@@ -85,6 +85,67 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertNotIn("email", serialized)
         self.assertNotIn("customer", serialized)
         self.assertNotIn("participant", serialized)
+
+    def test_positive_private_with_no_legacy_row_is_v1_gap_not_public_anchor(self):
+        private = demand(visibility="private", session_status="scheduled",
+                         count_available=True, active_registration_count=1,
+                         external_class_id=None)
+        resolved, audit = resolve_canonical_demand([], [private])
+        self.assertEqual([], resolved)
+        self.assertEqual([], promote_seated_sessions(resolved))
+        summary = summarize_positive_v1_attribution([private], audit)
+        self.assertEqual(1, summary["positive_active_sessions"])
+        self.assertEqual(1, summary["unmatched_positive"])
+        self.assertEqual(1, summary["v1_identity_gap_positive"])
+        self.assertEqual("v1_occurrence_identity_only_not_v2_occupancy", summary["scope"])
+        self.assertNotIn(private["canonical_session_id"], str(summary))
+
+    def test_positive_v1_audit_separates_matched_from_ambiguous(self):
+        positive = demand(session_status="active", count_available=True)
+        resolved, audit = resolve_canonical_demand([occurrence()], [positive])
+        summary = summarize_positive_v1_attribution([positive], audit)
+        self.assertEqual(1, len(promote_seated_sessions(resolved)))
+        self.assertEqual(1, summary["matched_positive"])
+        self.assertEqual(0, summary["v1_identity_gap_positive"])
+        _, ambiguous_audit = resolve_canonical_demand(
+            [occurrence(session_id="a"), occurrence(session_id="b")], [positive])
+        ambiguous = summarize_positive_v1_attribution([positive], ambiguous_audit)
+        self.assertEqual(1, ambiguous["ambiguous_positive"])
+        self.assertEqual(1, ambiguous["v1_identity_gap_positive"])
+
+    def test_private_recorded_seat_counts_without_external_roster_authority(self):
+        private = demand(
+            session_status="active", visibility="private",
+            canonical_recorded_registration_count=1,
+            active_registration_count=None, count_available=False,
+            demand_basis="unknown",
+        )
+        _, audit = resolve_canonical_demand([], [private])
+        summary = summarize_positive_v1_attribution([private], audit)
+        self.assertEqual(1, summary["positive_active_sessions"])
+        self.assertEqual(1, summary["positive_recorded_without_external_roster_proof"])
+        self.assertEqual(1, summary["unmatched_positive"])
+        self.assertNotIn(private["canonical_session_id"], str(summary))
+        self.assertEqual(0, summarize_positive_v1_attribution(
+            [dict(private, session_status="canceled")], audit)["positive_active_sessions"])
+        self.assertEqual(0, summarize_positive_v1_attribution(
+            [dict(private, canonical_recorded_registration_count=True)], audit)["positive_active_sessions"])
+
+    def test_v1_audit_excludes_provisional_and_canceled_or_unproven_seats(self):
+        rows = [
+            demand(session_status="active", count_available=True,
+                   active_registration_count=0),
+            demand(session_status="canceled", count_available=True,
+                   active_registration_count=1),
+            demand(session_status="scheduled", count_available=False,
+                   active_registration_count=1),
+            demand(session_status="scheduled", count_available=True,
+                   active_registration_count=True),
+        ]
+        summary = summarize_positive_v1_attribution(
+            rows, [{"result": "unmatched"}] * len(rows))
+        self.assertEqual(0, summary["positive_active_sessions"])
+        self.assertEqual(0, summary["v1_identity_gap_positive"])
 
     def test_protected_projection_source_has_required_contract_and_no_customer_fields(self):
         source = (Path(__file__).resolve().parents[1] / "supabase/functions/canonical-scheduling-demand/index.ts").read_text(encoding="utf-8")

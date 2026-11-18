@@ -175,6 +175,15 @@ jobs:
           python -m unittest tests.test_anchor_state tests.test_apply_anchor_policy
           python -m scripts.apply_anchor_policy
 
+      - name: Retain anonymous positive-demand V1 attribution diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: canonical-v1-positive-attribution-${{ github.run_id }}-${{ github.run_attempt }}
+          path: debug/status/canonical_positive_v1_attribution.json
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Build durable seated Anchor session pages
         run: python -m scripts.build_landers --anchors-only --data-file docs/data/schedule_future.json
 
