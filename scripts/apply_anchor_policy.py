@@ -607,7 +607,7 @@ def run() -> dict[str, int]:
     demand_audit: list[dict[str, Any]] = []
     sessions, demand_audit = sessions_with_canonical_demand(sessions)
     positive_v1_attribution = summarize_positive_v1_attribution(
-        load_publication_demand(ROOT)["sessions"], demand_audit)
+        validate_payload(load(CANONICAL_DEMAND_PATH))["sessions"], demand_audit)
     schedule["sessions"] = sessions
     anchors = promote_seated_sessions(sessions)
     stats = {
