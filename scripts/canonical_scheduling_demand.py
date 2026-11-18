@@ -233,6 +233,47 @@ def resolve_canonical_demand(
     return resolved, audits
 
 
+
+def summarize_positive_v1_attribution(
+    demand_rows: Iterable[dict[str, Any]],
+    audits: Iterable[dict[str, Any]],
+) -> dict[str, Any]:
+    """Count positive active canonical demand absent from *legacy V1 identity*.
+
+    This is a read-only, identity-free diagnostic. A V1 mismatch does not imply
+    missing V2 physical occupancy, public joinability or permission to suppress
+    an entire day. Keep it out of public selector/anchor payloads.
+    """
+    rows, results = list(demand_rows), list(audits)
+    summary: dict[str, Any] = {
+        "scope": "v1_occurrence_identity_only_not_v2_occupancy",
+        "positive_active_sessions": 0,
+        "matched_positive": 0,
+        "unmatched_positive": 0,
+        "ambiguous_positive": 0,
+        "other_positive": 0,
+    }
+    for index, row in enumerate(rows):
+        seats = row.get("active_registration_count")
+        if (row.get("session_status") not in ("scheduled", "active")
+                or type(seats) is not int or seats < 1
+                or row.get("count_available") is not True):
+            continue
+        summary["positive_active_sessions"] += 1
+        result = results[index].get("result") if index < len(results) else None
+        key = {
+            "matched": "matched_positive",
+            "unmatched": "unmatched_positive",
+            "ambiguous": "ambiguous_positive",
+        }.get(result, "other_positive")
+        summary[key] += 1
+    summary["v1_identity_gap_positive"] = (
+        summary["unmatched_positive"] + summary["ambiguous_positive"]
+        + summary["other_positive"]
+    )
+    return summary
+
+
 def reconciliation_issues(occurrences: list[dict[str, Any]], demand_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Publish safe diagnostics and close synthesis on BOTH sides of a move."""
     resolved, _ = resolve_canonical_demand(occurrences, demand_rows)
