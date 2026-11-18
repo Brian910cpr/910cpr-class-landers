@@ -80,6 +80,10 @@ class CoverageCheckpointTests(unittest.TestCase):
         self.assertEqual(list(days), ['2026-11-01', '2026-11-02', '2026-11-03'])
         self.assertEqual([days[d]['publishedOffers'] for d in days], [2, 1, 0])
         self.assertEqual([days[d]['failedWindows'] for d in days], [0, 1, 0])
+        self.assertEqual(days['2026-11-01']['failedWindowReasons'], {})
+        self.assertEqual(days['2026-11-02']['failedWindowReasons'], {'missing directional travel rule': 1})
+        self.assertEqual(days['2026-11-03']['failedWindowReasons'], {})
+        self.assertEqual(summary['failedWindowReasons'], {'missing directional travel rule': 2})
         self.assertEqual(days['2026-11-01']['perCourse'], {'bls': 2})
         self.assertEqual(days['2026-11-02']['publishedTimes'], ['12:00'])
         self.assertTrue(summary['coverageAlert'],
