@@ -647,6 +647,14 @@ def run() -> dict[str, int]:
         "anchors": anchors,
         "counts": stats,
     })
+    # The full legacy audit contains internal canonical identities and must
+    # never be published. Persist only anonymous aggregate V1 counts for
+    # workflow-level evidence; V1 mismatches do not prove V2 occupancy failure.
+    write(ROOT / "debug" / "status" / "canonical_positive_v1_attribution.json", {
+        "schema_version": "910cpr-canonical-positive-v1-attribution.v1",
+        "generated_at": datetime.now().astimezone().isoformat(),
+        "positive_v1_attribution": positive_v1_attribution,
+    })
     write(DEMAND_MATCH_AUDIT_PATH, {
             "schema_version": "910cpr-canonical-demand-match-audit.v1",
             "generated_at": datetime.now().astimezone().isoformat(),
