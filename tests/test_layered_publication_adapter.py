@@ -826,7 +826,7 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(self.starts('329495'),{'11:00','13:00'})
 
     def test_overnight_full_offer_preserves_next_date_end_and_free_day_thinning(self):
-        self.add(11,'20:00','21:30','359474')
+        self.add(11,'20:00','21:30','359474',count=1)
         self.windows[0]['end']=self.at(12,'06:00').isoformat()
         self.coverage[0]['end']=self.windows[0]['end']
         full=[o for o in self.payload()['offers'] if o['courseId']=='209809' and o['startTime']=='21:30'][0]
@@ -838,7 +838,7 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(self.starts('210549'),{'03:00','03:30','04:00'})
 
     def test_feed_trace_and_finalizer_keep_v2_edges_not_legacy_date_gate(self):
-        self.add(11,'17:00','19:00','359474')
+        self.add(11,'17:00','19:00','359474',count=1)
         payload=self.payload()
         # Finalizer is re-used by landscape. Freeze its clock, not the source evidence.
         with patch('scripts.layered_publication_adapter.finalize',side_effect=lambda p:finalize(p,self.now)):
