@@ -13,6 +13,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 concurrency:
   group: public-booking-observation
   cancel-in-progress: false
@@ -20,13 +21,20 @@ jobs:
   observe:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
           sparse-checkout-cone-mode: false
-          sparse-checkout: scripts/audit_family_publication_coverage.py
+          sparse-checkout: |
+            scripts/audit_family_publication_coverage.py
+            scripts/wait_for_pages_publication.py
+      - name: Wait for matching successful Pages deployment after refresh
+        if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.name == 'Refresh admin availability' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/wait_for_pages_publication.py
       - name: Check all public families and BLS/Heartsaver continuity
         run: python scripts/audit_family_publication_coverage.py --live --continuity --output public-booking-observation.json
       - name: Preserve timestamped public evidence
