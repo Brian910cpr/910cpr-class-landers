@@ -1,14 +1,14 @@
 {
   "schema_version": "0.1",
-  "generated_at": "2026-11-18T02:14:27.998420+00:00",
+  "generated_at": "2026-11-18T02:23:38.212553+00:00",
   "read_only_snapshot": true,
   "calendar_source_id": "brian_do_not_schedule",
   "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
   "source_type": "inverse_google_calendar",
   "source_display_name": "910CPR - Brian DoNotSchedule",
   "date_range": {
-    "start": "2026-11-18T02:14:27.249572+00:00",
-    "end": "2027-02-16T02:14:27.249572+00:00",
+    "start": "2026-11-18T02:23:37.345013+00:00",
+    "end": "2027-02-16T02:23:37.345013+00:00",
     "days": 90
   },
   "export_status": "ok",
@@ -20,11 +20,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -37,6 +37,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -53,7 +68,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-11-18T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261118T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -76,7 +91,7 @@
       "raw_properties": {
         "DTSTART": "20261118T223000Z",
         "DTEND": "20261118T224500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "ATTENDEE": "mailto:c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
         "RECURRENCE-ID": "20261118T200000Z",
@@ -93,7 +108,7 @@
       "end_raw": "20261118T224500Z",
       "end_params": {},
       "end": "2026-11-18T22:45:00+00:00",
-      "updated": "2026-11-18T02:14:27+00:00",
+      "updated": "2026-11-18T02:23:38+00:00",
       "event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
       "recurrence_id_raw": "20261118T200000Z",
       "recurrence_id_params": {},
@@ -116,11 +131,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -133,6 +148,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -149,7 +179,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-11-19T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261119T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -173,11 +203,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -190,6 +220,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -206,7 +251,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-11-20T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261120T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -229,7 +274,7 @@
       "raw_properties": {
         "DTSTART": "20261120T230000Z",
         "DTEND": "20261121T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "cgo6cp9ncphmcb9oc8pj4b9k6kp68b9ocoqj6b9g69hjicr671i3gdj1ck@google.com",
         "CREATED": "20261116T190445Z",
         "DESCRIPTION": "EMT",
@@ -271,7 +316,7 @@
       "raw_properties": {
         "DTSTART": "20261122T230000Z",
         "DTEND": "20261123T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75gm4d1k74s3cb9p74rjcb9k74qjib9o6dj68bb4cdi3ic32ckq66cpic8@google.com",
         "CREATED": "20261116T190446Z",
         "DESCRIPTION": "EMT",
@@ -314,11 +359,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -331,6 +376,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -347,7 +407,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-11-23T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261123T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -370,7 +430,7 @@
       "raw_properties": {
         "DTSTART": "20261123T230000Z",
         "DTEND": "20261124T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "6pim6or56gs68bb66cr6ab9k6spmcb9o75j30b9o6gq3aoph68p32dpn6g@google.com",
         "CREATED": "20261116T190444Z",
         "DESCRIPTION": "EMT",
@@ -413,11 +473,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -430,6 +490,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -446,7 +521,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-11-24T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261124T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -470,11 +545,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -487,6 +562,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -503,7 +593,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-11-25T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261125T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -525,11 +615,11 @@
     {
       "raw_properties": {
         "DTSTART": "20261126T051500Z",
-        "DTEND": "20261126T054500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTEND": "20261127T220000Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "1g3rqafna77n717vp575diku1j@google.com",
         "CREATED": "20261118T021339Z",
-        "LAST-MODIFIED": "20261118T021420Z",
+        "LAST-MODIFIED": "20261118T021500Z",
         "SEQUENCE": "1",
         "STATUS": "CONFIRMED",
         "SUMMARY": "Closed for Thanksgiving",
@@ -543,10 +633,10 @@
       "calendar_id": "c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
       "source_type": "inverse_google_calendar",
       "read_only_snapshot": true,
-      "end_raw": "20261126T054500Z",
+      "end_raw": "20261127T220000Z",
       "end_params": {},
-      "end": "2026-11-26T05:45:00+00:00",
-      "updated": "2026-11-18T02:14:20+00:00",
+      "end": "2026-11-27T22:00:00+00:00",
+      "updated": "2026-11-18T02:15:00+00:00",
       "event_id": "1g3rqafna77n717vp575diku1j@google.com",
       "created": "2026-11-18T02:13:39+00:00",
       "status": "CONFIRMED",
@@ -567,11 +657,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -584,6 +674,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -600,7 +705,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-11-26T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261126T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -624,11 +729,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -641,6 +746,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -657,7 +777,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-11-27T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261127T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -680,7 +800,7 @@
       "raw_properties": {
         "DTSTART": "20261127T230000Z",
         "DTEND": "20261128T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "61gj0pj66li3eb9h64qmab9k64p66b9pccsj8b9m6opjeopk6kpm6cj26k@google.com",
         "CREATED": "20261116T190446Z",
         "DESCRIPTION": "EMT",
@@ -722,7 +842,7 @@
       "raw_properties": {
         "DTSTART": "20261129T230000Z",
         "DTEND": "20261130T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "ccrm2chi69h36bb2cgr64b9k6oq62bb2cor6cb9l6com2eb66ti64p9h70@google.com",
         "CREATED": "20261116T190447Z",
         "DESCRIPTION": "EMT",
@@ -765,11 +885,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -782,6 +902,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -798,7 +933,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-11-30T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261130T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -821,7 +956,7 @@
       "raw_properties": {
         "DTSTART": "20261130T223000Z",
         "DTEND": "20261130T224500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "ATTENDEE": "mailto:c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
         "RECURRENCE-ID": "20261130T200000Z",
@@ -838,7 +973,7 @@
       "end_raw": "20261130T224500Z",
       "end_params": {},
       "end": "2026-11-30T22:45:00+00:00",
-      "updated": "2026-11-18T02:14:27+00:00",
+      "updated": "2026-11-18T02:23:38+00:00",
       "event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
       "recurrence_id_raw": "20261130T200000Z",
       "recurrence_id_params": {},
@@ -860,7 +995,7 @@
       "raw_properties": {
         "DTSTART": "20261130T230000Z",
         "DTEND": "20261201T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "clij8oj16ssj8bb270sjab9kckqjgb9occr68bb2cgrjcd9p70ojeohm6o@google.com",
         "CREATED": "20261116T190447Z",
         "DESCRIPTION": "EMT",
@@ -903,11 +1038,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -920,6 +1055,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -936,7 +1086,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-01T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261201T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -959,7 +1109,7 @@
       "raw_properties": {
         "DTSTART": "20261201T230000Z",
         "DTEND": "20261202T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "74q6adb368s38bb16ph64b9k70o34bb26kojib9hchj6ac9j6phj2or4cc@google.com",
         "CREATED": "20261116T190448Z",
         "DESCRIPTION": "EMT",
@@ -1002,11 +1152,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -1019,6 +1169,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -1035,7 +1200,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-02T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261202T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -1059,11 +1224,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -1076,6 +1241,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -1092,7 +1272,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-03T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261203T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -1115,7 +1295,7 @@
       "raw_properties": {
         "DTSTART": "20261203T223000Z",
         "DTEND": "20261203T224500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "ATTENDEE": "mailto:c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
         "RECURRENCE-ID": "20261203T200000Z",
@@ -1132,7 +1312,7 @@
       "end_raw": "20261203T224500Z",
       "end_params": {},
       "end": "2026-12-03T22:45:00+00:00",
-      "updated": "2026-11-18T02:14:27+00:00",
+      "updated": "2026-11-18T02:23:38+00:00",
       "event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
       "recurrence_id_raw": "20261203T200000Z",
       "recurrence_id_params": {},
@@ -1154,7 +1334,7 @@
       "raw_properties": {
         "DTSTART": "20261203T230000Z",
         "DTEND": "20261204T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "6th3ep1mcksj4b9hc5h34b9kckqjcb9o6oq3cb9gckrm8p9k69j32cb1c8@google.com",
         "CREATED": "20261116T190449Z",
         "DESCRIPTION": "EMT",
@@ -1197,11 +1377,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -1214,6 +1394,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -1230,7 +1425,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-04T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261204T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -1253,7 +1448,7 @@
       "raw_properties": {
         "DTSTART": "20261204T230000Z",
         "DTEND": "20261205T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "c9j3cp9i6cr3abb168om2b9k70s3gbb26go6ab9n65h38cj3cgq36d316s@google.com",
         "CREATED": "20261116T190448Z",
         "DESCRIPTION": "EMT",
@@ -1295,7 +1490,7 @@
       "raw_properties": {
         "DTSTART": "20261206T123000Z",
         "DTEND": "20261206T230000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "65ijcdpp60q3ebb668qj6b9kc5h62bb26di32bb1ckojcdpi68o34dr264@google.com",
         "CREATED": "20261104T141511Z",
         "LAST-MODIFIED": "20261104T141616Z",
@@ -1335,7 +1530,7 @@
       "raw_properties": {
         "DTSTART": "20261206T230000Z",
         "DTEND": "20261207T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "64qjgdhn6srj6b9lccrjgb9k68sm2bb26ksjabb46li62o9ocdhm4p9nc4@google.com",
         "CREATED": "20261116T190449Z",
         "DESCRIPTION": "EMT",
@@ -1378,11 +1573,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -1395,6 +1590,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -1411,7 +1621,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-07T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261207T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -1434,7 +1644,7 @@
       "raw_properties": {
         "DTSTART": "20261207T213000Z",
         "DTEND": "20261207T214500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "ATTENDEE": "mailto:c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
         "RECURRENCE-ID": "20261207T200000Z",
@@ -1451,7 +1661,7 @@
       "end_raw": "20261207T214500Z",
       "end_params": {},
       "end": "2026-12-07T21:45:00+00:00",
-      "updated": "2026-11-18T02:14:27+00:00",
+      "updated": "2026-11-18T02:23:38+00:00",
       "event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
       "recurrence_id_raw": "20261207T200000Z",
       "recurrence_id_params": {},
@@ -1473,7 +1683,7 @@
       "raw_properties": {
         "DTSTART": "20261207T230000Z",
         "DTEND": "20261208T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "6hgjgdb46lh3ibb670o38b9kcosjgb9o6so34b9k6gp68d9jchijadpl6k@google.com",
         "CREATED": "20261116T190450Z",
         "DESCRIPTION": "EMT",
@@ -1516,11 +1726,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -1533,6 +1743,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -1549,7 +1774,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-08T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261208T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -1573,11 +1798,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -1590,6 +1815,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -1606,7 +1846,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-09T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261209T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -1629,7 +1869,7 @@
       "raw_properties": {
         "DTSTART": "20261209T213000Z",
         "DTEND": "20261209T214500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "ATTENDEE": "mailto:c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
         "RECURRENCE-ID": "20261209T200000Z",
@@ -1646,7 +1886,7 @@
       "end_raw": "20261209T214500Z",
       "end_params": {},
       "end": "2026-12-09T21:45:00+00:00",
-      "updated": "2026-11-18T02:14:27+00:00",
+      "updated": "2026-11-18T02:23:38+00:00",
       "event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
       "recurrence_id_raw": "20261209T200000Z",
       "recurrence_id_params": {},
@@ -1669,11 +1909,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -1686,6 +1926,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -1702,7 +1957,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-10T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261210T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -1725,7 +1980,7 @@
       "raw_properties": {
         "DTSTART": "20261210T223000Z",
         "DTEND": "20261210T224500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "ATTENDEE": "mailto:c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
         "RECURRENCE-ID": "20261210T200000Z",
@@ -1742,7 +1997,7 @@
       "end_raw": "20261210T224500Z",
       "end_params": {},
       "end": "2026-12-10T22:45:00+00:00",
-      "updated": "2026-11-18T02:14:27+00:00",
+      "updated": "2026-11-18T02:23:38+00:00",
       "event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
       "recurrence_id_raw": "20261210T200000Z",
       "recurrence_id_params": {},
@@ -1765,11 +2020,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -1782,6 +2037,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -1798,7 +2068,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-11T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261211T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -1821,7 +2091,7 @@
       "raw_properties": {
         "DTSTART": "20261211T230000Z",
         "DTEND": "20261212T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "cdi3idhg74o34bb16kq3cb9k6dgjgb9pclhjeb9l6opjeo9o6di3gopj6o@google.com",
         "CREATED": "20261116T190450Z",
         "DESCRIPTION": "EMT",
@@ -1864,11 +2134,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -1881,6 +2151,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -1897,7 +2182,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-14T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261214T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -1920,7 +2205,7 @@
       "raw_properties": {
         "DTSTART": "20261214T230000Z",
         "DTEND": "20261215T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "68r64c1nckrj8bb4cdi3ib9k6hj64b9o64r32bb270pjge3571h6ad1hc8@google.com",
         "CREATED": "20261116T190451Z",
         "DESCRIPTION": "EMT",
@@ -1963,11 +2248,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -1980,6 +2265,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -1996,7 +2296,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-15T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261215T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2020,11 +2320,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2037,6 +2337,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2053,7 +2368,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-16T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261216T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2077,11 +2392,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2094,6 +2409,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2110,7 +2440,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-17T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261217T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2134,11 +2464,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2151,6 +2481,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2167,7 +2512,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-18T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261218T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2190,7 +2535,7 @@
       "raw_properties": {
         "DTSTART": "20261218T230000Z",
         "DTEND": "20261219T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "cor64d1j6so62b9l6somcb9kc8qj8bb1c8rj4bb668qm4oj574q3aohh6s@google.com",
         "CREATED": "20261116T190451Z",
         "DESCRIPTION": "EMT",
@@ -2232,7 +2577,7 @@
       "raw_properties": {
         "DTSTART": "20261220T230000Z",
         "DTEND": "20261221T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "6kom4dhpc8r32b9n74qjcb9kcco32b9p75i62bb36spjacj46soj4cr2cg@google.com",
         "CREATED": "20261116T190452Z",
         "DESCRIPTION": "EMT",
@@ -2275,11 +2620,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2292,6 +2637,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2308,7 +2668,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-21T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261221T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2331,7 +2691,7 @@
       "raw_properties": {
         "DTSTART": "20261221T230000Z",
         "DTEND": "20261222T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "60s66e9h6li34b9k6gpmab9k6tgj8bb26gp66b9icopj6cpmclimccj3ck@google.com",
         "CREATED": "20261116T190452Z",
         "DESCRIPTION": "EMT",
@@ -2374,11 +2734,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2391,6 +2751,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2407,7 +2782,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-22T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261222T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2430,7 +2805,7 @@
       "raw_properties": {
         "DTSTART": "20261222T230000Z",
         "DTEND": "20261223T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "ccr64phoclij4bb270s6ab9k64o3ib9o6lh6abb3c8pjcopjc9h30pb36g@google.com",
         "CREATED": "20261116T190453Z",
         "DESCRIPTION": "EMT",
@@ -2473,11 +2848,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2490,6 +2865,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2506,7 +2896,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-23T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261223T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2530,11 +2920,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2547,6 +2937,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2563,7 +2968,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-24T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261224T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2587,11 +2992,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2604,6 +3009,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2620,7 +3040,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-25T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261225T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2644,11 +3064,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2661,6 +3081,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2677,7 +3112,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-28T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261228T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2701,11 +3136,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2718,6 +3153,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2734,7 +3184,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-29T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261229T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2758,11 +3208,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2775,6 +3225,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2791,7 +3256,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-30T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261230T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2815,11 +3280,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2832,6 +3297,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2848,7 +3328,7 @@
         "TZID": "America/New_York"
       },
       "end": "2026-12-31T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20261231T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2871,7 +3351,7 @@
       "raw_properties": {
         "DTSTART": "20261231T230000Z",
         "DTEND": "20270101T110000Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "c8p36d9lc5gjeb9g6oqm4b9k6pim4b9o6sq3ebb6ckrm4c9h70s62e9g68@google.com",
         "CREATED": "20261116T190454Z",
         "DESCRIPTION": "EMT",
@@ -2914,11 +3394,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2931,6 +3411,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -2947,7 +3442,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-01T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270101T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -2971,11 +3466,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -2988,6 +3483,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3004,7 +3514,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-04T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270104T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3028,11 +3538,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3045,6 +3555,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3061,7 +3586,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-05T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270105T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3085,11 +3610,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3102,6 +3627,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3118,7 +3658,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-06T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270106T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3141,7 +3681,7 @@
       "raw_properties": {
         "DTSTART": "20270106T223000Z",
         "DTEND": "20270106T224500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "ATTENDEE": "mailto:c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
         "RECURRENCE-ID": "20270106T200000Z",
@@ -3158,7 +3698,7 @@
       "end_raw": "20270106T224500Z",
       "end_params": {},
       "end": "2027-01-06T22:45:00+00:00",
-      "updated": "2026-11-18T02:14:27+00:00",
+      "updated": "2026-11-18T02:23:38+00:00",
       "event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
       "recurrence_id_raw": "20270106T200000Z",
       "recurrence_id_params": {},
@@ -3181,11 +3721,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3198,6 +3738,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3214,7 +3769,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-07T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270107T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3238,11 +3793,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3255,6 +3810,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3271,7 +3841,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-08T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270108T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3295,11 +3865,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3312,6 +3882,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3328,7 +3913,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-11T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270111T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3352,11 +3937,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3369,6 +3954,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3385,7 +3985,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-12T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270112T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3409,11 +4009,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3426,6 +4026,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3442,7 +4057,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-13T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270113T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3466,11 +4081,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3483,6 +4098,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3499,7 +4129,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-14T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270114T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3522,7 +4152,7 @@
       "raw_properties": {
         "DTSTART": "20270114T213000Z",
         "DTEND": "20270114T214500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "ATTENDEE": "mailto:c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
         "RECURRENCE-ID": "20270114T200000Z",
@@ -3539,7 +4169,7 @@
       "end_raw": "20270114T214500Z",
       "end_params": {},
       "end": "2027-01-14T21:45:00+00:00",
-      "updated": "2026-11-18T02:14:27+00:00",
+      "updated": "2026-11-18T02:23:38+00:00",
       "event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
       "recurrence_id_raw": "20270114T200000Z",
       "recurrence_id_params": {},
@@ -3562,11 +4192,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3579,6 +4209,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3595,7 +4240,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-15T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270115T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3619,11 +4264,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3636,6 +4281,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3652,7 +4312,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-18T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270118T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3676,11 +4336,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3693,6 +4353,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3709,7 +4384,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-19T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270119T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3733,11 +4408,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3750,6 +4425,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3766,7 +4456,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-20T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270120T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3789,7 +4479,7 @@
       "raw_properties": {
         "DTSTART": "20270120T223000Z",
         "DTEND": "20270120T224500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "ATTENDEE": "mailto:c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
         "RECURRENCE-ID": "20270120T200000Z",
@@ -3806,7 +4496,7 @@
       "end_raw": "20270120T224500Z",
       "end_params": {},
       "end": "2027-01-20T22:45:00+00:00",
-      "updated": "2026-11-18T02:14:27+00:00",
+      "updated": "2026-11-18T02:23:38+00:00",
       "event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
       "recurrence_id_raw": "20270120T200000Z",
       "recurrence_id_params": {},
@@ -3829,11 +4519,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3846,6 +4536,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3862,7 +4567,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-21T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270121T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3886,11 +4591,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3903,6 +4608,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3919,7 +4639,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-22T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270122T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3943,11 +4663,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -3960,6 +4680,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -3976,7 +4711,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-25T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270125T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -3999,7 +4734,7 @@
       "raw_properties": {
         "DTSTART": "20270125T223000Z",
         "DTEND": "20270125T224500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "ATTENDEE": "mailto:c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
         "RECURRENCE-ID": "20270125T200000Z",
@@ -4016,7 +4751,7 @@
       "end_raw": "20270125T224500Z",
       "end_params": {},
       "end": "2027-01-25T22:45:00+00:00",
-      "updated": "2026-11-18T02:14:27+00:00",
+      "updated": "2026-11-18T02:23:38+00:00",
       "event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
       "recurrence_id_raw": "20270125T200000Z",
       "recurrence_id_params": {},
@@ -4039,11 +4774,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4056,6 +4791,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4072,7 +4822,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-26T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270126T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4096,11 +4846,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4113,6 +4863,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4129,7 +4894,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-27T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270127T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4152,7 +4917,7 @@
       "raw_properties": {
         "DTSTART": "20270127T213000Z",
         "DTEND": "20270127T214500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
         "ATTENDEE": "mailto:c_d2f947481181f460985c18b4ba5d713a67b488f408889f2483d71ef498ab2df7@group.calendar.google.com",
         "RECURRENCE-ID": "20270127T200000Z",
@@ -4169,7 +4934,7 @@
       "end_raw": "20270127T214500Z",
       "end_params": {},
       "end": "2027-01-27T21:45:00+00:00",
-      "updated": "2026-11-18T02:14:27+00:00",
+      "updated": "2026-11-18T02:23:38+00:00",
       "event_id": "70b4tsu83auf8fb9k9pa2fvmpi_R20260820T190000@google.com",
       "recurrence_id_raw": "20270127T200000Z",
       "recurrence_id_params": {},
@@ -4192,11 +4957,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4209,6 +4974,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4225,7 +5005,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-28T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270128T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4249,11 +5029,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4266,6 +5046,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4282,7 +5077,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-01-29T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270129T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4306,11 +5101,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4323,6 +5118,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4339,7 +5149,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-02-01T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270201T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4363,11 +5173,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4380,6 +5190,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4396,7 +5221,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-02-02T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270202T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4420,11 +5245,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4437,6 +5262,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4453,7 +5293,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-02-03T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270203T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4477,11 +5317,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4494,6 +5334,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4510,7 +5365,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-02-04T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270204T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4534,11 +5389,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4551,6 +5406,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4567,7 +5437,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-02-05T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270205T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4591,11 +5461,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4608,6 +5478,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4624,7 +5509,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-02-08T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270208T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4648,11 +5533,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4665,6 +5550,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4681,7 +5581,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-02-09T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270209T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4705,11 +5605,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4722,6 +5622,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4738,7 +5653,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-02-10T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270210T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4762,11 +5677,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4779,6 +5694,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4795,7 +5725,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-02-11T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270211T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4819,11 +5749,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4836,6 +5766,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4852,7 +5797,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-02-12T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270212T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4876,11 +5821,11 @@
         "DTSTART": "20261020T063000",
         "DTEND": "20261020T073000",
         "RRULE": "FREQ=WEEKLY;WKST=SU;UNTIL=20270529T035959Z;BYDAY=FR,MO,TH,TU,WE",
-        "EXDATE": "20261023T063000",
-        "DTSTAMP": "20261118T021427Z",
+        "EXDATE": "20261127T063000",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "75a00s0e8lhgfkppes3g16lr93@google.com",
         "CREATED": "20261019T204804Z",
-        "LAST-MODIFIED": "20261019T204822Z",
+        "LAST-MODIFIED": "20261118T021542Z",
         "LOCATION": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
         "SEQUENCE": "0",
         "STATUS": "CONFIRMED",
@@ -4893,6 +5838,21 @@
         },
         {
           "exdate": "20261023T063000"
+        },
+        {
+          "exdate": "20261123T063000"
+        },
+        {
+          "exdate": "20261124T063000"
+        },
+        {
+          "exdate": "20261125T063000"
+        },
+        {
+          "exdate": "20261126T063000"
+        },
+        {
+          "exdate": "20261127T063000"
         }
       ],
       "start_raw": "20261020T063000",
@@ -4909,7 +5869,7 @@
         "TZID": "America/New_York"
       },
       "end": "2027-02-15T07:30:00-05:00",
-      "updated": "2026-10-19T20:48:22+00:00",
+      "updated": "2026-11-18T02:15:42+00:00",
       "event_id": "75a00s0e8lhgfkppes3g16lr93@google.com:20270215T0630000500",
       "created": "2026-10-19T20:48:04+00:00",
       "location": "Cape Fear Academy\\, 3900 College Rd\\, Wilmington\\, NC 28412\\, USA",
@@ -4932,7 +5892,7 @@
       "raw_properties": {
         "DTSTART": "20270215T124500Z",
         "DTEND": "20270215T201500Z",
-        "DTSTAMP": "20261118T021427Z",
+        "DTSTAMP": "20261118T022338Z",
         "UID": "6ks36c9jcco3ebb3c5ij8b9k6op6ab9oc8q34b9i68qj0e3360s38phn60@google.com",
         "CREATED": "20261004T175609Z",
         "LAST-MODIFIED": "20261004T175609Z",
