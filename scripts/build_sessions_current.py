@@ -318,6 +318,10 @@ def registration_status_from_unavailable_reason(reason: Optional[str]) -> str:
         return "closed"
     if reason == "enrollware_class_full":
         return "full"
+    # A fetch error is not evidence that the externally hosted enrollment form
+    # is open. Protect the occupied class but withhold its public sale link.
+    if isinstance(reason, str) and reason.startswith("enrollware_registration_status_check_failed:"):
+        return "unverified"
     return "open"
 
 
@@ -638,7 +642,7 @@ def build_sessions_from_enrollware_ical(
             })
         registration_unavailable_reason = enrollment_url_unavailable_reason(session.get("commerce", {}).get("registration_url"))
         registration_status = registration_status_from_unavailable_reason(registration_unavailable_reason)
-        if registration_status in {"closed", "full"}:
+        if registration_status in {"closed", "full", "unverified"}:
             status = session.setdefault("status", {})
             status["registration_status"] = registration_status
             status["public_direct_booking"] = False
