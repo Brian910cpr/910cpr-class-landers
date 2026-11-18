@@ -17,6 +17,81 @@ def encode(value):
 
 SCHEMA = "layered-publication.v2"
 
+# This report is embedded in public selector JSON. Source DTOs can carry
+# private URLs and participant fields, so diagnostics must be allowlisted.
+PUBLIC_SOURCE_DIAGNOSTIC_FIELDS = frozenset({
+    "source_event_id", "external_class_id", "source_file", "start", "end",
+    "instructor", "course_id", "resource", "location_resolution",
+    "availability_location_mode", "kind", "count_available",
+    "operational_has_active_seat", "instructor_unassigned", "resource_uncertain",
+    "uncertainty_reason", "duration_resolution", "normalization_issue",
+    "visibility",
+})
+
+# Unlisted/unknown-visibility occupancy needs only anonymous interval geometry
+# on the public site. Source, instructor, room, location and visibility details
+# are retained in the internal calculation, never the customer-facing trace.
+PUBLIC_PRIVATE_OCCUPANCY_FIELDS = frozenset({"start", "end", "resource_uncertain"})
+
+
+def public_calculation_diagnostics(calculation):
+    """Public geometry only; private source IDs and nested edge IDs stay internal.
+
+    The internal calculation retains full provenance for conflicts, tests and
+    operator audit. This is an allowlisted customer serialization, not a roster.
+    """
+    result = dict(schema=calculation.get("schema"),
+                  counts=encode(calculation.get("counts", {})),
+                  projected_sources=[], reports=[], issues=[])
+    for index, source in enumerate(calculation.get("projected_sources", []), start=1):
+        if source.get("visibility") != "public":
+            # Anonymous occupied interval only: any additional source labels
+            # (including staff/room/provenance) can identify private training.
+            diagnostic = {key: value for key, value in source.items()
+                          if key in PUBLIC_PRIVATE_OCCUPANCY_FIELDS}
+            diagnostic["source_event_id"] = "private-occupied-" + str(index)
+            diagnostic["kind"] = "occupied"
+        else:
+            diagnostic = {key: value for key, value in source.items()
+                          if key in PUBLIC_SOURCE_DIAGNOSTIC_FIELDS}
+            if source.get("count_available") is True:
+                diagnostic["active_registration_count"] = source.get("active_registration_count")
+        result["projected_sources"].append(diagnostic)
+    for report in calculation.get("reports", []):
+        public_occupied = []
+        for occupied in report.get("normalized_occupancy", []):
+            public_occupied.append({key: value for key, value in occupied.items()
+                                    if key in {"start", "end", "resource_uncertain", "kind"}
+                                    and value is not None})
+            if public_occupied[-1].get("kind") in {"paid", "seated"}:
+                public_occupied[-1]["kind"] = "occupied"
+        public_blocks = [
+            dict(id="occupied-block-" + str(index), start=block.get("start"),
+                 end=block.get("end"), source_ids=[])
+            for index, block in enumerate(report.get("blocks", []), start=1)
+        ]
+        result["reports"].append(dict(normalized_occupancy=public_occupied,
+                                      blocks=public_blocks))
+    return encode(result)  # Dates in engine reports are not inherently JSON-safe.
+
+
+# Rejection telemetry is also shipped inside the customer-facing feed.
+# An existing class rejected for a room conflict can carry source DTOs,
+# registration URLs, customer fields, and nested intake metadata. Preserve
+# only the public date/course/reason summary; never publish raw rejected DTOs.
+PUBLIC_REJECTION_DIAGNOSTIC_FIELDS = frozenset({
+    "date", "startTime", "courseId", "courseFamily", "courseName",
+    "offerType", "scheduleRole", "reasons",
+})
+
+
+def public_rejection_diagnostics(rows):
+    return encode([
+        {key: value for key, value in row.items()
+         if key in PUBLIC_REJECTION_DIAGNOSTIC_FIELDS}
+        for row in rows
+    ])
+
 
 def active(policy):
     return policy.get("mode") == "active_local_v2"
@@ -173,7 +248,10 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     origins = {str(w.get("source_availability_window", i)): w for i, w in enumerate(windows)}
     accepted, rejected = [], []
     def diagnostic(candidate):
-        row = encode(candidate)
+        # Candidate edges contain private occupied-source IDs. The rejection
+        # report is public, so retain why/when, never internal provenance.
+        row = {key: value for key, value in encode(candidate).items()
+               if key not in {"source_ids", "edge_ids", "edge_id", "block_id"}}
         start = aware(candidate["start"])
         course = catalog.get(candidate["course"], {})
         row.update(date=start.date().isoformat(), startTime=start.strftime("%H:%M"),
@@ -213,7 +291,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 appointmentUrl=url, registrationUrl=url, availabilityBlockId=report["availability_window"],
                 availabilityWindow=report["availability_window"], sourceAvailabilityBlock=window.get("source_live_availability_block", {}),
                 offerType="dynamic_appointment", scheduleRole="barnacle" if candidate["mode"]=="barnacle" else "open_day",
-                sourceSessionIds=candidate["source_ids"], edgeIds=candidate["edge_ids"],
+                sourceSessionIds=[], edgeIds=[],
                 validUntil=report["valid_until"].isoformat(), publicSelectable=True))
     # Never retire a source record. Confirmed-zero booking choices are retired
     # only from this projection; their occupied interval remains in calculation.
@@ -222,17 +300,127 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         for identity in [source.get("source_event_id"), source.get("external_class_id")]:
             if identity is not None and str(identity) not in counts:
                 counts[str(identity)] = source
+    def unreconciled_private_committed_start(offer):
+        """Fail closed when an unrelated private seat may physically overlap.
+
+        Different start times can overlap a class. Only a proven independent
+        room AND instructor permits parallel bookings; a shared office label
+        or an unassigned canonical resource is never evidence of independence.
+        """
+        try:
+            offered_start = aware(str(offer["date"]) + "T" + str(offer["startTime"]))
+        except (KeyError, TypeError, ValueError):
+            return "unreconciled_private_committed_public_start"
+        offered_identity = str(offer.get("session_id") or offer.get("sourceSessionId")
+                               or offer.get("sourceAvailabilityBlock", {}).get("sessionId") or "")
+        public_source = counts.get(offered_identity)
+        # Use the actual matching occurrence's consumed interval, not just its
+        # visible start or instruction-only duration. If no trustworthy end is
+        # available, do not assume an early public class clears a later booking.
+        offered_end = None
+        try:
+            if public_source and public_source.get("start") and public_source.get("end"):
+                if aware(public_source["start"]) != offered_start:
+                    return "unreconciled_private_committed_public_start"
+                offered_end = aware(public_source["end"])
+            elif offer.get("occupiedUntil"):
+                offered_end = aware(offer["occupiedUntil"])
+            elif type(offer.get("schedulerConsumptionMinutes")) is int and offer["schedulerConsumptionMinutes"] > 0:
+                offered_end = offered_start + timedelta(minutes=offer["schedulerConsumptionMinutes"])
+            if offered_end is not None and offered_end <= offered_start:
+                return "unreconciled_private_committed_public_start"
+        except (ValueError, TypeError):
+            return "unreconciled_private_committed_public_start"
+
+        if offered_end is None:
+            # No validated class duration: a cross-midnight collision cannot
+            # be ruled out. Fail this seated link closed, not the entire day.
+            return "unverified_existing_class_consumption_end"
+
+        offered_location = str(offer.get("location") or "").strip().casefold()
+        for occupied in calculation["projected_sources"]:
+            if occupied.get("visibility") == "public":
+                continue
+            # A genuine same-occurrence legacy mirror is not a second class.
+            # Explicit private/unlisted visibility never grants joinability.
+            if (offered_identity and str(occupied.get("source_event_id") or "") == offered_identity
+                    and occupied.get("visibility") not in {"private", "unlisted"}):
+                continue
+            count = occupied.get("active_registration_count")
+            proof = (occupied.get("operational_has_active_seat") is True
+                     or (occupied.get("count_available") is True and type(count) is int and count > 0))
+            if not proof:
+                continue
+            try:
+                committed_start, committed_end = aware(occupied["start"]), aware(occupied["end"])
+                if committed_end <= committed_start:
+                    return "unreconciled_private_committed_public_start"
+            except (KeyError, ValueError, TypeError):
+                return "unreconciled_private_committed_public_start"
+            # Half-open physical intervals: touching at the end is legal.
+            if committed_end <= offered_start:
+                continue
+            if offered_end is not None:
+                if committed_start >= offered_end:
+                    continue
+            elif committed_start.date() != offered_start.date():
+                continue  # Unknown offer end: bound uncertainty to its day.
+
+            committed_location = str(occupied.get("location") or "").strip().casefold()
+            # Different public office spellings may still describe Shipyard.
+            same_shipyard = "shipyard" in committed_location and "shipyard" in offered_location
+            if (committed_location and offered_location
+                    and committed_location != offered_location and not same_shipyard):
+                continue
+            # Two assigned rooms and two different verified instructors are
+            # required before treating simultaneous same-venue classes as
+            # independent. The current canonical feed lacks room proof.
+            if (public_source and public_source.get("resource_assignment_verified") is True
+                    and occupied.get("resource_assignment_verified") is True
+                    and public_source.get("resource") and occupied.get("resource")
+                    and public_source["resource"] != occupied["resource"]
+                    and public_source["resource"] != "Shipyard Office"
+                    and occupied["resource"] != "Shipyard Office"
+                    and public_source.get("instructor_assignment_verified") is True
+                    and occupied.get("instructor_assignment_verified") is True
+                    and public_source.get("instructor") and occupied.get("instructor")
+                    and public_source["instructor"].strip().casefold() != occupied["instructor"].strip().casefold()
+                    and not public_source.get("resource_uncertain")
+                    and not occupied.get("resource_uncertain")):
+                continue
+            return "unreconciled_private_committed_public_start"
+        return None
+
     for original in seated_offers:
         source = counts.get(str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId")))
-        if source and source.get("count_available") is True and source.get("active_registration_count") == 0:
+        collision_reason = unreconciled_private_committed_start(original)
+        if collision_reason:
+            rejected.append(dict(original, reasons=[collision_reason]))
+        elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
         else:
             accepted.append(deepcopy(original))
-    # Every retained existing class is that exact course's day anchor,
-    # including when its roster count is unknown. Consolidate across separate
-    # Google availability gaps without suppressing different course formats.
+    # A published existing-class row is not proof of a paid/registered Anchor.
+    # Unknown external rosters continue to block their actual occupied interval
+    # upstream, but cannot suppress other legal starts for an entire day.
+    def proven_seated(source):
+        if source is None:
+            return False
+        # Operational private registrations never confer public joinability.
+        # The canonical active-seat flag only controls gravity/offer geometry.
+        if source.get('operational_has_active_seat') is True:
+            return True
+        count = source.get('active_registration_count')
+        return source.get('count_available') is True and type(count) is int and count > 0
+
+    def seated_source(offer):
+        key = str(offer.get('session_id') or offer.get('sourceSessionId')
+                  or offer.get('sourceAvailabilityBlock', {}).get('sessionId') or '')
+        return counts.get(key)
+
     day_anchors = {(o['date'], str(o['courseId'])) for o in accepted
-                   if o.get('offerType') == 'seated_class'}
+                   if o.get('offerType') == 'seated_class'
+                   and proven_seated(seated_source(o))}
     def instructor_key(name):
         key = str(name or '').strip().casefold()
         return 'brian ennis' if key == 'brian' else key
@@ -240,12 +428,23 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     # courses. A second calendar gap does not reset an instructor's anchored day.
     anchored_days = set()
     for source in calculation['projected_sources']:
-        if (source.get('course_id') and source.get('start') and source.get('end') and
-                not source.get('normalization_issue') and aware(source['end']) > aware(source['start'])):
-            anchored_days.add((aware(source['start']).date().isoformat(),
-                               instructor_key(source.get('instructor'))))
+        # Canonical classes may have course_key but no public catalog ID.
+        # Only a verified instructor may collapse that instructor's *day*.
+        # Unassigned/private commitments still reserve their physical occupied
+        # interval in calculate(); they cannot erase every instructor's day.
+        instructor = instructor_key(source.get('instructor'))
+        if (proven_seated(source)
+                and (source.get('course_id') or source.get('course_key'))
+                and instructor not in {'', 'unknown'}
+                and source.get('instructor_unassigned') is not True
+                and source.get('start') and source.get('end')
+                and not source.get('normalization_issue')
+                and aware(source['end']) > aware(source['start'])):
+            anchored_days.add((aware(source['start']).date().isoformat(), instructor))
     for offer in accepted:
-        if offer.get('offerType') == 'seated_class':
+        if (offer.get('offerType') == 'seated_class'
+                and proven_seated(seated_source(offer))
+                and instructor_key(offer.get('instructor')) not in {'', 'unknown'}):
             anchored_days.add((offer['date'], instructor_key(offer.get('instructor'))))
     retained = []
     for offer in accepted:
@@ -257,9 +456,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         # candidate's 45-minute instruction plus 15-minute cleanup and conflicts.
         if offer.get('offerType') != 'seated_class' and (offer['date'], str(offer['courseId'])) in day_anchors and not skills_edge:
             rejected.append(dict(offer, reasons=['existing_course_day_anchor']))
-        elif offer.get('scheduleRole') == 'open_day' and (
-                (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days or
-                (offer['date'], '') in anchored_days):
+        elif (offer.get('scheduleRole') == 'open_day'
+              and (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days):
             rejected.append(dict(offer, reasons=['anchored_day_requires_attached_offer']))
         else:
             retained.append(offer)
@@ -274,7 +472,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         whole_block_presented_as_class=False, availability_source_used="explicit_layered_coverage",
         availability_fallback_used=False, horizonDays=0, minimumLeadHours=0,
         rejectedCourseStartTimes=rejected, rejectionReasonCounts=dict(Counter(reason for row in rejected for reason in row.get("reasons",[]))),
-        reconciliationIssues=calculation["issues"], layeredDiagnostics=encode(calculation),
+        reconciliationIssues=[{"reason":issue.get("reason")} for issue in calculation["issues"]], layeredDiagnostics=public_calculation_diagnostics(calculation),
         proof=dict(whole_block_presented_as_class=False, availability_windows_are_not_rendered_as_class_times=True))
     _rebuild_dates(payload,unique)
     payload["counts"].update(calculation["counts"])
@@ -299,4 +497,7 @@ def finalize(payload, now=None):
     result["validUntil"] = max((o["validUntil"] for o in kept if o.get("offerType")!="seated_class"),default=now.isoformat())
     result["anchor_policy"] = dict(mode=SCHEMA,finalized=True)
     from scripts.public_registration_closures import apply_closures
-    return apply_closures(_rebuild_dates(result,kept))[0]
+    result = apply_closures(_rebuild_dates(result,kept))[0]
+    result["rejectedCourseStartTimes"] = public_rejection_diagnostics(
+        result.get("rejectedCourseStartTimes", []))
+    return result

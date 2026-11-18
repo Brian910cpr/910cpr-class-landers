@@ -70,6 +70,15 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             source_course_id=cid,
             duration_evidence=override['evidence'] if override else "owner45+15skills/120+30full; actual occupied intervals preserved",
             provider=course.get("provider") or course.get("brand"), locations=[primary])
+    # Resolve a canonical session's stable catalog key only when its external
+    # course ID is absent and that key identifies exactly one offered catalog
+    # course. The mapping informs operational full-course gravity; it does not
+    # grant public joinability or replace missing registration/roster proof.
+    catalog_ids_by_key = {}
+    for course in courses:
+        key = str(course.get("course_key") or "").strip().casefold()
+        if key:
+            catalog_ids_by_key.setdefault(key, set()).add(str(course["course_id"]))
     origins = {}
     brian_names = set()
     for index, window in enumerate(windows):
@@ -102,6 +111,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
     if commitment_coverage is not None:
         fixture["commitment_coverage"] = commitment_coverage
     source_keys = set()
+    emitted_source_ids = set()
     for index, busy in enumerate(occupancy):
         if not busy.get("start") or not busy.get("end"):
             raise ValueError("unresolved occupied interval")
@@ -119,16 +129,43 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             instructor = next(iter(brian_names))
         # Preserve real physical occupancy; source-provided travel buffers are
         # separate commitments and cannot move the paid block's actual edges.
-        key = (instructor, location, start, end)
-        if key in source_keys:
-            continue
-        source_keys.add(key)
+        # Geometry is not occurrence identity: a legacy row and an active
+        # canonical registration may occupy exactly the same interval.
+        source_event_id = str(busy.get("source_event_id") or "").strip()
+        source_file = str(busy.get("source_file") or "").strip()
+        if source_event_id and source_file:
+            key = (source_file, source_event_id, instructor, location, start, end,
+                   str(busy.get("course_id") or ""), str(busy.get("kind") or ""),
+                   busy.get("count_available") is True,
+                   busy.get("active_registration_count"),
+                   busy.get("operational_has_active_seat") is True,
+                   busy.get("instructor_unassigned") is True,
+                   busy.get("resource_uncertain") is True)
+            if key in source_keys:
+                continue
+            source_keys.add(key)
+        # The pure scheduling engine requires unique source IDs. Keep an
+        # authoritative ID unchanged unless distinct source facts collide.
+        source_id = source_event_id or "occupied-"+str(index)
+        if source_id in emitted_source_ids:
+            source_id += "-source-"+str(index)
+        emitted_source_ids.add(source_id)
         cid = str(busy.get("course_id") or "")
+        if not cid:
+            catalog_key = str(busy.get("course_key") or "").strip().casefold()
+            matches = catalog_ids_by_key.get(catalog_key, ())
+            if len(matches) == 1:
+                cid = next(iter(matches))
         kind = busy.get("kind") or ("commitment" if "blocked" in str(busy.get("source_file")) else "planted")
         count = busy.get("active_registration_count")
-        if isinstance(count, int) and count > 0 and kind == "planted":
+        # Operational canonical seats form gravity even if public/external
+        # count proof is unavailable. Never expose that private seat for sale.
+        if kind == "planted" and (
+            (type(count) is int and count > 0 and busy.get("count_available") is True)
+            or busy.get("operational_has_active_seat") is True
+        ):
             kind = "paid"
-        fixture["sources"].append(dict(id=str(busy.get("source_event_id") or "occupied-"+str(index)),
+        fixture["sources"].append(dict(id=source_id,
             instructor=instructor, location=location, start=start.isoformat(), end=end.isoformat(),
             course=cid if cid in fixture["courses"] else None, kind=kind, headcount=count,
             evidence=busy.get("source_file"),

@@ -732,9 +732,22 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
                     uncertainty_scope=session.get("uncertainty_scope", {}))
     calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"), allow_unresolved)
     canonical = []
+    # A verified canonical registration is an operational commitment even when
+    # its external provider roster cannot authorize public seat availability.
+    # This is deliberately separate from count_available/public joinability.
+    accepted_operational_sources = frozenset({
+        "confirmed_booking_intake", "owner_requested_reschedule", "manual",
+        "landerware_event", "landerware_public_offer", "enrollware_reconciled",
+    })
     for session in loaded.get("canonical_demand", {}).get("sessions", []):
         if session.get("session_status") not in ("scheduled", "active", "completed"):
             continue
+        recorded_seats = session.get("canonical_recorded_registration_count")
+        operational_has_active_seat = (
+            session.get("session_status") in ("scheduled", "active")
+            and session.get("source") in accepted_operational_sources
+            and type(recorded_seats) is int and recorded_seats > 0
+        )
         start = parse_dt(session.get("consumption_start_at") or session.get("start_at"))
         end = parse_dt(session.get("consumption_end_at") or session.get("end_at"))
         if (not start or not end or end <= start) and not allow_unresolved:
@@ -748,8 +761,14 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "source_event_id": session.get("canonical_session_id"),
             "external_class_id": session.get("external_class_id"),
             "course_id": session.get("course_id") or session.get("external_course_id"),
+            # The canonical demand endpoint can carry only this stable course key.
+            # Keep it for operational Anchor geometry; it never grants public joinability.
+            "course_key": session.get("course_key"),
+            "visibility": session.get("visibility"),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
-            "instructor_unassigned": not session.get("lead_instructor_name"),
+            # Human source labels are not proof of a canonical instructor.
+            "instructor_unassigned": not session.get("lead_instructor_id"),
+            "operational_has_active_seat": operational_has_active_seat,
             "count_available": session.get("count_available") is True,
             "active_registration_count": session.get("active_registration_count"),
         })
