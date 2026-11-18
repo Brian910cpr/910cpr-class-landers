@@ -370,6 +370,41 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(internal['projected_sources'][0]['active_registration_count'],1)
 
 
+    def test_compact_public_availability_reports_redact_private_travel_and_room(self):
+        # This suite runs in the Anchor policy CI: do not rely on Chrome-only
+        # integration tests to gate privacy of public selector JSON.
+        private = dict(
+            reason='missing directional travel rule: PRIVATE CLIENT LOCATION->PRIVATE ROOM',
+            instructor='SECRET STAFF', resource='SECRET ROOM',
+            start='2026-12-06T00:00:00-05:00', end='2026-12-06T07:30:00-05:00',
+            source_event_id='SECRET SOURCE',
+        )
+        raw = dict(dates=[], reconciliationIssues=[private, {
+            'reason': 'unknown internal PRIVATE VENUE diagnostics',
+            'start': '2026-12-10T18:30:00-05:00',
+        }], layeredDiagnostics=dict(projected_sources=[dict(
+            visibility='private', source_event_id='SECRET SOURCE',
+            course_id='SECRET COURSE', resource='SECRET ROOM',
+            start=private['start'], end=private['end'],
+        )], reports=[]))
+        before=copy.deepcopy(raw)
+        feed=public_selector_availability_payload(raw)
+        self.assertEqual(feed['reconciliationIssues'], [
+            dict(reason='missing_directional_travel_rule',start='2026-12-06'),
+            dict(reason='availability_coverage_unknown',start='2026-12-10'),
+        ])
+        source=feed['layeredLandscape']['sources'][0]
+        self.assertEqual(source['role'],'blocking')
+        self.assertEqual((source['start'],source['end']),
+                         (private['start'],private['end']))
+        self.assertIsNone(source['resource'])
+        redacted=json.dumps(feed)
+        for private_value in ('PRIVATE CLIENT', 'PRIVATE VENUE', 'SECRET STAFF',
+                              'SECRET ROOM', 'SECRET SOURCE', 'SECRET COURSE',
+                              '2026-12-06T07:30:00'):
+            self.assertNotIn(private_value,redacted)
+        self.assertEqual(raw,before)
+
     def test_public_offer_omits_internal_source_and_edge_provenance(self):
         # The full public JSON must not leak identifiers even when private
         # sources are already masked in layeredLandscape. Provenance remains
