@@ -60,6 +60,35 @@ class LayeredPublicationTests(unittest.TestCase):
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
 
+    def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
+        # Both conflict rejections and expired dynamic URLs pass through this
+        # finalizer. Neither may serialize a private record into the public
+        # repo's diagnostic artifacts, even when a closure adds a rejection.
+        sentinel = "PRIVATE-REGISTRATION-IDENTIFIER-NOT-FOR-PUBLICATION"
+        payload = self.payload()
+        payload.setdefault('rejectedCourseStartTimes', []).append(dict(
+            date='2026-10-11', startTime='12:00', courseId='209809',
+            courseFamily='Heartsaver', courseName='Heartsaver Full Classroom',
+            offerType='seated_class', reasons=['occupied_by_private_class'],
+            sessionId=sentinel, customerEmail='private@example.invalid',
+            registrationUrl='https://private.invalid/enroll?token=' + sentinel,
+            sourceAvailabilityBlock={'private': sentinel},
+            sourceSessionIds=[sentinel], edgeIds=[sentinel]))
+        payload['offers'].append(dict(
+            date='2026-10-11', startTime='13:00', courseId='209809',
+            offerType='dynamic_appointment',
+            validUntil=(self.now - timedelta(minutes=1)).isoformat(),
+            registrationUrl='https://private.invalid/expired?token=' + sentinel,
+            sourceSessionIds=[sentinel]))
+        public = finalize(payload, self.now)
+        self.assertGreaterEqual(len(public['rejectedCourseStartTimes']), 2)
+        for rejected in public['rejectedCourseStartTimes']:
+            self.assertTrue(set(rejected).issubset({
+                'date', 'startTime', 'courseId', 'courseFamily',
+                'courseName', 'offerType', 'scheduleRole', 'reasons'}))
+        self.assertNotIn(sentinel, json.dumps(public['rejectedCourseStartTimes']))
+        self.assertEqual(payload['rejectedCourseStartTimes'][0]['sessionId'], sentinel)
+
     def test_repeated_skills_growth_and_full_class_enlarges_block(self):
         self.add(11,'12:00','13:00')
         for cid in ['210549','329495']: self.assertEqual(self.starts(cid),{'11:00','13:00'})
