@@ -24,10 +24,15 @@ class LayeredAdapterTests(unittest.TestCase):
         return datetime.fromisoformat(f'2026-10-{day:02d}T{clock}:00-04:00')
 
     def add(self, start, end, cid='210549', **extra):
-        self.busy.append(dict(start=self.at(start), end=self.at(end), instructor='Brian',
+        row = dict(start=self.at(start), end=self.at(end), instructor='Brian',
             course_id=cid, resource=self.policy['primary_resource'],
             location_resolution='location_resource_map', source_file='canonical_class_sessions',
-            source_event_id='real-'+start, **extra))
+            source_event_id='real-'+start, **extra)
+        # This fixture helper creates a confirmed occupied class, not an empty
+        # legacy calendar row. Unknown/empty inventory is tested separately.
+        if not extra.get('source_file_override'):
+            row.setdefault('operational_has_active_seat', True)
+        self.busy.append(row)
 
     def report(self, start='00:00', end='00:00', end_day=11):
         return build_shadow([self.window], self.busy, self.courses, self.policy, self.resources,
@@ -57,11 +62,15 @@ class LayeredAdapterTests(unittest.TestCase):
                         end=parse_dt('2026-10-10T17:00:00Z'))
         self.busy.append(mirrored)
         report = self.report()
-        self.assertEqual(len(report['normalized_occupancy']), 1)
-        self.assertEqual(len(report['seated_offers']), 1)
+        # A visually identical legacy occurrence is NOT proof of a shared
+        # canonical identity. Retain both source facts; merge occupied geometry
+        # without inventing an identity or another public-joinable seat.
+        self.assertEqual(len(report['normalized_occupancy']), 2)
+        self.assertEqual(len(report['blocks']), 1)
         self.assertEqual(self.starts(report), {'11:00', '13:00'})
         for offer in report['accepted']:
-            self.assertEqual(offer['source_ids'], ['real-12:00'])
+            self.assertEqual(set(offer['source_ids']),
+                {'real-12:00', 'enrollware:real-12:00'})
 
     def test_utc_conversion_preserves_eastern_winter_and_dst_clock(self):
         from scripts.generate_dynamic_offers import parse_dt
@@ -140,7 +149,7 @@ class LayeredAdapterTests(unittest.TestCase):
         self.busy = [dict(start=self.at('12:00'), end=self.at('13:00'),
             instructor='Brian Ennis', location=venue, resource=resource,
             location_resolution='location_resource_map',
-            source_file='canonical_class_sessions')]
+            source_file='canonical_class_sessions', operational_has_active_seat=True)]
         report = self.report()
         self.assertEqual(len(report['normalized_occupancy']), 1)
         self.assertNotIn('12:00', self.starts(report))
