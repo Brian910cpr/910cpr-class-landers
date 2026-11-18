@@ -8,7 +8,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from scripts.anchor_state import ANCHOR_SYMBOL, in_repeat_bubble, promote_seated_sessions, repeat_scope_key, same_course_anchor
-from scripts.canonical_scheduling_demand import resolve_canonical_demand, exclude_non_session_sources, reconciliation_issues, load_publication_demand
+from scripts.canonical_scheduling_demand import resolve_canonical_demand, exclude_non_session_sources, reconciliation_issues, load_publication_demand, summarize_positive_v1_attribution
 from scripts.fetch_canonical_scheduling_demand import validate_payload
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -606,6 +606,8 @@ def run() -> dict[str, int]:
     sessions = schedule.get("sessions", []) if isinstance(schedule, dict) else []
     demand_audit: list[dict[str, Any]] = []
     sessions, demand_audit = sessions_with_canonical_demand(sessions)
+    positive_v1_attribution = summarize_positive_v1_attribution(
+        load_publication_demand(ROOT)["sessions"], demand_audit)
     schedule["sessions"] = sessions
     anchors = promote_seated_sessions(sessions)
     stats = {
@@ -649,6 +651,7 @@ def run() -> dict[str, int]:
             "schema_version": "910cpr-canonical-demand-match-audit.v1",
             "generated_at": datetime.now().astimezone().isoformat(),
             "matches": demand_audit,
+            "positive_v1_attribution": positive_v1_attribution,
             "occurrences": [{
                 "external_class_id": text(row.get("session_id") or row.get("id") or row.get("class_id")),
                 "canonical_session_id": row.get("canonical_session_id"),
