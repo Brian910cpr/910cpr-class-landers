@@ -18,7 +18,7 @@ class ValidatePublicRefreshOutputTests(unittest.TestCase):
             publicSelectable=True,date='2031-04-05',startTime='10:00',instructor='Brian Ennis',
             location=':: Wilmington; Shipyard Blvd',resource=':: Wilmington; Shipyard Blvd - B',
             durationMinutes=45,schedulerConsumptionMinutes=60,cleanupBufferMinutes=15,setupBufferMinutes=0,
-            availabilityBlockId='fixture-source',sourceSessionIds=[],validUntil=lease,occupiedUntil='2031-04-05T15:00:00Z')
+            availabilityBlockId='fixture-public-block',validUntil=lease,occupiedUntil='2031-04-05T15:00:00Z')
         course['appointmentUrl']='/register/skills-session/?'+urlencode(dict(course='509474',date=course['date'],
             startTime=course['startTime'],instructor=course['instructor'],location=course['location']))
         return dict(schemaVersion='selector-resolved-availability.v1',anchor_policy={'finalized':True},
@@ -32,7 +32,8 @@ class ValidatePublicRefreshOutputTests(unittest.TestCase):
 
     def test_native_skills_reject_tampering_and_preserve_legacy_requirements(self):
         for field,value in [('publicSelectable',False),('durationMinutes',90),('cleanupBufferMinutes',0),
-                            ('instructor','Other'),('resource','Room C'),('sourceSessionIds',None),
+                            ('instructor','Other'),('resource','Room C'),('availabilityBlockId',''),
+                            ('sourceSessionIds',None),('edgeIds',[]),
                             ('appointmentUrl','https://example.invalid/register/skills-session/'),
                             ('occupiedUntil','2031-04-05T14:45:00Z'),
                             ('validUntil',(datetime.now(timezone.utc)-timedelta(seconds=1)).isoformat())]:
@@ -44,6 +45,20 @@ class ValidatePublicRefreshOutputTests(unittest.TestCase):
         payload=self.native_payload();payload['dates'][0]['startTimes'][0]['courses'][0]['courseId']='209806'
         with patch.object(validator,'load_json',return_value=payload):
             with self.assertRaisesRegex(ValueError,'appointmentDayId'):validator.validate_selector('bls',set())
+
+    def test_public_trace_is_rejected_for_non_skills_offers_too(self):
+        payload = self.native_payload()
+        course = payload['dates'][0]['startTimes'][0]['courses'][0]
+        # Even a legitimate public registration route may not carry raw
+        # internal provenance in the published compact course DTO.
+        course.update(courseId='209809', appointmentDayId='public-day')
+        for field, value in [('sourceSessionIds', ['private-source-id']),
+                             ('edgeIds', []), ('sourceSessionIds', None)]:
+            candidate = copy.deepcopy(payload)
+            candidate['dates'][0]['startTimes'][0]['courses'][0][field] = value
+            with self.subTest(field=field, value=value), patch.object(validator, 'load_json', return_value=candidate):
+                with self.assertRaisesRegex(ValueError, 'public offer leaks internal source trace'):
+                    validator.validate_selector('heartsaver', set())
 
     def test_expired_lease_preserves_existing_classes_but_rejects_calculated_offers(self):
         payload=dict(validUntil=(datetime.now(timezone.utc)-timedelta(minutes=1)).isoformat(),
