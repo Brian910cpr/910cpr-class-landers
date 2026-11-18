@@ -773,7 +773,7 @@ def public_direct_bookable_session(session: dict[str, Any]) -> bool:
     session_status = clean_text(session.get("session_status") or "active").lower()
     return (
         session.get("public_direct_booking") is not False
-        and registration_status not in {"closed", "full", "cancelled", "canceled", "deleted"}
+        and registration_status not in {"closed", "full", "unverified", "cancelled", "canceled", "deleted"}
         and session_status not in {"cancelled", "canceled", "deleted"}
         and session.get("is_full") is not True
     )
