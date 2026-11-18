@@ -7,6 +7,8 @@
   "primary_resource": ":: Wilmington; Shipyard Blvd - B",
   "manual_overlap_resources": [":: Wilmington; Shipyard Blvd - C", ":: Wilmington; Shipyard Blvd - C (Other)"],
   "automatic_relocation": false,
+  "occupied_interval_rule": "Required turnaround must already be part of a class's unavailable interval before publication. Preserve explicit source consumption bounds; permit touching at the recorded occupied end. Never append a separate cleanup veto during later validation or checkout.",
+  "occupied_interval_owner_evidence": "Brian approved flexible turnaround on 2026-10-15, message Sentinel_7a99f4491ab48191871b6c3b4c006224: Make the hard rule PART OF THE UNAVAILIBLE SPACE OF A CLASS. No separate cleanup refusal after the recorded occupied end.",
   "skills_instruction_minutes": 45,
   "skills_cleanup_minutes": 15,
   "full_instruction_minutes": 120,

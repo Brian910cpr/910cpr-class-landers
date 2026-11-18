@@ -1,0 +1,443 @@
+{
+  "captured_at_utc": "2026-10-15T11:30:02.685807+00:00",
+  "source_url": "https://www.910cpr.com/data/block-selector-availability/heartsaver.json",
+  "http_status": 200,
+  "sha256": "917c988ebd17f083dcb3b5a20cf71f36d1d4fbf3ded86f57ce72225f75d24594",
+  "generatedAt": "2026-10-15T07:25:32.865218-04:00",
+  "validUntil": "2026-10-15T07:40:25.435893-04:00",
+  "counts": {
+    "publicSelectableDateCount": 87,
+    "publicSelectableStartTimeCount": 1345,
+    "publicSelectableOfferCount": 7314,
+    "input_sources": 453,
+    "normalized_sources": 453,
+    "input_windows": 191,
+    "evaluated_windows": 189,
+    "failed_windows": 2,
+    "uncertainty_issues": 2
+  },
+  "incident_date_offers": [
+    {
+      "courseId": "209808",
+      "courseName": "AHA Heartsaver CPR AED Online",
+      "courseFamily": "Heartsaver",
+      "deliveryMode": "blended",
+      "displayStartTime": "9:00 AM",
+      "durationMinutes": 45,
+      "schedulerConsumptionMinutes": 60,
+      "appointmentDayId": 260788,
+      "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=9%3A00%20AM&courseId=209808",
+      "registrationUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=9%3A00%20AM&courseId=209808",
+      "cleanupBufferMinutes": 15,
+      "setupBufferMinutes": 0,
+      "location": ":: Wilmington; Shipyard Blvd",
+      "availabilityBlockId": "brian_do_not_schedule:inverse_gap:5",
+      "offerType": "dynamic_appointment",
+      "scheduleRole": "barnacle",
+      "instructor": "Brian Ennis",
+      "schedulerConsumptionEnd": "10:00",
+      "occupiedUntil": "2026-10-17T10:00:00-04:00",
+      "sourceSessionIds": [
+        "3b2731a3-19bb-4d10-9757-08a8e81e336f"
+      ],
+      "edgeIds": [
+        "block-3b2731a3-19bb-4d10-9757-08a8e81e336f-left"
+      ],
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "validUntil": "2026-10-15T07:40:25.435893-04:00",
+      "date": "2026-10-17",
+      "startTime": "09:00"
+    },
+    {
+      "courseId": "251545",
+      "courseName": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "courseFamily": "Heartsaver",
+      "deliveryMode": "blended",
+      "displayStartTime": "9:00 AM",
+      "durationMinutes": 45,
+      "schedulerConsumptionMinutes": 60,
+      "appointmentDayId": 260788,
+      "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=9%3A00%20AM&courseId=251545",
+      "registrationUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=9%3A00%20AM&courseId=251545",
+      "cleanupBufferMinutes": 15,
+      "setupBufferMinutes": 0,
+      "location": ":: Wilmington; Shipyard Blvd",
+      "availabilityBlockId": "brian_do_not_schedule:inverse_gap:5",
+      "offerType": "dynamic_appointment",
+      "scheduleRole": "barnacle",
+      "instructor": "Brian Ennis",
+      "schedulerConsumptionEnd": "10:00",
+      "occupiedUntil": "2026-10-17T10:00:00-04:00",
+      "sourceSessionIds": [
+        "3b2731a3-19bb-4d10-9757-08a8e81e336f"
+      ],
+      "edgeIds": [
+        "block-3b2731a3-19bb-4d10-9757-08a8e81e336f-left"
+      ],
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "validUntil": "2026-10-15T07:40:25.435893-04:00",
+      "date": "2026-10-17",
+      "startTime": "09:00"
+    },
+    {
+      "courseId": "329495",
+      "courseName": "AHA Heartsaver First Aid CPR AED - Blended",
+      "courseFamily": "Heartsaver",
+      "deliveryMode": "blended",
+      "displayStartTime": "9:00 AM",
+      "durationMinutes": 45,
+      "schedulerConsumptionMinutes": 60,
+      "appointmentDayId": 260788,
+      "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=9%3A00%20AM&courseId=329495",
+      "registrationUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=9%3A00%20AM&courseId=329495",
+      "cleanupBufferMinutes": 15,
+      "setupBufferMinutes": 0,
+      "location": ":: Wilmington; Shipyard Blvd",
+      "availabilityBlockId": "brian_do_not_schedule:inverse_gap:5",
+      "offerType": "dynamic_appointment",
+      "scheduleRole": "barnacle",
+      "instructor": "Brian Ennis",
+      "schedulerConsumptionEnd": "10:00",
+      "occupiedUntil": "2026-10-17T10:00:00-04:00",
+      "sourceSessionIds": [
+        "3b2731a3-19bb-4d10-9757-08a8e81e336f"
+      ],
+      "edgeIds": [
+        "block-3b2731a3-19bb-4d10-9757-08a8e81e336f-left"
+      ],
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "validUntil": "2026-10-15T07:40:25.435893-04:00",
+      "date": "2026-10-17",
+      "startTime": "09:00"
+    },
+    {
+      "courseId": "209808",
+      "courseName": "AHA Heartsaver CPR AED Online",
+      "courseFamily": "Heartsaver",
+      "deliveryMode": "blended",
+      "displayStartTime": "12:00 PM",
+      "durationMinutes": 45,
+      "schedulerConsumptionMinutes": 60,
+      "appointmentDayId": 260788,
+      "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=12%3A00%20PM&courseId=209808",
+      "registrationUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=12%3A00%20PM&courseId=209808",
+      "cleanupBufferMinutes": 15,
+      "setupBufferMinutes": 0,
+      "location": ":: Wilmington; Shipyard Blvd",
+      "availabilityBlockId": "brian_do_not_schedule:inverse_gap:5",
+      "offerType": "dynamic_appointment",
+      "scheduleRole": "barnacle",
+      "instructor": "Brian Ennis",
+      "schedulerConsumptionEnd": "13:00",
+      "occupiedUntil": "2026-10-17T13:00:00-04:00",
+      "sourceSessionIds": [
+        "3b2731a3-19bb-4d10-9757-08a8e81e336f"
+      ],
+      "edgeIds": [
+        "block-3b2731a3-19bb-4d10-9757-08a8e81e336f-right"
+      ],
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "validUntil": "2026-10-15T07:40:25.435893-04:00",
+      "date": "2026-10-17",
+      "startTime": "12:00"
+    },
+    {
+      "courseId": "209809",
+      "courseName": "AHA Heartsaver First Aid CPR AED",
+      "courseFamily": "Heartsaver",
+      "deliveryMode": "classroom",
+      "displayStartTime": "12:00 PM",
+      "durationMinutes": 120,
+      "schedulerConsumptionMinutes": 150,
+      "appointmentDayId": 260788,
+      "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=12%3A00%20PM&courseId=209809",
+      "registrationUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=12%3A00%20PM&courseId=209809",
+      "cleanupBufferMinutes": 30,
+      "setupBufferMinutes": 0,
+      "location": ":: Wilmington; Shipyard Blvd",
+      "availabilityBlockId": "brian_do_not_schedule:inverse_gap:5",
+      "offerType": "dynamic_appointment",
+      "scheduleRole": "barnacle",
+      "instructor": "Brian Ennis",
+      "schedulerConsumptionEnd": "14:30",
+      "occupiedUntil": "2026-10-17T14:30:00-04:00",
+      "sourceSessionIds": [
+        "3b2731a3-19bb-4d10-9757-08a8e81e336f"
+      ],
+      "edgeIds": [
+        "block-3b2731a3-19bb-4d10-9757-08a8e81e336f-right"
+      ],
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "validUntil": "2026-10-15T07:40:25.435893-04:00",
+      "date": "2026-10-17",
+      "startTime": "12:00"
+    },
+    {
+      "courseId": "251545",
+      "courseName": "AHA Heartsaver Pediatric First Aid CPR AED Online",
+      "courseFamily": "Heartsaver",
+      "deliveryMode": "blended",
+      "displayStartTime": "12:00 PM",
+      "durationMinutes": 45,
+      "schedulerConsumptionMinutes": 60,
+      "appointmentDayId": 260788,
+      "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=12%3A00%20PM&courseId=251545",
+      "registrationUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=12%3A00%20PM&courseId=251545",
+      "cleanupBufferMinutes": 15,
+      "setupBufferMinutes": 0,
+      "location": ":: Wilmington; Shipyard Blvd",
+      "availabilityBlockId": "brian_do_not_schedule:inverse_gap:5",
+      "offerType": "dynamic_appointment",
+      "scheduleRole": "barnacle",
+      "instructor": "Brian Ennis",
+      "schedulerConsumptionEnd": "13:00",
+      "occupiedUntil": "2026-10-17T13:00:00-04:00",
+      "sourceSessionIds": [
+        "3b2731a3-19bb-4d10-9757-08a8e81e336f"
+      ],
+      "edgeIds": [
+        "block-3b2731a3-19bb-4d10-9757-08a8e81e336f-right"
+      ],
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "validUntil": "2026-10-15T07:40:25.435893-04:00",
+      "date": "2026-10-17",
+      "startTime": "12:00"
+    },
+    {
+      "courseId": "329495",
+      "courseName": "AHA Heartsaver First Aid CPR AED - Blended",
+      "courseFamily": "Heartsaver",
+      "deliveryMode": "blended",
+      "displayStartTime": "12:00 PM",
+      "durationMinutes": 45,
+      "schedulerConsumptionMinutes": 60,
+      "appointmentDayId": 260788,
+      "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=12%3A00%20PM&courseId=329495",
+      "registrationUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=12%3A00%20PM&courseId=329495",
+      "cleanupBufferMinutes": 15,
+      "setupBufferMinutes": 0,
+      "location": ":: Wilmington; Shipyard Blvd",
+      "availabilityBlockId": "brian_do_not_schedule:inverse_gap:5",
+      "offerType": "dynamic_appointment",
+      "scheduleRole": "barnacle",
+      "instructor": "Brian Ennis",
+      "schedulerConsumptionEnd": "13:00",
+      "occupiedUntil": "2026-10-17T13:00:00-04:00",
+      "sourceSessionIds": [
+        "3b2731a3-19bb-4d10-9757-08a8e81e336f"
+      ],
+      "edgeIds": [
+        "block-3b2731a3-19bb-4d10-9757-08a8e81e336f-right"
+      ],
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "validUntil": "2026-10-15T07:40:25.435893-04:00",
+      "date": "2026-10-17",
+      "startTime": "12:00"
+    },
+    {
+      "courseId": "344085",
+      "courseName": "AHA Heartsaver CPR AED",
+      "courseFamily": "Heartsaver",
+      "deliveryMode": "classroom",
+      "displayStartTime": "12:00 PM",
+      "durationMinutes": 90,
+      "schedulerConsumptionMinutes": 105,
+      "appointmentDayId": 260788,
+      "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=12%3A00%20PM&courseId=344085",
+      "registrationUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=12%3A00%20PM&courseId=344085",
+      "cleanupBufferMinutes": 15,
+      "setupBufferMinutes": 0,
+      "location": ":: Wilmington; Shipyard Blvd",
+      "availabilityBlockId": "brian_do_not_schedule:inverse_gap:5",
+      "offerType": "dynamic_appointment",
+      "scheduleRole": "barnacle",
+      "instructor": "Brian Ennis",
+      "schedulerConsumptionEnd": "13:45",
+      "occupiedUntil": "2026-10-17T13:45:00-04:00",
+      "sourceSessionIds": [
+        "3b2731a3-19bb-4d10-9757-08a8e81e336f"
+      ],
+      "edgeIds": [
+        "block-3b2731a3-19bb-4d10-9757-08a8e81e336f-right"
+      ],
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "validUntil": "2026-10-15T07:40:25.435893-04:00",
+      "date": "2026-10-17",
+      "startTime": "12:00"
+    },
+    {
+      "courseId": "351632",
+      "courseName": "AHA Heartsaver Pediatric First Aid / CPR / AED",
+      "courseFamily": "Heartsaver",
+      "deliveryMode": "classroom",
+      "displayStartTime": "12:00 PM",
+      "durationMinutes": 120,
+      "schedulerConsumptionMinutes": 150,
+      "appointmentDayId": 260788,
+      "appointmentUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=12%3A00%20PM&courseId=351632",
+      "registrationUrl": "https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=260788&startTime=12%3A00%20PM&courseId=351632",
+      "cleanupBufferMinutes": 30,
+      "setupBufferMinutes": 0,
+      "location": ":: Wilmington; Shipyard Blvd",
+      "availabilityBlockId": "brian_do_not_schedule:inverse_gap:5",
+      "offerType": "dynamic_appointment",
+      "scheduleRole": "barnacle",
+      "instructor": "Brian Ennis",
+      "schedulerConsumptionEnd": "14:30",
+      "occupiedUntil": "2026-10-17T14:30:00-04:00",
+      "sourceSessionIds": [
+        "3b2731a3-19bb-4d10-9757-08a8e81e336f"
+      ],
+      "edgeIds": [
+        "block-3b2731a3-19bb-4d10-9757-08a8e81e336f-right"
+      ],
+      "resource": ":: Wilmington; Shipyard Blvd - B",
+      "validUntil": "2026-10-15T07:40:25.435893-04:00",
+      "date": "2026-10-17",
+      "startTime": "12:00"
+    }
+  ],
+  "public_source_session": {
+    "session_id": "14377157",
+    "canonical_session_id": "3b2731a3-19bb-4d10-9757-08a8e81e336f",
+    "course_id": "359474",
+    "start_at": "2026-10-17T10:00:00-04:00",
+    "end_at": "2026-10-17T12:00:00-04:00",
+    "consumption_start_at": "2026-10-17T14:00:00+00:00",
+    "consumption_end_at": "2026-10-17T16:00:00+00:00",
+    "lead_instructor_name": "Brian Ennis",
+    "location_name": ":: Wilmington; Shipyard Blvd - B",
+    "count_available": false,
+    "active_registration_count": null,
+    "demand_status": "stale_reconciliation",
+    "source_observed_at": "2026-10-10T13:24:57.527084Z",
+    "end_inference_reason": "inferred_from_course_consumption_rule_for_zero_duration_ical_event"
+  },
+  "native_source_cleanup_minutes": {
+    "value": 0,
+    "basis": "parent handoff; not independently queried in this environment"
+  },
+  "source_enrollware_page": {
+    "status": "unverified",
+    "error": "SSL CERTIFICATE_VERIFY_FAILED: certificate has expired; certificate verification retained"
+  },
+  "browser": {
+    "surface": "CyberPC browser",
+    "status": "blocked",
+    "error": "MXC launcher cannot locate required Windows platform directory: HRESULT 0x80070003"
+  },
+  "local_feed_family_counts": {
+    "acls": {
+      "generatedAt": "2026-10-15T07:18:39.055653-04:00",
+      "counts": {
+        "publicSelectableDateCount": 5,
+        "publicSelectableStartTimeCount": 5,
+        "publicSelectableOfferCount": 8,
+        "input_sources": 453,
+        "normalized_sources": 453,
+        "input_windows": 191,
+        "evaluated_windows": 189,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      }
+    },
+    "arc": {
+      "generatedAt": "2026-10-15T07:18:46.636815-04:00",
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1332,
+        "publicSelectableOfferCount": 3504,
+        "input_sources": 453,
+        "normalized_sources": 453,
+        "input_windows": 191,
+        "evaluated_windows": 189,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      }
+    },
+    "bls": {
+      "generatedAt": "2026-10-15T07:18:37.509938-04:00",
+      "counts": {
+        "publicSelectableDateCount": 88,
+        "publicSelectableStartTimeCount": 1342,
+        "publicSelectableOfferCount": 3505,
+        "input_sources": 453,
+        "normalized_sources": 453,
+        "input_windows": 191,
+        "evaluated_windows": 189,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      }
+    },
+    "family_cpr": {
+      "generatedAt": "2026-10-15T07:18:48.243572-04:00",
+      "counts": {
+        "publicSelectableDateCount": 86,
+        "publicSelectableStartTimeCount": 1091,
+        "publicSelectableOfferCount": 1091,
+        "input_sources": 453,
+        "normalized_sources": 453,
+        "input_windows": 191,
+        "evaluated_windows": 189,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      }
+    },
+    "heartsaver": {
+      "generatedAt": "2026-10-15T07:18:41.026395-04:00",
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1345,
+        "publicSelectableOfferCount": 7314,
+        "input_sources": 453,
+        "normalized_sources": 453,
+        "input_windows": 191,
+        "evaluated_windows": 189,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      }
+    },
+    "hsi": {
+      "generatedAt": "2026-10-15T07:18:45.398984-04:00",
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1332,
+        "publicSelectableOfferCount": 2413,
+        "input_sources": 453,
+        "normalized_sources": 453,
+        "input_windows": 191,
+        "evaluated_windows": 189,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      }
+    },
+    "pals": {
+      "generatedAt": "2026-10-15T07:18:40.049775-04:00",
+      "counts": {
+        "publicSelectableDateCount": 3,
+        "publicSelectableStartTimeCount": 3,
+        "publicSelectableOfferCount": 6,
+        "input_sources": 453,
+        "normalized_sources": 453,
+        "input_windows": 191,
+        "evaluated_windows": 189,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      }
+    },
+    "uscg_first_aid_cpr_aed": {
+      "generatedAt": "2026-10-15T07:18:44.115173-04:00",
+      "counts": {
+        "publicSelectableDateCount": 87,
+        "publicSelectableStartTimeCount": 1333,
+        "publicSelectableOfferCount": 2414,
+        "input_sources": 453,
+        "normalized_sources": 453,
+        "input_windows": 191,
+        "evaluated_windows": 189,
+        "failed_windows": 2,
+        "uncertainty_issues": 2
+      }
+    }
+  }
+}
