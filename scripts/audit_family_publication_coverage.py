@@ -5,7 +5,7 @@ carry window-level failures separately from candidate rejection counts.
 """
 import argparse
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 import hashlib
 import json
@@ -22,6 +22,20 @@ def summarize(payload, day, now=None):
             for t in d.get('startTimes', []) for c in t.get('courses', [])]
     failures = payload.get('reconciliationIssues', [])
     now = now or datetime.now(timezone.utc)
+    # Public offers are date-scoped in Eastern local time. Do not infer an open
+    # instructor day from an empty public date, nor conflate partial coverage
+    # failures with an expired dynamic-feed lease.
+    next_days = [(datetime.fromisoformat(day).date() + timedelta(days=n)).isoformat()
+                 for n in range(3)]
+    next_three_days = {
+        date: {
+            'publishedOffers': sum(d == date for d, _, _ in rows),
+            'publishedTimes': sorted({t for d, t, _ in rows if d == date}),
+            'perCourse': dict(Counter(str(c['courseId']) for d, _, c in rows if d == date)),
+            'failedWindows': sum(str(i.get('start', '')).startswith(date) for i in failures),
+        }
+        for date in next_days
+    }
     try:
         expiry = datetime.fromisoformat(str(payload.get('validUntil', '')).replace('Z', '+00:00'))
         expired = expiry.tzinfo is None or expiry <= now
@@ -38,6 +52,7 @@ def summarize(payload, day, now=None):
         'day': day, 'dayOffers': len([r for r in rows if r[0] == day]),
         'dayTimes': sorted({t for d, t, _ in rows if d == day}),
         'dayPerCourse': dict(Counter(str(c['courseId']) for d, _, c in rows if d == day)),
+        'nextThreeDays': next_three_days,
         'failedWindowReasons': dict(Counter(i.get('reason', 'unknown') for i in failures)),
         'dayFailedWindows': sum(str(i.get('start', '')).startswith(day) for i in failures),
         'coverageAlert': bool((payload.get('counts') or {}).get('failed_windows')),
@@ -96,10 +111,13 @@ def main():
                 rejectionReasonCounts=v.get('rejectionReasonCounts')) for k,v in landscape['sourcePages'].items()}),
         limitations=['Sequential HTTP reads may straddle publication; timestamps and hashes retained.',
             'Failed windows are not candidate rejections; nonzero failed_windows is an explicit coverage alert.',
+            'Published offer counts do not prove a qualified instructor was available or a booking URL works.',
             'Counts do not prove legal free-window coverage, browser rendering, or recurring health.'])
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
-    print(json.dumps({k:{f:v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','coverageAlert')}
+    print(json.dumps({k: dict(
+        {f: v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','coverageAlert')},
+        nextThreeDayOffers={day: item['publishedOffers'] for day, item in v['nextThreeDays'].items()})
         for k,v in feeds.items()}, indent=2))
     if incident:
         print('::error title=P0 public booking outage::' +
