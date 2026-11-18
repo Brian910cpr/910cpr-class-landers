@@ -2,9 +2,12 @@ name: Verify public booking inventory
 on:
   schedule:
     - cron: '*/5 * * * *'
-  # A successful source refresh supplies a second observation heartbeat when cron is delayed.
+  # Observe source refreshes promptly, then re-check after Pages finishes deploying.
+  # Refresh commits may be checked before the CDN has the new lease: the second
+  # observation distinguishes a transient publish race from persistent expiry.
+  # Keep the early refresh alarm, cron heartbeat and all fail-closed safety gates.
   workflow_run:
-    workflows: ['Refresh admin availability']
+    workflows: ['Refresh admin availability', 'pages build and deployment']
     types: [completed]
     branches: [main]
   workflow_dispatch:
