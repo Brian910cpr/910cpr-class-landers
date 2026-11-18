@@ -70,6 +70,15 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             source_course_id=cid,
             duration_evidence=override['evidence'] if override else "owner45+15skills/120+30full; actual occupied intervals preserved",
             provider=course.get("provider") or course.get("brand"), locations=[primary])
+    # Resolve a canonical session's stable catalog key only when its external
+    # course ID is absent and that key identifies exactly one offered catalog
+    # course. The mapping informs operational full-course gravity; it does not
+    # grant public joinability or replace missing registration/roster proof.
+    catalog_ids_by_key = {}
+    for course in courses:
+        key = str(course.get("course_key") or "").strip().casefold()
+        if key:
+            catalog_ids_by_key.setdefault(key, set()).add(str(course["course_id"]))
     origins = {}
     brian_names = set()
     for index, window in enumerate(windows):
@@ -142,6 +151,11 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             source_id += "-source-"+str(index)
         emitted_source_ids.add(source_id)
         cid = str(busy.get("course_id") or "")
+        if not cid:
+            catalog_key = str(busy.get("course_key") or "").strip().casefold()
+            matches = catalog_ids_by_key.get(catalog_key, ())
+            if len(matches) == 1:
+                cid = next(iter(matches))
         kind = busy.get("kind") or ("commitment" if "blocked" in str(busy.get("source_file")) else "planted")
         count = busy.get("active_registration_count")
         # Operational canonical seats form gravity even if public/external
