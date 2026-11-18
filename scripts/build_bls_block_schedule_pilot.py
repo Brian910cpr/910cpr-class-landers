@@ -45,47 +45,43 @@ def selector_availability_path(page_key: str) -> Path:
 
 
 def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
-    """Public geometry from production decisions; no calendar titles or participants."""
+    """Public geometry only; private source IDs, course types and rosters stay hidden.
+
+    Operational commitments must still block real time in the internal
+    calculation. Only explicitly public records may expose joinability
+    metadata; unknown visibility is nonpublic by default.
+    """
     calculation = payload.get("layeredDiagnostics") or {}
     sources = []
     for source in calculation.get("projected_sources", []):
-        # A legacy planted class is a real time blocker, not evidence of a
-        # registered Anchor. Private canonical seats may establish operational
-        # gravity without authorizing a public joinable roster/count.
+        visibility_public = source.get("visibility") == "public"
         count = source.get("active_registration_count")
+        known_count = source.get("count_available") is True
         proven = (source.get("operational_has_active_seat") is True
                   or source.get("kind") == "paid"
-                  or (source.get("count_available") is True
-                      and type(count) is int and count > 0))
-        # Only explicit public visibility may disclose a verified public
-        # roster or paid Anchor role. Unknown visibility from any source,
-        # including noncanonical intake, must remain blocking-only.
-        private_source = source.get("visibility") != "public"
-        # Private/unlisted sources retain occupied geometry but never reveal
-        # registration count, paid-anchor role or a joinable seat.
-        public_count = not private_source and source.get("count_available") is True
+                  or (known_count and type(count) is int and count > 0))
         sources.append({
-            # A private/unlisted canonical source must not expose its ID in public JSON.
-            "sourceId": source.get("source_event_id") if not private_source else None,
-            "role": "anchor" if proven and not private_source else "blocking",
+            "sourceId": source.get("source_event_id") if visibility_public else None,
+            "role": "anchor" if visibility_public and proven else "blocking",
             "start": source.get("start"), "end": source.get("end"),
-            # Private operational holds may expose blocking geometry, not the
-            # private course/catalog identity (even when its roster is hidden).
-            "courseId": source.get("course_id") if not private_source else None,
+            "courseId": source.get("course_id") if visibility_public else None,
             "resource": source.get("resource"),
-            "countAvailable": public_count,
-            "registeredCount": count if public_count else None,
+            "countAvailable": visibility_public and known_count,
+            "registeredCount": count if visibility_public and known_count else None,
         })
     blocks = []
     seen = set()
     for report in calculation.get("reports", []):
         for block in report.get("blocks", []):
             key = (block.get("id"), block.get("start"), block.get("end"))
-            if key in seen:continue
+            if key in seen:
+                continue
             seen.add(key)
-            blocks.append({"id": "occupied-block-" + str(len(blocks) + 1),
-                           "start": block.get("start"), "end": block.get("end"),
-                           "source_ids": []})
+            blocks.append({
+                "id": "occupied-block-" + str(len(blocks) + 1),
+                "start": block.get("start"), "end": block.get("end"),
+                "source_ids": [],
+            })
     return {"schemaVersion": "public-layered-landscape.v1", "sources": sources,
             "occupiedBlocks": blocks, "offersAreAlternatives": True,
             "availabilityIsNotAClass": True}
@@ -121,8 +117,6 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "instructor": course.get("instructor"),
                     "schedulerConsumptionEnd": course.get("schedulerConsumptionEnd"),
                     "occupiedUntil": course.get("occupiedUntil"),
-                    "sourceSessionIds": course.get("sourceSessionIds"),
-                    "edgeIds": course.get("edgeIds"),
                     "resource": course.get("resource"),
                     "validUntil": course.get("validUntil"),
                     "date": day.get("date"),

@@ -131,6 +131,21 @@ class LayeredAdapterTests(unittest.TestCase):
         self.busy[0]['instructor'] = 'Brian'
         self.assertNotIn('12:00', self.starts(self.report()))
 
+    def test_room_worded_shipyard_venue_is_occupied_without_offsite_travel_guess(self):
+        from scripts.generate_dynamic_offers import normalize_location_resource
+        label = '910CPR Office - Shipyard Blvd, Room B'
+        venue, resource, verified_venue = normalize_location_resource(label, label, self.resources)
+        self.assertTrue(verified_venue)
+        self.assertEqual(resource, label)  # No room FK: don't manufacture a Room B allocation.
+        self.busy = [dict(start=self.at('12:00'), end=self.at('13:00'),
+            instructor='Brian Ennis', location=venue, resource=resource,
+            location_resolution='location_resource_map',
+            source_file='canonical_class_sessions')]
+        report = self.report()
+        self.assertEqual(len(report['normalized_occupancy']), 1)
+        self.assertNotIn('12:00', self.starts(report))
+        self.assertEqual(self.starts(report), {'11:00', '13:00'})
+
     def test_room_hours_do_not_resolve_unknown_occupied_duration(self):
         self.add('12:00','12:00')
         with self.assertRaisesRegex(ValueError,'zero-duration'):

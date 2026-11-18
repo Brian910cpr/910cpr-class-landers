@@ -122,6 +122,11 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
             for course in courses:
                 for field in ("courseId", "courseName", "startTime", "location"):
                     require(course.get(field) not in (None, ""), f"{page_key}: offer lacks {field}")
+                # Public compact selectors must never carry internal source/edge
+                # provenance, even when the offer itself is a valid public route.
+                # Internal pipeline DTOs retain this trace before serialization.
+                require(not any(field in course for field in ("sourceSessionIds", "edgeIds")),
+                        f"{page_key}: public offer leaks internal source trace")
                 if course.get("offerType") == "seated_class":
                     # Public selector payloads are intentionally compact: they retain
                     # the seated identity as availabilityBlockId="seated:<session_id>"
@@ -166,8 +171,10 @@ def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: s
     require(course.get('instructor') == 'Brian Ennis' and
             course.get('resource') == ':: Wilmington; Shipyard Blvd - B' and
             course.get('location') == ':: Wilmington; Shipyard Blvd', 'native skills: invalid resource or instructor')
-    require(bool(course.get('availabilityBlockId')) and isinstance(course.get('sourceSessionIds'), list),
-            'native skills: missing source trace')
+    # A compact native skills offer needs its public block identity but must not
+    # expose the internal sourceSessionIds/edgeIds removed by the public serializer.
+    require(bool(course.get('availabilityBlockId')),
+            'native skills: missing availability block identity')
     require(course.get('date') == day and course.get('startTime') == clock, 'native skills: inconsistent date or time')
     lease = datetime.fromisoformat(str(course.get('validUntil') or '').replace('Z', '+00:00'))
     require(lease.tzinfo is not None and lease > datetime.now(timezone.utc), 'native skills: expired lease')

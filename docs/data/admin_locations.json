@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-17T07:04:24.430114+00:00",
+  "generated_at": "2026-11-18T04:03:00.578444+00:00",
   "locations": [
     {
       "location_key": "shipyard",
@@ -11,6 +11,7 @@
         "Wilmington; Shipyard Blvd",
         "Shipyard Office",
         "910CPR Office - Shipyard Blvd",
+        "910CPR Office - Shipyard Blvd, Room B",
         "4018 Shipyard Blvd, Room B, 910CPR Office"
       ],
       "internal_resources": [
