@@ -281,6 +281,21 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     return finalize(payload, now)
 
 
+# Customer-facing rejection reports must not retain raw source offers.
+# Rejected seated links and expired appointment DTOs can contain private
+# registration URLs, rosters, internal source references and customer metadata.
+PUBLIC_REJECTION_DIAGNOSTIC_FIELDS = frozenset({
+    "date", "startTime", "courseId", "courseFamily", "courseName",
+    "offerType", "scheduleRole", "reasons",
+})
+
+
+def public_rejection_diagnostics(rows):
+    return [{key: value for key, value in row.items()
+             if key in PUBLIC_REJECTION_DIAGNOSTIC_FIELDS}
+            for row in rows if isinstance(row, dict)]
+
+
 def finalize(payload, now=None):
     """Shared V2 finalizer: enforce leases without reapplying V1 date suppression."""
     from scripts.apply_anchor_policy import _rebuild_dates
@@ -299,4 +314,8 @@ def finalize(payload, now=None):
     result["validUntil"] = max((o["validUntil"] for o in kept if o.get("offerType")!="seated_class"),default=now.isoformat())
     result["anchor_policy"] = dict(mode=SCHEMA,finalized=True)
     from scripts.public_registration_closures import apply_closures
-    return apply_closures(_rebuild_dates(result,kept))[0]
+    result = apply_closures(_rebuild_dates(result,kept))[0]
+    # Redact after the closure filter, which may add rejected seated rows.
+    result["rejectedCourseStartTimes"] = public_rejection_diagnostics(
+        result.get("rejectedCourseStartTimes", []))
+    return result
