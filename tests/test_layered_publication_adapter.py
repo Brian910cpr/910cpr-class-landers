@@ -400,9 +400,13 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertIsNone(source['resource'])
         redacted=json.dumps(feed)
         for private_value in ('PRIVATE CLIENT', 'PRIVATE VENUE', 'SECRET STAFF',
-                              'SECRET ROOM', 'SECRET SOURCE', 'SECRET COURSE',
-                              '2026-12-06T07:30:00'):
+                              'SECRET ROOM', 'SECRET SOURCE', 'SECRET COURSE'):
             self.assertNotIn(private_value,redacted)
+        # Public occupancy geometry is intentionally preserved; the detailed
+        # travel failure is not. Exact source hours must not appear in the
+        # public issue entry, but may still block a legitimate overlap.
+        self.assertNotIn('end',feed['reconciliationIssues'][0])
+        self.assertEqual(feed['reconciliationIssues'][0]['start'],'2026-12-06')
         self.assertEqual(raw,before)
 
     def test_public_offer_omits_internal_source_and_edge_provenance(self):
