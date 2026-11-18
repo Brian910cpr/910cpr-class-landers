@@ -28,6 +28,11 @@ PUBLIC_SOURCE_DIAGNOSTIC_FIELDS = frozenset({
     "visibility",
 })
 
+# Unlisted/unknown-visibility occupancy needs only anonymous interval geometry
+# on the public site. Source, instructor, room, location and visibility details
+# are retained in the internal calculation, never the customer-facing trace.
+PUBLIC_PRIVATE_OCCUPANCY_FIELDS = frozenset({"start", "end", "resource_uncertain"})
+
 
 def public_calculation_diagnostics(calculation):
     """Public geometry only; private source IDs and nested edge IDs stay internal.
@@ -39,26 +44,24 @@ def public_calculation_diagnostics(calculation):
                   counts=encode(calculation.get("counts", {})),
                   projected_sources=[], reports=[], issues=[])
     for index, source in enumerate(calculation.get("projected_sources", []), start=1):
-        diagnostic = {key: value for key, value in source.items()
-                      if key in PUBLIC_SOURCE_DIAGNOSTIC_FIELDS}
         if source.get("visibility") != "public":
-            # This opaque display-local label cannot resolve to a canonical
-            # private booking, registration, or legacy external class.
+            # Anonymous occupied interval only: any additional source labels
+            # (including staff/room/provenance) can identify private training.
+            diagnostic = {key: value for key, value in source.items()
+                          if key in PUBLIC_PRIVATE_OCCUPANCY_FIELDS}
             diagnostic["source_event_id"] = "private-occupied-" + str(index)
-            diagnostic.pop("external_class_id", None)
-            diagnostic.pop("course_id", None)
-            diagnostic.pop("operational_has_active_seat", None)
-            diagnostic["count_available"] = False
-            if diagnostic.get("kind") in {"paid", "seated"}:
-                diagnostic["kind"] = "occupied"
-        elif source.get("count_available") is True:
-            diagnostic["active_registration_count"] = source.get("active_registration_count")
+            diagnostic["kind"] = "occupied"
+        else:
+            diagnostic = {key: value for key, value in source.items()
+                          if key in PUBLIC_SOURCE_DIAGNOSTIC_FIELDS}
+            if source.get("count_available") is True:
+                diagnostic["active_registration_count"] = source.get("active_registration_count")
         result["projected_sources"].append(diagnostic)
     for report in calculation.get("reports", []):
         public_occupied = []
         for occupied in report.get("normalized_occupancy", []):
             public_occupied.append({key: value for key, value in occupied.items()
-                                    if key in {"start", "end", "instructor", "location", "resource_uncertain", "kind"}
+                                    if key in {"start", "end", "resource_uncertain", "kind"}
                                     and value is not None})
             if public_occupied[-1].get("kind") in {"paid", "seated"}:
                 public_occupied[-1]["kind"] = "occupied"
