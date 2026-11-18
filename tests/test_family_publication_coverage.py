@@ -91,6 +91,32 @@ class CoverageCheckpointTests(unittest.TestCase):
         self.assertEqual(summary['actualOffers'], 4)
         self.assertNotIn('2026-11-04', days)
 
+    def test_hosted_public_diagnostic_metadata_is_strictly_redacted(self):
+        # The host observer must not echo private staff names, room labels,
+        # client venues or operational time bounds into public error reports.
+        safe = {'counts': {'failed_windows': 1}, 'reconciliationIssues': [
+            {'reason': 'missing_directional_travel_rule', 'start': '2026-12-06'}]}
+        result = summarize(safe, '2026-12-06')
+        self.assertTrue(result['publicDiagnosticsSafe'])
+        self.assertTrue(result['coverageAlert'])
+        self.assertEqual(result['dayFailedWindows'], 1)
+        self.assertEqual(result['failedWindowReasons'],
+                         {'missing_directional_travel_rule': 1})
+        for bad in [
+            {'reason': 'missing directional travel rule: Client->Room B',
+             'start': '2026-12-06T00:00:00-05:00',
+             'instructor': 'Sensitive Instructor', 'resource': 'Sensitive Room'},
+            {'reason': 'missing_directional_travel_rule',
+             'start': '2026-12-06T00:00:00-05:00'},
+            {'reason': 'unapproved_free_text_reason', 'start': '2026-12-06'},
+            {'reason': 'missing_directional_travel_rule',
+             'start': '2026-12-06', 'end': '2026-12-06T07:30:00-05:00'},
+        ]:
+            with self.subTest(bad=tuple(bad)):
+                reported = summarize({'reconciliationIssues': [bad]}, '2026-12-06')
+                self.assertFalse(reported['publicDiagnosticsSafe'])
+        self.assertTrue(summarize({'reconciliationIssues': []}, '2026-12-06')['publicDiagnosticsSafe'])
+
     def test_empty_day_is_unknown_coverage_not_inferred_occupancy(self):
         result = summarize({'counts': {'failed_windows': 0}}, '2026-10-14')
         self.assertEqual(result['dayOffers'], 0)
