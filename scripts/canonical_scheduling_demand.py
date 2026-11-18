@@ -248,18 +248,27 @@ def summarize_positive_v1_attribution(
     summary: dict[str, Any] = {
         "scope": "v1_occurrence_identity_only_not_v2_occupancy",
         "positive_active_sessions": 0,
+        "positive_recorded_without_external_roster_proof": 0,
         "matched_positive": 0,
         "unmatched_positive": 0,
         "ambiguous_positive": 0,
         "other_positive": 0,
     }
     for index, row in enumerate(rows):
+        # A canonical registered/confirmed/completed seat is operational
+        # demand even when an external roster is unavailable or stale.
+        # Keep that distinct from external public-seat/booking authority.
+        recorded = row.get("canonical_recorded_registration_count")
         seats = row.get("active_registration_count")
+        trusted_recorded = type(recorded) is int and recorded > 0
+        externally_proven = (row.get("count_available") is True
+                             and type(seats) is int and seats > 0)
         if (row.get("session_status") not in ("scheduled", "active")
-                or type(seats) is not int or seats < 1
-                or row.get("count_available") is not True):
+                or not (trusted_recorded or externally_proven)):
             continue
         summary["positive_active_sessions"] += 1
+        if trusted_recorded and not externally_proven:
+            summary["positive_recorded_without_external_roster_proof"] += 1
         result = results[index].get("result") if index < len(results) else None
         key = {
             "matched": "matched_positive",
