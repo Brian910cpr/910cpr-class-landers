@@ -60,6 +60,33 @@ class CoverageCheckpointTests(unittest.TestCase):
         self.assertEqual(result['dayTimes'], ['17:30'])
         self.assertEqual(result['dayPerCourse'], {'a': 1, 'b': 1})
 
+    def test_three_day_observer_counts_public_candidates_and_scoped_failures_only(self):
+        # DST day rollover is a calendar-date operation, never a fixed UTC offset.
+        payload = {'counts': {'failed_windows': 2}, 'dates': [
+            {'date': '2026-11-01', 'startTimes': [{'startTime': '08:30',
+                'courses': [{'courseId': 'bls'}, {'courseId': 'bls'}]}]},
+            {'date': '2026-11-02', 'startTimes': [{'startTime': '12:00',
+                'courses': [{'courseId': 'heartsaver'}]}]},
+            {'date': '2026-11-03', 'startTimes': []},
+            {'date': '2026-11-04', 'startTimes': [{'startTime': '15:00',
+                'courses': [{'courseId': 'later'}]}]}],
+            'reconciliationIssues': [
+                {'start': '2026-11-02T11:00:00-05:00',
+                 'reason': 'missing directional travel rule'},
+                {'start': '2026-11-04T15:00:00-05:00',
+                 'reason': 'missing directional travel rule'}]}
+        summary = summarize(payload, '2026-11-01')
+        days = summary['nextThreeDays']
+        self.assertEqual(list(days), ['2026-11-01', '2026-11-02', '2026-11-03'])
+        self.assertEqual([days[d]['publishedOffers'] for d in days], [2, 1, 0])
+        self.assertEqual([days[d]['failedWindows'] for d in days], [0, 1, 0])
+        self.assertEqual(days['2026-11-01']['perCourse'], {'bls': 2})
+        self.assertEqual(days['2026-11-02']['publishedTimes'], ['12:00'])
+        self.assertTrue(summary['coverageAlert'],
+                        'partial coverage must remain a failing health signal')
+        self.assertEqual(summary['actualOffers'], 4)
+        self.assertNotIn('2026-11-04', days)
+
     def test_empty_day_is_unknown_coverage_not_inferred_occupancy(self):
         result = summarize({'counts': {'failed_windows': 0}}, '2026-10-14')
         self.assertEqual(result['dayOffers'], 0)
