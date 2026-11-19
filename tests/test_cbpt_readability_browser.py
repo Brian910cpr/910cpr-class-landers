@@ -50,7 +50,10 @@ class CBPTReadabilityTests(unittest.TestCase):
       el.hover();self.check(el)
       page.keyboard.press('Tab');el.focus();self.check(el)
       self.assertNotEqual(el.evaluate('e=>getComputedStyle(e).outlineStyle'),'none')
-     self.assertEqual(page.locator('.registration a[href^="tel:"]').count(),1)
+     self.assertEqual(page.locator('.registration a[href^="tel:"]').count(),0)
+     text=page.locator('.registration a[href="sms:+19103955193"]')
+     self.assertEqual(text.count(),1)
+     self.assertEqual(text.inner_text(),'Text 910-395-5193')
      self.assertEqual(page.locator('.registration a[href^="mailto:"]').count(),1)
      # The live contact card has no form. Verify existing field CSS with a local-only synthetic control.
      page.locator('.registration').evaluate("e=>e.insertAdjacentHTML('beforeend','<div class=field><label for=fixture>Test field</label><input id=fixture placeholder=Example></div>')")
