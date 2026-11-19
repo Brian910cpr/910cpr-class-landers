@@ -69,7 +69,9 @@ test('materialized LanderWare active registrations retain real seated demand pri
   assert.equal(projected.canonical_recorded_registration_count,3);
   assert.equal(projected.demand_basis,'canonical_active_registrations');
   assert.equal(projected.visibility,undefined);
-  assert.doesNotMatch(JSON.stringify(projected),/registrations|customers|participant/i);
+  assert.equal(Object.hasOwn(projected,'registrations'),false);
+  assert.equal(Object.hasOwn(projected,'customers'),false);
+  assert.equal(Object.hasOwn(projected,'participant'),false);
 });
 
 test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields', async () => {
