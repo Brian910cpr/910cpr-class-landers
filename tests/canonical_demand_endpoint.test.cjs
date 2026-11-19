@@ -52,11 +52,24 @@ test('untrusted origins and unauthenticated reads fail closed', async () => {
 });
 
 test('only active canonical registrations count; missing and external bridge are unknown', () => {
-  const row = {id:'fixture',registration_backend:'landerware',registrations:[{status:'registered'},{status:'confirmed'},{status:'completed'},{status:'canceled'},{status:'rescheduled'},{status:'no_show'}]};
-  assert.equal(api.projectDemand(row).active_registration_count,3);
+  const row = {id:'fixture',registration_backend:'landerware',registrations:[{status:'registered'},{status:'confirmed'},{status:'completed'},{status:'active'},{status:'canceled'},{status:'rescheduled'},{status:'no_show'}]};
+  assert.equal(api.projectDemand(row).active_registration_count,4);
   assert.equal(api.projectDemand({...row,registrations:[]}).active_registration_count,0);
   assert.equal(api.projectDemand({...row,registrations:null}).active_registration_count,null);
   assert.equal(api.projectDemand({...row,registration_backend:'enrollware'}).active_registration_count,null);
+});
+
+test('materialized LanderWare active registrations retain real seated demand privately', () => {
+  const row = {id:'canonical-session',source:'landerware_public_offer',
+    registration_backend:'landerware', external_class_id:'lw-12345678-1234-1234-1234-123456789abc',
+    registrations:[{status:'active'},{status:'active'},{status:'active'},{status:'canceled'}]};
+  const projected=api.projectDemand(row);
+  assert.equal(projected.count_available,true);
+  assert.equal(projected.active_registration_count,3);
+  assert.equal(projected.canonical_recorded_registration_count,3);
+  assert.equal(projected.demand_basis,'canonical_active_registrations');
+  assert.equal(projected.visibility,undefined);
+  assert.doesNotMatch(JSON.stringify(projected),/registrations|customers|participant/i);
 });
 
 test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields', async () => {
