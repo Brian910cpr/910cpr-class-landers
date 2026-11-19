@@ -16,11 +16,11 @@ class ValidatePublicRefreshOutputTests(unittest.TestCase):
         lease=(datetime.now(timezone.utc)+timedelta(minutes=10)).isoformat()
         course=dict(courseId='509474',courseName='Skills Session Only',offerType='dynamic_appointment',
             publicSelectable=True,date='2031-04-05',startTime='10:00',instructor='Brian Ennis',
-            location=':: Wilmington; Shipyard Blvd',resource=':: Wilmington; Shipyard Blvd - B',
+            location='Wilmington; Shipyard Blvd',resource='Wilmington; Shipyard Blvd',
             durationMinutes=45,schedulerConsumptionMinutes=60,cleanupBufferMinutes=15,setupBufferMinutes=0,
             availabilityBlockId='fixture-public-block',validUntil=lease,occupiedUntil='2031-04-05T15:00:00Z')
         course['appointmentUrl']='/register/skills-session/?'+urlencode(dict(course='509474',date=course['date'],
-            startTime=course['startTime'],instructor=course['instructor'],location=course['location']))
+            startTime=course['startTime'],instructor=course['instructor'],location=':: Wilmington; Shipyard Blvd'))
         return dict(schemaVersion='selector-resolved-availability.v1',anchor_policy={'finalized':True},
             validUntil=lease,dates=[dict(date=course['date'],startTimes=[dict(startTime='10:00',courses=[course])])],
             counts=dict(publicSelectableDateCount=1,publicSelectableStartTimeCount=1,publicSelectableOfferCount=1))
