@@ -74,6 +74,48 @@ test('materialized LanderWare active registrations retain real seated demand pri
   assert.equal(Object.hasOwn(projected,'participant'),false);
 });
 
+test('numeric legacy identity with native active seats signals occupied demand without inventing a known external roster', () => {
+  // Matches source shape from Nov 20/23/Dec 1: LanderWare-owned active rows
+  // can coexist with a numeric legacy ID and absent external reconciliation.
+  const row = {id:'numeric-native',status:'scheduled',source:'landerware_public_offer',
+    visibility:'private',registration_status:'closed',registration_backend:'landerware',
+    external_class_id:'15007373',
+    registrations:[{status:'active',registration_source:'landerware_native_checkout',external_registration_id:null}]};
+  const projection=api.projectDemand(row);
+  assert.equal(projection.count_available,false);
+  assert.equal(projection.active_registration_count,null);
+  assert.equal(projection.canonical_recorded_registration_count,1);
+  assert.equal(projection.demand_basis,'unknown');
+  assert.equal(projection.operational_has_active_seat,true);
+  assert.equal(projection.visibility,'private');
+  assert.equal(projection.registration_status,'closed');
+  assert.equal(Object.hasOwn(projection,'registrations'),false);
+  assert.equal(Object.hasOwn(projection,'customers'),false);
+
+  const mixed=api.projectDemand({...row,registrations:[
+    {status:'registered',registration_source:'enrollware_email_confirmation',external_registration_id:null},
+    {status:'active',registration_source:'landerware_native_checkout',external_registration_id:null},
+    {status:'active',registration_source:'landerware_native_checkout',external_registration_id:null},
+    {status:'active',registration_source:'landerware_native_checkout',external_registration_id:null}
+  ]});
+  assert.equal(mixed.active_registration_count,null);
+  assert.equal(mixed.canonical_recorded_registration_count,4);
+  assert.equal(mixed.operational_has_active_seat,true);
+
+  for(const change of [
+    {registrations:[{status:'registered',registration_source:'enrollware_email_confirmation'}]},
+    {registrations:[{status:'canceled',registration_source:'landerware_native_checkout'}]},
+    {registrations:[{status:'active',registration_source:'enrollware'}]},
+    {registration_backend:'enrollware'},
+    {source:'enrollware_reconciled'},
+    {status:'canceled'}
+  ]) {
+    const unproven=api.projectDemand({...row,...change});
+    assert.equal(unproven.operational_has_active_seat,false);
+    assert.equal(unproven.active_registration_count,null);
+  }
+});
+
 test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields', async () => {
   const calls = [];
   const endpoint = loadEndpoint(async url => {
