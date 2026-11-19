@@ -42,6 +42,20 @@ export function projectDemand(row: any) {
   const proof = registrationProof(row);
   const countAvailable = proof.count_available;
   const registrations = countAvailable ? row.registrations : [];
+  // Internal occupied-time signal only. A numeric legacy external_class_id can
+  // coexist with genuine native registrations; without a fresh complete
+  // external roster we must NOT infer the total, remaining seats, or public
+  // joinability from those rows. Verified local native lifecycle is sufficient
+  // to reserve the instructor's time and supply Anchor gravity.
+  const nativeCommittedSeat = row.registration_backend === "landerware"
+    && row.source === "landerware_public_offer"
+    && Array.isArray(row.registrations)
+    && row.registrations.some((item: any) => ACTIVE.has(item.status)
+      && item.registration_source === "landerware_native_checkout"
+      && !item.external_registration_id);
+  const operationalHasActiveSeat = ["scheduled", "active"].includes(row.status)
+    && ((countAvailable && typeof proof.active_registration_count === "number"
+          && proof.active_registration_count > 0) || nativeCommittedSeat);
   const workspaces = row.landerware_sessions || [];
   const workspace = workspaces.length === 1 ? workspaces[0] : null;
   const workspaceStatus = !workspaces.length ? "missing" : !workspace
@@ -66,6 +80,8 @@ export function projectDemand(row: any) {
     registration_status: row.registration_status,
     workspace_projection_status: workspaceStatus,
     workspace_session_id: workspace?.id || null,
+    // Not authority to list or join private sessions, or to treat an unknown external roster as zero.
+    operational_has_active_seat: operationalHasActiveSeat,
     canonical_recorded_registration_count: Array.isArray(row.registrations)
       ? row.registrations.filter((item: any) => ACTIVE.has(item.status)).length : null,
     source: row.source,
