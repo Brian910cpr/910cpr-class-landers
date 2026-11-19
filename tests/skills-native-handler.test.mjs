@@ -4,7 +4,7 @@ import {createHandler} from '../supabase/functions/skills-session-reservation/ha
 import {skillsOffers} from '../supabase/functions/skills-session-reservation/policy.mjs';
 import client from '../docs/assets/skills-reservation-client.js';
 const now=Date.parse('2026-11-06T12:00:00Z');
-function feed(){return {schemaVersion:'selector-resolved-availability.v1',pageKey:'heartsaver',generatedAt:new Date(now).toISOString(),validUntil:new Date(now+60000).toISOString(),dates:[{date:'2026-11-10',startTimes:[{startTime:'10:00',courses:[{courseId:'509474',offerType:'dynamic_appointment',publicSelectable:true,durationMinutes:45,schedulerConsumptionMinutes:60,cleanupBufferMinutes:15,occupiedUntil:'2026-11-10T16:00:00Z',instructor:'Fixture Instructor',resource:':: Wilmington; Shipyard Blvd - B',location:':: Wilmington; Shipyard Blvd',availabilityBlockId:'fixture',sourceSessionIds:[],validUntil:new Date(now+60000).toISOString()}]}]}]};}
+function feed(){return {schemaVersion:'selector-resolved-availability.v1',pageKey:'heartsaver',generatedAt:new Date(now).toISOString(),validUntil:new Date(now+60000).toISOString(),dates:[{date:'2026-11-10',startTimes:[{startTime:'10:00',courses:[{courseId:'509474',offerType:'dynamic_appointment',publicSelectable:true,durationMinutes:45,schedulerConsumptionMinutes:60,cleanupBufferMinutes:15,occupiedUntil:'2026-11-10T16:00:00Z',instructor:'Fixture Instructor',resource:'Wilmington; Shipyard Blvd',location:'Wilmington; Shipyard Blvd',availabilityBlockId:'fixture',sourceSessionIds:[],validUntil:new Date(now+60000).toISOString()}]}]}]};}
 const student={firstName:'Fixture',lastName:'Student',email:'fixture@example.invalid',onlineCompleted:true};
 const key='11111111-1111-4111-8111-111111111111';
 const request=(body,route='reserve',origin='https://www.910cpr.com')=>new Request('https://test/'+route,{method:'POST',headers:{origin,'content-type':'application/json','idempotency-key':key},body:JSON.stringify(body)});
@@ -60,9 +60,9 @@ test('selected date is canonically checked read-only before exposing a reservati
   const selected=skillsOffers(feed(),'cpr-aed',now)[0],calls=[];
   let available=false;
   const handler=createHandler({enabled:()=>true,now:()=>now,publication:async()=>feed(),rpc:async(name,args)=>{calls.push(name);assert.equal(name,'skills_session_native_option');assert.equal(args.p_offer.selectionId,selected.selectionId);return available?{capacity:2}:null;}});
-  const body={context:'cpr-aed',selection:{localStart:selected.localStart,instructor:selected.instructor,location:selected.location}};
+  const body={context:'cpr-aed',selection:{localStart:selected.localStart,instructor:selected.instructor,location:selected.publicLocation}};
   let response=await handler(request(body,'choices'));assert.equal((await response.json()).offers.length,0);
-  available=true;response=await handler(request(body,'choices'));assert.equal((await response.json()).offers[0].selectionId,selected.selectionId);
+  available=true;response=await handler(request(body,'choices'));const offered=(await response.json()).offers[0];assert.equal(offered.selectionId,selected.selectionId);assert.equal(offered.location,'Wilmington; Shipyard Blvd');assert.equal(JSON.stringify(offered).includes(' - B'),false);
   response=await handler(request({...body,selection:{...body.selection,localStart:'2030-01-01T10:00'}},'choices'));assert.equal((await response.json()).offers.length,0);
   assert.equal(calls.length,2);
 });
