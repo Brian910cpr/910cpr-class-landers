@@ -155,10 +155,10 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         # numeric legacy external roster is unproven; do not synthesize public
         # availability or silently drop the longer occupied consumption end.
         session = dict(canonical_session_id="numeric-native-fixture",
-            external_class_id="15007373", session_status="scheduled",
-            start_at="2026-11-23T10:00:00-05:00",
-            end_at="2026-11-23T12:00:00-05:00",
-            consumption_end_at="2026-11-23T12:30:00-05:00",
+            external_class_id="80001", session_status="scheduled",
+            start_at="2030-11-23T10:00:00-05:00",
+            end_at="2030-11-23T12:00:00-05:00",
+            consumption_end_at="2030-11-23T12:30:00-05:00",
             visibility="private", registration_status="closed",
             location_name="Private venue", lead_instructor_name=None,
             active_registration_count=None, count_available=False,
@@ -176,7 +176,7 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertFalse(blocks[0]["count_available"])
         self.assertIsNone(blocks[0]["active_registration_count"])
         self.assertTrue(blocks[0]["instructor_unassigned"])
-        self.assertEqual(aware(blocks[0]["end"]).isoformat(), "2026-11-23T12:30:00-05:00")
+        self.assertEqual(aware(blocks[0]["end"]).isoformat(), "2030-11-23T12:30:00-05:00")
         self.assertNotIn("public_direct_booking", blocks[0])
 
     def test_protected_projection_source_has_required_contract_and_no_customer_fields(self):
