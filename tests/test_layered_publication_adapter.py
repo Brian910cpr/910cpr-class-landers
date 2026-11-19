@@ -148,8 +148,12 @@ class LayeredPublicationTests(unittest.TestCase):
                 self.assertTrue(occupied[0]['operational_has_active_seat'])
                 self.assertEqual(occupied[0]['kind'],'paid')
                 self.assertIsNone(occupied[0]['headcount'])
-                public=finalize(self.payload(),self.now)
-                self.assertFalse(any(x.get('offerType')=='seated_class' for x in public['offers']))
+                # finalize() retains restricted internal diagnostics by design.
+                # Test the actual customer-facing whitelist projection instead.
+                public=public_selector_availability_payload(self.payload())
+                self.assertFalse(any(course.get('offerType')=='seated_class'
+                    for day in public['dates'] for slot in day['startTimes']
+                    for course in slot['courses']))
                 self.assertNotIn('synthetic-canonical-private-seat',json.dumps(public))
 
     def test_v2_empty_occupied_shell_does_not_create_fake_bookend_day(self):
