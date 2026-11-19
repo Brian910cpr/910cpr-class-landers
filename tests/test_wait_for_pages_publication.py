@@ -75,8 +75,10 @@ class PagesPublicationWaitTests(unittest.TestCase):
 
     def test_bounded_pages_exhaustion_fails_closed(self):
         full = [run("2026-11-18T17:04:47Z")] * 30
-        with patch("scripts.wait_for_pages_publication.urlopen",
-                   return_value=io.BytesIO(json.dumps({"workflow_runs": full}).encode())):
+        def response(_request, timeout):
+            # Each HTTP request gets its own stream, just like urlopen.
+            return io.BytesIO(json.dumps({"workflow_runs": full}).encode())
+        with patch("scripts.wait_for_pages_publication.urlopen", side_effect=response):
             with self.assertRaisesRegex(ValueError, "bounded pagination"):
                 read_runs("example/repo", "test-token", SHA)
 
