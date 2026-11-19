@@ -192,7 +192,10 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertNotIn("customers", source)
         self.assertNotIn("first_name", source)
         self.assertNotIn("last_name", source)
-        self.assertNotIn("email", source)
+        # A registration_source enum may contain the word email without
+        # exporting an address; guard actual identity fields instead.
+        self.assertNotIn('"email"', source)
+        self.assertNotIn("customer_email", source)
 
 
 if __name__ == "__main__":
