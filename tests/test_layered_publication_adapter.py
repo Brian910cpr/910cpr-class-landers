@@ -124,6 +124,34 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertNotIn(private['source_event_id'],json.dumps(result['offers']))
         self.assertFalse(any(o.get('offerType')=='seated_class' for o in result['offers']))
 
+    def test_native_private_seat_survives_exact_interval_legacy_mirror(self):
+        # A legacy class shell and a canonical paid seat may represent the same
+        # physical interval. Neither source order may erase verified occupancy
+        # or turn the private record into a publicly joinable existing class.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', next_day=False)
+        self.policy['require_verified_day_gravity'] = True
+        legacy=self.add(11,'12:00','13:00',cid='359474',count=None)
+        legacy['source_file']='docs/data/schedule_future.json'
+        canonical=dict(legacy,source_event_id='synthetic-canonical-private-seat',
+            source_file='canonical_class_sessions',visibility='private',
+            operational_has_active_seat=True,count_available=False,
+            active_registration_count=None)
+        for rows in ([legacy,canonical],[canonical,legacy]):
+            with self.subTest(first=rows[0]['source_file']):
+                self.sources=list(rows)
+                reports=self.calculation()['reports']
+                self.assertEqual(len(reports),1)
+                occupied=reports[0]['normalized_occupancy']
+                self.assertEqual(len(occupied),1)
+                self.assertEqual(occupied[0]['id'],'synthetic-canonical-private-seat')
+                self.assertTrue(occupied[0]['operational_has_active_seat'])
+                self.assertEqual(occupied[0]['kind'],'paid')
+                self.assertIsNone(occupied[0]['headcount'])
+                public=finalize(self.payload(),self.now)
+                self.assertFalse(any(x.get('offerType')=='seated_class' for x in public['offers']))
+                self.assertNotIn('synthetic-canonical-private-seat',json.dumps(public))
+
     def test_v2_empty_occupied_shell_does_not_create_fake_bookend_day(self):
         # The existing physical interval stays unavailable, while safe free
         # time on both sides is scanned instead of requiring fake Barnacles.
