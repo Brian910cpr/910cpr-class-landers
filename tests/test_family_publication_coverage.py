@@ -109,6 +109,28 @@ class CoverageCheckpointTests(unittest.TestCase):
         self.assertEqual(result['dayOffers'], 0)
         self.assertTrue(result['coverageAlert'], 'known travel uncertainty remains RED')
 
+    def test_global_travel_failures_are_not_mislabeled_as_same_day_lead_outage(self):
+        # A past/current day can be fully inside the 24h lead rule while real
+        # future travel uncertainty still requires a failing global monitor.
+        now = datetime(2026, 11, 18, 23, 9, tzinfo=timezone.utc)
+        feed = {'minimumLeadHours': 24, 'counts': {'failed_windows': 1},
+                'reconciliationIssues': [
+                    {'reason': 'missing_directional_travel_rule', 'start': '2026-12-07'}]}
+        current = summarize(feed, '2026-11-18', now)
+        self.assertEqual(current['dayLeadWindowStatus'], 'entire_day_inside_lead_window')
+        self.assertEqual(current['dayOffers'], 0)
+        self.assertEqual(current['dayFailedWindows'], 0)
+        self.assertFalse(current['dayCoverageAlert'])
+        self.assertTrue(current['coverageAlert'])
+        self.assertEqual(current['coverageAlertScope'], 'other_or_unscoped_windows')
+        on_failure_day = summarize(feed, '2026-12-07', now)
+        self.assertTrue(on_failure_day['dayCoverageAlert'])
+        self.assertEqual(on_failure_day['dayFailedWindows'], 1)
+        self.assertEqual(on_failure_day['coverageAlertScope'], 'includes_observed_day')
+        clear = summarize({'counts': {'failed_windows': 0}}, '2026-11-18', now)
+        self.assertFalse(clear['coverageAlert'])
+        self.assertEqual(clear['coverageAlertScope'], 'none')
+
     def test_lead_window_exact_midnight_and_unknown_policy(self):
         # At the exact cutoff, midnight Nov 19 is a legal lead-time boundary.
         now = datetime(2026, 11, 18, 5, tzinfo=timezone.utc)
