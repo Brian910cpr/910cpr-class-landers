@@ -116,6 +116,39 @@ test('numeric legacy identity with native active seats signals occupied demand w
   }
 });
 
+test('verified email-confirmed private intake is internal occupancy, not external roster or a public seat', () => {
+  const fixture = {id:'synthetic-private-intake',status:'scheduled',
+    source:'confirmed_booking_intake',registration_backend:'landerware',
+    visibility:'private',registration_status:'closed',external_class_id:'80002',
+    external_session_evidence:{kind:'registration_confirmation',gmail_message_id:'0123456789abcdef'},
+    registrations:[{status:'registered',registration_source:'enrollware_email_confirmation',external_registration_id:null}]};
+  const projected = api.projectDemand(fixture);
+  assert.equal(projected.operational_has_active_seat,true);
+  assert.equal(projected.count_available,false);
+  assert.equal(projected.active_registration_count,null);
+  assert.equal(projected.demand_basis,'unknown');
+  assert.equal(projected.canonical_recorded_registration_count,1);
+  assert.equal(projected.visibility,'private');
+  assert.equal(projected.registration_status,'closed');
+  assert.equal(Object.hasOwn(projected,'registrations'),false);
+  assert.equal(Object.hasOwn(projected,'external_session_evidence'),false);
+
+  for (const change of [
+    {source:'manual'},
+    {registration_backend:'enrollware'},
+    {status:'canceled'},
+    {external_session_evidence:{kind:'registration_confirmation'}},
+    {external_session_evidence:{kind:'owner_confirmed_booking',gmail_message_id:'0123456789abcdef'}},
+    {registrations:[{status:'canceled',registration_source:'enrollware_email_confirmation'}]},
+    {registrations:[{status:'registered',registration_source:'owner_voice_fragment'}]},
+    {registrations:null}
+  ]) {
+    const unverified = api.projectDemand({...fixture,...change});
+    assert.equal(unverified.operational_has_active_seat,false,JSON.stringify(change));
+    assert.equal(unverified.active_registration_count,null);
+  }
+});
+
 test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields', async () => {
   const calls = [];
   const endpoint = loadEndpoint(async url => {
