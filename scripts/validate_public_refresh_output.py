@@ -168,9 +168,11 @@ def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: s
     for key, value in {'durationMinutes':45, 'schedulerConsumptionMinutes':60,
                        'cleanupBufferMinutes':15, 'setupBufferMinutes':0}.items():
         require(type(course.get(key)) is int and course[key] == value, 'native skills: invalid '+key)
+    # This validates the compact public DTO after presentation redaction.
+    # Internal room identity is validated before serialization and must not leak here.
     require(course.get('instructor') == 'Brian Ennis' and
-            course.get('resource') == ':: Wilmington; Shipyard Blvd - B' and
-            course.get('location') == ':: Wilmington; Shipyard Blvd', 'native skills: invalid resource or instructor')
+            course.get('resource') == 'Wilmington; Shipyard Blvd' and
+            course.get('location') == 'Wilmington; Shipyard Blvd', 'native skills: invalid resource or instructor')
     # A compact native skills offer needs its public block identity but must not
     # expose the internal sourceSessionIds/edgeIds removed by the public serializer.
     require(bool(course.get('availabilityBlockId')),
@@ -185,8 +187,10 @@ def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: s
     query = parse_qs(url.query)
     require(not url.scheme and not url.netloc and not url.fragment and url.path == '/register/skills-session/',
             'native skills: invalid native destination')
+    # The owned route retains its canonical source-location identity even
+    # though the public DTO uses the approved customer-facing venue label.
     for key, value in {'course':'509474', 'date':day, 'startTime':clock,
-                       'instructor':course['instructor'], 'location':course['location']}.items():
+                       'instructor':course['instructor'], 'location':':: Wilmington; Shipyard Blvd'}.items():
         require(query.get(key) == [value], 'native skills: mismatched URL '+key)
     require(not course.get('appointmentDayId') and 'appointmentDayId' not in query,
             'native skills: unexpected Enrollware container')
