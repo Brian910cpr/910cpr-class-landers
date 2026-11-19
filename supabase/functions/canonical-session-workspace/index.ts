@@ -6,7 +6,7 @@ import {storeIntake, validId, viewDocument} from './class-record.ts';
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const ALLOWED_ORIGINS = new Set(["https://www.910cpr.com", "https://910cpr.com"]);
-const ACTIVE_REGISTRATION_STATUSES = new Set(["registered", "confirmed", "completed"]);
+const ACTIVE_REGISTRATION_STATUSES = new Set(["registered", "confirmed", "completed", "active"]);
 const OPERATIONAL_SESSION_STATUSES = "(scheduled,active,completed)";
 
 function headers(origin: string) {
