@@ -53,7 +53,7 @@ test('actual PostgreSQL transaction: default-off, canonical claim, capacity, rol
       assert.equal(name,'reserve_skills_session_native');
       return scalar('select public.reserve_skills_session_native($1,$2,$3::jsonb,$4::jsonb)',[args.p_idempotency_key,args.p_context,JSON.stringify(args.p_offer),JSON.stringify(args.p_student)]);
     }});
-    const choices=await handler(new Request('https://fixture/choices',{method:'POST',body:JSON.stringify({context:'cpr-aed',selection:{localStart:selected.localStart,instructor:selected.instructor,location:selected.location}})}));
+    const choices=await handler(new Request('https://fixture/choices',{method:'POST',body:JSON.stringify({context:'cpr-aed',selection:{localStart:selected.localStart,instructor:selected.instructor,location:selected.publicLocation}})}));
     assert.equal((await choices.json()).offers.length,1);assert.equal(await scalar('select count(*)::int from class_sessions'),0,'listing is read-only');
     const response=await handler(new Request('https://fixture/reserve',{method:'POST',headers:{'idempotency-key':key(1),'content-type':'application/json'},
       body:JSON.stringify({context:'cpr-aed',selectionId:selected.selectionId,student,amountCents:0,startsAt:'attacker-controlled'})}));
