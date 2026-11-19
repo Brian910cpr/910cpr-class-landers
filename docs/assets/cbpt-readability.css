@@ -1,0 +1,32 @@
+/* Page-owned surfaces must keep paired text colors after the shared theme. */
+body.cbpt-page a.cta { background: #ffd36b; color: #0a273a !important; }
+body.cbpt-page a.cta:hover { background: #ffe39c; color: #0a273a !important; }
+body.cbpt-page :is(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid #04778a; outline-offset: 4px;
+}
+body.cbpt-page :is(input, textarea)::placeholder { color: #52697b; opacity: 1; }
+html[data-theme="dark"] body.cbpt-page :is(.partner, .registration, .pressitem) {
+  background: #fff !important; color: #18364b !important; border-color: #b8cdd5 !important;
+}
+html[data-theme="dark"] body.cbpt-page :is(.partner, .registration, .pressitem) :is(h1, h2, h3, h4, p, small, strong, label, summary, legend, .muted) {
+  color: #18364b !important;
+}
+html[data-theme="dark"] body.cbpt-page :is(.partner, .registration, .pressitem) a:not(.cta) {
+  color: #075d78 !important;
+}
+html[data-theme="dark"] body.cbpt-page a.cta,
+html[data-theme="dark"] body.cbpt-page a.cta:hover {
+  color: #0a273a !important;
+}
+html[data-theme="dark"] body.cbpt-page .share-actions :is(a, button) {
+  background: #172334 !important; color: #eef5fc !important; border: 1px solid #53657a;
+}
+html[data-theme="dark"] body.cbpt-page .share-actions :is(a, button):hover {
+  background: #263c54 !important; color: #fff !important;
+}
+html[data-theme="dark"] body.cbpt-page :is(a, button, input, select, textarea):focus-visible {
+  outline-color: #04778a;
+}
+html[data-theme="dark"] body.cbpt-page :is(input, textarea)::placeholder {
+  color: #c4d0dc !important; opacity: 1;
+}
