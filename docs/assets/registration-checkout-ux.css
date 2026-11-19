@@ -1,0 +1,26 @@
+/* Local checkout-only presentation; reservation and payment contracts remain server owned. */
+body.registration-checkout main { max-width: 1040px; }
+.registration-checkout .checkout-step { opacity: 1; font-size: 14px; letter-spacing: .06em; }
+.registration-checkout .base-price-note { font-size: 13px; margin: 4px 0 0; color: #dbe8f4; }
+.registration-checkout .student-body { grid-template-columns: minmax(240px,.85fr) minmax(0,1.15fr); }
+.registration-checkout .product-choice { grid-template-columns: auto minmax(0,1fr); padding: 12px; gap: 10px; line-height: 1.45; }
+.registration-checkout .product-image[hidden] { display: none !important; }
+.registration-checkout .product-choice strong { font-size: 14px; }
+.registration-checkout .product-choice small { font-size: 13px; line-height: 1.5; }
+.registration-checkout .product-choice input { min-width: 20px; min-height: 20px; }
+.registration-checkout .billing-help { margin: 0; line-height: 1.5; }
+.registration-checkout .checkout-review { margin-top: 10px; display: grid; gap: 12px; }
+.registration-checkout .checkout-review h2 { font-size: 21px; }
+.registration-checkout .order-total { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 16px; }
+.registration-checkout .checkout-actions { display: flex; gap: 12px; align-items: stretch; }
+html body.registration-checkout #continue { flex: 1; background: #08683f !important; color: #fff !important; border: 2px solid #08683f !important; min-height: 58px; font-size: 18px; font-weight: 900; }
+html body.registration-checkout #continue:hover { background: #06502f !important; }
+html body.registration-checkout #add-student { background: #fff !important; color: #164865 !important; border: 2px solid #8ba6ba !important; min-height: 58px; font-size: 16px; font-weight: 700; }
+html[data-theme="dark"] body.registration-checkout #add-student { background: #20364d !important; color: #eef5fc !important; border-color: #6f94b4 !important; }
+.registration-checkout :is(button,input,a):focus-visible { outline: 3px solid #1677a8; outline-offset: 3px; }
+.registration-checkout .fine { font-size: 13px; line-height: 1.5; }
+@media(max-width:680px) { .registration-checkout .student-body { grid-template-columns: 1fr; } .registration-checkout .student-options { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 16px; } .registration-checkout .checkout-actions { flex-direction: column; } }
+
+html body.registration-checkout .formwrap input::placeholder { color: #526071 !important; opacity: 1; }
+
+.registration-checkout .billing-suggestions[hidden] { display: none; }

@@ -5,6 +5,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = (ROOT / "docs" / "register" / "index.html").read_text(encoding="utf-8")
 BLS_PAGE = (ROOT / "docs" / "bls.html").read_text(encoding="utf-8")
+RESOLVER = (ROOT / "docs" / "assets" / "resolved-selector-availability.js").read_text(encoding="utf-8")
 EDGE = (ROOT / "supabase" / "functions" / "public-registration" / "index.ts").read_text(encoding="utf-8")
 SQL = (ROOT / "supabase" / "migrations" / "20260908233000_public_registration_intents.sql").read_text(encoding="utf-8")
 QUEUE_SQL = (ROOT / "supabase" / "migrations" / "20260908233800_public_registration_intent_queue.sql").read_text(encoding="utf-8")
@@ -18,7 +19,7 @@ class PublicRegistrationTests(unittest.TestCase):
     def test_collects_multiple_students_and_uses_idempotency(self):
         for name in ("firstName", "lastName", "email", "phone"):
             self.assertIn(f'data-field="{name}"', PAGE)
-        self.assertIn("Add another student", PAGE)
+        self.assertIn("Add other students", PAGE)
         self.assertIn("students:order", PAGE)
         self.assertIn("idempotency-key", PAGE)
 
@@ -103,10 +104,12 @@ class PublicRegistrationTests(unittest.TestCase):
         self.assertIn("from public, anon, authenticated", QUEUE_SQL)
 
     def test_only_real_bls_initial_sessions_route_to_native_registration(self):
-        self.assertIn("String(course.courseId) === '209806'", BLS_PAGE)
-        self.assertIn("course.offerType === 'seated_class'", BLS_PAGE)
-        self.assertIn("/register/?session=${encodeURIComponent(nativeSessionId)}", BLS_PAGE)
-        self.assertIn(": course.appointmentUrl", BLS_PAGE)
+        self.assertIn("link.href = ResolvedSelectorAvailability.registrationDestination(course);", BLS_PAGE)
+        self.assertIn("String(course.courseId) === '209806'", RESOLVER)
+        self.assertIn("course.offerType === 'seated_class'", RESOLVER)
+        self.assertIn("https://www.910cpr.com/register/?session=", RESOLVER)
+        self.assertIn("return course.appointmentUrl || course.registrationUrl || ''", RESOLVER)
+
 
 
 if __name__ == "__main__":
