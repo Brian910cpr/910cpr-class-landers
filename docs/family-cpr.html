@@ -887,12 +887,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </main>
   <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261119-canonical-origin1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261119-request-containment2"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = [];
     const availabilityUrl = "/data/block-selector-availability/family_cpr.json?v=2026-11-19T09%3A49%3A09.502001%2B00%3A00";
     const courseOptions = [{"courseId": "252737", "courseName": "Family & Friends CPR", "family": "Heartsaver", "variant": "family-cpr", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["family-cpr", "family", "family-friends", "family-and-friends", "friends"], "iconLabel": "CPR", "imageUrl": "/images/FF-CPR-2.jpg", "imageFit": "contain", "imageAlt": "Family CPR practice with an infant CPR manikin", "deliveryBadge": "IN-PERSON", "clarification": "Relaxed, hands-on CPR practice for families and community members. No certification card is included.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 45, "fullWidth": false, "skillsContexts": [], "details": {}}];
+    const nativeClassCapabilities = {"sessions": {"14996400": {"courseId": "209806", "date": "2026-12-01", "startTime": "11:00", "location": "Wilmington; Shipyard Blvd"}, "15026275": {"courseId": "209806", "date": "2026-11-20", "startTime": "11:00", "location": "Wilmington; Shipyard Blvd"}, "15000715": {"courseId": "209806", "date": "2026-11-22", "startTime": "15:00", "location": "Wilmington; Shipyard Blvd"}, "15007373": {"courseId": "209806", "date": "2026-11-23", "startTime": "10:00", "location": "Wilmington; Shipyard Blvd"}, "14999858": {"courseId": "209806", "date": "2026-11-24", "startTime": "11:30", "location": "Wilmington; Shipyard Blvd"}, "15026054": {"courseId": "209806", "date": "2026-11-25", "startTime": "09:30", "location": "Wilmington; Shipyard Blvd"}}};
     const optionGroups = {"Heartsaver": {"family": "Heartsaver", "label": "Family & Friends CPR", "courseIds": ["252737"]}};
     const asapOptionLabel = "Family & Friends CPR";
     const unsupportedOptions = [];
@@ -1706,15 +1707,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const link = document.createElement('a');
         link.className = 'register-link';
         const config = courseOptions.find(option => option.courseId === course.courseId);
-        link.href = ResolvedSelectorAvailability.registrationDestination(course);
-        if (config?.fullWidth) {
-          const selection = new URLSearchParams({course: course.courseId, date: selectedDate,
-            startTime: slot.startTime, location: course.location,
-            instructor: course.instructor || '', skillsContext: selectedSkillsContext || config.skillsContexts?.[0]?.key || '', context: "family_cpr"});
-          link.href = '/register/skills-session/?' + selection;
-          link.textContent = 'Schedule skills session';
+        const action = ResolvedSelectorAvailability.registrationAction(course, {date:selectedDate, startTime:slot.startTime,
+          pagePath:"/family-cpr.html", familyContext:"",
+          skillsContext:selectedSkillsContext,
+          skillsContextVerified:config?.fullWidth === true && (config.skillsContexts || []).some(item => item.key === selectedSkillsContext)}, nativeClassCapabilities);
+        link.href = action.href;
+        link.textContent = action.label;
+        const requestNotice = action.notice ? document.createElement('p') : null;
+        if (requestNotice) {
+          requestNotice.className = 'registration-request-notice';
+          requestNotice.textContent = action.notice;
         }
-        if (!config?.fullWidth) link.textContent = 'Register';
         link.addEventListener('click', event => {
           if (!availabilityReady() || isPastStart(day, {...slot, courses: [course]}) ||
               !ResolvedSelectorAvailability.datesForPublication(
@@ -1725,6 +1728,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           }
         });
         item.append(summary, badge, link);
+        if (requestNotice) item.appendChild(requestNotice);
         host.appendChild(item);
       });
     }
