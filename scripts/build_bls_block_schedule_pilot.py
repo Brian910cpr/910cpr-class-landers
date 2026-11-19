@@ -1323,6 +1323,9 @@ def render_html(payload: dict[str, Any]) -> str:
         certification_link = '<p><a href="/bls.html">Choose AHA BLS Provider training</a></p>' if page_config.get("page_key") in {"heartsaver", "arc", "hsi"} else ""
         certification_html = f'<section class="page-note" aria-label="Certification details"><h2>{certification_title}</h2><p>{certification_body}</p>{certification_link}</section>'
     explanation = html.escape(str(page_config.get("explanation") or ""))
+    selector_intro = html.escape(str(page_config.get("selector_intro") or "Pick the option you need, then choose a date and start time."))
+    registration_heading = html.escape(str(page_config.get("registration_heading") or "Register"))
+    registration_note = html.escape(str(page_config.get("registration_note") or "Times shown are start times. Please allow enough time for the course you selected."))
     documentation_note = page_config.get("documentation_note", {})
     student_note = html.escape(str(page_config.get("student_note") or ""))
     context_html = ""
@@ -1504,7 +1507,7 @@ def render_html(payload: dict[str, Any]) -> str:
         <div class="course-selector-top">
           <div>
             <h2>Choose your class</h2>
-            <p class="muted">Pick the option you need, then choose a date and start time.</p>
+            <p class="muted">{selector_intro}</p>
           </div>
           <div class="option-tools">
             {show_all_toggle_html}
@@ -1530,8 +1533,8 @@ def render_html(payload: dict[str, Any]) -> str:
           <div id="start-list" class="button-list"></div>
         </div>
         <div class="panel">
-          <h2>Register</h2>
-          <p class="register-note">Times shown are start times. Please allow enough time for the course you selected.</p>
+          <h2>{registration_heading}</h2>
+          <p class="register-note">{registration_note}</p>
           <div id="course-list" class="course-list"></div>
         </div>
       </div>
