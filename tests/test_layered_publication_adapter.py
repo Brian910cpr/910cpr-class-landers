@@ -124,6 +124,48 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertNotIn(private['source_event_id'],json.dumps(result['offers']))
         self.assertFalse(any(o.get('offerType')=='seated_class' for o in result['offers']))
 
+    def test_adjacent_confirmed_private_session_with_unassigned_instructor(self):
+        # Source-shaped Nov 20 boundary: confirmed BLS consumption ends at
+        # 14:30, exactly when a second closed private appointment begins.
+        # Unknown instructor/room must never create a speculative public seat,
+        # erase either occupied interval, or free the 14:30 transition.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', next_day=False)
+        self.policy['require_verified_day_gravity'] = True
+        first=self.add(11, '13:30', '14:30', cid='359474', count=1,
+                       visibility='private', registration_status='closed')
+        second=self.add(11, '14:30', '16:00', cid='359474',
+                        name='UNASSIGNED', count=None,
+                        visibility='private', registration_status='closed',
+                        operational_has_active_seat=True,
+                        instructor_unassigned=True)
+        # Synthetic known-venue fallback only: no invented second room,
+        # participant identity, or instructor assignment.
+        calculation=self.calculation()
+        self.assertEqual(len(calculation['reports']), 1, calculation['issues'])
+        occupied=calculation['reports'][0]['normalized_occupancy']
+        self.assertTrue(any(o['id']==first['source_event_id'] and
+                            aware(o['end'])==self.at(11, '14:30') for o in occupied))
+        self.assertTrue(any(o['id']==second['source_event_id'] and
+                            aware(o['start'])==self.at(11, '14:30') and
+                            aware(o['end'])==self.at(11, '16:00') and
+                            o['operational_has_active_seat'] for o in occupied))
+        self.assertTrue(any(o['id'].startswith('unassigned-') and
+                            o['instructor']=='Brian Ennis' for o in occupied))
+        payload=self.payload(calculation=calculation)
+        public=public_selector_availability_payload(payload)
+        for offer in payload['offers']:
+            if offer.get('offerType')=='seated_class': continue
+            start=self.at(11, offer['startTime'])
+            end=aware(offer['occupiedUntil'])
+            self.assertFalse(start < self.at(11, '16:00') and
+                             end > self.at(11, '13:30'),
+                             f"private interval became bookable: {offer['startTime']}")
+        self.assertFalse(any(o.get('offerType')=='seated_class'
+                             for o in payload['offers']))
+        self.assertNotIn(first['source_event_id'], json.dumps(public))
+        self.assertNotIn(second['source_event_id'], json.dumps(public))
+
     def test_native_private_seat_survives_exact_interval_legacy_mirror(self):
         # A legacy class shell and a canonical paid seat may represent the same
         # physical interval. Neither source order may erase verified occupancy
