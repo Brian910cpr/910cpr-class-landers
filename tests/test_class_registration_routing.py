@@ -67,6 +67,14 @@ class ClassRoutingTests(unittest.TestCase):
   self.assertNotIn('Shipyard Blvd - B',body)
   for sid,existing in self.records().items():
    self.assertEqual(registration_action(existing)['mode'],'native',sid)
+ def test_generated_heartsaver_detail_is_request_only_and_public_office(self):
+  page=(ROOT/'docs/classes/14114232.html').read_text(encoding='utf8')
+  self.assertIn('no seat is reserved until confirmed',page)
+  self.assertIn('Request only. No seat is reserved',page)
+  self.assertNotIn('with direct registration after the class details below',page)
+  self.assertNotIn('Shipyard Blvd - B',page)
+  self.assertNotIn('Shipyard+Blvd+-+B',page)
+  self.assertIn('Wilmington; Shipyard Blvd',page)
  def test_request_hero_never_promises_direct_registration(self):
   row=dict(session_id='999',course_id='359474',course_name='BLS Renewal',start_at='2026-12-01T10:00:00-05:00',location_display='Wilmington; Shipyard Blvd - B')
   body='<p class="subhead">Morning session in Wilmington with direct registration after the class details below.</p><div class="cta-panel"><p class="cta-panel-label">Reserve your seat</p><p class="cta-panel-copy">Direct registration</p><div class="cta-row"><a class="button primary" href="/register/?session=999">Continue to Registration</a></div></div><script>const pageContext={register_url: "/register/?session=999",class_status: "scheduled"};</script>'
