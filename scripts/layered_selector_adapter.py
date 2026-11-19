@@ -126,11 +126,13 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         cid = str(busy.get("course_id") or "")
         kind = busy.get("kind") or ("commitment" if "blocked" in str(busy.get("source_file")) else "planted")
         count = busy.get("active_registration_count")
-        if isinstance(count, int) and count > 0 and kind == "planted":
+        if ((type(count) is int and count > 0)
+                or busy.get("operational_has_active_seat") is True) and kind == "planted":
             kind = "paid"
         fixture["sources"].append(dict(id=str(busy.get("source_event_id") or "occupied-"+str(index)),
             instructor=instructor, location=location, start=start.isoformat(), end=end.isoformat(),
             course=cid if cid in fixture["courses"] else None, kind=kind, headcount=count,
+            operational_has_active_seat=busy.get("operational_has_active_seat") is True,
             evidence=busy.get("source_file"),
             resource_uncertain=busy.get("resource_uncertain", False),
             uncertainty_reason=busy.get("uncertainty_reason"),
