@@ -32,6 +32,32 @@ PUBLIC_SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 PUBLIC_TZ = ZoneInfo("America/New_York")
 
 
+def selector_registration_capabilities() -> dict[str, Any]:
+    """Expose only approved native identities and the existing safe public venue label."""
+    source = ROOT / "data/config/native_class_checkout_capabilities.json"
+    rows = json.loads(source.read_text(encoding="utf8")).get("sessions", {})
+    result = {}
+    for sid, row in rows.items():
+        start = datetime.fromisoformat(row["starts_at"]).astimezone(PUBLIC_TZ)
+        result[str(sid)] = dict(courseId=str(row["course_id"]), date=start.date().isoformat(),
+            startTime=start.strftime("%H:%M"), location=public_location_display(row["location"]))
+    return {"sessions": result}
+
+
+def selector_registration_action_script(page_path: str) -> str:
+    return f'''        const action = ResolvedSelectorAvailability.registrationAction(course, {{date:selectedDate, startTime:slot.startTime,
+          pagePath:{json.dumps(page_path)}, familyContext:{json.dumps('heartsaver' if page_path.lower() == '/heartsaver.html' else '')},
+          skillsContext:selectedSkillsContext,
+          skillsContextVerified:config?.fullWidth === true && (config.skillsContexts || []).some(item => item.key === selectedSkillsContext)}}, nativeClassCapabilities);
+        link.href = action.href;
+        link.textContent = action.label;
+        const requestNotice = action.notice ? document.createElement('p') : null;
+        if (requestNotice) {{
+          requestNotice.className = 'registration-request-notice';
+          requestNotice.textContent = action.notice;
+        }}'''
+
+
 def load_course_descriptions() -> dict[str, dict[str, Any]]:
     if not COURSE_DESCRIPTIONS_PATH.exists():
         return {}
@@ -1521,12 +1547,13 @@ def render_html(payload: dict[str, Any]) -> str:
   </main>
   <script src="{hero_script_url}" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
-  <script src="/assets/resolved-selector-availability.js?v=20261119-canonical-origin1"></script>
+  <script src="/assets/resolved-selector-availability.js?v=20261119-request-containment2"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = {data_json};
     const availabilityUrl = {availability_url_json};
     const courseOptions = {course_options_json};
+    const nativeClassCapabilities = {json.dumps(selector_registration_capabilities())};
     const optionGroups = {option_groups_json};
     const asapOptionLabel = {compare_label_json};
     const unsupportedOptions = {unsupported_options_json};
@@ -2340,15 +2367,7 @@ def render_html(payload: dict[str, Any]) -> str:
         const link = document.createElement('a');
         link.className = 'register-link';
         const config = courseOptions.find(option => option.courseId === course.courseId);
-        link.href = ResolvedSelectorAvailability.registrationDestination(course);
-        if (config?.fullWidth) {{
-          const selection = new URLSearchParams({{course: course.courseId, date: selectedDate,
-            startTime: slot.startTime, location: course.location,
-            instructor: course.instructor || '', skillsContext: selectedSkillsContext || config.skillsContexts?.[0]?.key || '', context: {json.dumps(str(payload.get("pageKey") or page_config.get("page_key") or ""))}}});
-          link.href = '/register/skills-session/?' + selection;
-          link.textContent = 'Schedule skills session';
-        }}
-        if (!config?.fullWidth) link.textContent = 'Register';
+{selector_registration_action_script(str(page_config.get("output_path", "docs/bls.html")).removeprefix("docs"))}
         link.addEventListener('click', event => {{
           if (!availabilityReady() || isPastStart(day, {{...slot, courses: [course]}}) ||
               !ResolvedSelectorAvailability.datesForPublication(
@@ -2359,6 +2378,7 @@ def render_html(payload: dict[str, Any]) -> str:
           }}
         }});
         item.append(summary, badge, link);
+        if (requestNotice) item.appendChild(requestNotice);
         host.appendChild(item);
       }});
     }}

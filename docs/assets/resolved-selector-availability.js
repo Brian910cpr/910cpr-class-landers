@@ -5,35 +5,89 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function () {
   "use strict";
 
-  // Preserve native destinations through every selector rebuild. The original
-  // BLS Initial seated-class route is supported by the existing retail checkout;
-  // other unconverted offers retain their current backend until explicitly ready.
-  function registrationDestination(course) {
-    const owned = value => {
-      if (typeof value !== 'string' || !value) return null;
+  // Customer sales never fall back to an external checkout or an unverified owned route.
+  // Native capabilities are a server-maintained allow-list projected by the page generator.
+  function registrationAction(course, context = {}, capabilities = {}) {
+    course = course || {};
+    const clean = value => String(value || '').replace(/[\r\n]+/g, ' ').slice(0, 400);
+    const date = context.date || course.date || '';
+    const time = context.startTime || course.startTime || '';
+    // Preserve only the explicitly selected Heartsaver Skills variants. This is
+    // a reservation path; choices/reserve still revalidate on the server.
+    const skillsVariants = ['cpr-aed', 'first-aid-cpr-aed'];
+    const venue = value => ['Wilmington; Shipyard Blvd', ':: Wilmington; Shipyard Blvd'].includes(value)
+      ? 'Wilmington; Shipyard Blvd' : '';
+    if (String(course.courseId) === '509474' && context.familyContext === 'heartsaver' &&
+        skillsVariants.includes(context.skillsContext) && context.skillsContextVerified === true &&
+        /^\d{4}-\d{2}-\d{2}$/.test(date) && /^\d{2}:\d{2}$/.test(time) && Number.isFinite(startMinutes(time)) &&
+        String(context.pagePath || '').toLowerCase() === '/heartsaver.html' && course.publicSelectable === true &&
+        ['seated_class', 'dynamic_appointment'].includes(course.offerType) && course.durationMinutes === 45 &&
+        course.schedulerConsumptionMinutes === 60 && course.cleanupBufferMinutes === 15 &&
+        venue(course.location) && course.instructor && course.availabilityBlockId && !course.isFull &&
+        !['closed','full','cancelled','canceled','completed'].includes(String(course.registrationStatus || course.registration_status || course.status || '').toLowerCase())) {
+      const sources = [course.registrationUrl, course.appointmentUrl].filter(Boolean);
+      const valid = sources.length > 0 && sources.every(value => {
+        try {
+          const u = new URL(value, 'https://www.910cpr.com');
+          const q = u.searchParams;
+          if (u.protocol !== 'https:' || !['www.910cpr.com','910cpr.com'].includes(u.host) ||
+              u.pathname !== '/register/skills-session/' || u.username || u.password || u.hash) return false;
+          for (const key of q.keys()) if (!['course','date','startTime','location','instructor','skillsContext','context'].includes(key) || q.getAll(key).length !== 1) return false;
+          return q.get('course') === '509474' && q.get('date') === date && q.get('startTime') === time &&
+            venue(q.get('location')) === venue(course.location) && q.get('instructor') === course.instructor &&
+            (!q.has('skillsContext') || q.get('skillsContext') === context.skillsContext) &&
+            (!q.has('context') || q.get('context') === context.familyContext) &&
+            q.has('skillsContext') === q.has('context');
+        } catch { return false; }
+      });
+      if (valid) {
+        const q = new URLSearchParams({course:'509474',date,startTime:time,location:venue(course.location),
+          instructor:course.instructor,skillsContext:context.skillsContext,context:'heartsaver'});
+        return {mode:'skills-reservation',href:'https://www.910cpr.com/register/skills-session/?'+q,
+          label:'Schedule skills session',notice:'Skills reservation only. This form does not collect payment.'};
+      }
+    }
+    const ids = [];
+    let badIdentity = false;
+    for (const value of [course.registrationUrl, course.appointmentUrl]) {
+      if (!value) continue;
       try {
         const url = new URL(value, 'https://www.910cpr.com');
-        if (url.protocol !== 'https:' || !['www.910cpr.com', '910cpr.com'].includes(url.host) ||
-            url.username || url.password || url.hash ||
-            !['/register/', '/register/checkout/', '/register/skills-session/'].includes(url.pathname)) return null;
-        const session = url.searchParams.getAll('session');
-        if (session.length > 1 || (session.length && !/^(?:\d+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/i.test(session[0]))) return null;
-        if (!session.length && !/^\d+$/.test(url.searchParams.get('course') || '')) return null;
-        return 'https://www.910cpr.com' + url.pathname + url.search;
-      } catch { return null; }
-    };
-    const native = owned(course.registrationUrl) || owned(course.appointmentUrl);
-    if (native) return native;
-    if (String(course.courseId) === '209806' && course.offerType === 'seated_class') {
-      try {
-        const url = new URL(course.appointmentUrl);
-        const ids = url.searchParams.getAll('id');
-        if (url.protocol === 'https:' && url.host === 'coastalcprtraining.enrollware.com' &&
-            !url.username && !url.password && !url.hash && url.pathname === '/enroll' &&
-            ids.length === 1 && /^\d+$/.test(ids[0])) return 'https://www.910cpr.com/register/?session=' + encodeURIComponent(ids[0]);
-      } catch { /* Incomplete legacy identity cannot invent a native session. */ }
+        if (url.protocol !== 'https:' || url.username || url.password || url.hash) { badIdentity = true;continue; }
+        let values;
+        if (['www.910cpr.com','910cpr.com'].includes(url.host) && url.pathname === '/register/') {
+          values = url.searchParams.getAll('session');
+          const codes = url.searchParams.getAll('course');
+          if (codes.length > 1 || (codes.length && codes[0] !== String(course.courseId))) badIdentity = true;
+        } else if (url.host === 'coastalcprtraining.enrollware.com' && url.pathname === '/enroll') {
+          values = url.searchParams.getAll('id');
+        } else { badIdentity = true;continue; }
+        if (values.length !== 1 || !/^\d+$/.test(values[0])) { badIdentity = true;continue; }
+        ids.push(values[0]);
+      } catch { badIdentity = true; }
     }
-    return course.appointmentUrl || course.registrationUrl || '';
+    const sid = ids[0] || '';
+    const cap = capabilities.sessions?.[sid];
+    const closed = ['closed','full','cancelled','canceled','completed'].includes(String(course.registrationStatus || course.registration_status || course.status || '').toLowerCase()) || course.isFull === true;
+    if (!badIdentity && ids.length && ids.every(id => id === sid) && cap && !closed &&
+        course.offerType === 'seated_class' && String(course.courseId) === String(cap.courseId) &&
+        date === cap.date && Number.isFinite(startMinutes(time)) && startMinutes(time) === startMinutes(cap.startTime) &&
+        course.location === cap.location) {
+      return {mode:'native',href:'https://www.910cpr.com/register/?session='+encodeURIComponent(sid),label:'Register',notice:''};
+    }
+    const body = ['I would like to ask about this class. This is a request, not a confirmed reservation.',
+      '', 'Course: '+clean(course.courseName || 'Class option'), 'Course ID: '+clean(course.courseId),
+      'Date: '+clean(date || 'Not selected'), 'Start: '+clean(time || course.displayStartTime || 'Not selected'),
+      'Duration: '+clean(course.durationMinutes || 'Not supplied')+' minutes', 'Location: '+clean(course.location || 'Not supplied')];
+    if (sid) body.push('Class reference: '+sid);
+    const path = String(context.pagePath || '');
+    if (/^\/(?:courses\/)?[a-z0-9_-]+[.]html$/.test(path)) body.push('Page: https://www.910cpr.com'+path);
+    const query = new URLSearchParams({subject:'Class request'+(sid?' '+sid:''),body:body.join('\n')});
+    return {mode:'request',href:'mailto:brian@910cpr.com?'+query,label:'Request this class',notice:'Request only. No seat is reserved until 910CPR confirms registration.'};
+  }
+
+  function registrationDestination(course, context, capabilities) {
+    return registrationAction(course, context, capabilities).href;
   }
 
   function businessNow(timeZone = "America/New_York", now = new Date()) {
@@ -154,6 +208,7 @@
     schemaVersion: "selector-resolved-availability.v1",
     businessNow,
     registrationDestination,
+    registrationAction,
     startMinutes,
     isPastStart,
     selectableStartTimes,

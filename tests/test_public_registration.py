@@ -104,11 +104,13 @@ class PublicRegistrationTests(unittest.TestCase):
         self.assertIn("from public, anon, authenticated", QUEUE_SQL)
 
     def test_only_real_bls_initial_sessions_route_to_native_registration(self):
-        self.assertIn("link.href = ResolvedSelectorAvailability.registrationDestination(course);", BLS_PAGE)
-        self.assertIn("String(course.courseId) === '209806'", RESOLVER)
+        self.assertIn("link.href = action.href;", BLS_PAGE)
+        self.assertIn("String(course.courseId) === String(cap.courseId)", RESOLVER)
         self.assertIn("course.offerType === 'seated_class'", RESOLVER)
         self.assertIn("https://www.910cpr.com/register/?session=", RESOLVER)
-        self.assertIn("return course.appointmentUrl || course.registrationUrl || ''", RESOLVER)
+        self.assertIn("registrationAction(course, context, capabilities).href", RESOLVER)
+        self.assertIn("Request this class", RESOLVER)
+        self.assertNotIn("return course.appointmentUrl ||", RESOLVER)
 
 
 
