@@ -198,6 +198,48 @@ class LayeredPublicationTests(unittest.TestCase):
                     for course in slot['courses']))
                 self.assertNotIn('synthetic-canonical-private-seat',json.dumps(public))
 
+    def test_different_end_private_mirrors_preserve_latest_consumption_end(self):
+        # Production-shaped duplicate evidence can describe the same two seats
+        # with different occupied ends (e.g. 19:30 vs 20:00). Preserve both
+        # source intervals conservatively until the owner records are reconciled;
+        # never count the mirror as a new publicly joinable class.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '22:00', next_day=False)
+        self.policy['require_verified_day_gravity'] = True
+        canonical=self.add(11, '17:30', '20:00', cid='359474', count=2,
+                           visibility='unlisted', registration_status='open')
+        canonical['source_event_id']='synthetic-canonical-late-end'
+        external=self.add(11, '17:30', '19:30', cid='359474', count=2,
+                          visibility='unlisted', registration_status='external')
+        external['source_event_id']='synthetic-legacy-early-end'
+        external['source_file']='docs/data/schedule_future.json'
+        for rows in ([canonical, external], [external, canonical]):
+            with self.subTest(first=rows[0]['source_file']):
+                self.sources=list(rows)
+                calculation=self.calculation()
+                self.assertEqual(len(calculation['reports']), 1, calculation['issues'])
+                occupied=calculation['reports'][0]['normalized_occupancy']
+                self.assertEqual({o['id'] for o in occupied},
+                    {canonical['source_event_id'], external['source_event_id']})
+                self.assertEqual(max(aware(o['end']) for o in occupied),
+                                 self.at(11, '20:00'))
+                public=public_selector_availability_payload(
+                    self.payload(calculation=calculation))
+                self.assertFalse(any(
+                    offer.get('offerType')=='seated_class'
+                    for day in public['dates'] for slot in day['startTimes']
+                    for offer in slot['courses']))
+                self.assertNotIn('synthetic-canonical-late-end', json.dumps(public))
+                self.assertNotIn('synthetic-legacy-early-end', json.dumps(public))
+                for offer in self.payload(calculation=calculation)['offers']:
+                    if offer.get('offerType') == 'seated_class':
+                        continue
+                    start=self.at(11, offer['startTime'])
+                    end=aware(offer['occupiedUntil'])
+                    self.assertFalse(start < self.at(11, '20:00')
+                        and end > self.at(11, '17:30'),
+                        'shortened mirror exposed occupied private interval')
+
     def test_v2_empty_occupied_shell_does_not_create_fake_bookend_day(self):
         # The existing physical interval stays unavailable, while safe free
         # time on both sides is scanned instead of requiring fake Barnacles.
