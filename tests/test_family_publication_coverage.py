@@ -91,6 +91,35 @@ class CoverageCheckpointTests(unittest.TestCase):
         self.assertEqual(summary['actualOffers'], 4)
         self.assertNotIn('2026-11-04', days)
 
+    def test_24_hour_lead_explains_cutoff_without_declaring_booking_healthy(self):
+        # 18:09 Eastern on Nov 18, policy lead=24h. Nov 19 has potential
+        # after-18:09 starts; zero observed offers alone cannot prove a fault.
+        now = datetime(2026, 11, 18, 23, 9, tzinfo=timezone.utc)
+        payload = {'minimumLeadHours': 24, 'counts': {'failed_windows': 11},
+                   'reconciliationIssues': [
+                       {'reason': 'missing_directional_travel_rule',
+                        'start': '2026-12-07'}]}
+        result = summarize(payload, '2026-11-18', now)
+        self.assertEqual(result['leadCutoffAtEastern'], '2026-11-19T18:09:00-05:00')
+        self.assertEqual(result['dayLeadWindowStatus'], 'entire_day_inside_lead_window')
+        self.assertEqual(
+            [value['leadWindowStatus'] for value in result['nextThreeDays'].values()],
+            ['entire_day_inside_lead_window', 'partly_inside_lead_window',
+             'outside_lead_window'])
+        self.assertEqual(result['dayOffers'], 0)
+        self.assertTrue(result['coverageAlert'], 'known travel uncertainty remains RED')
+
+    def test_lead_window_exact_midnight_and_unknown_policy(self):
+        # At the exact cutoff, midnight Nov 19 is a legal lead-time boundary.
+        now = datetime(2026, 11, 18, 5, tzinfo=timezone.utc)
+        result = summarize({'minimumLeadHours': 24}, '2026-11-18', now)
+        self.assertEqual(result['nextThreeDays']['2026-11-19']['leadWindowStatus'],
+                         'outside_lead_window')
+        for bad in (None, '24', -1, True):
+            result = summarize({'minimumLeadHours': bad}, '2026-11-18', now)
+            self.assertEqual(result['dayLeadWindowStatus'], 'unknown')
+            self.assertIsNone(result['leadCutoffAtEastern'])
+
     def test_hosted_public_diagnostic_metadata_is_strictly_redacted(self):
         # The host observer must not echo private staff names, room labels,
         # client venues or operational time bounds into public error reports.
