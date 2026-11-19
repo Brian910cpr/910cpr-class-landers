@@ -75,11 +75,11 @@ test('materialized LanderWare active registrations retain real seated demand pri
 });
 
 test('numeric legacy identity with native active seats signals occupied demand without inventing a known external roster', () => {
-  // Matches source shape from Nov 20/23/Dec 1: LanderWare-owned active rows
+  // Synthetic numeric/legacy source shape: LanderWare-owned active rows
   // can coexist with a numeric legacy ID and absent external reconciliation.
   const row = {id:'numeric-native',status:'scheduled',source:'landerware_public_offer',
     visibility:'private',registration_status:'closed',registration_backend:'landerware',
-    external_class_id:'15007373',
+    external_class_id:'80001',
     registrations:[{status:'active',registration_source:'landerware_native_checkout',external_registration_id:null}]};
   const projection=api.projectDemand(row);
   assert.equal(projection.count_available,false);
