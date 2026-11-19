@@ -20,6 +20,7 @@ from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_S
 from scripts.static_public_inventory_projection import render_from_schedule
 from scripts.family_course_art import asset_url, hero_markup
 from scripts.inject_global_theme_assets import THEME_TAGS
+from scripts.class_registration_routing import public_location_display
 
 
 REPORT_JSON_PATH = ROOT / "data" / "audit" / "bls_block_schedule_pilot.json"
@@ -65,7 +66,8 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
             "role": "anchor" if visibility_public and proven else "blocking",
             "start": source.get("start"), "end": source.get("end"),
             "courseId": source.get("course_id") if visibility_public else None,
-            "resource": source.get("resource") if visibility_public else None,
+            "resource": (public_location_display(source.get("resource"))
+                         if visibility_public and source.get("resource") else None),
             "countAvailable": visibility_public and known_count,
             "registeredCount": count if visibility_public and known_count else None,
         })
@@ -142,7 +144,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "registrationUrl": course.get("registrationUrl") or course.get("appointmentUrl"),
                     "cleanupBufferMinutes": course.get("cleanupBufferMinutes"),
                     "setupBufferMinutes": course.get("setupBufferMinutes"),
-                    "location": course.get("location"),
+                    "location": public_location_display(course.get("location")),
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "offerType": course.get("offerType") or "dynamic_appointment",
                     "scheduleRole": course.get("scheduleRole") or course.get("schedule_role"),
@@ -151,7 +153,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "instructor": course.get("instructor"),
                     "schedulerConsumptionEnd": course.get("schedulerConsumptionEnd"),
                     "occupiedUntil": course.get("occupiedUntil"),
-                    "resource": course.get("resource"),
+                    "resource": public_location_display(course.get("resource")) if course.get("resource") else None,
                     "validUntil": course.get("validUntil"),
                     "date": day.get("date"),
                     "startTime": slot.get("startTime"),
@@ -1132,7 +1134,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     **({"appointmentDayId": course["appointmentDayId"]} if "appointmentDayId" in course else {}),
                     "appointmentUrl": course["appointmentUrl"],
                     "registrationUrl": course.get("registrationUrl") or course["appointmentUrl"],
-                    "location": course["location"],
+                    "location": public_location_display(course["location"]),
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "sourceAvailabilityBlock": course.get("sourceAvailabilityBlock", {}),
                     "offerType": course.get("offerType") or "dynamic_appointment",

@@ -165,6 +165,44 @@ class LayeredPipelineTests(unittest.TestCase):
                       '2026-12-06T00:00:00'):
             self.assertNotIn(value, encoded)
 
+    def test_public_selector_show_approved_office_without_changing_private_room_or_booking_url(self):
+        # Source room and registration identity remain authoritative and unchanged.
+        raw_room = ":: Wilmington; Shipyard Blvd - B"
+        public_room = "Wilmington; Shipyard Blvd"
+        url = "https://coastalcprtraining.enrollware.com/enroll?id=14732872"
+        course = dict(courseId="241108", courseName="ACLS Initial",
+                      location=raw_room, resource=raw_room,
+                      registrationUrl=url, appointmentUrl=url,
+                      offerType="seated_class", displayStartTime="2:00 PM")
+        payload = dict(
+            dates=[dict(date="2026-11-24", displayDate="November 24, 2026",
+                        startTimes=[dict(startTime="14:00", displayStartTime="2:00 PM",
+                                         courses=[course])])],
+            layeredDiagnostics=dict(projected_sources=[
+                dict(visibility="public", source_event_id="public-seated",
+                     start="2026-11-24T14:00:00", end="2026-11-24T18:00:00",
+                     resource=raw_room, count_available=True,
+                     active_registration_count=1),
+                dict(visibility="private", source_event_id="secret-private-id",
+                     start="2026-11-24T14:00:00", end="2026-11-24T18:00:00",
+                     resource=raw_room, course_id="241108",
+                     count_available=True, active_registration_count=1),
+            ]))
+        original = copy.deepcopy(payload)
+        feed = public_selector_availability_payload(payload)
+        shown = feed["dates"][0]["startTimes"][0]["courses"][0]
+        self.assertEqual(shown["location"], public_room)
+        self.assertEqual(shown["resource"], public_room)
+        self.assertEqual(shown["appointmentUrl"], url)
+        self.assertEqual(shown["registrationUrl"], url)
+        self.assertEqual(feed["layeredLandscape"]["sources"][0]["resource"], public_room)
+        self.assertIsNone(feed["layeredLandscape"]["sources"][1]["resource"])
+        self.assertNotIn(raw_room, json.dumps(feed))
+        self.assertNotIn("secret-private-id", json.dumps(feed))
+        self.assertEqual(payload, original)
+        from scripts.class_registration_routing import public_location_display
+        self.assertEqual(public_location_display("Wilmington, NC"), "Wilmington, NC")
+
     def test_public_landscape_keeps_unknown_count_and_generic_blocking(self):
         from scripts.build_bls_block_schedule_pilot import public_layered_landscape
         payload={'layeredDiagnostics':{'projected_sources':[{'source_event_id':'unknown','course_id':'209806','count_available':False,'active_registration_count':0},{'source_event_id':'calendar','source_file':'calendar_blocked','description':'private'}]}}
