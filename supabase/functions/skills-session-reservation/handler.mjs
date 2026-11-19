@@ -1,4 +1,4 @@
-import {SITE,CONTEXTS,skillsOffers,studentInput} from './policy.mjs';
+import {SITE,CONTEXTS,PUBLIC_LOCATION,skillsOffers,studentInput} from './policy.mjs';
 const ALLOWED=new Set([SITE,'https://910cpr.com']);
 const PUBLIC=new Set(['invalid_request','invalid_context','invalid_student','idempotency_conflict','session_not_available','calendar_refresh_required']);
 export function createHandler({publication,rpc,enabled=()=>false,now=()=>Date.now()}) {
@@ -22,7 +22,7 @@ export function createHandler({publication,rpc,enabled=()=>false,now=()=>Date.no
         const selection=body.selection;
         if(!selection||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(selection.localStart||'')||
           typeof selection.instructor!=='string'||selection.instructor.length>200||typeof selection.location!=='string'||selection.location.length>300)throw Error('invalid_request');
-        const candidates=skillsOffers(await publication(CONTEXTS[context]),context,now()).filter(o=>o.localStart===selection.localStart&&o.instructor===selection.instructor&&o.location===selection.location);
+        const candidates=skillsOffers(await publication(CONTEXTS[context]),context,now()).filter(o=>o.localStart===selection.localStart&&o.instructor===selection.instructor&&o.publicLocation===selection.location);
         if(candidates.length>4)throw Error('service_unavailable');
         const offers=[];
         for(const offer of candidates){
@@ -30,7 +30,7 @@ export function createHandler({publication,rpc,enabled=()=>false,now=()=>Date.no
           // can materialize anything, and it rechecks under the transaction locks.
           if(await rpc('skills_session_native_option',{p_context:context,p_offer:offer}))offers.push(offer);
         }
-        return json({ok:true,context,amountCents:5500,offers:offers.map(o=>({selectionId:o.selectionId,startsAt:o.startsAt,endsAt:o.endsAt,location:o.location,instructor:o.instructor}))});
+        return json({ok:true,context,amountCents:5500,offers:offers.map(o=>({selectionId:o.selectionId,startsAt:o.startsAt,endsAt:o.endsAt,location:o.publicLocation||PUBLIC_LOCATION,instructor:o.instructor}))});
       }
       if(route!=='reserve')return json({error:'not_found'},404);
       const key=req.headers.get('idempotency-key')||'';
