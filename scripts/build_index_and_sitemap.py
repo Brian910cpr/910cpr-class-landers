@@ -351,7 +351,10 @@ def parse_json_ld_event(content: str) -> dict:
 
 
 def clean_location_name(location: str) -> str:
-    return public_location_display(strip_html(location)) or "Unknown Location"
+    value = strip_html(location)
+    if value.startswith("::"):
+        value = value[2:].strip()
+    return value or "Unknown Location"
 
 
 def normalize_course_key(value: str) -> str:
@@ -652,7 +655,7 @@ def render_classes_finder_index(
         if date_key and date_key not in seen_dates:
             seen_dates.add(date_key)
             date_options.append((date_key, s.get("date_label") or s.get("display_date") or date_key))
-    location_options = sorted({s["location_name"] for s in sessions if s.get("location_name")}, key=str.lower)
+    location_options = sorted({public_location_display(s["location_name"]) for s in sessions if s.get("location_name")}, key=str.lower)
 
     def option_html(value: str, label: str) -> str:
         return f'<option value="{html_escape(value)}">{html_escape(label)}</option>'
@@ -801,7 +804,7 @@ def render_classes_finder_index(
         if s.get("display_time"):
             bits.append(s["display_time"])
         if s.get("location_name"):
-            bits.append(s["location_name"])
+            bits.append(public_location_display(s["location_name"]))
         if s.get("city") and s["city"].lower() not in str(s.get("location_name", "")).lower():
             bits.append(s["city"])
         meta_line = " | ".join(html_escape(bit) for bit in bits if bit)
@@ -817,7 +820,7 @@ def render_classes_finder_index(
 <article class="class-finder-card js-class-result"
   data-course="{html_escape(s.get('course_name', ''))}"
   data-date="{html_escape(s.get('date_key', ''))}"
-  data-location="{html_escape(s.get('location_name', ''))}"
+  data-location="{html_escape(public_location_display(s.get('location_name', '')))}"
 >
   <div>
     <h2>{html_escape(s.get("course_name", "CPR Class"))}</h2>
