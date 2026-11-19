@@ -142,6 +142,30 @@ class CoverageCheckpointTests(unittest.TestCase):
             self.assertEqual(result['dayLeadWindowStatus'], 'unknown')
             self.assertIsNone(result['leadCutoffAtEastern'])
 
+    def test_live_shipyard_offer_location_is_public_alias_not_internal_room(self):
+        # Verify only browser-visible offer fields. No source ID or attendee
+        # information is copied to monitoring artifacts.
+        payload = {'dates': [{'date': '2026-11-24', 'startTimes': [{
+            'startTime': '14:00', 'courses': [
+                {'courseId': 'acls', 'offerType': 'seated_class',
+                 'location': 'Wilmington; Shipyard Blvd'},
+                {'courseId': 'other', 'location': 'Other Approved Venue'}]}]}]}
+        result = summarize(payload, '2026-11-24')
+        self.assertTrue(result['publicShipyardAliasSafe'])
+        self.assertEqual(result['shipyardOffersChecked'], 1)
+        for internal in (':: Wilmington; Shipyard Blvd - B',
+                         '4018 Shipyard Blvd, Room B, 910CPR Office',
+                         ':: Wilmington; Shipyard Blvd'):
+            with self.subTest(internal=internal):
+                payload['dates'][0]['startTimes'][0]['courses'][0]['location'] = internal
+                result = summarize(payload, '2026-11-24')
+                self.assertFalse(result['publicShipyardAliasSafe'])
+                self.assertEqual(result['shipyardOffersChecked'], 1)
+        empty = summarize({'dates': []}, '2026-11-24')
+        self.assertTrue(empty['publicShipyardAliasSafe'])
+        self.assertEqual(empty['shipyardOffersChecked'], 0,
+                         'empty inventory is no proof of a public offer')
+
     def test_hosted_public_diagnostic_metadata_is_strictly_redacted(self):
         # The host observer must not echo private staff names, room labels,
         # client venues or operational time bounds into public error reports.
