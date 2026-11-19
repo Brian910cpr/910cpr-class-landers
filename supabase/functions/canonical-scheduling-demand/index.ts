@@ -53,9 +53,21 @@ export function projectDemand(row: any) {
     && row.registrations.some((item: any) => ACTIVE.has(item.status)
       && item.registration_source === "landerware_native_checkout"
       && !item.external_registration_id);
+  // A confirmed appointment intake can have a real seated registration even
+  // while its legacy numeric class roster remains unproven. Require the original
+  // accepted confirmation-message provenance and the matching active lifecycle;
+  // do not infer totals or public joinability from this one-seat signal.
+  const emailEvidence = row.external_session_evidence || {};
+  const confirmedEmailIntakeSeat = row.registration_backend === "landerware"
+    && row.source === "confirmed_booking_intake"
+    && emailEvidence.kind === "registration_confirmation"
+    && /^[0-9a-f]{16}$/i.test(String(emailEvidence.gmail_message_id || ""))
+    && Array.isArray(row.registrations)
+    && row.registrations.some((item: any) => ACTIVE.has(item.status)
+      && item.registration_source === "enrollware_email_confirmation");
   const operationalHasActiveSeat = ["scheduled", "active"].includes(row.status)
     && ((countAvailable && typeof proof.active_registration_count === "number"
-          && proof.active_registration_count > 0) || nativeCommittedSeat);
+          && proof.active_registration_count > 0) || nativeCommittedSeat || confirmedEmailIntakeSeat);
   const workspaces = row.landerware_sessions || [];
   const workspace = workspaces.length === 1 ? workspaces[0] : null;
   const workspaceStatus = !workspaces.length ? "missing" : !workspace
