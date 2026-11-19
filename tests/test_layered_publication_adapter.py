@@ -259,7 +259,7 @@ class LayeredPublicationTests(unittest.TestCase):
         self.window(11,'20:00','00:00')
         self.window(11,'20:00','00:00',name='Michelle')
         self.window(12)
-        row=self.add(11,'11:45','13:45',cid='209806')
+        row=self.add(11,'11:45','13:45',cid='209806',count=1)
         # The BLS anchor is outside the Heartsaver page's course catalog.
         seated=dict(session_id=row['source_event_id'],date='2026-10-11',startTime='11:45',
                     courseId='209806',courseName='Existing BLS',offerType='seated_class',instructor='Brian Ennis')
