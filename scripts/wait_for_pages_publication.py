@@ -6,6 +6,7 @@ but does not answer whether the newly generated release reached the public host.
 This guard never changes availability, customer records, or publishing state.
 """
 import json
+from http.client import HTTPException
 import os
 import sys
 import time
@@ -34,17 +35,31 @@ def matching_pages_run(runs, expected_sha, refresh_completed_at):
     return max(candidates, key=lambda run: run["created_at"], default=None)
 
 
-def read_runs(repo, token):
-    request = Request(
-        f"https://api.github.com/repos/{repo}/actions/runs?per_page=50",
-        headers={
-            "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {token}",
-            "X-GitHub-Api-Version": "2022-11-28",
-        },
-    )
-    with urlopen(request, timeout=12) as response:
-        return json.load(response)["workflow_runs"]
+def read_runs(repo, token, expected_sha):
+    """Read bounded, commit-filtered Pages candidates, never arbitrary huge run lists.
+
+    A transient truncated GitHub response is retried by main(), within its
+    existing deadline. Exhaustion is an error, never a green observation.
+    """
+    all_runs = []
+    for page in range(1, 4):
+        request = Request(
+            f"https://api.github.com/repos/{repo}/actions/runs"
+            f"?head_sha={expected_sha}&per_page=30&page={page}",
+            headers={
+                "Accept": "application/vnd.github+json",
+                "Authorization": f"Bearer {token}",
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+        )
+        with urlopen(request, timeout=12) as response:
+            rows = json.load(response)["workflow_runs"]
+        if not isinstance(rows, list):
+            raise ValueError("GitHub workflow_runs is not a list")
+        all_runs.extend(rows)
+        if len(rows) < 30:
+            return all_runs
+    raise ValueError("GitHub workflow runs exceed bounded pagination")
 
 
 def main():
@@ -65,8 +80,8 @@ def main():
 
     while True:
         try:
-            run = matching_pages_run(read_runs(repo, token), expected_sha, finished)
-        except (OSError, ValueError, KeyError) as exc:
+            run = matching_pages_run(read_runs(repo, token, expected_sha), expected_sha, finished)
+        except (OSError, HTTPException, ValueError, KeyError) as exc:
             # Never ignore a failed/missing probe. Retry only within a strict bound.
             print(f"Unable to confirm Pages status ({type(exc).__name__}); retrying.")
             run = None
