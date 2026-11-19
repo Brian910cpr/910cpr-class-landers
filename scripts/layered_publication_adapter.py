@@ -246,15 +246,19 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                     or offer.get("sourceAvailabilityBlock", {}).get("sessionId"))
         return counts.get(str(identity))
 
+    def instructor_key(name):
+        key = str(name or '').strip().casefold()
+        return 'brian ennis' if key == 'brian' else key
+
+    # A demand Anchor collapses this class for its instructor, not every
+    # independently qualified instructor on the same date. Physical room and
+    # instructor conflicts are enforced upstream by the scheduling engine.
     day_anchors = {
-        (offer['date'], str(offer['courseId']))
+        (offer['date'], str(offer['courseId']), instructor_key(offer.get('instructor')))
         for offer in accepted
         if offer.get('offerType') == 'seated_class'
         and has_verified_demand(matched_source(offer))
     }
-    def instructor_key(name):
-        key = str(name or '').strip().casefold()
-        return 'brian ennis' if key == 'brian' else key
 
     # Only verified operational demand provides day gravity, including a
     # canonical private/unlisted seat without an external numeric course ID.
@@ -280,7 +284,9 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         # A retained skills seat occupies its actual interval; it does not consume
         # the whole day's eligible skills edges. Calculation already checks each
         # candidate's 45-minute instruction plus 15-minute cleanup and conflicts.
-        if offer.get('offerType') != 'seated_class' and (offer['date'], str(offer['courseId'])) in day_anchors and not skills_edge:
+        if (offer.get('offerType') != 'seated_class'
+                and (offer['date'], str(offer['courseId']), instructor_key(offer.get('instructor'))) in day_anchors
+                and not skills_edge):
             rejected.append(dict(offer, reasons=['existing_course_day_anchor']))
         elif offer.get('scheduleRole') == 'open_day' and (
                 (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days or
