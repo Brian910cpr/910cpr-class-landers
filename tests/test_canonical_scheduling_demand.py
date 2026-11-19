@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 from scripts.anchor_state import promote_seated_sessions
 from scripts.block_start_time_selector import build_occupancy
+from scripts.layered_selector_adapter import aware
 from scripts.canonical_scheduling_demand import resolve_canonical_demand, summarize_positive_v1_attribution
 
 
@@ -175,7 +176,7 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertFalse(blocks[0]["count_available"])
         self.assertIsNone(blocks[0]["active_registration_count"])
         self.assertTrue(blocks[0]["instructor_unassigned"])
-        self.assertEqual(blocks[0]["end"].isoformat(), "2026-11-23T12:30:00-05:00")
+        self.assertEqual(aware(blocks[0]["end"]).isoformat(), "2026-11-23T12:30:00-05:00")
         self.assertNotIn("public_direct_booking", blocks[0])
 
     def test_protected_projection_source_has_required_contract_and_no_customer_fields(self):
