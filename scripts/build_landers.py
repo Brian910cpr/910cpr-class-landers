@@ -18,11 +18,13 @@ except ModuleNotFoundError:
         return iterable
 
 try:
+    from scripts.class_registration_routing import registration_action, rewrite_detail_routes
     from scripts.title_cleaner import normalize_course_title, seo_title_for_session
     from scripts.build_metadata import apply_build_metadata, current_build_metadata
     from scripts.public_class_eligibility import session_has_public_class_location
     from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
 except ModuleNotFoundError:
+    from class_registration_routing import registration_action, rewrite_detail_routes
     from title_cleaner import normalize_course_title, seo_title_for_session
     from build_metadata import apply_build_metadata, current_build_metadata
     from public_class_eligibility import session_has_public_class_location
@@ -436,9 +438,8 @@ def enrollware_url_for_session(session: dict) -> str:
 
 
 def public_registration_url(session: dict) -> str:
-    """Route real public classes through LanderWare before Enrollware checkout."""
-    sid = str(session.get("session_id") or "").strip()
-    return f"/register/?session={quote(sid)}" if sid.isdigit() else enrollware_url_for_session(session)
+    """Use a verified native capability or a truthful class-context request."""
+    return registration_action(session)["href"]
 
 
 def verified_enrollware_url(url: str) -> bool:
@@ -3033,6 +3034,10 @@ def main() -> None:
             course_page_url=escape(course_page_url),
             public_status_js=js_escape(lander_status),
         )
+        if lander_status == "scheduled":
+            route_sessions = {str(row.get("session_id")): row for row in canonical_sessions
+                if public_indexable_session(row, enrollware_url_for_session(row)) and session_has_public_class_location(row)}
+            html_doc = rewrite_detail_routes(html_doc, session, route_sessions)
         html_doc = apply_build_metadata(html_doc, build_meta)
         html_doc = "\n".join(line.rstrip() for line in html_doc.splitlines()) + "\n"
 

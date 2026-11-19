@@ -1,0 +1,57 @@
+import json,re,unittest
+from pathlib import Path
+from urllib.parse import parse_qs,urlsplit
+from scripts.class_registration_routing import registration_action,owned_registration,rewrite_detail_routes,CAPABILITIES
+ROOT=Path(__file__).resolve().parents[1]
+class ClassRoutingTests(unittest.TestCase):
+ def records(self):
+  return {sid:dict(session_id=sid,course_id=c['course_id'],course_number=c['course_id'],start_at=c['starts_at'],location_display=c['location'],course_name='BLS Initial',registration_url='https://coastalcprtraining.enrollware.com/enroll?id='+sid,session_status='active') for sid,c in json.loads(CAPABILITIES.read_text())['sessions'].items()}
+ def test_six_capabilities_use_own_ids(self):
+  self.assertEqual(len(self.records()),6)
+  for sid,row in self.records().items():
+   self.assertEqual(registration_action(row)['href'],'https://www.910cpr.com/register/?session='+sid)
+ def test_mismatch_missing_closed_and_ambiguous_fields_fail_closed(self):
+  row=self.records()['15026275']
+  for change in ({'start_at':''},{'start_at':'2026-11-20T11:30:00-05:00'},{'course_number':'359474'},{'course_id':'359474'},{'location_display':'Another site'},{'registration_status':'closed'},{'is_full':True}):
+   with self.subTest(change=change):self.assertEqual(registration_action(dict(row,**change))['mode'],'request')
+ def test_request_preserves_selected_class_not_confirmation(self):
+  row=dict(session_id='999',course_id='359474',course_name='BLS Renewal',start_at='2026-12-01T10:00:00-05:00',location_display='Shipyard')
+  action=registration_action(row);self.assertEqual(action['label'],'Request this class')
+  body=parse_qs(urlsplit(action['href']).query)['body'][0]
+  for value in ['BLS Renewal','2026-12-01T10:00:00-05:00','Shipyard','/classes/999.html','not a confirmed reservation']:self.assertIn(value,body)
+ def test_owned_routes_validate_host_identity_course_and_duplicates(self):
+  good='/register/?session=999&course=359474'
+  self.assertEqual(owned_registration(good,'999','359474'),'https://www.910cpr.com'+good)
+  for url in ['https://example.pages.dev'+good,'//untrusted.invalid'+good,'https://www.910cpr.com.evil.invalid'+good,good+'&session=777',good.replace('359474','209806'),good+'#fragment']:
+   self.assertEqual(owned_registration(url,'999','359474'),'')
+ def test_detail_rewrite_preserves_price_and_is_idempotent(self):
+  row=dict(session_id='999',course_id='359474',course_name='BLS Renewal',start_at='2026-12-01T10:00:00-05:00',location_display='Shipyard')
+  original='''<script type="application/ld+json">{"offers":{"price":"75.00","url":"https://coastalcprtraining.enrollware.com/enroll?id=999"}}</script><div class="cta-panel"><p class="cta-panel-label">Reserve your seat</p><p class="cta-panel-copy">Direct registration</p><div class="cta-row"><a class="button primary" href="/register/?session=999">Continue to Registration</a></div></div><a href="https://coastalcprtraining.enrollware.com/schedule#ct359474">Full schedule</a><script>const pageContext={register_url: "/register/?session=999",schedule_url: "external",class_status: "scheduled"};if (!shouldForward || !pageContext.register_url) return;</script>'''
+  output=rewrite_detail_routes(original,row,{'999':row})
+  self.assertIn('Request this class',output);self.assertNotIn('Reserve your seat',output)
+  self.assertNotIn('coastalcprtraining.enrollware.com',output)
+  self.assertIn('href="/classes/"',output)
+  self.assertIn('startsWith("https://www.910cpr.com/register/")',output)
+  self.assertEqual(json.loads(re.search(r'application/ld\+json">(.*?)</script>',output)[1])['offers']['price'],'75.00')
+  self.assertEqual(rewrite_detail_routes(output,row,{'999':row}),output)
+ def test_current_listings_and_details_match_actions(self):
+  html=(ROOT/'docs/classes/index.html').read_text(encoding='utf8')
+  ids=re.findall(r'class="class-finder-secondary" href="/classes/(\d+)\.html"',html)
+  rows=json.loads((ROOT/'docs/data/schedule_future.json').read_text(encoding='utf8'))['sessions'];source={str(r['session_id']):r for r in rows}
+  cards=re.findall(r'<article class="class-finder-card[^>]*>.*?</article>',html,re.S)
+  self.assertEqual(len(ids),len(cards))
+  from html import unescape
+  for sid,card in zip(ids,cards):
+   action=registration_action(source[sid]);href=unescape(re.search(r'class="class-finder-primary" href="([^"]+)"',card)[1])
+   self.assertEqual(href,action['href']);self.assertIn('>'+action['label']+'</a>',card)
+   self.assertNotIn('https://coastalcprtraining.enrollware.com',(ROOT/'docs/classes'/(sid+'.html')).read_text(encoding='utf8'))
+  self.assertNotIn('https://coastalcprtraining.enrollware.com',html)
+ def test_canonical_generator_integration(self):
+  from scripts import build_index_and_sitemap as index,build_landers as detail
+  rows=index.load_schedule_future_sessions();normalized=[index.schedule_future_to_public_session(r) for r in rows];normalized=[r for r in normalized if r]
+  self.assertNotIn('coastalcprtraining.enrollware.com',index.render_classes_finder_index(normalized))
+  for row in self.records().values():
+   public=index.schedule_future_to_public_session(row);self.assertIsNotNone(public)
+   self.assertEqual(registration_action(public)['mode'],'native')
+   self.assertEqual(detail.public_registration_url(row),registration_action(row)['href'])
+if __name__=='__main__':unittest.main()

@@ -3,7 +3,7 @@ const {execFileSync}=require('node:child_process');
 const api=require('../docs/assets/resolved-selector-availability.js');
 const legacy='https://coastalcprtraining.enrollware.com/enroll?id=123456';
 test('existing BLS Initial seated retail route survives a legacy-source refresh without activating other offerings',()=>{
- assert.equal(api.registrationDestination({courseId:'209806',offerType:'seated_class',appointmentUrl:legacy}),'/register/?session=123456');
+ assert.equal(api.registrationDestination({courseId:'209806',offerType:'seated_class',appointmentUrl:legacy}),'https://www.910cpr.com/register/?session=123456');
  for(const courseId of ['359474','209809','241108','209805','248288','448630','253768','252737'])assert.equal(api.registrationDestination({courseId,offerType:'seated_class',appointmentUrl:legacy}),legacy);
  assert.equal(api.registrationDestination({courseId:'209806',offerType:'dynamic_appointment',appointmentUrl:legacy}),legacy);
  for(const url of [legacy+'&id=999',legacy.replace('id=123456','id=unknown'),legacy.replace('coastalcprtraining.enrollware.com','unverified.invalid')])assert.equal(api.registrationDestination({courseId:'209806',offerType:'seated_class',appointmentUrl:url}),url);
@@ -11,10 +11,10 @@ test('existing BLS Initial seated retail route survives a legacy-source refresh 
 test('explicit owned checkout destinations preserve exact session/course/context and take precedence over stale external URLs',()=>{
  for(const prefix of ['/register/','/register/checkout/']){
   const destination=prefix+'?session=lw-11111111-1111-4111-8111-111111111111&course=209809&context=heartsaver';
-  assert.equal(api.registrationDestination({courseId:'209809',registrationUrl:destination,appointmentUrl:legacy}),destination);
+  assert.equal(api.registrationDestination({courseId:'209809',registrationUrl:destination,appointmentUrl:legacy}),'https://www.910cpr.com'+destination);
  }
  const skills='/register/skills-session/?course=509474&date=2031-01-01&startTime=09%3A30&skillsContext=arc-blended';
- assert.equal(api.registrationDestination({registrationUrl:skills,appointmentUrl:legacy}),skills);
+ assert.equal(api.registrationDestination({registrationUrl:skills,appointmentUrl:legacy}),'https://www.910cpr.com'+skills);
 });
 test('actual family templates preserve native links on repeated rebuilds and version the changed shared resolver',()=>{
  const script=String.raw`
@@ -29,7 +29,7 @@ for family,cid in [('bls','209806'),('heartsaver','209809'),('acls','241108'),('
  row.pop('authority',None);slot['courses']=[row];day['startTimes']=[slot];p['dates']=[day]
  a=generator.render_html(p);b=generator.render_html(p)
  compact=generator.public_selector_availability_payload(p)
- result.append(dict(family=family,expected=row['registrationUrl'],embedded=compact['dates'][0]['startTimes'][0]['courses'][0],stable=a==b,usesResolver='link.href = ResolvedSelectorAvailability.registrationDestination(course);' in a,versioned='/assets/resolved-selector-availability.js?v=20261113-native-routing1' in a))
+ result.append(dict(family=family,expected='https://www.910cpr.com'+row['registrationUrl'],embedded=compact['dates'][0]['startTimes'][0]['courses'][0],stable=a==b,usesResolver='link.href = ResolvedSelectorAvailability.registrationDestination(course);' in a,versioned='/assets/resolved-selector-availability.js?v=20261119-canonical-origin1' in a))
 print(json.dumps(result))
 `;
  const rows=JSON.parse(execFileSync(process.env.PYTHON||'python',['-B','-c',script],{cwd:require('node:path').resolve(__dirname,'..'),encoding:'utf8',timeout:30000}));
@@ -39,5 +39,13 @@ print(json.dumps(result))
   const context=vm.createContext({course:row.embedded,link:{},ResolvedSelectorAvailability:api});
   vm.runInContext('link.href = ResolvedSelectorAvailability.registrationDestination(course);',context);
   assert.equal(context.link.href,row.expected,row.family);
+ }
+});
+
+test('Friday and each other verified Initial session use their own production URL, including from previews',()=>{
+ for(const id of ['15026275','14996400','15000715','15007373','14999858','15026054']){
+  const url=api.registrationDestination({courseId:'209806',offerType:'seated_class',appointmentUrl:'https://coastalcprtraining.enrollware.com/enroll?id='+id});
+  assert.equal(url,'https://www.910cpr.com/register/?session='+id);
+  assert.equal(new URL(url,'https://example.pages.dev').origin,'https://www.910cpr.com');
  }
 });
