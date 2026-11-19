@@ -104,6 +104,29 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(sum(o['offerType']=='seated_class'
                              for o in proven['offers']),1)
 
+    def test_verified_course_anchor_does_not_collapse_other_instructor(self):
+        # Publication must not globally hide a qualified second instructor's
+        # already-approved starts merely because someone booked this course
+        # with the first instructor. Resource conflicts are tested upstream.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', next_day=False)
+        self.window(11, '08:00', '18:00', name='Michelle', next_day=False)
+        clear_calculation=self.calculation()
+        confirmed=self.add(11, '12:00', '14:30', cid='209809', count=1)
+        clear_calculation['projected_sources']=project_sources([confirmed], {})
+        seated=dict(session_id=confirmed['source_event_id'],
+                    date='2026-10-11', startTime='12:00', courseId='209809',
+                    instructor='Brian Ennis', offerType='seated_class')
+        offers=self.payload([seated], calculation=clear_calculation)['offers']
+        self.assertEqual(sum(o.get('offerType')=='seated_class' for o in offers), 1)
+        self.assertFalse(any(o.get('offerType')=='dynamic_appointment'
+            and o['courseId']=='209809' and o['instructor']=='Brian Ennis'
+            for o in offers))
+        self.assertTrue(any(o.get('offerType')=='dynamic_appointment'
+            and o['courseId']=='209809' and o['instructor']=='Michelle'
+            and o['startTime']=='08:00' and o['scheduleRole']=='open_day'
+            for o in offers))
+
     def test_private_key_only_positive_seat_has_internal_day_gravity(self):
         # A confirmed private seat may lack an external course ID. It is still
         # operational demand, but this gate must never create a joinable seat.
