@@ -137,7 +137,9 @@ class LayeredPublicationTests(unittest.TestCase):
             result=self.payload()
             offers=[o for o in result['offers'] if o['courseId']=='209809']
             self.assertTrue(any(o['startTime']=='08:00' and
-                                o['scheduleRole']=='open_day' for o in offers))
+                                o['scheduleRole']=='open_day' for o in offers),
+                            f"count={count} offers={[(o['startTime'],o['scheduleRole']) for o in offers[:12]]} "
+                            f"reasons={result['rejectionReasonCounts']} counts={result['counts']}")
             self.assertTrue(any(o['startTime']=='14:00' and
                                 o['scheduleRole']=='open_day' for o in offers))
             self.assertFalse(any(o['startTime']=='12:00' for o in offers))
