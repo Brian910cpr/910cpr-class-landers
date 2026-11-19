@@ -14,6 +14,7 @@ from scripts.build_status import BuildStatusReporter
 from scripts.build_course_landers import COURSE_SESSION_ALIASES, TITLE_OVERRIDES
 from scripts.stale_class_link_fallbacks import infer_current_public_destination
 from scripts.public_class_eligibility import session_has_public_class_location
+from scripts.class_registration_routing import registration_action, owned_registration
 from supervisor.status_snapshot import write_status_snapshot
 from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
 
@@ -520,7 +521,7 @@ def schedule_future_to_public_session(session: dict) -> dict | None:
     direct_booking = session.get("public_direct_booking")
     if direct_booking is False or str(direct_booking).strip().lower() == "false":
         return None
-    if not re.match(r"^https://coastalcprtraining\.enrollware\.com/enroll\?(?:.*&)?id=\d+(?:&.*)?$", register_url):
+    if not re.match(r"^https://coastalcprtraining\.enrollware\.com/enroll\?(?:.*&)?id=\d+(?:&.*)?$", register_url) and not owned_registration(register_url, session_id, str(session.get("course_number") or session.get("course_id") or "")):
         return None
     if session.get("is_full") is True:
         return None
@@ -796,6 +797,7 @@ def render_classes_finder_index(
 
     result_cards = []
     for s in sessions:
+        action = registration_action(s)
         bits = []
         if s.get("display_date"):
             bits.append(s["display_date"])
@@ -809,7 +811,7 @@ def render_classes_finder_index(
         price_html = f'<span class="class-finder-price">{html_escape(s["price"])}</span>' if s.get("price") else ""
         detail_link = f'<a class="class-finder-secondary" href="{html_escape(s["local_path"])}">Details</a>'
         register_link = (
-            f'<a class="class-finder-primary" href="{html_escape(s["register_url"])}">Book This Class</a>'
+            f'<a class="class-finder-primary" href="{html_escape(action["href"])}">{html_escape(action["label"])}</a>'
             if s.get("register_url")
             else ""
         )
@@ -1696,7 +1698,7 @@ ul {{
       <a href="/pals.html">PALS</a>
       <a href="/heartsaver.html">Heartsaver</a>
       <a href="{PHONE_LINK}">Call {PHONE_DISPLAY}</a>
-      <a href="{ENROLLWARE_SCHEDULE_URL}">Full class schedule</a>
+      <a href="{'/courses/' if canonical_path == '/classes/index.html' else ENROLLWARE_SCHEDULE_URL}">{'Browse course types' if canonical_path == '/classes/index.html' else 'Full class schedule'}</a>
     </div>
   </div>
 </header>

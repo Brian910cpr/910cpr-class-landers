@@ -19,7 +19,7 @@
         const session = url.searchParams.getAll('session');
         if (session.length > 1 || (session.length && !/^(?:\d+|lw-[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12})$/i.test(session[0]))) return null;
         if (!session.length && !/^\d+$/.test(url.searchParams.get('course') || '')) return null;
-        return url.pathname + url.search;
+        return 'https://www.910cpr.com' + url.pathname + url.search;
       } catch { return null; }
     };
     const native = owned(course.registrationUrl) || owned(course.appointmentUrl);
@@ -30,7 +30,7 @@
         const ids = url.searchParams.getAll('id');
         if (url.protocol === 'https:' && url.host === 'coastalcprtraining.enrollware.com' &&
             !url.username && !url.password && !url.hash && url.pathname === '/enroll' &&
-            ids.length === 1 && /^\d+$/.test(ids[0])) return '/register/?session=' + encodeURIComponent(ids[0]);
+            ids.length === 1 && /^\d+$/.test(ids[0])) return 'https://www.910cpr.com/register/?session=' + encodeURIComponent(ids[0]);
       } catch { /* Incomplete legacy identity cannot invent a native session. */ }
     }
     return course.appointmentUrl || course.registrationUrl || '';
