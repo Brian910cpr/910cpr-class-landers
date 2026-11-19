@@ -145,11 +145,33 @@ def public_landscape_diagnostics_safe(payload):
     return True
 
 
+def lead_window_status(day, cutoff):
+    """Only classify the clock cutoff; never infer a free instructor or outage."""
+    if cutoff is None:
+        return 'unknown'
+    eastern = ZoneInfo('America/New_York')
+    start_day = datetime.fromisoformat(day).date()
+    start = datetime.combine(start_day, datetime.min.time(), tzinfo=eastern).astimezone(timezone.utc)
+    end = datetime.combine(start_day + timedelta(days=1), datetime.min.time(),
+                           tzinfo=eastern).astimezone(timezone.utc)
+    if cutoff <= start:
+        return 'outside_lead_window'
+    if cutoff >= end:
+        return 'entire_day_inside_lead_window'
+    return 'partly_inside_lead_window'
+
+
 def summarize(payload, day, now=None):
     rows = [(d['date'], t['startTime'], c) for d in payload.get('dates', [])
             for t in d.get('startTimes', []) for c in t.get('courses', [])]
     failures = payload.get('reconciliationIssues', [])
     now = now or datetime.now(timezone.utc)
+    # Use the policy that the public feed actually carries. A missing or invalid
+    # lead is UNKNOWN, not a license to treat an empty day as healthy or blocked.
+    raw_lead = payload.get('minimumLeadHours')
+    lead_hours = (raw_lead if isinstance(raw_lead, (int, float)) and
+                  not isinstance(raw_lead, bool) and 0 <= raw_lead <= 24 * 365 else None)
+    lead_cutoff = now + timedelta(hours=lead_hours) if lead_hours is not None else None
     # Public offers are date-scoped in Eastern local time. Do not infer an open
     # instructor day from an empty public date, nor conflate partial coverage
     # failures with an expired dynamic-feed lease.
@@ -167,6 +189,8 @@ def summarize(payload, day, now=None):
         }
         for date in next_days
     }
+    for next_date, detail in next_three_days.items():
+        detail['leadWindowStatus'] = lead_window_status(next_date, lead_cutoff)
     try:
         expiry = datetime.fromisoformat(str(payload.get('validUntil', '')).replace('Z', '+00:00'))
         expired = expiry.tzinfo is None or expiry <= now
@@ -180,6 +204,10 @@ def summarize(payload, day, now=None):
         'seatedOffers': sum(c.get('offerType') == 'seated_class' for _, _, c in rows),
         'publicationExpired': expired,
         'perCourse': dict(Counter(str(c['courseId']) for _, _, c in rows)),
+        'minimumLeadHours': lead_hours,
+        'leadCutoffAtEastern': (lead_cutoff.astimezone(ZoneInfo('America/New_York')).isoformat()
+                                if lead_cutoff is not None else None),
+        'dayLeadWindowStatus': lead_window_status(day, lead_cutoff),
         'day': day, 'dayOffers': len([r for r in rows if r[0] == day]),
         'dayTimes': sorted({t for d, t, _ in rows if d == day}),
         'dayPerCourse': dict(Counter(str(c['courseId']) for d, _, c in rows if d == day)),
@@ -249,7 +277,7 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     print(json.dumps({k: dict(
-        {f: v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','coverageAlert','publicDiagnosticsSafe')},
+        {f: v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','coverageAlert','publicDiagnosticsSafe', 'minimumLeadHours', 'leadCutoffAtEastern', 'dayLeadWindowStatus')},
         nextThreeDayOffers={day: item['publishedOffers'] for day, item in v['nextThreeDays'].items()})
         for k,v in feeds.items()}, indent=2))
     if incident:
