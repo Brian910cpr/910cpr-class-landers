@@ -14,7 +14,7 @@ from scripts.build_status import BuildStatusReporter
 from scripts.build_course_landers import COURSE_SESSION_ALIASES, TITLE_OVERRIDES
 from scripts.stale_class_link_fallbacks import infer_current_public_destination
 from scripts.public_class_eligibility import session_has_public_class_location
-from scripts.class_registration_routing import registration_action, owned_registration
+from scripts.class_registration_routing import registration_action, owned_registration, public_location_display
 from supervisor.status_snapshot import write_status_snapshot
 from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
 
@@ -351,10 +351,7 @@ def parse_json_ld_event(content: str) -> dict:
 
 
 def clean_location_name(location: str) -> str:
-    value = strip_html(location)
-    if value.startswith("::"):
-        value = value[2:].strip()
-    return value or "Unknown Location"
+    return public_location_display(strip_html(location)) or "Unknown Location"
 
 
 def normalize_course_key(value: str) -> str:
