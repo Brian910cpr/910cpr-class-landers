@@ -24,6 +24,11 @@ class CBPTLandingTests(unittest.TestCase):
         cls.html = (ROOT / 'docs/cbpt.html').read_text()
         cls.tags = Tags(cls.html).tags
 
+    def test_primary_contact_is_text_without_changing_email(self):
+        self.assertIn('<a class="cta" href="sms:+19103955193">Text 910-395-5193</a>', self.html)
+        self.assertNotIn('Call 910-395-5193', self.html)
+        self.assertIn('>Email 910CPR</a>', self.html)
+
     def test_event_metadata_matches_page(self):
         schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', self.html, re.S)[1])
         self.assertEqual(schema['startDate'], '2026-12-06T13:00:00-05:00')
@@ -55,7 +60,7 @@ class CBPTLandingTests(unittest.TestCase):
         self.assertNotIn('Facebook link awaiting verification', self.html)
         self.assertTrue(any(a.get('aria-label') == '910CPR LLC Facebook' and a['href'] == 'https://www.facebook.com/910cpr' for a in links))
         for a in links:
-            if a['href'].startswith(('sms:', 'mailto:?subject=', 'https://www.facebook.com/sharer')):
+            if a.get('data-share') in {'text', 'email', 'facebook'}:
                 self.assertIn('%2Fcbpt', a['href'])
         self.assertIn('href="tel:+19103955193"', self.html)
 
