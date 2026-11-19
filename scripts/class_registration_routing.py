@@ -2,6 +2,7 @@
 import json
 import re
 from datetime import datetime
+from functools import lru_cache
 from html import escape, unescape
 from pathlib import Path
 from urllib.parse import parse_qs, urlencode, urlsplit, urlunsplit
@@ -9,6 +10,38 @@ from urllib.parse import parse_qs, urlencode, urlsplit, urlunsplit
 ROOT=Path(__file__).resolve().parents[1]
 ORIGIN='https://www.910cpr.com'
 CAPABILITIES=ROOT/'data/config/native_class_checkout_capabilities.json'
+LOCATION_RESOURCES=ROOT/'data/config/location_resource_map.json'
+
+
+@lru_cache(maxsize=1)
+def _public_location_aliases():
+    """Customer display only. Internal room identity remains in source records."""
+    try:
+        places=json.loads(LOCATION_RESOURCES.read_text(encoding='utf8')).get('locations',[])
+    except (OSError,ValueError,TypeError):
+        return {}
+    aliases={}
+    for place in places:
+        if not isinstance(place,dict):
+            continue
+        public=str(place.get('canonical_public_location') or place.get('public_display_name') or '').lstrip(': ').strip()
+        if not public:
+            continue
+        names=[place.get('canonical_public_location'),place.get('public_display_name'),*(place.get('aliases') or [])]
+        for resource in place.get('internal_resources') or []:
+            if isinstance(resource,dict):
+                names.extend([resource.get('resource_name'),*(resource.get('aliases') or [])])
+        for name in names:
+            key=str(name or '').lstrip(': ').strip().casefold()
+            if key:
+                aliases[key]=public
+    return aliases
+
+
+def public_location_display(value):
+    """Use approved office label in customer HTML/email, not for resource matching."""
+    raw=str(value or '').lstrip(': ').strip()
+    return _public_location_aliases().get(raw.casefold(),raw)
 
 
 def owned_registration(value, sid, course=''):
@@ -43,7 +76,7 @@ def registration_action(session):
         native=owned_registration(session.get('registration_url') or session.get('register_url'),sid,course)
     if native: return dict(mode='native',href=native,label='Register',notice='')
     title=str(session.get('course_name') or session.get('title') or 'this class')
-    body='I would like to ask about this class. This is a request, not a confirmed reservation.\n\nCourse: '+title+'\nDate/time: '+str(start)+'\nLocation: '+location+'\nClass: '+ORIGIN+'/classes/'+sid+'.html'
+    body='I would like to ask about this class. This is a request, not a confirmed reservation.\n\nCourse: '+title+'\nDate/time: '+str(start)+'\nLocation: '+public_location_display(location)+'\nClass: '+ORIGIN+'/classes/'+sid+'.html'
     href='mailto:brian@910cpr.com?'+urlencode({'subject':'Class request '+sid,'body':body})
     return dict(mode='request',href=href,label='Request this class',notice='Request only. No seat is reserved until 910CPR confirms registration.')
 
@@ -76,6 +109,11 @@ def rewrite_detail_routes(html, session, sessions=None):
     html=re.sub(r'<a\b[^>]*>.*?</a>',anchor,html,flags=re.S)
     if action['mode']=='request':
         html=html.replace('View details and continue to secure registration with 910CPR.', 'View class details and contact 910CPR about this class.')
+        html=re.sub(
+            r'(<p class="subhead">)([^<]*?) with direct registration after the class details below\.(</p>)',
+            lambda m:m[1]+m[2]+'. Contact 910CPR to request class details; no seat is reserved until confirmed.'+m[3],
+            html,count=1,
+        )
     if active and '<div class="cta-panel">' in html:
         start=html.index('<div class="cta-panel">');end=html.index('</div>',html.index('<div class="cta-row">',start))
         panel=html[start:end]

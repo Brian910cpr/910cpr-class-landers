@@ -14,7 +14,7 @@ from scripts.build_status import BuildStatusReporter
 from scripts.build_course_landers import COURSE_SESSION_ALIASES, TITLE_OVERRIDES
 from scripts.stale_class_link_fallbacks import infer_current_public_destination
 from scripts.public_class_eligibility import session_has_public_class_location
-from scripts.class_registration_routing import registration_action, owned_registration
+from scripts.class_registration_routing import registration_action, owned_registration, public_location_display
 from supervisor.status_snapshot import write_status_snapshot
 from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
 
@@ -655,7 +655,7 @@ def render_classes_finder_index(
         if date_key and date_key not in seen_dates:
             seen_dates.add(date_key)
             date_options.append((date_key, s.get("date_label") or s.get("display_date") or date_key))
-    location_options = sorted({s["location_name"] for s in sessions if s.get("location_name")}, key=str.lower)
+    location_options = sorted({public_location_display(s["location_name"]) for s in sessions if s.get("location_name")}, key=str.lower)
 
     def option_html(value: str, label: str) -> str:
         return f'<option value="{html_escape(value)}">{html_escape(label)}</option>'
@@ -804,7 +804,7 @@ def render_classes_finder_index(
         if s.get("display_time"):
             bits.append(s["display_time"])
         if s.get("location_name"):
-            bits.append(s["location_name"])
+            bits.append(public_location_display(s["location_name"]))
         if s.get("city") and s["city"].lower() not in str(s.get("location_name", "")).lower():
             bits.append(s["city"])
         meta_line = " | ".join(html_escape(bit) for bit in bits if bit)
@@ -820,7 +820,7 @@ def render_classes_finder_index(
 <article class="class-finder-card js-class-result"
   data-course="{html_escape(s.get('course_name', ''))}"
   data-date="{html_escape(s.get('date_key', ''))}"
-  data-location="{html_escape(s.get('location_name', ''))}"
+  data-location="{html_escape(public_location_display(s.get('location_name', '')))}"
 >
   <div>
     <h2>{html_escape(s.get("course_name", "CPR Class"))}</h2>

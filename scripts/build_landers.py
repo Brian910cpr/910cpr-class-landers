@@ -18,13 +18,13 @@ except ModuleNotFoundError:
         return iterable
 
 try:
-    from scripts.class_registration_routing import registration_action, rewrite_detail_routes
+    from scripts.class_registration_routing import registration_action, rewrite_detail_routes, public_location_display
     from scripts.title_cleaner import normalize_course_title, seo_title_for_session
     from scripts.build_metadata import apply_build_metadata, current_build_metadata
     from scripts.public_class_eligibility import session_has_public_class_location
     from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
 except ModuleNotFoundError:
-    from class_registration_routing import registration_action, rewrite_detail_routes
+    from class_registration_routing import registration_action, rewrite_detail_routes, public_location_display
     from title_cleaner import normalize_course_title, seo_title_for_session
     from build_metadata import apply_build_metadata, current_build_metadata
     from public_class_eligibility import session_has_public_class_location
@@ -413,9 +413,7 @@ def location_to_city_state(location: str):
 
 
 def clean_location_display(location: str) -> str:
-    value = str(location or "").strip()
-    if value.startswith("::"):
-        value = value[2:].strip()
+    value = public_location_display(location)
     for prohibited in PROHIBITED_PUBLIC_NAMES:
         value = re.sub(re.escape(prohibited), "", value, flags=re.I).strip(" -–—,;")
     return value

@@ -1,7 +1,7 @@
 import json,re,unittest
 from pathlib import Path
 from urllib.parse import parse_qs,urlsplit
-from scripts.class_registration_routing import registration_action,owned_registration,rewrite_detail_routes,CAPABILITIES
+from scripts.class_registration_routing import registration_action,owned_registration,rewrite_detail_routes,CAPABILITIES,public_location_display
 ROOT=Path(__file__).resolve().parents[1]
 class ClassRoutingTests(unittest.TestCase):
  def records(self):
@@ -54,4 +54,39 @@ class ClassRoutingTests(unittest.TestCase):
    public=index.schedule_future_to_public_session(row);self.assertIsNotNone(public)
    self.assertEqual(registration_action(public)['mode'],'native')
    self.assertEqual(detail.public_registration_url(row),registration_action(row)['href'])
+ def test_customer_location_redacts_internal_room_without_changing_native_match(self):
+  from scripts.build_landers import clean_location_display
+  for raw in [':: Wilmington; Shipyard Blvd - B','Wilmington; Shipyard Blvd - B', "NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office"]:
+   self.assertEqual(public_location_display(raw),'Wilmington; Shipyard Blvd')
+   self.assertEqual(clean_location_display(raw),'Wilmington; Shipyard Blvd')
+  self.assertEqual(public_location_display('Another offsite venue'),'Another offsite venue')
+  row=dict(session_id='999',course_id='359474',course_name='BLS Renewal',start_at='2026-12-01T10:00:00-05:00',location_display='Wilmington; Shipyard Blvd - B')
+  body=parse_qs(urlsplit(registration_action(row)['href']).query)['body'][0]
+  self.assertIn('Location: Wilmington; Shipyard Blvd',body)
+  self.assertNotIn('Room B',body)
+  self.assertNotIn('Shipyard Blvd - B',body)
+  for sid,existing in self.records().items():
+   self.assertEqual(registration_action(existing)['mode'],'native',sid)
+ def test_generated_heartsaver_detail_is_request_only_and_public_office(self):
+  page=(ROOT/'docs/classes/14114232.html').read_text(encoding='utf8')
+  self.assertIn('no seat is reserved until confirmed',page)
+  self.assertIn('Request only. No seat is reserved',page)
+  self.assertNotIn('with direct registration after the class details below',page)
+  self.assertNotIn('Shipyard Blvd - B',page)
+  self.assertNotIn('Shipyard+Blvd+-+B',page)
+  self.assertIn('Wilmington; Shipyard Blvd',page)
+ def test_request_hero_never_promises_direct_registration(self):
+  row=dict(session_id='999',course_id='359474',course_name='BLS Renewal',start_at='2026-12-01T10:00:00-05:00',location_display='Wilmington; Shipyard Blvd - B')
+  body='<p class="subhead">Morning session in Wilmington with direct registration after the class details below.</p><div class="cta-panel"><p class="cta-panel-label">Reserve your seat</p><p class="cta-panel-copy">Direct registration</p><div class="cta-row"><a class="button primary" href="/register/?session=999">Continue to Registration</a></div></div><script>const pageContext={register_url: "/register/?session=999",class_status: "scheduled"};</script>'
+  output=rewrite_detail_routes(body,row,{'999':row})
+  self.assertNotIn('with direct registration after the class details below',output)
+  self.assertIn('no seat is reserved until confirmed',output)
+  self.assertIn('Request this class',output)
+  self.assertEqual(output,rewrite_detail_routes(output,row,{'999':row}))
+  sid='15026275'
+  native=self.records()[sid]
+  native_html=body.replace('session=999','session='+sid)
+  native_output=rewrite_detail_routes(native_html,native,{sid:native})
+  self.assertIn('with direct registration after the class details below',native_output)
+  self.assertIn('Continue to Registration',native_output)
 if __name__=='__main__':unittest.main()
