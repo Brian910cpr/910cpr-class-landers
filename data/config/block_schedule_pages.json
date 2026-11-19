@@ -138,16 +138,19 @@
     },
     "acls": {
       "page_key": "acls",
+      "selector_intro": "Choose an option, date and start time to request a class.",
+      "registration_heading": "Request a class",
+      "registration_note": "910CPR will confirm the date and time. Your request does not reserve a seat.",
       "family": "ACLS",
       "certifying_body": "AHA",
       "title": "AHA ACLS Certification & Renewal in Wilmington, NC",
-      "meta_description": "Choose AHA ACLS initial, renewal, or HeartCode skills training in Wilmington, NC. Compare formats, view current 910CPR dates, and register online.",
+      "meta_description": "Compare AHA ACLS initial, renewal and HeartCode skills training in Wilmington, NC. Request a class; 910CPR confirms the date and time.",
       "subtitle": "For clinicians who need an American Heart Association ACLS Provider eCard",
       "intro": "New or expired ACLS: choose Provider. Current ACLS card: choose Renewal. Prefer online coursework: choose HeartCode ACLS plus an in-person skills session.",
       "explanation": "910CPR provides American Heart Association Advanced Cardiovascular Life Support training for clinicians who manage adult cardiovascular emergencies.",
       "documentation_note": {
         "title": "Choose the ACLS path that matches your requirement",
-        "body": "This page shows current availability and registration for all three public AHA ACLS paths in Wilmington.",
+        "body": "Compare the three public AHA ACLS paths in Wilmington and request a class. 910CPR will confirm the date and time.",
         "bullets": [
           "ACLS Provider is the complete instructor-led path for initial certification or an expired card.",
           "ACLS Renewal is the focused classroom path for currently certified providers.",
@@ -275,16 +278,19 @@
     },
     "pals": {
       "page_key": "pals",
+      "selector_intro": "Choose an option, date and start time to request a class.",
+      "registration_heading": "Request a class",
+      "registration_note": "910CPR will confirm the date and time. Your request does not reserve a seat.",
       "family": "PALS",
       "certifying_body": "AHA",
       "title": "AHA PALS Certification & Renewal in Wilmington, NC",
-      "meta_description": "Choose AHA PALS initial, renewal, or HeartCode skills training in Wilmington, NC. Compare formats, view current 910CPR dates, and register online.",
+      "meta_description": "Compare AHA PALS initial, renewal and HeartCode skills training in Wilmington, NC. Request a class; 910CPR confirms the date and time.",
       "subtitle": "For clinicians who need an American Heart Association PALS Provider eCard",
       "intro": "New or expired PALS: choose Provider. Current PALS card: choose Renewal. Prefer online coursework: choose HeartCode PALS plus an in-person skills session.",
       "explanation": "910CPR provides American Heart Association Pediatric Advanced Life Support training for clinicians who respond to pediatric respiratory, shock, and cardiac emergencies.",
       "documentation_note": {
         "title": "Choose the PALS path that matches your requirement",
-        "body": "This page shows current availability and registration for all three public AHA PALS paths in Wilmington.",
+        "body": "Compare the three public AHA PALS paths in Wilmington and request a class. 910CPR will confirm the date and time.",
         "bullets": [
           "PALS Provider is the complete instructor-led path for initial certification or an expired card.",
           "PALS Renewal is the focused classroom path for currently certified providers.",
