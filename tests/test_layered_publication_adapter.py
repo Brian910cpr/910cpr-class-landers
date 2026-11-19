@@ -124,6 +124,69 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertNotIn(private['source_event_id'],json.dumps(result['offers']))
         self.assertFalse(any(o.get('offerType')=='seated_class' for o in result['offers']))
 
+    def test_native_private_seat_survives_exact_interval_legacy_mirror(self):
+        # A legacy class shell and a canonical paid seat may represent the same
+        # physical interval. Neither source order may erase verified occupancy
+        # or turn the private record into a publicly joinable existing class.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', next_day=False)
+        self.policy['require_verified_day_gravity'] = True
+        legacy=self.add(11,'12:00','13:00',cid='359474',count=None)
+        legacy['source_file']='docs/data/schedule_future.json'
+        canonical=dict(legacy,source_event_id='synthetic-canonical-private-seat',
+            source_file='canonical_class_sessions',visibility='private',
+            operational_has_active_seat=True,count_available=False,
+            active_registration_count=None)
+        for rows in ([legacy,canonical],[canonical,legacy]):
+            with self.subTest(first=rows[0]['source_file']):
+                self.sources=list(rows)
+                reports=self.calculation()['reports']
+                self.assertEqual(len(reports),1)
+                occupied=reports[0]['normalized_occupancy']
+                self.assertEqual(len(occupied),1)
+                self.assertEqual(occupied[0]['id'],'synthetic-canonical-private-seat')
+                self.assertTrue(occupied[0]['operational_has_active_seat'])
+                self.assertEqual(occupied[0]['kind'],'paid')
+                self.assertIsNone(occupied[0]['headcount'])
+                # finalize() retains restricted internal diagnostics by design.
+                # Test the actual customer-facing whitelist projection instead.
+                public=public_selector_availability_payload(self.payload())
+                self.assertFalse(any(course.get('offerType')=='seated_class'
+                    for day in public['dates'] for slot in day['startTimes']
+                    for course in slot['courses']))
+                self.assertNotIn('synthetic-canonical-private-seat',json.dumps(public))
+
+    def test_v2_empty_occupied_shell_does_not_create_fake_bookend_day(self):
+        # The existing physical interval stays unavailable, while safe free
+        # time on both sides is scanned instead of requiring fake Barnacles.
+        self.windows=[];self.coverage=[];self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        self.policy["require_verified_day_gravity"] = True
+        row=self.add(11,'12:00','13:00',cid='359474',count=None)
+        for count in (None, 0):
+            row['count_available'] = count is not None
+            row['active_registration_count'] = count
+            result=self.payload()
+            offers=[o for o in result['offers'] if o['courseId']=='209809']
+            self.assertTrue(any(o['startTime']=='08:00' and
+                                o['scheduleRole']=='open_day' for o in offers),
+                            f"count={count} offers={[(o['startTime'],o['scheduleRole']) for o in offers[:12]]} "
+                            f"reasons={result['rejectionReasonCounts']} counts={result['counts']}")
+            self.assertTrue(any(o['startTime']=='14:00' and
+                                o['scheduleRole']=='open_day' for o in offers))
+            self.assertFalse(any(o['startTime']=='12:00' for o in offers))
+            self.assertNotIn('anchored_day_requires_attached_offer',
+                             result['rejectionReasonCounts'])
+        # The same occupied interval, with one verified private seat, must
+        # instead provide internal Anchor gravity without a public private seat.
+        row['visibility']='private'
+        row['active_registration_count']=1
+        row['count_available']=True
+        proven=self.payload()
+        self.assertFalse(any(o.get('scheduleRole')=='open_day' for o in proven['offers']))
+        self.assertTrue(any(o.get('scheduleRole')=='barnacle' for o in proven['offers']))
+        self.assertFalse(any(o.get('offerType')=='seated_class' for o in proven['offers']))
+
     def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
         # Both conflict rejections and expired dynamic URLs pass through this
         # finalizer. Neither may serialize a private record into the public

@@ -215,6 +215,16 @@ def run(fixture):
     grid = policy.get('slot_minutes')
     if grid is not None and (not isinstance(grid, int) or grid <= 0 or 60 % grid):
         raise ValueError('invalid slot grid')
+    # Operational occupancy and Anchor gravity are not interchangeable. In V2,
+    # a zero/unknown-seat shell still blocks its exact interval, but must not
+    # turn the instructor's entire remaining day into bookend-only inventory.
+    # Legacy lab fixtures retain their earlier explicitly planted behavior.
+    verified_gravity_ids = {
+        busy["id"] for busy in occupied
+        if busy.get("operational_has_active_seat") is True
+        or (busy["kind"] in {"paid", "seated"}
+            and type(busy.get("headcount")) is int and busy["headcount"] > 0)
+    }
     candidates, edges, free_intervals = [], [], []
     def candidate(course, start, instructor, location, origin):
         candidates.append({"id": "candidate-" + str(len(candidates) + 1), "course": course,
@@ -236,7 +246,10 @@ def run(fixture):
         local_zone = datetime.fromisoformat(window["start"].replace("Z", "+00:00")).tzinfo
         first_day = ws.astimezone(local_zone).date()
         last_day = (we - timedelta(microseconds=1)).astimezone(local_zone).date()
-        relevant = [b for b in blocks if (b["instructor"] == instructor or (policy.get("shared_room_edges")
+        relevant = [b for b in blocks if
+                    (not policy.get("require_verified_day_gravity")
+                     or any(source_id in verified_gravity_ids for source_id in b["source_ids"]))
+                    and (b["instructor"] == instructor or (policy.get("shared_room_edges")
                         and b["start_location"] == location and b["end_location"] == location))
                     and b["start"].astimezone(local_zone).date() <= last_day
                     and (b["end"] - timedelta(microseconds=1)).astimezone(local_zone).date() >= first_day

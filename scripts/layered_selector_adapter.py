@@ -49,6 +49,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         "full_class_consolidation_scope": policy.get("full_class_consolidation_scope", "family"),
         "travel_minutes": {}, "instructor_family_eligibility": {},
         "shared_room_edges": shared_room_edges,
+        "require_verified_day_gravity": policy.get("require_verified_day_gravity") is True,
         "reject_unknown_full_family_count": commitment_coverage is not None})
     for course in courses:
         cid = str(course["course_id"])
@@ -102,7 +103,13 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
     if commitment_coverage is not None:
         fixture["commitment_coverage"] = commitment_coverage
     source_keys = set()
-    for index, busy in enumerate(occupancy):
+    # An exact interval may appear in both legacy schedule inventory and the
+    # canonical demand feed. Keep the proven canonical commitment first so an
+    # earlier unproven mirror cannot erase its internal Anchor gravity. This
+    # does not sum seats, establish public joinability, or shorten occupancy.
+    priority_occupancy = sorted(enumerate(occupancy), key=lambda pair: (
+        pair[1].get("operational_has_active_seat") is not True, pair[0]))
+    for index, busy in priority_occupancy:
         if not busy.get("start") or not busy.get("end"):
             raise ValueError("unresolved occupied interval")
         start, end = aware(busy["start"]), aware(busy["end"])
@@ -126,11 +133,13 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         cid = str(busy.get("course_id") or "")
         kind = busy.get("kind") or ("commitment" if "blocked" in str(busy.get("source_file")) else "planted")
         count = busy.get("active_registration_count")
-        if isinstance(count, int) and count > 0 and kind == "planted":
+        if ((type(count) is int and count > 0)
+                or busy.get("operational_has_active_seat") is True) and kind == "planted":
             kind = "paid"
         fixture["sources"].append(dict(id=str(busy.get("source_event_id") or "occupied-"+str(index)),
             instructor=instructor, location=location, start=start.isoformat(), end=end.isoformat(),
             course=cid if cid in fixture["courses"] else None, kind=kind, headcount=count,
+            operational_has_active_seat=busy.get("operational_has_active_seat") is True,
             evidence=busy.get("source_file"),
             resource_uncertain=busy.get("resource_uncertain", False),
             uncertainty_reason=busy.get("uncertainty_reason"),
