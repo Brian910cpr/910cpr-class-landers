@@ -191,6 +191,12 @@ def summarize(payload, day, now=None):
     }
     for next_date, detail in next_three_days.items():
         detail['leadWindowStatus'] = lead_window_status(next_date, lead_cutoff)
+    # A healthy lead cutoff and a global failed-window alert can coexist.
+    # Preserve the global fail-closed gate while attributing which date is affected.
+    day_failed_windows = sum(str(i.get('start', '')).startswith(day) for i in failures)
+    global_coverage_alert = bool((payload.get('counts') or {}).get('failed_windows'))
+    coverage_alert_scope = ('includes_observed_day' if day_failed_windows else
+                            'other_or_unscoped_windows' if global_coverage_alert else 'none')
     try:
         expiry = datetime.fromisoformat(str(payload.get('validUntil', '')).replace('Z', '+00:00'))
         expired = expiry.tzinfo is None or expiry <= now
@@ -213,8 +219,10 @@ def summarize(payload, day, now=None):
         'dayPerCourse': dict(Counter(str(c['courseId']) for d, _, c in rows if d == day)),
         'nextThreeDays': next_three_days,
         'failedWindowReasons': dict(Counter(i.get('reason', 'unknown') for i in failures)),
-        'dayFailedWindows': sum(str(i.get('start', '')).startswith(day) for i in failures),
-        'coverageAlert': bool((payload.get('counts') or {}).get('failed_windows')),
+        'dayFailedWindows': day_failed_windows,
+        'dayCoverageAlert': bool(day_failed_windows),
+        'coverageAlert': global_coverage_alert,
+        'coverageAlertScope': coverage_alert_scope,
         'publicDiagnosticsSafe': public_diagnostics_safe(failures),
     }
 
@@ -277,13 +285,21 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     print(json.dumps({k: dict(
-        {f: v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','coverageAlert','publicDiagnosticsSafe', 'minimumLeadHours', 'leadCutoffAtEastern', 'dayLeadWindowStatus')},
+        {f: v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','dayCoverageAlert','coverageAlert','coverageAlertScope','publicDiagnosticsSafe', 'minimumLeadHours', 'leadCutoffAtEastern', 'dayLeadWindowStatus')},
         nextThreeDayOffers={day: item['publishedOffers'] for day, item in v['nextThreeDays'].items()})
         for k,v in feeds.items()}, indent=2))
     if incident:
         print('::error title=P0 public booking outage::' +
               ', '.join(f"{f['family']}: {f['reason']}" for f in incident['failures']) +
               '. Immediate recovery required; remaining seated classes do not resolve this failure.')
+    unresolved_coverage = [
+        f"{family}: {feed['coverageAlertScope']} (observed-day failures={feed['dayFailedWindows']})"
+        for family, feed in feeds.items() if feed['coverageAlert']
+    ]
+    if unresolved_coverage:
+        print('::error title=Unresolved scheduling coverage windows::' +
+              '; '.join(unresolved_coverage) +
+              '. The global safety gate remains red even when same-day zero offers are explained by lead time.')
     unsafe_families = [family for family, feed in feeds.items() if not feed['publicDiagnosticsSafe']]
     if unsafe_families:
         print('::error title=Public selector diagnostic privacy gate::' +
