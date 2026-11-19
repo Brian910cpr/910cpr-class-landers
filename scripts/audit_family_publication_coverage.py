@@ -145,6 +145,23 @@ def public_landscape_diagnostics_safe(payload):
     return True
 
 
+
+def public_shipyard_alias_check(payload):
+    """Audit displayed offers only; never copy operational room IDs into public evidence."""
+    checked = 0
+    for date in payload.get('dates', []):
+        for start in date.get('startTimes', []):
+            for course in start.get('courses', []):
+                location = course.get('location', '')
+                if not isinstance(location, str):
+                    return False, checked
+                if 'Shipyard Blvd' in location:
+                    checked += 1
+                    if location != 'Wilmington; Shipyard Blvd':
+                        return False, checked
+    return True, checked
+
+
 def lead_window_status(day, cutoff):
     """Only classify the clock cutoff; never infer a free instructor or outage."""
     if cutoff is None:
@@ -172,6 +189,7 @@ def summarize(payload, day, now=None):
     lead_hours = (raw_lead if isinstance(raw_lead, (int, float)) and
                   not isinstance(raw_lead, bool) and 0 <= raw_lead <= 24 * 365 else None)
     lead_cutoff = now + timedelta(hours=lead_hours) if lead_hours is not None else None
+    shipyard_alias_safe, shipyard_offers_checked = public_shipyard_alias_check(payload)
     # Public offers are date-scoped in Eastern local time. Do not infer an open
     # instructor day from an empty public date, nor conflate partial coverage
     # failures with an expired dynamic-feed lease.
@@ -224,6 +242,8 @@ def summarize(payload, day, now=None):
         'coverageAlert': global_coverage_alert,
         'coverageAlertScope': coverage_alert_scope,
         'publicDiagnosticsSafe': public_diagnostics_safe(failures),
+        'publicShipyardAliasSafe': shipyard_alias_safe,
+        'shipyardOffersChecked': shipyard_offers_checked,
     }
 
 
@@ -285,7 +305,7 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     print(json.dumps({k: dict(
-        {f: v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','dayCoverageAlert','coverageAlert','coverageAlertScope','publicDiagnosticsSafe', 'minimumLeadHours', 'leadCutoffAtEastern', 'dayLeadWindowStatus')},
+        {f: v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','dayCoverageAlert','coverageAlert','coverageAlertScope','publicDiagnosticsSafe', 'publicShipyardAliasSafe', 'shipyardOffersChecked', 'minimumLeadHours', 'leadCutoffAtEastern', 'dayLeadWindowStatus')},
         nextThreeDayOffers={day: item['publishedOffers'] for day, item in v['nextThreeDays'].items()})
         for k,v in feeds.items()}, indent=2))
     if incident:
@@ -305,12 +325,21 @@ def main():
         print('::error title=Public selector diagnostic privacy gate::' +
               ', '.join(unsafe_families) +
               ' returned sensitive or unapproved issue structure; inspect restricted evidence and regenerate sanitized publication.')
+    # This independent live-host gate is specific to the recently repaired
+    # ACLS/PALS Shipyard public DTO. Zero matching offers means no alias proof,
+    # not a green claim about hosted registration or a fabricated class.
+    unsafe_shipyard = [family for family in ('acls', 'pals')
+                       if not feeds[family]['publicShipyardAliasSafe']]
+    if unsafe_shipyard:
+        print('::error title=Public Shipyard location alias regression::' +
+              ', '.join(unsafe_shipyard) +
+              ' exposed a non-approved Shipyard location. Inspect hosted offers; preserve the internal resource only server-side.')
     landscape_safe = public_landscape_diagnostics_safe(landscape)
     if not landscape_safe:
         print('::error title=Public scheduling landscape privacy gate::'
               ' Public diagnostic contains restricted structure; repair publication and verify actual host.')
     return int(any(v['coverageAlert'] for v in feeds.values()) or bool(incident)
-               or bool(unsafe_families) or not landscape_safe)
+               or bool(unsafe_families) or bool(unsafe_shipyard) or not landscape_safe)
 
 
 if __name__ == '__main__':
