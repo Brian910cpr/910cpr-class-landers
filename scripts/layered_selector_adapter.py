@@ -103,7 +103,13 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
     if commitment_coverage is not None:
         fixture["commitment_coverage"] = commitment_coverage
     source_keys = set()
-    for index, busy in enumerate(occupancy):
+    # An exact interval may appear in both legacy schedule inventory and the
+    # canonical demand feed. Keep the proven canonical commitment first so an
+    # earlier unproven mirror cannot erase its internal Anchor gravity. This
+    # does not sum seats, establish public joinability, or shorten occupancy.
+    priority_occupancy = sorted(enumerate(occupancy), key=lambda pair: (
+        pair[1].get("operational_has_active_seat") is not True, pair[0]))
+    for index, busy in priority_occupancy:
         if not busy.get("start") or not busy.get("end"):
             raise ValueError("unresolved occupied interval")
         start, end = aware(busy["start"]), aware(busy["end"])
