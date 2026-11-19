@@ -187,6 +187,21 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertTrue(any(o.get('scheduleRole')=='barnacle' for o in proven['offers']))
         self.assertFalse(any(o.get('offerType')=='seated_class' for o in proven['offers']))
 
+    def test_clear_day_offers_all_qualified_courses_at_every_half_hour(self):
+        # Owner doctrine #16: open qualified windows use the 30-minute grid.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', next_day=False)
+        for course in self.courses:
+            cid = course['course_id']
+            last = 18 if course['kind'] == 'skills' else 15
+            expected = {(self.at(11, '08:00') + timedelta(minutes=30*i)).strftime('%H:%M')
+                        for i in range(last+1)}
+            with self.subTest(cid=cid):
+                self.assertEqual(self.starts(cid, day=11), expected)
+        self.assertTrue(all(x['step_minutes'] == 30
+            for report in self.calculation()['reports']
+            for x in report['free_intervals']))
+
     def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
         # Both conflict rejections and expired dynamic URLs pass through this
         # finalizer. Neither may serialize a private record into the public
@@ -425,7 +440,7 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertTrue(full['occupiedUntil'].startswith('2026-10-12T00:00'))
         self.sources=[]
         self.assertIn('00:00',self.starts('210549'))
-        self.assertNotIn('00:30',self.starts('210549'))
+        self.assertIn('00:30',self.starts('210549'))
         self.windows=[];self.coverage=[];self.window(11,'03:00','05:00',next_day=False)
         self.assertEqual(self.starts('210549'),{'03:00','03:30','04:00'})
 

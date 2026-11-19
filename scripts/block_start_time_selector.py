@@ -752,6 +752,9 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "instructor_unassigned": not session.get("lead_instructor_name"),
             "count_available": session.get("count_available") is True,
             "active_registration_count": session.get("active_registration_count"),
+            # A proven native/confirmed intake seat blocks operations even while
+            # an unrelated legacy roster total remains unknown; no public join.
+            "operational_has_active_seat": session.get("operational_has_active_seat") is True,
         })
     occupancy = sessions_current + schedule_future + calendar_blocks + canonical
     for block in occupancy:

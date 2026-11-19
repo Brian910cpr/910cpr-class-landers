@@ -1,7 +1,7 @@
 /** Shared owner/runtime freshness contract. Database read time is not source time. */
 export function registrationProof(row: any, now = new Date()) {
   const active = Array.isArray(row.registrations)
-    ? row.registrations.filter((r: any) => ['registered','confirmed','completed'].includes(r.status)) : [];
+    ? row.registrations.filter((r: any) => ['registered','confirmed','completed','active'].includes(r.status)) : [];
   // Native events use a local slug in this legacy column; the Enrollware
   // reconciliation contract accepts numeric external class IDs only.
   const localEvent = row.source === 'landerware_event' && !/^\d+$/.test(String(row.external_class_id || ''));
