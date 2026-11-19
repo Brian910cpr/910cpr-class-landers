@@ -66,7 +66,8 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
             "role": "anchor" if visibility_public and proven else "blocking",
             "start": source.get("start"), "end": source.get("end"),
             "courseId": source.get("course_id") if visibility_public else None,
-            "resource": public_location_display(source.get("resource")) if visibility_public else None,
+            "resource": (public_location_display(source.get("resource"))
+                         if visibility_public and source.get("resource") else None),
             "countAvailable": visibility_public and known_count,
             "registeredCount": count if visibility_public and known_count else None,
         })
