@@ -115,6 +115,13 @@ def public_reconciliation_issues(issues: list[dict[str, Any]]) -> list[dict[str,
 
 
 def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    # The public observer needs the actual publisher policy to distinguish a
+    # legitimate lead-time cutoff from unexplained missing inventory. Do not
+    # infer a policy from zero offers or expose the unrestricted input config.
+    lead_hours = payload.get("minimumLeadHours")
+    published_lead_hours = (
+        lead_hours if type(lead_hours) is int and 0 <= lead_hours <= 24 * 365 else None
+    )
     compact_dates: list[dict[str, Any]] = []
     for day in payload.get("dates", []):
         compact_slots: list[dict[str, Any]] = []
@@ -170,6 +177,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
         "validUntil": payload.get("validUntil"),
         "pageKey": payload.get("pageKey"),
         "publicPage": payload.get("publicPage"),
+        "minimumLeadHours": published_lead_hours,
         "sourceArtifacts": {
             "hotSyncCurrentOccupancy": "data/sessions_current.json",
             "publicScheduleFuture": "docs/data/schedule_future.json",
