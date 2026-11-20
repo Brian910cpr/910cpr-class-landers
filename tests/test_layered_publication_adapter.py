@@ -400,6 +400,38 @@ class LayeredPublicationTests(unittest.TestCase):
                     for course in slot['courses']))
                 self.assertNotIn('synthetic-canonical-private-seat',json.dumps(public))
 
+    def test_distinct_confirmed_same_interval_bookings_are_not_deduped_as_mirrors(self):
+        # Two independently identified paid/private seats can occupy identical
+        # instructor/resource geometry even when the canonical records disagree
+        # on course family. This is a reconciliation conflict, not proof that
+        # either booking may be erased or made available for public joining.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', next_day=False)
+        self.policy['require_verified_day_gravity'] = True
+        first=self.add(11, '12:00', '13:00', cid='359474', count=1,
+                       operational_has_active_seat=True,
+                       visibility='private', registration_status='closed')
+        first['source_event_id']='independent-private-seat-1'
+        second=self.add(11, '12:00', '13:00', cid='209809', count=1,
+                        operational_has_active_seat=True,
+                        visibility='private', registration_status='closed')
+        second['source_event_id']='independent-private-seat-2'
+        result=self.calculation()
+        self.assertEqual(result['counts']['failed_windows'], 0, result['issues'])
+        occupied=result['reports'][0]['normalized_occupancy']
+        paid=[row for row in occupied if row['id'] in
+              {'independent-private-seat-1', 'independent-private-seat-2'}]
+        self.assertEqual(len(paid), 2, 'distinct confirmed seats were deduped by geometry')
+        self.assertEqual({row['course'] for row in paid}, {'359474', '209809'})
+        self.assertTrue(all(row['operational_has_active_seat'] for row in paid))
+        self.assertFalse(any(row['start'] < self.at(11, '13:00') and
+                             row['end'] > self.at(11, '12:00')
+                             for row in result['reports'][0]['accepted']))
+        public=public_selector_availability_payload(self.payload(calculation=result))
+        serialized=json.dumps(public)
+        self.assertNotIn('independent-private-seat-1', serialized)
+        self.assertNotIn('independent-private-seat-2', serialized)
+
     def test_different_end_private_mirrors_preserve_latest_consumption_end(self):
         # Production-shaped duplicate evidence can describe the same two seats
         # with different occupied ends (e.g. 19:30 vs 20:00). Preserve both
