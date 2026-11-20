@@ -76,9 +76,11 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
         card = {"session_id": "15000001", "display_date": "November 21, 2026"}
         html = '<a class="class-finder-secondary" href="/classes/15000001.html">Details</a>'
         future_row = {"_parsed_start": self.now + timedelta(days=1)}
-        with patch.object(finder, "load_schedule_future_sessions", return_value=[future_row]), \\
-             patch.object(finder, "schedule_future_to_public_session", return_value=card), \\
-             patch.object(finder, "render_classes_finder_index", return_value=html):
+        with (
+            patch.object(finder, "load_schedule_future_sessions", return_value=[future_row]),
+            patch.object(finder, "schedule_future_to_public_session", return_value=card),
+            patch.object(finder, "render_classes_finder_index", return_value=html),
+        ):
             self.write_source()
             self.assertEqual(self.render()[1], {"15000001"})
             self.write_source(when=self.now - timedelta(hours=3))
