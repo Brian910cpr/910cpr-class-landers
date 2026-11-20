@@ -37,6 +37,37 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
              patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other):
             return finder.render_current_class_finder(self.now)
 
+    def test_public_cards_are_chronological_across_month_boundary(self):
+        # A displayed month name is not a sortable timestamp. In production,
+        # this placed December cards ahead of upcoming November classes.
+        def public_session(session_id, starts_at):
+            return {
+                "session_id": session_id,
+                "course_id": "209806",
+                "course_number": "209806",
+                "course_name": "AHA BLS Provider (Initial)",
+                "start_at": starts_at,
+                "location_name": ":: Wilmington; Shipyard Blvd - B",
+                "session_status": "active",
+                "registration_status": "open",
+                "public_direct_booking": True,
+                "registration_url": (
+                    "https://coastalcprtraining.enrollware.com/enroll?id="
+                    + session_id
+                ),
+            }
+
+        self.write_source([
+            public_session("15000102", "2026-12-01T09:00:00-05:00"),
+            public_session("15000101", "2026-11-21T09:00:00-05:00"),
+        ])
+        html, ids = self.render()
+        self.assertEqual(ids, {"15000101", "15000102"})
+        self.assertLess(
+            html.index('href="/classes/15000101.html"'),
+            html.index('href="/classes/15000102.html"'),
+        )
+
     def test_recent_valid_zero_inventory_renders_no_phantom_class(self):
         self.write_source()
         html, ids = self.render()
