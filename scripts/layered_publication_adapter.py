@@ -276,15 +276,22 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     for source in calculation['projected_sources']:
         if not has_verified_demand(source):
             continue
-        if (source.get('start') and source.get('end')
+        # A confirmed but unassigned private appointment is a real occupied
+        # interval, not evidence that *every* qualified instructor is anchored
+        # for the rest of the day. The engine still blocks its time for all
+        # potentially assigned instructors and any shared physical resource.
+        instructor = instructor_key(source.get('instructor'))
+        if (instructor and not source.get('instructor_unassigned')
+                and source.get('start') and source.get('end')
                 and not source.get('normalization_issue')
                 and aware(source['end']) > aware(source['start'])):
             anchored_days.add((aware(source['start']).date().isoformat(),
-                               instructor_key(source.get('instructor'))))
+                               instructor))
     for offer in accepted:
-        if (offer.get('offerType') == 'seated_class'
+        instructor = instructor_key(offer.get('instructor'))
+        if (offer.get('offerType') == 'seated_class' and instructor
                 and has_verified_demand(matched_source(offer))):
-            anchored_days.add((offer['date'], instructor_key(offer.get('instructor'))))
+            anchored_days.add((offer['date'], instructor))
     retained = []
     for offer in accepted:
         course = catalog.get(str(offer['courseId']), {})
@@ -298,8 +305,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 and not skills_edge):
             rejected.append(dict(offer, reasons=['existing_course_day_anchor']))
         elif offer.get('scheduleRole') == 'open_day' and (
-                (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days or
-                (offer['date'], '') in anchored_days):
+                (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days):
             rejected.append(dict(offer, reasons=['anchored_day_requires_attached_offer']))
         else:
             retained.append(offer)
