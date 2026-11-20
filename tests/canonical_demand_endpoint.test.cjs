@@ -59,6 +59,34 @@ test('only active canonical registrations count; missing and external bridge are
   assert.equal(api.projectDemand({...row,registration_backend:'enrollware'}).active_registration_count,null);
 });
 
+
+test('rescheduled-only private appointments are not falsely counted as occupied Anchors', () => {
+  // A prior appointment can remain scheduled in the historical source while
+  // its students have been moved. Rescheduled lifecycle rows are not live seats.
+  const prior = {id:'synthetic-prior-slot',status:'scheduled',source:'landerware_public_offer',
+    registration_backend:'landerware',visibility:'unlisted',registration_status:'closed',
+    registrations:[
+      {status:'rescheduled',registration_source:'landerware_native_checkout',external_registration_id:null},
+      {status:'rescheduled',registration_source:'landerware_native_checkout',external_registration_id:null}
+    ]};
+  const oldSlot = api.projectDemand(prior);
+  assert.equal(oldSlot.canonical_recorded_registration_count,0);
+  assert.equal(oldSlot.operational_has_active_seat,false);
+  assert.equal(oldSlot.visibility,'unlisted');
+  assert.equal(Object.hasOwn(oldSlot,'registrations'),false);
+
+  // Preserve the opposite rule: an independently active seat is still a
+  // private operational hold even if old rescheduled records coexist.
+  const newSeat = api.projectDemand({...prior, registrations:[
+    ...prior.registrations,
+    {status:'registered',registration_source:'landerware_native_checkout',external_registration_id:null}
+  ]});
+  assert.equal(newSeat.canonical_recorded_registration_count,1);
+  assert.equal(newSeat.operational_has_active_seat,true);
+  assert.equal(newSeat.visibility,'unlisted');
+});
+
+
 test('materialized LanderWare active registrations retain real seated demand privately', () => {
   const row = {id:'canonical-session',source:'landerware_public_offer',
     registration_backend:'landerware', external_class_id:'lw-12345678-1234-1234-1234-123456789abc',
