@@ -80,9 +80,10 @@ def render_current_class_finder(now: datetime | None = None) -> tuple[str, set[s
         raise ValueError("Duplicate public class identity; retaining prior finder")
 
     # Mirror the full public builder's sorting and presentation exactly.
+    # Customer cards must follow real chronological starts. The month-name
+    # display string sorts December before November and can bury imminent seats.
     sessions.sort(key=lambda row: (
-        row.get("display_date", ""),
-        row.get("display_time", ""),
+        row.get("start_sort", ""),
         row.get("session_id", ""),
     ))
     html = render_classes_finder_index(
