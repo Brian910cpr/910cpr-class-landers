@@ -61,6 +61,73 @@ class LayeredPublicationTests(unittest.TestCase):
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
 
+    def test_distant_confirmed_private_offsite_kept_without_poisoning_other_day(self):
+        # A private one-seat offsite session is authoritative occupancy for its
+        # own day; its missing route must not reject windows two weeks away.
+        self.sources.append(dict(
+            source_event_id='fixture-private-distant-offsite',
+            start=self.at(24, '09:00').isoformat(),
+            end=self.at(24, '10:00').isoformat(),
+            instructor='Brian Ennis', location='unmapped-offsite',
+            resource='unmapped-offsite',
+            source_file='canonical_class_sessions', visibility='private',
+            count_available=True, active_registration_count=1))
+        result=self.calculation()
+        self.assertEqual(result['counts']['normalized_sources'], 1)
+        self.assertEqual(result['counts']['failed_windows'], 0, result['issues'])
+        self.assertTrue(result['reports'][0]['accepted'])
+        self.assertEqual(result['projected_sources'][0]['active_registration_count'], 1)
+        public=public_selector_availability_payload(self.payload(calculation=result))
+        self.assertNotIn('fixture-private-distant-offsite', json.dumps(public))
+
+    def test_near_window_private_offsite_unknown_travel_still_fails_closed(self):
+        # Exact same verified booking within this availability window cannot
+        # be assigned a speculative zero-minute return journey.
+        self.sources.append(dict(
+            source_event_id='fixture-private-near-offsite',
+            start=self.at(11, '09:00').isoformat(),
+            end=self.at(11, '10:00').isoformat(),
+            instructor='Brian Ennis', location='unmapped-offsite',
+            resource='unmapped-offsite',
+            source_file='canonical_class_sessions', visibility='private',
+            count_available=True, active_registration_count=1))
+        result=self.calculation()
+        self.assertEqual(result['counts']['failed_windows'], 1)
+        self.assertEqual(result['counts']['evaluated_windows'], 0)
+        self.assertTrue(any('missing directional travel rule' in issue['reason']
+                            for issue in result['issues']))
+        self.assertEqual(result['projected_sources'][0]['active_registration_count'], 1)
+
+    def test_near_boundary_private_offsite_still_requires_known_route(self):
+        # A booking ~38 hours after a window remains in the conservative 48h
+        # transition/repeat-gap envelope; it must not get silently pruned.
+        self.sources.append(dict(
+            source_event_id='fixture-private-adjacent-offsite',
+            start=self.at(13, '08:00').isoformat(),
+            end=self.at(13, '09:00').isoformat(),
+            instructor='Brian Ennis', location='unmapped-offsite',
+            resource='unmapped-offsite',
+            source_file='canonical_class_sessions', visibility='private',
+            count_available=True, active_registration_count=1))
+        result=self.calculation()
+        self.assertEqual(result['counts']['failed_windows'], 1)
+        self.assertTrue(any('missing directional travel rule' in issue['reason']
+                            for issue in result['issues']))
+
+    def test_other_instructor_private_offsite_does_not_steal_window(self):
+        self.sources.append(dict(
+            source_event_id='fixture-other-instructor-offsite',
+            start=self.at(11, '09:00').isoformat(),
+            end=self.at(11, '10:00').isoformat(),
+            instructor='Unrelated Instructor', location='unmapped-offsite',
+            resource='unmapped-offsite',
+            source_file='canonical_class_sessions', visibility='private',
+            count_available=True, active_registration_count=1))
+        result=self.calculation()
+        self.assertEqual(result['counts']['failed_windows'], 0, result['issues'])
+        self.assertTrue(result['reports'][0]['accepted'])
+
+
     def test_unproven_legacy_occurrence_keeps_hard_block_without_daywide_gravity(self):
         # Physical occupancy and publication day gravity are separate gates.
         self.windows=[];self.coverage=[];self.sources=[]
