@@ -133,9 +133,13 @@ def resolve_canonical_demand(
             "location_name": demand.get("location_name"),
             "lead_instructor_name": demand.get("lead_instructor_name"),
             "source": "landerware_event", "session_status": demand["session_status"],
-            "registration_status": "open", "public_direct_booking": True,
-            "registration_backend": "landerware",
-            "registration_url": "https://www.910cpr.com/register/?session=" + external_id,
+            # This canonical projection proves an active occupied seat, not
+            # that the hosted native checkout can attach a buyer to this class.
+            # The endpoint does not export a source-owned verified booking URL.
+            # Never manufacture a public registration claim from a session ID.
+            "registration_status": "closed", "public_direct_booking": False,
+            "public_route_guard": "native_source_booking_route_unverified",
+            "registration_backend": "landerware", "registration_url": None,
         })
     resolved = source_rows
     exact: dict[str, list[int]] = {}
