@@ -90,7 +90,8 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
         proven = (source.get("operational_has_active_seat") is True
                   or (known_count and type(count) is int and count > 0))
         sources.append({
-            "sourceId": source.get("source_event_id"),
+            # Source event IDs are ingestion/mailbox identities, not a public
+            # class identifier. Public geometry needs no durable source key.
             "role": "anchor" if proven else "blocking",
             "start": source.get("start"), "end": source.get("end"),
             "courseId": source.get("course_id"),
