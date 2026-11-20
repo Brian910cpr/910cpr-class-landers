@@ -769,7 +769,6 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             # Preserve internal canonical visibility and route authority through
             # the V2 publisher. This is not a grant of public joinability.
             "visibility": session.get("visibility"),
-            "public_direct_booking": session.get("public_direct_booking"),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
             "instructor_unassigned": not session.get("lead_instructor_name"),
             "count_available": session.get("count_available") is True,
@@ -778,6 +777,11 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             # an unrelated legacy roster total remains unknown; no public join.
             "operational_has_active_seat": session.get("operational_has_active_seat") is True,
         })
+        # Only propagate an explicitly revoked public route. Absence is not
+        # evidence of either permission or denial, and downstream occupancy
+        # consumers must not infer a synthetic public_direct_booking field.
+        if session.get("public_direct_booking") is False:
+            canonical[-1]["public_direct_booking"] = False
     occupancy = sessions_current + schedule_future + calendar_blocks + canonical
     for block in occupancy:
         canonical, resource, normalized = generate_dynamic_offers.normalize_location_resource(
