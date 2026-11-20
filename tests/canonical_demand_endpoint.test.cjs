@@ -150,6 +150,44 @@ test('verified email-confirmed private intake is internal occupancy, not externa
 });
 
 
+test('owner-confirmed one-seat intake remains a private operational Anchor after receiving a numeric legacy ID', () => {
+  // Verified owner-confirmed booking evidence is independent of the external
+  // roster, which must remain unknown until separately reconciled.
+  const booked = {id:'fixture-owner-booked',status:'scheduled',source:'confirmed_booking_intake',
+    registration_backend:'landerware',visibility:'private',registration_status:'closed',
+    external_class_id:'80123',
+    external_session_evidence:{kind:'owner_confirmed_booking',gmail_message_id:'0123456789abcdef'},
+    registrations:[{status:'registered',registration_source:'owner_confirmed_booking',external_registration_id:null}]};
+  for (const source of ['owner_confirmed_booking','owner_voice_fragment','manual']) {
+    const row = {...booked,registrations:[{...booked.registrations[0],registration_source:source}]};
+    const result=api.projectDemand(row);
+    assert.equal(result.operational_has_active_seat,true,source);
+    assert.equal(result.count_available,false,source);
+    assert.equal(result.active_registration_count,null,source);
+    assert.equal(result.canonical_recorded_registration_count,1,source);
+    assert.equal(result.visibility,'private');
+    assert.equal(result.registration_status,'closed');
+    assert.equal(Object.hasOwn(result,'registrations'),false);
+    assert.equal(Object.hasOwn(result,'external_session_evidence'),false);
+    assert.equal(Object.hasOwn(result,'registration_url'),false);
+  }
+  for (const change of [
+    {source:'enrollware_reconciled'},
+    {registration_backend:'enrollware'},
+    {status:'canceled'},
+    {external_session_evidence:{kind:'owner_confirmed_booking'}},
+    {external_session_evidence:{kind:'registration_confirmation',gmail_message_id:'0123456789abcdef'}},
+    {registrations:[{status:'canceled',registration_source:'owner_confirmed_booking'}]},
+    {registrations:[{status:'registered',registration_source:'enrollware_email_confirmation'}]},
+    {registrations:[{status:'registered',registration_source:'owner_confirmed_booking',external_registration_id:'999'}]},
+    {registrations:null}
+  ]) {
+    const result=api.projectDemand({...booked,...change});
+    assert.equal(result.operational_has_active_seat,false,JSON.stringify(change));
+    assert.equal(result.active_registration_count,null);
+  }
+});
+
 test('canonical course mapping preserves private booked-course gravity without inventing an external class or URL', () => {
   const row = {id:'mapped-private',status:'scheduled',source:'confirmed_booking_intake',
     registration_backend:'landerware',visibility:'private',registration_status:'closed',
