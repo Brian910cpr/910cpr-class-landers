@@ -241,6 +241,47 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertNotIn(private['source_event_id'],json.dumps(result['offers']))
         self.assertFalse(any(o.get('offerType')=='seated_class' for o in result['offers']))
 
+    def test_private_unassigned_seat_blocks_time_not_other_instructors_entire_day(self):
+        # Real private demand with no verified lead belongs to the occupied
+        # interval, not an inferred daywide Anchor for an independent instructor.
+        # A separately identified room never becomes a public booking container.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', name='Michelle', next_day=False)
+        self.policy['require_verified_day_gravity'] = True
+        other_room=':: Wilmington; Shipyard Blvd - C'
+        private=self.add(11, '12:00', '13:00', cid='359474', name='',
+                         count=1, visibility='private',
+                         instructor_unassigned=True)
+        private['resource']=other_room
+        calculation=self.calculation()
+        self.assertEqual(calculation['counts']['failed_windows'], 0,
+                         calculation['issues'])
+        occupied=calculation['reports'][0]['normalized_occupancy']
+        self.assertTrue(any(row['id']==private['source_event_id']
+                            and row['location']==other_room
+                            and row['headcount']==1 for row in occupied))
+        self.assertTrue(any(row['instructor']=='Michelle'
+                            and row['kind']=='hold' for row in occupied))
+        payload=self.payload(calculation=calculation)
+        offers=[o for o in payload['offers']
+                if o.get('offerType')=='dynamic_appointment'
+                and o['instructor']=='Michelle']
+        self.assertTrue(any(o['startTime']=='08:00'
+                            and o['courseId']=='209809'
+                            and o['scheduleRole']=='open_day' for o in offers),
+                        payload['rejectionReasonCounts'])
+        self.assertTrue(any(o['startTime']=='13:00' for o in offers))
+        for offer in offers:
+            start=self.at(11, offer['startTime'])
+            end=aware(offer['occupiedUntil'])
+            self.assertFalse(start < self.at(11,'13:00')
+                             and end > self.at(11,'12:00'),
+                             'unassigned appointment time was offered')
+        self.assertFalse(any(o.get('offerType')=='seated_class'
+                             for o in payload['offers']))
+        public=public_selector_availability_payload(payload)
+        self.assertNotIn(private['source_event_id'],json.dumps(public))
+
     def test_adjacent_confirmed_private_session_with_unassigned_instructor(self):
         # Source-shaped Nov 20 boundary: confirmed BLS consumption ends at
         # 14:30, exactly when a second closed private appointment begins.
