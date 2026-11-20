@@ -929,13 +929,16 @@ class LayeredPublicationTests(unittest.TestCase):
         landscape=public_layered_landscape({'layeredDiagnostics':internal})
         self.assertEqual(len(landscape['sources']), 1)
         public=landscape['sources'][0]
-        self.assertEqual((public['sourceId'], public['courseId'], public['role'],
+        # Even explicitly public courses must not disclose ingestion/source
+        # identifiers (which can encode email or calendar provenance).
+        self.assertNotIn('sourceId', public)
+        self.assertEqual((public['courseId'], public['role'],
                           public['registeredCount']),
-                         ('PUBLIC-CLASS', '209806', 'anchor', 1))
+                         ('209806', 'anchor', 1))
         self.assertEqual(landscape['occupiedBlocks'], [])
         public_json=json.dumps(landscape)
         for secret in ('SECRET-PRIVATE-ID','SECRET-PRIVATE-COURSE',
-                       'SECRET-UNKNOWN-ID','SECRET-UNKNOWN-COURSE',
+                       'PUBLIC-CLASS', 'SECRET-UNKNOWN-ID','SECRET-UNKNOWN-COURSE',
                        'SECRET-REVOKED-ID','SECRET-BLOCK-ID',
                        '15:07:00','17:13:00','10:03:00','12:17:00',
                        '09:06:00','10:22:00'):
