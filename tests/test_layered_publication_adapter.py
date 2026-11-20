@@ -127,6 +127,33 @@ class LayeredPublicationTests(unittest.TestCase):
             and o['startTime']=='08:00' and o['scheduleRole']=='open_day'
             for o in offers))
 
+    def test_independent_instructor_keeps_legal_bookends_but_not_shared_room_collision(self):
+        # Integration regression: do not rely on a pre-seat clear-day report.
+        # The real engine must respect the shared physical room for Michelle,
+        # even while the publication gate keeps her independent qualified edges.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', next_day=False)
+        self.window(11, '08:00', '18:00', name='Michelle', next_day=False)
+        self.policy['require_verified_day_gravity'] = True
+        self.add(11, '12:00', '14:30', cid='209809', count=1,
+                 visibility='private', registration_status='closed')
+        calculation=self.calculation()
+        self.assertEqual(len(calculation['reports']), 2, calculation['issues'])
+        payload=self.payload(calculation=calculation)
+        michelle=[o for o in payload['offers']
+                  if o.get('offerType')=='dynamic_appointment'
+                  and o.get('instructor')=='Michelle']
+        self.assertTrue(michelle, payload['rejectionReasonCounts'])
+        self.assertTrue(any(o['scheduleRole']=='barnacle' for o in michelle))
+        for offer in michelle:
+            start=self.at(11, offer['startTime'])
+            end=aware(offer['occupiedUntil'])
+            self.assertFalse(start < self.at(11, '14:30')
+                             and end > self.at(11, '12:00'),
+                             'seated class room was offered to second instructor')
+        public=public_selector_availability_payload(payload)
+        self.assertNotIn('fixture-11-12:00-Brian Ennis', json.dumps(public))
+
     def test_private_key_only_positive_seat_has_internal_day_gravity(self):
         # A confirmed private seat may lack an external course ID. It is still
         # operational demand, but this gate must never create a joinable seat.
