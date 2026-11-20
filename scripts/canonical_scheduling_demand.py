@@ -160,6 +160,12 @@ def resolve_canonical_demand(
             candidates = [index for index, row in enumerate(resolved) if _strict_occurrence_match(demand, row)]
 
         if len(candidates) != 1:
+            # A canonical booking matching several legacy occurrences cannot
+            # authorize any one public link. Keep all occupied intervals.
+            if len(candidates) > 1:
+                for candidate in candidates:
+                    resolved[candidate]["public_direct_booking"] = False
+                    resolved[candidate]["public_route_guard"] = "ambiguous_canonical_occurrence_identity"
             audits.append({
                 "canonical_session_id": canonical_id,
                 "external_class_id": external_id or None,
@@ -172,6 +178,10 @@ def resolve_canonical_demand(
         index = candidates[0]
         if index in claimed:
             conflicted.add(index)
+            # Independent claims to one legacy class require reconciliation;
+            # neither claim permits inheriting that class's open public link.
+            resolved[index]["public_direct_booking"] = False
+            resolved[index]["public_route_guard"] = "ambiguous_canonical_occurrence_claim"
             resolved[index].update(active_registration_count=None, count_available=False, demand_basis="unknown")
             resolved[index].pop("canonical_session_id", None)
             resolved[index].pop("demand_match_basis", None)
@@ -209,6 +219,10 @@ def resolve_canonical_demand(
         # External identity survives a reschedule; it does not prove that the
         # canonical occurrence still has the current source's start time.
         if _start(demand) != _start(resolved[index]):
+            # A rescheduled canonical seat does not verify the old public
+            # enrollment time. Preserve source geometry; close only the route.
+            resolved[index]["public_direct_booking"] = False
+            resolved[index]["public_route_guard"] = "canonical_occurrence_time_mismatch"
             resolved[index].update(
                 canonical_session_id=canonical_id, demand_status="stale_anchor",
                 canonical_start_at=demand.get("start_at"),
