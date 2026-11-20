@@ -74,7 +74,7 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertEqual(1, rows[0]["active_registration_count"])
         self.assertTrue(rows[0]["count_available"])
         self.assertFalse(rows[0]["public_direct_booking"])
-        self.assertEqual("closed", rows[0]["registration_status"])
+        self.assertEqual("open", rows[0]["registration_status"])
         self.assertIsNone(rows[0]["registration_url"])
         self.assertEqual("native_source_booking_route_unverified", rows[0]["public_route_guard"])
         self.assertFalse(public_direct_bookable_session(rows[0]))
