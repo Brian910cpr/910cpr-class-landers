@@ -6,16 +6,54 @@ transaction prevents expired/missing IDs and stale registration claims.
 """
 from __future__ import annotations
 
+import json
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from scripts.build_index_and_sitemap import (
     CLASSES_INDEX_FILE,
+    CANONICAL_CLASS_REPORT_FILE,
     LOCAL_TZ,
+    SCHEDULE_FUTURE_FILE,
     load_schedule_future_sessions,
     render_classes_finder_index,
     schedule_future_to_public_session,
 )
+
+
+
+def _verified_empty_inventory_source(now: datetime) -> None:
+    """Only publish zero seated cards when the real source is fresh and valid.
+
+    An absent/corrupt/stale feed is not evidence that every class disappeared.
+    This checks the same authoritative source selection as the public builder.
+    Dynamic course-time feeds are published independently of seated class cards.
+    """
+    source_file = SCHEDULE_FUTURE_FILE
+    if CANONICAL_CLASS_REPORT_FILE.exists():
+        try:
+            candidate = json.loads(CANONICAL_CLASS_REPORT_FILE.read_text(encoding="utf-8"))
+            if candidate.get("build", {}).get("source_mode") == "class_report_authoritative":
+                source_file = CANONICAL_CLASS_REPORT_FILE
+        except (OSError, ValueError, TypeError, AttributeError):
+            pass  # The class builder falls back to schedule_future in this case.
+
+    try:
+        payload = json.loads(source_file.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict) or not isinstance(payload.get("sessions"), list):
+            raise ValueError("Missing canonical sessions array")
+        generated_at = datetime.fromisoformat(str(payload.get("build", {}).get("generated_at") or ""))
+        if generated_at.tzinfo is None:
+            raise ValueError("Unzoned source timestamp")
+        age = now - generated_at
+        if age < -timedelta(minutes=5) or age > timedelta(minutes=90):
+            raise ValueError("Stale or future-dated source timestamp")
+        counts = payload.get("build", {}).get("counts", {})
+        if isinstance(counts, dict) and "sessions_output" in counts:
+            if counts["sessions_output"] != len(payload["sessions"]):
+                raise ValueError("Canonical source count does not match session rows")
+    except (OSError, ValueError, TypeError, AttributeError) as exc:
+        raise ValueError("Unverified zero-class source; retaining prior finder") from exc
 
 
 def render_current_class_finder(now: datetime | None = None) -> tuple[str, set[str]]:
@@ -24,8 +62,6 @@ def render_current_class_finder(now: datetime | None = None) -> tuple[str, set[s
         raise ValueError("Public schedule cutoff must be timezone-aware")
 
     source = load_schedule_future_sessions()
-    if not source:
-        raise ValueError("Canonical public class source unavailable; retaining prior finder")
 
     future = [
         row for row in source
@@ -36,7 +72,7 @@ def render_current_class_finder(now: datetime | None = None) -> tuple[str, set[s
         if public is not None
     ]
     if not sessions:
-        raise ValueError("No verified public class rows; refusing to publish an empty finder")
+        _verified_empty_inventory_source(now)
 
     ids = [str(row["session_id"]) for row in sessions]
     if len(ids) != len(set(ids)):
