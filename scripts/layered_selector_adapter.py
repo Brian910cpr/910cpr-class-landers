@@ -102,13 +102,19 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
                 all_skills=True)
     if commitment_coverage is not None:
         fixture["commitment_coverage"] = commitment_coverage
-    source_keys = set()
+    source_keys = {}
     # An exact interval may appear in both legacy schedule inventory and the
-    # canonical demand feed. Keep the proven canonical commitment first so an
-    # earlier unproven mirror cannot erase its internal Anchor gravity. This
-    # does not sum seats, establish public joinability, or shorten occupancy.
+    # canonical demand feed. Prefer verified demand over an unproven shell.
+    # However, independent positive-seat records in the same interval must
+    # BOTH remain visible to internal diagnostics until their identities are
+    # authoritatively reconciled. Identical geometry alone is not mirror proof.
+    def has_seated_demand(busy):
+        count = busy.get("active_registration_count")
+        return (busy.get("operational_has_active_seat") is True or
+                (busy.get("count_available") is True and type(count) is int and count > 0))
+
     priority_occupancy = sorted(enumerate(occupancy), key=lambda pair: (
-        pair[1].get("operational_has_active_seat") is not True, pair[0]))
+        not has_seated_demand(pair[1]), pair[0]))
     for index, busy in priority_occupancy:
         if not busy.get("start") or not busy.get("end"):
             raise ValueError("unresolved occupied interval")
@@ -127,9 +133,16 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         # Preserve real physical occupancy; source-provided travel buffers are
         # separate commitments and cannot move the paid block's actual edges.
         key = (instructor, location, start, end)
-        if key in source_keys:
+        previous = source_keys.get(key, [])
+        source_id = str(busy.get("source_event_id") or "")
+        # A copied shell or repeated source identity is one physical interval.
+        # Two *distinct* verified commitments are not silently deduplicated:
+        # preserve both without treating either as a public joinable seat.
+        if previous and not (has_seated_demand(busy) and source_id and
+                all(has_seated_demand(item) and
+                    source_id != str(item.get("source_event_id") or "") for item in previous)):
             continue
-        source_keys.add(key)
+        source_keys.setdefault(key, []).append(busy)
         cid = str(busy.get("course_id") or "")
         kind = busy.get("kind") or ("commitment" if "blocked" in str(busy.get("source_file")) else "planted")
         count = busy.get("active_registration_count")
