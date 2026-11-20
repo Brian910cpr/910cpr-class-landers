@@ -134,6 +134,37 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertFalse(any("canonical_session_id" in row for row in sessions))
         self.assertEqual("ambiguous", audit[0]["result"])
         self.assertEqual(2, audit[0]["candidate_count"])
+        self.assertTrue(all(row["public_direct_booking"] is False for row in sessions))
+        self.assertTrue(all(not public_direct_bookable_session(row) for row in sessions))
+
+    def test_competing_canonical_claims_close_shared_legacy_public_route(self):
+        legacy = occurrence(session_id="13800033", registration_status="open",
+                            registration_url="https://example.test/enroll/13800033")
+        first = demand(canonical_session_id="independent-a", external_class_id="13800033",
+                       visibility="public", registration_status="open")
+        second = dict(first, canonical_session_id="independent-b")
+        rows, audit = resolve_canonical_demand([legacy], [first, second])
+        self.assertEqual(["ambiguous", "ambiguous"], [a["result"] for a in audit])
+        self.assertEqual("ambiguous", rows[0]["demand_status"])
+        self.assertFalse(rows[0]["count_available"])
+        self.assertFalse(rows[0]["public_direct_booking"])
+        self.assertEqual("ambiguous_canonical_occurrence_claim", rows[0]["public_route_guard"])
+        self.assertFalse(public_direct_bookable_session(rows[0]))
+        self.assertEqual(legacy["start_at"], rows[0]["start_at"])
+
+    def test_moved_canonical_occurrence_closes_stale_public_enrollment(self):
+        legacy = occurrence(session_id="13800034", registration_status="open",
+                            registration_url="https://example.test/enroll/13800034")
+        moved = demand(external_class_id="13800034", visibility="public",
+                       registration_status="open", start_at="2026-09-15T11:15:00-04:00")
+        rows, audit = resolve_canonical_demand([legacy], [moved])
+        self.assertEqual("stale_anchor", audit[0]["result"])
+        self.assertEqual("stale_anchor", rows[0]["demand_status"])
+        self.assertEqual(legacy["start_at"], rows[0]["start_at"])
+        self.assertEqual(moved["start_at"], rows[0]["canonical_start_at"])
+        self.assertFalse(rows[0]["public_direct_booking"])
+        self.assertFalse(public_direct_bookable_session(rows[0]))
+        self.assertEqual("canonical_occurrence_time_mismatch", rows[0]["public_route_guard"])
 
     def test_add_increment_cancel_and_move_recompute_both_occurrences(self):
         old = occurrence(session_id="old", start_at="2026-09-14T11:15:00-04:00")
