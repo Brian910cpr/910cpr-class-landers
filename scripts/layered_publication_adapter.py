@@ -227,18 +227,27 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     # Never retire a source record. Confirmed-zero booking choices are retired
     # only from this projection; their occupied interval remains in calculation.
     counts = {}
+    denied_booking_identities = set()
     for source in calculation["projected_sources"]:
         for identity in [source.get("source_event_id"), source.get("external_class_id")]:
-            if identity is not None and str(identity) not in counts:
-                counts[str(identity)] = source
+            if identity is None:
+                continue
+            identity = str(identity)
+            # A canonical row can be followed by a second legacy mirror with
+            # the same external class ID but an explicitly revoked route.
+            # First-source wins for counts, but any known denial wins for
+            # public joinability. Geometry and positive seats remain intact.
+            if identity not in counts:
+                counts[identity] = source
+            if (str(source.get("visibility") or "").strip().lower() in {"private", "unlisted"}
+                    or source.get("public_direct_booking") is False):
+                denied_booking_identities.add(identity)
     for original in seated_offers:
-        source = counts.get(str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId")))
-        # Defense in depth: even if an upstream seated-offer generator returns
-        # a class, explicit canonical privacy or a revoked/unverified booking
-        # route must never be resurrected by the final V2 publisher. Keep its
-        # internal occupied interval for conflict and Anchor calculations.
-        if source and (str(source.get("visibility") or "").strip().lower() in {"private", "unlisted"}
-                       or source.get("public_direct_booking") is False):
+        identity = str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId"))
+        source = counts.get(identity)
+        # Defense in depth: never resurrect private or source-revoked seated
+        # routes even if an upstream selector mistakenly hands us such an offer.
+        if identity in denied_booking_identities:
             rejected.append(dict(original, reasons=["nonpublic_or_unverified_existing_booking_choice"]))
         elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
