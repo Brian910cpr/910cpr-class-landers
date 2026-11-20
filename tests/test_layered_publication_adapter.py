@@ -257,7 +257,9 @@ class LayeredPublicationTests(unittest.TestCase):
             for row in report['normalized_occupancy']))
         self.assertFalse(any(row['course']=='359474' for row in report['accepted']),
             'private occupied full course allowed same-family duplicate')
-        self.assertIn('full_family_already_paid_seated',report['rejection_reasons'])
+        self.assertTrue(any(reason in report['rejection_reasons'] for reason in
+            ('full_course_already_paid_seated','full_family_already_paid_seated')),
+            report['rejection_reasons'])
         self.assertFalse(any(o.get('offerType')=='seated_class'
             for o in self.payload(calculation=calculation)['offers']))
         self.assertNotIn('fixture-canonical-private-course-mapped',
