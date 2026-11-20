@@ -282,6 +282,50 @@ class LayeredPublicationTests(unittest.TestCase):
         public=public_selector_availability_payload(payload)
         self.assertNotIn(private['source_event_id'],json.dumps(public))
 
+    def test_unassigned_private_unknown_room_blocks_primary_without_daywide_veto(self):
+        # Production-shaped canonical record: paid one-seat appointment, known
+        # Shipyard venue, but NULL resource_id and no verified lead instructor.
+        # No other room may be inferred; physical time is reserved in the
+        # conservative primary room even for an independent qualified teacher.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', name='Michelle', next_day=False)
+        self.policy['require_verified_day_gravity'] = True
+        private=self.add(11, '12:00', '13:00', cid='359474',
+                         name='UNASSIGNED', count=1, visibility='private',
+                         registration_status='closed',
+                         instructor_unassigned=True)
+        private.pop('resource')
+        private['location']=':: Wilmington; Shipyard Blvd'
+        # A resolved venue is not a verified separate room assignment.
+        private['location_resolution']='location_resource_map'
+        calculation=self.calculation()
+        self.assertEqual(calculation['counts']['failed_windows'], 0,
+                         calculation['issues'])
+        occupied=calculation['reports'][0]['normalized_occupancy']
+        self.assertTrue(any(row['id']==private['source_event_id']
+                            and row['location']==self.room
+                            and row['headcount']==1 for row in occupied))
+        self.assertTrue(any(row['instructor']=='Michelle'
+                            and row['kind']=='hold'
+                            and row['location']==self.room for row in occupied))
+        payload=self.payload(calculation=calculation)
+        offers=[row for row in payload['offers']
+                if row.get('offerType')=='dynamic_appointment'
+                and row.get('instructor')=='Michelle']
+        self.assertTrue(offers, payload['rejectionReasonCounts'])
+        self.assertTrue(any(aware(row['occupiedUntil']) <= self.at(11, '12:00')
+                            or self.at(11, row['startTime']) >= self.at(11, '13:00')
+                            for row in offers))
+        for row in offers:
+            self.assertEqual(row['resource'], self.room)
+            self.assertFalse(self.at(11, row['startTime']) < self.at(11, '13:00')
+                             and aware(row['occupiedUntil']) > self.at(11, '12:00'),
+                             'NULL room was treated as an unoccupied second room')
+        public=public_selector_availability_payload(payload)
+        self.assertNotIn(private['source_event_id'],json.dumps(public))
+        self.assertFalse(any(row.get('offerType')=='seated_class'
+                             for row in payload['offers']))
+
     def test_adjacent_confirmed_private_session_with_unassigned_instructor(self):
         # Source-shaped Nov 20 boundary: confirmed BLS consumption ends at
         # 14:30, exactly when a second closed private appointment begins.
