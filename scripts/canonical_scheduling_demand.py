@@ -5,6 +5,7 @@ from datetime import datetime
 import json
 from pathlib import Path
 import re
+import urllib.parse
 from typing import Any, Iterable
 from zoneinfo import ZoneInfo
 
@@ -193,6 +194,18 @@ def resolve_canonical_demand(
             resolved[index]["public_direct_booking"] = False
             resolved[index]["registration_status"] = "closed"
             resolved[index]["registration_status_source"] = "canonical_class_sessions"
+        # A canonical native-owned class can share its numeric class ID with
+        # a legacy schedule export. That identity proves occupancy, NOT that
+        # the old Enrollware enrollment URL is authorized for a new native sale.
+        # Keep the class and its seat projection intact, but fail the public
+        # route closed until an actual native-owned registration URL is proven.
+        if (demand.get("source") == "landerware_public_offer"
+                and demand.get("registration_backend") == "landerware"):
+            legacy_url = _text(resolved[index].get("registration_url"))
+            legacy_host = urllib.parse.urlsplit(legacy_url).hostname or ""
+            if legacy_host == "enrollware.com" or legacy_host.endswith(".enrollware.com"):
+                resolved[index]["public_direct_booking"] = False
+                resolved[index]["public_route_guard"] = "native_canonical_legacy_url_unverified"
         # External identity survives a reschedule; it does not prove that the
         # canonical occurrence still has the current source's start time.
         if _start(demand) != _start(resolved[index]):
