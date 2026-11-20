@@ -191,7 +191,7 @@ jobs:
         run: |
           python -m scripts.refresh_class_finder_index
           python -m scripts.refresh_class_registration_routes
-          python -B -m unittest tests.test_class_registration_routing
+          python -B -m unittest tests.test_class_registration_routing tests.test_refresh_class_finder_index
 
       - name: Publish instructor and location reference feeds
         run: python -m scripts.publish_admin_reference_data
