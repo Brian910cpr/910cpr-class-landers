@@ -23,9 +23,9 @@ from scripts.build_index_and_sitemap import (
 
 
 def _verified_empty_inventory_source(now: datetime) -> None:
-    """Only publish zero seated cards when the real source is fresh and valid.
+    """Only publish seated cards when their source is fresh and valid.
 
-    An absent/corrupt/stale feed is not evidence that every class disappeared.
+    An absent/corrupt/stale feed cannot justify either nonzero or zero inventory.
     This checks the same authoritative source selection as the public builder.
     Dynamic course-time feeds are published independently of seated class cards.
     """
@@ -61,6 +61,9 @@ def render_current_class_finder(now: datetime | None = None) -> tuple[str, set[s
     if now.tzinfo is None:
         raise ValueError("Public schedule cutoff must be timezone-aware")
 
+    # A nonempty listing is no exception to the freshness/identity gate:
+    # stale snapshots can retain plausible future "Register" cards.
+    _verified_empty_inventory_source(now)
     source = load_schedule_future_sessions()
 
     future = [
@@ -71,8 +74,6 @@ def render_current_class_finder(now: datetime | None = None) -> tuple[str, set[s
         public for public in (schedule_future_to_public_session(row) for row in future)
         if public is not None
     ]
-    if not sessions:
-        _verified_empty_inventory_source(now)
 
     ids = [str(row["session_id"]) for row in sessions]
     if len(ids) != len(set(ids)):
