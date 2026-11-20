@@ -24,3 +24,11 @@ html[data-theme="dark"] body.registration-checkout #add-student { background: #2
 html body.registration-checkout .formwrap input::placeholder { color: #526071 !important; opacity: 1; }
 
 .registration-checkout .billing-suggestions[hidden] { display: none; }
+
+/* Format is visible text as well as a neutral owned symbol, never a book cover. */
+.registration-checkout .product-format { display: flex; align-items: center; gap: 6px; width: fit-content; max-width: 100%; margin-bottom: 5px; color: #164865; font-size: 13px; font-weight: 700; line-height: 1.4; }
+.registration-checkout .product-format svg { flex: 0 0 22px; width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.registration-checkout .product-choice > span { min-width: 0; overflow-wrap: anywhere; }
+.registration-checkout .product-choice:focus-within { border-color: #1677a8; box-shadow: 0 0 0 1px #1677a8; }
+html[data-theme="dark"] .registration-checkout .product-format { color: #a8d9ff !important; }
+html[data-theme="dark"] .registration-checkout .product-choice:focus-within { border-color: #a8d9ff !important; box-shadow: 0 0 0 1px #a8d9ff; }
