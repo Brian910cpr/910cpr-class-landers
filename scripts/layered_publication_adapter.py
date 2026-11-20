@@ -99,8 +99,17 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
                 start, end = aware(source["start"]), aware(source["end"])
                 if end <= start:
                     raise ValueError("unresolved duration")
-                # Keep known intervals outside the window: travel and block edges
-                # may affect the boundary even without literal overlap.
+                # Keep enough boundary context for the +/-24h full-course
+                # repeat gap and travel/cleanup. Distant commitments still
+                # exist in projected_sources and in their own dated windows,
+                # but must not demand a route for this unrelated window.
+                # Unknown routes near either boundary still fail closed.
+                travel_values = [v for v in (travel_minutes or {}).values()
+                                 if type(v) in (int, float) and v >= 0]
+                travel_envelope = max(travel_values, default=0)
+                horizon = timedelta(minutes=max(48 * 60, 24 * 60 + travel_envelope))
+                if end < ws - horizon or start > we + horizon:
+                    continue
                 relevant.append(source)
             except (KeyError, TypeError, ValueError):
                 scope = source.get("uncertainty_scope", {})
