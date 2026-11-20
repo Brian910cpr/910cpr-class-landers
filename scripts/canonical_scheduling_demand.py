@@ -190,7 +190,7 @@ def resolve_canonical_demand(
             continue
 
         claimed[index] = canonical_id
-        if demand.get("visibility") == "private" or demand.get("registration_status") == "closed":
+        if demand.get("visibility") in {"private", "unlisted"} or demand.get("registration_status") == "closed":
             resolved[index]["public_direct_booking"] = False
             resolved[index]["registration_status"] = "closed"
             resolved[index]["registration_status_source"] = "canonical_class_sessions"
