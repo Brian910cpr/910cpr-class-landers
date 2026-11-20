@@ -72,52 +72,39 @@ def selector_availability_path(page_key: str) -> Path:
 
 
 def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
-    """Public geometry only; private source IDs, course types and rosters stay hidden.
+    """Expose only authorized public class geometry in the public selector.
 
-    Operational commitments must still block real time in the internal
-    calculation. Only explicitly public records may expose joinability
-    metadata; unknown visibility is nonpublic by default.
+    Private/unlisted/unknown appointments still constrain the *internal*
+    scheduling engine. A customer-visible availability JSON must not reveal
+    their precise occupied intervals, even as anonymous blocking geometry.
+    The accepted start-times list already incorporates all such blockers.
     """
     calculation = payload.get("layeredDiagnostics") or {}
     sources = []
     for source in calculation.get("projected_sources", []):
-        # Do not expose canonical source identity as a public class when the
-        # public route is explicitly closed, even if the record is tagged public.
-        # Its occupied geometry remains visible only as an anonymous blocker.
-        visibility_public = (source.get("visibility") == "public"
-                             and source.get("public_direct_booking") is not False)
+        if (source.get("visibility") != "public"
+                or source.get("public_direct_booking") is False):
+            continue
         count = source.get("active_registration_count")
         known_count = source.get("count_available") is True
         proven = (source.get("operational_has_active_seat") is True
-                  or source.get("kind") == "paid"
                   or (known_count and type(count) is int and count > 0))
         sources.append({
-            "sourceId": source.get("source_event_id") if visibility_public else None,
-            "role": "anchor" if visibility_public and proven else "blocking",
+            "sourceId": source.get("source_event_id"),
+            "role": "anchor" if proven else "blocking",
             "start": source.get("start"), "end": source.get("end"),
-            "courseId": source.get("course_id") if visibility_public else None,
+            "courseId": source.get("course_id"),
             "resource": (public_location_display(source.get("resource"))
-                         if visibility_public and source.get("resource") else None),
-            "countAvailable": visibility_public and known_count,
-            "registeredCount": count if visibility_public and known_count else None,
+                         if source.get("resource") else None),
+            "countAvailable": known_count,
+            "registeredCount": count if known_count else None,
         })
-    blocks = []
-    seen = set()
-    for report in calculation.get("reports", []):
-        for block in report.get("blocks", []):
-            key = (block.get("id"), block.get("start"), block.get("end"))
-            if key in seen:
-                continue
-            seen.add(key)
-            blocks.append({
-                "id": "occupied-block-" + str(len(blocks) + 1),
-                "start": block.get("start"), "end": block.get("end"),
-                "source_ids": [],
-            })
+    # Report blocks can derive from private/unknown sources and would otherwise
+    # disclose their exact start/end in a publicly fetchable JSON artifact.
+    # Keep them solely in the restricted/internal layeredDiagnostics report.
     return {"schemaVersion": "public-layered-landscape.v1", "sources": sources,
-            "occupiedBlocks": blocks, "offersAreAlternatives": True,
+            "occupiedBlocks": [], "offersAreAlternatives": True,
             "availabilityIsNotAClass": True}
-
 
 def public_reconciliation_issues(issues: list[dict[str, Any]]) -> list[dict[str, str]]:
     """Keep date-scoped coverage alarms, never expose private travel/staff details.
