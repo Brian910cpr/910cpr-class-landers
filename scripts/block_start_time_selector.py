@@ -747,7 +747,12 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "source_file": "canonical_class_sessions",
             "source_event_id": session.get("canonical_session_id"),
             "external_class_id": session.get("external_class_id"),
-            "course_id": session.get("course_id") or session.get("external_course_id"),
+            # A source class may lack an external course ID while its joined
+            # canonical course has an explicitly mapped scheduler course ID.
+            # A disagreement is not permission to guess a family/repeat gap.
+            "course_id": None if session.get("course_identity_conflict") is True else (
+                session.get("scheduler_course_id") or session.get("course_id") or session.get("external_course_id")),
+            "course_key": session.get("course_key"),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
             "instructor_unassigned": not session.get("lead_instructor_name"),
             "count_available": session.get("count_available") is True,

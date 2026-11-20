@@ -149,6 +149,29 @@ test('verified email-confirmed private intake is internal occupancy, not externa
   }
 });
 
+
+test('canonical course mapping preserves private booked-course gravity without inventing an external class or URL', () => {
+  const row = {id:'mapped-private',status:'scheduled',source:'confirmed_booking_intake',
+    registration_backend:'landerware',visibility:'private',registration_status:'closed',
+    external_course_id:null,external_class_id:null,
+    courses:{course_key:'aha-bls-provider-renewal',enrollware_course_id:'359474'},
+    registrations:[{status:'registered',registration_source:'enrollware_email_confirmation'}]};
+  const projection=api.projectDemand(row);
+  assert.equal(projection.external_course_id,null);
+  assert.equal(projection.scheduler_course_id,'359474');
+  assert.equal(projection.course_identity_conflict,false);
+  assert.equal(projection.operational_has_active_seat,true);
+  assert.equal(projection.visibility,'private');
+  assert.equal(Object.hasOwn(projection,'registration_url'),false);
+  assert.equal(Object.hasOwn(projection,'registrations'),false);
+  const conflict=api.projectDemand({...row,external_course_id:'209809'});
+  assert.equal(conflict.scheduler_course_id,null);
+  assert.equal(conflict.course_identity_conflict,true);
+  assert.equal(conflict.external_course_id,'209809');
+  const unavailable=api.projectDemand({...row,courses:{course_key:'unmapped',enrollware_course_id:null}});
+  assert.equal(unavailable.scheduler_course_id,null);
+});
+
 test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields', async () => {
   const calls = [];
   const endpoint = loadEndpoint(async url => {

@@ -65,6 +65,15 @@ export function projectDemand(row: any) {
     && Array.isArray(row.registrations)
     && row.registrations.some((item: any) => ACTIVE.has(item.status)
       && item.registration_source === "enrollware_email_confirmation");
+  // The catalog's explicit Enrollware course mapping is a scheduling identity,
+  // not evidence of a legacy session, public seat, or valid booking URL.
+  // Never silently select a family when canonical and historical course IDs conflict.
+  const mappedCourseId = String(row.courses?.enrollware_course_id || "");
+  const historicalCourseId = String(row.external_course_id || "");
+  const mapped = /^[0-9]+$/.test(mappedCourseId) ? mappedCourseId : null;
+  const historical = /^[0-9]+$/.test(historicalCourseId) ? historicalCourseId : null;
+  const courseIdentityConflict = Boolean(mapped && historical && mapped !== historical);
+  const schedulerCourseId = courseIdentityConflict ? null : (mapped || historical);
   const operationalHasActiveSeat = ["scheduled", "active"].includes(row.status)
     && ((countAvailable && typeof proof.active_registration_count === "number"
           && proof.active_registration_count > 0) || nativeCommittedSeat || confirmedEmailIntakeSeat);
@@ -77,6 +86,8 @@ export function projectDemand(row: any) {
     canonical_session_id: row.id,
     external_class_id: row.external_class_id || null,
     external_course_id: row.external_course_id || null,
+    scheduler_course_id: schedulerCourseId,
+    course_identity_conflict: courseIdentityConflict,
     course_key: row.courses?.course_key || null,
     start_at: row.start_at,
     end_at: row.end_at,
@@ -110,7 +121,7 @@ export async function loadDemand(start: string, stop: string) {
   const select = [
     "id", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "external_session_evidence", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
     "consumption_start_at", "consumption_end_at", "source_location_label", "source_instructor_label", "visibility", "registration_status",
-    "courses!class_sessions_course_id_fkey(course_key,name)",
+    "courses!class_sessions_course_id_fkey(course_key,name,enrollware_course_id)",
     "locations!class_sessions_location_id_fkey(name)",
     "people!class_sessions_lead_instructor_id_fkey(display_name)",
     "landerware_sessions!landerware_sessions_class_session_id_fkey(id,starts_at,ends_at)",

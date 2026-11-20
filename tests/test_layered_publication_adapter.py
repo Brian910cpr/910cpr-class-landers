@@ -221,6 +221,53 @@ class LayeredPublicationTests(unittest.TestCase):
         public=public_selector_availability_payload(payload)
         self.assertNotIn('fixture-11-12:00-Brian Ennis', json.dumps(public))
 
+    def test_canonical_course_mapping_survives_real_occupancy_normalizer(self):
+        # Production-shaped joined Supabase demand: canonical private intake has
+        # a course FK mapping but no per-session numeric external course ID.
+        # Keep the private time blocked AND apply the paid full-course family cap.
+        from scripts.block_start_time_selector import build_occupancy
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        self.policy['require_verified_day_gravity']=True
+        snapshot={'sessions_current':{'sessions':[]},
+                  'schedule_future':{'sessions':[]},
+                  'live_availability_snapshot':{},
+                  'location_resource_map':self.resources,
+                  'canonical_demand':{'sessions':[{
+                      'canonical_session_id':'fixture-canonical-private-course-mapped',
+                      'session_status':'scheduled','course_key':'aha-bls-provider-renewal',
+                      'scheduler_course_id':'359474','external_course_id':None,
+                      'start_at':self.at(11,'12:00').isoformat(),
+                      'end_at':self.at(11,'14:30').isoformat(),
+                      'location_name':':: Wilmington; Shipyard Blvd',
+                      'lead_instructor_name':'Brian Ennis',
+                      'operational_has_active_seat':True,'count_available':False,
+                      'active_registration_count':None,
+                  }]}}
+        occupied=build_occupancy(snapshot,{},allow_unresolved=True)
+        self.assertEqual(len(occupied),1,occupied)
+        self.assertEqual(occupied[0]['course_id'],'359474')
+        self.assertEqual(occupied[0]['location_resolution'],'location_resource_map')
+        self.sources=occupied
+        calculation=self.calculation()
+        self.assertEqual(len(calculation['reports']),1,calculation['issues'])
+        report=calculation['reports'][0]
+        self.assertTrue(any(row['id']=='fixture-canonical-private-course-mapped'
+            and row['kind']=='paid' and row['course']=='359474'
+            for row in report['normalized_occupancy']))
+        self.assertFalse(any(row['course']=='359474' for row in report['accepted']),
+            'private occupied full course allowed same-family duplicate')
+        self.assertIn('full_family_already_paid_seated',report['rejection_reasons'])
+        self.assertFalse(any(o.get('offerType')=='seated_class'
+            for o in self.payload(calculation=calculation)['offers']))
+        self.assertNotIn('fixture-canonical-private-course-mapped',
+            json.dumps(public_selector_availability_payload(self.payload(calculation=calculation))))
+        snapshot['canonical_demand']['sessions'][0]['course_identity_conflict']=True
+        conflicting=build_occupancy(snapshot,{},allow_unresolved=True)
+        self.assertIsNone(conflicting[0]['course_id'])
+        self.assertEqual(conflicting[0]['start'],occupied[0]['start'])
+        self.assertEqual(conflicting[0]['end'],occupied[0]['end'])
+
     def test_private_key_only_positive_seat_has_internal_day_gravity(self):
         # A confirmed private seat may lack an external course ID. It is still
         # operational demand, but this gate must never create a joinable seat.
