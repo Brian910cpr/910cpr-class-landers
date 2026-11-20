@@ -137,7 +137,7 @@ def resolve_canonical_demand(
             # that the hosted native checkout can attach a buyer to this class.
             # The endpoint does not export a source-owned verified booking URL.
             # Never manufacture a public registration claim from a session ID.
-            "registration_status": "closed", "public_direct_booking": False,
+            "registration_status": "open", "public_direct_booking": False,
             "public_route_guard": "native_source_booking_route_unverified",
             "registration_backend": "landerware", "registration_url": None,
         })
