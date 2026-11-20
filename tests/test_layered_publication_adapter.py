@@ -1014,4 +1014,40 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(self.payload()['offers'])
 
 
+    def test_final_v2_publisher_cannot_resurrect_private_or_unlisted_seated_routes(self):
+        from scripts.block_start_time_selector import build_occupancy
+        for visibility, route_allowed in (('private', True), ('unlisted', True),
+                                           ('public', False)):
+            with self.subTest(visibility=visibility, route_allowed=route_allowed):
+                self.sources = build_occupancy(dict(
+                    location_resource_map=self.resources,
+                    canonical_demand=dict(sessions=[dict(
+                        canonical_session_id='private-seat-sentinel',
+                        location_name=':: Wilmington; Shipyard Blvd',
+                        lead_instructor_name='Brian Ennis',
+                        session_status='scheduled', external_course_id='210549',
+                        start_at=self.at(11, '12:00').isoformat(),
+                        end_at=self.at(11, '13:00').isoformat(),
+                        count_available=True, active_registration_count=1,
+                        operational_has_active_seat=True, visibility=visibility,
+                        public_direct_booking=route_allowed,
+                    )])), {}, allow_unresolved=True)
+                seated = dict(session_id='private-seat-sentinel',
+                              date='2026-10-11', startTime='12:00',
+                              courseId='210549', courseName='Unlisted source class',
+                              offerType='seated_class',
+                              registrationUrl='https://private.invalid/forbidden')
+                payload = self.payload([seated])
+                self.assertFalse([offer for offer in payload['offers']
+                                  if offer.get('offerType') == 'seated_class'])
+                self.assertIn('nonpublic_or_unverified_existing_booking_choice',
+                              payload['rejectionReasonCounts'])
+                self.assertTrue(payload['layeredDiagnostics']['projected_sources'][0][
+                    'operational_has_active_seat'])
+                public = public_selector_availability_payload(payload)
+                self.assertNotIn('private-seat-sentinel', json.dumps(public))
+                self.assertNotIn('private.invalid', json.dumps(public))
+        self.sources = []
+
+
 if __name__=='__main__':unittest.main()
