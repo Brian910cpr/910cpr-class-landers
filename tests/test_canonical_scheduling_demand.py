@@ -3,7 +3,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from scripts.anchor_state import promote_seated_sessions
-from scripts.block_start_time_selector import build_occupancy
+from scripts.block_start_time_selector import build_occupancy, public_direct_bookable_session
 from scripts.layered_selector_adapter import aware
 from scripts.canonical_scheduling_demand import resolve_canonical_demand, summarize_positive_v1_attribution
 
@@ -55,6 +55,30 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertNotIn("canonical_session_id", sessions[0])
         self.assertEqual("durable-sep-14-bls-renewal", sessions[1]["canonical_session_id"])
         self.assertEqual("external_class_id", audit[0]["match_basis"])
+
+    def test_native_seated_source_does_not_publish_inherited_legacy_enrollment_url(self):
+        # A real native BLS seat may share the numerical Enrollware class ID
+        # with its legacy schedule mirror. Keep its identity, but never turn
+        # the mirror's old URL into an authorized native checkout route.
+        legacy = occurrence(session_id="15000001", course_id="209806",
+            registration_url="https://coastalcprtraining.enrollware.com/enroll?id=15000001",
+            registration_status="open", session_status="scheduled")
+        native = demand(external_class_id="15000001", source="landerware_public_offer",
+            registration_backend="landerware", visibility="public",
+            session_status="scheduled", registration_status="open",
+            operational_has_active_seat=True, count_available=False,
+            active_registration_count=None)
+        resolved, audit = resolve_canonical_demand([legacy], [native])
+        self.assertEqual("external_class_id", audit[0]["match_basis"])
+        self.assertEqual(native["canonical_session_id"], resolved[0]["canonical_session_id"])
+        self.assertFalse(resolved[0]["public_direct_booking"])
+        self.assertFalse(public_direct_bookable_session(resolved[0]))
+        self.assertEqual("native_canonical_legacy_url_unverified", resolved[0]["public_route_guard"])
+        # This does not cancel the occupied canonical appointment or erase
+        # a legitimate legacy-backed enrollment route absent native ownership.
+        self.assertEqual(1, native["operational_has_active_seat"])
+        old_owner, _ = resolve_canonical_demand([legacy], [dict(native, registration_backend="enrollware")])
+        self.assertTrue(public_direct_bookable_session(old_owner[0]))
 
     def test_ambiguous_fallback_fails_closed(self):
         sessions, audit = resolve_canonical_demand([occurrence(session_id="a"), occurrence(session_id="b")], [demand()])
