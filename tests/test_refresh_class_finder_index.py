@@ -71,6 +71,23 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     self.render()
 
+    def test_nonempty_finder_cannot_publish_from_stale_or_missing_snapshot(self):
+        # A plausible, future-facing class is NOT proof that its source is fresh.
+        card = {"session_id": "15000001", "display_date": "November 21, 2026"}
+        html = '<a class="class-finder-secondary" href="/classes/15000001.html">Details</a>'
+        future_row = {"_parsed_start": self.now + timedelta(days=1)}
+        with patch.object(finder, "load_schedule_future_sessions", return_value=[future_row]), \\
+             patch.object(finder, "schedule_future_to_public_session", return_value=card), \\
+             patch.object(finder, "render_classes_finder_index", return_value=html):
+            self.write_source()
+            self.assertEqual(self.render()[1], {"15000001"})
+            self.write_source(when=self.now - timedelta(hours=3))
+            with self.assertRaisesRegex(ValueError, "Unverified zero-class source"):
+                self.render()
+            self.path.unlink()
+            with self.assertRaisesRegex(ValueError, "Unverified zero-class source"):
+                self.render()
+
     def test_safe_route_refresh_accepts_only_verified_empty_finder(self):
         self.write_source()
         html, ids = self.render()
