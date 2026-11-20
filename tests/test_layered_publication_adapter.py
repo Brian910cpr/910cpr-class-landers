@@ -899,49 +899,48 @@ class LayeredPublicationTests(unittest.TestCase):
         projected=project_sources([dict(active_registration_count=True,count_available=True)],{})
         self.assertIsNone(projected[0]['active_registration_count'])
 
-    def test_public_landscape_keeps_private_booking_geometry_but_no_identifiers(self):
-        # The actual published selector is customer-readable. A private
-        # registered class constrains time without advertising its course or
-        # confirming a participant, and an unknown-visibility row fails closed.
+    def test_public_landscape_never_publishes_nonpublic_booking_geometry(self):
+        # Private, unlisted and unknown source commitments must constrain the
+        # internal engine but must not reveal exact occupied times in public JSON.
         internal = {
             'projected_sources': [
-                dict(source_event_id='SECRET-PRIVATE-ID',visibility='private',
-                     course_id='SECRET-PRIVATE-COURSE',kind='paid',
-                     operational_has_active_seat=True,count_available=True,
-                     active_registration_count=1,start='2026-11-22T15:00:00',
-                     end='2026-11-22T17:00:00',resource='Shipyard Room B'),
+                dict(source_event_id='SECRET-PRIVATE-ID', visibility='private',
+                     course_id='SECRET-PRIVATE-COURSE', kind='paid',
+                     operational_has_active_seat=True, count_available=True,
+                     active_registration_count=1, start='2026-11-22T15:07:00',
+                     end='2026-11-22T17:13:00', resource='Shipyard Room B'),
                 dict(source_event_id='SECRET-UNKNOWN-ID',
-                     course_id='SECRET-UNKNOWN-COURSE',kind='paid',
-                     count_available=True,active_registration_count=2,
-                     start='2026-11-23T10:00:00',end='2026-11-23T12:00:00'),
-                dict(source_event_id='PUBLIC-CLASS',visibility='public',
-                     course_id='209806',kind='paid',count_available=True,
+                     course_id='SECRET-UNKNOWN-COURSE', kind='paid',
+                     count_available=True, active_registration_count=2,
+                     start='2026-11-23T10:03:00', end='2026-11-23T12:17:00'),
+                dict(source_event_id='SECRET-REVOKED-ID', visibility='public',
+                     public_direct_booking=False, kind='paid',
+                     start='2026-11-25T09:06:00', end='2026-11-25T10:22:00'),
+                dict(source_event_id='PUBLIC-CLASS', visibility='public',
+                     course_id='209806', kind='paid', count_available=True,
                      active_registration_count=1,
-                     start='2026-11-24T10:00:00',end='2026-11-24T12:00:00')],
+                     start='2026-11-24T10:00:00', end='2026-11-24T12:00:00')],
             'reports':[{'blocks':[dict(id='SECRET-BLOCK-ID',
                                       source_ids=['SECRET-PRIVATE-ID'],
-                                      start='2026-11-22T15:00:00',
-                                      end='2026-11-22T17:00:00')]}],
+                                      start='2026-11-22T15:07:00',
+                                      end='2026-11-22T17:13:00')]}],
         }
+        before=copy.deepcopy(internal)
         landscape=public_layered_landscape({'layeredDiagnostics':internal})
-        a,b,c=landscape['sources']
-        for private in (a,b):
-            self.assertIsNone(private['sourceId'])
-            self.assertIsNone(private['courseId'])
-            self.assertEqual(private['role'],'blocking')
-            self.assertFalse(private['countAvailable'])
-            self.assertIsNone(private['registeredCount'])
-        self.assertEqual((a['start'],a['end']),
-                         ('2026-11-22T15:00:00','2026-11-22T17:00:00'))
-        self.assertEqual((c['sourceId'],c['courseId'],c['role'],c['registeredCount']),
-                         ('PUBLIC-CLASS','209806','anchor',1))
-        self.assertEqual(landscape['occupiedBlocks'][0]['source_ids'],[])
+        self.assertEqual(len(landscape['sources']), 1)
+        public=landscape['sources'][0]
+        self.assertEqual((public['sourceId'], public['courseId'], public['role'],
+                          public['registeredCount']),
+                         ('PUBLIC-CLASS', '209806', 'anchor', 1))
+        self.assertEqual(landscape['occupiedBlocks'], [])
         public_json=json.dumps(landscape)
         for secret in ('SECRET-PRIVATE-ID','SECRET-PRIVATE-COURSE',
-                       'SECRET-UNKNOWN-ID','SECRET-UNKNOWN-COURSE','SECRET-BLOCK-ID'):
+                       'SECRET-UNKNOWN-ID','SECRET-UNKNOWN-COURSE',
+                       'SECRET-REVOKED-ID','SECRET-BLOCK-ID',
+                       '15:07:00','17:13:00','10:03:00','12:17:00',
+                       '09:06:00','10:22:00'):
             self.assertNotIn(secret,public_json)
-        self.assertEqual(internal['projected_sources'][0]['active_registration_count'],1)
-
+        self.assertEqual(internal,before)
 
     def test_compact_public_availability_reports_redact_private_travel_and_room(self):
         # This suite runs in the Anchor policy CI: do not rely on Chrome-only
@@ -966,18 +965,16 @@ class LayeredPublicationTests(unittest.TestCase):
             dict(reason='missing_directional_travel_rule',start='2026-12-06'),
             dict(reason='availability_coverage_unknown',start='2026-12-10'),
         ])
-        source=feed['layeredLandscape']['sources'][0]
-        self.assertEqual(source['role'],'blocking')
-        self.assertEqual((source['start'],source['end']),
-                         (private['start'],private['end']))
-        self.assertIsNone(source['resource'])
+        self.assertEqual(feed['layeredLandscape']['sources'], [])
+        self.assertEqual(feed['layeredLandscape']['occupiedBlocks'], [])
         redacted=json.dumps(feed)
         for private_value in ('PRIVATE CLIENT', 'PRIVATE VENUE', 'SECRET STAFF',
                               'SECRET ROOM', 'SECRET SOURCE', 'SECRET COURSE'):
             self.assertNotIn(private_value,redacted)
-        # Public occupancy geometry is intentionally preserved; the detailed
-        # travel failure is not. Exact source hours must not appear in the
-        # public issue entry, but may still block a legitimate overlap.
+        # Exact private occupancy remains an internal blocker only; the
+        # customer feed exposes eligible starts, not hidden appointment times.
+        self.assertNotIn(private['start'],redacted)
+        self.assertNotIn(private['end'],redacted)
         self.assertNotIn('end',feed['reconciliationIssues'][0])
         self.assertEqual(feed['reconciliationIssues'][0]['start'],'2026-12-06')
         self.assertEqual(raw,before)
