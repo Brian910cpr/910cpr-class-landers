@@ -78,5 +78,12 @@ class AhaPrintTests(base.CheckoutUXTests):
   self.assertEqual(student['manualChoice'],'physical');self.assertEqual(student['addons'],[])
   self.assertFalse(any('paid' in k.lower() or 'purchased' in k.lower() for k in student))
   self.assertNotIn('price',student)
+ def test_opening_shop_again_for_selected_print_does_not_recopy_other_students(self):
+  page,requests,_=self.open();page.locator('#add-student').click()
+  page.locator('[data-same-for-all]').check();self.activate(page)
+  page.locator('[data-manual-choice][value=ebook]').nth(1).check()
+  self.activate(page)
+  self.assertTrue(page.locator('[data-manual-choice][value=ebook]').nth(1).is_checked())
+  self.assertIn('$167.49',page.locator('#continue').inner_text());self.assertEqual(requests,[])
 
 if __name__=='__main__':unittest.main()
