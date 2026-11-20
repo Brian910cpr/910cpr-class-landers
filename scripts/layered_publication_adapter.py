@@ -233,7 +233,14 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 counts[str(identity)] = source
     for original in seated_offers:
         source = counts.get(str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId")))
-        if source and source.get("count_available") is True and source.get("active_registration_count") == 0:
+        # Defense in depth: even if an upstream seated-offer generator returns
+        # a class, explicit canonical privacy or a revoked/unverified booking
+        # route must never be resurrected by the final V2 publisher. Keep its
+        # internal occupied interval for conflict and Anchor calculations.
+        if source and (str(source.get("visibility") or "").strip().lower() in {"private", "unlisted"}
+                       or source.get("public_direct_booking") is False):
+            rejected.append(dict(original, reasons=["nonpublic_or_unverified_existing_booking_choice"]))
+        elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
         else:
             accepted.append(deepcopy(original))
