@@ -766,6 +766,10 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "course_id": None if session.get("course_identity_conflict") is True else (
                 session.get("scheduler_course_id") or session.get("course_id") or session.get("external_course_id")),
             "course_key": session.get("course_key"),
+            # Preserve internal canonical visibility and route authority through
+            # the V2 publisher. This is not a grant of public joinability.
+            "visibility": session.get("visibility"),
+            "public_direct_booking": session.get("public_direct_booking"),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
             "instructor_unassigned": not session.get("lead_instructor_name"),
             "count_available": session.get("count_available") is True,
