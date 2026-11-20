@@ -65,6 +65,19 @@ export function projectDemand(row: any) {
     && Array.isArray(row.registrations)
     && row.registrations.some((item: any) => ACTIVE.has(item.status)
       && item.registration_source === "enrollware_email_confirmation");
+  // Owner-confirmed private booking intake with a matching accepted source
+  // and an active canonical seat also reserves operational time. This matters
+  // if a later import assigns a numeric legacy class ID: an unproven external
+  // roster must not erase independently confirmed owner demand.
+  // This signal never authorizes public joinability or an external seat count.
+  const ownerConfirmedIntakeSeat = row.registration_backend === "landerware"
+    && row.source === "confirmed_booking_intake"
+    && emailEvidence.kind === "owner_confirmed_booking"
+    && /^[0-9a-f]{16}$/i.test(String(emailEvidence.gmail_message_id || ""))
+    && Array.isArray(row.registrations)
+    && row.registrations.some((item: any) => ACTIVE.has(item.status)
+      && ["owner_confirmed_booking", "owner_voice_fragment", "manual"].includes(item.registration_source)
+      && !item.external_registration_id);
   // The catalog's explicit Enrollware course mapping is a scheduling identity,
   // not evidence of a legacy session, public seat, or valid booking URL.
   // Never silently select a family when canonical and historical course IDs conflict.
@@ -76,7 +89,8 @@ export function projectDemand(row: any) {
   const schedulerCourseId = courseIdentityConflict ? null : (mapped || historical);
   const operationalHasActiveSeat = ["scheduled", "active"].includes(row.status)
     && ((countAvailable && typeof proof.active_registration_count === "number"
-          && proof.active_registration_count > 0) || nativeCommittedSeat || confirmedEmailIntakeSeat);
+          && proof.active_registration_count > 0) || nativeCommittedSeat || confirmedEmailIntakeSeat
+      || ownerConfirmedIntakeSeat);
   const workspaces = row.landerware_sessions || [];
   const workspace = workspaces.length === 1 ? workspaces[0] : null;
   const workspaceStatus = !workspaces.length ? "missing" : !workspace
