@@ -1050,4 +1050,28 @@ class LayeredPublicationTests(unittest.TestCase):
         self.sources = []
 
 
+    def test_mirrored_closed_route_cannot_override_public_canonical_seat(self):
+        canonical = self.add(11, '12:00', '13:00', cid='210549', count=1,
+                             visibility='public', external_class_id='legacy-class-720')
+        mirror = dict(canonical, source_file='schedule_future',
+                      source_event_id='legacy-mirror-720',
+                      count_available=False, active_registration_count=None,
+                      public_direct_booking=False)
+        self.sources.append(mirror)
+        seated = dict(session_id='legacy-class-720', date='2026-10-11',
+                      startTime='12:00', courseId='210549',
+                      courseName='Mirrored registration route',
+                      offerType='seated_class',
+                      registrationUrl='https://legacy.invalid/unverified')
+        payload = self.payload([seated])
+        self.assertTrue(any(source.get('active_registration_count') == 1
+                            for source in payload['layeredDiagnostics']['projected_sources']))
+        self.assertFalse([offer for offer in payload['offers']
+                          if offer.get('offerType') == 'seated_class'])
+        self.assertIn('nonpublic_or_unverified_existing_booking_choice',
+                      payload['rejectionReasonCounts'])
+        self.assertNotIn('legacy.invalid',
+                         json.dumps(public_selector_availability_payload(payload)))
+
+
 if __name__=='__main__':unittest.main()
