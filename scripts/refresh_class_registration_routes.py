@@ -10,7 +10,17 @@ def refresh(root=ROOT):
     index=root/'docs/classes/index.html'
     original=index.read_text(encoding='utf8')
     ids=re.findall(r'class="class-finder-secondary" href="/classes/(\d+)\.html"',original)
-    if not ids or len(ids)!=len(set(ids)): raise ValueError('missing or duplicate public class listing')
+    if len(ids)!=len(set(ids)): raise ValueError('duplicate public class listing')
+    if not ids:
+        # A zero-card class finder is valid only after the same fresh source has
+        # been independently verified. Never leave old "Register" cards alive.
+        if 'class="class-finder-card' in original:
+            raise ValueError('empty listing has unexpected class cards')
+        from scripts.refresh_class_finder_index import render_current_class_finder
+        _, verified_ids = render_current_class_finder()
+        if verified_ids:
+            raise ValueError('empty class listing mismatches current eligible source')
+        return {'listed': 0, 'files': 0}
     rows=json.loads((root/'docs/data/schedule_future.json').read_text(encoding='utf8'))['sessions']
     sessions={}
     for sid in ids:
