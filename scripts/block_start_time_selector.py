@@ -792,8 +792,10 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
 def public_direct_bookable_session(session: dict[str, Any]) -> bool:
     registration_status = clean_text(session.get("registration_status") or "open").lower()
     session_status = clean_text(session.get("session_status") or "active").lower()
+    visibility = clean_text(session.get("visibility")).lower()
     return (
-        session.get("public_direct_booking") is not False
+        visibility not in {"private", "unlisted"}
+        and session.get("public_direct_booking") is not False
         and registration_status not in {"closed", "full", "unverified", "cancelled", "canceled", "deleted"}
         and session_status not in {"cancelled", "canceled", "deleted"}
         and session.get("is_full") is not True
