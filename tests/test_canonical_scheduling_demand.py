@@ -116,6 +116,19 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         rows, _ = resolve_canonical_demand([legacy], [public])
         self.assertTrue(public_direct_bookable_session(rows[0]))
 
+    def test_explicit_private_unlisted_legacy_visibility_is_not_publicly_bookable(self):
+        # Independent of canonical matching, a legacy source's explicit
+        # private/unlisted visibility must never create a public join route.
+        for visibility in ("private", "unlisted", "PRIVATE", "Unlisted"):
+            with self.subTest(visibility=visibility):
+                row = occurrence(visibility=visibility, registration_status="open",
+                                 public_direct_booking=True)
+                self.assertFalse(public_direct_bookable_session(row))
+        # Missing legacy visibility is not proof of private status by itself;
+        # existing legacy route and source-ownership checks still apply.
+        self.assertTrue(public_direct_bookable_session(occurrence()))
+        self.assertTrue(public_direct_bookable_session(occurrence(visibility="public")))
+
     def test_ambiguous_fallback_fails_closed(self):
         sessions, audit = resolve_canonical_demand([occurrence(session_id="a"), occurrence(session_id="b")], [demand()])
         self.assertFalse(any("canonical_session_id" in row for row in sessions))
