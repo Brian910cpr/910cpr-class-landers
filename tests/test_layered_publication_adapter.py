@@ -624,6 +624,13 @@ class LayeredPublicationTests(unittest.TestCase):
                 'date', 'startTime', 'courseId', 'courseFamily',
                 'courseName', 'offerType', 'scheduleRole', 'reasons'}))
         self.assertNotIn(sentinel, json.dumps(public['rejectedCourseStartTimes']))
+        # Even the course/date/time of a rejected private or unlisted seated
+        # choice is confidential, not just its source URL and customer fields.
+        private_rejections = [row for row in public['rejectedCourseStartTimes']
+                              if row.get('offerType') == 'seated_class']
+        self.assertEqual(private_rejections, [dict(
+            offerType='seated_class',
+            reasons=['existing_booking_choice_withheld'])])
         self.assertEqual(payload['rejectedCourseStartTimes'][0]['sessionId'], sentinel)
 
     def test_repeated_skills_growth_and_full_class_enlarges_block(self):
