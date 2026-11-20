@@ -353,9 +353,20 @@ PUBLIC_REJECTION_DIAGNOSTIC_FIELDS = frozenset({
 
 
 def public_rejection_diagnostics(rows):
-    return [{key: value for key, value in row.items()
-             if key in PUBLIC_REJECTION_DIAGNOSTIC_FIELDS}
-            for row in rows if isinstance(row, dict)]
+    result = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        if row.get("offerType") == "seated_class":
+            # The rejected choice may be a private or unlisted appointment.
+            # Its exact time/course can identify a confidential commitment;
+            # detailed diagnostics stay in the internal calculation only.
+            result.append(dict(offerType="seated_class",
+                               reasons=["existing_booking_choice_withheld"]))
+            continue
+        result.append({key: value for key, value in row.items()
+                       if key in PUBLIC_REJECTION_DIAGNOSTIC_FIELDS})
+    return result
 
 
 def finalize(payload, now=None):
