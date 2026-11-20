@@ -1075,6 +1075,12 @@ class LayeredPublicationTests(unittest.TestCase):
                 payload = self.payload([seated])
                 self.assertFalse([offer for offer in payload['offers']
                                   if offer.get('offerType') == 'seated_class'])
+                self.assertFalse(any(
+                    row.get('courseName') == 'Unlisted source class'
+                    or row.get('date') == '2026-10-11' and row.get('startTime') == '12:00'
+                    for row in payload['rejectedCourseStartTimes']
+                    if row.get('offerType') == 'seated_class'
+                ), 'Rejected private seats must not disclose class or time')
                 self.assertIn('nonpublic_or_unverified_existing_booking_choice',
                               payload['rejectionReasonCounts'])
                 self.assertTrue(payload['layeredDiagnostics']['projected_sources'][0][
