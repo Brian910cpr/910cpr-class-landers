@@ -375,6 +375,34 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(any(row.get('offerType')=='seated_class'
                              for row in payload['offers']))
 
+    def test_private_unassigned_shared_room_blocks_duplicate_full_course_not_other_choices(self):
+        # A confirmed but unassigned private BLS seat consumes the primary
+        # room and its same-course day allowance, not other qualified courses.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','18:00',name='Michelle',next_day=False)
+        self.policy['require_verified_day_gravity']=True
+        private=self.add(11,'12:00','14:30',cid='359474',
+                         name='UNASSIGNED',count=1,visibility='private',
+                         registration_status='closed',instructor_unassigned=True)
+        private.pop('resource')
+        private['location']=':: Wilmington; Shipyard Blvd'
+        private['location_resolution']='location_resource_map'
+        calculation=self.calculation()
+        self.assertEqual(calculation['counts']['failed_windows'],0,calculation['issues'])
+        payload=self.payload(calculation=calculation)
+        offers=[o for o in payload['offers']
+                if o.get('offerType')=='dynamic_appointment'
+                and o.get('instructor')=='Michelle']
+        self.assertFalse([o for o in offers if o['courseId']=='359474'],
+                         'an unknown-instructor paid BLS seat must not yield another full BLS start')
+        self.assertTrue([o for o in offers if o['courseId']=='209809'],
+                        'another qualified course must retain its legal bookends')
+        self.assertTrue([o for o in offers if o['courseId']=='210549'],
+                        'skills repeat gap remains zero')
+        public=public_selector_availability_payload(payload)
+        self.assertNotIn(private['source_event_id'],json.dumps(public))
+        self.assertFalse(any(o.get('offerType')=='seated_class' for o in payload['offers']))
+
     def test_adjacent_confirmed_private_session_with_unassigned_instructor(self):
         # Source-shaped Nov 20 boundary: confirmed BLS consumption ends at
         # 14:30, exactly when a second closed private appointment begins.

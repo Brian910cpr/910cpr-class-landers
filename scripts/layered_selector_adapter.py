@@ -154,6 +154,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             course=cid if cid in fixture["courses"] else None, kind=kind, headcount=count,
             operational_has_active_seat=busy.get("operational_has_active_seat") is True,
             evidence=busy.get("source_file"),
+            instructor_unassigned=bool(busy.get("instructor_unassigned")),
             resource_uncertain=busy.get("resource_uncertain", False),
             uncertainty_reason=busy.get("uncertainty_reason"),
             adr_shift="adr" in str(busy.get("course_title") or "").casefold()))
