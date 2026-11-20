@@ -283,6 +283,7 @@ def run(fixture):
     accepted, rejected = [], []
     now = stamp(fixture["now"])
     family_counts = Counter(); seating_positions = {}; uncertain_full = []; uncertain_family_groups = set()
+    unassigned_seated_groups = set()
     consolidation_scope = policy.get('full_class_consolidation_scope', 'family')
     if consolidation_scope not in {'family', 'course'}:
         raise ValueError('invalid full class consolidation scope')
@@ -299,6 +300,8 @@ def run(fixture):
             continue
         group = (busy['instructor'], busy['start'].astimezone(zone).date().isoformat(), consolidation_identity(busy['course']))
         seating_positions.setdefault(group, {}).setdefault((busy['start'], busy['location']), []).append(busy['id'])
+        if busy.get('instructor_unassigned'):
+            unassigned_seated_groups.add((busy['location'], group[1], group[2]))
     for group, positions in seating_positions.items(): family_counts[group] = len(positions)
     for c in sorted(candidates, key=lambda x: (x["start"], x["course"])):
         reasons = []
@@ -330,7 +333,8 @@ def run(fixture):
         # Only real paid/seated full classes consume the allowance; offers never do.
         day = c["start"].astimezone(zone).date().isoformat()
         key = (c["instructor"], day, consolidation_identity(c['course']))
-        if meta["kind"] == "full" and family_counts[key] >= policy.get("paid_full_positions_per_family_day", 1):
+        shared_anchor = (c['location'], day, key[2]) in unassigned_seated_groups
+        if meta["kind"] == "full" and (shared_anchor or family_counts[key] >= policy.get("paid_full_positions_per_family_day", 1)):
             reasons.append("full_course_already_paid_seated" if consolidation_scope == 'course' else "full_family_already_paid_seated")
         if meta["kind"] == "full" and policy.get("reject_unknown_full_family_count") and key in uncertain_family_groups:
             reasons.append("full_course_count_unknown" if consolidation_scope == 'course' else "full_family_count_unknown")

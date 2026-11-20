@@ -262,6 +262,13 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertTrue(self.starts('359474'))
         self.assertEqual(self.starts('329495'),{'11:00','14:30'})
 
+    def test_unassigned_seated_renewal_blocks_duplicate_in_shared_room(self):
+        self.add(11, '13:30', '15:30', '359474', name='Unknown', count=2,
+                 instructor_unassigned=True)
+        self.assertFalse(self.starts('359474'))
+        self.assertTrue(self.starts('210549'))
+        self.assertTrue(self.starts('209809'))
+
     def test_missing_owned_url_rejects_calculated_offer(self):
         self.add(11,'12:00','13:00')
         payload=publish(self.calculation(),self.page,self.courses,self.windows,self.now,
