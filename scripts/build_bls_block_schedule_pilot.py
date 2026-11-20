@@ -81,7 +81,11 @@ def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
     calculation = payload.get("layeredDiagnostics") or {}
     sources = []
     for source in calculation.get("projected_sources", []):
-        visibility_public = source.get("visibility") == "public"
+        # Do not expose canonical source identity as a public class when the
+        # public route is explicitly closed, even if the record is tagged public.
+        # Its occupied geometry remains visible only as an anonymous blocker.
+        visibility_public = (source.get("visibility") == "public"
+                             and source.get("public_direct_booking") is not False)
         count = source.get("active_registration_count")
         known_count = source.get("count_available") is True
         proven = (source.get("operational_has_active_seat") is True
