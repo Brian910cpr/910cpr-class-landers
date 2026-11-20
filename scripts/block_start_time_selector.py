@@ -737,6 +737,19 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             continue
         start = parse_dt(session.get("consumption_start_at") or session.get("start_at"))
         end = parse_dt(session.get("consumption_end_at") or session.get("end_at"))
+        # Canonical intake may record only the 45-minute teaching interval for
+        # a known skills course. Reserve its required cleanup even when the
+        # source omitted it; never shorten a longer explicit commitment.
+        # Only an authoritative numeric scheduler identity permits this rule.
+        scheduler_course_id = (
+            session.get("scheduler_course_id") or session.get("external_course_id")
+        ) if session.get("course_identity_conflict") is not True else None
+        rule = course_rules.get(str(scheduler_course_id)) if scheduler_course_id else None
+        booked_end = parse_dt(session.get("end_at"))
+        if (rule and rule.get("kind") == "skills" and booked_end and end):
+            cleanup = int(rule.get("cleanup_buffer_minutes") or 0)
+            if cleanup > 0:
+                end = max(end, booked_end + timedelta(minutes=cleanup))
         if (not start or not end or end <= start) and not allow_unresolved:
             raise BlockSelectorInputError("Canonical session has an invalid occupied window")
         canonical.append({
