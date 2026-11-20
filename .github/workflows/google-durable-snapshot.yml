@@ -1,0 +1,45 @@
+name: Google durable snapshot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * *"
+
+concurrency:
+  group: google-durable-snapshot
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pinned Google clients
+        run: python -m pip install google-api-python-client==2.181.0 google-auth==2.40.3
+
+      - name: Export, verify, and upload snapshot
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_DRIVE_SNAPSHOT_FOLDER_ID: "1qdy514zfz53Ch-yQ1KIBHDhqD801ezNE"
+          GOOGLE_DRIVE_RECONCILIATION_FOLDER_ID: "1r11x64lvNiUDLsdM766Q4tlYrQtHsGRB"
+        run: python -m scripts.export_google_durable_snapshot --health-output data/audit/google_durable_snapshot_health.json
+
+      - name: Publish non-PII health evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: google-durable-snapshot-health
+          path: data/audit/google_durable_snapshot_health.json
+          if-no-files-found: error
+          retention-days: 30
