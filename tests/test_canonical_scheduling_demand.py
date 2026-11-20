@@ -80,6 +80,42 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         old_owner, _ = resolve_canonical_demand([legacy], [dict(native, registration_backend="enrollware")])
         self.assertTrue(public_direct_bookable_session(old_owner[0]))
 
+    def test_unlisted_canonical_seat_never_inherits_public_legacy_booking_route(self):
+        # An accepted unlisted class still reserves a real seat, but the public
+        # legacy mirror must not make it joinable, even with an "open" or
+        # externally managed registration status. Preserve its source identity.
+        legacy = occurrence(
+            session_id="15000007",
+            registration_url="https://coastalcprtraining.enrollware.com/enroll?id=15000007",
+            registration_status="open",
+            public_direct_booking=True,
+        )
+        for status in ("external", "open"):
+            with self.subTest(status=status):
+                unlisted = demand(
+                    external_class_id="15000007",
+                    visibility="unlisted",
+                    source="enrollware_reconciled",
+                    registration_backend="enrollware",
+                    session_status="scheduled",
+                    registration_status=status,
+                    active_registration_count=1,
+                    count_available=True,
+                    operational_has_active_seat=True,
+                )
+                rows, audit = resolve_canonical_demand([legacy], [unlisted])
+                self.assertEqual("external_class_id", audit[0]["match_basis"])
+                self.assertEqual(unlisted["canonical_session_id"], rows[0]["canonical_session_id"])
+                self.assertEqual(1, rows[0]["active_registration_count"])
+                self.assertTrue(rows[0]["count_available"])
+                self.assertFalse(rows[0]["public_direct_booking"])
+                self.assertEqual("closed", rows[0]["registration_status"])
+                self.assertFalse(public_direct_bookable_session(rows[0]))
+        # Do not globally disable independently public, correctly owned seats.
+        public = dict(unlisted, visibility="public", registration_status="open")
+        rows, _ = resolve_canonical_demand([legacy], [public])
+        self.assertTrue(public_direct_bookable_session(rows[0]))
+
     def test_ambiguous_fallback_fails_closed(self):
         sessions, audit = resolve_canonical_demand([occurrence(session_id="a"), occurrence(session_id="b")], [demand()])
         self.assertFalse(any("canonical_session_id" in row for row in sessions))
