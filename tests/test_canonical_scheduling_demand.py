@@ -203,6 +203,70 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertEqual(aware(blocks[0]["end"]).isoformat(), "2030-11-23T12:30:00-05:00")
         self.assertNotIn("public_direct_booking", blocks[0])
 
+    def test_known_canonical_blended_skills_hold_cleanup_without_public_promotion(self):
+        import json
+        from scripts.block_start_time_selector import course_rules_by_id
+
+        root = Path(__file__).resolve().parents[1]
+        rules = course_rules_by_id(json.loads(
+            (root / "data/inventory/course_consumption_rules.json").read_text(encoding="utf-8")))
+        policy = json.loads(
+            (root / "data/config/layered_scheduling_policy.json").read_text(encoding="utf-8"))
+        self.assertEqual(policy["skills_instruction_minutes"], rules["329495"]["duration_minutes"])
+        self.assertEqual(policy["skills_cleanup_minutes"], rules["329495"]["cleanup_buffer_minutes"])
+        self.assertEqual(60, rules["329495"]["scheduler_consumption_minutes"])
+        self.assertEqual(2, rules["329495"]["default_capacity"])
+
+        def seat(identity, course, end, consumption_end=None, conflict=False, status="scheduled"):
+            return dict(
+                canonical_session_id=identity, session_status=status,
+                start_at="2030-11-24T18:00:00-05:00",
+                end_at=end, consumption_end_at=consumption_end,
+                scheduler_course_id=course, course_identity_conflict=conflict,
+                visibility="private", registration_status="closed",
+                location_name="Private venue", lead_instructor_name=None,
+                operational_has_active_seat=True, count_available=False,
+                active_registration_count=None,
+            )
+
+        sessions = [
+            # A real 45-minute canonical skills class missing cleanup must
+            # protect the next 15 minutes, without inventing a second room.
+            seat("incomplete-cleanup", "329495", "2030-11-24T18:45:00-05:00"),
+            # Longer explicit holds are authoritative, never shortened.
+            seat("longer-hold", "329495", "2030-11-24T18:45:00-05:00",
+                 "2030-11-24T19:30:00-05:00"),
+            # A 509474 skills record already carries exactly 15 cleanup minutes.
+            seat("already-buffered", "509474", "2030-11-24T18:45:00-05:00",
+                 "2030-11-24T19:00:00-05:00"),
+            # Disputed or absent identities retain physical holds only.
+            seat("conflicted", "329495", "2030-11-24T18:45:00-05:00",
+                 conflict=True),
+            seat("unmapped", None, "2030-11-24T18:45:00-05:00"),
+            seat("canceled", "329495", "2030-11-24T18:45:00-05:00",
+                 status="canceled"),
+        ]
+        loaded = dict(location_resource_map={}, sessions_current={"sessions": []},
+                      schedule_future={"sessions": []}, live_availability_snapshot={},
+                      canonical_demand={"sessions": sessions})
+        with (patch("scripts.block_start_time_selector.generate_dynamic_offers.normalize_occupancy", return_value=[]),
+              patch("scripts.block_start_time_selector.generate_dynamic_offers.availability_windows", return_value=[]),
+              patch("scripts.block_start_time_selector.generate_dynamic_offers.normalize_location_resource",
+                    return_value=("Private venue", None, False))):
+            occupied = build_occupancy(loaded, rules, allow_unresolved=True)
+        by_id = {row["source_event_id"]: row for row in occupied}
+        self.assertEqual(set(by_id), {
+            "incomplete-cleanup", "longer-hold", "already-buffered", "conflicted", "unmapped"})
+        self.assertEqual({
+            identity: aware(row["end"]).strftime("%H:%M")
+            for identity, row in by_id.items()
+        }, {
+            "incomplete-cleanup": "19:00", "longer-hold": "19:30",
+            "already-buffered": "19:00", "conflicted": "18:45", "unmapped": "18:45"})
+        self.assertTrue(all(row["instructor_unassigned"] for row in occupied))
+        self.assertTrue(all(row["operational_has_active_seat"] for row in occupied))
+        self.assertTrue(all("public_direct_booking" not in row for row in occupied))
+
     def test_protected_projection_source_has_required_contract_and_no_customer_fields(self):
         source = (Path(__file__).resolve().parents[1] / "supabase/functions/canonical-scheduling-demand/index.ts").read_text(encoding="utf-8")
         for field in (
