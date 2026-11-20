@@ -56,6 +56,29 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertEqual("durable-sep-14-bls-renewal", sessions[1]["canonical_session_id"])
         self.assertEqual("external_class_id", audit[0]["match_basis"])
 
+    def test_native_public_seat_without_source_owned_route_stays_operational_not_joinable(self):
+        # The source's native UUID and a positive registration count do not
+        # themselves prove that /register/ will attach a buyer to this session.
+        # Keep the existing occupied seat but never invent a public checkout URL.
+        native = demand(
+            canonical_session_id="native-route-unverified",
+            external_class_id="lw-12345678-1234-1234-1234-123456789abc",
+            source="landerware_event", registration_backend="landerware",
+            session_status="scheduled", visibility="public",
+            registration_status="open", workspace_projection_status="current",
+            count_available=True, active_registration_count=1,
+        )
+        rows, audit = resolve_canonical_demand([], [native])
+        self.assertEqual("matched", audit[0]["result"])
+        self.assertEqual(1, len(rows))
+        self.assertEqual(1, rows[0]["active_registration_count"])
+        self.assertTrue(rows[0]["count_available"])
+        self.assertFalse(rows[0]["public_direct_booking"])
+        self.assertEqual("closed", rows[0]["registration_status"])
+        self.assertIsNone(rows[0]["registration_url"])
+        self.assertEqual("native_source_booking_route_unverified", rows[0]["public_route_guard"])
+        self.assertFalse(public_direct_bookable_session(rows[0]))
+
     def test_native_seated_source_does_not_publish_inherited_legacy_enrollment_url(self):
         # A real native BLS seat may share the numerical Enrollware class ID
         # with its legacy schedule mirror. Keep its identity, but never turn
