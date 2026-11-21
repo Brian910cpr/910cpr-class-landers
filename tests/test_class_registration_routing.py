@@ -128,12 +128,13 @@ class ClassRoutingTests(unittest.TestCase):
   <div class="upcoming-date">Unattributed private date</div>
 </div>
 </section>
-<aside class="current-courses-sidebar"><ul><li><a href="/classes/'''+public_id+'''.html">Public sidebar date</a></li><li><a href="/classes/'''+private_id+'''.html">Private UUID sidebar date</a></li></ul></aside>
+<aside class="current-courses-sidebar"><ul><li><a href="/classes/'''+public_id+'''.html">Public sidebar date</a></li><li><a href="/classes/'''+private_id+'''.html">Private UUID sidebar date</a></li><li><a href="/classes/index.html">Browse class index</a></li></ul></aside>
 '''
   public={'session_id':public_id,'course_id':'359474','course_name':'BLS Renewal','start_at':'2026-12-01T10:00:00-05:00','location_display':'Wilmington; Shipyard Blvd'}
   output=rewrite_detail_routes(src,public,{public_id:public})
   self.assertIn('Verified public date',output)
   self.assertIn('Public sidebar date',output)
+  self.assertIn('Browse class index',output)
   for secret in (private_id,'Private UUID date','Private UUID sidebar date','Unattributed private date','2026-12-07T17:30:00-05:00'):
    self.assertNotIn(secret,output)
   self.assertEqual(output,rewrite_detail_routes(output,public,{public_id:public}))
