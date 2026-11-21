@@ -1107,6 +1107,37 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(self.payload()['offers'])
 
 
+    def test_final_v2_publisher_withholds_orphan_seated_route_without_source_proof(self):
+        # A stale, public-looking class card is not proof that the selected
+        # canonical/legacy occupancy source still recognizes that session.
+        # Keep source privacy and authoritative bookings separate.
+        orphan = dict(session_id='orphan-private-source-sentinel',
+                      date='2026-10-11', startTime='12:00',
+                      courseId='210549', courseName='Stale unverified class',
+                      offerType='seated_class',
+                      registrationUrl='https://legacy.invalid/stale')
+        payload = self.payload([orphan])
+        self.assertFalse(any(o.get('offerType') == 'seated_class'
+                             for o in payload['offers']))
+        self.assertIn('existing_booking_source_unverified',
+                      payload['rejectionReasonCounts'])
+        public = public_selector_availability_payload(payload)
+        self.assertNotIn('orphan-private-source-sentinel', json.dumps(public))
+        self.assertNotIn('legacy.invalid', json.dumps(public))
+        self.assertNotIn('Stale unverified class', json.dumps(public))
+
+        # A distinct, recognized positive-seat source remains eligible for
+        # the existing seated path; don't suppress verified public inventory.
+        verified = self.add(11, '12:00', '13:00', cid='210549', count=1,
+                            visibility='public', public_direct_booking=True)
+        confirmed = dict(orphan, session_id=verified['source_event_id'],
+                         courseName='Verified current class',
+                         registrationUrl='https://fixture.test/current')
+        result = self.payload([confirmed])
+        self.assertTrue(any(o.get('offerType') == 'seated_class'
+                            and o.get('session_id') == verified['source_event_id']
+                            for o in result['offers']))
+
     def test_final_v2_publisher_cannot_resurrect_private_or_unlisted_seated_routes(self):
         from scripts.block_start_time_selector import build_occupancy
         for visibility, route_allowed in (('private', True), ('unlisted', True),
