@@ -2961,6 +2961,7 @@ def render_group_training_authority(page: dict[str, Any]) -> str:
         <h2 id="group-training-authority-title">On-site CPR and safety training in Wilmington and Coastal North Carolina</h2>
       </div>
       <p class="section-copy">Choose the exact credential your team needs, or share the requirement with us. We coordinate the course, instructor, equipment, location, and timing in one request.</p>
+      <p class="section-copy"><a href="/group-training/industries/">Browse CPR and First Aid training by industry</a></p>
     </div>
     <div class="training-option-grid">
       <article class="training-option-card"><h3>Healthcare and dental teams</h3><p>BLS commonly fits clinical staff. ACLS or PALS should be selected only for roles and requirements that call for advanced training. Front-office employees may need a different CPR and First Aid path.</p></article>
