@@ -7,6 +7,7 @@ missing bounds close the affected resource horizon. Existing records are immutab
 from copy import deepcopy
 from collections import Counter
 from datetime import timedelta, timezone
+from urllib.parse import urlsplit
 from scripts.layered_selector_adapter import aware, build_shadow
 from scripts.layered_scheduling_engine import encode as encode_value
 import json
@@ -267,6 +268,29 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         requested = str(offer.get("courseId") or "").strip()
         return bool(expected and requested and expected == requested)
 
+    def matches_authoritative_registration_route(source, offer):
+        # Matching the class ID, course and occurrence does not authenticate a
+        # customer registration URL. Only the selected authoritative source
+        # may attest to the exact destination. Never substitute a legacy mirror
+        # for missing canonical route proof.
+        advertised = str(offer.get("registrationUrl") or offer.get("appointmentUrl") or "").strip()
+        if not advertised:
+            # Informational fixture rows without a CTA can still carry demand
+            # gravity; a customer-selectable card cannot omit route proof.
+            return offer.get("publicSelectable") is not True
+        recorded = str(source.get("registration_url") or "").strip()
+        if not recorded or advertised != recorded:
+            return False
+        if offer.get("appointmentUrl") and offer["appointmentUrl"] != advertised:
+            return False
+        try:
+            parsed = urlsplit(advertised)
+            return (parsed.scheme == "https" and bool(parsed.hostname)
+                    and not parsed.username and not parsed.password
+                    and not parsed.fragment)
+        except ValueError:
+            return False
+
     for original in seated_offers:
         identity = str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId"))
         source = counts.get(identity)
@@ -285,6 +309,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             rejected.append(dict(original, reasons=["existing_booking_occurrence_mismatch"]))
         elif not matches_authoritative_course(source, original):
             rejected.append(dict(original, reasons=["existing_booking_course_mismatch"]))
+        elif not matches_authoritative_registration_route(source, original):
+            rejected.append(dict(original, reasons=["existing_booking_route_unverified"]))
         else:
             accepted.append(deepcopy(original))
     # A published existing-class row is not evidence of registered demand.
