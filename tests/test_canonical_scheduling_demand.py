@@ -186,7 +186,7 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
     def test_explicit_private_unlisted_legacy_visibility_is_not_publicly_bookable(self):
         # Independent of canonical matching, a legacy source's explicit
         # private/unlisted visibility must never create a public join route.
-        for visibility in ("private", "unlisted", "PRIVATE", "Unlisted"):
+        for visibility in ("private", "unlisted", "internal", "PRIVATE", "Unlisted", "INTERNAL"):
             with self.subTest(visibility=visibility):
                 row = occurrence(visibility=visibility, registration_status="open",
                                  public_direct_booking=True)
