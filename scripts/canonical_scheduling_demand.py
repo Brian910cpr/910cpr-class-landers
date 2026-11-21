@@ -204,7 +204,16 @@ def resolve_canonical_demand(
             continue
 
         claimed[index] = canonical_id
-        if demand.get("visibility") in {"private", "unlisted"} or demand.get("registration_status") == "closed":
+        # Canonical privacy authority must survive into the publisher's
+        # session row. Merely disabling registration leaves the class time
+        # visible as a "Request" card and a directly addressable detail page.
+        # Never use a public canonical value to relax an explicit private
+        # or unlisted legacy restriction.
+        canonical_visibility = _text(demand.get("visibility")).casefold()
+        if canonical_visibility in {"private", "unlisted", "internal"}:
+            resolved[index]["visibility"] = canonical_visibility
+        if (canonical_visibility in {"private", "unlisted", "internal"}
+                or demand.get("registration_status") == "closed"):
             resolved[index]["public_direct_booking"] = False
             resolved[index]["registration_status"] = "closed"
             resolved[index]["registration_status_source"] = "canonical_class_sessions"
