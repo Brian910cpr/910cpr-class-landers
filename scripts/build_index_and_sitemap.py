@@ -430,7 +430,7 @@ def course_description(course_name: str) -> str:
     return f"See current upcoming dates for {title}, with direct registration links and a clean course-specific schedule view."
 
 
-def load_schedule_future_sessions() -> list[dict]:
+def load_schedule_future_sessions(*, include_nonpublic_locations: bool = False) -> list[dict]:
     source_file = SCHEDULE_FUTURE_FILE
     if CANONICAL_CLASS_REPORT_FILE.exists():
         try:
@@ -447,7 +447,10 @@ def load_schedule_future_sessions() -> list[dict]:
     for session in sessions:
         if not isinstance(session, dict):
             continue
-        if not session_has_public_class_location(session):
+        # Public builders use the default; only the already-verified route
+        # refresh asks for excluded rows so bookmarked old class details can be
+        # retired without showing the private appointment in public inventory.
+        if not include_nonpublic_locations and not session_has_public_class_location(session):
             continue
         enriched = dict(session)
         enriched["_parsed_start"] = parse_local_datetime(enriched.get("start_at", ""))
