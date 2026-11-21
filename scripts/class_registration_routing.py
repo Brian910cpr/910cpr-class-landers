@@ -81,8 +81,47 @@ def registration_action(session):
     return dict(mode='request',href=href,label='Request this class',notice='Request only. No seat is reserved until 910CPR confirms registration.')
 
 
+def _redact_unverified_related_sessions(html, verified_sessions):
+    """Remove stale or nonpublic session recommendations from otherwise public details.
+
+    Old generated detail HTML can retain related cards for sessions no longer
+    eligible in the refreshed authoritative public finder. Rewriting their
+    buttons is insufficient: the dates and titles themselves leak appointments.
+    This is called only when the caller supplies the complete verified public
+    ID set from the same selected source snapshot.
+    """
+    approved = {str(sid) for sid in verified_sessions}
+
+    def upcoming(match):
+        sid = match.group(1)
+        return match.group(0) if sid in approved else ""
+
+    # The card template uses an unindented closing div for each card; inner
+    # div closers are indented. Keep the whole matching public card untouched.
+    html = re.sub(
+        r'(?s)<div class="upcoming-card js-session-item"\b[^>]*\bdata-session-id="(\d+)"[^>]*>.*?\n</div>(?:\n|$)',
+        upcoming, html,
+    )
+
+    def sidebar(match):
+        aside = match.group(0)
+        return re.sub(
+            r'<li>\s*<a\b[^>]*href="/classes/(\d+)\.html"[^>]*>.*?</a>\s*</li>',
+            lambda link: link.group(0) if link.group(1) in approved else "",
+            aside,
+            flags=re.S,
+        )
+
+    return re.sub(
+        r'<aside class="current-courses-sidebar"\b[^>]*>.*?</aside>',
+        sidebar, html, flags=re.S,
+    )
+
+
 def rewrite_detail_routes(html, session, sessions=None):
     """Regenerate routing only, preserving existing design, content and price bytes."""
+    if sessions is not None:
+        html = _redact_unverified_related_sessions(html, sessions)
     sessions=sessions or {}
     action=registration_action(session)
     active=not re.search(r'class_status:\s*"(?:completed|cancelled|rescheduled|sold_out|unavailable|proposed)"',html)
