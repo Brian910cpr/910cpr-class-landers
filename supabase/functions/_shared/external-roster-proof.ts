@@ -15,7 +15,15 @@ export function registrationProof(row: any, now = new Date()) {
     && evidence.verified_assignment === true
     && /^[0-9a-f]{16}$/.test(String(evidence.gmail_message_id || ''))
     && row.external_class_id === `lw-gmail:${evidence.gmail_message_id}`;
-  const native = acceptedIntake || (['landerware','manual'].includes(row.registration_backend) && (!row.external_class_id || localEvent || localOffer));
+  const ownerReschedule = row.source === 'owner_confirmed_reschedule'
+    && /^lw-owner-/.test(String(row.external_class_id || ''))
+    && evidence.destination_is_native_landerware === true
+    && evidence.workspace_link_basis === 'verified_owner_request_and_current_roster'
+    && /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}/.test(String(evidence.owner_authorized_at || ''))
+    && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(String(evidence.reconciles_workspace_id || ''));
+  const poolEvent = row.source === '910cpr-2027-pool'
+    && /^nseaswim-pool-(?:bls|family)-[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(String(row.external_class_id || ''));
+  const native = acceptedIntake || (['landerware','manual'].includes(row.registration_backend) && (!row.external_class_id || localEvent || localOffer || ownerReschedule || poolEvent));
   const proof = row.external_reconciliation || {};
   const observed = Date.parse(proof.source_observed_at || '');
   let status = 'external_reconciliation_required';
@@ -40,3 +48,4 @@ export function registrationProof(row: any, now = new Date()) {
     freshness_minutes: native ? null : 60,
     active_registration_count: status === 'current' ? active.length : null};
 }
+
