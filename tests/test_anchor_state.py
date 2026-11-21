@@ -48,7 +48,7 @@ class AnchorStateTests(unittest.TestCase):
         self.assertEqual(promote_seated_sessions([session(public_direct_booking=False)]), [])
 
     def test_private_and_unlisted_demand_cannot_promote_to_public_anchor(self):
-        for visibility in ("private", "unlisted", "PRIVATE", "Unlisted"):
+        for visibility in ("private", "unlisted", "internal", "PRIVATE", "Unlisted", "INTERNAL"):
             with self.subTest(visibility=visibility):
                 self.assertEqual([], promote_seated_sessions([
                     session(visibility=visibility, active_registration_count=1,
