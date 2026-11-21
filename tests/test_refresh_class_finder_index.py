@@ -271,7 +271,7 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
             patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
         ):
             result = routes.refresh(root=self.root)
-        self.assertEqual(result, {"listed": 1, "files": 3})
+        self.assertEqual(result, {"listed": 1, "files": 4})
         for sid in (stale, unlisted):
             redacted = (index.parent / (sid + ".html")).read_text(encoding="utf-8")
             self.assertIn('name="robots" content="noindex,nofollow"', redacted)
