@@ -89,4 +89,27 @@ class ClassRoutingTests(unittest.TestCase):
   native_output=rewrite_detail_routes(native_html,native,{sid:native})
   self.assertIn('with direct registration after the class details below',native_output)
   self.assertIn('Continue to Registration',native_output)
+ def test_related_cards_and_sidebar_hide_unverified_or_private_occurrences(self):
+  # A refreshed directory may drop an old private or expired listing while
+  # retained public detail HTML still advertises it in related suggestions.
+  src='''<section class="js-live-session-group">
+<div class="upcoming-card js-session-item" data-session-id="101" data-start="2026-12-01T10:00:00-05:00">
+  <div class="upcoming-date">December 1, 2026</div>
+  <div class="upcoming-actions"><a href="/classes/101.html">Register</a></div>
+</div>
+<div class="upcoming-card js-session-item" data-session-id="102" data-start="2026-12-07T17:30:00-05:00">
+  <div class="upcoming-date">Private date must disappear</div>
+  <div class="upcoming-actions"><a href="/classes/102.html">Register</a></div>
+</div>
+</section>
+<aside class="current-courses-sidebar"><ul><li><a href="/classes/102.html">Private sidebar time</a></li><li><a href="/classes/101.html">Public sidebar time</a></li></ul></aside>
+'''
+  session={'session_id':'101','course_id':'359474','course_name':'AHA BLS Renewal','start_at':'2026-12-01T10:00:00-05:00','location_display':'Wilmington; Shipyard Blvd'}
+  verified={'101':session}
+  output=rewrite_detail_routes(src,session,verified)
+  self.assertIn('data-session-id="101"',output)
+  self.assertIn('Public sidebar time',output)
+  for secret in ['data-session-id="102"','Private date must disappear','Private sidebar time','/classes/102.html']:
+   self.assertNotIn(secret,output)
+  self.assertEqual(rewrite_detail_routes(output,session,verified),output)
 if __name__=='__main__':unittest.main()
