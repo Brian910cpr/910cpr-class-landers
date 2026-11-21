@@ -99,7 +99,7 @@ def _redact_unverified_related_sessions(html, verified_sessions):
     # The card template uses an unindented closing div for each card; inner
     # div closers are indented. Keep the whole matching public card untouched.
     html = re.sub(
-        r'(?s)<div class="upcoming-card js-session-item"\b[^>]*\bdata-session-id="(\d+)"[^>]*>.*?\n</div>(?:\n|$)',
+        r'(?s)<div class="upcoming-card js-session-item"[^>]*\bdata-session-id="(\d+)"[^>]*>.*?\n</div>(?:\n|$)',
         upcoming, html,
     )
 
@@ -113,7 +113,7 @@ def _redact_unverified_related_sessions(html, verified_sessions):
         )
 
     return re.sub(
-        r'<aside class="current-courses-sidebar"\b[^>]*>.*?</aside>',
+        r'<aside class="current-courses-sidebar"[^>]*>.*?</aside>',
         sidebar, html, flags=re.S,
     )
 
