@@ -51,3 +51,41 @@ class NativeAnchorTests(unittest.TestCase):
         kept=[o for d in result["dates"] for slot in d["startTimes"] for o in slot["courses"]]
         self.assertEqual({o["startTime"] for o in kept}, {"12:00","16:30"})
         self.assertTrue(all(o["schedule_role"]=="barnacle" for o in kept))
+
+    def test_public_compact_barnacle_does_not_expose_private_attachment_id(self):
+        # A real one-seat private session can constrain a public Barnacle
+        # without exposing the private appointment's internal source identity.
+        from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload
+
+        private_id = "private-session-should-never-be-public"
+        source = {
+            "minimumLeadHours": 24,
+            "layeredDiagnostics": {
+                "projected_sources": [{
+                    "visibility": "private", "public_direct_booking": False,
+                    "session_id": private_id, "start": "2026-12-02T12:00",
+                    "end": "2026-12-02T14:00",
+                }],
+            },
+            "dates": [{
+                "date": "2026-12-02",
+                "startTimes": [{
+                    "startTime": "10:00",
+                    "courses": [{
+                        "courseId": "209809",
+                        "courseName": "Heartsaver",
+                        "offerType": "dynamic_appointment",
+                        "schedule_role": "barnacle",
+                        "attached_to_session_id": private_id,
+                        "appointmentUrl": "https://example.test/public-appointment",
+                    }],
+                }],
+            }],
+        }
+        public = public_selector_availability_payload(source)
+        self.assertEqual(public["layeredLandscape"]["sources"], [])
+        offers = public["dates"][0]["startTimes"][0]["courses"]
+        self.assertEqual(len(offers), 1)
+        self.assertEqual(offers[0]["scheduleRole"], "barnacle")
+        self.assertNotIn("attached_to_session_id", offers[0])
+        self.assertNotIn(private_id, str(public))
