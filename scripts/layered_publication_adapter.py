@@ -243,8 +243,9 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                     or source.get("public_direct_booking") is False
                     # An operationally occupied seat may be deliberately closed
                     # to new registrations; a stale public CTA must not revive it.
-                    or str(source.get("registration_status") or "").strip().lower() in {"closed", "cancelled", "canceled"}
-                    or str(source.get("session_status") or "").strip().lower() in {"cancelled", "canceled"}):
+                    or str(source.get("registration_status") or "").strip().lower() in {"closed", "full", "unverified", "cancelled", "canceled", "deleted"}
+                    or str(source.get("session_status") or "").strip().lower() in {"cancelled", "canceled", "deleted"}
+                    or source.get("is_full") is True):
                 denied_booking_identities.add(identity)
     for original in seated_offers:
         identity = str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId"))
