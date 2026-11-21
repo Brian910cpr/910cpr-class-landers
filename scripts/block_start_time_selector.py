@@ -727,6 +727,9 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             for block, session in zip(normalized, [r for r in raw if isinstance(r, dict)]):
                 block.update(source_event_id=session.get("session_id") or session.get("id"),
                     course_id=session.get("course_id"), external_class_id=session.get("session_id"),
+                    # Keep the existing-class route supplied by this exact
+                    # authority, not a link invented by the public renderer.
+                    registration_url=session.get("registration_url"),
                     count_available=session.get("count_available") is True,
                     active_registration_count=session.get("active_registration_count"),
                     uncertainty_scope=session.get("uncertainty_scope", {}))
@@ -760,6 +763,9 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "source_file": "canonical_class_sessions",
             "source_event_id": session.get("canonical_session_id"),
             "external_class_id": session.get("external_class_id"),
+            # The final publisher may prove a CTA only against a route from
+            # the selected canonical class, never by a legacy ID match alone.
+            "registration_url": session.get("registration_url"),
             # A source class may lack an external course ID while its joined
             # canonical course has an explicitly mapped scheduler course ID.
             # A disagreement is not permission to guess a family/repeat gap.
