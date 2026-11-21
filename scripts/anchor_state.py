@@ -102,7 +102,7 @@ def promote_seated_sessions(sessions: Iterable[dict[str, Any]]) -> list[dict[str
             or not start
             or not end
             or session.get("public_direct_booking") is False
-            or _text(session.get("visibility")).lower() in {"private", "unlisted"}
+            or _text(session.get("visibility")).lower() in {"private", "unlisted", "internal"}
             or session_status in {"cancelled", "canceled"}
             or not promotion_reason
         ):
