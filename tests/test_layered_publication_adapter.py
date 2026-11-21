@@ -509,6 +509,64 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertNotIn('independent-private-seat-1', serialized)
         self.assertNotIn('independent-private-seat-2', serialized)
 
+    def test_unmapped_historical_paid_seats_report_family_identity_gap(self):
+        # Three distinct one-seat private historical course records have no
+        # verified numeric scheduler ID. Preserve ALL physical intervals; do
+        # not pretend that their BLS full-course family cap has been proven.
+        # A fourth, separately registered BLS class at an identical interval
+        # is a distinct commitment, never a geometry-based duplicate.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        for day in (11, 12, 13):
+            self.window(day, '08:00', '18:00', next_day=False)
+        historical_ids=set()
+        for day, start, end in (
+                (11, '15:00', '17:00'),
+                (12, '10:00', '12:00'),
+                (13, '11:30', '13:30')):
+            row=self.add(day, start, end, cid='hist-course:unmapped-source',
+                count=1, operational_has_active_seat=True,
+                visibility='private', registration_status='closed')
+            row['source_event_id']=f'private-unmapped-{day}'
+            historical_ids.add(row['source_event_id'])
+        public_seat=self.add(12, '10:00', '12:00', cid='359474',
+            count=1, operational_has_active_seat=True,
+            visibility='public', registration_status='open')
+        public_seat['source_event_id']='independent-public-bought-seat'
+        calculation=self.calculation()
+        self.assertEqual(calculation['counts']['failed_windows'], 0, calculation['issues'])
+        protected=set()
+        for report in calculation['reports']:
+            occupied=report['normalized_occupancy']
+            historical=[row for row in occupied if row['id'] in historical_ids]
+            protected.update(row['id'] for row in historical)
+            diagnostic=report['family_seating_diagnostics']
+            self.assertEqual(
+                diagnostic['unmapped_positive_seated_course_count'],
+                len(historical))
+            if historical:
+                self.assertFalse(diagnostic['unmapped_positive_seated_family_policy_proven'])
+            for row in historical:
+                self.assertEqual(row['kind'], 'paid')
+                self.assertTrue(row['operational_has_active_seat'])
+                self.assertIsNone(row['course'])
+                self.assertFalse(any(
+                    offer['start'] < row['end'] and offer['end'] > row['start']
+                    for offer in report['accepted']))
+        self.assertEqual(protected, historical_ids)
+        nov23_shape=next(report for report in calculation['reports']
+                         if report['availability_window'].startswith('Brian Ennis-12-'))
+        simultaneous=[row for row in nov23_shape['normalized_occupancy']
+                      if row['start']==self.at(12, '10:00')
+                      and row['end']==self.at(12, '12:00')
+                      and row['kind']=='paid']
+        self.assertEqual({row['id'] for row in simultaneous},
+                         {'private-unmapped-12', 'independent-public-bought-seat'})
+        public=json.dumps(public_selector_availability_payload(
+            self.payload(calculation=calculation)))
+        for private_id in historical_ids:
+            self.assertNotIn(private_id, public)
+        self.assertNotIn('hist-course:unmapped-source', public)
+
     def test_different_end_private_mirrors_preserve_latest_consumption_end(self):
         # Production-shaped duplicate evidence can describe the same two seats
         # with different occupied ends (e.g. 19:30 vs 20:00). Preserve both
