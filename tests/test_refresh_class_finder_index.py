@@ -121,6 +121,72 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Unverified zero-class source"):
                 self.render()
 
+    def test_routes_use_same_authoritative_source_as_public_finder(self):
+        # The finder may select the canonical class report, while the fallback
+        # schedule contains different class IDs. Route rewriting must never
+        # silently attach a public card to the fallback's class data.
+        clock = datetime.now(ZoneInfo("America/New_York"))
+        start = (clock + timedelta(days=2)).replace(minute=0, second=0, microsecond=0)
+        def row(sid):
+            return {
+                "session_id": sid,
+                "course_id": "209806",
+                "course_number": "209806",
+                "course_name": "AHA BLS Provider (Initial)",
+                "start_at": start.isoformat(),
+                "location_name": ":: Wilmington; Shipyard Blvd - B",
+                "session_status": "active",
+                "registration_status": "open",
+                "public_direct_booking": True,
+                "registration_url": (
+                    "https://coastalcprtraining.enrollware.com/enroll?id=" + sid
+                ),
+            }
+
+        fallback_id, authoritative_id = "15000101", "15000102"
+        self.write_source([row(fallback_id)], when=clock)
+        report_path = self.root / "docs/data/canonical_schedule_from_class_report.json"
+        report_path.write_text(json.dumps({
+            "build": {
+                "source_mode": "class_report_authoritative",
+                "generated_at": clock.isoformat(),
+                "counts": {"sessions_output": 1},
+            },
+            "sessions": [row(authoritative_id)],
+        }), encoding="utf-8")
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        detail = self.root / "docs/classes" / (authoritative_id + ".html")
+        detail.write_text('<div class="cta-panel"><p class="cta-panel-label">Details</p>'
+                          '<p class="cta-panel-copy">Request</p>'
+                          '<div class="cta-row"><a class="button primary" '
+                          'href="/classes/">More</a></div></div>', encoding="utf-8")
+
+        with (
+            patch.object(finder, "SCHEDULE_FUTURE_FILE", self.path),
+            patch.object(finder, "CANONICAL_CLASS_REPORT_FILE", report_path),
+            patch.object(catalog, "SCHEDULE_FUTURE_FILE", self.path),
+            patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", report_path),
+        ):
+            html, ids = finder.render_current_class_finder(clock)
+            self.assertEqual(ids, {authoritative_id})
+            index.write_text(html, encoding="utf-8")
+            result = routes.refresh(root=self.root)
+            self.assertEqual(result["listed"], 1)
+            self.assertEqual(result["files"], 2)
+
+            # A stale/fallback ID accidentally left in the index must fail
+            # before rewriting or committing any card or detail.
+            mismatched = html.replace(
+                "/classes/" + authoritative_id + ".html",
+                "/classes/" + fallback_id + ".html",
+            )
+            index.write_text(mismatched, encoding="utf-8")
+            before = detail.read_bytes()
+            with self.assertRaisesRegex(ValueError, "mismatches current eligible source"):
+                routes.refresh(root=self.root)
+            self.assertEqual(detail.read_bytes(), before)
+
     def test_safe_route_refresh_accepts_only_verified_empty_finder(self):
         self.write_source()
         html, ids = self.render()
