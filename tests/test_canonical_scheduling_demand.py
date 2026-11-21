@@ -139,6 +139,44 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         rows, _ = resolve_canonical_demand([legacy], [public])
         self.assertTrue(public_direct_bookable_session(rows[0]))
 
+    def test_rescheduled_only_unlisted_legacy_shell_never_reappears_in_public_finder(self):
+        # A legacy class link can survive a move, even though the durable
+        # session has only historical rescheduled registrations. A stale
+        # roster is NOT zero-seat proof, but an explicit unlisted visibility
+        # decision must still veto public publication without deleting the
+        # operational source interval or inventing a registration.
+        from scripts.build_index_and_sitemap import schedule_future_to_public_session
+
+        legacy = occurrence(
+            session_id="15990017",
+            session_status="active",
+            registration_status="open",
+            registration_url="https://coastalcprtraining.enrollware.com/enroll?id=15990017",
+            public_direct_booking=True,
+        )
+        historical = demand(
+            external_class_id="15990017",
+            source="enrollware_reconciled",
+            registration_backend="enrollware",
+            session_status="scheduled",
+            visibility="unlisted",
+            registration_status="external",
+            active_registration_count=None,
+            count_available=False,
+            demand_status="stale_reconciliation",
+        )
+        resolved, audit = resolve_canonical_demand([legacy], [historical])
+        self.assertEqual(1, len(resolved))
+        self.assertEqual("unknown", audit[0]["result"])
+        self.assertEqual(legacy["start_at"], resolved[0]["start_at"])
+        self.assertFalse(resolved[0]["count_available"])
+        self.assertIsNone(resolved[0]["active_registration_count"])
+        self.assertFalse(resolved[0]["public_direct_booking"])
+        self.assertEqual("closed", resolved[0]["registration_status"])
+        self.assertFalse(public_direct_bookable_session(resolved[0]))
+        self.assertIsNone(schedule_future_to_public_session(resolved[0]))
+        self.assertEqual([], promote_seated_sessions(resolved))
+
     def test_explicit_private_unlisted_legacy_visibility_is_not_publicly_bookable(self):
         # Independent of canonical matching, a legacy source's explicit
         # private/unlisted visibility must never create a public join route.
