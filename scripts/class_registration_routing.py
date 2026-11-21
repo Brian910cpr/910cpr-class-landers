@@ -93,20 +93,26 @@ def _redact_unverified_related_sessions(html, verified_sessions):
     approved = {str(sid) for sid in verified_sessions}
 
     def upcoming(match):
-        sid = match.group(1)
-        return match.group(0) if sid in approved else ""
+        card = match.group(0)
+        # Canonical appointment identifiers may be UUIDs; a missing ID has
+        # no authoritative public eligibility proof and must not leak a time.
+        open_tag = card.split(">", 1)[0]
+        sid_match = re.search(r'\bdata-session-id="([^"]*)"', open_tag)
+        sid = sid_match.group(1) if sid_match else ""
+        return card if sid in approved else ""
 
     # The card template uses an unindented closing div for each card; inner
-    # div closers are indented. Keep the whole matching public card untouched.
+    # div closers are indented. An all-numeric ID is not required to find
+    # private canonical appointment recommendations for removal.
     html = re.sub(
-        r'(?s)<div class="upcoming-card js-session-item"[^>]*\bdata-session-id="(\d+)"[^>]*>.*?\n</div>(?:\n|$)',
+        r'(?s)<div class="upcoming-card js-session-item"[^>]*>.*?\n</div>(?:\n|$)',
         upcoming, html,
     )
 
     def sidebar(match):
         aside = match.group(0)
         return re.sub(
-            r'<li>\s*<a\b[^>]*href="/classes/(\d+)\.html"[^>]*>.*?</a>\s*</li>',
+            r'<li>\s*<a\b[^>]*href="/classes/([^"/?#]+)\.html"[^>]*>.*?</a>\s*</li>',
             lambda link: link.group(0) if link.group(1) in approved else "",
             aside,
             flags=re.S,
