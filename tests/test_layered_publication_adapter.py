@@ -1138,6 +1138,33 @@ class LayeredPublicationTests(unittest.TestCase):
                             and o.get('session_id') == verified['source_event_id']
                             for o in result['offers']))
 
+    def test_final_v2_publisher_cannot_attach_wrong_course_to_valid_class(self):
+        # A valid public, positive-seat class can retain its ID and start time
+        # while a stale route labels it as a different course. Never advertise
+        # that route; only the source-proven course may remain joinable.
+        source = self.add(11, '12:00', '13:00', cid='210549', count=1,
+                          visibility='public', public_direct_booking=True)
+        valid = dict(session_id=source['source_event_id'],
+                     date='2026-10-11', startTime='12:00',
+                     courseId='210549', courseName='Verified skills course',
+                     offerType='seated_class',
+                     registrationUrl='https://fixture.test/right-course')
+        self.assertEqual(sum(o.get('offerType') == 'seated_class'
+                             for o in self.payload([valid])['offers']), 1)
+        wrong = dict(valid, courseId='359474', courseName='Wrong renewal',
+                     registrationUrl='https://wrong.invalid/course')
+        result = self.payload([wrong])
+        self.assertFalse([o for o in result['offers']
+                          if o.get('offerType') == 'seated_class'])
+        self.assertIn('existing_booking_course_mismatch',
+                      result['rejectionReasonCounts'])
+        self.assertEqual(result['layeredDiagnostics']['projected_sources'][0][
+            'active_registration_count'], 1)
+        public = json.dumps(public_selector_availability_payload(result))
+        self.assertNotIn('wrong.invalid', public)
+        self.assertNotIn('Wrong renewal', public)
+        self.assertNotIn(source['source_event_id'], public)
+
     def test_final_v2_publisher_rejects_stale_source_matched_class_time(self):
         # A reschedule can retain a stable class identity while the cached
         # public selector still points at the old occurrence. Do not treat
