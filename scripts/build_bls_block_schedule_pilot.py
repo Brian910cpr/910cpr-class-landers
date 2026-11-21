@@ -166,7 +166,9 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "offerType": course.get("offerType") or "dynamic_appointment",
                     "scheduleRole": course.get("scheduleRole") or course.get("schedule_role"),
-                    "attached_to_session_id": course.get("attached_to_session_id"),
+                    # Internal Barnacle attachment IDs may refer to private one-seat
+                    # appointments. Public selectors need the role, not that
+                    # internal source identity. Never serialize the reference.
                     "session_id": course.get("session_id"),
                     "instructor": course.get("instructor"),
                     "schedulerConsumptionEnd": course.get("schedulerConsumptionEnd"),
