@@ -13,6 +13,8 @@ def refresh(root=ROOT):
     original=index.read_text(encoding='utf8')
     ids=re.findall(r'class="class-finder-secondary" href="/classes/(\d+)\.html"',original)
     if len(ids)!=len(set(ids)): raise ValueError('duplicate public class listing')
+    if not ids and 'class="class-finder-card' in original:
+        raise ValueError('empty listing has unexpected class cards')
     # The finder may select an authoritative class report instead of schedule_future.
     # Independently revalidate the chosen fresh source and its actual public IDs
     # before rewriting any CTA. Never use an unrelated snapshot to route a card.
@@ -20,8 +22,6 @@ def refresh(root=ROOT):
     if set(ids) != verified_ids:
         raise ValueError('public class listing mismatches current eligible source')
     if not ids:
-        if 'class="class-finder-card' in original:
-            raise ValueError('empty listing has unexpected class cards')
         return {'listed': 0, 'files': 0}
     rows=class_index.load_schedule_future_sessions()
     sessions={}
