@@ -249,6 +249,7 @@ jobs:
             docs/data/anchor_state.json \
             docs/data/block-selector-availability \
             docs/classes \
+            docs/sitemap.xml \
             docs/admin/dashboard.html \
             debug/status/build_sessions_current.json \
             debug/status/build_schedule_future.json
