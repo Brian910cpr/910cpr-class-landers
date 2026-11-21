@@ -63,15 +63,31 @@ def refresh(root=ROOT):
     # Retire only existing detail files explicitly rejected by the SAME fresh
     # selected source. Do not delete internal bookings, alter source rows, or
     # assume missing identity/legacy inventory is safe to de-list.
+    rejected_public_ids=set()
     for row in rows:
         sid=str(row.get('session_id') or row.get('id') or '').strip()
         if not re.fullmatch(r'[0-9]+',sid) or sid in verified_ids:
             continue
         if class_index.schedule_future_to_public_session(row) is not None:
             continue
+        rejected_public_ids.add(sid)
         file=root/'docs/classes'/(sid+'.html')
         if file.is_file():
             changes[file]=UNLISTED_DETAIL_HTML
+
+    # Retiring a private class detail must also remove its discovery URL from
+    # the sitemap in the SAME verified-source publication. Preserve unrelated
+    # historic/public URLs and all other sitemap entries byte-for-byte.
+    sitemap=root/'docs/sitemap.xml'
+    if rejected_public_ids and sitemap.is_file():
+        xml=sitemap.read_text(encoding='utf8')
+        def retire_url(match):
+            block=match.group(0)
+            location=re.search(r'<loc>\\s*https://(?:www\\.)?910cpr\\.com/classes/(\\d+)\\.html\\s*</loc>',block)
+            return '' if location and location.group(1) in rejected_public_ids else block
+        updated=re.sub(r'(?ms)^[ \\t]*<url>.*?</url>[ \\t]*(?:\\r?\\n|$)',retire_url,xml)
+        if updated != xml:
+            changes[sitemap]=updated
 
     # Build every replacement before writing; never partially apply invalid identities.
     for file,content in changes.items():file.write_bytes(content.encode('utf8'))
