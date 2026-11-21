@@ -41,9 +41,15 @@ def refresh(root=ROOT, retired_previous_ids=None):
     # The finder may select an authoritative class report instead of schedule_future.
     # Independently revalidate the chosen fresh source and its actual public IDs
     # before rewriting any CTA. Never use an unrelated snapshot to route a card.
-    _, verified_ids = finder.render_current_class_finder()
+    fresh_html, verified_ids = finder.render_current_class_finder()
     if set(ids) != verified_ids:
         raise ValueError('public class listing mismatches current eligible source')
+    # Identity parity alone is insufficient: a moved session may retain its ID
+    # while the finder advertises an old start, course or registration action.
+    # Demand that this exact finder matches the freshly selected authoritative
+    # source before writing any detail, sidebar, sitemap or CTA replacement.
+    if original != fresh_html:
+        raise ValueError('public class listing content mismatches current eligible source')
     # Include otherwise filtered private/offsite source records ONLY while
     # retiring existing detail pages. The finder and verified_ids remain
     # public-only; source records never enter the rendered inventory.
