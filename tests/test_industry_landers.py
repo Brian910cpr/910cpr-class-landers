@@ -43,6 +43,7 @@ class IndustryLandersTest(unittest.TestCase):
             if slug != DIRECTORY:
                 self.assertIn(">Course family<",body)
                 self.assertIn(">Course type<",body)
+                self.assertIn("replace the preset Program",body)
                 self.assertTrue(any(a.get("src","").startswith("/images/0") for a in page.get("img")))
         self.assertEqual(len(titles),len(set(titles)))
         self.assertEqual(len(descriptions),len(set(descriptions)))
