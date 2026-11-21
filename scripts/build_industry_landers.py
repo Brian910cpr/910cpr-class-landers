@@ -45,10 +45,15 @@ PALETTES = {
  "hospitality": ("#313348", "#805628"),
 }
 PROGRAMS = {
- "clinical": ("Clinical life support","clinical","Hands-on class, or approved blended skills path when accepted by the employer.",("aha", "arc")),
- "care": ("CPR, AED & pediatric / general first aid","care","Ask about age-appropriate hands-on training and any requirement for a specific delivery format.",("aha", "hsi", "arc")),
- "water": ("Maritime and workplace first aid","water","Request instructor-led training. Credential applicants should verify the exact course code.",("hsi", "aha", "arc")),
- "default": ("Workplace First Aid, CPR & AED","care","Request instructor-led onsite training; blended options depend on the selected program and employer requirement.",("hsi", "aha", "arc")),
+ "clinical": ("Clinical life support","clinical",("aha", "arc")),
+ "care": ("CPR, AED & pediatric / general first aid","care",("aha", "hsi", "arc")),
+ "water": ("Maritime and workplace first aid","water",("hsi", "aha", "arc")),
+ "default": ("Workplace First Aid, CPR & AED","care",("hsi", "aha", "arc")),
+}
+DELIVERY_NOTES = {
+ "childcare": "For licensed NC child care centers, we verify the exact approved course, any delivery restrictions and instructor evaluation before quoting a blended option. A self-paced online-only course is not a substitute.",
+ "dental-offices": "For NC dental licensure, an instructor must be physically present during the manikin test. We check the exact course and skills format before quoting.",
+ "logging": "For logging crews covered by OSHA’s rule, we verify the proposed course against Appendix B before quoting a format. A generic online course is not a substitute.",
 }
 
 
@@ -62,6 +67,24 @@ def sitemap_paths():
 
 def icon(key, css="feature-icon"):
     return f'<svg class="{css}" viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="{ICONS[key]}"/></svg>'
+
+
+def delivery_block(slug):
+    in_person = ("<li><strong>Fully in person</strong> is our usual recommendation. Your team can ask questions, "
+                 "practice together and work through scenarios as a group. It’s often the more economical choice.</li>")
+    if slug == "merchant-mariners":
+        return (icon("calendar") + "<h2>Course type</h2><ul>" + in_person +
+                "<li><strong>Blended:</strong> Don’t assume a general blended or online course counts "
+                "toward the Coast Guard requirement.</li></ul>"
+                "<p>We’ll quote the exact instructor-led HSINST-203 course if it matches your "
+                "Merchant Mariner Credential checklist and the approved delivery conditions.</p>")
+    blended = ("<li><strong>Blended, where allowed:</strong> Employees complete the online coursework "
+               "on their own schedule, then rotate through the required instructor-led, hands-on skills "
+               "in pairs or groups of four.</li>")
+    note = f"<p>{e(DELIVERY_NOTES[slug])}</p>" if slug in DELIVERY_NOTES else ""
+    quote = ("<p>We’re happy to quote either format or both so you can compare, as long as the program, "
+             "employer and applicable authority allow them.</p>")
+    return icon("calendar") + icon("hybrid") + "<h2>Course type</h2><ul>" + in_person + blended + "</ul>" + note + quote
 
 
 def sector_art(slug, key):
@@ -128,7 +151,7 @@ def industry(row, sources):
         "provider":{"@type":"Organization","name":"910CPR LLC","url":BASE,"telephone":"+1-910-395-5193"},
         "areaServed":{"@type":"City","name":"Wilmington","containedInPlace":{"@type":"State","name":"North Carolina"}},
     }]}
-    family,family_icon,delivery,body_ids = PROGRAMS.get(art,PROGRAMS["default"])
+    family,family_icon,body_ids = PROGRAMS.get(art,PROGRAMS["default"])
     if slug == "merchant-mariners":
         family,family_icon,body_ids = "HSI First Aid / CPR / AED (HSINST-203)","water",("hsi",)
     source_list = "".join(f'<li><a href="{e(sources[key][1])}">{e(sources[key][0])}</a></li>' for key in dict.fromkeys(source_keys.split(",")+["hsi"]))
@@ -138,7 +161,7 @@ def industry(row, sources):
 <section class="hero"><div class="hero-body"><p class="kicker">{e(kicker)}</p><h1>{e(title)}</h1><p class="lead">{e(who)}</p><div class="actions hero-actions"><a class="btn primary" href="{CTA}">Request group training</a><a class="btn secondary" href="mailto:info@910cpr.com">Email 910CPR</a><a class="btn secondary" href="tel:+19103955193">Call 910CPR</a></div><small>On the request form, replace the preset Program with the course your group needs, or write “help me choose.” We confirm the course, instructor and date before booking.</small></div>{photo_markup(slug)}</section>
 <section class="quick" aria-label="Course information">
 <div>{icon(family_icon)}<h2>Course family</h2><p>{e(family)}</p></div>
-<div>{icon("calendar")}{icon("hybrid")}<h2>Course type</h2><p>{e(delivery)}</p></div>
+<div>{delivery_block(slug)}</div>
 <div>{icon("team")}<h2>Who it’s for</h2><p>{e(name)} planning training for a group or workplace.</p></div>
 </section>
 <div class="columns">

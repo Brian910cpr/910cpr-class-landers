@@ -43,6 +43,16 @@ class IndustryLandersTest(unittest.TestCase):
             if slug != DIRECTORY:
                 self.assertIn(">Course family<",body)
                 self.assertIn(">Course type<",body)
+                self.assertIn("<li><strong>Fully in person</strong> is our usual recommendation",body)
+                self.assertRegex(body, r"<li><strong>Blended[,:]")
+                self.assertIn("more economical",body)
+                if slug.endswith("/merchant-mariners/"):
+                    self.assertNotIn("groups of four",body)
+                    self.assertIn("approved delivery conditions",body)
+                else:
+                    self.assertIn("on their own schedule",body)
+                    self.assertIn("in pairs or groups of four",body)
+                    self.assertIn("quote either format or both",body)
                 self.assertIn("replace the preset Program",body)
                 self.assertIn('<div class="actions hero-actions">',body)
                 self.assertEqual(
