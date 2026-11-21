@@ -219,6 +219,96 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
                 routes.refresh(root=self.root)
             self.assertEqual(detail.read_bytes(), before)
 
+    def test_hidden_legacy_detail_pages_are_retired_without_erasing_public_inventory(self):
+        # Previously generated numeric pages remain directly reachable after a
+        # card disappears from the index. They must not publish unlisted times
+        # or stale Enrollware routes, even when the card itself is hidden.
+        def row(sid, **extra):
+            return {
+                "session_id": sid,
+                "course_id": "209806",
+                "course_number": "209806",
+                "course_name": "AHA BLS Provider (Initial)",
+                "start_at": "2026-11-22T13:00:00-05:00",
+                "location_name": ":: Wilmington; Shipyard Blvd - B",
+                "session_status": "active",
+                "registration_status": "open",
+                "public_direct_booking": True,
+                "registration_url": (
+                    "https://coastalcprtraining.enrollware.com/enroll?id=" + sid
+                ),
+                **extra,
+            }
+
+        stale, unlisted, public, unrelated = (
+            "15000101", "15000102", "15000103", "15000104"
+        )
+        self.write_source([
+            row(stale, canonical_session_id="simulated-private-mirror",
+                demand_status="stale_reconciliation"),
+            row(unlisted, visibility="unlisted"),
+            row(public),
+        ])
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index_html = (
+            '<a class="class-finder-secondary" href="/classes/' + public
+            + '.html">Details</a>'
+        )
+        index.write_text(index_html, encoding="utf-8")
+        for sid in (stale, unlisted, public):
+            (index.parent / (sid + ".html")).write_text(
+                'Confidential source class detail ' + sid
+                + ' https://coastalcprtraining.enrollware.com/enroll?id=' + sid,
+                encoding="utf-8",
+            )
+        unrelated_detail = index.parent / (unrelated + ".html")
+        unrelated_detail.write_text("unrelated historic page", encoding="utf-8")
+        with (
+            patch.object(finder, "render_current_class_finder",
+                         return_value=(index_html, {public})),
+            patch.object(catalog, "SCHEDULE_FUTURE_FILE", self.path),
+            patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
+        ):
+            result = routes.refresh(root=self.root)
+        self.assertEqual(result, {"listed": 1, "files": 3})
+        for sid in (stale, unlisted):
+            redacted = (index.parent / (sid + ".html")).read_text(encoding="utf-8")
+            self.assertIn('name="robots" content="noindex,nofollow"', redacted)
+            self.assertIn("Browse current classes", redacted)
+            self.assertNotIn("Confidential source class detail", redacted)
+            self.assertNotIn(sid, redacted)
+            self.assertNotIn("enrollware.com", redacted)
+        self.assertIn("Confidential source class detail",
+                      (index.parent / (public + ".html")).read_text(encoding="utf-8"))
+        self.assertEqual(unrelated_detail.read_text(encoding="utf-8"),
+                         "unrelated historic page")
+
+    def test_verified_empty_finder_still_retires_known_nonpublic_detail(self):
+        private_id = "15000105"
+        self.write_source([{
+            "session_id": private_id,
+            "start_at": "2026-11-22T13:00:00-05:00",
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "visibility": "private",
+        }])
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text("0 classes found", encoding="utf-8")
+        detail = index.parent / (private_id + ".html")
+        detail.write_text("Old private session advert", encoding="utf-8")
+        with (
+            patch.object(finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(catalog, "SCHEDULE_FUTURE_FILE", self.path),
+            patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
+        ):
+            result = routes.refresh(root=self.root)
+        self.assertEqual(result, {"listed": 0, "files": 1})
+        self.assertIn("not publicly listed", detail.read_text(encoding="utf-8"))
+        self.assertNotIn("Old private session advert",
+                         detail.read_text(encoding="utf-8"))
+
     def test_safe_route_refresh_accepts_only_verified_empty_finder(self):
         self.write_source()
         html, ids = self.render()
