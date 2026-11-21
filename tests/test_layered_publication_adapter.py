@@ -1052,7 +1052,7 @@ class LayeredPublicationTests(unittest.TestCase):
     def test_final_v2_publisher_cannot_resurrect_private_or_unlisted_seated_routes(self):
         from scripts.block_start_time_selector import build_occupancy
         for visibility, route_allowed in (('private', True), ('unlisted', True),
-                                           ('public', False)):
+                                           ('internal', True), ('public', False)):
             with self.subTest(visibility=visibility, route_allowed=route_allowed):
                 self.sources = build_occupancy(dict(
                     location_resource_map=self.resources,
