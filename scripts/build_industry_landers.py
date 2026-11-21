@@ -106,7 +106,7 @@ def shell(title, desc, path, main, structured, industry=""):
 <link rel="canonical" href="{BASE}{path}">
 <meta name="910cpr-page-id" content="{val(industry or "industry-directory")}">
 <meta property="og:title" content="{val(title)} | 910CPR"><meta property="og:description" content="{val(desc)}"><meta property="og:url" content="{BASE}{path}">
-<link rel="stylesheet" href="/assets/industry-landers/industry.css?v=2">
+<link rel="stylesheet" href="/assets/industry-landers/industry.css?v=3">
 <script type="application/ld+json">{json.dumps(structured,ensure_ascii=True).replace("<", chr(92)+"u003c")}</script>
 {GTM_HEAD_SNIPPET}
 {ATTRIBUTION_SCRIPT_SNIPPET}
@@ -143,7 +143,7 @@ def photo_markup(slug):
 
 
 def industry(row, sources):
-    slug, name, title, kicker, who, fit, rule, prepare, question, answer, source_keys, art = row
+    slug, name, title, kicker, who, fit, rule, prepare, question, answer, team, source_keys, art = row
     path = f"/group-training/{slug}/"
     crumb, crumb_schema = crumbs(name, path)
     schema = {"@context":"https://schema.org","@graph":[crumb_schema,{
@@ -162,13 +162,13 @@ def industry(row, sources):
 <section class="quick" aria-label="Course information">
 <div>{icon(family_icon)}<h2>Course family</h2><p>{e(family)}</p></div>
 <div>{delivery_block(slug)}</div>
-<div>{icon("team")}<h2>Who it’s for</h2><p>{e(name)} planning training for a group or workplace.</p></div>
+<div>{icon("team")}<h2>Who to train</h2><p>{e(team)}</p></div>
 </section>
 <div class="columns">
-<section class="card"><p class="kicker label">Training fit</p><h2>Which class should we consider?</h2><p>{e(fit)}</p>{specialty}<h3>Before choosing a date</h3><p>{e(prepare)}</p><p>For onsite requests in Wilmington and surrounding coastal communities, share your address, headcount, preferred dates and written credential requirement. We’ll confirm instructor availability, travel and the course length for your group.</p></section>
-<section class="card authority"><p class="kicker label">Primary sources</p><h2>What do the authorities say?</h2><p>{e(rule)}</p><ul>{source_list}</ul><p class="fine">Check the current rule and your employer or licensing authority’s exact course and format requirement. This page is training guidance, not a legal or licensing determination.</p></section>
+<section class="card"><p class="kicker label">Training fit</p><h2>Which class should we consider?</h2><p>{e(fit)}</p>{specialty}<h3>Plan a session</h3><p>{e(prepare)}</p><p>Tell us how many people need training and where you’d like to meet. We’ll help find a format and date that work for your team.</p></section>
+<section class="card authority"><div class="authority-heading"><div><p class="kicker label">Primary sources</p><h2>What do the authorities say?</h2></div><img class="authority-photo" src="/assets/industry-landers/authority-glasses.webp" alt="" width="816" height="544" loading="lazy" decoding="async"></div><p>{e(rule)}</p><ul>{source_list}</ul><p class="fine">If you have a written requirement, send it with your request. We’ll check the course and format with you before booking.</p></section>
 </div>
-<section class="card brands"><p class="kicker label">Certifying bodies</p><h2>Training organizations to discuss with 910CPR</h2><p>The appropriate card issuer depends on the program, delivery format, applicable approval and accepting organization. Logos do not imply that credentials are interchangeable or that every issuer meets your requirement.</p><ul>{badges}</ul></section>
+<section class="card brands"><p class="kicker label">Certifying bodies</p><h2>Which certification does your team need?</h2><p>If your employer or licensing authority names an issuer, tell us which one before you choose a class. These cards are not always interchangeable.</p><ul>{badges}</ul></section>
 <section class="card"><p class="kicker label">Common question</p><h2>{e(question)}</h2><p>{e(answer)}</p><div class="actions"><a class="btn" href="{CTA}">Share your group’s requirements</a><a href="{DIRECTORY}">Explore other industries</a></div></section>'''
     return shell(title,who,path,main,schema,slug)
 
