@@ -83,9 +83,9 @@ def refresh(root=ROOT):
         xml=sitemap.read_text(encoding='utf8')
         def retire_url(match):
             block=match.group(0)
-            location=re.search(r'<loc>\\s*https://(?:www\\.)?910cpr\\.com/classes/(\\d+)\\.html\\s*</loc>',block)
+            location=re.search(r'<loc>\s*https://(?:www\.)?910cpr\.com/classes/(\d+)\.html\s*</loc>',block)
             return '' if location and location.group(1) in rejected_public_ids else block
-        updated=re.sub(r'(?ms)^[ \\t]*<url>.*?</url>[ \\t]*(?:\\r?\\n|$)',retire_url,xml)
+        updated=re.sub(r'(?ms)^[ \t]*<url>.*?</url>[ \t]*(?:\r?\n|$)',retire_url,xml)
         if updated != xml:
             changes[sitemap]=updated
 
