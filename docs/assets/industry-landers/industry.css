@@ -18,3 +18,5 @@
 @media(hover:hover){.brand-picker li:hover .issuer-hover{display:block}.brand-picker li:has(details[open]) .issuer-hover{display:none}}
 @media(max-width:480px){.brands .brand-picker{gap:.4rem}.brand-picker summary img{height:36px}.brands .brand-picker li:has(details[open]){grid-column:1/-1}.brand-picker details p{padding:.65rem .8rem}}
 @media(hover:hover){.brands .brand-picker li{position:relative}.brand-picker .issuer-hover{position:absolute;top:calc(100% + .3rem);left:50%;transform:translateX(-50%);width:min(19rem,64vw);z-index:3;pointer-events:none;border:1px solid var(--line);background:#fff;border-radius:.55rem;box-shadow:0 8px 18px #1227412b;padding:.7rem .8rem}}
+.brands .brand-picker summary img{width:auto;max-width:88%;height:40px;object-fit:contain}.brand-picker .brand-aha summary img{height:80px}.brand-picker .brand-aha summary{min-height:112px}
+@media(max-width:480px){.brands .brand-picker summary img{height:32px}.brand-picker .brand-aha summary img{height:64px}.brand-picker .brand-aha summary{min-height:96px}}

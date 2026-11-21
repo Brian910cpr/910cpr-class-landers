@@ -106,7 +106,7 @@ def shell(title, desc, path, main, structured, industry=""):
 <link rel="canonical" href="{BASE}{path}">
 <meta name="910cpr-page-id" content="{val(industry or "industry-directory")}">
 <meta property="og:title" content="{val(title)} | 910CPR"><meta property="og:description" content="{val(desc)}"><meta property="og:url" content="{BASE}{path}">
-<link rel="stylesheet" href="/assets/industry-landers/industry.css?v=5">
+<link rel="stylesheet" href="/assets/industry-landers/industry.css?v=6">
 <script type="application/ld+json">{json.dumps(structured,ensure_ascii=True).replace("<", chr(92)+"u003c")}</script>
 {GTM_HEAD_SNIPPET}
 {ATTRIBUTION_SCRIPT_SNIPPET}
