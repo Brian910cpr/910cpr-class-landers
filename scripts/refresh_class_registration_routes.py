@@ -44,7 +44,10 @@ def refresh(root=ROOT):
     _, verified_ids = finder.render_current_class_finder()
     if set(ids) != verified_ids:
         raise ValueError('public class listing mismatches current eligible source')
-    rows=class_index.load_schedule_future_sessions()
+    # Include otherwise filtered private/offsite source records ONLY while
+    # retiring existing detail pages. The finder and verified_ids remain
+    # public-only; source records never enter the rendered inventory.
+    rows=class_index.load_schedule_future_sessions(include_nonpublic_locations=True)
     sessions={}
     for sid in ids:
         matches=[r for r in rows if str(r.get('session_id'))==sid]
