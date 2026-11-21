@@ -19,6 +19,10 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install openpyxl python-dateutil tzdata
-      - run: python -B -m scripts.refresh_class_finder_index && python -B -m scripts.refresh_class_registration_routes
+      # A PR checkout's last-published source snapshot is not a live data feed.
+      # Running the production freshness-gated publisher on it turns the age of
+      # a PR into a false CI failure. Fixture-driven tests below exercise both
+      # fresh source routing and fail-closed stale/ambiguous source behavior.
+      # The production ten-minute refresh still runs the real publisher.
       - run: python -B -m unittest tests.test_class_registration_routing tests.test_refresh_class_finder_index tests.test_public_session_landers tests.test_native_lander_metadata
       - run: node --test tests/selector_native_routing.test.cjs tests/resolved_selector_availability.test.mjs
