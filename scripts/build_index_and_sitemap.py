@@ -435,10 +435,14 @@ def load_schedule_future_sessions(*, include_nonpublic_locations: bool = False) 
     if CANONICAL_CLASS_REPORT_FILE.exists():
         try:
             canonical = json.loads(CANONICAL_CLASS_REPORT_FILE.read_text(encoding="utf-8"))
-            if canonical.get("build", {}).get("source_mode") == "class_report_authoritative":
-                source_file = CANONICAL_CLASS_REPORT_FILE
-        except Exception:
-            source_file = SCHEDULE_FUTURE_FILE
+        except (OSError, ValueError, TypeError) as exc:
+            # A damaged authoritative report must not silently revive a legacy
+            # iCal card whose canonical privacy/booking decision is missing.
+            raise ValueError("Canonical class report unreadable; refusing legacy fallback") from exc
+        if not isinstance(canonical, dict) or not isinstance(canonical.get("build"), dict):
+            raise ValueError("Canonical class report malformed; refusing legacy fallback")
+        if canonical["build"].get("source_mode") == "class_report_authoritative":
+            source_file = CANONICAL_CLASS_REPORT_FILE
     if not source_file.exists():
         return []
     payload = json.loads(source_file.read_text(encoding="utf-8"))
