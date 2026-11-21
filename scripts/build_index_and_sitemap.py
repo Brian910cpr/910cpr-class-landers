@@ -430,15 +430,19 @@ def course_description(course_name: str) -> str:
     return f"See current upcoming dates for {title}, with direct registration links and a clean course-specific schedule view."
 
 
-def load_schedule_future_sessions() -> list[dict]:
+def load_schedule_future_sessions(*, include_nonpublic_locations: bool = False) -> list[dict]:
     source_file = SCHEDULE_FUTURE_FILE
     if CANONICAL_CLASS_REPORT_FILE.exists():
         try:
             canonical = json.loads(CANONICAL_CLASS_REPORT_FILE.read_text(encoding="utf-8"))
-            if canonical.get("build", {}).get("source_mode") == "class_report_authoritative":
-                source_file = CANONICAL_CLASS_REPORT_FILE
-        except Exception:
-            source_file = SCHEDULE_FUTURE_FILE
+        except (OSError, ValueError, TypeError) as exc:
+            # A damaged authoritative report must not silently revive a legacy
+            # iCal card whose canonical privacy/booking decision is missing.
+            raise ValueError("Canonical class report unreadable; refusing legacy fallback") from exc
+        if not isinstance(canonical, dict) or not isinstance(canonical.get("build"), dict):
+            raise ValueError("Canonical class report malformed; refusing legacy fallback")
+        if canonical["build"].get("source_mode") == "class_report_authoritative":
+            source_file = CANONICAL_CLASS_REPORT_FILE
     if not source_file.exists():
         return []
     payload = json.loads(source_file.read_text(encoding="utf-8"))
@@ -447,7 +451,10 @@ def load_schedule_future_sessions() -> list[dict]:
     for session in sessions:
         if not isinstance(session, dict):
             continue
-        if not session_has_public_class_location(session):
+        # Public builders use the default; only the already-verified route
+        # refresh asks for excluded rows so bookmarked old class details can be
+        # retired without showing the private appointment in public inventory.
+        if not include_nonpublic_locations and not session_has_public_class_location(session):
             continue
         enriched = dict(session)
         enriched["_parsed_start"] = parse_local_datetime(enriched.get("start_at", ""))
@@ -468,6 +475,16 @@ def public_session_source_label(sessions: list[dict]) -> str:
 
 
 def schedule_future_to_public_session(session: dict) -> dict | None:
+    # Public location alone cannot confer public visibility. A stale linked
+    # reconciliation is not proof that a legacy appointment can be advertised.
+    visibility = str(session.get("visibility") or "").strip().lower()
+    if visibility in {"private", "unlisted", "internal"}:
+        return None
+    if (
+        session.get("canonical_session_id")
+        and str(session.get("demand_status") or "").strip().lower() == "stale_reconciliation"
+    ):
+        return None
     if not session_has_public_class_location(session):
         return None
     session_id = str(session.get("session_id") or session.get("id") or "").strip()
@@ -2069,8 +2086,8 @@ def build():
         if public_session is not None
     ]
 
-    # Sort by best available date text, then session id
-    sessions.sort(key=lambda s: (s.get("display_date", ""), s.get("display_time", ""), s.get("session_id", "")))
+    # Sort actual ISO starts; month-name labels are not chronological keys.
+    sessions.sort(key=lambda s: (s.get("start_sort", ""), s.get("session_id", "")))
 
     course_groups: dict[str, list[dict]] = defaultdict(list)
     location_groups: dict[str, list[dict]] = defaultdict(list)
@@ -2101,7 +2118,14 @@ def build():
             if page_meta["primary_course_id"] or page_meta["primary_course_number"]
             else page_meta["parent_hub"]
         )
-        matched_future = [session for session in future_sessions if session_matches_course(session, page_meta)]
+        # Course-specific date rows must use the same public eligibility as
+        # the finder; a raw private/stale mirror must not leak through here.
+        public_ids = {item["session_id"] for item in sessions}
+        matched_future = [
+            session for session in future_sessions
+            if str(session.get("session_id") or session.get("id") or "") in public_ids
+            and session_matches_course(session, page_meta)
+        ]
         if matched_future and not (page_meta["primary_course_id"] or page_meta["primary_course_number"]):
             first_match = matched_future[0]
             page_meta["primary_course_id"] = str(first_match.get("course_id", "")).strip()

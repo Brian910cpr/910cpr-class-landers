@@ -18,18 +18,31 @@ class NativeLanderMetadataTests(unittest.TestCase):
         demand["start_at"] = (self.now + timedelta(days=2)).isoformat()
         demand["end_at"] = (self.now + timedelta(days=2, hours=2)).isoformat()
         self.session = resolve_canonical_demand([], [demand])[0][0]
+        # Explicitly simulated already-verified owned route, used ONLY to
+        # exercise the HTML/routing candidate; production demand has no proof.
+        sid = self.session["session_id"]
+        self.published_session = {**self.session,
+            "registration_url": f"https://www.910cpr.com/register/?session={sid}",
+            "public_direct_booking": True}
 
     def status(self, row):
         return build_landers.session_lander_status(
             row, row["registration_url"], build_landers.parse_dt(row["start_at"]), self.now
         )
 
+    def test_current_canonical_seat_without_owned_booking_proof_is_not_a_public_lander(self):
+        self.assertEqual(1, self.session["active_registration_count"])
+        self.assertIsNone(self.session["registration_url"])
+        self.assertFalse(self.session["public_direct_booking"])
+        self.assertEqual("unavailable", self.status(self.session))
+        self.assertFalse(build_landers.is_session_lander_candidate(self.session))
+
     def test_canonical_native_occurrence_resolves_existing_course_mapping(self):
-        normalized = build_landers.normalize_session_record(self.session)
+        normalized = build_landers.normalize_session_record(self.published_session)
         self.assertEqual("mapped", normalized["mapping_status"])
         self.assertEqual("Heartsaver", normalized["mapped_family"])
         self.assertEqual("AHA", normalized["mapped_certifying_body"])
-        self.assertNotIn("mapping_status", self.session)
+        self.assertNotIn("mapping_status", self.published_session)
         self.assertNotIn("Unmapped", build_landers.render_confidence_block(normalized))
         self.assertEqual("scheduled", self.status(normalized))
 
@@ -45,26 +58,26 @@ class NativeLanderMetadataTests(unittest.TestCase):
             ("session_status", "unavailable"),
         ]:
             with self.subTest(key=key):
-                self.assertEqual("unavailable", self.status({**self.session, key: value}))
+                self.assertEqual("unavailable", self.status({**self.published_session, key: value}))
         for key, value, expected in [
             ("registration_status", "closed", "sold_out"),
             ("session_status", "cancelled", "cancelled"),
             ("session_status", "rescheduled", "rescheduled"),
             ("start_at", (self.now - timedelta(days=1)).isoformat(), "completed"),
         ]:
-            self.assertEqual(expected, self.status({**self.session, key: value}))
+            self.assertEqual(expected, self.status({**self.published_session, key: value}))
 
     def test_unknown_or_inactive_course_mapping_is_not_invented(self):
         for entry in [{}, {"active": False, "family": "Heartsaver"}]:
             with patch.object(build_landers, "course_map_entry", return_value=entry):
-                self.assertNotIn("mapping_status", build_landers.normalize_session_record(self.session))
-                self.assertEqual("unavailable", self.status(self.session))
+                self.assertNotIn("mapping_status", build_landers.normalize_session_record(self.published_session))
+                self.assertEqual("unavailable", self.status(self.published_session))
 
     def test_complete_html_has_native_cta_and_completed_class_has_no_cta(self):
-        past = {**self.session, "session_id": "lw-eb020e4a-b74a-443e-acd8-05727c2a8170",
+        past = {**self.published_session, "session_id": "lw-eb020e4a-b74a-443e-acd8-05727c2a8170",
                 "start_at": (self.now - timedelta(days=1)).isoformat()}
         past["registration_url"] = "https://www.910cpr.com/register/?session=" + past["session_id"]
-        rows = [self.session, past]
+        rows = [self.published_session, past]
         with tempfile.TemporaryDirectory() as directory, ExitStack() as stack:
             root = Path(directory)
             source = root / "sessions.json"
@@ -77,11 +90,11 @@ class NativeLanderMetadataTests(unittest.TestCase):
                 "needs_review_count": 0, "pages_deleted_count": 0}))
             stack.enter_context(patch("sys.argv", ["build_landers", "--data-file", str(source), "--anchors-only"]))
             build_landers.main()
-            future_html = (root / (self.session["session_id"] + ".html")).read_text(encoding="utf-8")
+            future_html = (root / (self.published_session["session_id"] + ".html")).read_text(encoding="utf-8")
             past_html = (root / (past["session_id"] + ".html")).read_text(encoding="utf-8")
             self.assertIn('class_status: "scheduled"', future_html)
             self.assertIn("Continue to Registration", future_html)
-            self.assertIn(self.session["registration_url"], future_html)
+            self.assertIn(self.published_session["registration_url"], future_html)
             self.assertIn("Heartsaver - First Aid + CPR + AED", future_html)
             self.assertNotIn("Unmapped course metadata", future_html)
             self.assertNotIn("Registration is not currently available", future_html)

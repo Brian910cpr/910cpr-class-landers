@@ -49,6 +49,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         "full_class_consolidation_scope": policy.get("full_class_consolidation_scope", "family"),
         "travel_minutes": {}, "instructor_family_eligibility": {},
         "shared_room_edges": shared_room_edges,
+        "require_verified_day_gravity": policy.get("require_verified_day_gravity") is True,
         "reject_unknown_full_family_count": commitment_coverage is not None})
     for course in courses:
         cid = str(course["course_id"])
@@ -101,8 +102,20 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
                 all_skills=True)
     if commitment_coverage is not None:
         fixture["commitment_coverage"] = commitment_coverage
-    source_keys = set()
-    for index, busy in enumerate(occupancy):
+    source_keys = {}
+    # An exact interval may appear in both legacy schedule inventory and the
+    # canonical demand feed. Prefer verified demand over an unproven shell.
+    # However, independent positive-seat records in the same interval must
+    # BOTH remain visible to internal diagnostics until their identities are
+    # authoritatively reconciled. Identical geometry alone is not mirror proof.
+    def has_seated_demand(busy):
+        count = busy.get("active_registration_count")
+        return (busy.get("operational_has_active_seat") is True or
+                (busy.get("count_available") is True and type(count) is int and count > 0))
+
+    priority_occupancy = sorted(enumerate(occupancy), key=lambda pair: (
+        not has_seated_demand(pair[1]), pair[0]))
+    for index, busy in priority_occupancy:
         if not busy.get("start") or not busy.get("end"):
             raise ValueError("unresolved occupied interval")
         start, end = aware(busy["start"]), aware(busy["end"])
@@ -120,18 +133,28 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         # Preserve real physical occupancy; source-provided travel buffers are
         # separate commitments and cannot move the paid block's actual edges.
         key = (instructor, location, start, end)
-        if key in source_keys:
+        previous = source_keys.get(key, [])
+        source_id = str(busy.get("source_event_id") or "")
+        # A copied shell or repeated source identity is one physical interval.
+        # Two *distinct* verified commitments are not silently deduplicated:
+        # preserve both without treating either as a public joinable seat.
+        if previous and not (has_seated_demand(busy) and source_id and
+                all(has_seated_demand(item) and
+                    source_id != str(item.get("source_event_id") or "") for item in previous)):
             continue
-        source_keys.add(key)
+        source_keys.setdefault(key, []).append(busy)
         cid = str(busy.get("course_id") or "")
         kind = busy.get("kind") or ("commitment" if "blocked" in str(busy.get("source_file")) else "planted")
         count = busy.get("active_registration_count")
-        if isinstance(count, int) and count > 0 and kind == "planted":
+        if ((type(count) is int and count > 0)
+                or busy.get("operational_has_active_seat") is True) and kind == "planted":
             kind = "paid"
         fixture["sources"].append(dict(id=str(busy.get("source_event_id") or "occupied-"+str(index)),
             instructor=instructor, location=location, start=start.isoformat(), end=end.isoformat(),
             course=cid if cid in fixture["courses"] else None, kind=kind, headcount=count,
+            operational_has_active_seat=busy.get("operational_has_active_seat") is True,
             evidence=busy.get("source_file"),
+            instructor_unassigned=bool(busy.get("instructor_unassigned")),
             resource_uncertain=busy.get("resource_uncertain", False),
             uncertainty_reason=busy.get("uncertainty_reason"),
             adr_shift="adr" in str(busy.get("course_title") or "").casefold()))

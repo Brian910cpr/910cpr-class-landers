@@ -187,6 +187,12 @@ jobs:
       - name: Build durable seated Anchor session pages
         run: python -m scripts.build_landers --anchors-only --data-file docs/data/schedule_future.json
 
+      - name: Refresh class finder and safe routes from this same seated snapshot
+        run: |
+          python -m scripts.refresh_class_finder_index
+          python -m scripts.refresh_class_registration_routes
+          python -B -m unittest tests.test_class_registration_routing tests.test_refresh_class_finder_index
+
       - name: Publish instructor and location reference feeds
         run: python -m scripts.publish_admin_reference_data
 
@@ -243,6 +249,7 @@ jobs:
             docs/data/anchor_state.json \
             docs/data/block-selector-availability \
             docs/classes \
+            docs/sitemap.xml \
             docs/admin/dashboard.html \
             debug/status/build_sessions_current.json \
             debug/status/build_schedule_future.json

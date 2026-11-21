@@ -215,6 +215,16 @@ def run(fixture):
     grid = policy.get('slot_minutes')
     if grid is not None and (not isinstance(grid, int) or grid <= 0 or 60 % grid):
         raise ValueError('invalid slot grid')
+    # Operational occupancy and Anchor gravity are not interchangeable. In V2,
+    # a zero/unknown-seat shell still blocks its exact interval, but must not
+    # turn the instructor's entire remaining day into bookend-only inventory.
+    # Legacy lab fixtures retain their earlier explicitly planted behavior.
+    verified_gravity_ids = {
+        busy["id"] for busy in occupied
+        if busy.get("operational_has_active_seat") is True
+        or (busy["kind"] in {"paid", "seated"}
+            and type(busy.get("headcount")) is int and busy["headcount"] > 0)
+    }
     candidates, edges, free_intervals = [], [], []
     def candidate(course, start, instructor, location, origin):
         candidates.append({"id": "candidate-" + str(len(candidates) + 1), "course": course,
@@ -236,7 +246,10 @@ def run(fixture):
         local_zone = datetime.fromisoformat(window["start"].replace("Z", "+00:00")).tzinfo
         first_day = ws.astimezone(local_zone).date()
         last_day = (we - timedelta(microseconds=1)).astimezone(local_zone).date()
-        relevant = [b for b in blocks if (b["instructor"] == instructor or (policy.get("shared_room_edges")
+        relevant = [b for b in blocks if
+                    (not policy.get("require_verified_day_gravity")
+                     or any(source_id in verified_gravity_ids for source_id in b["source_ids"]))
+                    and (b["instructor"] == instructor or (policy.get("shared_room_edges")
                         and b["start_location"] == location and b["end_location"] == location))
                     and b["start"].astimezone(local_zone).date() <= last_day
                     and (b["end"] - timedelta(microseconds=1)).astimezone(local_zone).date() >= first_day
@@ -259,7 +272,10 @@ def run(fixture):
         else:
             intervals = resource_availability[index]['free']
             for a, b in intervals:
-                step = 60 if b - a >= minutes(policy.get("wide_threshold_minutes", 180)) else 30
+                # For a clear layered public window do not thin qualified starts
+                # to an hourly cadence; preserve legacy lab behavior.
+                step = grid if layered_windows and grid is not None else (
+                    60 if b - a >= minutes(policy.get("wide_threshold_minutes", 180)) else 30)
                 free_intervals.append({"start": a, "end": b, "step_minutes": step, "instructor": instructor, "location": location})
                 for course, meta in courses.items():
                     course_step = meta.get('display_step_minutes', step) if layered_windows else step
@@ -283,6 +299,7 @@ def run(fixture):
     accepted, rejected = [], []
     now = stamp(fixture["now"])
     family_counts = Counter(); seating_positions = {}; uncertain_full = []; uncertain_family_groups = set()
+    unassigned_seated_groups = set()
     consolidation_scope = policy.get('full_class_consolidation_scope', 'family')
     if consolidation_scope not in {'family', 'course'}:
         raise ValueError('invalid full class consolidation scope')
@@ -299,6 +316,21 @@ def run(fixture):
             continue
         group = (busy['instructor'], busy['start'].astimezone(zone).date().isoformat(), consolidation_identity(busy['course']))
         seating_positions.setdefault(group, {}).setdefault((busy['start'], busy['location']), []).append(busy['id'])
+        # An unassigned verified seat consumes the same-room daily full-course
+        # allowance, but never a different room or a different course family.
+        if busy.get('instructor_unassigned'):
+            unassigned_seated_groups.add((busy['location'], group[1], group[2]))
+    # A verified seat without an authoritative scheduler-course mapping still
+    # reserves its physical interval. Its family collapse/repeat-gap behavior
+    # remains UNPROVEN: never infer a course ID from a historical title.
+    # This is internal-only diagnostics, not public selector data.
+    unmapped_positive_seated = [
+        busy for busy in occupied
+        if busy['kind'] in {'paid', 'seated'}
+        and busy.get('course') not in courses
+        and (busy.get('operational_has_active_seat') is True
+             or (type(busy.get('headcount')) is int and busy['headcount'] > 0))
+    ]
     for group, positions in seating_positions.items(): family_counts[group] = len(positions)
     for c in sorted(candidates, key=lambda x: (x["start"], x["course"])):
         reasons = []
@@ -330,7 +362,8 @@ def run(fixture):
         # Only real paid/seated full classes consume the allowance; offers never do.
         day = c["start"].astimezone(zone).date().isoformat()
         key = (c["instructor"], day, consolidation_identity(c['course']))
-        if meta["kind"] == "full" and family_counts[key] >= policy.get("paid_full_positions_per_family_day", 1):
+        shared_room_seat = (c['location'], day, key[2]) in unassigned_seated_groups
+        if meta["kind"] == "full" and (shared_room_seat or family_counts[key] >= policy.get("paid_full_positions_per_family_day", 1)):
             reasons.append("full_course_already_paid_seated" if consolidation_scope == 'course' else "full_family_already_paid_seated")
         if meta["kind"] == "full" and policy.get("reject_unknown_full_family_count") and key in uncertain_family_groups:
             reasons.append("full_course_count_unknown" if consolidation_scope == 'course' else "full_family_count_unknown")
@@ -351,7 +384,9 @@ def run(fixture):
             remaining_seats=remaining, seats_status='known' if remaining is not None else 'unknown', mode='existing_seated'))
     return {"layered_windows": layered_windows, "seated_offers": seated,
             "customer_options": seated + accepted, "durable_source_ids": sorted(set(durable) - revoked), "resource_availability": resource_availability,
-            "family_seating_diagnostics": {"gap_waits_enabled": False, "uncertain_full_commitments": uncertain_full, "duplicate_paid_positions": [{"instructor": g[0], "date": g[1], "family": g[2], "source_ids": [ident for ids in positions.values() for ident in ids]} for g, positions in seating_positions.items() if len(positions)>1]}, "fixture": fixture["name"], "source_truth": list(sources.values()),
+            "family_seating_diagnostics": {"gap_waits_enabled": False, "uncertain_full_commitments": uncertain_full,
+                "unmapped_positive_seated_course_count": len(unmapped_positive_seated),
+                "unmapped_positive_seated_family_policy_proven": not unmapped_positive_seated, "duplicate_paid_positions": [{"instructor": g[0], "date": g[1], "family": g[2], "source_ids": [ident for ids in positions.values() for ident in ids]} for g, positions in seating_positions.items() if len(positions)>1]}, "fixture": fixture["name"], "source_truth": list(sources.values()),
             "ignored_sources": ignored, "normalized_occupancy": occupied, "blocks": blocks,
             "edges": edges, "merge_decisions": merge_decisions, "free_intervals": free_intervals, "candidates": candidates,
             "accepted": accepted, "rejected": rejected,
