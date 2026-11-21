@@ -112,4 +112,29 @@ class ClassRoutingTests(unittest.TestCase):
   for secret in ['data-session-id="102"','Private date must disappear','Private sidebar time','/classes/102.html']:
    self.assertNotIn(secret,output)
   self.assertEqual(rewrite_detail_routes(output,session,verified),output)
+ def test_related_recommendations_with_uuid_or_missing_id_fail_closed(self):
+  # The generator writes arbitrary source session IDs into related cards;
+  # a private canonical UUID is not a numeric Enrollware identity.
+  public_id='11111111-1111-4111-8111-111111111111'
+  private_id='22222222-2222-4222-8222-222222222222'
+  src='''<section class="js-live-session-group">
+<div class="upcoming-card js-session-item" data-session-id="'''+public_id+'''" data-start="2026-12-01T10:00:00-05:00">
+  <div class="upcoming-date">Verified public date</div>
+</div>
+<div class="upcoming-card js-session-item" data-session-id="'''+private_id+'''" data-start="2026-12-07T17:30:00-05:00">
+  <div class="upcoming-date">Private UUID date</div>
+</div>
+<div class="upcoming-card js-session-item" data-start="2026-12-08T12:00:00-05:00">
+  <div class="upcoming-date">Unattributed private date</div>
+</div>
+</section>
+<aside class="current-courses-sidebar"><ul><li><a href="/classes/'''+public_id+'''.html">Public sidebar date</a></li><li><a href="/classes/'''+private_id+'''.html">Private UUID sidebar date</a></li></ul></aside>
+'''
+  public={'session_id':public_id,'course_id':'359474','course_name':'BLS Renewal','start_at':'2026-12-01T10:00:00-05:00','location_display':'Wilmington; Shipyard Blvd'}
+  output=rewrite_detail_routes(src,public,{public_id:public})
+  self.assertIn('Verified public date',output)
+  self.assertIn('Public sidebar date',output)
+  for secret in (private_id,'Private UUID date','Private UUID sidebar date','Unattributed private date','2026-12-07T17:30:00-05:00'):
+   self.assertNotIn(secret,output)
+  self.assertEqual(output,rewrite_detail_routes(output,public,{public_id:public}))
 if __name__=='__main__':unittest.main()
