@@ -442,6 +442,44 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
         self.assertIn(historic_id, sitemap.read_text(encoding="utf-8"))
         self.assertEqual(historic.read_text(encoding="utf-8"), "Historical archive")
 
+    def test_same_id_stale_finder_content_cannot_rewrite_public_routes(self):
+        # ID-only reconciliation misses a reschedule, course change or a
+        # stale/wrong Register action retaining the same numeric class ID.
+        # Keep ALL public discovery surfaces unchanged if any differs from
+        # the freshly validated, same-source finder.
+        sid = "15000999"
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        initial = (
+            '<article class="class-finder-card">'
+            '<span>December 07, 2026 | 5:30 PM | BLS Renewal</span>'
+            '<a class="class-finder-primary" href="/register/?session=' + sid + '">Register</a>'
+            '<a class="class-finder-secondary" href="/classes/' + sid + '.html">Details</a>'
+            '</article>'
+        )
+        index.write_text(initial, encoding="utf-8")
+        detail = index.parent / (sid + ".html")
+        detail.write_text("Existing public class detail", encoding="utf-8")
+        sitemap = self.root / "docs/sitemap.xml"
+        sitemap.write_text("<urlset><url><loc>https://www.910cpr.com/classes/" +
+                           sid + ".html</loc></url></urlset>", encoding="utf-8")
+        for changed in (
+            initial.replace("5:30 PM", "2:00 PM"),
+            initial.replace("BLS Renewal", "Heartsaver CPR AED"),
+            initial.replace("/register/?session=" + sid,
+                            "/register/?session=other"),
+        ):
+            with self.subTest(changed=changed):
+                with patch.object(finder, "render_current_class_finder",
+                                  return_value=(changed, {sid})):
+                    with self.assertRaisesRegex(
+                            ValueError, "listing content mismatches"):
+                        routes.refresh(root=self.root)
+                self.assertEqual(index.read_text(encoding="utf-8"), initial)
+                self.assertEqual(detail.read_text(encoding="utf-8"),
+                                 "Existing public class detail")
+                self.assertIn(sid, sitemap.read_text(encoding="utf-8"))
+
     def test_bundle_passes_removed_public_ids_before_rewriting_routes(self):
         old_id = "14917169"
         index = self.root / "docs/classes/index.html"
