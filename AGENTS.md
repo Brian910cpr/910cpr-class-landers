@@ -1,5 +1,29 @@
 # 910CPR Lander System Rules
 
+## Native operational authority
+
+LanderWare owns operational sessions, registrations and their lifecycle. Enrollware
+is historical intake/provenance only, not a required live operating service.
+
+* Do not introduce or retain customer-facing Enrollware checkout, rescheduling or
+  cancellation fallbacks where a native path exists.
+* An accepted booking does not expire because its original external snapshot is
+  old. Separate import freshness from the validity of canonical relationships.
+* Customer identity, exact course, location and start time in a real confirmation
+  are sufficient for canonical placement. Resolve exact identities and use the
+  atomic confirmed-intake operation; do not require an external class ID, complete
+  roster, instructor, explicit end time or separate settlement confirmation.
+* Preserve cancellations, refunds, reschedules, original documents and external
+  IDs as audit evidence. Do not delete history or fabricate fresh observations.
+* Replace each remaining operational dependency with native behavior, an approved
+  independent service, or an explicitly documented interim native procedure.
+  Missing replacements are defects to implement, not reasons to keep routing
+  customers to the legacy service or to declare existing bookings nonexistent.
+* Keep genuine identity conflicts, duplicate sessions, unsafe occupancy and paid
+  orders without registration placement visible until specifically repaired.
+
+This authority rule supersedes older source-first migration assumptions below.
+
 ## Mandatory LanderWare Design Ethos
 
 Before designing or implementing any significant LanderWare feature, workflow, data model, migration, or replacement of an incumbent training-business capability, read and follow `LANDERWARE_DESIGN_ETHOS.md`.
@@ -8,7 +32,7 @@ This is a standing design gate, not optional background reading.
 
 In particular:
 
-* LanderWare is the intended durable operating system for 910CPR. Enrollware is a migration source, incumbent reference architecture, and temporary dependency, not the long-term design center.
+* LanderWare is the durable operating system for 910CPR. Enrollware is historical provenance and reference architecture, not operational authority.
 * Before inventing a new training-business workflow, investigate how Enrollware or another mature platform solves the same operational problem and ask why that design evolved that way.
 * Do not copy incumbent behavior blindly, but do not get creative without understanding the hard-earned business/compliance/operational lesson being replaced.
 * Prefer canonical reusable objects and explicit relationships over copied page-local state.
@@ -21,9 +45,10 @@ When a design materially differs from the mature incumbent pattern, record the s
 
 ## Authoritative Inputs
 
-Primary schedule source:
+Primary operational schedule source:
 
-* data/Class Report.xlsx
+* Canonical LanderWare class_sessions, registrations and linked scheduled workspace records.
+* data/Class Report.xlsx is legacy import evidence, not a continuing live schedule prerequisite.
 
 Primary runtime data contract:
 
@@ -66,7 +91,7 @@ Debug outputs are authoritative for audits:
 ## Important Operational Rules
 
 * schedule_future.json is the authoritative public inventory contract.
-* Only real Enrollware sessions should become session landers.
+* Only real eligible LanderWare sessions should become session landers; legacy identity may be retained as provenance.
 * Appointment availability is NOT pre-generated into landers.
 * Preserve existing working schema behavior unless explicitly modifying schema logic.
 * Avoid full-stack rebuilds unless required.
@@ -89,7 +114,7 @@ The following systems are considered operationally stable unless explicitly targ
 * JSON-LD event generation stable
 * schedule_future.json contract stable
 * Cloudflare shortlink integration stable
-* Existing Enrollware enroll?id= link structures stable
+* Native registration routes must preserve exact course/session selection; legacy enroll?id= URLs are provenance, not a checkout fallback.
 * Existing hub anchor structures stable (#provider, #renewal, #heartcode)
 * Existing sitemap generation stable
 
@@ -144,10 +169,10 @@ Preserve the hidden Dockmaster/Harbor Master story in code comments. See `lore/d
 
 ## Enrollware and Public Inventory Safety
 
-* Preserve Enrollware-driven class data and existing course IDs unless explicitly changing them.
+* Preserve imported class data and legacy course IDs as provenance while keeping native operational identity authoritative.
 * Never guess Enrollware course IDs.
 * Treat public class visibility, lead-time rules, timezone handling, instructor availability, appointment URLs, and availability filtering as high-risk logic.
-* Existing Enrollware classes and occupied scheduler windows must block conflicting dynamic offers.
+* Existing imported occupied classes and scheduler windows must continue blocking conflicting dynamic offers during native migration; removing a source dependency must not erase occupancy.
 * Public dynamic appointment-seed offers must be traceable from final rendered HTML back to source availability, course ID, appointmentDayId, startTime, location, and course mapping.
 * Do not treat backend or generated data as proof that the customer-facing site works. Verify rendered pages and links.
 * When changing schedule or class-generation logic, report the input data used, availability blocks found, offers generated, offers filtered out, top rejection reasons, and final public offer count.
