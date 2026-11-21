@@ -228,24 +228,49 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
         else:
             accepted.append(deepcopy(original))
-    # Every retained existing class is that exact course's day anchor,
-    # including when its roster count is unknown. Consolidate across separate
-    # Google availability gaps without suppressing different course formats.
-    day_anchors = {(o['date'], str(o['courseId'])) for o in accepted
-                   if o.get('offerType') == 'seated_class'}
+    # A published existing-class row is not evidence of registered demand.
+    # The source retains its hard occupied interval in calculate()/build_shadow
+    # even when no trustworthy headcount is available; this gate controls only
+    # whole-day collapse, not instructor/resource occupancy or joinability.
+    def has_verified_demand(source):
+        if not source:
+            return False
+        if source.get("operational_has_active_seat") is True:
+            return True
+        count = source.get("active_registration_count")
+        return (source.get("count_available") is True
+                and type(count) is int and count > 0)
+
+    def matched_source(offer):
+        identity = (offer.get("session_id") or offer.get("sourceSessionId")
+                    or offer.get("sourceAvailabilityBlock", {}).get("sessionId"))
+        return counts.get(str(identity))
+
+    day_anchors = {
+        (offer['date'], str(offer['courseId']))
+        for offer in accepted
+        if offer.get('offerType') == 'seated_class'
+        and has_verified_demand(matched_source(offer))
+    }
     def instructor_key(name):
         key = str(name or '').strip().casefold()
         return 'brian ennis' if key == 'brian' else key
-    # Class occupancy comes from every program, not just the page's selected
-    # courses. A second calendar gap does not reset an instructor's anchored day.
+
+    # Only verified operational demand provides day gravity, including a
+    # canonical private/unlisted seat without an external numeric course ID.
+    # The actual class remains private and cannot be joined from this flag.
     anchored_days = set()
     for source in calculation['projected_sources']:
-        if (source.get('course_id') and source.get('start') and source.get('end') and
-                not source.get('normalization_issue') and aware(source['end']) > aware(source['start'])):
+        if not has_verified_demand(source):
+            continue
+        if (source.get('start') and source.get('end')
+                and not source.get('normalization_issue')
+                and aware(source['end']) > aware(source['start'])):
             anchored_days.add((aware(source['start']).date().isoformat(),
                                instructor_key(source.get('instructor'))))
     for offer in accepted:
-        if offer.get('offerType') == 'seated_class':
+        if (offer.get('offerType') == 'seated_class'
+                and has_verified_demand(matched_source(offer))):
             anchored_days.add((offer['date'], instructor_key(offer.get('instructor'))))
     retained = []
     for offer in accepted:
