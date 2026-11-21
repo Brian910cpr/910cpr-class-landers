@@ -1138,6 +1138,50 @@ class LayeredPublicationTests(unittest.TestCase):
                             and o.get('session_id') == verified['source_event_id']
                             for o in result['offers']))
 
+    def test_final_v2_publisher_rejects_stale_source_matched_class_time(self):
+        # A reschedule can retain a stable class identity while the cached
+        # public selector still points at the old occurrence. Do not treat
+        # ID-only matching as proof of a bookable date/start time.
+        self.sources = []
+        source = self.add(11, '12:00', '13:00', cid='210549', count=1,
+                          visibility='public', public_direct_booking=True)
+        current = dict(session_id=source['source_event_id'],
+                       date='2026-10-11', startTime='12:00',
+                       courseId='210549', courseName='Verified current class',
+                       offerType='seated_class',
+                       registrationUrl='https://fixture.test/current')
+        accepted = self.payload([current])
+        self.assertEqual(sum(o.get('offerType') == 'seated_class'
+                             for o in accepted['offers']), 1)
+
+        for change in ({'date': '2026-10-12'},
+                       {'startTime': '14:00'},
+                       {'startTime': None}):
+            with self.subTest(stale_public_card=change):
+                stale = dict(current, **change,
+                             registrationUrl='https://stale.invalid/rescheduled')
+                result = self.payload([stale])
+                self.assertFalse(any(o.get('offerType') == 'seated_class'
+                                     for o in result['offers']))
+                self.assertIn('existing_booking_occurrence_mismatch',
+                              result['rejectionReasonCounts'])
+                exposed = json.dumps(public_selector_availability_payload(result))
+                self.assertNotIn('stale.invalid', exposed)
+                self.assertNotIn(source['source_event_id'], exposed)
+
+        # The authoritative class itself moved, but its identifier stayed
+        # stable. A previously valid card must be withdrawn, not reattached.
+        source['start'] = self.at(11, '13:00').isoformat()
+        source['end'] = self.at(11, '14:00').isoformat()
+        moved = self.payload([current])
+        self.assertNotIn(current, moved['offers'])
+        self.assertIn('existing_booking_occurrence_mismatch',
+                      moved['rejectionReasonCounts'])
+        self.assertEqual(moved['layeredDiagnostics']['projected_sources'][0][
+            'active_registration_count'], 1)
+        self.assertEqual(moved['layeredDiagnostics']['projected_sources'][0][
+            'start'], source['start'])
+
     def test_final_v2_publisher_withholds_explicitly_closed_public_seated_route(self):
         # A valid positive-seat source remains operationally occupied even
         # when its public registration lifecycle is closed or cancelled.
