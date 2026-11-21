@@ -189,8 +189,7 @@ jobs:
 
       - name: Refresh class finder and safe routes from this same seated snapshot
         run: |
-          python -m scripts.refresh_class_finder_index
-          python -m scripts.refresh_class_registration_routes
+          python -m scripts.refresh_public_class_artifacts
           python -B -m unittest tests.test_class_registration_routing tests.test_refresh_class_finder_index
 
       - name: Publish instructor and location reference feeds

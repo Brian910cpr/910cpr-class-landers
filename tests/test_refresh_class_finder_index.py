@@ -10,6 +10,7 @@ from zoneinfo import ZoneInfo
 from scripts import build_index_and_sitemap as catalog
 from scripts import refresh_class_finder_index as finder
 from scripts import refresh_class_registration_routes as routes
+from scripts import refresh_public_class_artifacts as bundle
 
 
 class ZeroSeatedInventoryTests(unittest.TestCase):
@@ -403,6 +404,76 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
         self.assertIn("https://www.910cpr.com/bls.html", updated)
         self.assertEqual(index.read_text(encoding="utf-8"), "0 classes found")
 
+
+
+    def test_absent_expired_previous_card_tombstones_detail_and_sitemap(self):
+        # Missing from the current source is distinct from a currently present
+        # explicitly private row. Only previously PUBLICLY LISTED IDs may be
+        # retired on this basis; untouched historical pages must remain intact.
+        old_id, historic_id = "14917169", "12345678"
+        self.write_source([])
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text("0 classes found", encoding="utf-8")
+        old = index.parent / (old_id + ".html")
+        old.write_text("Old published class date and registration", encoding="utf-8")
+        historic = index.parent / (historic_id + ".html")
+        historic.write_text("Historical archive", encoding="utf-8")
+        sitemap = self.root / "docs/sitemap.xml"
+        sitemap.write_text(
+            "<urlset>\\n"
+            "  <url><loc>https://www.910cpr.com/classes/" + old_id + ".html</loc></url>\\n"
+            "  <url><loc>https://www.910cpr.com/classes/" + historic_id + ".html</loc></url>\\n"
+            "</urlset>\\n",
+            encoding="utf-8",
+        )
+        with (
+            patch.object(finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(catalog, "SCHEDULE_FUTURE_FILE", self.path),
+            patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
+        ):
+            result = routes.refresh(root=self.root, retired_previous_ids={old_id})
+        self.assertEqual(result["listed"], 0)
+        self.assertEqual(result["files"], 2)
+        self.assertIn("noindex,nofollow", old.read_text(encoding="utf-8"))
+        self.assertNotIn("Old published class date", old.read_text(encoding="utf-8"))
+        self.assertNotIn(old_id, sitemap.read_text(encoding="utf-8"))
+        self.assertIn(historic_id, sitemap.read_text(encoding="utf-8"))
+        self.assertEqual(historic.read_text(encoding="utf-8"), "Historical archive")
+
+    def test_bundle_passes_removed_public_ids_before_rewriting_routes(self):
+        old_id = "14917169"
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text(
+            '<a class="class-finder-secondary" href="/classes/' +
+            old_id + '.html">Details</a>', encoding="utf-8")
+        with (
+            patch.object(bundle.finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(bundle.routes, "refresh",
+                         return_value={"listed": 0, "files": 1}) as rewriter,
+        ):
+            result = bundle.refresh(root=self.root)
+        rewriter.assert_called_once_with(
+            root=self.root, retired_previous_ids={old_id})
+        self.assertEqual(result["retired_previous"], 1)
+        self.assertEqual(index.read_text(encoding="utf-8"), "0 classes found")
+
+    def test_bundle_restores_finder_on_unverified_route_failure(self):
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text("original listing", encoding="utf-8")
+        with (
+            patch.object(bundle.finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(bundle.routes, "refresh",
+                         side_effect=ValueError("source changed")),
+        ):
+            with self.assertRaisesRegex(ValueError, "source changed"):
+                bundle.refresh(root=self.root)
+        self.assertEqual(index.read_text(encoding="utf-8"), "original listing")
 
 if __name__ == "__main__":
     unittest.main()

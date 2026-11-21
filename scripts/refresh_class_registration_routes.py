@@ -31,7 +31,7 @@ UNLISTED_DETAIL_HTML = """<!doctype html>
 """
 
 
-def refresh(root=ROOT):
+def refresh(root=ROOT, retired_previous_ids=None):
     index=root/'docs/classes/index.html'
     original=index.read_text(encoding='utf8')
     ids=re.findall(r'class="class-finder-secondary" href="/classes/(\d+)\.html"',original)
@@ -70,6 +70,21 @@ def refresh(root=ROOT):
             continue
         if class_index.schedule_future_to_public_session(row) is not None:
             continue
+        rejected_public_ids.add(sid)
+        file=root/'docs/classes'/(sid+'.html')
+        if file.is_file():
+            changes[file]=UNLISTED_DETAIL_HTML
+
+    # A fresh source need not contain a class that has just expired or was
+    # withdrawn. It nevertheless had a public detail page in the PREVIOUS
+    # finder. Retire precisely those previously listed IDs removed by the
+    # verified refresh; do not sweep unrelated historical class archives.
+    for retired_id in retired_previous_ids or ():
+        sid=str(retired_id)
+        if not re.fullmatch(r'[0-9]+',sid):
+            raise ValueError('invalid previously published class identity')
+        if sid in verified_ids:
+            raise ValueError('cannot retire a currently eligible public class')
         rejected_public_ids.add(sid)
         file=root/'docs/classes'/(sid+'.html')
         if file.is_file():
