@@ -93,9 +93,15 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
                        demand_status="stale_reconciliation"),
             legacy_row("15000102", visibility="unlisted"),
             legacy_row("15000103"),
+            legacy_row("15000104", canonical_session_id="unresolved-link",
+                       demand_status="external_reconciliation_required"),
+            legacy_row("15000105", canonical_session_id="confirmed-public",
+                       demand_status="current", visibility="public"),
+            legacy_row("15000106", canonical_session_id="moved-link",
+                       demand_status="stale_anchor"),
         ])
         html, ids = self.render()
-        self.assertEqual(ids, {"15000103"})
+        self.assertEqual(ids, {"15000103", "15000105"})
         self.assertNotIn("/classes/15000101.html", html)
         self.assertNotIn("/classes/15000102.html", html)
         self.assertIn("/classes/15000103.html", html)
