@@ -802,7 +802,7 @@ def public_direct_bookable_session(session: dict[str, Any]) -> bool:
     session_status = clean_text(session.get("session_status") or "active").lower()
     visibility = clean_text(session.get("visibility")).lower()
     return (
-        visibility not in {"private", "unlisted"}
+        visibility not in {"private", "unlisted", "internal"}
         and session.get("public_direct_booking") is not False
         and registration_status not in {"closed", "full", "unverified", "cancelled", "canceled", "deleted"}
         and session_status not in {"cancelled", "canceled", "deleted"}
