@@ -480,10 +480,11 @@ def schedule_future_to_public_session(session: dict) -> dict | None:
     visibility = str(session.get("visibility") or "").strip().lower()
     if visibility in {"private", "unlisted", "internal"}:
         return None
-    if (
-        session.get("canonical_session_id")
-        and str(session.get("demand_status") or "").strip().lower() == "stale_reconciliation"
-    ):
+    # An external numeric ID proves a source link, not a current public
+    # enrollment entitlement. Unreconciled, stale or unknown canonical state
+    # must not inherit a legacy Register link from a prior projection.
+    # Physical occupancy remains in the canonical scheduling source.
+    if session.get("canonical_session_id") and str(session.get("demand_status") or "").strip().lower() != "current":
         return None
     if not session_has_public_class_location(session):
         return None
