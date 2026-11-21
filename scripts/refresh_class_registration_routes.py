@@ -7,6 +7,29 @@ from scripts import build_index_and_sitemap as class_index
 from scripts import refresh_class_finder_index as finder
 ROOT=Path(__file__).resolve().parents[1]
 
+# Rejected canonical-linked or explicitly nonpublic appointments may have a
+# previously generated, directly addressable legacy detail HTML file. Hiding
+# the finder card alone is insufficient: those bookmarked pages must not keep
+# advertising a private appointment or an inherited external booking URL.
+UNLISTED_DETAIL_HTML = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://www.910cpr.com/classes/index.html">
+<title>Class listing unavailable | 910CPR</title>
+</head>
+<body>
+<main>
+<h1>This class is not publicly listed</h1>
+<p>No registration is available from this class page. Please choose from our current public classes.</p>
+<p><a href="/classes/index.html">Browse current classes</a></p>
+</main>
+</body>
+</html>
+"""
+
 
 def refresh(root=ROOT):
     index=root/'docs/classes/index.html'
@@ -21,18 +44,32 @@ def refresh(root=ROOT):
     _, verified_ids = finder.render_current_class_finder()
     if set(ids) != verified_ids:
         raise ValueError('public class listing mismatches current eligible source')
-    if not ids:
-        return {'listed': 0, 'files': 0}
     rows=class_index.load_schedule_future_sessions()
     sessions={}
     for sid in ids:
         matches=[r for r in rows if str(r.get('session_id'))==sid]
         if len(matches)!=1: raise ValueError('class identity missing or ambiguous: '+sid)
         sessions[sid]=matches[0]
-    changes={index:rewrite_directory_routes(original,sessions)}
+    changes={}
+    if ids:
+        changes[index]=rewrite_directory_routes(original,sessions)
     for sid in ids:
         file=root/'docs/classes'/(sid+'.html')
         changes[file]=rewrite_detail_routes(file.read_text(encoding='utf8'),sessions[sid],sessions)
+
+    # Retire only existing detail files explicitly rejected by the SAME fresh
+    # selected source. Do not delete internal bookings, alter source rows, or
+    # assume missing identity/legacy inventory is safe to de-list.
+    for row in rows:
+        sid=str(row.get('session_id') or row.get('id') or '').strip()
+        if not re.fullmatch(r'[0-9]+',sid) or sid in verified_ids:
+            continue
+        if class_index.schedule_future_to_public_session(row) is not None:
+            continue
+        file=root/'docs/classes'/(sid+'.html')
+        if file.is_file():
+            changes[file]=UNLISTED_DETAIL_HTML
+
     # Build every replacement before writing; never partially apply invalid identities.
     for file,content in changes.items():file.write_bytes(content.encode('utf8'))
     return {'listed':len(ids),'files':len(changes)}
