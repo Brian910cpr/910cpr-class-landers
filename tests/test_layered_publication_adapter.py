@@ -1149,7 +1149,8 @@ class LayeredPublicationTests(unittest.TestCase):
                 ('registration_status', 'deleted'),
                 ('registration_status', 'cancelled'),
                 ('session_status', 'canceled'),
-                ('session_status', 'deleted')):
+                ('session_status', 'deleted'),
+                ('is_full', True)):
             with self.subTest(status_field=status_field, status=status):
                 self.sources = []
                 source = self.add(11, '12:00', '13:00', cid='210549',
