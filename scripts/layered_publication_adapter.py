@@ -247,7 +247,12 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         source = counts.get(identity)
         # Defense in depth: never resurrect private or source-revoked seated
         # routes even if an upstream selector mistakenly hands us such an offer.
-        if identity in denied_booking_identities:
+        # A seated route not backed by any selected authoritative occupancy
+        # source is an orphan, not verified bookable inventory. A stale legacy
+        # card must never bypass the canonical private/closed source filter.
+        if source is None:
+            rejected.append(dict(original, reasons=["existing_booking_source_unverified"]))
+        elif identity in denied_booking_identities:
             rejected.append(dict(original, reasons=["nonpublic_or_unverified_existing_booking_choice"]))
         elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
