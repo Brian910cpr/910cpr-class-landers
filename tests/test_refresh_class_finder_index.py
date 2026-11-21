@@ -240,13 +240,17 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
                 **extra,
             }
 
-        stale, unlisted, public, unrelated = (
-            "15000101", "15000102", "15000103", "15000104"
+        stale, unlisted, public, unrelated, offsite = (
+            "15000101", "15000102", "15000103", "15000104", "15000106"
         )
         self.write_source([
             row(stale, canonical_session_id="simulated-private-mirror",
                 demand_status="stale_reconciliation"),
             row(unlisted, visibility="unlisted"),
+            # A private-location row is filtered from ordinary class-card
+            # loading; its old numeric detail page must STILL be retired.
+            row(offsite, location_name="Private workplace appointment",
+                visibility="private"),
             row(public),
         ])
         index = self.root / "docs/classes/index.html"
@@ -256,7 +260,7 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
             + '.html">Details</a>'
         )
         index.write_text(index_html, encoding="utf-8")
-        for sid in (stale, unlisted, public):
+        for sid in (stale, unlisted, offsite, public):
             (index.parent / (sid + ".html")).write_text(
                 'Confidential source class detail ' + sid
                 + ' https://coastalcprtraining.enrollware.com/enroll?id=' + sid,
@@ -271,8 +275,8 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
             patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
         ):
             result = routes.refresh(root=self.root)
-        self.assertEqual(result, {"listed": 1, "files": 4})
-        for sid in (stale, unlisted):
+        self.assertEqual(result, {"listed": 1, "files": 5})
+        for sid in (stale, unlisted, offsite):
             redacted = (index.parent / (sid + ".html")).read_text(encoding="utf-8")
             self.assertIn('name="robots" content="noindex,nofollow"', redacted)
             self.assertIn("Browse current classes", redacted)
