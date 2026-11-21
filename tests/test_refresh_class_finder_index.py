@@ -134,6 +134,32 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     self.render()
 
+    def test_corrupt_canonical_report_cannot_resurrect_legacy_public_cards(self):
+        # A malformed authoritative report previously caused BOTH source
+        # selectors to fall back to a fresh but potentially privacy-stale iCal
+        # feed. The class finder and direct route must fail closed together.
+        self.write_source([{
+            "session_id": "15000109", "course_id": "209806",
+            "course_number": "209806", "course_name": "AHA BLS Provider",
+            "start_at": "2026-11-22T13:00:00-05:00",
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "session_status": "active", "registration_status": "open",
+            "public_direct_booking": True,
+            "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=15000109",
+        }])
+        self.assertEqual(self.render()[1], {"15000109"})
+        for corrupt in ('{"build":', '{"sessions": []}', '[]'):
+            with self.subTest(corrupt=corrupt):
+                self.other.write_text(corrupt, encoding="utf-8")
+                with self.assertRaisesRegex(ValueError, "Canonical class report"):
+                    self.render()
+                with (
+                    patch.object(catalog, "SCHEDULE_FUTURE_FILE", self.path),
+                    patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
+                ):
+                    with self.assertRaisesRegex(ValueError, "Canonical class report"):
+                        catalog.load_schedule_future_sessions()
+
     def test_nonempty_finder_cannot_publish_from_stale_or_missing_snapshot(self):
         # A plausible, future-facing class is NOT proof that its source is fresh.
         card = {"session_id": "15000001", "display_date": "November 21, 2026"}
