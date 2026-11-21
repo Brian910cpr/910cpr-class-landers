@@ -1130,6 +1130,7 @@ class LayeredPublicationTests(unittest.TestCase):
         # the existing seated path; don't suppress verified public inventory.
         verified = self.add(11, '12:00', '13:00', cid='210549', count=1,
                             visibility='public', public_direct_booking=True)
+        verified['registration_url'] = 'https://fixture.test/current'
         confirmed = dict(orphan, session_id=verified['source_event_id'],
                          courseName='Verified current class',
                          registrationUrl='https://fixture.test/current')
@@ -1144,6 +1145,7 @@ class LayeredPublicationTests(unittest.TestCase):
         # that route; only the source-proven course may remain joinable.
         source = self.add(11, '12:00', '13:00', cid='210549', count=1,
                           visibility='public', public_direct_booking=True)
+        source['registration_url'] = 'https://fixture.test/right-course'
         valid = dict(session_id=source['source_event_id'],
                      date='2026-10-11', startTime='12:00',
                      courseId='210549', courseName='Verified skills course',
@@ -1172,6 +1174,7 @@ class LayeredPublicationTests(unittest.TestCase):
         self.sources = []
         source = self.add(11, '12:00', '13:00', cid='210549', count=1,
                           visibility='public', public_direct_booking=True)
+        source['registration_url'] = 'https://fixture.test/current'
         current = dict(session_id=source['source_event_id'],
                        date='2026-10-11', startTime='12:00',
                        courseId='210549', courseName='Verified current class',
@@ -1208,6 +1211,89 @@ class LayeredPublicationTests(unittest.TestCase):
             'active_registration_count'], 1)
         self.assertEqual(moved['layeredDiagnostics']['projected_sources'][0][
             'start'], source['start'])
+
+    def test_final_v2_publisher_requires_source_attested_registration_route(self):
+        # An ID/course/time match does not verify that its CTA belongs to the
+        # selected authoritative session. Preserve the active seat and redact
+        # all disallowed destination URLs from the public JSON.
+        self.sources = []
+        source = self.add(11, '12:00', '13:00', cid='210549', count=1,
+                          visibility='public', public_direct_booking=True)
+        valid = dict(session_id=source['source_event_id'],
+                     date='2026-10-11', startTime='12:00',
+                     courseId='210549', courseName='Verified seated route',
+                     offerType='seated_class',
+                     registrationUrl='https://fixture.test/verified')
+        missing = self.payload([valid])
+        self.assertIn('existing_booking_route_unverified',
+                      missing['rejectionReasonCounts'])
+        self.assertFalse([o for o in missing['offers'] if o.get('offerType') == 'seated_class'])
+
+        source['registration_url'] = valid['registrationUrl']
+        accepted = self.payload([valid])
+        self.assertEqual(sum(o.get('offerType') == 'seated_class'
+                             for o in accepted['offers']), 1)
+
+        cases = (
+            dict(registrationUrl='https://wrong.invalid/different-class'),
+            dict(registrationUrl='https://fixture.test/verified',
+                 appointmentUrl='https://wrong.invalid/alternate'),
+        )
+        for wrong in cases:
+            with self.subTest(untrusted_route=wrong):
+                result = self.payload([dict(valid, **wrong)])
+                self.assertFalse([o for o in result['offers']
+                                  if o.get('offerType') == 'seated_class'])
+                self.assertIn('existing_booking_route_unverified',
+                              result['rejectionReasonCounts'])
+                self.assertEqual(result['layeredDiagnostics']['projected_sources'][0]
+                                 ['active_registration_count'], 1)
+                public = json.dumps(public_selector_availability_payload(result))
+                self.assertNotIn('wrong.invalid', public)
+                self.assertNotIn(source['source_event_id'], public)
+
+        # Even an exact authority-string match is not permission for a
+        # plaintext or credential-bearing customer link.
+        for bad in ('http://fixture.test/verified',
+                    'https://user:pass@fixture.test/verified',
+                    'https://fixture.test/verified#hidden'):
+            with self.subTest(unsafe_route=bad):
+                source['registration_url'] = bad
+                result = self.payload([dict(valid, registrationUrl=bad)])
+                self.assertIn('existing_booking_route_unverified',
+                              result['rejectionReasonCounts'])
+        self.sources = []
+
+    def test_canonical_registration_route_survives_occupancy_normalizer(self):
+        from scripts.block_start_time_selector import build_occupancy
+        destination = 'https://fixture.test/canonical-authority'
+        self.sources = build_occupancy(dict(
+            location_resource_map=self.resources,
+            canonical_demand=dict(sessions=[dict(
+                canonical_session_id='canonical-route-proof',
+                location_name=':: Wilmington; Shipyard Blvd',
+                lead_instructor_name='Brian Ennis',
+                session_status='scheduled', visibility='public',
+                registration_status='open',
+                public_direct_booking=True,
+                external_course_id='210549',
+                registration_url=destination,
+                start_at=self.at(11, '12:00').isoformat(),
+                end_at=self.at(11, '13:00').isoformat(),
+                count_available=True, active_registration_count=1,
+                operational_has_active_seat=True,
+            )])), {}, allow_unresolved=True)
+        self.assertEqual(self.sources[0]['registration_url'], destination)
+        source_offer = dict(session_id='canonical-route-proof',
+                            date='2026-10-11', startTime='12:00',
+                            courseId='210549', offerType='seated_class',
+                            registrationUrl=destination)
+        payload = self.payload([source_offer])
+        self.assertTrue(any(o.get('offerType') == 'seated_class'
+                            for o in payload['offers']))
+        self.assertEqual(payload['layeredDiagnostics']['projected_sources'][0]
+                         ['active_registration_count'], 1)
+        self.sources = []
 
     def test_final_v2_publisher_withholds_explicitly_closed_public_seated_route(self):
         # A valid positive-seat source remains operationally occupied even
