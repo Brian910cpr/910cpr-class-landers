@@ -239,7 +239,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             # public joinability. Geometry and positive seats remain intact.
             if identity not in counts:
                 counts[identity] = source
-            if (str(source.get("visibility") or "").strip().lower() in {"private", "unlisted"}
+            if (str(source.get("visibility") or "").strip().lower() in {"private", "unlisted", "internal"}
                     or source.get("public_direct_booking") is False):
                 denied_booking_identities.add(identity)
     for original in seated_offers:
