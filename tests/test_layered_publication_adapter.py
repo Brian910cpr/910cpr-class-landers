@@ -1174,6 +1174,48 @@ class LayeredPublicationTests(unittest.TestCase):
                 self.assertNotIn(source['source_event_id'], json.dumps(public))
         self.sources = []
 
+    def test_canonical_closed_route_survives_normalization_and_cannot_be_resurrected(self):
+        # This exercises the actual canonical -> build_occupancy -> V2 publisher
+        # path. A final route gate is ineffective if the normalizer silently
+        # drops canonical registration_status while preserving positive seats.
+        from scripts.block_start_time_selector import build_occupancy
+
+        for status in ('closed', 'full', 'unverified', 'cancelled', 'deleted'):
+            with self.subTest(registration_status=status):
+                self.sources = build_occupancy(dict(
+                    location_resource_map=self.resources,
+                    canonical_demand=dict(sessions=[dict(
+                        canonical_session_id='canonical-closed-route-sentinel',
+                        location_name=':: Wilmington; Shipyard Blvd',
+                        lead_instructor_name='Brian Ennis',
+                        session_status='scheduled', visibility='public',
+                        registration_status=status,
+                        public_direct_booking=True,
+                        external_course_id='210549',
+                        start_at=self.at(11, '12:00').isoformat(),
+                        end_at=self.at(11, '13:00').isoformat(),
+                        count_available=True, active_registration_count=1,
+                        operational_has_active_seat=True,
+                    )])), {}, allow_unresolved=True)
+                self.assertEqual(self.sources[0]['registration_status'], status)
+                self.assertEqual(self.sources[0]['session_status'], 'scheduled')
+                seated = dict(session_id='canonical-closed-route-sentinel',
+                              date='2026-10-11', startTime='12:00',
+                              courseId='210549', offerType='seated_class',
+                              courseName='Never joinable',
+                              registrationUrl='https://closed.invalid/revived')
+                payload = self.payload([seated])
+                self.assertFalse([o for o in payload['offers']
+                                  if o.get('offerType') == 'seated_class'])
+                self.assertIn('nonpublic_or_unverified_existing_booking_choice',
+                              payload['rejectionReasonCounts'])
+                self.assertEqual(payload['layeredDiagnostics']['projected_sources'][0]
+                                 ['active_registration_count'], 1)
+                public = json.dumps(public_selector_availability_payload(payload))
+                self.assertNotIn('canonical-closed-route-sentinel', public)
+                self.assertNotIn('closed.invalid', public)
+        self.sources = []
+
     def test_final_v2_publisher_cannot_resurrect_private_or_unlisted_seated_routes(self):
         from scripts.block_start_time_selector import build_occupancy
         for visibility, route_allowed in (('private', True), ('unlisted', True),
