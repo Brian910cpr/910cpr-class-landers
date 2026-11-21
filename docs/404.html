@@ -5,6 +5,11 @@
 <title>Schedule Page Error | 910CPR</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
+var scheduleMatch = location.pathname.match(/^\/schedule\/([A-Za-z0-9_-]{43,128})\/?$/);
+if (scheduleMatch) {
+  sessionStorage.setItem("landerwareScheduleToken", scheduleMatch[1]);
+  location.replace("/schedule/");
+}
 if (location.pathname.indexOf("/go/") === 0) {
   location.replace("https://910cpr.com" + location.pathname + location.search + location.hash);
 }
