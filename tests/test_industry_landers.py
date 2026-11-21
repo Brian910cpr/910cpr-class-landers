@@ -82,6 +82,54 @@ class IndustryLandersTest(unittest.TestCase):
             self.assertEqual(1,current.count(BASE+url))
             if url!=DIRECTORY: self.assertIn(f'href="{url}"',idx)
 
+    def test_authority_answers_on_page_with_quiet_source_links(self):
+        conf=load()
+        sources=conf["sources"]
+        for row in conf["industries"]:
+            slug=row[0]
+            evidence=conf["authority_evidence"][slug]
+            page=(DOCS/"group-training"/slug/"index.html").read_text()
+            authority=page.split('<section class="card authority">',1)[1].split("</section>",1)[0]
+            self.assertIn("authority-from",authority)
+            self.assertIn("authority-references",authority)
+            self.assertNotIn("regulatory-and-approvals-compliance",authority)
+            self.assertNotIn("<iframe",authority)
+            self.assertNotIn('class="btn',authority)
+            self.assertTrue(authority.index("authority-from") < authority.index("authority-references"))
+            links=Page(authority).get("a")
+            self.assertEqual([sources[key][1] for key in evidence["sources"]], [a["href"] for a in links])
+            self.assertTrue(all(a.get("target")=="_blank" and a.get("rel")=="noopener noreferrer" for a in links))
+            self.assertLessEqual(len(evidence["excerpt"].split()),25)
+            if evidence["excerpt"]:
+                self.assertIn("Short official excerpt",authority)
+            else:
+                self.assertIn("Plain-English summary above",authority)
+        workplace=(DOCS/"group-training/workplaces/index.html").read_text()
+        self.assertIn("29 CFR 1910.151(b)",workplace)
+        self.assertIn("a person or persons shall be adequately trained to render first aid.",workplace)
+        self.assertIn("used to treat all injured employees",workplace)
+
+    def test_issuer_options_are_disclosed_without_javascript(self):
+        for row in load()["industries"]:
+            slug=row[0]
+            page=(DOCS/"group-training"/slug/"index.html").read_text()
+            brands=page.split('<section class="card brands">',1)[1].split("</section>",1)[0]
+            parsed=Page(brands)
+            self.assertEqual([a["class"] for a in parsed.get("li")], ["brand-aha", "brand-hsi", "brand-arc"])
+            self.assertEqual(3,len(parsed.get("details")))
+            self.assertEqual(3,len(parsed.get("summary")))
+            self.assertEqual(3,len(parsed.get("p",**{"class":"issuer-hover","aria-hidden":"true"})))
+            self.assertNotIn("<script",brands)
+            if slug=="merchant-mariners":
+                self.assertIn("HSINST-203",brands)
+                self.assertIn("do not present a separate Red Cross option",brands)
+                self.assertIn("does not satisfy STCW endorsements",brands)
+        css=(DOCS/"assets/industry-landers/industry.css").read_text()
+        self.assertIn(".brand-picker li:hover .issuer-hover{display:block}",css)
+        self.assertIn(".brand-picker .brand-aha{grid-row:1;grid-column:2/4}",css)
+        self.assertIn(".brand-picker .brand-hsi{grid-row:2;grid-column:2}",css)
+        self.assertIn(".brand-picker .brand-arc{grid-row:2;grid-column:3}",css)
+
     def test_sources_and_local_assets(self):
         conf=load()
         for row in conf["industries"]:

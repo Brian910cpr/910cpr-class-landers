@@ -106,7 +106,7 @@ def shell(title, desc, path, main, structured, industry=""):
 <link rel="canonical" href="{BASE}{path}">
 <meta name="910cpr-page-id" content="{val(industry or "industry-directory")}">
 <meta property="og:title" content="{val(title)} | 910CPR"><meta property="og:description" content="{val(desc)}"><meta property="og:url" content="{BASE}{path}">
-<link rel="stylesheet" href="/assets/industry-landers/industry.css?v=3">
+<link rel="stylesheet" href="/assets/industry-landers/industry.css?v=5">
 <script type="application/ld+json">{json.dumps(structured,ensure_ascii=True).replace("<", chr(92)+"u003c")}</script>
 {GTM_HEAD_SNIPPET}
 {ATTRIBUTION_SCRIPT_SNIPPET}
@@ -142,7 +142,74 @@ def photo_markup(slug):
     return f'<picture class="scene" aria-hidden="true">{source}<img src="{asset}.svg" alt="" width="640" height="360" fetchpriority="high"></picture>'
 
 
-def industry(row, sources):
+def issuer_options(slug, art):
+    if slug == "merchant-mariners":
+        return {
+            "aha": "Need an AHA card? Contact us with your Coast Guard checklist. We do not present a separate AHA option here for this endorsement.",
+            "hsi": "Ask about instructor-led HSINST-203, the exact HSI First Aid/CPR/AED course listed for specified National Maritime Center first-aid and CPR requirements. It does not satisfy STCW endorsements.",
+            "arc": "Need a Red Cross card? Send us your Coast Guard checklist. We do not present a separate Red Cross option here for this endorsement.",
+        }
+    if slug == "childcare":
+        return {
+            "aha": "Heartsaver Pediatric First Aid CPR AED. Confirm the exact issuer, ages and delivery format your center is allowed to use.",
+            "hsi": "NC DCDEE lists specific HSI pediatric courses. Ask us to confirm that the exact approved program, delivery and age coverage are available before you choose.",
+            "arc": "Adult and Pediatric First Aid/CPR/AED classroom. Check your center’s accepted course title, age coverage and delivery rules before booking.",
+        }
+    if slug == "dental-offices":
+        return {
+            "aha": "BLS Provider with a physically present instructor for manikin testing. Confirm the course against your practice and licensing requirements.",
+            "hsi": "BLS Challenge or BLS with Adult First Aid are options for other roles. Ask before selecting HSI for NC dental licensure; we do not assume the course or format meets that rule.",
+            "arc": "BLS classroom. Confirm all required topics and that an instructor is physically present during manikin testing for NC dental licensure.",
+        }
+    if art == "clinical":
+        return {
+            "aha": "BLS Provider initial, renewal or HeartCode skills when accepted. Ask about ACLS or PALS initial or renewal for roles that require advanced care.",
+            "hsi": "BLS Challenge or blended BLS with Adult First Aid, only if your employer accepts the exact program and format.",
+            "arc": "BLS classroom if accepted by your employer. Ask if you need a different course; ARC BLS does not replace ACLS or PALS.",
+        }
+    if slug in {"schools","aquatics","churches","fitness"}:
+        return {
+            "aha": "Heartsaver First Aid CPR AED or Heartsaver Pediatric First Aid CPR AED. Tell us the ages and job roles your policy covers.",
+            "hsi": "Ask about First Aid/CPR/AED. If your policy requires a pediatric or role-specific HSI course, we’ll first confirm the exact option and acceptance.",
+            "arc": "Adult and Pediatric First Aid/CPR/AED classroom. Choose the course your organization accepts; lifeguard and other job credentials are separate.",
+        }
+    hsi = "First Aid/CPR/AED in person. Tell us the exact program your employer accepts so we can match it."
+    if slug=="logging":
+        hsi="Ask about hands-on First Aid/CPR/AED. For covered logging crews, first verify the course and testing against OSHA’s Appendix B."
+    return {
+        "aha": "Heartsaver First Aid CPR AED or Heartsaver CPR AED. Choose First Aid as well if your role requires it.",
+        "hsi": hsi,
+        "arc": "Adult and Pediatric First Aid/CPR/AED classroom, or Adult CPR/AED online plus skills when a first-aid card isn’t required and your employer accepts blended.",
+    }
+
+
+def issuer_picker(slug, art):
+    options = issuer_options(slug, art)
+    items=[]
+    for key, short in (("aha","AHA"),("hsi","HSI"),("arc","ARC")):
+        title, asset=BADGES[key]
+        option=e(options[key])
+        items.append(f'<li class="brand-{key}"><details><summary aria-label="{e(title)} course options"><img src="{asset}" alt="" width="140" height="55" loading="lazy"><span>{short}</span></summary><p>{option}</p></details><p class="issuer-hover" aria-hidden="true">{option}</p></li>')
+    return '<ul class="brand-picker">'+"".join(items)+'</ul>'
+
+
+def authority_evidence(entry, sources):
+    kind = e(entry["kind"])
+    reference = e(entry["citation"])
+    excerpt = entry["excerpt"]
+    if len(excerpt.split()) > 25:
+        raise ValueError("Authority excerpts must be short")
+    details = (f'<p class="authority-from"><strong>{kind}:</strong> {reference}</p>'
+               + (f'<blockquote class="authority-excerpt"><span>Short official excerpt</span><p>“{e(excerpt)}”</p></blockquote>' if excerpt
+                  else '<p class="fine authority-paraphrase">Plain-English summary above.</p>'))
+    links = "".join(
+        f'<li><a href="{e(sources[key][1])}" target="_blank" rel="noopener noreferrer">{e(sources[key][0])}</a></li>'
+        for key in entry["sources"]
+    )
+    return details, f'<div class="authority-references"><h3>References <span>(open in a new tab)</span></h3><ul>{links}</ul></div>'
+
+
+def industry(row, sources, evidence):
     slug, name, title, kicker, who, fit, rule, prepare, question, answer, team, source_keys, art = row
     path = f"/group-training/{slug}/"
     crumb, crumb_schema = crumbs(name, path)
@@ -154,8 +221,8 @@ def industry(row, sources):
     family,family_icon,body_ids = PROGRAMS.get(art,PROGRAMS["default"])
     if slug == "merchant-mariners":
         family,family_icon,body_ids = "HSI First Aid / CPR / AED (HSINST-203)","water",("hsi",)
-    source_list = "".join(f'<li><a href="{e(sources[key][1])}">{e(sources[key][0])}</a></li>' for key in dict.fromkeys(source_keys.split(",")+["hsi"]))
-    badges = "".join(f'<li><img src="{BADGES[key][1]}" alt="{e(BADGES[key][0])}" width="140" height="55"><span>{e(BADGES[key][0])}</span></li>' for key in body_ids)
+    authority_details, authority_links = authority_evidence(evidence[slug], sources)
+    badges = issuer_picker(slug, art)
     specialty = '<a href="/uscg-hsi/">Read about the HSINST-203 course</a>' if slug == "merchant-mariners" else ""
     main = f'''{crumb}
 <section class="hero"><div class="hero-body"><p class="kicker">{e(kicker)}</p><h1>{e(title)}</h1><p class="lead">{e(who)}</p><div class="actions hero-actions"><a class="btn primary" href="{CTA}">Request group training</a><a class="btn secondary" href="mailto:info@910cpr.com">Email 910CPR</a><a class="btn secondary" href="tel:+19103955193">Call 910CPR</a></div><small>On the request form, replace the preset Program with the course your group needs, or write “help me choose.” We confirm the course, instructor and date before booking.</small></div>{photo_markup(slug)}</section>
@@ -166,9 +233,9 @@ def industry(row, sources):
 </section>
 <div class="columns">
 <section class="card"><p class="kicker label">Training fit</p><h2>Which class should we consider?</h2><p>{e(fit)}</p>{specialty}<h3>Plan a session</h3><p>{e(prepare)}</p><p>Tell us how many people need training and where you’d like to meet. We’ll help find a format and date that work for your team.</p></section>
-<section class="card authority"><div class="authority-heading"><div><p class="kicker label">Primary sources</p><h2>What do the authorities say?</h2></div><img class="authority-photo" src="/assets/industry-landers/authority-glasses.webp" alt="" width="816" height="544" loading="lazy" decoding="async"></div><p>{e(rule)}</p><ul>{source_list}</ul><p class="fine">If you have a written requirement, send it with your request. We’ll check the course and format with you before booking.</p></section>
+<section class="card authority"><div class="authority-heading"><div><p class="kicker label">Primary sources</p><h2>What do the authorities say?</h2></div><img class="authority-photo" src="/assets/industry-landers/authority-glasses.webp" alt="" width="816" height="544" loading="lazy" decoding="async"></div><p>{e(rule)}</p>{authority_details}<p class="fine">If you have a written requirement, send it with your request. We’ll check the course and format with you before booking.</p>{authority_links}</section>
 </div>
-<section class="card brands"><p class="kicker label">Certifying bodies</p><h2>Which certification does your team need?</h2><p>If your employer or licensing authority names an issuer, tell us which one before you choose a class. These cards are not always interchangeable.</p><ul>{badges}</ul></section>
+<section class="card brands"><p class="kicker label">Certifying bodies</p><h2>Which certification does your team need?</h2><p>910CPR offers qualifying training through the American Heart Association, Health &amp; Safety Institute, and American Red Cross. After you meet the course requirements, your card comes from the program you completed. If your organization names a specific issuer or program, tell us and we’ll help match it before you book.</p><p class="issuer-hint">Choose a logo to see relevant course options and limits.</p>{badges}</section>
 <section class="card"><p class="kicker label">Common question</p><h2>{e(question)}</h2><p>{e(answer)}</p><div class="actions"><a class="btn" href="{CTA}">Share your group’s requirements</a><a href="{DIRECTORY}">Explore other industries</a></div></section>'''
     return shell(title,who,path,main,schema,slug)
 
@@ -187,7 +254,7 @@ def output_set():
         slug=row[0]
         if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*",slug):
             raise ValueError(f"Invalid public industry slug: {slug}")
-        yield DOCS / "group-training" / slug / "index.html",industry(row,config["sources"])
+        yield DOCS / "group-training" / slug / "index.html",industry(row,config["sources"],config["authority_evidence"])
         yield ASSETS / (slug+".svg"),sector_art(slug,row[-1])
     yield DOCS / DIRECTORY.strip("/") / "index.html",directory(config["industries"])
 
