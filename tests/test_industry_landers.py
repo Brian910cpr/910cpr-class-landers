@@ -44,6 +44,11 @@ class IndustryLandersTest(unittest.TestCase):
                 self.assertIn(">Course family<",body)
                 self.assertIn(">Course type<",body)
                 self.assertIn("replace the preset Program",body)
+                self.assertIn('<div class="actions hero-actions">',body)
+                self.assertEqual(
+                    [CTA, "mailto:info@910cpr.com", "tel:+19103955193"],
+                    [a["href"] for a in page.get("a") if a.get("class") in {"btn primary", "btn secondary"}],
+                )
                 self.assertTrue(any(a.get("src","").startswith("/images/0") for a in page.get("img")))
         self.assertEqual(len(titles),len(set(titles)))
         self.assertEqual(len(descriptions),len(set(descriptions)))

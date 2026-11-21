@@ -83,7 +83,7 @@ def shell(title, desc, path, main, structured, industry=""):
 <link rel="canonical" href="{BASE}{path}">
 <meta name="910cpr-page-id" content="{val(industry or "industry-directory")}">
 <meta property="og:title" content="{val(title)} | 910CPR"><meta property="og:description" content="{val(desc)}"><meta property="og:url" content="{BASE}{path}">
-<link rel="stylesheet" href="/assets/industry-landers/industry.css?v=1">
+<link rel="stylesheet" href="/assets/industry-landers/industry.css?v=2">
 <script type="application/ld+json">{json.dumps(structured,ensure_ascii=True).replace("<", chr(92)+"u003c")}</script>
 {GTM_HEAD_SNIPPET}
 {ATTRIBUTION_SCRIPT_SNIPPET}
@@ -135,7 +135,7 @@ def industry(row, sources):
     badges = "".join(f'<li><img src="{BADGES[key][1]}" alt="{e(BADGES[key][0])}" width="140" height="55"><span>{e(BADGES[key][0])}</span></li>' for key in body_ids)
     specialty = '<a href="/uscg-hsi/">Read about the HSINST-203 course</a>' if slug == "merchant-mariners" else ""
     main = f'''{crumb}
-<section class="hero"><div class="hero-body"><p class="kicker">{e(kicker)}</p><h1>{e(title)}</h1><p class="lead">{e(who)}</p><div class="actions"><a class="btn" href="{CTA}">Request group training</a><a class="btn secondary" href="tel:+19103955193">Call 910CPR</a></div><small>On the request form, replace the preset Program with the course your group needs, or write “help me choose.” We confirm the course, instructor and date before booking.</small></div>{photo_markup(slug)}</section>
+<section class="hero"><div class="hero-body"><p class="kicker">{e(kicker)}</p><h1>{e(title)}</h1><p class="lead">{e(who)}</p><div class="actions hero-actions"><a class="btn primary" href="{CTA}">Request group training</a><a class="btn secondary" href="mailto:info@910cpr.com">Email 910CPR</a><a class="btn secondary" href="tel:+19103955193">Call 910CPR</a></div><small>On the request form, replace the preset Program with the course your group needs, or write “help me choose.” We confirm the course, instructor and date before booking.</small></div>{photo_markup(slug)}</section>
 <section class="quick" aria-label="Course information">
 <div>{icon(family_icon)}<h2>Course family</h2><p>{e(family)}</p></div>
 <div>{icon("calendar")}{icon("hybrid")}<h2>Course type</h2><p>{e(delivery)}</p></div>
