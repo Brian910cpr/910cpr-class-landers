@@ -259,6 +259,14 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         except (KeyError, TypeError, ValueError):
             return False
 
+    def matches_authoritative_course(source, offer):
+        # A class identifier and start time do not authorize a different
+        # course. A source lacking a scheduler course identity is operational
+        # occupancy, not proof of the customer's requested registration type.
+        expected = str(source.get("course_id") or "").strip()
+        requested = str(offer.get("courseId") or "").strip()
+        return bool(expected and requested and expected == requested)
+
     for original in seated_offers:
         identity = str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId"))
         source = counts.get(identity)
@@ -275,6 +283,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
         elif not matches_authoritative_start(source, original):
             rejected.append(dict(original, reasons=["existing_booking_occurrence_mismatch"]))
+        elif not matches_authoritative_course(source, original):
+            rejected.append(dict(original, reasons=["existing_booking_course_mismatch"]))
         else:
             accepted.append(deepcopy(original))
     # A published existing-class row is not evidence of registered demand.
