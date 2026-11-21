@@ -33,10 +33,12 @@ def _verified_empty_inventory_source(now: datetime) -> None:
     if CANONICAL_CLASS_REPORT_FILE.exists():
         try:
             candidate = json.loads(CANONICAL_CLASS_REPORT_FILE.read_text(encoding="utf-8"))
-            if candidate.get("build", {}).get("source_mode") == "class_report_authoritative":
-                source_file = CANONICAL_CLASS_REPORT_FILE
-        except (OSError, ValueError, TypeError, AttributeError):
-            pass  # The class builder falls back to schedule_future in this case.
+        except (OSError, ValueError, TypeError) as exc:
+            raise ValueError("Canonical class report unreadable; refusing legacy fallback") from exc
+        if not isinstance(candidate, dict) or not isinstance(candidate.get("build"), dict):
+            raise ValueError("Canonical class report malformed; refusing legacy fallback")
+        if candidate["build"].get("source_mode") == "class_report_authoritative":
+            source_file = CANONICAL_CLASS_REPORT_FILE
 
     try:
         payload = json.loads(source_file.read_text(encoding="utf-8"))
