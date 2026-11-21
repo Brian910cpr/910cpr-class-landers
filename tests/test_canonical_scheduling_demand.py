@@ -134,6 +134,12 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
                 self.assertFalse(rows[0]["public_direct_booking"])
                 self.assertEqual("closed", rows[0]["registration_status"])
                 self.assertFalse(public_direct_bookable_session(rows[0]))
+                # A nonpublic active seat may still protect instructor time.
+                # It must not reappear as a request card when the canonical
+                # reconciliation is CURRENT (not just when it is stale).
+                from scripts.build_index_and_sitemap import schedule_future_to_public_session
+                self.assertEqual("unlisted", rows[0]["visibility"])
+                self.assertIsNone(schedule_future_to_public_session(rows[0]))
         # Do not globally disable independently public, correctly owned seats.
         public = dict(unlisted, visibility="public", registration_status="open")
         rows, _ = resolve_canonical_demand([legacy], [public])
