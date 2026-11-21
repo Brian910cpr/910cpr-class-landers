@@ -3,6 +3,8 @@ import json
 import re
 from pathlib import Path
 from scripts.class_registration_routing import rewrite_detail_routes, rewrite_directory_routes
+from scripts import build_index_and_sitemap as class_index
+from scripts import refresh_class_finder_index as finder
 ROOT=Path(__file__).resolve().parents[1]
 
 
@@ -11,17 +13,17 @@ def refresh(root=ROOT):
     original=index.read_text(encoding='utf8')
     ids=re.findall(r'class="class-finder-secondary" href="/classes/(\d+)\.html"',original)
     if len(ids)!=len(set(ids)): raise ValueError('duplicate public class listing')
+    # The finder may select an authoritative class report instead of schedule_future.
+    # Independently revalidate the chosen fresh source and its actual public IDs
+    # before rewriting any CTA. Never use an unrelated snapshot to route a card.
+    _, verified_ids = finder.render_current_class_finder()
+    if set(ids) != verified_ids:
+        raise ValueError('public class listing mismatches current eligible source')
     if not ids:
-        # A zero-card class finder is valid only after the same fresh source has
-        # been independently verified. Never leave old "Register" cards alive.
         if 'class="class-finder-card' in original:
             raise ValueError('empty listing has unexpected class cards')
-        from scripts.refresh_class_finder_index import render_current_class_finder
-        _, verified_ids = render_current_class_finder()
-        if verified_ids:
-            raise ValueError('empty class listing mismatches current eligible source')
         return {'listed': 0, 'files': 0}
-    rows=json.loads((root/'docs/data/schedule_future.json').read_text(encoding='utf8'))['sessions']
+    rows=class_index.load_schedule_future_sessions()
     sessions={}
     for sid in ids:
         matches=[r for r in rows if str(r.get('session_id'))==sid]
