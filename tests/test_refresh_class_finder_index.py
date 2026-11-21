@@ -349,12 +349,12 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
         index.write_text("0 classes found", encoding="utf-8")
         sitemap = self.root / "docs/sitemap.xml"
         original = (
-            '<?xml version="1.0" encoding="UTF-8"?>\\n'
-            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\\n'
-            '  <url><loc>https://www.910cpr.com/classes/' + private_id + '.html</loc></url>\\n'
-            '  <url><loc>https://www.910cpr.com/classes/' + historical_id + '.html</loc></url>\\n'
-            '  <url><loc>https://www.910cpr.com/bls.html</loc></url>\\n'
-            '</urlset>\\n'
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+            '  <url><loc>https://www.910cpr.com/classes/' + private_id + '.html</loc></url>\n'
+            '  <url><loc>https://www.910cpr.com/classes/' + historical_id + '.html</loc></url>\n'
+            '  <url><loc>https://www.910cpr.com/bls.html</loc></url>\n'
+            '</urlset>\n'
         )
         sitemap.write_text(original, encoding="utf-8")
         with (
