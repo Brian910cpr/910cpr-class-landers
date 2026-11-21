@@ -2234,6 +2234,7 @@ def build():
     # -----------------------------------------------------------------
     urls = [
         f"{SITE_BASE}/",
+        f"{SITE_BASE}/privacy-terms/",
         f"{SITE_BASE}/bls.html",
         f"{SITE_BASE}/acls.html",
         f"{SITE_BASE}/pals.html",
