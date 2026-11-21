@@ -52,11 +52,101 @@ test('untrusted origins and unauthenticated reads fail closed', async () => {
 });
 
 test('only active canonical registrations count; missing and external bridge are unknown', () => {
-  const row = {id:'fixture',registration_backend:'landerware',registrations:[{status:'registered'},{status:'confirmed'},{status:'completed'},{status:'canceled'},{status:'rescheduled'},{status:'no_show'}]};
-  assert.equal(api.projectDemand(row).active_registration_count,3);
+  const row = {id:'fixture',registration_backend:'landerware',registrations:[{status:'registered'},{status:'confirmed'},{status:'completed'},{status:'active'},{status:'canceled'},{status:'rescheduled'},{status:'no_show'}]};
+  assert.equal(api.projectDemand(row).active_registration_count,4);
   assert.equal(api.projectDemand({...row,registrations:[]}).active_registration_count,0);
   assert.equal(api.projectDemand({...row,registrations:null}).active_registration_count,null);
   assert.equal(api.projectDemand({...row,registration_backend:'enrollware'}).active_registration_count,null);
+});
+
+test('materialized LanderWare active registrations retain real seated demand privately', () => {
+  const row = {id:'canonical-session',source:'landerware_public_offer',
+    registration_backend:'landerware', external_class_id:'lw-12345678-1234-1234-1234-123456789abc',
+    registrations:[{status:'active'},{status:'active'},{status:'active'},{status:'canceled'}]};
+  const projected=api.projectDemand(row);
+  assert.equal(projected.count_available,true);
+  assert.equal(projected.active_registration_count,3);
+  assert.equal(projected.canonical_recorded_registration_count,3);
+  assert.equal(projected.demand_basis,'canonical_active_registrations');
+  assert.equal(projected.visibility,undefined);
+  assert.equal(Object.hasOwn(projected,'registrations'),false);
+  assert.equal(Object.hasOwn(projected,'customers'),false);
+  assert.equal(Object.hasOwn(projected,'participant'),false);
+});
+
+test('numeric legacy identity with native active seats signals occupied demand without inventing a known external roster', () => {
+  // Synthetic numeric/legacy source shape: LanderWare-owned active rows
+  // can coexist with a numeric legacy ID and absent external reconciliation.
+  const row = {id:'numeric-native',status:'scheduled',source:'landerware_public_offer',
+    visibility:'private',registration_status:'closed',registration_backend:'landerware',
+    external_class_id:'80001',
+    registrations:[{status:'active',registration_source:'landerware_native_checkout',external_registration_id:null}]};
+  const projection=api.projectDemand(row);
+  assert.equal(projection.count_available,false);
+  assert.equal(projection.active_registration_count,null);
+  assert.equal(projection.canonical_recorded_registration_count,1);
+  assert.equal(projection.demand_basis,'unknown');
+  assert.equal(projection.operational_has_active_seat,true);
+  assert.equal(projection.visibility,'private');
+  assert.equal(projection.registration_status,'closed');
+  assert.equal(Object.hasOwn(projection,'registrations'),false);
+  assert.equal(Object.hasOwn(projection,'customers'),false);
+
+  const mixed=api.projectDemand({...row,registrations:[
+    {status:'registered',registration_source:'enrollware_email_confirmation',external_registration_id:null},
+    {status:'active',registration_source:'landerware_native_checkout',external_registration_id:null},
+    {status:'active',registration_source:'landerware_native_checkout',external_registration_id:null},
+    {status:'active',registration_source:'landerware_native_checkout',external_registration_id:null}
+  ]});
+  assert.equal(mixed.active_registration_count,null);
+  assert.equal(mixed.canonical_recorded_registration_count,4);
+  assert.equal(mixed.operational_has_active_seat,true);
+
+  for(const change of [
+    {registrations:[{status:'registered',registration_source:'enrollware_email_confirmation'}]},
+    {registrations:[{status:'canceled',registration_source:'landerware_native_checkout'}]},
+    {registrations:[{status:'active',registration_source:'enrollware'}]},
+    {registration_backend:'enrollware'},
+    {source:'enrollware_reconciled'},
+    {status:'canceled'}
+  ]) {
+    const unproven=api.projectDemand({...row,...change});
+    assert.equal(unproven.operational_has_active_seat,false);
+    assert.equal(unproven.active_registration_count,null);
+  }
+});
+
+test('verified email-confirmed private intake is internal occupancy, not external roster or a public seat', () => {
+  const fixture = {id:'synthetic-private-intake',status:'scheduled',
+    source:'confirmed_booking_intake',registration_backend:'landerware',
+    visibility:'private',registration_status:'closed',external_class_id:'80002',
+    external_session_evidence:{kind:'registration_confirmation',gmail_message_id:'0123456789abcdef'},
+    registrations:[{status:'registered',registration_source:'enrollware_email_confirmation',external_registration_id:null}]};
+  const projected = api.projectDemand(fixture);
+  assert.equal(projected.operational_has_active_seat,true);
+  assert.equal(projected.count_available,false);
+  assert.equal(projected.active_registration_count,null);
+  assert.equal(projected.demand_basis,'unknown');
+  assert.equal(projected.canonical_recorded_registration_count,1);
+  assert.equal(projected.visibility,'private');
+  assert.equal(projected.registration_status,'closed');
+  assert.equal(Object.hasOwn(projected,'registrations'),false);
+  assert.equal(Object.hasOwn(projected,'external_session_evidence'),false);
+
+  for (const change of [
+    {source:'manual'},
+    {registration_backend:'enrollware'},
+    {status:'canceled'},
+    {external_session_evidence:{kind:'registration_confirmation'}},
+    {external_session_evidence:{kind:'owner_confirmed_booking',gmail_message_id:'0123456789abcdef'}},
+    {registrations:[{status:'canceled',registration_source:'enrollware_email_confirmation'}]},
+    {registrations:[{status:'registered',registration_source:'owner_voice_fragment'}]},
+    {registrations:null}
+  ]) {
+    const unverified = api.projectDemand({...fixture,...change});
+    assert.equal(unverified.operational_has_active_seat,false,JSON.stringify(change));
+    assert.equal(unverified.active_registration_count,null);
+  }
 });
 
 test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields', async () => {
