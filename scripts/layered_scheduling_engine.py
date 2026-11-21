@@ -320,6 +320,17 @@ def run(fixture):
         # allowance, but never a different room or a different course family.
         if busy.get('instructor_unassigned'):
             unassigned_seated_groups.add((busy['location'], group[1], group[2]))
+    # A verified seat without an authoritative scheduler-course mapping still
+    # reserves its physical interval. Its family collapse/repeat-gap behavior
+    # remains UNPROVEN: never infer a course ID from a historical title.
+    # This is internal-only diagnostics, not public selector data.
+    unmapped_positive_seated = [
+        busy for busy in occupied
+        if busy['kind'] in {'paid', 'seated'}
+        and busy.get('course') not in courses
+        and (busy.get('operational_has_active_seat') is True
+             or (type(busy.get('headcount')) is int and busy['headcount'] > 0))
+    ]
     for group, positions in seating_positions.items(): family_counts[group] = len(positions)
     for c in sorted(candidates, key=lambda x: (x["start"], x["course"])):
         reasons = []
@@ -373,7 +384,9 @@ def run(fixture):
             remaining_seats=remaining, seats_status='known' if remaining is not None else 'unknown', mode='existing_seated'))
     return {"layered_windows": layered_windows, "seated_offers": seated,
             "customer_options": seated + accepted, "durable_source_ids": sorted(set(durable) - revoked), "resource_availability": resource_availability,
-            "family_seating_diagnostics": {"gap_waits_enabled": False, "uncertain_full_commitments": uncertain_full, "duplicate_paid_positions": [{"instructor": g[0], "date": g[1], "family": g[2], "source_ids": [ident for ids in positions.values() for ident in ids]} for g, positions in seating_positions.items() if len(positions)>1]}, "fixture": fixture["name"], "source_truth": list(sources.values()),
+            "family_seating_diagnostics": {"gap_waits_enabled": False, "uncertain_full_commitments": uncertain_full,
+                "unmapped_positive_seated_course_count": len(unmapped_positive_seated),
+                "unmapped_positive_seated_family_policy_proven": not unmapped_positive_seated, "duplicate_paid_positions": [{"instructor": g[0], "date": g[1], "family": g[2], "source_ids": [ident for ids in positions.values() for ident in ids]} for g, positions in seating_positions.items() if len(positions)>1]}, "fixture": fixture["name"], "source_truth": list(sources.values()),
             "ignored_sources": ignored, "normalized_occupancy": occupied, "blocks": blocks,
             "edges": edges, "merge_decisions": merge_decisions, "free_intervals": free_intervals, "candidates": candidates,
             "accepted": accepted, "rejected": rejected,
