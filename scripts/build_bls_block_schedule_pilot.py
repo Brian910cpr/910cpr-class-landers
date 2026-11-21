@@ -169,7 +169,11 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     # Internal Barnacle attachment IDs may refer to private one-seat
                     # appointments. Public selectors need the role, not that
                     # internal source identity. Never serialize the reference.
-                    "session_id": course.get("session_id"),
+                    # Dynamic Barnacles may carry a private source session ID.
+                    # Public selectors only need the ID for real seated classes.
+                    "session_id": (course.get("session_id")
+                                   if (course.get("offerType") or "dynamic_appointment") == "seated_class"
+                                   else None),
                     "instructor": course.get("instructor"),
                     "schedulerConsumptionEnd": course.get("schedulerConsumptionEnd"),
                     "occupiedUntil": course.get("occupiedUntil"),
