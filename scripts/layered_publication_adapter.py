@@ -240,7 +240,11 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             if identity not in counts:
                 counts[identity] = source
             if (str(source.get("visibility") or "").strip().lower() in {"private", "unlisted", "internal"}
-                    or source.get("public_direct_booking") is False):
+                    or source.get("public_direct_booking") is False
+                    # An operationally occupied seat may be deliberately closed
+                    # to new registrations; a stale public CTA must not revive it.
+                    or str(source.get("registration_status") or "").strip().lower() in {"closed", "cancelled", "canceled"}
+                    or str(source.get("session_status") or "").strip().lower() in {"cancelled", "canceled"}):
                 denied_booking_identities.add(identity)
     for original in seated_offers:
         identity = str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId"))
