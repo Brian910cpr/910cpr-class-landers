@@ -68,6 +68,38 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
             html.index('href="/classes/15000102.html"'),
         )
 
+    def test_stale_linked_legacy_mirrors_are_not_public_classes(self):
+        # A fresh iCal file can still carry an old canonical reconciliation.
+        # Location prefix and an inherited external URL do not make it public.
+        def legacy_row(sid, **extra):
+            return {
+                "session_id": sid,
+                "course_id": "209806",
+                "course_number": "209806",
+                "course_name": "AHA BLS Provider (Initial)",
+                "start_at": "2026-11-22T13:00:00-05:00",
+                "location_name": ":: Wilmington; Shipyard Blvd - B",
+                "session_status": "active",
+                "registration_status": "open",
+                "public_direct_booking": True,
+                "registration_url": (
+                    "https://coastalcprtraining.enrollware.com/enroll?id=" + sid
+                ),
+                **extra,
+            }
+
+        self.write_source([
+            legacy_row("15000101", canonical_session_id="private-mirror",
+                       demand_status="stale_reconciliation"),
+            legacy_row("15000102", visibility="unlisted"),
+            legacy_row("15000103"),
+        ])
+        html, ids = self.render()
+        self.assertEqual(ids, {"15000103"})
+        self.assertNotIn("/classes/15000101.html", html)
+        self.assertNotIn("/classes/15000102.html", html)
+        self.assertIn("/classes/15000103.html", html)
+
     def test_recent_valid_zero_inventory_renders_no_phantom_class(self):
         self.write_source()
         html, ids = self.render()
