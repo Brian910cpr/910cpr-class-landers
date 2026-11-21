@@ -421,10 +421,10 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
         historic.write_text("Historical archive", encoding="utf-8")
         sitemap = self.root / "docs/sitemap.xml"
         sitemap.write_text(
-            "<urlset>\\n"
-            "  <url><loc>https://www.910cpr.com/classes/" + old_id + ".html</loc></url>\\n"
-            "  <url><loc>https://www.910cpr.com/classes/" + historic_id + ".html</loc></url>\\n"
-            "</urlset>\\n",
+            "<urlset>\n"
+            "  <url><loc>https://www.910cpr.com/classes/" + old_id + ".html</loc></url>\n"
+            "  <url><loc>https://www.910cpr.com/classes/" + historic_id + ".html</loc></url>\n"
+            "</urlset>\n",
             encoding="utf-8",
         )
         with (

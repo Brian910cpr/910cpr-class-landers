@@ -21,7 +21,7 @@ def refresh(root: Path = ROOT) -> dict[str, int]:
     index = root / "docs/classes/index.html"
     old_html = index.read_text(encoding="utf-8")
     previous_ids = re.findall(
-        r'class="class-finder-secondary" href="/classes/(\\d+)\\.html"',
+        r'class="class-finder-secondary" href="/classes/(\d+)\.html"',
         old_html,
     )
     if len(previous_ids) != len(set(previous_ids)):
