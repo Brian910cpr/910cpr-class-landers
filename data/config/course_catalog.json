@@ -227,7 +227,45 @@
       "skills_session_sku": "AP-HSSSFA711-r.25",
       "skills_session_arc_cost_usd": 11,
       "session_family": "ARC_GENERAL_SKILLS",
-      "session_capacity": 4
+      "session_capacity": 4,
+      "arc_source_name": "Adult CPR/AED-BL",
+      "arc_source_effective_date": "2027-01-01",
+      "customer_product": {
+        "title": "Red Cross Adult CPR/AED Skills Session",
+        "seo_slug": "red-cross-adult-cpr-aed-skills-session",
+        "search_aliases": [
+          "Red Cross skills session near me",
+          "Red Cross CPR skills test",
+          "Red Cross online CPR hands-on test",
+          "Red Cross blended learning skills session",
+          "finish Red Cross CPR certification",
+          "Red Cross ROC skills session"
+        ]
+      },
+      "commercial_choices": {
+        "ONLINE_PLUS_SKILLS": {
+          "label": "Online + Skills",
+          "fulfillment_sku": "AP-HSSSFA511-BL-r.25",
+          "source_cost_field": "arc_cost_usd",
+          "online_component_state": "PURCHASE_REQUIRED",
+          "completion_proof_required_before_skills": true
+        },
+        "SKILLS_SESSION_ONLY": {
+          "label": "Skills Session Only",
+          "fulfillment_sku": "AP-HSSSFA711-r.25",
+          "source_cost_field": "skills_session_arc_cost_usd",
+          "online_component_state": "CUSTOMER_SUPPLIED_COMPLETION_PROOF_REQUIRED",
+          "completion_proof_required_before_skills": true
+        }
+      },
+      "pricing_rule": {
+        "currency": "USD",
+        "service_charge_field": "service_price_usd",
+        "fee_multiplier_field": "arc_fee_multiplier",
+        "rounding": "ROUND_HALF_UP",
+        "source": "https://github.com/Brian910cpr/910cpr-class-landers/issues/360"
+      },
+      "activation_state": "CATALOG_PREPARATION_ONLY"
     },
     {
       "course_id": "369209",
@@ -328,7 +366,46 @@
       "skills_session_sku": "AP-HSSSFA716-r.25",
       "skills_session_arc_cost_usd": 16,
       "session_family": "ARC_GENERAL_SKILLS",
-      "session_capacity": 4
+      "session_capacity": 4,
+      "arc_source_name": "Adult and Pediatric First Aid/CPR/AED-BL",
+      "arc_source_effective_date": "2027-01-01",
+      "customer_product": {
+        "title": "Red Cross Adult and Pediatric First Aid/CPR/AED Skills Session",
+        "seo_slug": "red-cross-adult-and-pediatric-first-aid-cpr-aed-skills-session",
+        "search_aliases": [
+          "Red Cross skills session near me",
+          "Red Cross CPR skills test",
+          "Red Cross online CPR hands-on test",
+          "Red Cross blended learning skills session",
+          "finish Red Cross CPR certification",
+          "Red Cross ROC skills session",
+          "Red Cross pediatric CPR skills session"
+        ]
+      },
+      "commercial_choices": {
+        "ONLINE_PLUS_SKILLS": {
+          "label": "Online + Skills",
+          "fulfillment_sku": "AP-HSSSFA516-BL-r.25",
+          "source_cost_field": "arc_cost_usd",
+          "online_component_state": "PURCHASE_REQUIRED",
+          "completion_proof_required_before_skills": true
+        },
+        "SKILLS_SESSION_ONLY": {
+          "label": "Skills Session Only",
+          "fulfillment_sku": "AP-HSSSFA716-r.25",
+          "source_cost_field": "skills_session_arc_cost_usd",
+          "online_component_state": "CUSTOMER_SUPPLIED_COMPLETION_PROOF_REQUIRED",
+          "completion_proof_required_before_skills": true
+        }
+      },
+      "pricing_rule": {
+        "currency": "USD",
+        "service_charge_field": "service_price_usd",
+        "fee_multiplier_field": "arc_fee_multiplier",
+        "rounding": "ROUND_HALF_UP",
+        "source": "https://github.com/Brian910cpr/910cpr-class-landers/issues/360"
+      },
+      "activation_state": "CATALOG_PREPARATION_ONLY"
     },
     {
       "course_id": "444919",
@@ -484,7 +561,46 @@
       "service_price_usd": 55,
       "arc_fee_multiplier": 1.08,
       "session_family": "ARC_BLS",
-      "session_capacity": 4
+      "session_capacity": 4,
+      "arc_source_name": "Basic Life Support-BL",
+      "arc_source_effective_date": "2027-01-01",
+      "customer_product": {
+        "title": "Red Cross BLS Skills Session",
+        "seo_slug": "red-cross-bls-skills-session",
+        "search_aliases": [
+          "Red Cross skills session near me",
+          "Red Cross CPR skills test",
+          "Red Cross online CPR hands-on test",
+          "Red Cross blended learning skills session",
+          "finish Red Cross CPR certification",
+          "Red Cross ROC skills session",
+          "Red Cross BLS skills session"
+        ]
+      },
+      "commercial_choices": {
+        "ONLINE_PLUS_SKILLS": {
+          "label": "Online + Skills",
+          "fulfillment_sku": "AP-HSSBLS101-BL-r.25",
+          "source_cost_field": "arc_cost_usd",
+          "online_component_state": "PURCHASE_REQUIRED",
+          "completion_proof_required_before_skills": true
+        },
+        "SKILLS_SESSION_ONLY": {
+          "label": "Skills Session Only",
+          "fulfillment_sku": "UNKNOWN",
+          "source_cost_field": "skills_session_arc_cost_usd",
+          "online_component_state": "CUSTOMER_SUPPLIED_COMPLETION_PROOF_REQUIRED",
+          "completion_proof_required_before_skills": true
+        }
+      },
+      "pricing_rule": {
+        "currency": "USD",
+        "service_charge_field": "service_price_usd",
+        "fee_multiplier_field": "arc_fee_multiplier",
+        "rounding": "ROUND_HALF_UP",
+        "source": "https://github.com/Brian910cpr/910cpr-class-landers/issues/360"
+      },
+      "activation_state": "CATALOG_PREPARATION_ONLY"
     },
     {
       "course_id": "209806",
@@ -1725,7 +1841,45 @@
         "scheduling_rule_source": "Owner-approved LanderWare rule #359",
         "appointment_container_source": "LanderWare shared skills capacity",
         "unknown_policy": "UNKNOWN means the value is not explicitly represented in the current local config/source."
-      }
+      },
+      "arc_source_name": "First Aid-BL",
+      "arc_source_effective_date": "2027-01-01",
+      "customer_product": {
+        "title": "Red Cross First Aid Skills Session",
+        "seo_slug": "red-cross-first-aid-skills-session",
+        "search_aliases": [
+          "Red Cross skills session near me",
+          "Red Cross CPR skills test",
+          "Red Cross online CPR hands-on test",
+          "Red Cross blended learning skills session",
+          "finish Red Cross CPR certification",
+          "Red Cross ROC skills session"
+        ]
+      },
+      "commercial_choices": {
+        "ONLINE_PLUS_SKILLS": {
+          "label": "Online + Skills",
+          "fulfillment_sku": "AP-HSSSFA510-BL-r.25",
+          "source_cost_field": "arc_cost_usd",
+          "online_component_state": "PURCHASE_REQUIRED",
+          "completion_proof_required_before_skills": true
+        },
+        "SKILLS_SESSION_ONLY": {
+          "label": "Skills Session Only",
+          "fulfillment_sku": "AP-HSSSFA710-r.25",
+          "source_cost_field": "skills_session_arc_cost_usd",
+          "online_component_state": "CUSTOMER_SUPPLIED_COMPLETION_PROOF_REQUIRED",
+          "completion_proof_required_before_skills": true
+        }
+      },
+      "pricing_rule": {
+        "currency": "USD",
+        "service_charge_field": "service_price_usd",
+        "fee_multiplier_field": "arc_fee_multiplier",
+        "rounding": "ROUND_HALF_UP",
+        "source": "https://github.com/Brian910cpr/910cpr-class-landers/issues/360"
+      },
+      "activation_state": "CATALOG_PREPARATION_ONLY"
     },
     {
       "course_id": "AP-HSSSFA512-BL-r.25",
@@ -1780,7 +1934,46 @@
         "scheduling_rule_source": "Owner-approved LanderWare rule #359",
         "appointment_container_source": "LanderWare shared skills capacity",
         "unknown_policy": "UNKNOWN means the value is not explicitly represented in the current local config/source."
-      }
+      },
+      "arc_source_name": "Pediatric CPR/AED-BL",
+      "arc_source_effective_date": "2027-01-01",
+      "customer_product": {
+        "title": "Red Cross Pediatric CPR/AED Skills Session",
+        "seo_slug": "red-cross-pediatric-cpr-aed-skills-session",
+        "search_aliases": [
+          "Red Cross skills session near me",
+          "Red Cross CPR skills test",
+          "Red Cross online CPR hands-on test",
+          "Red Cross blended learning skills session",
+          "finish Red Cross CPR certification",
+          "Red Cross ROC skills session",
+          "Red Cross pediatric CPR skills session"
+        ]
+      },
+      "commercial_choices": {
+        "ONLINE_PLUS_SKILLS": {
+          "label": "Online + Skills",
+          "fulfillment_sku": "AP-HSSSFA512-BL-r.25",
+          "source_cost_field": "arc_cost_usd",
+          "online_component_state": "PURCHASE_REQUIRED",
+          "completion_proof_required_before_skills": true
+        },
+        "SKILLS_SESSION_ONLY": {
+          "label": "Skills Session Only",
+          "fulfillment_sku": "UNKNOWN",
+          "source_cost_field": "skills_session_arc_cost_usd",
+          "online_component_state": "CUSTOMER_SUPPLIED_COMPLETION_PROOF_REQUIRED",
+          "completion_proof_required_before_skills": true
+        }
+      },
+      "pricing_rule": {
+        "currency": "USD",
+        "service_charge_field": "service_price_usd",
+        "fee_multiplier_field": "arc_fee_multiplier",
+        "rounding": "ROUND_HALF_UP",
+        "source": "https://github.com/Brian910cpr/910cpr-class-landers/issues/360"
+      },
+      "activation_state": "CATALOG_PREPARATION_ONLY"
     },
     {
       "course_id": "AP-HSSSFA513-BL-r.25",
@@ -1835,7 +2028,46 @@
         "scheduling_rule_source": "Owner-approved LanderWare rule #359",
         "appointment_container_source": "LanderWare shared skills capacity",
         "unknown_policy": "UNKNOWN means the value is not explicitly represented in the current local config/source."
-      }
+      },
+      "arc_source_name": "Adult and Pediatric CPR/AED-BL",
+      "arc_source_effective_date": "2027-01-01",
+      "customer_product": {
+        "title": "Red Cross Adult and Pediatric CPR/AED Skills Session",
+        "seo_slug": "red-cross-adult-and-pediatric-cpr-aed-skills-session",
+        "search_aliases": [
+          "Red Cross skills session near me",
+          "Red Cross CPR skills test",
+          "Red Cross online CPR hands-on test",
+          "Red Cross blended learning skills session",
+          "finish Red Cross CPR certification",
+          "Red Cross ROC skills session",
+          "Red Cross pediatric CPR skills session"
+        ]
+      },
+      "commercial_choices": {
+        "ONLINE_PLUS_SKILLS": {
+          "label": "Online + Skills",
+          "fulfillment_sku": "AP-HSSSFA513-BL-r.25",
+          "source_cost_field": "arc_cost_usd",
+          "online_component_state": "PURCHASE_REQUIRED",
+          "completion_proof_required_before_skills": true
+        },
+        "SKILLS_SESSION_ONLY": {
+          "label": "Skills Session Only",
+          "fulfillment_sku": "AP-HSSSFA713-r.25",
+          "source_cost_field": "skills_session_arc_cost_usd",
+          "online_component_state": "CUSTOMER_SUPPLIED_COMPLETION_PROOF_REQUIRED",
+          "completion_proof_required_before_skills": true
+        }
+      },
+      "pricing_rule": {
+        "currency": "USD",
+        "service_charge_field": "service_price_usd",
+        "fee_multiplier_field": "arc_fee_multiplier",
+        "rounding": "ROUND_HALF_UP",
+        "source": "https://github.com/Brian910cpr/910cpr-class-landers/issues/360"
+      },
+      "activation_state": "CATALOG_PREPARATION_ONLY"
     },
     {
       "course_id": "AP-HSSSFA514-BL-r.25",
@@ -1891,7 +2123,45 @@
         "scheduling_rule_source": "Owner-approved LanderWare rule #359",
         "appointment_container_source": "LanderWare shared skills capacity",
         "unknown_policy": "UNKNOWN means the value is not explicitly represented in the current local config/source."
-      }
+      },
+      "arc_source_name": "Adult First Aid/CPR/AED-BL",
+      "arc_source_effective_date": "2027-01-01",
+      "customer_product": {
+        "title": "Red Cross Adult First Aid/CPR/AED Skills Session",
+        "seo_slug": "red-cross-adult-first-aid-cpr-aed-skills-session",
+        "search_aliases": [
+          "Red Cross skills session near me",
+          "Red Cross CPR skills test",
+          "Red Cross online CPR hands-on test",
+          "Red Cross blended learning skills session",
+          "finish Red Cross CPR certification",
+          "Red Cross ROC skills session"
+        ]
+      },
+      "commercial_choices": {
+        "ONLINE_PLUS_SKILLS": {
+          "label": "Online + Skills",
+          "fulfillment_sku": "AP-HSSSFA514-BL-r.25",
+          "source_cost_field": "arc_cost_usd",
+          "online_component_state": "PURCHASE_REQUIRED",
+          "completion_proof_required_before_skills": true
+        },
+        "SKILLS_SESSION_ONLY": {
+          "label": "Skills Session Only",
+          "fulfillment_sku": "AP-HSSSFA714-r.25",
+          "source_cost_field": "skills_session_arc_cost_usd",
+          "online_component_state": "CUSTOMER_SUPPLIED_COMPLETION_PROOF_REQUIRED",
+          "completion_proof_required_before_skills": true
+        }
+      },
+      "pricing_rule": {
+        "currency": "USD",
+        "service_charge_field": "service_price_usd",
+        "fee_multiplier_field": "arc_fee_multiplier",
+        "rounding": "ROUND_HALF_UP",
+        "source": "https://github.com/Brian910cpr/910cpr-class-landers/issues/360"
+      },
+      "activation_state": "CATALOG_PREPARATION_ONLY"
     },
     {
       "course_id": "AP-HSSSFA515-BL-r.25",
@@ -1947,7 +2217,46 @@
         "scheduling_rule_source": "Owner-approved LanderWare rule #359",
         "appointment_container_source": "LanderWare shared skills capacity",
         "unknown_policy": "UNKNOWN means the value is not explicitly represented in the current local config/source."
-      }
+      },
+      "arc_source_name": "Pediatric First Aid/CPR/AED-BL",
+      "arc_source_effective_date": "2027-01-01",
+      "customer_product": {
+        "title": "Red Cross Pediatric First Aid/CPR/AED Skills Session",
+        "seo_slug": "red-cross-pediatric-first-aid-cpr-aed-skills-session",
+        "search_aliases": [
+          "Red Cross skills session near me",
+          "Red Cross CPR skills test",
+          "Red Cross online CPR hands-on test",
+          "Red Cross blended learning skills session",
+          "finish Red Cross CPR certification",
+          "Red Cross ROC skills session",
+          "Red Cross pediatric CPR skills session"
+        ]
+      },
+      "commercial_choices": {
+        "ONLINE_PLUS_SKILLS": {
+          "label": "Online + Skills",
+          "fulfillment_sku": "AP-HSSSFA515-BL-r.25",
+          "source_cost_field": "arc_cost_usd",
+          "online_component_state": "PURCHASE_REQUIRED",
+          "completion_proof_required_before_skills": true
+        },
+        "SKILLS_SESSION_ONLY": {
+          "label": "Skills Session Only",
+          "fulfillment_sku": "AP-HSSSFA717-r.25",
+          "source_cost_field": "skills_session_arc_cost_usd",
+          "online_component_state": "CUSTOMER_SUPPLIED_COMPLETION_PROOF_REQUIRED",
+          "completion_proof_required_before_skills": true
+        }
+      },
+      "pricing_rule": {
+        "currency": "USD",
+        "service_charge_field": "service_price_usd",
+        "fee_multiplier_field": "arc_fee_multiplier",
+        "rounding": "ROUND_HALF_UP",
+        "source": "https://github.com/Brian910cpr/910cpr-class-landers/issues/360"
+      },
+      "activation_state": "CATALOG_PREPARATION_ONLY"
     },
     {
       "course_id": "AP-HSSSFA710-r.25",
@@ -2000,7 +2309,9 @@
         "scheduling_rule_source": "Owner-approved LanderWare rule #359",
         "appointment_container_source": "LanderWare shared skills capacity",
         "unknown_policy": "UNKNOWN means the value is not explicitly represented in the current local config/source."
-      }
+      },
+      "arc_source_name": "First Aid Skills Session",
+      "arc_source_effective_date": "2027-01-01"
     },
     {
       "course_id": "AP-HSSSFA711-r.25",
@@ -2053,7 +2364,9 @@
         "scheduling_rule_source": "Owner-approved LanderWare rule #359",
         "appointment_container_source": "LanderWare shared skills capacity",
         "unknown_policy": "UNKNOWN means the value is not explicitly represented in the current local config/source."
-      }
+      },
+      "arc_source_name": "Adult CPR/AED Skills Session",
+      "arc_source_effective_date": "2027-01-01"
     },
     {
       "course_id": "AP-HSSSFA713-r.25",
@@ -2106,7 +2419,9 @@
         "scheduling_rule_source": "Owner-approved LanderWare rule #359",
         "appointment_container_source": "LanderWare shared skills capacity",
         "unknown_policy": "UNKNOWN means the value is not explicitly represented in the current local config/source."
-      }
+      },
+      "arc_source_name": "Adult and Pediatric CPR/AED Skills Session",
+      "arc_source_effective_date": "2027-01-01"
     },
     {
       "course_id": "AP-HSSSFA714-r.25",
@@ -2160,7 +2475,9 @@
         "scheduling_rule_source": "Owner-approved LanderWare rule #359",
         "appointment_container_source": "LanderWare shared skills capacity",
         "unknown_policy": "UNKNOWN means the value is not explicitly represented in the current local config/source."
-      }
+      },
+      "arc_source_name": "Adult First Aid/CPR/AED Skills Session",
+      "arc_source_effective_date": "2027-01-01"
     },
     {
       "course_id": "AP-HSSSFA716-r.25",
@@ -2214,7 +2531,9 @@
         "scheduling_rule_source": "Owner-approved LanderWare rule #359",
         "appointment_container_source": "LanderWare shared skills capacity",
         "unknown_policy": "UNKNOWN means the value is not explicitly represented in the current local config/source."
-      }
+      },
+      "arc_source_name": "Adult and Pediatric First Aid/CPR/AED Skills Session",
+      "arc_source_effective_date": "2027-01-01"
     },
     {
       "course_id": "AP-HSSSFA717-r.25",
@@ -2268,7 +2587,9 @@
         "scheduling_rule_source": "Owner-approved LanderWare rule #359",
         "appointment_container_source": "LanderWare shared skills capacity",
         "unknown_policy": "UNKNOWN means the value is not explicitly represented in the current local config/source."
-      }
+      },
+      "arc_source_name": "Pediatric First Aid/CPR/AED Skills Session",
+      "arc_source_effective_date": "2027-01-01"
     },
     {
       "course_id": "LW-HSI-ADULT-FIRST-AID-BLENDED-SKILLS",
