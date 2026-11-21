@@ -1138,6 +1138,37 @@ class LayeredPublicationTests(unittest.TestCase):
                             and o.get('session_id') == verified['source_event_id']
                             for o in result['offers']))
 
+    def test_final_v2_publisher_withholds_explicitly_closed_public_seated_route(self):
+        # A valid positive-seat source remains operationally occupied even
+        # when its public registration lifecycle is closed or cancelled.
+        # Never revive the stale customer CTA simply because its ID matches.
+        for status_field, status in (
+                ('registration_status', 'closed'),
+                ('registration_status', 'cancelled'),
+                ('session_status', 'canceled')):
+            with self.subTest(status_field=status_field, status=status):
+                self.sources = []
+                source = self.add(11, '12:00', '13:00', cid='210549',
+                                  count=1, visibility='public',
+                                  public_direct_booking=True)
+                source[status_field] = status
+                seat = dict(session_id=source['source_event_id'],
+                            date='2026-10-11', startTime='12:00',
+                            courseId='210549', offerType='seated_class',
+                            courseName='No longer joinable',
+                            registrationUrl='https://closed.invalid/stale')
+                payload = self.payload([seat])
+                self.assertFalse(any(o.get('offerType') == 'seated_class'
+                                     for o in payload['offers']))
+                self.assertIn('nonpublic_or_unverified_existing_booking_choice',
+                              payload['rejectionReasonCounts'])
+                self.assertEqual(payload['layeredDiagnostics']['projected_sources'][0]
+                                 ['active_registration_count'], 1)
+                public = public_selector_availability_payload(payload)
+                self.assertNotIn('closed.invalid', json.dumps(public))
+                self.assertNotIn(source['source_event_id'], json.dumps(public))
+        self.sources = []
+
     def test_final_v2_publisher_cannot_resurrect_private_or_unlisted_seated_routes(self):
         from scripts.block_start_time_selector import build_occupancy
         for visibility, route_allowed in (('private', True), ('unlisted', True),
