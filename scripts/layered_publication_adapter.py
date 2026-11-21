@@ -247,6 +247,18 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                     or str(source.get("session_status") or "").strip().lower() in {"cancelled", "canceled", "deleted"}
                     or source.get("is_full") is True):
                 denied_booking_identities.add(identity)
+    def matches_authoritative_start(source, offer):
+        # An ID match alone is not enough: a rescheduled class can retain its
+        # legacy ID while a cached public card still advertises the old date.
+        # Compare the actual selected source start in Eastern local time; never
+        # reinterpret an unknown start as a joinable public occurrence.
+        try:
+            actual = aware(source["start"])
+            return (offer.get("date") == actual.date().isoformat()
+                    and offer.get("startTime") == actual.strftime("%H:%M"))
+        except (KeyError, TypeError, ValueError):
+            return False
+
     for original in seated_offers:
         identity = str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId"))
         source = counts.get(identity)
@@ -261,6 +273,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             rejected.append(dict(original, reasons=["nonpublic_or_unverified_existing_booking_choice"]))
         elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
+        elif not matches_authoritative_start(source, original):
+            rejected.append(dict(original, reasons=["existing_booking_occurrence_mismatch"]))
         else:
             accepted.append(deepcopy(original))
     # A published existing-class row is not evidence of registered demand.
