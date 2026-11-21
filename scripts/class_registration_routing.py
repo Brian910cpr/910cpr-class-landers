@@ -112,7 +112,7 @@ def _redact_unverified_related_sessions(html, verified_sessions):
     def sidebar(match):
         aside = match.group(0)
         return re.sub(
-            r'<li>\s*<a\b[^>]*href="/classes/([^"/?#]+)\.html"[^>]*>.*?</a>\s*</li>',
+            r'<li>\s*<a\b[^>]*href="/classes/((?:\d+|[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}))\.html"[^>]*>.*?</a>\s*</li>',
             lambda link: link.group(0) if link.group(1) in approved else "",
             aside,
             flags=re.S,
