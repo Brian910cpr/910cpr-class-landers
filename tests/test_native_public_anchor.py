@@ -77,6 +77,9 @@ class NativeAnchorTests(unittest.TestCase):
                         "offerType": "dynamic_appointment",
                         "schedule_role": "barnacle",
                         "attached_to_session_id": private_id,
+                        # A dynamic offer must not leak a private source ID
+                        # even if an upstream adapter accidentally includes it.
+                        "session_id": private_id,
                         "appointmentUrl": "https://example.test/public-appointment",
                     }],
                 }],
