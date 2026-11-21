@@ -769,6 +769,13 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             # Preserve internal canonical visibility and route authority through
             # the V2 publisher. This is not a grant of public joinability.
             "visibility": session.get("visibility"),
+            # Keep canonical route-lifecycle proof on the internal occupancy
+            # DTO. The final V2 seated-route publisher must not revive a
+            # closed/full route merely because the booked session is occupied.
+            # These flags never grant publication or alter the occupied time.
+            "registration_status": session.get("registration_status"),
+            "session_status": session.get("session_status"),
+            **({"is_full": True} if session.get("is_full") is True else {}),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
             "instructor_unassigned": not session.get("lead_instructor_name"),
             "count_available": session.get("count_available") is True,
