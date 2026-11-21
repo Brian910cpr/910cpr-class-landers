@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "status": "scheduled_stopped_launcher_detection_and_recovery_proven",
+  "repository": "Brian910cpr/910cpr-class-landers",
+  "issue": 371,
+  "pull_request": 372,
+  "delta_task_id": "6aa07a7161408191b146dc743eeab786",
+  "deep_task_id": "6aabf6372ba88191abb345d1202dff6d",
+  "original_schedules_preserved": true,
+  "duplicate_automations_created": 0,
+  "health_comment_id": 6102455692,
+  "observer_comment_id": 6102801791,
+  "stop": {
+    "test": "existing supervisor detects actual stopped launcher",
+    "stopped_at": "2026-10-10T18:13:39.1179457-04:00",
+    "loop_pid": 33536,
+    "restore_deadline": "2026-10-10T19:28:39.1207113-04:00",
+    "last_publication": "2026-10-10T18:13:28.9411805-04:00",
+    "assignments_preserved": true,
+    "synthetic_staleness": false
+  },
+  "manual_baselines": {
+    "delta": {
+      "result": "FRESH",
+      "published_at": "2026-10-10T22:10:26.2145468Z",
+      "observed_at": "2026-10-10T22:11:11Z"
+    },
+    "deep": {
+      "result": "STALE",
+      "scheduled_proof": false,
+      "published_at": "2026-10-10T22:13:28.9411805Z",
+      "observed_at": "2026-10-10T22:19:08Z"
+    }
+  },
+  "scheduled_detection": {
+    "task": "910CPR Deep Stability Review",
+    "task_id": "6aabf6372ba88191abb345d1202dff6d",
+    "observed_at": "2026-10-10T23:04:55Z",
+    "signal_published_at": "2026-10-10T22:13:28.9411805Z",
+    "issue_comment_url": "https://github.com/Brian910cpr/910cpr-class-landers/issues/371#issuecomment-6103141637",
+    "github_created_at": "2026-10-10T23:05:15Z",
+    "github_body": "### Planned outage test: automatic stale detection\n\nRound ID: `20261010T230455Z-I371-PLANNED-OUTAGE-SCHEDULED-DEEP-R1`\n\nThis actual scheduled Deep Stability Review independently fetched the canonical launcher signal at **2026-10-10T23:04:55Z**.\n\nObserved signal:\n- `published_at=2026-10-10T22:13:28.9411805Z` — **STALE by about 51 minutes**\n- `last_check_at=2026-10-10T17:59:17.0803439-04:00`\n- `last_session_id=01a127d1-3221-7083-9f2b-6a75d47b371b`\n- `execution_process_alive=false`\n- `manual_hold=false`\n- `last_launch_status=completed`\n- signal: https://github.com/Brian910cpr/910cpr-class-landers/pull/372#issuecomment-6102455692\n\nThis is the intentionally stopped launcher inside the authorized bounded acceptance test, not an inferred crash. The existing one-time local guard PID `19520` owns restoration of the **same** Windows Codex Wake loop by **2026-10-10T23:28:39Z**. **No Brian restart or computer check is required.**\n\nIndependent Delta Watch observer receipt check at the same scheduled run:\n- marker exists at https://github.com/Brian910cpr/910cpr-class-landers/pull/372#issuecomment-6102801791\n- body remains initialization-only `UNKNOWN`; it has no valid `checked_at`, task ID, signal comment ID or evaluated status\n- therefore Delta Watch scheduled-execution health is **UNKNOWN / observer failure**, not silently healthy\n\nNo receipt was fabricated or refreshed by this task. Recovery must be verified from a new live publisher timestamp after the guard restores the same loop; the next scheduled check should record the recovery transition.",
+    "observed_without_manual_run": true,
+    "owner_check_required": false
+  },
+  "recovery": {
+    "restore": {
+      "reason": "observer result received",
+      "loop_pid": 32372,
+      "restored_at": "2026-10-10T19:19:25.5234694-04:00"
+    },
+    "verified_loop_pid": 32372,
+    "published_health": {
+      "schema_version": 1,
+      "worker_name": "910CPR Codex Wake",
+      "published_at": "2026-10-10T19:20:32.1903147-04:00",
+      "loop_started_at": "2026-10-10T23:19:25.4957768Z",
+      "loop_pid": 32372,
+      "execution_process_alive": true,
+      "manual_hold": false,
+      "last_check_at": "2026-10-10T19:19:31.7409401-04:00",
+      "worker_state": "working",
+      "current_task": 239,
+      "last_completed_task": 239,
+      "last_session_id": "01a127d1-3221-7083-9f2b-6a75d47b371b",
+      "last_launch_status": "started",
+      "next_check_due": "2026-10-10T19:34:31.7409401-04:00",
+      "retry_after": null
+    },
+    "assignment_keys_preserved": true,
+    "observer_recovery": {
+      "task": "910CPR Delta Watch",
+      "scheduled": true,
+      "updated_at": "2026-10-10T23:19:54Z",
+      "body": "<!-- 910CPR-DELTA-WATCH-OBSERVATION-V1 -->\n910CPR Delta Watch launcher observation. This proves observation, not device notification delivery.\n```json\n{\n  \"schema_version\": 1,\n  \"task_id\": \"6aa07a7161408191b146dc743eeab786\",\n  \"checked_at\": \"2026-10-10T23:19:54.482Z\",\n  \"signal_comment_id\": 6102455692,\n  \"signal_published_at\": \"2026-10-10T23:19:31.2937082+00:00\",\n  \"status\": \"FRESH\",\n  \"last_session_id\": \"01a127d1-3221-7083-9f2b-6a75d47b371b\",\n  \"reason\": \"fresh launcher signal; execution process alive confirms loop liveness\",\n  \"previous_status\": \"STALE\",\n  \"invocation_kind\": \"scheduled\"\n}\n```",
+      "url": "https://github.com/Brian910cpr/910cpr-class-landers/pull/372#issuecomment-6102801791",
+      "conversation_response": "Today 7:20 PM; stale 23:17:58Z, recovery 23:19:54Z; no restart or Brian action needed"
+    }
+  },
+  "task_push_configured": true,
+  "device_notification_receipt": "not_observable_from_available_tools",
+  "crm_source_commit": "5d15a8825d39fd8f96642305c283f16424532bd4",
+  "crm_tests_passed": 35,
+  "crm_deployed": false,
+  "delta_scheduled_observation": {
+    "updated_at": "2026-10-10T23:17:59Z",
+    "body": "<!-- 910CPR-DELTA-WATCH-OBSERVATION-V1 -->\n910CPR Delta Watch launcher observation. This proves observation, not device notification delivery.\n```json\n{\n  \"schema_version\": 1,\n  \"task_id\": \"6aa07a7161408191b146dc743eeab786\",\n  \"checked_at\": \"2026-10-10T23:17:58.442Z\",\n  \"signal_comment_id\": 6102455692,\n  \"signal_published_at\": \"2026-10-10T22:13:28.9411805+00:00\",\n  \"status\": \"STALE\",\n  \"last_session_id\": \"01a127d1-3221-7083-9f2b-6a75d47b371b\",\n  \"reason\": \"launcher signal is older than five minutes\",\n  \"previous_status\": null,\n  \"invocation_kind\": \"scheduled\"\n}\n```",
+    "url": "https://github.com/Brian910cpr/910cpr-class-landers/pull/372#issuecomment-6102801791"
+  }
+}
