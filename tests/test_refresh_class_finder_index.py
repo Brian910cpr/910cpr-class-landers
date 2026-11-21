@@ -333,5 +333,44 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
             routes.refresh(root=self.root)
 
 
+    def test_sitemap_drops_verified_unlisted_class_without_erasing_other_urls(self):
+        # A numeric detail tombstone is not enough if sitemap discovery still
+        # points search engines directly at the formerly private class.
+        private_id, historical_id = "15000107", "15000108"
+        self.write_source([{
+            "session_id": private_id,
+            "start_at": "2026-11-22T13:00:00-05:00",
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "session_status": "active",
+            "visibility": "unlisted",
+        }])
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text("0 classes found", encoding="utf-8")
+        sitemap = self.root / "docs/sitemap.xml"
+        original = (
+            '<?xml version="1.0" encoding="UTF-8"?>\\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\\n'
+            '  <url><loc>https://www.910cpr.com/classes/' + private_id + '.html</loc></url>\\n'
+            '  <url><loc>https://www.910cpr.com/classes/' + historical_id + '.html</loc></url>\\n'
+            '  <url><loc>https://www.910cpr.com/bls.html</loc></url>\\n'
+            '</urlset>\\n'
+        )
+        sitemap.write_text(original, encoding="utf-8")
+        with (
+            patch.object(finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(catalog, "SCHEDULE_FUTURE_FILE", self.path),
+            patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
+        ):
+            result = routes.refresh(root=self.root)
+        self.assertEqual(result, {"listed": 0, "files": 1})
+        updated = sitemap.read_text(encoding="utf-8")
+        self.assertNotIn("/classes/" + private_id + ".html", updated)
+        self.assertIn("/classes/" + historical_id + ".html", updated)
+        self.assertIn("https://www.910cpr.com/bls.html", updated)
+        self.assertEqual(index.read_text(encoding="utf-8"), "0 classes found")
+
+
 if __name__ == "__main__":
     unittest.main()
