@@ -165,14 +165,14 @@ def compare_safe_summaries(main, draft):
         raise ValueError("Main/draft comparison requires the full 90-day horizon")
     try:
         first_day = datetime.fromisoformat(main["horizon_start"]).date()
-        # A matching but stale 90-day window is not a valid proof for this
-        # replay clock; both engines must cover the same *current* ET horizon.
-        if first_day != clock.astimezone(ZoneInfo("America/New_York")).date():
-            raise ValueError("Main/draft horizon does not start on the replay clock's ET day")
-        if (first_day + timedelta(days=89)).isoformat() != main["horizon_end"]:
-            raise ValueError("Mismatched main/draft 90-day bounds")
-    except (TypeError, ValueError):
-        raise ValueError("Main/draft comparison has invalid calendar bounds")
+    except (TypeError, ValueError) as exc:
+        raise ValueError("Main/draft comparison has invalid calendar bounds") from exc
+    # A matching but stale 90-day window is not valid proof for this
+    # replay clock; both engines must cover the current ET horizon.
+    if first_day != clock.astimezone(ZoneInfo("America/New_York")).date():
+        raise ValueError("Main/draft horizon does not start on the replay clock's ET day")
+    if (first_day + timedelta(days=89)).isoformat() != main["horizon_end"]:
+        raise ValueError("Mismatched main/draft 90-day bounds")
     if (set(main.get("pages") or {}) != EXPECTED_FAMILIES or
             set(draft.get("pages") or {}) != EXPECTED_FAMILIES):
         raise ValueError("Main/draft comparison requires all eight exact public course families")
