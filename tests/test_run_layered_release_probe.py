@@ -64,7 +64,7 @@ class FrozenSourceReplayTests(unittest.TestCase):
                         "customer@example.com": 1,
                     },
                     "calculation_issue_counts": {
-                        "missing_instructor:private source": 3,
+                        "HARD_BLOCK_COLLISION": 3,
                         "human name:personal detail": 8,
                     },
                     "synthesis_blocked_dates": [],
@@ -82,8 +82,8 @@ class FrozenSourceReplayTests(unittest.TestCase):
             {"date": "2026-11-22", "anchor": 1, "barnacle": 1, "open": 0},
         )
         self.assertEqual(safe["pages"]["bls"]["next_three_days"][1]["open"], 2)
-        self.assertEqual(safe["pages"]["bls"]["failed_window_reason_categories"],
-                         {"missing_instructor": 3, "unclassified": 8})
+        self.assertEqual(safe["pages"]["bls"]["reconciliation_issue_code_categories"],
+                         {"hard_block_collision": 3, "unclassified": 8})
         summary = json.dumps(safe)
         self.assertNotIn("private-course-id", summary)
         self.assertNotIn("14:00", summary)
