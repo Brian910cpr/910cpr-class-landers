@@ -85,7 +85,9 @@ def public_safe_summary(proof):
             cat = _reason_category(reason)
             reasons[cat] = reasons.get(cat, 0) + int(count)
         uncertainty = {}
-        # These are calendar-collision reconciliation *codes*, not the\n        # failed/unknown availability-window reasons in counts["failed_windows"].\n        for reason, count in (row.get("calculation_issue_counts") or {}).items():
+        # These are calendar-collision reconciliation *codes*, not the
+        # failed/unknown availability-window reasons in counts["failed_windows"].
+        for reason, count in (row.get("calculation_issue_counts") or {}).items():
             cat = _reason_category(reason)
             uncertainty[cat] = uncertainty.get(cat, 0) + int(count)
         safe["pages"][key] = {
