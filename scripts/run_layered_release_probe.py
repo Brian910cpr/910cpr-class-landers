@@ -44,6 +44,24 @@ def _reason_category(reason):
     return category if _SAFE_REASON.fullmatch(category) else "unclassified"
 
 
+def _window_issue_category(issue):
+    """Map private per-window exception text to a fixed nonidentifying taxonomy."""
+    value = str(issue.get("reason") or "").casefold()
+    if "unresolved_occupied_bounds" in value:
+        return "unresolved_occupied_bounds"
+    if "travel" in value:
+        return "travel_assumption_unverified"
+    if "coverage" in value:
+        return "commitment_coverage_unverified"
+    if "instructor" in value:
+        return "instructor_unverified"
+    if "location" in value or "room" in value or "resource" in value:
+        return "resource_unverified"
+    if "duration" in value or "interval" in value:
+        return "interval_unverified"
+    return "other_window_error"
+
+
 def public_safe_summary(proof):
     """Aggregate a real frozen replay without emitting source identities or slot times.
 
@@ -95,6 +113,7 @@ def public_safe_summary(proof):
             "offer_roles": row.get("offer_roles"),
             "rejection_reason_categories": reasons,
             "reconciliation_issue_code_categories": uncertainty,
+            "failed_window_issue_categories": row.get("failed_window_issue_categories") or {},
             "synthesis_blocked_day_count": len(row.get("synthesis_blocked_dates") or []),
             "day_count": len(per_day),
             "next_three_days": counts_by_day[:3],
@@ -138,7 +157,11 @@ def run():
                         role='anchor' if course.get('offerType')=='seated_class' else ('barnacle' if course.get('scheduleRole')=='barnacle' else 'open')
                         courses.setdefault(course['courseId'],dict(anchor=[],barnacle=[],open=[]))[role].append(slot['startTime'])
                 patterns[day['date']]=courses
-            result['pages'][key]=dict(calculation_issue_counts=dict(Counter(issue.get('code') or 'unclassified' for issue in payload.get('reconciliationIssues',[]))),day_patterns=patterns,counts=payload.get('counts'),offer_roles=dict(Counter(o.get('scheduleRole') or o.get('offerType') for o in offers)),rejection_reasons=payload.get('rejectionReasonCounts'),synthesis_blocked_dates=payload.get('synthesisBlockedDates'),model=payload.get('schedulingModel'),valid_until=feed.get('validUntil'))
+            result['pages'][key]=dict(
+                failed_window_issue_categories=dict(Counter(_window_issue_category(issue) for issue in
+                    (payload.get('layeredDiagnostics') or {}).get('issues', []))),
+                calculation_issue_counts=dict(Counter(issue.get('code') or 'unclassified'
+                    for issue in payload.get('reconciliationIssues',[]))),day_patterns=patterns,counts=payload.get('counts'),offer_roles=dict(Counter(o.get('scheduleRole') or o.get('offerType') for o in offers)),rejection_reasons=payload.get('rejectionReasonCounts'),synthesis_blocked_dates=payload.get('synthesisBlockedDates'),model=payload.get('schedulingModel'),valid_until=feed.get('validUntil'))
         result['source_snapshot_unchanged'] = source_fingerprint() == fingerprint
         if not result['source_snapshot_unchanged']:
             raise RuntimeError('Read-only V2 source changed during replay; no publication')
