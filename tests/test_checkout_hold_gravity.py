@@ -96,5 +96,44 @@ class ProvisionalCheckoutHoldTests(unittest.TestCase):
         self.assertTrue(any(c["mode"] == "free" for c in later["accepted"]))
 
 
+    def test_publication_applies_hold_gravity_without_joinable_seat(self):
+        # The publisher may see source-attested demand even in a different
+        # availability window; it must collapse open-day offers without
+        # inventing a seated registration URL for an unpaid hold.
+        from tests.test_layered_publication_adapter import LayeredPublicationTests
+        test = LayeredPublicationTests("test_source_records_not_mutated_and_explicit_activation_required")
+        test.setUp()
+        test.windows = []
+        test.coverage = []
+        test.window(11, "08:00", "18:00", next_day=False)
+        clear = test.calculation()
+        self.assertTrue(any(o.get("scheduleRole") == "open_day"
+                            for o in test.payload(calculation=clear)["offers"]))
+        source = dict(source_event_id="private-hold-source",
+            kind="hold", course_id="359474", instructor="Brian Ennis",
+            resource=test.room, source_file="canonical_checkout_hold_ledger",
+            start=test.at(11, "12:00").isoformat(),
+            end=test.at(11, "14:00").isoformat(),
+            checkout_hold_status="admitted", hold_admission_attested=True,
+            checkout_hold_capacity_claimed=True, checkout_hold_resource_verified=True,
+            checkout_hold_id="h", checkout_order_id="o",
+            hold_admitted_at="2026-10-05T11:50:00-04:00",
+            hold_expires_at="2026-10-05T12:05:00-04:00")
+        clear["projected_sources"] = [source]
+        provisional = test.payload(calculation=clear)
+        self.assertFalse(any(o.get("offerType") == "seated_class"
+                             for o in provisional["offers"]))
+        self.assertFalse(any(o.get("scheduleRole") == "open_day"
+                             for o in provisional["offers"]))
+        self.assertIn("anchored_day_requires_attached_offer",
+                      provisional["rejectionReasonCounts"])
+        # A's expiration removes only the provisional day gravity, not a
+        # second independent commitment or a stored snapshot.
+        source["hold_expires_at"] = "2026-10-05T11:59:00-04:00"
+        restored = test.payload(calculation=clear)
+        self.assertTrue(any(o.get("scheduleRole") == "open_day"
+                            for o in restored["offers"]))
+
+
 if __name__ == "__main__":
     unittest.main()
