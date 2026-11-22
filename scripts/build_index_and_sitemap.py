@@ -84,7 +84,7 @@ def strip_html(value: str) -> str:
     return re.sub(r"\s+", " ", unescape(value)).strip()
 
 
-def contain_stale_class_index_links() -> dict[str, int]:
+def contain_stale_class_index_links(*, eligible_public_session_ids: set[str] | None = None) -> dict[str, int]:
     stats = {
         "files_checked": 0,
         "files_changed": 0,
@@ -120,7 +120,7 @@ def contain_stale_class_index_links() -> dict[str, int]:
             if match.group("session_id"):
                 target_path = href.split("#", 1)[0]
                 target_file = DOCS_DIR / target_path.lstrip("/")
-                if target_file.exists():
+                if target_file.exists() and (eligible_public_session_ids is None or match.group("session_id") in eligible_public_session_ids):
                     stats["existing_numeric_class_links_kept"] += 1
                     return match.group(0)
                 stats["missing_numeric_class_links_rewritten"] += 1
@@ -2246,7 +2246,11 @@ def build():
             encoding="utf-8",
         )
 
-    stale_class_index_containment = contain_stale_class_index_links()
+    # A retained HTML detail file alone is not proof of current public eligibility.
+    # Avoid reintroducing stale/private class links from older topic indexes.
+    stale_class_index_containment = contain_stale_class_index_links(
+        eligible_public_session_ids={str(item["session_id"]) for item in sessions}
+    )
 
     # -----------------------------------------------------------------
     # Sitemap
