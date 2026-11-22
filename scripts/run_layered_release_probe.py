@@ -211,13 +211,15 @@ def compare_safe_summaries(main, draft):
             "horizon_start": main["horizon_start"], "horizon_end": main["horizon_end"],
             "horizon_days": 90, "families": families}
 
-def run():
+def run(*, replay_clock_utc: datetime | None = None):
     output=ROOT/'data/runtime/audit_previews/v2_release_probe'
     output.mkdir(parents=True,exist_ok=True)
     policy_path=ROOT/'data/config/layered_scheduling_policy.json'
     original=policy_path.read_bytes()
     policy=json.loads(original);policy['mode']='active_local_v2'
-    frozen_now = datetime.now(timezone.utc)
+    frozen_now = replay_clock_utc if replay_clock_utc is not None else datetime.now(timezone.utc)
+    if frozen_now.tzinfo is None or frozen_now.utcoffset() != timedelta(0):
+        raise ValueError('Read-only replay requires an aware UTC clock')
     result=dict(observed_at=frozen_now.isoformat(), replay_clock_utc=frozen_now.isoformat(),
                 published=False, source_snapshot_unchanged=False, pages={})
     try:
