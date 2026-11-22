@@ -23,6 +23,9 @@ SOURCE_PATHS = (
     'data/config/public_location_policy.json',
     'data/config/public_offer_policy.json',
     'data/config/block_schedule_pages.json',
+    # Include the effective V2 policy after the disposable active-mode override.
+    # Otherwise a mid-replay policy mutation would evade the source checksum.
+    'data/config/layered_scheduling_policy.json',
 )
 
 def source_fingerprint(root=ROOT):
