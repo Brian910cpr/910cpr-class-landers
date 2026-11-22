@@ -349,6 +349,24 @@ jobs:
           if not safe['calculation_completed'] or not safe['release_passed'] or not (safe['canonical_session_count'] or 0):
               raise SystemExit('V2 source proof incomplete: leaving public inventory and checkout unchanged')
           PY
+      - name: Replay same-source finder and detail pipeline in disposable checkout
+        shell: bash
+        run: |
+          # Only the CI runner worktree changes. No push, deploy, purchase, or
+          # source mutation; old public artifacts are not silently promoted.
+          if ! python -B -m scripts.build_landers --anchors-only --data-file docs/data/schedule_future.json >/tmp/p0_landers.log 2>&1; then
+            echo "::error::Disposably generated class details failed; no publication"
+            exit 1
+          fi
+          if ! python -B -m scripts.refresh_public_class_artifacts >/tmp/p0_routes.log 2>&1; then
+            echo "::error::Same-source finder/detail/sitemap reconciliation failed; no publication"
+            exit 1
+          fi
+          if ! python -B -m unittest tests.test_class_registration_routing tests.test_refresh_class_finder_index >/tmp/p0_routing_tests.log 2>&1; then
+            echo "::error::Refreshed public directory/detail regression failed; no publication"
+            exit 1
+          fi
+          echo "Same-source public artifact rebuild and routing tests passed in runner only; deployment remains prohibited"
       - name: Upload aggregate-only replay summary
         if: always()
         uses: actions/upload-artifact@v4
