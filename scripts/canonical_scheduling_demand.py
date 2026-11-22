@@ -10,7 +10,7 @@ from typing import Any, Iterable
 from zoneinfo import ZoneInfo
 
 
-ACTIVE_REGISTRATION_STATUSES = frozenset({"registered", "confirmed", "completed"})
+ACTIVE_REGISTRATION_STATUSES = frozenset({"registered", "confirmed", "completed", "active"})
 
 
 def load_publication_demand(root: Path) -> dict[str, Any]:
