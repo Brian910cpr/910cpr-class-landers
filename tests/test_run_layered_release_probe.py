@@ -112,5 +112,74 @@ class FrozenSourceReplayTests(unittest.TestCase):
             probe.public_safe_summary(sample)
 
 
+    def _comparable_replay(self):
+        first = probe.datetime.fromisoformat("2026-11-22T00:00:00+00:00")
+        days = [(first + probe.timedelta(days=i)).date().isoformat() for i in range(90)]
+        return {
+            "published": False, "source_snapshot_unchanged": True,
+            "calculation_completed": True, "source_snapshot_sha256": "a" * 64,
+            "replay_clock_utc": "2026-11-22T08:18:24+00:00",
+            "horizon_start": days[0], "horizon_end": days[-1], "horizon_days": 90,
+            "pages": {"bls": {"ninety_day_offer_counts": [
+                {"date": day, "anchor": 0, "barnacle": 0, "open": 1} for day in days
+            ]}}
+        }
+
+    def test_same_snapshot_main_draft_comparison_returns_only_daily_aggregate_deltas(self):
+        main = self._comparable_replay()
+        draft = json.loads(json.dumps(main))
+        draft["pages"]["bls"]["ninety_day_offer_counts"][0]["open"] = 3
+        draft["pages"]["bls"]["ninety_day_offer_counts"][0]["barnacle"] = 1
+        delta = probe.compare_safe_summaries(main, draft)
+        self.assertTrue(delta["same_source_verified"])
+        self.assertFalse(delta["published"])
+        self.assertFalse(delta["registration_or_checkout_proven"])
+        self.assertEqual(delta["families"]["bls"]["days_with_different_counts"], 1)
+        self.assertEqual(delta["families"]["bls"]["offer_roles"]["open"],
+                         {"main": 90, "draft": 92, "delta": 2})
+        self.assertEqual(delta["families"]["bls"]["offer_roles"]["barnacle"]["delta"], 1)
+        self.assertNotIn("ninety_day_offer_counts", delta["families"]["bls"])
+
+    def test_main_draft_mismatched_source_clock_or_family_fails_closed(self):
+        main = self._comparable_replay()
+        for field, wrong in (
+            ("source_snapshot_sha256", "b" * 64),
+            ("replay_clock_utc", "2026-11-22T08:18:25+00:00"),
+            ("horizon_days", 89),
+        ):
+            draft = json.loads(json.dumps(main))
+            draft[field] = wrong
+            with self.assertRaises(ValueError, msg=field):
+                probe.compare_safe_summaries(main, draft)
+        draft = json.loads(json.dumps(main))
+        draft["pages"]["heartsaver"] = draft["pages"].pop("bls")
+        with self.assertRaises(ValueError):
+            probe.compare_safe_summaries(main, draft)
+
+    def test_main_draft_rejects_incomplete_private_or_mutable_evidence(self):
+        main = self._comparable_replay()
+        for field, wrong in (
+            ("published", True), ("source_snapshot_unchanged", False),
+            ("calculation_completed", False),
+        ):
+            bad = json.loads(json.dumps(main))
+            bad[field] = wrong
+            with self.assertRaises(ValueError, msg=field):
+                probe.compare_safe_summaries(bad, main)
+        bad = json.loads(json.dumps(main))
+        bad["pages"]["bls"]["ninety_day_offer_counts"][0]["open"] = -1
+        with self.assertRaises(ValueError):
+            probe.compare_safe_summaries(main, bad)
+        bad = json.loads(json.dumps(main))
+        bad["pages"]["bls"]["ninety_day_offer_counts"][1]["date"] = "2026-11-23-private-student"
+        with self.assertRaises(ValueError):
+            probe.compare_safe_summaries(main, bad)
+        bad = json.loads(json.dumps(main))
+        bad["pages"]["private-person@example.com"] = bad["pages"].pop("bls")
+        with self.assertRaises(ValueError):
+            probe.compare_safe_summaries(bad, bad)
+
+
+
 if __name__ == "__main__":
     unittest.main()
