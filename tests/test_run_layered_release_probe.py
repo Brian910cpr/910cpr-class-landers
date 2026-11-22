@@ -121,9 +121,9 @@ class FrozenSourceReplayTests(unittest.TestCase):
             "source_snapshot_sha256": "a" * 64,
             "replay_clock_utc": "2026-11-22T08:18:24+00:00",
             "horizon_start": days[0], "horizon_end": days[-1], "horizon_days": 90,
-            "pages": {"bls": {"ninety_day_offer_counts": [
+            "pages": {family: {"ninety_day_offer_counts": [
                 {"date": day, "anchor": 0, "barnacle": 0, "open": 1} for day in days
-            ]}}
+            ]} for family in probe.EXPECTED_FAMILIES}
         }
 
     def test_same_snapshot_main_draft_comparison_returns_only_daily_aggregate_deltas(self):
@@ -140,6 +140,29 @@ class FrozenSourceReplayTests(unittest.TestCase):
                          {"main": 90, "draft": 92, "delta": 2})
         self.assertEqual(delta["families"]["bls"]["offer_roles"]["barnacle"]["delta"], 1)
         self.assertNotIn("ninety_day_offer_counts", delta["families"]["bls"])
+
+    def test_main_draft_requires_all_eight_real_family_keys(self):
+        main = self._comparable_replay()
+        self.assertEqual(len(main["pages"]), 8)
+        self.assertIn("uscg-first-aid-cpr-aed", main["pages"])
+        self.assertEqual(len(probe.compare_safe_summaries(main, main)["families"]), 8)
+
+        missing = json.loads(json.dumps(main))
+        missing["pages"].pop("uscg-first-aid-cpr-aed")
+        with self.assertRaises(ValueError):
+            probe.compare_safe_summaries(main, missing)
+
+        extra = json.loads(json.dumps(main))
+        extra["pages"]["unverified_family"] = extra["pages"]["bls"]
+        with self.assertRaises(ValueError):
+            probe.compare_safe_summaries(main, extra)
+
+    def test_direct_selector_inputs_are_all_fingerprinted(self):
+        for path in ("data/config/travel_time_rules.json",
+                     "data/config/anchor_schedule_policy.json",
+                     "data/config/native_skills_activation.json",
+                     "data/config/calendar_sources.json"):
+            self.assertIn(path, probe.SOURCE_PATHS)
 
     def test_main_draft_mismatched_source_clock_or_family_fails_closed(self):
         main = self._comparable_replay()
