@@ -76,7 +76,7 @@ def attested_checkout_hold(source, now, courses):
     Valid but expired holds are distinguishable so only that lease is released.
     """
     if (source.get("kind") != "hold"
-            or source.get("source_file") != "canonical_checkout_hold_ledger"
+            or source.get("source_file") != "landerware_public_orders"
             or source.get("checkout_hold_status") != "admitted"
             or source.get("hold_admission_attested") is not True
             or source.get("checkout_hold_capacity_claimed") is not True
