@@ -74,6 +74,7 @@ class ValidatePublicRefreshOutputTests(unittest.TestCase):
         now = datetime(2026, 9, 27, 14, 0, tzinfo=timezone.utc)
         return now, {
             "schema_version": SCHEMA_VERSION, "generated_at": now.isoformat(),
+            "active_registration_statuses": ["registered", "confirmed", "completed", "active"],
             "non_session_sources": [], "sessions": [{
                 "canonical_session_id": "canonical-incident", "external_class_id": "14361098",
                 "active_registration_count": count, "count_available": True,
