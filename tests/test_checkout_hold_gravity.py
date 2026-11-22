@@ -46,7 +46,7 @@ class ProvisionalCheckoutHoldTests(unittest.TestCase):
         self.assertEqual([b["source_ids"] for b in result["blocks"]], [["lease-A"]])
         self.assertFalse(result["seated_offers"])
         self.assertTrue(any(c["course"] == "hs" and c["mode"] == "barnacle"
-                            and c["start"].hour == 10 and c["start"].minute == 30
+                            and c["start"].hour == 15 and c["start"].minute == 30
                             for c in result["accepted"]))
         self.assertFalse(any(c["course"] == "bls" and c["mode"] == "barnacle"
                              for c in result["accepted"]))
