@@ -68,13 +68,31 @@ class ClassRoutingTests(unittest.TestCase):
   for sid,existing in self.records().items():
    self.assertEqual(registration_action(existing)['mode'],'native',sid)
  def test_generated_heartsaver_detail_is_request_only_and_public_office(self):
-  page=(ROOT/'docs/classes/14114232.html').read_text(encoding='utf8')
-  self.assertIn('no seat is reserved until confirmed',page)
-  self.assertIn('Request only. No seat is reserved',page)
-  self.assertNotIn('with direct registration after the class details below',page)
-  self.assertNotIn('Shipyard Blvd - B',page)
-  self.assertNotIn('Shipyard+Blvd+-+B',page)
-  self.assertIn('Wilmington; Shipyard Blvd',page)
+  # A current-source refresh may retire an old public detail after canonical
+  # reconciliation establishes that the appointment is no longer public.
+  # Both states must be safe: a still-listed request-only class must not sell
+  # a seat, and a retired class must disclose no appointment time or CTA.
+  sid='14114232'
+  page=(ROOT/'docs/classes'/(sid+'.html')).read_text(encoding='utf8')
+  finder=(ROOT/'docs/classes/index.html').read_text(encoding='utf8')
+  sitemap=(ROOT/'docs/sitemap.xml').read_text(encoding='utf8')
+  listed='href="/classes/'+sid+'.html"' in finder
+  if 'This class is not publicly listed' in page:
+   self.assertFalse(listed)
+   self.assertIn('noindex,nofollow',page)
+   self.assertIn('No registration is available',page)
+   self.assertIn('href="/classes/index.html"',page)
+   self.assertNotIn('14114232.html',sitemap)
+   for private_detail in ('December 08, 2026','10:15 AM','Request this class','mailto:','Shipyard Blvd','register/?session='):
+    self.assertNotIn(private_detail,page)
+  else:
+   self.assertTrue(listed)
+   self.assertIn('no seat is reserved until confirmed',page)
+   self.assertIn('Request only. No seat is reserved',page)
+   self.assertNotIn('with direct registration after the class details below',page)
+   self.assertNotIn('Shipyard Blvd - B',page)
+   self.assertNotIn('Shipyard+Blvd+-+B',page)
+   self.assertIn('Wilmington; Shipyard Blvd',page)
  def test_request_hero_never_promises_direct_registration(self):
   row=dict(session_id='999',course_id='359474',course_name='BLS Renewal',start_at='2026-12-01T10:00:00-05:00',location_display='Wilmington; Shipyard Blvd - B')
   body='<p class="subhead">Morning session in Wilmington with direct registration after the class details below.</p><div class="cta-panel"><p class="cta-panel-label">Reserve your seat</p><p class="cta-panel-copy">Direct registration</p><div class="cta-row"><a class="button primary" href="/register/?session=999">Continue to Registration</a></div></div><script>const pageContext={register_url: "/register/?session=999",class_status: "scheduled"};</script>'
@@ -89,4 +107,53 @@ class ClassRoutingTests(unittest.TestCase):
   native_output=rewrite_detail_routes(native_html,native,{sid:native})
   self.assertIn('with direct registration after the class details below',native_output)
   self.assertIn('Continue to Registration',native_output)
+ def test_related_cards_and_sidebar_hide_unverified_or_private_occurrences(self):
+  # A refreshed directory may drop an old private or expired listing while
+  # retained public detail HTML still advertises it in related suggestions.
+  src='''<section class="js-live-session-group">
+<div class="upcoming-card js-session-item" data-session-id="101" data-start="2026-12-01T10:00:00-05:00">
+  <div class="upcoming-date">December 1, 2026</div>
+  <div class="upcoming-actions"><a href="/classes/101.html">Register</a></div>
+</div>
+<div class="upcoming-card js-session-item" data-session-id="102" data-start="2026-12-07T17:30:00-05:00">
+  <div class="upcoming-date">Private date must disappear</div>
+  <div class="upcoming-actions"><a href="/classes/102.html">Register</a></div>
+</div>
+</section>
+<aside class="current-courses-sidebar"><ul><li><a href="/classes/102.html">Private sidebar time</a></li><li><a href="/classes/101.html">Public sidebar time</a></li></ul></aside>
+'''
+  session={'session_id':'101','course_id':'359474','course_name':'AHA BLS Renewal','start_at':'2026-12-01T10:00:00-05:00','location_display':'Wilmington; Shipyard Blvd'}
+  verified={'101':session}
+  output=rewrite_detail_routes(src,session,verified)
+  self.assertIn('data-session-id="101"',output)
+  self.assertIn('Public sidebar time',output)
+  for secret in ['data-session-id="102"','Private date must disappear','Private sidebar time','/classes/102.html']:
+   self.assertNotIn(secret,output)
+  self.assertEqual(rewrite_detail_routes(output,session,verified),output)
+ def test_related_recommendations_with_uuid_or_missing_id_fail_closed(self):
+  # The generator writes arbitrary source session IDs into related cards;
+  # a private canonical UUID is not a numeric Enrollware identity.
+  public_id='11111111-1111-4111-8111-111111111111'
+  private_id='22222222-2222-4222-8222-222222222222'
+  src='''<section class="js-live-session-group">
+<div class="upcoming-card js-session-item" data-session-id="'''+public_id+'''" data-start="2026-12-01T10:00:00-05:00">
+  <div class="upcoming-date">Verified public date</div>
+</div>
+<div class="upcoming-card js-session-item" data-session-id="'''+private_id+'''" data-start="2026-12-07T17:30:00-05:00">
+  <div class="upcoming-date">Private UUID date</div>
+</div>
+<div class="upcoming-card js-session-item" data-start="2026-12-08T12:00:00-05:00">
+  <div class="upcoming-date">Unattributed private date</div>
+</div>
+</section>
+<aside class="current-courses-sidebar"><ul><li><a href="/classes/'''+public_id+'''.html">Public sidebar date</a></li><li><a href="/classes/'''+private_id+'''.html">Private UUID sidebar date</a></li><li><a href="/classes/index.html">Browse class index</a></li></ul></aside>
+'''
+  public={'session_id':public_id,'course_id':'359474','course_name':'BLS Renewal','start_at':'2026-12-01T10:00:00-05:00','location_display':'Wilmington; Shipyard Blvd'}
+  output=rewrite_detail_routes(src,public,{public_id:public})
+  self.assertIn('Verified public date',output)
+  self.assertIn('Public sidebar date',output)
+  self.assertIn('Browse class index',output)
+  for secret in (private_id,'Private UUID date','Private UUID sidebar date','Unattributed private date','2026-12-07T17:30:00-05:00'):
+   self.assertNotIn(secret,output)
+  self.assertEqual(output,rewrite_detail_routes(output,public,{public_id:public}))
 if __name__=='__main__':unittest.main()

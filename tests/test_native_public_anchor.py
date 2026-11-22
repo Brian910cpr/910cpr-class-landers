@@ -9,7 +9,12 @@ class NativeAnchorTests(unittest.TestCase):
         row=self.row()
         sessions,audit=resolve_canonical_demand([], [row])
         self.assertEqual(audit[0]["result"], "matched")
-        self.assertEqual(len(promote_seated_sessions(sessions)), 1)
+        # Active demand is operational occupancy, but not a PUBLIC joinable
+        # Anchor until a separately verified owned booking path exists.
+        self.assertEqual(len(promote_seated_sessions(sessions)), 0)
+        self.assertEqual(sessions[0]["active_registration_count"], 1)
+        self.assertFalse(sessions[0]["public_direct_booking"])
+        self.assertIsNone(sessions[0]["registration_url"])
         self.assertEqual(sessions[0]["start_at"], row["start_at"])
         again,_=resolve_canonical_demand(sessions, [row])
         self.assertEqual(len(again), 1)
@@ -23,8 +28,13 @@ class NativeAnchorTests(unittest.TestCase):
         from scripts.validate_public_refresh_output import validate_admin_reconciliation
         from scripts.build_landers import is_session_lander_candidate
         sessions,_=resolve_canonical_demand([], [self.row()])
-        self.assertEqual(validate_admin_reconciliation({"sessions":[]}, {"sources":{"hot_sync":{"available":True}},"sessions":sessions}), {sessions[0]["session_id"]})
-        self.assertTrue(is_session_lander_candidate(sessions[0]))
+        # The public lander gate must reject ID-derived links. A simulated
+        # explicitly approved native route exercises the downstream allowlist.
+        self.assertFalse(is_session_lander_candidate(sessions[0]))
+        verified = dict(sessions[0], public_direct_booking=True,
+            registration_url="https://www.910cpr.com/register/?session=" + sessions[0]["session_id"])
+        self.assertEqual(validate_admin_reconciliation({"sessions":[]}, {"sources":{"hot_sync":{"available":True}},"sessions":[verified]}), {verified["session_id"]})
+        self.assertTrue(is_session_lander_candidate(verified))
         self.assertFalse(is_session_lander_candidate({**sessions[0],"registration_url":"https://example.invalid/register"}))
         with self.assertRaises(ValueError):
             validate_admin_reconciliation({"sessions":[]}, {"sources":{"hot_sync":{"available":True}},"sessions":[{**sessions[0],"count_available":False}]})
@@ -35,7 +45,50 @@ class NativeAnchorTests(unittest.TestCase):
         base=dict(date="2026-10-10",courseId="329495",courseName="Heartsaver Blended",location=":: Wilmington; Shipyard Blvd",instructor="Brian Ennis",durationMinutes=120,schedulerConsumptionMinutes=120,appointmentUrl="https://example.test")
         offers=[{**base,"startTime":t,"schedulerConsumptionEnd":e} for t,e in [("12:00","14:00"),("16:30","18:30"),("09:00","11:00"),("14:30","16:30")]]
         payload={"dates":[{"date":"2026-10-10","startTimes":[{"startTime":o["startTime"],"courses":[o]} for o in offers]}],"counts":{}}
-        result=apply_selector_policy(payload,promote_seated_sessions(sessions),production_anchor_policy())
+        # This policy test uses an explicitly approved public seated fixture.
+        verified=dict(sessions[0], public_direct_booking=True)
+        result=apply_selector_policy(payload,promote_seated_sessions([verified]),production_anchor_policy())
         kept=[o for d in result["dates"] for slot in d["startTimes"] for o in slot["courses"]]
         self.assertEqual({o["startTime"] for o in kept}, {"12:00","16:30"})
         self.assertTrue(all(o["schedule_role"]=="barnacle" for o in kept))
+
+    def test_public_compact_barnacle_does_not_expose_private_attachment_id(self):
+        # A real one-seat private session can constrain a public Barnacle
+        # without exposing the private appointment's internal source identity.
+        from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload
+
+        private_id = "private-session-should-never-be-public"
+        source = {
+            "minimumLeadHours": 24,
+            "layeredDiagnostics": {
+                "projected_sources": [{
+                    "visibility": "private", "public_direct_booking": False,
+                    "session_id": private_id, "start": "2026-12-02T12:00",
+                    "end": "2026-12-02T14:00",
+                }],
+            },
+            "dates": [{
+                "date": "2026-12-02",
+                "startTimes": [{
+                    "startTime": "10:00",
+                    "courses": [{
+                        "courseId": "209809",
+                        "courseName": "Heartsaver",
+                        "offerType": "dynamic_appointment",
+                        "schedule_role": "barnacle",
+                        "attached_to_session_id": private_id,
+                        # A dynamic offer must not leak a private source ID
+                        # even if an upstream adapter accidentally includes it.
+                        "session_id": private_id,
+                        "appointmentUrl": "https://example.test/public-appointment",
+                    }],
+                }],
+            }],
+        }
+        public = public_selector_availability_payload(source)
+        self.assertEqual(public["layeredLandscape"]["sources"], [])
+        offers = public["dates"][0]["startTimes"][0]["courses"]
+        self.assertEqual(len(offers), 1)
+        self.assertEqual(offers[0]["scheduleRole"], "barnacle")
+        self.assertNotIn("attached_to_session_id", offers[0])
+        self.assertNotIn(private_id, str(public))

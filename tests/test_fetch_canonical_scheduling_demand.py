@@ -27,7 +27,7 @@ def payload(**session_overrides):
     return {
         "schema_version": subject.SCHEMA_VERSION,
         "generated_at": "2026-09-11T22:59:00Z",
-        "active_registration_statuses": ["registered", "confirmed", "completed"],
+        "active_registration_statuses": ["registered", "confirmed", "completed", "active"],
         "sessions": [session],
     }
 
@@ -87,6 +87,42 @@ class FetchCanonicalSchedulingDemandTests(unittest.TestCase):
 
     def test_validate_accepts_fresh_pii_free_contract(self):
         self.assertEqual(subject.validate_payload(payload(), now=NOW)["sessions"][0]["active_registration_count"], 2)
+
+    def test_validate_refuses_legacy_or_nonfinal_status_contracts(self):
+        expected = ["registered", "confirmed", "completed", "active"]
+        for statuses in (
+            None,
+            [],
+            expected[:-1],
+            expected + ["rescheduled"],
+            expected + ["payment_pending"],
+            ["registered", "confirmed", "completed", "active", "active"],
+            ["registered", "confirmed", "completed", 42],
+        ):
+            with self.subTest(statuses=statuses):
+                source = payload()
+                if statuses is None:
+                    source.pop("active_registration_statuses")
+                else:
+                    source["active_registration_statuses"] = statuses
+                with self.assertRaisesRegex(ValueError, "active registration status contract mismatch"):
+                    subject.validate_payload(source, now=NOW)
+
+    def test_run_rejects_legacy_status_semantics_without_replacing_good_snapshot(self):
+        legacy = payload()
+        legacy["active_registration_statuses"] = ["registered", "confirmed", "completed"]
+        with tempfile.TemporaryDirectory() as directory:
+            output, status = Path(directory) / "demand.json", Path(directory) / "status.json"
+            output.write_text('{"last":"good"}\n', encoding="utf-8")
+            with (patch.object(subject, "OUTPUT", output),
+                  patch.object(subject, "STATUS_OUTPUT", status),
+                  patch.object(subject, "fetch", return_value=legacy),
+                  patch.dict(subject.os.environ, {"HOT_SYNC_ADMIN_KEY": "test-key"}, clear=True)):
+                self.assertEqual(subject.run(now=NOW), 1)
+            self.assertEqual(output.read_text(encoding="utf-8"), '{"last":"good"}\n')
+            result = json.loads(status.read_text(encoding="utf-8"))
+            self.assertFalse(result["success"])
+            self.assertTrue(result["snapshot_preserved"])
 
     def test_validate_rejects_stale_payload(self):
         stale = payload()

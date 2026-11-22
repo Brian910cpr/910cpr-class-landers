@@ -5,11 +5,12 @@ from datetime import datetime
 import json
 from pathlib import Path
 import re
+import urllib.parse
 from typing import Any, Iterable
 from zoneinfo import ZoneInfo
 
 
-ACTIVE_REGISTRATION_STATUSES = frozenset({"registered", "confirmed", "completed"})
+ACTIVE_REGISTRATION_STATUSES = frozenset({"registered", "confirmed", "completed", "active"})
 
 
 def load_publication_demand(root: Path) -> dict[str, Any]:
@@ -132,9 +133,13 @@ def resolve_canonical_demand(
             "location_name": demand.get("location_name"),
             "lead_instructor_name": demand.get("lead_instructor_name"),
             "source": "landerware_event", "session_status": demand["session_status"],
-            "registration_status": "open", "public_direct_booking": True,
-            "registration_backend": "landerware",
-            "registration_url": "https://www.910cpr.com/register/?session=" + external_id,
+            # This canonical projection proves an active occupied seat, not
+            # that the hosted native checkout can attach a buyer to this class.
+            # The endpoint does not export a source-owned verified booking URL.
+            # Never manufacture a public registration claim from a session ID.
+            "registration_status": "open", "public_direct_booking": False,
+            "public_route_guard": "native_source_booking_route_unverified",
+            "registration_backend": "landerware", "registration_url": None,
         })
     resolved = source_rows
     exact: dict[str, list[int]] = {}
@@ -159,6 +164,12 @@ def resolve_canonical_demand(
             candidates = [index for index, row in enumerate(resolved) if _strict_occurrence_match(demand, row)]
 
         if len(candidates) != 1:
+            # A canonical booking matching several legacy occurrences cannot
+            # authorize any one public link. Keep all occupied intervals.
+            if len(candidates) > 1:
+                for candidate in candidates:
+                    resolved[candidate]["public_direct_booking"] = False
+                    resolved[candidate]["public_route_guard"] = "ambiguous_canonical_occurrence_identity"
             audits.append({
                 "canonical_session_id": canonical_id,
                 "external_class_id": external_id or None,
@@ -171,6 +182,10 @@ def resolve_canonical_demand(
         index = candidates[0]
         if index in claimed:
             conflicted.add(index)
+            # Independent claims to one legacy class require reconciliation;
+            # neither claim permits inheriting that class's open public link.
+            resolved[index]["public_direct_booking"] = False
+            resolved[index]["public_route_guard"] = "ambiguous_canonical_occurrence_claim"
             resolved[index].update(active_registration_count=None, count_available=False, demand_basis="unknown")
             resolved[index].pop("canonical_session_id", None)
             resolved[index].pop("demand_match_basis", None)
@@ -189,13 +204,38 @@ def resolve_canonical_demand(
             continue
 
         claimed[index] = canonical_id
-        if demand.get("visibility") == "private" or demand.get("registration_status") == "closed":
+        # Canonical privacy authority must survive into the publisher's
+        # session row. Merely disabling registration leaves the class time
+        # visible as a "Request" card and a directly addressable detail page.
+        # Never use a public canonical value to relax an explicit private
+        # or unlisted legacy restriction.
+        canonical_visibility = _text(demand.get("visibility")).casefold()
+        if canonical_visibility in {"private", "unlisted", "internal"}:
+            resolved[index]["visibility"] = canonical_visibility
+        if (canonical_visibility in {"private", "unlisted", "internal"}
+                or demand.get("registration_status") == "closed"):
             resolved[index]["public_direct_booking"] = False
             resolved[index]["registration_status"] = "closed"
             resolved[index]["registration_status_source"] = "canonical_class_sessions"
+        # A canonical native-owned class can share its numeric class ID with
+        # a legacy schedule export. That identity proves occupancy, NOT that
+        # the old Enrollware enrollment URL is authorized for a new native sale.
+        # Keep the class and its seat projection intact, but fail the public
+        # route closed until an actual native-owned registration URL is proven.
+        if (demand.get("source") == "landerware_public_offer"
+                and demand.get("registration_backend") == "landerware"):
+            legacy_url = _text(resolved[index].get("registration_url"))
+            legacy_host = urllib.parse.urlsplit(legacy_url).hostname or ""
+            if legacy_host == "enrollware.com" or legacy_host.endswith(".enrollware.com"):
+                resolved[index]["public_direct_booking"] = False
+                resolved[index]["public_route_guard"] = "native_canonical_legacy_url_unverified"
         # External identity survives a reschedule; it does not prove that the
         # canonical occurrence still has the current source's start time.
         if _start(demand) != _start(resolved[index]):
+            # A rescheduled canonical seat does not verify the old public
+            # enrollment time. Preserve source geometry; close only the route.
+            resolved[index]["public_direct_booking"] = False
+            resolved[index]["public_route_guard"] = "canonical_occurrence_time_mismatch"
             resolved[index].update(
                 canonical_session_id=canonical_id, demand_status="stale_anchor",
                 canonical_start_at=demand.get("start_at"),

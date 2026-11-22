@@ -52,11 +52,190 @@ test('untrusted origins and unauthenticated reads fail closed', async () => {
 });
 
 test('only active canonical registrations count; missing and external bridge are unknown', () => {
-  const row = {id:'fixture',registration_backend:'landerware',registrations:[{status:'registered'},{status:'confirmed'},{status:'completed'},{status:'canceled'},{status:'rescheduled'},{status:'no_show'}]};
-  assert.equal(api.projectDemand(row).active_registration_count,3);
+  const row = {id:'fixture',registration_backend:'landerware',registrations:[{status:'registered'},{status:'confirmed'},{status:'completed'},{status:'active'},{status:'canceled'},{status:'rescheduled'},{status:'no_show'}]};
+  assert.equal(api.projectDemand(row).active_registration_count,4);
   assert.equal(api.projectDemand({...row,registrations:[]}).active_registration_count,0);
   assert.equal(api.projectDemand({...row,registrations:null}).active_registration_count,null);
   assert.equal(api.projectDemand({...row,registration_backend:'enrollware'}).active_registration_count,null);
+});
+
+
+test('rescheduled-only private appointments are not falsely counted as occupied Anchors', () => {
+  // A prior appointment can remain scheduled in the historical source while
+  // its students have been moved. Rescheduled lifecycle rows are not live seats.
+  const prior = {id:'synthetic-prior-slot',status:'scheduled',source:'landerware_public_offer',
+    registration_backend:'landerware',visibility:'unlisted',registration_status:'closed',
+    registrations:[
+      {status:'rescheduled',registration_source:'landerware_native_checkout',external_registration_id:null},
+      {status:'rescheduled',registration_source:'landerware_native_checkout',external_registration_id:null}
+    ]};
+  const oldSlot = api.projectDemand(prior);
+  assert.equal(oldSlot.canonical_recorded_registration_count,0);
+  assert.equal(oldSlot.operational_has_active_seat,false);
+  assert.equal(oldSlot.visibility,'unlisted');
+  assert.equal(Object.hasOwn(oldSlot,'registrations'),false);
+
+  // Preserve the opposite rule: an independently active seat is still a
+  // private operational hold even if old rescheduled records coexist.
+  const newSeat = api.projectDemand({...prior, registrations:[
+    ...prior.registrations,
+    {status:'registered',registration_source:'landerware_native_checkout',external_registration_id:null}
+  ]});
+  assert.equal(newSeat.canonical_recorded_registration_count,1);
+  assert.equal(newSeat.operational_has_active_seat,true);
+  assert.equal(newSeat.visibility,'unlisted');
+});
+
+
+test('materialized LanderWare active registrations retain real seated demand privately', () => {
+  const row = {id:'canonical-session',source:'landerware_public_offer',
+    registration_backend:'landerware', external_class_id:'lw-12345678-1234-1234-1234-123456789abc',
+    registrations:[{status:'active'},{status:'active'},{status:'active'},{status:'canceled'}]};
+  const projected=api.projectDemand(row);
+  assert.equal(projected.count_available,true);
+  assert.equal(projected.active_registration_count,3);
+  assert.equal(projected.canonical_recorded_registration_count,3);
+  assert.equal(projected.demand_basis,'canonical_active_registrations');
+  assert.equal(projected.visibility,undefined);
+  assert.equal(Object.hasOwn(projected,'registrations'),false);
+  assert.equal(Object.hasOwn(projected,'customers'),false);
+  assert.equal(Object.hasOwn(projected,'participant'),false);
+});
+
+test('numeric legacy identity with native active seats signals occupied demand without inventing a known external roster', () => {
+  // Synthetic numeric/legacy source shape: LanderWare-owned active rows
+  // can coexist with a numeric legacy ID and absent external reconciliation.
+  const row = {id:'numeric-native',status:'scheduled',source:'landerware_public_offer',
+    visibility:'private',registration_status:'closed',registration_backend:'landerware',
+    external_class_id:'80001',
+    registrations:[{status:'active',registration_source:'landerware_native_checkout',external_registration_id:null}]};
+  const projection=api.projectDemand(row);
+  assert.equal(projection.count_available,false);
+  assert.equal(projection.active_registration_count,null);
+  assert.equal(projection.canonical_recorded_registration_count,1);
+  assert.equal(projection.demand_basis,'unknown');
+  assert.equal(projection.operational_has_active_seat,true);
+  assert.equal(projection.visibility,'private');
+  assert.equal(projection.registration_status,'closed');
+  assert.equal(Object.hasOwn(projection,'registrations'),false);
+  assert.equal(Object.hasOwn(projection,'customers'),false);
+
+  const mixed=api.projectDemand({...row,registrations:[
+    {status:'registered',registration_source:'enrollware_email_confirmation',external_registration_id:null},
+    {status:'active',registration_source:'landerware_native_checkout',external_registration_id:null},
+    {status:'active',registration_source:'landerware_native_checkout',external_registration_id:null},
+    {status:'active',registration_source:'landerware_native_checkout',external_registration_id:null}
+  ]});
+  assert.equal(mixed.active_registration_count,null);
+  assert.equal(mixed.canonical_recorded_registration_count,4);
+  assert.equal(mixed.operational_has_active_seat,true);
+
+  for(const change of [
+    {registrations:[{status:'registered',registration_source:'enrollware_email_confirmation'}]},
+    {registrations:[{status:'canceled',registration_source:'landerware_native_checkout'}]},
+    {registrations:[{status:'active',registration_source:'enrollware'}]},
+    {registration_backend:'enrollware'},
+    {source:'enrollware_reconciled'},
+    {status:'canceled'}
+  ]) {
+    const unproven=api.projectDemand({...row,...change});
+    assert.equal(unproven.operational_has_active_seat,false);
+    assert.equal(unproven.active_registration_count,null);
+  }
+});
+
+test('verified email-confirmed private intake is internal occupancy, not external roster or a public seat', () => {
+  const fixture = {id:'synthetic-private-intake',status:'scheduled',
+    source:'confirmed_booking_intake',registration_backend:'landerware',
+    visibility:'private',registration_status:'closed',external_class_id:'80002',
+    external_session_evidence:{kind:'registration_confirmation',gmail_message_id:'0123456789abcdef'},
+    registrations:[{status:'registered',registration_source:'enrollware_email_confirmation',external_registration_id:null}]};
+  const projected = api.projectDemand(fixture);
+  assert.equal(projected.operational_has_active_seat,true);
+  assert.equal(projected.count_available,false);
+  assert.equal(projected.active_registration_count,null);
+  assert.equal(projected.demand_basis,'unknown');
+  assert.equal(projected.canonical_recorded_registration_count,1);
+  assert.equal(projected.visibility,'private');
+  assert.equal(projected.registration_status,'closed');
+  assert.equal(Object.hasOwn(projected,'registrations'),false);
+  assert.equal(Object.hasOwn(projected,'external_session_evidence'),false);
+
+  for (const change of [
+    {source:'manual'},
+    {registration_backend:'enrollware'},
+    {status:'canceled'},
+    {external_session_evidence:{kind:'registration_confirmation'}},
+    {external_session_evidence:{kind:'owner_confirmed_booking',gmail_message_id:'0123456789abcdef'}},
+    {registrations:[{status:'canceled',registration_source:'enrollware_email_confirmation'}]},
+    {registrations:[{status:'registered',registration_source:'owner_voice_fragment'}]},
+    {registrations:null}
+  ]) {
+    const unverified = api.projectDemand({...fixture,...change});
+    assert.equal(unverified.operational_has_active_seat,false,JSON.stringify(change));
+    assert.equal(unverified.active_registration_count,null);
+  }
+});
+
+
+test('owner-confirmed one-seat intake remains a private operational Anchor after receiving a numeric legacy ID', () => {
+  // Verified owner-confirmed booking evidence is independent of the external
+  // roster, which must remain unknown until separately reconciled.
+  const booked = {id:'fixture-owner-booked',status:'scheduled',source:'confirmed_booking_intake',
+    registration_backend:'landerware',visibility:'private',registration_status:'closed',
+    external_class_id:'80123',
+    external_session_evidence:{kind:'owner_confirmed_booking',gmail_message_id:'0123456789abcdef'},
+    registrations:[{status:'registered',registration_source:'owner_confirmed_booking',external_registration_id:null}]};
+  for (const source of ['owner_confirmed_booking','owner_voice_fragment','manual']) {
+    const row = {...booked,registrations:[{...booked.registrations[0],registration_source:source}]};
+    const result=api.projectDemand(row);
+    assert.equal(result.operational_has_active_seat,true,source);
+    assert.equal(result.count_available,false,source);
+    assert.equal(result.active_registration_count,null,source);
+    assert.equal(result.canonical_recorded_registration_count,1,source);
+    assert.equal(result.visibility,'private');
+    assert.equal(result.registration_status,'closed');
+    assert.equal(Object.hasOwn(result,'registrations'),false);
+    assert.equal(Object.hasOwn(result,'external_session_evidence'),false);
+    assert.equal(Object.hasOwn(result,'registration_url'),false);
+  }
+  for (const change of [
+    {source:'enrollware_reconciled'},
+    {registration_backend:'enrollware'},
+    {status:'canceled'},
+    {external_session_evidence:{kind:'owner_confirmed_booking'}},
+    {external_session_evidence:{kind:'registration_confirmation',gmail_message_id:'0123456789abcdef'}},
+    {registrations:[{status:'canceled',registration_source:'owner_confirmed_booking'}]},
+    {registrations:[{status:'registered',registration_source:'enrollware_email_confirmation'}]},
+    {registrations:[{status:'registered',registration_source:'owner_confirmed_booking',external_registration_id:'999'}]},
+    {registrations:null}
+  ]) {
+    const result=api.projectDemand({...booked,...change});
+    assert.equal(result.operational_has_active_seat,false,JSON.stringify(change));
+    assert.equal(result.active_registration_count,null);
+  }
+});
+
+test('canonical course mapping preserves private booked-course gravity without inventing an external class or URL', () => {
+  const row = {id:'mapped-private',status:'scheduled',source:'confirmed_booking_intake',
+    registration_backend:'landerware',visibility:'private',registration_status:'closed',
+    external_course_id:null,external_class_id:null,
+    courses:{course_key:'aha-bls-provider-renewal',enrollware_course_id:'359474'},
+    registrations:[{status:'registered',registration_source:'enrollware_email_confirmation'}]};
+  const projection=api.projectDemand(row);
+  assert.equal(projection.external_course_id,null);
+  assert.equal(projection.scheduler_course_id,'359474');
+  assert.equal(projection.course_identity_conflict,false);
+  assert.equal(projection.operational_has_active_seat,true);
+  assert.equal(projection.visibility,'private');
+  assert.equal(Object.hasOwn(projection,'registration_url'),false);
+  assert.equal(Object.hasOwn(projection,'registrations'),false);
+  const conflict=api.projectDemand({...row,external_course_id:'209809'});
+  assert.equal(conflict.scheduler_course_id,null);
+  assert.equal(conflict.course_identity_conflict,true);
+  assert.equal(conflict.external_course_id,'209809');
+  const unavailable=api.projectDemand({...row,courses:{course_key:'unmapped',enrollware_course_id:null}});
+  assert.equal(unavailable.scheduler_course_id,null);
 });
 
 test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields', async () => {

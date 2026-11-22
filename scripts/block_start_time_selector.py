@@ -727,6 +727,9 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             for block, session in zip(normalized, [r for r in raw if isinstance(r, dict)]):
                 block.update(source_event_id=session.get("session_id") or session.get("id"),
                     course_id=session.get("course_id"), external_class_id=session.get("session_id"),
+                    # Keep the existing-class route supplied by this exact
+                    # authority, not a link invented by the public renderer.
+                    registration_url=session.get("registration_url"),
                     count_available=session.get("count_available") is True,
                     active_registration_count=session.get("active_registration_count"),
                     uncertainty_scope=session.get("uncertainty_scope", {}))
@@ -737,6 +740,19 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             continue
         start = parse_dt(session.get("consumption_start_at") or session.get("start_at"))
         end = parse_dt(session.get("consumption_end_at") or session.get("end_at"))
+        # Canonical intake may record only the 45-minute teaching interval for
+        # a known skills course. Reserve its required cleanup even when the
+        # source omitted it; never shorten a longer explicit commitment.
+        # Only an authoritative numeric scheduler identity permits this rule.
+        scheduler_course_id = (
+            session.get("scheduler_course_id") or session.get("external_course_id")
+        ) if session.get("course_identity_conflict") is not True else None
+        rule = course_rules.get(str(scheduler_course_id)) if scheduler_course_id else None
+        booked_end = parse_dt(session.get("end_at"))
+        if (rule and rule.get("kind") == "skills" and booked_end and end):
+            cleanup = int(rule.get("cleanup_buffer_minutes") or 0)
+            if cleanup > 0:
+                end = max(end, booked_end + timedelta(minutes=cleanup))
         if (not start or not end or end <= start) and not allow_unresolved:
             raise BlockSelectorInputError("Canonical session has an invalid occupied window")
         canonical.append({
@@ -747,12 +763,38 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "source_file": "canonical_class_sessions",
             "source_event_id": session.get("canonical_session_id"),
             "external_class_id": session.get("external_class_id"),
-            "course_id": session.get("course_id") or session.get("external_course_id"),
+            # The final publisher may prove a CTA only against a route from
+            # the selected canonical class, never by a legacy ID match alone.
+            "registration_url": session.get("registration_url"),
+            # A source class may lack an external course ID while its joined
+            # canonical course has an explicitly mapped scheduler course ID.
+            # A disagreement is not permission to guess a family/repeat gap.
+            "course_id": None if session.get("course_identity_conflict") is True else (
+                session.get("scheduler_course_id") or session.get("course_id") or session.get("external_course_id")),
+            "course_key": session.get("course_key"),
+            # Preserve internal canonical visibility and route authority through
+            # the V2 publisher. This is not a grant of public joinability.
+            "visibility": session.get("visibility"),
+            # Keep canonical route-lifecycle proof on the internal occupancy
+            # DTO. The final V2 seated-route publisher must not revive a
+            # closed/full route merely because the booked session is occupied.
+            # These flags never grant publication or alter the occupied time.
+            "registration_status": session.get("registration_status"),
+            "session_status": session.get("session_status"),
+            **({"is_full": True} if session.get("is_full") is True else {}),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
             "instructor_unassigned": not session.get("lead_instructor_name"),
             "count_available": session.get("count_available") is True,
             "active_registration_count": session.get("active_registration_count"),
+            # A proven native/confirmed intake seat blocks operations even while
+            # an unrelated legacy roster total remains unknown; no public join.
+            "operational_has_active_seat": session.get("operational_has_active_seat") is True,
         })
+        # Only propagate an explicitly revoked public route. Absence is not
+        # evidence of either permission or denial, and downstream occupancy
+        # consumers must not infer a synthetic public_direct_booking field.
+        if session.get("public_direct_booking") is False:
+            canonical[-1]["public_direct_booking"] = False
     occupancy = sessions_current + schedule_future + calendar_blocks + canonical
     for block in occupancy:
         canonical, resource, normalized = generate_dynamic_offers.normalize_location_resource(
@@ -771,8 +813,10 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
 def public_direct_bookable_session(session: dict[str, Any]) -> bool:
     registration_status = clean_text(session.get("registration_status") or "open").lower()
     session_status = clean_text(session.get("session_status") or "active").lower()
+    visibility = clean_text(session.get("visibility")).lower()
     return (
-        session.get("public_direct_booking") is not False
+        visibility not in {"private", "unlisted", "internal"}
+        and session.get("public_direct_booking") is not False
         and registration_status not in {"closed", "full", "unverified", "cancelled", "canceled", "deleted"}
         and session_status not in {"cancelled", "canceled", "deleted"}
         and session.get("is_full") is not True
@@ -1158,7 +1202,7 @@ def contextual_course(course_id, option, catalog, rules):
     return {**course, "schedule_page_option": option}
 
 
-def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
+def build_block_schedule_page(page_config: dict[str, Any], *, replay_now: datetime | None = None) -> dict[str, Any]:
     page_key = normalize_key(page_config.get("page_key"))
     if not page_key:
         raise BlockSelectorInputError("Block schedule page config is missing page_key")
@@ -1197,7 +1241,9 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     from scripts.layered_publication_adapter import active as layered_active
     occupancy = build_occupancy(loaded, course_rules, allow_unresolved=layered_active(layered_policy))
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy) if not layered_active(layered_policy) else {}
-    reference_now = selector_reference_datetime()
+    # A read-only replay can pin one clock across all course families.
+    # Ordinary production callers retain the live Eastern reference time.
+    reference_now = selector_reference_datetime(replay_now)
     anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
     same_day_anchors = seated_family_anchors(
         schedule_future_payload=loaded.get("schedule_future"),
@@ -1249,7 +1295,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         windows = [dict(w, public_location_allowed=public_location_allowed(
             clean_text(w.get("location_name")), public_location_policy)) for w in windows]
         effective_layered_policy = dict(layered_policy,
-            lead_minutes=int(public_offer_policy.get("minimum_lead_hours") or 0) * 60)
+            lead_minutes=int(public_offer_policy.get("minimum_lead_hours") or 0) * 60,
+            require_verified_day_gravity=True)
         calculation = cached_calculate(windows, occupancy, selected_courses, effective_layered_policy,
             loaded["location_resource_map"], reference_now, window_datetimes,
             lambda window, course: bool(people.get(normalize_key(window.get("person_id")))

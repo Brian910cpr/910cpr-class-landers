@@ -1,7 +1,10 @@
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from scripts.anchor_state import promote_seated_sessions
+from scripts.block_start_time_selector import build_occupancy, public_direct_bookable_session
+from scripts.layered_selector_adapter import aware
 from scripts.canonical_scheduling_demand import resolve_canonical_demand, summarize_positive_v1_attribution
 
 
@@ -53,11 +56,182 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertEqual("durable-sep-14-bls-renewal", sessions[1]["canonical_session_id"])
         self.assertEqual("external_class_id", audit[0]["match_basis"])
 
+    def test_native_public_seat_without_source_owned_route_stays_operational_not_joinable(self):
+        # The source's native UUID and a positive registration count do not
+        # themselves prove that /register/ will attach a buyer to this session.
+        # Keep the existing occupied seat but never invent a public checkout URL.
+        native = demand(
+            canonical_session_id="native-route-unverified",
+            external_class_id="lw-12345678-1234-1234-1234-123456789abc",
+            source="landerware_event", registration_backend="landerware",
+            session_status="scheduled", visibility="public",
+            registration_status="open", workspace_projection_status="current",
+            count_available=True, active_registration_count=1,
+        )
+        rows, audit = resolve_canonical_demand([], [native])
+        self.assertEqual("matched", audit[0]["result"])
+        self.assertEqual(1, len(rows))
+        self.assertEqual(1, rows[0]["active_registration_count"])
+        self.assertTrue(rows[0]["count_available"])
+        self.assertFalse(rows[0]["public_direct_booking"])
+        self.assertEqual("open", rows[0]["registration_status"])
+        self.assertIsNone(rows[0]["registration_url"])
+        self.assertEqual("native_source_booking_route_unverified", rows[0]["public_route_guard"])
+        self.assertFalse(public_direct_bookable_session(rows[0]))
+
+    def test_native_seated_source_does_not_publish_inherited_legacy_enrollment_url(self):
+        # A real native BLS seat may share the numerical Enrollware class ID
+        # with its legacy schedule mirror. Keep its identity, but never turn
+        # the mirror's old URL into an authorized native checkout route.
+        legacy = occurrence(session_id="15000001", course_id="209806",
+            registration_url="https://coastalcprtraining.enrollware.com/enroll?id=15000001",
+            registration_status="open", session_status="scheduled")
+        native = demand(external_class_id="15000001", source="landerware_public_offer",
+            registration_backend="landerware", visibility="public",
+            session_status="scheduled", registration_status="open",
+            operational_has_active_seat=True, count_available=False,
+            active_registration_count=None)
+        resolved, audit = resolve_canonical_demand([legacy], [native])
+        self.assertEqual("external_class_id", audit[0]["match_basis"])
+        self.assertEqual(native["canonical_session_id"], resolved[0]["canonical_session_id"])
+        self.assertFalse(resolved[0]["public_direct_booking"])
+        self.assertFalse(public_direct_bookable_session(resolved[0]))
+        self.assertEqual("native_canonical_legacy_url_unverified", resolved[0]["public_route_guard"])
+        # This does not cancel the occupied canonical appointment or erase
+        # a legitimate legacy-backed enrollment route absent native ownership.
+        self.assertEqual(1, native["operational_has_active_seat"])
+        old_owner, _ = resolve_canonical_demand([legacy], [dict(native, registration_backend="enrollware")])
+        self.assertTrue(public_direct_bookable_session(old_owner[0]))
+
+    def test_unlisted_canonical_seat_never_inherits_public_legacy_booking_route(self):
+        # An accepted unlisted class still reserves a real seat, but the public
+        # legacy mirror must not make it joinable, even with an "open" or
+        # externally managed registration status. Preserve its source identity.
+        legacy = occurrence(
+            session_id="15000007",
+            registration_url="https://coastalcprtraining.enrollware.com/enroll?id=15000007",
+            registration_status="open",
+            public_direct_booking=True,
+        )
+        for status in ("external", "open"):
+            with self.subTest(status=status):
+                unlisted = demand(
+                    external_class_id="15000007",
+                    visibility="unlisted",
+                    source="enrollware_reconciled",
+                    registration_backend="enrollware",
+                    session_status="scheduled",
+                    registration_status=status,
+                    active_registration_count=1,
+                    count_available=True,
+                    operational_has_active_seat=True,
+                )
+                rows, audit = resolve_canonical_demand([legacy], [unlisted])
+                self.assertEqual("external_class_id", audit[0]["match_basis"])
+                self.assertEqual(unlisted["canonical_session_id"], rows[0]["canonical_session_id"])
+                self.assertEqual(1, rows[0]["active_registration_count"])
+                self.assertTrue(rows[0]["count_available"])
+                self.assertFalse(rows[0]["public_direct_booking"])
+                self.assertEqual("closed", rows[0]["registration_status"])
+                self.assertFalse(public_direct_bookable_session(rows[0]))
+                # A nonpublic active seat may still protect instructor time.
+                # It must not reappear as a request card when the canonical
+                # reconciliation is CURRENT (not just when it is stale).
+                from scripts.build_index_and_sitemap import schedule_future_to_public_session
+                self.assertEqual("unlisted", rows[0]["visibility"])
+                self.assertIsNone(schedule_future_to_public_session(rows[0]))
+        # Do not globally disable independently public, correctly owned seats.
+        public = dict(unlisted, visibility="public", registration_status="open")
+        rows, _ = resolve_canonical_demand([legacy], [public])
+        self.assertTrue(public_direct_bookable_session(rows[0]))
+
+    def test_rescheduled_only_unlisted_legacy_shell_never_reappears_in_public_finder(self):
+        # A legacy class link can survive a move, even though the durable
+        # session has only historical rescheduled registrations. A stale
+        # roster is NOT zero-seat proof, but an explicit unlisted visibility
+        # decision must still veto public publication without deleting the
+        # operational source interval or inventing a registration.
+        from scripts.build_index_and_sitemap import schedule_future_to_public_session
+
+        legacy = occurrence(
+            session_id="15990017",
+            session_status="active",
+            registration_status="open",
+            registration_url="https://coastalcprtraining.enrollware.com/enroll?id=15990017",
+            public_direct_booking=True,
+        )
+        historical = demand(
+            external_class_id="15990017",
+            source="enrollware_reconciled",
+            registration_backend="enrollware",
+            session_status="scheduled",
+            visibility="unlisted",
+            registration_status="external",
+            active_registration_count=None,
+            count_available=False,
+            demand_status="stale_reconciliation",
+        )
+        resolved, audit = resolve_canonical_demand([legacy], [historical])
+        self.assertEqual(1, len(resolved))
+        self.assertEqual("unknown", audit[0]["result"])
+        self.assertEqual(legacy["start_at"], resolved[0]["start_at"])
+        self.assertFalse(resolved[0]["count_available"])
+        self.assertIsNone(resolved[0]["active_registration_count"])
+        self.assertFalse(resolved[0]["public_direct_booking"])
+        self.assertEqual("closed", resolved[0]["registration_status"])
+        self.assertFalse(public_direct_bookable_session(resolved[0]))
+        self.assertIsNone(schedule_future_to_public_session(resolved[0]))
+        self.assertEqual([], promote_seated_sessions(resolved))
+
+    def test_explicit_private_unlisted_legacy_visibility_is_not_publicly_bookable(self):
+        # Independent of canonical matching, a legacy source's explicit
+        # private/unlisted visibility must never create a public join route.
+        for visibility in ("private", "unlisted", "internal", "PRIVATE", "Unlisted", "INTERNAL"):
+            with self.subTest(visibility=visibility):
+                row = occurrence(visibility=visibility, registration_status="open",
+                                 public_direct_booking=True)
+                self.assertFalse(public_direct_bookable_session(row))
+        # Missing legacy visibility is not proof of private status by itself;
+        # existing legacy route and source-ownership checks still apply.
+        self.assertTrue(public_direct_bookable_session(occurrence()))
+        self.assertTrue(public_direct_bookable_session(occurrence(visibility="public")))
+
     def test_ambiguous_fallback_fails_closed(self):
         sessions, audit = resolve_canonical_demand([occurrence(session_id="a"), occurrence(session_id="b")], [demand()])
         self.assertFalse(any("canonical_session_id" in row for row in sessions))
         self.assertEqual("ambiguous", audit[0]["result"])
         self.assertEqual(2, audit[0]["candidate_count"])
+        self.assertTrue(all(row["public_direct_booking"] is False for row in sessions))
+        self.assertTrue(all(not public_direct_bookable_session(row) for row in sessions))
+
+    def test_competing_canonical_claims_close_shared_legacy_public_route(self):
+        legacy = occurrence(session_id="13800033", registration_status="open",
+                            registration_url="https://example.test/enroll/13800033")
+        first = demand(canonical_session_id="independent-a", external_class_id="13800033",
+                       visibility="public", registration_status="open")
+        second = dict(first, canonical_session_id="independent-b")
+        rows, audit = resolve_canonical_demand([legacy], [first, second])
+        self.assertEqual(["ambiguous", "ambiguous"], [a["result"] for a in audit])
+        self.assertEqual("ambiguous", rows[0]["demand_status"])
+        self.assertFalse(rows[0]["count_available"])
+        self.assertFalse(rows[0]["public_direct_booking"])
+        self.assertEqual("ambiguous_canonical_occurrence_claim", rows[0]["public_route_guard"])
+        self.assertFalse(public_direct_bookable_session(rows[0]))
+        self.assertEqual(legacy["start_at"], rows[0]["start_at"])
+
+    def test_moved_canonical_occurrence_closes_stale_public_enrollment(self):
+        legacy = occurrence(session_id="13800034", registration_status="open",
+                            registration_url="https://example.test/enroll/13800034")
+        moved = demand(external_class_id="13800034", visibility="public",
+                       registration_status="open", start_at="2026-09-15T11:15:00-04:00")
+        rows, audit = resolve_canonical_demand([legacy], [moved])
+        self.assertEqual("stale_anchor", audit[0]["result"])
+        self.assertEqual("stale_anchor", rows[0]["demand_status"])
+        self.assertEqual(legacy["start_at"], rows[0]["start_at"])
+        self.assertEqual(moved["start_at"], rows[0]["canonical_start_at"])
+        self.assertFalse(rows[0]["public_direct_booking"])
+        self.assertFalse(public_direct_bookable_session(rows[0]))
+        self.assertEqual("canonical_occurrence_time_mismatch", rows[0]["public_route_guard"])
 
     def test_add_increment_cancel_and_move_recompute_both_occurrences(self):
         old = occurrence(session_id="old", start_at="2026-09-14T11:15:00-04:00")
@@ -147,19 +321,116 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertEqual(0, summary["positive_active_sessions"])
         self.assertEqual(0, summary["v1_identity_gap_positive"])
 
+    def test_numeric_external_native_seat_reaches_internal_hard_occupancy_without_opening_public_join(self):
+        # A counted native lifecycle seat can be operational even while a
+        # numeric legacy external roster is unproven; do not synthesize public
+        # availability or silently drop the longer occupied consumption end.
+        session = dict(canonical_session_id="numeric-native-fixture",
+            external_class_id="80001", session_status="scheduled",
+            start_at="2030-11-23T10:00:00-05:00",
+            end_at="2030-11-23T12:00:00-05:00",
+            consumption_end_at="2030-11-23T12:30:00-05:00",
+            visibility="private", registration_status="closed",
+            location_name="Private venue", lead_instructor_name=None,
+            active_registration_count=None, count_available=False,
+            operational_has_active_seat=True)
+        loaded = dict(location_resource_map={}, sessions_current={"sessions": []},
+                      schedule_future={"sessions": []}, live_availability_snapshot={},
+                      canonical_demand={"sessions": [session]})
+        with (patch("scripts.block_start_time_selector.generate_dynamic_offers.normalize_occupancy", return_value=[]),
+              patch("scripts.block_start_time_selector.generate_dynamic_offers.availability_windows", return_value=[]),
+              patch("scripts.block_start_time_selector.generate_dynamic_offers.normalize_location_resource",
+                    return_value=("Private venue", None, False))):
+            blocks = build_occupancy(loaded, {}, allow_unresolved=True)
+        self.assertEqual(len(blocks), 1)
+        self.assertTrue(blocks[0]["operational_has_active_seat"])
+        self.assertFalse(blocks[0]["count_available"])
+        self.assertIsNone(blocks[0]["active_registration_count"])
+        self.assertTrue(blocks[0]["instructor_unassigned"])
+        self.assertEqual(aware(blocks[0]["end"]).isoformat(), "2030-11-23T12:30:00-05:00")
+        self.assertNotIn("public_direct_booking", blocks[0])
+
+    def test_known_canonical_blended_skills_hold_cleanup_without_public_promotion(self):
+        import json
+        from scripts.block_start_time_selector import course_rules_by_id
+
+        root = Path(__file__).resolve().parents[1]
+        rules = course_rules_by_id(json.loads(
+            (root / "data/inventory/course_consumption_rules.json").read_text(encoding="utf-8")))
+        policy = json.loads(
+            (root / "data/config/layered_scheduling_policy.json").read_text(encoding="utf-8"))
+        self.assertEqual(policy["skills_instruction_minutes"], rules["329495"]["duration_minutes"])
+        self.assertEqual(policy["skills_cleanup_minutes"], rules["329495"]["cleanup_buffer_minutes"])
+        self.assertEqual(60, rules["329495"]["scheduler_consumption_minutes"])
+        self.assertEqual(2, rules["329495"]["default_capacity"])
+
+        def seat(identity, course, end, consumption_end=None, conflict=False, status="scheduled"):
+            return dict(
+                canonical_session_id=identity, session_status=status,
+                start_at="2030-11-24T18:00:00-05:00",
+                end_at=end, consumption_end_at=consumption_end,
+                scheduler_course_id=course, course_identity_conflict=conflict,
+                visibility="private", registration_status="closed",
+                location_name="Private venue", lead_instructor_name=None,
+                operational_has_active_seat=True, count_available=False,
+                active_registration_count=None,
+            )
+
+        sessions = [
+            # A real 45-minute canonical skills class missing cleanup must
+            # protect the next 15 minutes, without inventing a second room.
+            seat("incomplete-cleanup", "329495", "2030-11-24T18:45:00-05:00"),
+            # Longer explicit holds are authoritative, never shortened.
+            seat("longer-hold", "329495", "2030-11-24T18:45:00-05:00",
+                 "2030-11-24T19:30:00-05:00"),
+            # A 509474 skills record already carries exactly 15 cleanup minutes.
+            seat("already-buffered", "509474", "2030-11-24T18:45:00-05:00",
+                 "2030-11-24T19:00:00-05:00"),
+            # Disputed or absent identities retain physical holds only.
+            seat("conflicted", "329495", "2030-11-24T18:45:00-05:00",
+                 conflict=True),
+            seat("unmapped", None, "2030-11-24T18:45:00-05:00"),
+            seat("canceled", "329495", "2030-11-24T18:45:00-05:00",
+                 status="canceled"),
+        ]
+        loaded = dict(location_resource_map={}, sessions_current={"sessions": []},
+                      schedule_future={"sessions": []}, live_availability_snapshot={},
+                      canonical_demand={"sessions": sessions})
+        with (patch("scripts.block_start_time_selector.generate_dynamic_offers.normalize_occupancy", return_value=[]),
+              patch("scripts.block_start_time_selector.generate_dynamic_offers.availability_windows", return_value=[]),
+              patch("scripts.block_start_time_selector.generate_dynamic_offers.normalize_location_resource",
+                    return_value=("Private venue", None, False))):
+            occupied = build_occupancy(loaded, rules, allow_unresolved=True)
+        by_id = {row["source_event_id"]: row for row in occupied}
+        self.assertEqual(set(by_id), {
+            "incomplete-cleanup", "longer-hold", "already-buffered", "conflicted", "unmapped"})
+        self.assertEqual({
+            identity: aware(row["end"]).strftime("%H:%M")
+            for identity, row in by_id.items()
+        }, {
+            "incomplete-cleanup": "19:00", "longer-hold": "19:30",
+            "already-buffered": "19:00", "conflicted": "18:45", "unmapped": "18:45"})
+        self.assertTrue(all(row["instructor_unassigned"] for row in occupied))
+        self.assertTrue(all(row["operational_has_active_seat"] for row in occupied))
+        self.assertTrue(all("public_direct_booking" not in row for row in occupied))
+
     def test_protected_projection_source_has_required_contract_and_no_customer_fields(self):
         source = (Path(__file__).resolve().parents[1] / "supabase/functions/canonical-scheduling-demand/index.ts").read_text(encoding="utf-8")
         for field in (
             "canonical_session_id", "external_class_id", "external_course_id", "course_key",
             "start_at", "end_at", "location_id", "location_name", "lead_instructor_id",
             "lead_instructor_name", "source", "session_status", "active_registration_count", "demand_basis",
+            "operational_has_active_seat",
         ):
             self.assertIn(field, source)
         self.assertIn('req.headers.get("x-hot-sync-admin-key")', source)
         self.assertNotIn("customers", source)
         self.assertNotIn("first_name", source)
         self.assertNotIn("last_name", source)
-        self.assertNotIn("email", source)
+        # A registration_source enum may contain the word email without
+        # exporting an address; guard actual identity fields instead.
+        self.assertNotIn('"email"', source)
+        self.assertNotIn("customer_email", source)
 
 
 if __name__ == "__main__":

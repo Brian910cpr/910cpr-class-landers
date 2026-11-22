@@ -3,7 +3,9 @@ import {localDate, localMidnight, demandRange} from '../_shared/scheduling-clock
 export {localDate, localMidnight, demandRange} from '../_shared/scheduling-clock.ts';
 import {registrationProof} from '../_shared/external-roster-proof.ts';
 
-const ACTIVE = new Set(["registered", "confirmed", "completed"]);
+// Canonical registration state `active` is a real occupied seat (not a placeholder).
+// Keep aligned with external-roster-proof and canonical-session-workspace.
+const ACTIVE = new Set(["registered", "confirmed", "completed", "active"]);
 const ALLOWED_ORIGINS = new Set(["https://www.910cpr.com", "https://910cpr.com"]);
 
 function response(origin: string, body: unknown, status = 200) {
@@ -40,6 +42,55 @@ export function projectDemand(row: any) {
   const proof = registrationProof(row);
   const countAvailable = proof.count_available;
   const registrations = countAvailable ? row.registrations : [];
+  // Internal occupied-time signal only. A numeric legacy external_class_id can
+  // coexist with genuine native registrations; without a fresh complete
+  // external roster we must NOT infer the total, remaining seats, or public
+  // joinability from those rows. Verified local native lifecycle is sufficient
+  // to reserve the instructor's time and supply Anchor gravity.
+  const nativeCommittedSeat = row.registration_backend === "landerware"
+    && row.source === "landerware_public_offer"
+    && Array.isArray(row.registrations)
+    && row.registrations.some((item: any) => ACTIVE.has(item.status)
+      && item.registration_source === "landerware_native_checkout"
+      && !item.external_registration_id);
+  // A confirmed appointment intake can have a real seated registration even
+  // while its legacy numeric class roster remains unproven. Require the original
+  // accepted confirmation-message provenance and the matching active lifecycle;
+  // do not infer totals or public joinability from this one-seat signal.
+  const emailEvidence = row.external_session_evidence || {};
+  const confirmedEmailIntakeSeat = row.registration_backend === "landerware"
+    && row.source === "confirmed_booking_intake"
+    && emailEvidence.kind === "registration_confirmation"
+    && /^[0-9a-f]{16}$/i.test(String(emailEvidence.gmail_message_id || ""))
+    && Array.isArray(row.registrations)
+    && row.registrations.some((item: any) => ACTIVE.has(item.status)
+      && item.registration_source === "enrollware_email_confirmation");
+  // Owner-confirmed private booking intake with a matching accepted source
+  // and an active canonical seat also reserves operational time. This matters
+  // if a later import assigns a numeric legacy class ID: an unproven external
+  // roster must not erase independently confirmed owner demand.
+  // This signal never authorizes public joinability or an external seat count.
+  const ownerConfirmedIntakeSeat = row.registration_backend === "landerware"
+    && row.source === "confirmed_booking_intake"
+    && emailEvidence.kind === "owner_confirmed_booking"
+    && /^[0-9a-f]{16}$/i.test(String(emailEvidence.gmail_message_id || ""))
+    && Array.isArray(row.registrations)
+    && row.registrations.some((item: any) => ACTIVE.has(item.status)
+      && ["owner_confirmed_booking", "owner_voice_fragment", "manual"].includes(item.registration_source)
+      && !item.external_registration_id);
+  // The catalog's explicit Enrollware course mapping is a scheduling identity,
+  // not evidence of a legacy session, public seat, or valid booking URL.
+  // Never silently select a family when canonical and historical course IDs conflict.
+  const mappedCourseId = String(row.courses?.enrollware_course_id || "");
+  const historicalCourseId = String(row.external_course_id || "");
+  const mapped = /^[0-9]+$/.test(mappedCourseId) ? mappedCourseId : null;
+  const historical = /^[0-9]+$/.test(historicalCourseId) ? historicalCourseId : null;
+  const courseIdentityConflict = Boolean(mapped && historical && mapped !== historical);
+  const schedulerCourseId = courseIdentityConflict ? null : (mapped || historical);
+  const operationalHasActiveSeat = ["scheduled", "active"].includes(row.status)
+    && ((countAvailable && typeof proof.active_registration_count === "number"
+          && proof.active_registration_count > 0) || nativeCommittedSeat || confirmedEmailIntakeSeat
+      || ownerConfirmedIntakeSeat);
   const workspaces = row.landerware_sessions || [];
   const workspace = workspaces.length === 1 ? workspaces[0] : null;
   const workspaceStatus = !workspaces.length ? "missing" : !workspace
@@ -49,6 +100,8 @@ export function projectDemand(row: any) {
     canonical_session_id: row.id,
     external_class_id: row.external_class_id || null,
     external_course_id: row.external_course_id || null,
+    scheduler_course_id: schedulerCourseId,
+    course_identity_conflict: courseIdentityConflict,
     course_key: row.courses?.course_key || null,
     start_at: row.start_at,
     end_at: row.end_at,
@@ -64,6 +117,8 @@ export function projectDemand(row: any) {
     registration_status: row.registration_status,
     workspace_projection_status: workspaceStatus,
     workspace_session_id: workspace?.id || null,
+    // Not authority to list or join private sessions, or to treat an unknown external roster as zero.
+    operational_has_active_seat: operationalHasActiveSeat,
     canonical_recorded_registration_count: Array.isArray(row.registrations)
       ? row.registrations.filter((item: any) => ACTIVE.has(item.status)).length : null,
     source: row.source,
@@ -80,7 +135,7 @@ export async function loadDemand(start: string, stop: string) {
   const select = [
     "id", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "external_session_evidence", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
     "consumption_start_at", "consumption_end_at", "source_location_label", "source_instructor_label", "visibility", "registration_status",
-    "courses!class_sessions_course_id_fkey(course_key,name)",
+    "courses!class_sessions_course_id_fkey(course_key,name,enrollware_course_id)",
     "locations!class_sessions_location_id_fkey(name)",
     "people!class_sessions_lead_instructor_id_fkey(display_name)",
     "landerware_sessions!landerware_sessions_class_session_id_fkey(id,starts_at,ends_at)",

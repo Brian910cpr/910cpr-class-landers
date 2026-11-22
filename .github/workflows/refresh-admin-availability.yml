@@ -12,6 +12,7 @@ on:
   push:
     branches:
       - main
+      - integration/p0-demand-safety-20261119-r1
     paths:
       - '.github/workflows/refresh-admin-availability.yml'
       - 'scripts/build_sessions_current.py'
@@ -21,12 +22,17 @@ on:
       - 'scripts/build_live_availability_snapshot.py'
       - 'scripts/validate_public_refresh_output.py'
       - 'tests/test_validate_public_refresh_output.py'
+      - 'tests/test_class_registration_routing.py'
+      - 'tests/test_refresh_class_finder_index.py'
       - 'scripts/publish_admin_availability.py'
       - 'scripts/publish_admin_schedule.py'
       - 'scripts/publish_landerware_ical.py'
       - 'scripts/publish_scheduling_landscape.py'
       - 'scripts/publish_admin_reference_data.py'
       - 'scripts/block_start_time_selector.py'
+      - 'scripts/run_layered_release_probe.py'
+      - 'scripts/compare_current_main_draft_probe.py'
+      - 'tests/test_run_layered_release_probe.py'
       - 'scripts/layered_publication_adapter.py'
       - 'scripts/layered_day_cache.py'
       - 'scripts/build_bls_block_schedule_pilot.py'
@@ -187,6 +193,15 @@ jobs:
       - name: Build durable seated Anchor session pages
         run: python -m scripts.build_landers --anchors-only --data-file docs/data/schedule_future.json
 
+      - name: Refresh class finder and safe routes from this same seated snapshot
+        run: |
+          python -m scripts.refresh_public_class_artifacts
+          python -B -m unittest tests.test_class_registration_routing tests.test_refresh_class_finder_index tests.test_verify_replayed_public_privacy
+          # The source-backed gate must protect the ACTUAL scheduled publish,
+          # not just the draft's read-only probe. Any leaked private identity
+          # aborts before the Git commit and public deployment.
+          python -B -m scripts.verify_replayed_public_privacy
+
       - name: Publish instructor and location reference feeds
         run: python -m scripts.publish_admin_reference_data
 
@@ -243,6 +258,7 @@ jobs:
             docs/data/anchor_state.json \
             docs/data/block-selector-availability \
             docs/classes \
+            docs/sitemap.xml \
             docs/admin/dashboard.html \
             debug/status/build_sessions_current.json \
             debug/status/build_schedule_future.json
@@ -271,7 +287,7 @@ jobs:
     concurrency:
       group: v2-release-probe-${{ github.ref_name }}
       cancel-in-progress: false
-    if: github.event_name == 'workflow_dispatch' && inputs.v2_release_probe
+    if: (github.event_name == 'workflow_dispatch' && inputs.v2_release_probe) || (github.event_name == 'push' && github.ref == 'refs/heads/integration/p0-demand-safety-20261119-r1')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -296,13 +312,96 @@ jobs:
           python -B -m scripts.build_schedule_future
           python -B -m scripts.export_calendar_snapshots
           python -B -m scripts.build_live_availability_snapshot
-      - name: Calculate existing V2 and customer previews
-        run: python -B -m scripts.run_layered_release_probe
-      - name: Upload public-safe proof only
+      - name: Calculate actual V2 against fetched live source without publication
+        shell: bash
+        run: |
+          # The full source replay is runner-local: never print class/private dates,
+          # customer routes, or the underlying canonical payload in public logs.
+          if ! python -B -m scripts.run_layered_release_probe >/tmp/v2_probe_private.log 2>&1; then
+            echo "::error::Read-only V2 proof failed; no source, public, or payment state changed"
+            exit 1
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          source = Path('data/runtime/audit_previews/v2_release_probe/proof.json')
+          proof = json.loads(source.read_text(encoding='utf-8'))
+          from scripts.run_layered_release_probe import public_safe_summary
+          safe = public_safe_summary(proof)
+          target = source.with_name('public_safe_summary.json')
+          target.write_text(json.dumps(safe, indent=2), encoding='utf-8')
+          print('Read-only V2 source replay:', json.dumps({'published': False, 'calculation_completed': safe['calculation_completed'], 'release_passed': safe['release_passed'], 'canonical_session_count': safe['canonical_session_count'], 'calendar_coverage_count': safe['calendar_coverage_count'], 'pages': sorted(safe['pages'])}))
+          if not safe['calculation_completed'] or not safe['release_passed'] or not safe['source_snapshot_unchanged'] or not (safe['canonical_session_count'] or 0):
+              raise SystemExit('V2 source proof incomplete: leaving public inventory and checkout unchanged')
+          PY
+      - name: Compare actual current-main and draft V2 selectors on frozen sources
+        shell: bash
+        run: |
+          # Runner-only, separate engines; no push, external booking, or promotion.
+          # All source/appointment diagnostics stay off public Actions logs.
+          python -B -m scripts.compare_current_main_draft_probe
+      - name: Replay same-source finder and detail pipeline in disposable checkout
+        shell: bash
+        run: |
+          # Only the CI runner worktree changes. No push, deploy, purchase, or
+          # source mutation; old public artifacts are not silently promoted.
+          if ! python -B -m scripts.build_landers --anchors-only --data-file docs/data/schedule_future.json >/tmp/p0_landers.log 2>&1; then
+            echo "::error::Disposably generated class details failed; no publication"
+            exit 1
+          fi
+          if ! python -B -m scripts.refresh_public_class_artifacts >/tmp/p0_routes.log 2>&1; then
+            echo "::error::Same-source finder/detail/sitemap reconciliation failed; no publication"
+            exit 1
+          fi
+          if ! python -B -m unittest tests.test_class_registration_routing tests.test_refresh_class_finder_index >/tmp/p0_routing_tests.log 2>&1; then
+            # Only test method names and counts are allowed into the public
+            # CI summary. The raw failing assertion can contain source IDs.
+            python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+          log = Path('/tmp/p0_routing_tests.log').read_text(encoding='utf-8', errors='replace')
+          failures = sorted(set(re.findall(r'^(?:FAIL|ERROR): (test_[A-Za-z0-9_]+) \(', log, re.M)))
+          summary = Path('data/runtime/audit_previews/v2_release_probe/public_safe_summary.json')
+          evidence = json.loads(summary.read_text(encoding='utf-8'))
+          evidence['coordinated_public_replay'] = {'result': 'blocked', 'test_case_names_only': failures}
+          summary.write_text(json.dumps(evidence, indent=2), encoding='utf-8')
+          print('Same-source routing regressions (names only):', failures)
+          PY
+            echo "::error::Refreshed public directory/detail regression failed; no publication"
+            exit 1
+          fi
+          # A passing builder is insufficient if a public recommendation or
+          # bookmarked numeric route still advertises a private appointment.
+          # Check the *refreshed runner artifacts* against the same selected
+          # source without printing source identifiers or appointment details.
+          if ! python -B -m unittest tests.test_verify_replayed_public_privacy >/tmp/p0_privacy_tests.log 2>&1; then
+            echo "::error::Synthetic private-route replay regression failed; no publication"
+            exit 1
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.verify_replayed_public_privacy import verify
+          counts = verify()
+          summary = Path('data/runtime/audit_previews/v2_release_probe/public_safe_summary.json')
+          evidence = json.loads(summary.read_text(encoding='utf-8'))
+          evidence['coordinated_public_replay'] = {
+              'result': 'source_checked_in_disposable_runner',
+              'privacy_counts_only': counts,
+              'hosted_public_booking_proven': False,
+          }
+          summary.write_text(json.dumps(evidence, indent=2), encoding='utf-8')
+          print('Refreshed finder/detail/sitemap private-route proof:', counts)
+          PY
+          echo "Same-source public artifact rebuild, routing and privacy tests passed in runner only; deployment remains prohibited"
+      - name: Upload aggregate-only replay summary
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: v2-release-probe-${{ github.run_id }}
-          path: data/runtime/audit_previews/v2_release_probe/
+          name: v2-safe-summary-${{ github.run_id }}
+          path: |
+            data/runtime/audit_previews/v2_release_probe/public_safe_summary.json
+            data/runtime/audit_previews/v2_release_probe/same_source_main_draft_comparison.json
           if-no-files-found: warn
           retention-days: 7
