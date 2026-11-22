@@ -3,7 +3,9 @@ import json
 import hashlib
 from pathlib import Path
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from zoneinfo import ZoneInfo
+import re
 from scripts.block_start_time_selector import build_block_schedule_page, load_block_schedule_page_configs, apply_final_live_availability_guard
 from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, render_html
 ROOT=Path(__file__).resolve().parents[1]
@@ -30,6 +32,74 @@ def source_fingerprint(root=ROOT):
         digest.update(relative.encode('utf-8') + b'\0')
         digest.update(data + b'\0')
     return digest.hexdigest()
+
+
+_SAFE_REASON = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
+_ROLES = ("anchor", "barnacle", "open")
+
+
+def _reason_category(reason):
+    """Public artifact may contain reason *categories*, never freeform source details."""
+    category = str(reason).split(":", 1)[0]
+    return category if _SAFE_REASON.fullmatch(category) else "unclassified"
+
+
+def public_safe_summary(proof):
+    """Aggregate a real frozen replay without emitting source identities or slot times.
+
+    This is one side of the requested main-versus-draft comparison, not a
+    production deployment, public bookability, or end-to-end checkout proof.
+    """
+    if not proof.get("source_snapshot_unchanged") or not proof.get("source_snapshot_sha256"):
+        raise ValueError("Cannot summarize an unfrozen source replay")
+    clock = datetime.fromisoformat(str(proof["replay_clock_utc"]).replace("Z", "+00:00"))
+    if clock.tzinfo is None:
+        raise ValueError("Replay clock must be timezone-aware")
+    first_day = clock.astimezone(ZoneInfo("America/New_York")).date()
+    horizon = [(first_day + timedelta(days=i)).isoformat() for i in range(90)]
+    safe = {
+        "published": False,
+        "calculation_completed": bool(proof.get("calculation_completed")),
+        "release_passed": bool(proof.get("release_passed")),
+        "source_snapshot_unchanged": True,
+        "source_snapshot_sha256": proof["source_snapshot_sha256"],
+        "replay_clock_utc": proof["replay_clock_utc"],
+        "canonical_session_count": proof.get("canonical_session_count"),
+        "calendar_coverage_count": proof.get("calendar_coverage_count"),
+        "horizon_days": 90,
+        "horizon_start": horizon[0],
+        "horizon_end": horizon[-1],
+        "pages": {},
+    }
+    for key, row in proof.get("pages", {}).items():
+        per_day = row.get("day_patterns") or {}
+        counts_by_day = []
+        for day in horizon:
+            roles = {role: 0 for role in _ROLES}
+            for course in per_day.get(day, {}).values():
+                for role in _ROLES:
+                    roles[role] += len(course.get(role, []))
+            counts_by_day.append({"date": day, **roles})
+        reasons = {}
+        for reason, count in (row.get("rejection_reasons") or {}).items():
+            cat = _reason_category(reason)
+            reasons[cat] = reasons.get(cat, 0) + int(count)
+        uncertainty = {}
+        for reason, count in (row.get("calculation_issue_counts") or {}).items():
+            cat = _reason_category(reason)
+            uncertainty[cat] = uncertainty.get(cat, 0) + int(count)
+        safe["pages"][key] = {
+            "counts": row.get("counts"),
+            "offer_roles": row.get("offer_roles"),
+            "rejection_reason_categories": reasons,
+            "failed_window_reason_categories": uncertainty,
+            "synthesis_blocked_day_count": len(row.get("synthesis_blocked_dates") or []),
+            "day_count": len(per_day),
+            "next_three_days": counts_by_day[:3],
+            "ninety_day_offer_counts": counts_by_day,
+        }
+    return safe
+
 
 def run():
     output=ROOT/'data/runtime/audit_previews/v2_release_probe'
