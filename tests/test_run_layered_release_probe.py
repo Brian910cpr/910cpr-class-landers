@@ -144,11 +144,11 @@ class FrozenSourceReplayTests(unittest.TestCase):
     def test_main_draft_requires_all_eight_real_family_keys(self):
         main = self._comparable_replay()
         self.assertEqual(len(main["pages"]), 8)
-        self.assertIn("uscg-first-aid-cpr-aed", main["pages"])
+        self.assertIn("uscg_first_aid_cpr_aed", main["pages"])
         self.assertEqual(len(probe.compare_safe_summaries(main, main)["families"]), 8)
 
         missing = json.loads(json.dumps(main))
-        missing["pages"].pop("uscg-first-aid-cpr-aed")
+        missing["pages"].pop("uscg_first_aid_cpr_aed")
         with self.assertRaises(ValueError):
             probe.compare_safe_summaries(main, missing)
 
@@ -156,6 +156,13 @@ class FrozenSourceReplayTests(unittest.TestCase):
         extra["pages"]["unverified_family"] = extra["pages"]["bls"]
         with self.assertRaises(ValueError):
             probe.compare_safe_summaries(main, extra)
+
+    def test_comparison_family_keys_match_actual_selector_runtime(self):
+        self.assertEqual(set(probe.load_block_schedule_page_configs()), probe.EXPECTED_FAMILIES)
+        # Config uses a hyphenated page key; normalizing to underscores is
+        # required to compare the actual eight-family replay.
+        self.assertIn("uscg_first_aid_cpr_aed", probe.EXPECTED_FAMILIES)
+        self.assertNotIn("uscg-first-aid-cpr-aed", probe.EXPECTED_FAMILIES)
 
     def test_direct_selector_inputs_are_all_fingerprinted(self):
         for path in ("data/config/travel_time_rules.json",
