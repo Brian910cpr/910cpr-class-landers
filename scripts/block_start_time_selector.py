@@ -1202,7 +1202,7 @@ def contextual_course(course_id, option, catalog, rules):
     return {**course, "schedule_page_option": option}
 
 
-def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
+def build_block_schedule_page(page_config: dict[str, Any], *, replay_now: datetime | None = None) -> dict[str, Any]:
     page_key = normalize_key(page_config.get("page_key"))
     if not page_key:
         raise BlockSelectorInputError("Block schedule page config is missing page_key")
@@ -1241,7 +1241,9 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     from scripts.layered_publication_adapter import active as layered_active
     occupancy = build_occupancy(loaded, course_rules, allow_unresolved=layered_active(layered_policy))
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy) if not layered_active(layered_policy) else {}
-    reference_now = selector_reference_datetime()
+    # A read-only replay can pin one clock across all course families.
+    # Ordinary production callers retain the live Eastern reference time.
+    reference_now = selector_reference_datetime(replay_now)
     anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
     same_day_anchors = seated_family_anchors(
         schedule_future_payload=loaded.get("schedule_future"),
