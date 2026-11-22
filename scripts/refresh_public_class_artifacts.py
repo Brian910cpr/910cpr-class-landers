@@ -29,13 +29,29 @@ def refresh(root: Path = ROOT) -> dict[str, int]:
     fresh_html, public_ids = finder.render_current_class_finder()
     # A concurrent source change between the finder and the route rewriter
     # causes the latter to fail closed, preventing the workflow's Git push.
-    index.write_text(fresh_html, encoding="utf-8")
+    # Capture all potentially rewritten public artifacts before touching them:
+    # route.refresh writes details and sitemap as well as the directory, and
+    # an I/O failure halfway through must not leave a mixed local publication.
+    # This is a runner-local rollback, not a substitute for the final CI gate
+    # and all-or-nothing Git publication.
+    snapshots = {index: index.read_bytes()}
+    classes_dir = root / "docs/classes"
+    snapshots.update(
+        (path, path.read_bytes()) for path in classes_dir.glob("[0-9]*.html")
+        if path.is_file() and path.name[:-5].isdigit()
+    )
+    sitemap = root / "docs/sitemap.xml"
+    if sitemap.is_file():
+        snapshots[sitemap] = sitemap.read_bytes()
     try:
+        index.write_text(fresh_html, encoding="utf-8")
         result = routes.refresh(
             root=root, retired_previous_ids=set(previous_ids) - public_ids
         )
     except Exception:
-        index.write_text(old_html, encoding="utf-8")
+        for path, original in snapshots.items():
+            if not path.is_file() or path.read_bytes() != original:
+                path.write_bytes(original)
         raise
     return {
         "listed": len(public_ids),
