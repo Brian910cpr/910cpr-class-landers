@@ -147,6 +147,12 @@ def compare_safe_summaries(main, draft):
         raise ValueError("Main/draft comparison requires an aware UTC clock")
     if main["horizon_days"] != 90:
         raise ValueError("Main/draft comparison requires the full 90-day horizon")
+    try:
+        first_day = datetime.fromisoformat(main["horizon_start"]).date()
+        if (first_day + timedelta(days=89)).isoformat() != main["horizon_end"]:
+            raise ValueError("Mismatched main/draft 90-day bounds")
+    except (TypeError, ValueError):
+        raise ValueError("Main/draft comparison has invalid calendar bounds")
     if not main.get("pages") or set(main["pages"]) != set(draft.get("pages") or {}):
         raise ValueError("Main/draft comparison must cover identical course families")
 
@@ -160,9 +166,9 @@ def compare_safe_summaries(main, draft):
             raise ValueError("Main/draft comparison requires complete 90-day daily counts")
         aggregate = {role: {"main": 0, "draft": 0, "delta": 0} for role in _ROLES}
         changed_days = 0
-        for before_day, after_day in zip(left, right):
+        for index, (before_day, after_day) in enumerate(zip(left, right)):
             day = before_day.get("date")
-            if (day != after_day.get("date") or not re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", str(day))):
+            if (day != after_day.get("date") or day != (first_day + timedelta(days=index)).isoformat()):
                 raise ValueError("Main/draft comparison day alignment failed")
             if day < main["horizon_start"] or day > main["horizon_end"]:
                 raise ValueError("Main/draft comparison day outside bounded horizon")
