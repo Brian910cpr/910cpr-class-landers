@@ -382,7 +382,30 @@ jobs:
             echo "::error::Refreshed public directory/detail regression failed; no publication"
             exit 1
           fi
-          echo "Same-source public artifact rebuild and routing tests passed in runner only; deployment remains prohibited"
+          # A passing builder is insufficient if a public recommendation or
+          # bookmarked numeric route still advertises a private appointment.
+          # Check the *refreshed runner artifacts* against the same selected
+          # source without printing source identifiers or appointment details.
+          if ! python -B -m unittest tests.test_verify_replayed_public_privacy >/tmp/p0_privacy_tests.log 2>&1; then
+            echo "::error::Synthetic private-route replay regression failed; no publication"
+            exit 1
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.verify_replayed_public_privacy import verify
+          counts = verify()
+          summary = Path('data/runtime/audit_previews/v2_release_probe/public_safe_summary.json')
+          evidence = json.loads(summary.read_text(encoding='utf-8'))
+          evidence['coordinated_public_replay'] = {
+              'result': 'source_checked_in_disposable_runner',
+              'privacy_counts_only': counts,
+              'hosted_public_booking_proven': False,
+          }
+          summary.write_text(json.dumps(evidence, indent=2), encoding='utf-8')
+          print('Refreshed finder/detail/sitemap private-route proof:', counts)
+          PY
+          echo "Same-source public artifact rebuild, routing and privacy tests passed in runner only; deployment remains prohibited"
       - name: Upload aggregate-only replay summary
         if: always()
         uses: actions/upload-artifact@v4
