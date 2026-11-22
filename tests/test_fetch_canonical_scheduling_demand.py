@@ -113,13 +113,13 @@ class FetchCanonicalSchedulingDemandTests(unittest.TestCase):
         legacy["active_registration_statuses"] = ["registered", "confirmed", "completed"]
         with tempfile.TemporaryDirectory() as directory:
             output, status = Path(directory) / "demand.json", Path(directory) / "status.json"
-            output.write_text('{"last":"good"}\\n', encoding="utf-8")
+            output.write_text('{"last":"good"}\n', encoding="utf-8")
             with (patch.object(subject, "OUTPUT", output),
                   patch.object(subject, "STATUS_OUTPUT", status),
                   patch.object(subject, "fetch", return_value=legacy),
                   patch.dict(subject.os.environ, {"HOT_SYNC_ADMIN_KEY": "test-key"}, clear=True)):
                 self.assertEqual(subject.run(now=NOW), 1)
-            self.assertEqual(output.read_text(encoding="utf-8"), '{"last":"good"}\\n')
+            self.assertEqual(output.read_text(encoding="utf-8"), '{"last":"good"}\n')
             result = json.loads(status.read_text(encoding="utf-8"))
             self.assertFalse(result["success"])
             self.assertTrue(result["snapshot_preserved"])
