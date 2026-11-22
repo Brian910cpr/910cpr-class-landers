@@ -333,6 +333,12 @@ jobs:
           if not safe['calculation_completed'] or not safe['release_passed'] or not safe['source_snapshot_unchanged'] or not (safe['canonical_session_count'] or 0):
               raise SystemExit('V2 source proof incomplete: leaving public inventory and checkout unchanged')
           PY
+      - name: Compare actual current-main and draft V2 selectors on frozen sources
+        shell: bash
+        run: |
+          # Runner-only, separate engines; no push, external booking, or promotion.
+          # All source/appointment diagnostics stay off public Actions logs.
+          python -B -m scripts.compare_current_main_draft_probe
       - name: Replay same-source finder and detail pipeline in disposable checkout
         shell: bash
         run: |
@@ -393,6 +399,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: v2-safe-summary-${{ github.run_id }}
-          path: data/runtime/audit_previews/v2_release_probe/public_safe_summary.json
+          path: |
+            data/runtime/audit_previews/v2_release_probe/public_safe_summary.json
+            data/runtime/audit_previews/v2_release_probe/same_source_main_draft_comparison.json
           if-no-files-found: warn
           retention-days: 7
