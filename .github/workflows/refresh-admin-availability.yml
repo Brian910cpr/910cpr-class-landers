@@ -363,6 +363,20 @@ jobs:
             exit 1
           fi
           if ! python -B -m unittest tests.test_class_registration_routing tests.test_refresh_class_finder_index >/tmp/p0_routing_tests.log 2>&1; then
+            # Only test method names and counts are allowed into the public
+            # CI summary. The raw failing assertion can contain source IDs.
+            python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+          log = Path('/tmp/p0_routing_tests.log').read_text(encoding='utf-8', errors='replace')
+          failures = sorted(set(re.findall(r'^(?:FAIL|ERROR): (test_[A-Za-z0-9_]+) \\(', log, re.M)))
+          summary = Path('data/runtime/audit_previews/v2_release_probe/public_safe_summary.json')
+          evidence = json.loads(summary.read_text(encoding='utf-8'))
+          evidence['coordinated_public_replay'] = {'result': 'blocked', 'test_case_names_only': failures}
+          summary.write_text(json.dumps(evidence, indent=2), encoding='utf-8')
+          print('Same-source routing regressions (names only):', failures)
+          PY
             echo "::error::Refreshed public directory/detail regression failed; no publication"
             exit 1
           fi
