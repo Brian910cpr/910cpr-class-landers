@@ -99,5 +99,34 @@ class CanonicalPublicInventoryGuardTests(unittest.TestCase):
             self.assertEqual({row["session_id"] for row in retirement_rows}, {"98765433", "98765434"})
 
 
+
+    def test_archived_index_cannot_keep_existing_but_ineligible_class_link(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            docs = root / "docs"
+            archive = docs / "topics"
+            classes = docs / "classes"
+            archive.mkdir(parents=True)
+            classes.mkdir()
+            source = archive / "old.html"
+            source.write_text(
+                '<a href="/classes/111.html">BLS</a> '
+                '<a href="/classes/222.html">BLS</a>', encoding="utf-8"
+            )
+            (classes / "111.html").write_text("Current public class", encoding="utf-8")
+            (classes / "222.html").write_text("Old detail still exists", encoding="utf-8")
+            with patch.object(catalog, "DOCS_DIR", docs), \\
+                 patch.object(catalog, "STALE_CLASS_INDEX_DIRS", (archive,)), \\
+                 patch.object(catalog, "STALE_CLASS_INDEX_FILES", ()), \\
+                 patch.object(catalog, "infer_current_public_destination", return_value="/bls.html"):
+                result = catalog.contain_stale_class_index_links(
+                    eligible_public_session_ids={"111"}
+                )
+            rendered = source.read_text(encoding="utf-8")
+            self.assertIn('href="/classes/111.html"', rendered)
+            self.assertNotIn('href="/classes/222.html"', rendered)
+            self.assertIn('href="/bls.html"', rendered)
+            self.assertEqual(result["missing_numeric_class_links_rewritten"], 1)
+
 if __name__ == "__main__":
     unittest.main()
