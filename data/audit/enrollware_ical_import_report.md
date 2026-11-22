@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-11-22T05:37:37.543041-05:00`
+- Generated at: `2026-11-22T05:49:38.297922-05:00`
 - Source: `enrollware_ical`
-- iCal events read: `169`
-- Public sessions created: `169`
+- iCal events read: `168`
+- Public sessions created: `168`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `141`
+- Registration unavailable sessions marked not direct-bookable: `140`
 - Unmapped sessions: `3`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `13914085` | enrollware_registration_closed | AHA BLS Provider (Initial) | 2026-08-24T10:45:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13910051` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-08-24T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13828449` | enrollware_registration_closed | AHA ACLS Provider (Renewal) | 2026-08-26T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13989619` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-27T16:00:00-04:00 | Surf City Police Department |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `14034158` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-09-23T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `14083298` | enrollware_registration_closed | AHA PALS HeartCode® | 2026-09-24T13:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `14083302` | enrollware_registration_closed | AHA ACLS HeartCode | 2026-09-24T13:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `13963992` | enrollware_registration_closed | AHA ACLS Provider (Renewal) | 2026-09-24T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
