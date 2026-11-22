@@ -1,11 +1,11 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-11-22T12:21:57.718357-05:00`
+- Generated at: `2026-11-22T12:32:18.191829-05:00`
 - Source: `enrollware_ical`
-- iCal events read: `168`
-- Public sessions created: `168`
+- iCal events read: `167`
+- Public sessions created: `167`
 - Skipped events: `0`
-- Registration unavailable sessions marked not direct-bookable: `140`
+- Registration unavailable sessions marked not direct-bookable: `139`
 - Unmapped sessions: `3`
 - Prior sessions read: `0`
 - Classes removed compared with prior source: `0`
@@ -23,7 +23,6 @@ They remain separate registration-signal/audit inputs only.
 
 | Session ID | Reason | Course | Start | Location |
 |---|---|---|---|---|
-| `13910051` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED | 2026-08-24T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13828449` | enrollware_registration_closed | AHA ACLS Provider (Renewal) | 2026-08-26T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13989619` | enrollware_registration_closed | AHA BLS Provider (Renewal) | 2026-08-27T16:00:00-04:00 | Surf City Police Department |
 | `13990775` | enrollware_registration_closed | AHA Heartsaver® First Aid CPR AED – Blended | 2026-08-27T17:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
@@ -73,6 +72,7 @@ They remain separate registration-signal/audit inputs only.
 | `14083298` | enrollware_registration_closed | AHA PALS HeartCode® | 2026-09-24T13:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `14083302` | enrollware_registration_closed | AHA ACLS HeartCode | 2026-09-24T13:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 | `13963992` | enrollware_registration_closed | AHA ACLS Provider (Renewal) | 2026-09-24T14:00:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
+| `14332848` | enrollware_registration_closed | AHA Heartsaver® Pediatric First Aid CPR AED Online | 2026-09-24T19:30:00-04:00 | NC - Wilmington: 4018 Shipyard Blvd; Room B @ 910CPR's Office |
 
 ## Unmapped Examples
 
