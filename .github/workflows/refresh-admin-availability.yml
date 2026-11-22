@@ -187,6 +187,12 @@ jobs:
       - name: Build durable seated Anchor session pages
         run: python -m scripts.build_landers --anchors-only --data-file docs/data/schedule_future.json
 
+      - name: Reconcile public finder, details, and sitemap from same schedule snapshot
+        run: |
+          python -m scripts.refresh_public_class_artifacts
+          python -B -m unittest tests.test_canonical_public_inventory_guard tests.test_refresh_class_finder_index tests.test_verify_replayed_public_privacy
+          python -B -m scripts.verify_replayed_public_privacy
+
       - name: Publish instructor and location reference feeds
         run: python -m scripts.publish_admin_reference_data
 
@@ -243,6 +249,7 @@ jobs:
             docs/data/anchor_state.json \
             docs/data/block-selector-availability \
             docs/classes \
+            docs/sitemap.xml \
             docs/admin/dashboard.html \
             debug/status/build_sessions_current.json \
             debug/status/build_schedule_future.json
