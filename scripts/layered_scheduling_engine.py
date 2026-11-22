@@ -122,10 +122,41 @@ def run(fixture):
                                   'end': window['end'], 'instructor': window['instructor'],
                                   'location': window['location'],
                                   'uncertainty_reason': 'commitment_coverage_not_established'}
+    # Checkout holds are provisional demand only when a trusted canonical
+    # ledger has attested atomic admission, course/resource binding, and a
+    # finite lease. Generic calendar "hold" mirrors stay physical blockers
+    # without ever becoming demand Anchors. Nothing here attests a payment.
+    replay_now = stamp(fixture["now"])
+    def attested_checkout_hold(source):
+        if (source.get("kind") != "hold"
+                or source.get("source_file") != "canonical_checkout_hold_ledger"
+                or source.get("checkout_hold_status") != "admitted"
+                or source.get("hold_admission_attested") is not True
+                or source.get("checkout_hold_capacity_claimed") is not True
+                or source.get("checkout_hold_resource_verified") is not True
+                or not source.get("checkout_hold_id")
+                or not source.get("checkout_order_id")
+                or source.get("course") not in courses
+                or source.get("instructor_unassigned") is True
+                or not source.get("instructor")
+                or source.get("instructor") == "unassigned"
+                or not source.get("location")):
+            return False
+        try:
+            admitted = stamp(source["hold_admitted_at"])
+            expires = stamp(source["hold_expires_at"])
+        except (KeyError, TypeError, ValueError):
+            return False
+        return admitted <= replay_now and expires > admitted
+
     occupied, ignored = [], []
     for source in sources.values():
         if source.get("kind") not in {"paid", "seated", "planted", "hold", "commitment", "uncertain"}:
             ignored.append({"source_id": source["id"], "reason": "not_explicit_work_commitment"})
+            continue
+        if attested_checkout_hold(source) and stamp(source["hold_expires_at"]) <= replay_now:
+            # Releasing this hold must not erase a separately admitted hold.
+            ignored.append({"source_id": source["id"], "reason": "checkout_hold_expired"})
             continue
         start, end = stamp(source["start"]), stamp(source.get("end", source["start"]))
         raw_end = end
@@ -147,7 +178,9 @@ def run(fixture):
     occupied.sort(key=lambda x: (x["instructor"], x["start"], x["id"]))
     blocks, merge_decisions = [], []
     for item in occupied:
-        if item["kind"] not in {"paid", "seated", "planted"}:
+        if (item["kind"] not in {"paid", "seated", "planted"}
+                and not (attested_checkout_hold(item)
+                         and stamp(item["hold_expires_at"]) > replay_now)):
             continue
         previous = blocks[-1] if blocks else None
         merge = (previous and previous["instructor"] == item["instructor"]
@@ -224,6 +257,8 @@ def run(fixture):
         if busy.get("operational_has_active_seat") is True
         or (busy["kind"] in {"paid", "seated"}
             and type(busy.get("headcount")) is int and busy["headcount"] > 0)
+        or (attested_checkout_hold(busy)
+            and stamp(busy["hold_expires_at"]) > replay_now)
     }
     candidates, edges, free_intervals = [], [], []
     def candidate(course, start, instructor, location, origin):
@@ -309,7 +344,8 @@ def run(fixture):
     for busy in occupied:
         meta = courses.get(busy.get('course'), {})
         if meta.get('kind') != 'full': continue
-        if busy.get('kind') not in {'paid', 'seated'}:
+        if busy.get('kind') not in {'paid', 'seated'} and not (
+                attested_checkout_hold(busy) and stamp(busy["hold_expires_at"]) > replay_now):
             uncertain_full.append({'source_id': busy['id'], 'kind': busy['kind'], 'headcount': busy.get('headcount')})
             if busy.get('kind') == 'planted' and busy.get('headcount') is None:
                 uncertain_family_groups.add((busy['instructor'], busy['start'].astimezone(zone).date().isoformat(), consolidation_identity(busy['course'])))
