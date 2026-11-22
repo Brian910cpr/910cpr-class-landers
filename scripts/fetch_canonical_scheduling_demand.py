@@ -24,6 +24,7 @@ DEFAULT_URL = (
 )
 SCHEMA_VERSION = "910cpr-canonical-scheduling-demand.v1"
 MAX_SOURCE_AGE = timedelta(minutes=15)
+EXPECTED_ACTIVE_REGISTRATION_STATUSES = frozenset({"registered", "confirmed", "completed", "active"})
 FORBIDDEN_KEYS = frozenset({"email", "phone", "first_name", "last_name", "name", "student_name"})
 
 
@@ -68,6 +69,13 @@ def validate_payload(payload: Any, *, now: datetime | None = None) -> dict[str, 
         raise ValueError("response must be a JSON object")
     if payload.get("schema_version") != SCHEMA_VERSION:
         raise ValueError(f"unexpected schema_version: {payload.get('schema_version')!r}")
+    # A fresh endpoint can still be semantically stale. Reject versions that
+    # silently omit a real native active seat or count nonfinal moves as demand.
+    statuses = payload.get("active_registration_statuses")
+    if (not isinstance(statuses, list) or len(statuses) != len(EXPECTED_ACTIVE_REGISTRATION_STATUSES)
+            or any(not isinstance(status, str) for status in statuses)
+            or set(statuses) != EXPECTED_ACTIVE_REGISTRATION_STATUSES):
+        raise ValueError("Canonical active registration status contract mismatch")
     generated_at = _parse_instant(payload.get("generated_at"))
     current = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
     age = current - generated_at
