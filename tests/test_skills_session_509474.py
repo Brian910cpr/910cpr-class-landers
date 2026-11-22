@@ -98,7 +98,12 @@ class SkillsOnlyTests(unittest.TestCase):
             html=render_html(payload)
             self.assertIn('skills-session-choice',html)
             self.assertIn('selectedSkillsContext',html)
-            self.assertIn("link.href = '/register/skills-session/?'",html)
+            # Skills checkout must be constructed by the verified routing policy,
+            # never hardcoded as a live registration destination.
+            self.assertIn('ResolvedSelectorAvailability.registrationAction(course,', html)
+            self.assertIn('skillsContextVerified:', html)
+            self.assertIn('link.href = action.href;', html)
+            self.assertNotIn("link.href = '/register/skills-session/?'", html)
             self.assertNotIn('schedule#ct509474',html)
         pediatric=[o for o in self.pages['heartsaver']['course_options'] if o.get('family_group')=='pediatric-first-aid-cpr-aed']
         self.assertEqual({o['course_id'] for o in pediatric},{'351632','251545'})
