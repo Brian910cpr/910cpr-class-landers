@@ -137,7 +137,8 @@ def compare_safe_summaries(main, draft):
     for report in (main, draft):
         if (report.get("published") is not False or
                 report.get("source_snapshot_unchanged") is not True or
-                report.get("calculation_completed") is not True):
+                report.get("calculation_completed") is not True or
+                report.get("release_passed") is not True):
             raise ValueError("Main/draft comparison requires completed, unpublished, frozen replays")
         if any(field not in report for field in fields):
             raise ValueError("Main/draft comparison missing snapshot or horizon evidence")
