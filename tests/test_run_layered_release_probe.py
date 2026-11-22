@@ -117,7 +117,8 @@ class FrozenSourceReplayTests(unittest.TestCase):
         days = [(first + probe.timedelta(days=i)).date().isoformat() for i in range(90)]
         return {
             "published": False, "source_snapshot_unchanged": True,
-            "calculation_completed": True, "source_snapshot_sha256": "a" * 64,
+            "calculation_completed": True, "release_passed": True,
+            "source_snapshot_sha256": "a" * 64,
             "replay_clock_utc": "2026-11-22T08:18:24+00:00",
             "horizon_start": days[0], "horizon_end": days[-1], "horizon_days": 90,
             "pages": {"bls": {"ninety_day_offer_counts": [
@@ -161,6 +162,7 @@ class FrozenSourceReplayTests(unittest.TestCase):
         for field, wrong in (
             ("published", True), ("source_snapshot_unchanged", False),
             ("calculation_completed", False),
+            ("release_passed", False),
         ):
             bad = json.loads(json.dumps(main))
             bad[field] = wrong
