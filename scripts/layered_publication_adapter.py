@@ -9,7 +9,7 @@ from collections import Counter
 from datetime import timedelta, timezone
 from urllib.parse import urlsplit
 from scripts.layered_selector_adapter import aware, build_shadow
-from scripts.layered_scheduling_engine import encode as encode_value
+from scripts.layered_scheduling_engine import encode as encode_value, attested_checkout_hold, stamp
 import json
 
 
@@ -326,6 +326,13 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         return (source.get("count_available") is True
                 and type(count) is int and count > 0)
 
+    def has_provisional_checkout_gravity(source):
+        # A real admitted checkout lease shapes offers for its own instructor;
+        # it is not paid demand and never makes a private session joinable.
+        return (source is not None
+                and attested_checkout_hold(source, now, catalog)
+                and stamp(source["hold_expires_at"]) > now)
+
     def matched_source(offer):
         identity = (offer.get("session_id") or offer.get("sourceSessionId")
                     or offer.get("sourceAvailabilityBlock", {}).get("sessionId"))
@@ -350,7 +357,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     # The actual class remains private and cannot be joined from this flag.
     anchored_days = set()
     for source in calculation['projected_sources']:
-        if not has_verified_demand(source):
+        if not (has_verified_demand(source)
+                or has_provisional_checkout_gravity(source)):
             continue
         # A confirmed but unassigned private appointment is a real occupied
         # interval, not evidence that *every* qualified instructor is anchored
