@@ -31,7 +31,7 @@ class ProvisionalCheckoutHoldTests(unittest.TestCase):
             id="lease-"+ident, kind="hold", course=course, instructor="Brian Ennis",
             location="Room B", start=day+start+":00-05:00",
             end=day+end+":00-05:00",
-            source_file="canonical_checkout_hold_ledger",
+            source_file="landerware_public_orders",
             checkout_hold_status="admitted", hold_admission_attested=True,
             checkout_hold_capacity_claimed=True, checkout_hold_resource_verified=True,
             checkout_hold_id="hold-"+ident, checkout_order_id="order-"+ident,
@@ -111,7 +111,7 @@ class ProvisionalCheckoutHoldTests(unittest.TestCase):
                             for o in test.payload(calculation=clear)["offers"]))
         source = dict(source_event_id="private-hold-source",
             kind="hold", course_id="359474", instructor="Brian Ennis",
-            resource=test.room, source_file="canonical_checkout_hold_ledger",
+            resource=test.room, source_file="landerware_public_orders",
             start=test.at(11, "12:00").isoformat(),
             end=test.at(11, "14:00").isoformat(),
             checkout_hold_status="admitted", hold_admission_attested=True,
