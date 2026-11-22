@@ -22,6 +22,8 @@ on:
       - 'scripts/build_live_availability_snapshot.py'
       - 'scripts/validate_public_refresh_output.py'
       - 'tests/test_validate_public_refresh_output.py'
+      - 'tests/test_class_registration_routing.py'
+      - 'tests/test_refresh_class_finder_index.py'
       - 'scripts/publish_admin_availability.py'
       - 'scripts/publish_admin_schedule.py'
       - 'scripts/publish_landerware_ical.py'
