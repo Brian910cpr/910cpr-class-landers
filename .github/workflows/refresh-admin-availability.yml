@@ -31,6 +31,7 @@ on:
       - 'scripts/publish_admin_reference_data.py'
       - 'scripts/block_start_time_selector.py'
       - 'scripts/run_layered_release_probe.py'
+      - 'scripts/compare_current_main_draft_probe.py'
       - 'tests/test_run_layered_release_probe.py'
       - 'scripts/layered_publication_adapter.py'
       - 'scripts/layered_day_cache.py'
