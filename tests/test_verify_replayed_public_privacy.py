@@ -40,6 +40,7 @@ class PublicReplayPrivacyTests(unittest.TestCase):
             "public_detail_count": 1,
             "rejected_source_identity_count": 2,
             "redacted_numeric_detail_count": 1,
+            "redacted_uuid_detail_count": 0,
         })
 
     def test_rejects_private_in_related_card_and_direct_page(self):
@@ -68,6 +69,36 @@ class PublicReplayPrivacyTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "nonpublic sitemap discovery"):
             self.run_verify()
 
+
+    def test_private_uuid_detail_and_sitemap_are_not_public(self):
+        # A canonical UUID is a real session identity too. Public finder links
+        # are numeric today, but old directly addressable UUID files must not
+        # leak private times or remain discoverable via sitemap.
+        sid = "22222222-2222-4222-8222-222222222222"
+        self.uuid["session_id"] = sid
+        (self.details / "index.html").write_text(
+            '<a class="class-finder-secondary" href="/classes/111.html">Details</a>',
+            encoding="utf-8",
+        )
+        (self.details / "111.html").write_text("Public detail", encoding="utf-8")
+        direct = self.details / (sid + ".html")
+        direct.write_text("Private appointment details", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "nonpublic direct detail not redacted"):
+            self.run_verify()
+        direct.write_text(
+            '<meta name="robots" content="noindex,nofollow">'
+            '<h1>This class is not publicly listed</h1>', encoding="utf-8",
+        )
+        (self.root / "docs/sitemap.xml").write_text(
+            "<urlset><url><loc>https://www.910cpr.com/classes/" + sid
+            + ".html</loc></url></urlset>", encoding="utf-8",
+        )
+        with self.assertRaisesRegex(ValueError, "nonpublic sitemap discovery"):
+            self.run_verify()
+        (self.root / "docs/sitemap.xml").write_text("<urlset></urlset>", encoding="utf-8")
+        result = self.run_verify()
+        self.assertEqual(result["redacted_uuid_detail_count"], 1)
+        self.assertEqual(result["redacted_numeric_detail_count"], 0)
 
 if __name__ == "__main__":
     unittest.main()

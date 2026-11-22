@@ -10,6 +10,7 @@ from datetime import datetime
 from pathlib import Path
 
 from scripts import build_index_and_sitemap as catalog
+from scripts.refresh_class_registration_routes import DETAIL_ID
 
 ROOT = Path(__file__).resolve().parents[1]
 DETAIL_LINK = re.compile(r'class="class-finder-secondary" href="/classes/(\d+)\.html"')
@@ -54,6 +55,7 @@ def verify(root: Path = ROOT) -> dict[str, int]:
         raise ValueError("Public replay privacy gate: listed IDs disagree with authoritative source")
 
     tombstoned = 0
+    uuid_tombstoned = 0
     for sid in rejected:
         # A nonpublic ID must be absent from *every* currently published public
         # surface, regardless of whether it is an Enrollware number or a UUID.
@@ -66,7 +68,7 @@ def verify(root: Path = ROOT) -> dict[str, int]:
             )
         ):
             raise ValueError("Public replay privacy gate: nonpublic identity leaked into public listing")
-        if NUMERIC_ID.fullmatch(sid):
+        if DETAIL_ID.fullmatch(sid):
             if re.search(
                 rf"<loc>\s*https://(?:www\.)?910cpr\.com/classes/{re.escape(sid)}\.html\s*</loc>",
                 xml,
@@ -83,12 +85,16 @@ def verify(root: Path = ROOT) -> dict[str, int]:
                     or 'data-session-id="' in page
                 ):
                     raise ValueError("Public replay privacy gate: nonpublic direct detail not redacted")
-                tombstoned += 1
+                if NUMERIC_ID.fullmatch(sid):
+                    tombstoned += 1
+                else:
+                    uuid_tombstoned += 1
 
     return {
         "public_detail_count": len(public_ids),
         "rejected_source_identity_count": len(rejected),
         "redacted_numeric_detail_count": tombstoned,
+        "redacted_uuid_detail_count": uuid_tombstoned,
     }
 
 

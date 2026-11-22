@@ -6,6 +6,9 @@ from scripts.class_registration_routing import rewrite_detail_routes, rewrite_di
 from scripts import build_index_and_sitemap as class_index
 from scripts import refresh_class_finder_index as finder
 ROOT=Path(__file__).resolve().parents[1]
+# Only public-class numeric IDs and canonical UUIDs may identify a generated
+# detail page. Never treat arbitrary slugs (notably index.html) as appointments.
+DETAIL_ID = re.compile(r'(?:[0-9]+|[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12})')
 
 # Rejected canonical-linked or explicitly nonpublic appointments may have a
 # previously generated, directly addressable legacy detail HTML file. Hiding
@@ -66,13 +69,13 @@ def refresh(root=ROOT, retired_previous_ids=None):
         file=root/'docs/classes'/(sid+'.html')
         changes[file]=rewrite_detail_routes(file.read_text(encoding='utf8'),sessions[sid],sessions)
 
-    # Retire only existing detail files explicitly rejected by the SAME fresh
+    # Retire only numeric/UUID detail files explicitly rejected by the SAME fresh
     # selected source. Do not delete internal bookings, alter source rows, or
     # assume missing identity/legacy inventory is safe to de-list.
     rejected_public_ids=set()
     for row in rows:
         sid=str(row.get('session_id') or row.get('id') or '').strip()
-        if not re.fullmatch(r'[0-9]+',sid) or sid in verified_ids:
+        if not DETAIL_ID.fullmatch(sid) or sid in verified_ids:
             continue
         if class_index.schedule_future_to_public_session(row) is not None:
             continue
@@ -104,7 +107,7 @@ def refresh(root=ROOT, retired_previous_ids=None):
         xml=sitemap.read_text(encoding='utf8')
         def retire_url(match):
             block=match.group(0)
-            location=re.search(r'<loc>\s*https://(?:www\.)?910cpr\.com/classes/(\d+)\.html\s*</loc>',block)
+            location=re.search(r'<loc>\s*https://(?:www\.)?910cpr\.com/classes/([0-9a-fA-F-]+)\.html\s*</loc>',block)
             return '' if location and location.group(1) in rejected_public_ids else block
         updated=re.sub(r'(?ms)^[ \t]*<url>.*?</url>[ \t]*(?:\r?\n|$)',retire_url,xml)
         if updated != xml:

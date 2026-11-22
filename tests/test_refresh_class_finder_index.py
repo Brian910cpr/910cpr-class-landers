@@ -406,6 +406,64 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
 
 
 
+    def test_private_uuid_detail_is_retired_without_touching_historical_pages(self):
+        # Canonical appointment UUID routes require the same retirement and
+        # sitemap privacy behavior as numeric Enrollware details.
+        sid = "22222222-2222-4222-8222-222222222222"
+        historic = "12345678"
+        self.write_source([{
+            "session_id": sid, "start_at": "2026-11-22T13:00:00-05:00",
+            "location_name": ":: Wilmington; Shipyard Blvd - B",
+            "session_status": "active", "visibility": "private",
+        }])
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text("0 classes found", encoding="utf-8")
+        direct = index.parent / (sid + ".html")
+        direct.write_text("Private time and enrollment", encoding="utf-8")
+        archive = index.parent / (historic + ".html")
+        archive.write_text("Historical archive", encoding="utf-8")
+        sitemap = self.root / "docs/sitemap.xml"
+        sitemap.write_text(
+            "<urlset>\n"
+            "  <url><loc>https://www.910cpr.com/classes/" + sid + ".html</loc></url>\n"
+            "  <url><loc>https://www.910cpr.com/classes/" + historic + ".html</loc></url>\n"
+            "</urlset>\n", encoding="utf-8",
+        )
+        with (
+            patch.object(finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(catalog, "SCHEDULE_FUTURE_FILE", self.path),
+            patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
+        ):
+            result = routes.refresh(root=self.root)
+        self.assertEqual(result["files"], 2)
+        self.assertIn("noindex,nofollow", direct.read_text(encoding="utf-8"))
+        self.assertNotIn("Private time", direct.read_text(encoding="utf-8"))
+        self.assertNotIn(sid, sitemap.read_text(encoding="utf-8"))
+        self.assertIn(historic, sitemap.read_text(encoding="utf-8"))
+        self.assertEqual(archive.read_text(encoding="utf-8"), "Historical archive")
+
+    def test_bundle_restores_uuid_detail_after_partial_route_failure(self):
+        sid = "22222222-2222-4222-8222-222222222222"
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text("Original finder", encoding="utf-8")
+        direct = index.parent / (sid + ".html")
+        direct.write_text("Original private UUID detail", encoding="utf-8")
+        def failed_routes(**kwargs):
+            direct.write_text("Partial private tombstone", encoding="utf-8")
+            raise OSError("injected route failure")
+        with (
+            patch.object(bundle.finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(bundle.routes, "refresh", side_effect=failed_routes),
+        ):
+            with self.assertRaisesRegex(OSError, "injected route failure"):
+                bundle.refresh(root=self.root)
+        self.assertEqual(index.read_text(encoding="utf-8"), "Original finder")
+        self.assertEqual(direct.read_text(encoding="utf-8"), "Original private UUID detail")
+
     def test_absent_expired_previous_card_tombstones_detail_and_sitemap(self):
         # Missing from the current source is distinct from a currently present
         # explicitly private row. Only previously PUBLICLY LISTED IDs may be

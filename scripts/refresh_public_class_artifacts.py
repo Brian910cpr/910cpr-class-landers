@@ -37,8 +37,8 @@ def refresh(root: Path = ROOT) -> dict[str, int]:
     snapshots = {index: index.read_bytes()}
     classes_dir = root / "docs/classes"
     snapshots.update(
-        (path, path.read_bytes()) for path in classes_dir.glob("[0-9]*.html")
-        if path.is_file() and path.name[:-5].isdigit()
+        (path, path.read_bytes()) for path in classes_dir.glob("*.html")
+        if path.is_file() and routes.DETAIL_ID.fullmatch(path.stem)
     )
     sitemap = root / "docs/sitemap.xml"
     if sitemap.is_file():
