@@ -327,7 +327,16 @@ jobs:
                   key: {
                       'counts': row.get('counts'),
                       'offer_roles': row.get('offer_roles'),
-                      'rejection_reasons': row.get('rejection_reasons'),
+                      'rejection_reason_categories': {
+                          category: sum(
+                              count for reason, count in (row.get('rejection_reasons') or {}).items()
+                              if reason.split(':', 1)[0] == category
+                          )
+                          for category in {
+                              reason.split(':', 1)[0]
+                              for reason in (row.get('rejection_reasons') or {})
+                          }
+                      },
                       'synthesis_blocked_day_count': len(row.get('synthesis_blocked_dates') or []),
                       'day_count': len(row.get('day_patterns') or {}),
                   }
