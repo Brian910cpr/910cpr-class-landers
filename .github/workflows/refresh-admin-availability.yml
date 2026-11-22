@@ -30,6 +30,8 @@ on:
       - 'scripts/publish_scheduling_landscape.py'
       - 'scripts/publish_admin_reference_data.py'
       - 'scripts/block_start_time_selector.py'
+      - 'scripts/run_layered_release_probe.py'
+      - 'tests/test_run_layered_release_probe.py'
       - 'scripts/layered_publication_adapter.py'
       - 'scripts/layered_day_cache.py'
       - 'scripts/build_bls_block_schedule_pilot.py'
@@ -327,6 +329,9 @@ jobs:
               'published': False,
               'calculation_completed': bool(proof.get('calculation_completed')),
               'release_passed': bool(proof.get('release_passed')),
+              'source_snapshot_unchanged': proof.get('source_snapshot_unchanged') is True,
+              'source_snapshot_sha256': proof.get('source_snapshot_sha256'),
+              'replay_clock_utc': proof.get('replay_clock_utc'),
               'canonical_session_count': proof.get('canonical_session_count'),
               'calendar_coverage_count': proof.get('calendar_coverage_count'),
               'pages': {
@@ -352,7 +357,7 @@ jobs:
           target = source.with_name('public_safe_summary.json')
           target.write_text(json.dumps(safe, indent=2), encoding='utf-8')
           print('Read-only V2 source replay:', json.dumps({'published': False, 'calculation_completed': safe['calculation_completed'], 'release_passed': safe['release_passed'], 'canonical_session_count': safe['canonical_session_count'], 'calendar_coverage_count': safe['calendar_coverage_count'], 'pages': sorted(safe['pages'])}))
-          if not safe['calculation_completed'] or not safe['release_passed'] or not (safe['canonical_session_count'] or 0):
+          if not safe['calculation_completed'] or not safe['release_passed'] or not safe['source_snapshot_unchanged'] or not (safe['canonical_session_count'] or 0):
               raise SystemExit('V2 source proof incomplete: leaving public inventory and checkout unchanged')
           PY
       - name: Replay same-source finder and detail pipeline in disposable checkout
