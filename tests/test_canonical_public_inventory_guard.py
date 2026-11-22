@@ -115,10 +115,10 @@ class CanonicalPublicInventoryGuardTests(unittest.TestCase):
             )
             (classes / "111.html").write_text("Current public class", encoding="utf-8")
             (classes / "222.html").write_text("Old detail still exists", encoding="utf-8")
-            with patch.object(catalog, "DOCS_DIR", docs), \\
-                 patch.object(catalog, "STALE_CLASS_INDEX_DIRS", (archive,)), \\
-                 patch.object(catalog, "STALE_CLASS_INDEX_FILES", ()), \\
-                 patch.object(catalog, "infer_current_public_destination", return_value="/bls.html"):
+            with (patch.object(catalog, "DOCS_DIR", docs),
+                  patch.object(catalog, "STALE_CLASS_INDEX_DIRS", (archive,)),
+                  patch.object(catalog, "STALE_CLASS_INDEX_FILES", ()),
+                  patch.object(catalog, "infer_current_public_destination", return_value="/bls.html")):
                 result = catalog.contain_stale_class_index_links(
                     eligible_public_session_ids={"111"}
                 )
