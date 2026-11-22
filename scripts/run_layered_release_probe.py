@@ -45,10 +45,11 @@ def source_fingerprint(root=ROOT):
 
 _SAFE_REASON = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
 _ROLES = ("anchor", "barnacle", "open")
-# Exact deployed page families. A general "safe name" regex rejects the legitimate
-# hyphenated USCG family and a partial comparison is not eight-family proof.
+# Actual selector keys returned by load_block_schedule_page_configs(): normalize_key
+# changes the configured hyphenated USCG page to underscores in the replay output.
+# The comparator must match actual runtime keys, not the raw config map's keys.
 EXPECTED_FAMILIES = frozenset({
-    "bls", "acls", "pals", "heartsaver", "uscg-first-aid-cpr-aed",
+    "bls", "acls", "pals", "heartsaver", "uscg_first_aid_cpr_aed",
     "hsi", "arc", "family_cpr",
 })
 
