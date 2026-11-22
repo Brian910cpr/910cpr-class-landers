@@ -1,6 +1,7 @@
 """Synthetic negative public-surface replay privacy regression."""
 import tempfile
 import unittest
+from datetime import datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -15,7 +16,7 @@ class PublicReplayPrivacyTests(unittest.TestCase):
         self.details = self.root / "docs/classes"
         self.details.mkdir(parents=True)
         (self.root / "docs/sitemap.xml").write_text("<urlset></urlset>", encoding="utf-8")
-        self.public = {"session_id": "111", "public": True}
+        self.public = {"session_id": "111", "public": True, "start_at": (datetime.now(privacy.catalog.LOCAL_TZ) + timedelta(days=2)).isoformat()}
         self.private = {"session_id": "222", "public": False}
         self.uuid = {"session_id": "private-uuid", "public": False}
 
