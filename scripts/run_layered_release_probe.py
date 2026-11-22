@@ -26,6 +26,12 @@ SOURCE_PATHS = (
     # Include the effective V2 policy after the disposable active-mode override.
     # Otherwise a mid-replay policy mutation would evade the source checksum.
     'data/config/layered_scheduling_policy.json',
+    # These sources participate in travel, class-occupancy and native-skills decisions.
+    # Keep them immutable across all eight families and both comparison worktrees.
+    'data/config/travel_time_rules.json',
+    'data/config/anchor_schedule_policy.json',
+    'data/config/native_skills_activation.json',
+    'data/config/calendar_sources.json',
 )
 
 def source_fingerprint(root=ROOT):
@@ -39,6 +45,12 @@ def source_fingerprint(root=ROOT):
 
 _SAFE_REASON = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
 _ROLES = ("anchor", "barnacle", "open")
+# Exact deployed page families. A general "safe name" regex rejects the legitimate
+# hyphenated USCG family and a partial comparison is not eight-family proof.
+EXPECTED_FAMILIES = frozenset({
+    "bls", "acls", "pals", "heartsaver", "uscg-first-aid-cpr-aed",
+    "hsi", "arc", "family_cpr",
+})
 
 
 def _reason_category(reason):
@@ -157,13 +169,12 @@ def compare_safe_summaries(main, draft):
             raise ValueError("Mismatched main/draft 90-day bounds")
     except (TypeError, ValueError):
         raise ValueError("Main/draft comparison has invalid calendar bounds")
-    if not main.get("pages") or set(main["pages"]) != set(draft.get("pages") or {}):
-        raise ValueError("Main/draft comparison must cover identical course families")
+    if (set(main.get("pages") or {}) != EXPECTED_FAMILIES or
+            set(draft.get("pages") or {}) != EXPECTED_FAMILIES):
+        raise ValueError("Main/draft comparison requires all eight exact public course families")
 
     families = {}
-    for family in sorted(main["pages"]):
-        if not _SAFE_REASON.fullmatch(family):
-            raise ValueError("Unrecognized course-family report identifier")
+    for family in sorted(EXPECTED_FAMILIES):
         left = main["pages"][family].get("ninety_day_offer_counts")
         right = draft["pages"][family].get("ninety_day_offer_counts")
         if not isinstance(left, list) or not isinstance(right, list) or len(left) != 90 or len(right) != 90:
