@@ -1544,6 +1544,7 @@ def render_html(payload: dict[str, Any]) -> str:
       {context_html}
       {delivery_help_html}
       {service_promise_html}
+      {('<p><a href="/privacy-terms/">SMS Privacy &amp; Terms</a></p>' if page_key == "bls" else "")}
       {header_credential_html}
     </section>
     {stable_projection_html}

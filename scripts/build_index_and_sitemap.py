@@ -1901,6 +1901,7 @@ def render_homepage() -> str:
           <div class="eyebrow">Local training, clearly routed</div>
           <h2 id="home-locality-title">CPR and certification classes serving Coastal North Carolina</h2>
           <p>910CPR is based at 4018 Shipyard Boulevard in Wilmington and serves students, healthcare professionals, workplaces, schools, and maritime crews throughout Wilmington, Leland, Burgaw, Holly Ridge, Jacksonville, and surrounding communities.</p>
+          <p><a href="/privacy-terms/">SMS Privacy &amp; Terms</a></p>
         </div>
         <div class="home-locality-links" aria-label="Popular local class paths">
           <a href="/bls.html">BLS in Wilmington</a>
