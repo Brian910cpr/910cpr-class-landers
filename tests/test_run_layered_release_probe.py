@@ -63,6 +63,7 @@ class FrozenSourceReplayTests(unittest.TestCase):
                         "outside_explicit_availability:person@example.com": 2,
                         "customer@example.com": 1,
                     },
+                    "failed_window_issue_categories": {"travel_assumption_unverified": 11},
                     "calculation_issue_counts": {
                         "HARD_BLOCK_COLLISION": 3,
                         "human name:personal detail": 8,
@@ -84,10 +85,21 @@ class FrozenSourceReplayTests(unittest.TestCase):
         self.assertEqual(safe["pages"]["bls"]["next_three_days"][1]["open"], 2)
         self.assertEqual(safe["pages"]["bls"]["reconciliation_issue_code_categories"],
                          {"hard_block_collision": 3, "unclassified": 8})
+        self.assertEqual(safe["pages"]["bls"]["failed_window_issue_categories"],
+                         {"travel_assumption_unverified": 11})
         summary = json.dumps(safe)
         self.assertNotIn("private-course-id", summary)
         self.assertNotIn("14:00", summary)
         self.assertNotIn("@example.com", summary)
+
+
+    def test_failed_window_categories_are_fixed_and_do_not_expose_raw_error(self):
+        issue = {"reason": "missing directional travel assumption: person@example.com"}
+        self.assertEqual(probe._window_issue_category(issue), "travel_assumption_unverified")
+        self.assertEqual(probe._window_issue_category({"reason": "unresolved_occupied_bounds: private"}),
+                         "unresolved_occupied_bounds")
+        self.assertEqual(probe._window_issue_category({"reason": "some person's private details"}),
+                         "other_window_error")
 
     def test_public_summary_fails_closed_on_mutable_or_naive_source(self):
         sample = {"source_snapshot_unchanged": False, "source_snapshot_sha256": "a" * 64,
