@@ -68,6 +68,38 @@ def instructor_course_eligible(fixture, instructor, course, layered=False):
     return course in fixture['capabilities'].get(instructor, [])
 
 
+def attested_checkout_hold(source, now, courses):
+    """Verify a canonical, atomic, capacity-backed checkout lease as demand.
+
+    The producer must authenticate the ledger before passing these fields;
+    neither calendar hold mirrors nor a client-supplied URL attests a claim.
+    Valid but expired holds are distinguishable so only that lease is released.
+    """
+    if (source.get("kind") != "hold"
+            or source.get("source_file") != "canonical_checkout_hold_ledger"
+            or source.get("checkout_hold_status") != "admitted"
+            or source.get("hold_admission_attested") is not True
+            or source.get("checkout_hold_capacity_claimed") is not True
+            or source.get("checkout_hold_resource_verified") is not True
+            or not source.get("checkout_hold_id")
+            or not source.get("checkout_order_id")
+            or str(source.get("course") or source.get("course_id") or "") not in courses
+            or source.get("instructor_unassigned") is True
+            or not source.get("instructor")
+            or source.get("instructor") == "unassigned"
+            or not (source.get("location") or source.get("resource"))):
+        return False
+    try:
+        admitted = stamp(source["hold_admitted_at"])
+        expires = stamp(source["hold_expires_at"])
+    except (KeyError, TypeError, ValueError):
+        return False
+    current = now if isinstance(now, datetime) else stamp(now)
+    if current.tzinfo is None:
+        raise ValueError("replay clock must include an offset")
+    return admitted <= current.astimezone(timezone.utc) and expires > admitted
+
+
 def run(fixture):
     fixture, layered_windows = intersect_resource_layers(fixture)
     courses = fixture["courses"]
@@ -122,39 +154,14 @@ def run(fixture):
                                   'end': window['end'], 'instructor': window['instructor'],
                                   'location': window['location'],
                                   'uncertainty_reason': 'commitment_coverage_not_established'}
-    # Checkout holds are provisional demand only when a trusted canonical
-    # ledger has attested atomic admission, course/resource binding, and a
-    # finite lease. Generic calendar "hold" mirrors stay physical blockers
-    # without ever becoming demand Anchors. Nothing here attests a payment.
+    # Verified checkout-hold demand is distinct from synthetic hard blockers.
     replay_now = stamp(fixture["now"])
-    def attested_checkout_hold(source):
-        if (source.get("kind") != "hold"
-                or source.get("source_file") != "canonical_checkout_hold_ledger"
-                or source.get("checkout_hold_status") != "admitted"
-                or source.get("hold_admission_attested") is not True
-                or source.get("checkout_hold_capacity_claimed") is not True
-                or source.get("checkout_hold_resource_verified") is not True
-                or not source.get("checkout_hold_id")
-                or not source.get("checkout_order_id")
-                or source.get("course") not in courses
-                or source.get("instructor_unassigned") is True
-                or not source.get("instructor")
-                or source.get("instructor") == "unassigned"
-                or not source.get("location")):
-            return False
-        try:
-            admitted = stamp(source["hold_admitted_at"])
-            expires = stamp(source["hold_expires_at"])
-        except (KeyError, TypeError, ValueError):
-            return False
-        return admitted <= replay_now and expires > admitted
-
     occupied, ignored = [], []
     for source in sources.values():
         if source.get("kind") not in {"paid", "seated", "planted", "hold", "commitment", "uncertain"}:
             ignored.append({"source_id": source["id"], "reason": "not_explicit_work_commitment"})
             continue
-        if attested_checkout_hold(source) and stamp(source["hold_expires_at"]) <= replay_now:
+        if attested_checkout_hold(source, replay_now, courses) and stamp(source["hold_expires_at"]) <= replay_now:
             # Releasing this hold must not erase a separately admitted hold.
             ignored.append({"source_id": source["id"], "reason": "checkout_hold_expired"})
             continue
@@ -179,7 +186,7 @@ def run(fixture):
     blocks, merge_decisions = [], []
     for item in occupied:
         if (item["kind"] not in {"paid", "seated", "planted"}
-                and not (attested_checkout_hold(item)
+                and not (attested_checkout_hold(item, replay_now, courses)
                          and stamp(item["hold_expires_at"]) > replay_now)):
             continue
         previous = blocks[-1] if blocks else None
@@ -257,7 +264,7 @@ def run(fixture):
         if busy.get("operational_has_active_seat") is True
         or (busy["kind"] in {"paid", "seated"}
             and type(busy.get("headcount")) is int and busy["headcount"] > 0)
-        or (attested_checkout_hold(busy)
+        or (attested_checkout_hold(busy, replay_now, courses)
             and stamp(busy["hold_expires_at"]) > replay_now)
     }
     candidates, edges, free_intervals = [], [], []
@@ -345,7 +352,7 @@ def run(fixture):
         meta = courses.get(busy.get('course'), {})
         if meta.get('kind') != 'full': continue
         if busy.get('kind') not in {'paid', 'seated'} and not (
-                attested_checkout_hold(busy) and stamp(busy["hold_expires_at"]) > replay_now):
+                attested_checkout_hold(busy, replay_now, courses) and stamp(busy["hold_expires_at"]) > replay_now):
             uncertain_full.append({'source_id': busy['id'], 'kind': busy['kind'], 'headcount': busy.get('headcount')})
             if busy.get('kind') == 'planted' and busy.get('headcount') is None:
                 uncertain_family_groups.add((busy['instructor'], busy['start'].astimezone(zone).date().isoformat(), consolidation_identity(busy['course'])))
