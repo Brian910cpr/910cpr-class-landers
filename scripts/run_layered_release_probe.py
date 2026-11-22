@@ -122,6 +122,69 @@ def public_safe_summary(proof):
     return safe
 
 
+
+def compare_safe_summaries(main, draft):
+    """Compare aggregate actual-engine replays; reject different sources or clocks.
+
+    Main and draft must each be run against the identical captured inputs.
+    This utility never treats a green calculation as hosted/public booking proof.
+    """
+    fields = ("source_snapshot_sha256", "replay_clock_utc", "horizon_start",
+              "horizon_end", "horizon_days")
+    for report in (main, draft):
+        if (report.get("published") is not False or
+                report.get("source_snapshot_unchanged") is not True or
+                report.get("calculation_completed") is not True):
+            raise ValueError("Main/draft comparison requires completed, unpublished, frozen replays")
+        if any(field not in report for field in fields):
+            raise ValueError("Main/draft comparison missing snapshot or horizon evidence")
+    if any(main[field] != draft[field] for field in fields):
+        raise ValueError("Main/draft comparison source, clock or horizon mismatch")
+    if not re.fullmatch(r"[0-9a-f]{64}", str(main["source_snapshot_sha256"])):
+        raise ValueError("Main/draft comparison requires a valid SHA-256 fingerprint")
+    clock = datetime.fromisoformat(main["replay_clock_utc"].replace("Z", "+00:00"))
+    if clock.utcoffset() != timedelta(0):
+        raise ValueError("Main/draft comparison requires an aware UTC clock")
+    if main["horizon_days"] != 90:
+        raise ValueError("Main/draft comparison requires the full 90-day horizon")
+    if not main.get("pages") or set(main["pages"]) != set(draft.get("pages") or {}):
+        raise ValueError("Main/draft comparison must cover identical course families")
+
+    families = {}
+    for family in sorted(main["pages"]):
+        if not _SAFE_REASON.fullmatch(family):
+            raise ValueError("Unrecognized course-family report identifier")
+        left = main["pages"][family].get("ninety_day_offer_counts")
+        right = draft["pages"][family].get("ninety_day_offer_counts")
+        if not isinstance(left, list) or not isinstance(right, list) or len(left) != 90 or len(right) != 90:
+            raise ValueError("Main/draft comparison requires complete 90-day daily counts")
+        aggregate = {role: {"main": 0, "draft": 0, "delta": 0} for role in _ROLES}
+        changed_days = 0
+        for before_day, after_day in zip(left, right):
+            day = before_day.get("date")
+            if (day != after_day.get("date") or not re.fullmatch(r"\\d{4}-\\d{2}-\\d{2}", str(day))):
+                raise ValueError("Main/draft comparison day alignment failed")
+            if day < main["horizon_start"] or day > main["horizon_end"]:
+                raise ValueError("Main/draft comparison day outside bounded horizon")
+            changed = False
+            for role in _ROLES:
+                a, b = before_day.get(role), after_day.get(role)
+                if any(type(value) is not int or value < 0 for value in (a, b)):
+                    raise ValueError("Main/draft comparison requires nonnegative integer offer counts")
+                aggregate[role]["main"] += a
+                aggregate[role]["draft"] += b
+                changed |= a != b
+            changed_days += int(changed)
+        for values in aggregate.values():
+            values["delta"] = values["draft"] - values["main"]
+        families[family] = {"offer_roles": aggregate, "days_with_different_counts": changed_days}
+    return {"published": False, "same_source_verified": True,
+            "registration_or_checkout_proven": False,
+            "source_snapshot_sha256": main["source_snapshot_sha256"],
+            "replay_clock_utc": main["replay_clock_utc"],
+            "horizon_start": main["horizon_start"], "horizon_end": main["horizon_end"],
+            "horizon_days": 90, "families": families}
+
 def run():
     output=ROOT/'data/runtime/audit_previews/v2_release_probe'
     output.mkdir(parents=True,exist_ok=True)
