@@ -325,35 +325,8 @@ jobs:
           from pathlib import Path
           source = Path('data/runtime/audit_previews/v2_release_probe/proof.json')
           proof = json.loads(source.read_text(encoding='utf-8'))
-          safe = {
-              'published': False,
-              'calculation_completed': bool(proof.get('calculation_completed')),
-              'release_passed': bool(proof.get('release_passed')),
-              'source_snapshot_unchanged': proof.get('source_snapshot_unchanged') is True,
-              'source_snapshot_sha256': proof.get('source_snapshot_sha256'),
-              'replay_clock_utc': proof.get('replay_clock_utc'),
-              'canonical_session_count': proof.get('canonical_session_count'),
-              'calendar_coverage_count': proof.get('calendar_coverage_count'),
-              'pages': {
-                  key: {
-                      'counts': row.get('counts'),
-                      'offer_roles': row.get('offer_roles'),
-                      'rejection_reason_categories': {
-                          category: sum(
-                              count for reason, count in (row.get('rejection_reasons') or {}).items()
-                              if reason.split(':', 1)[0] == category
-                          )
-                          for category in {
-                              reason.split(':', 1)[0]
-                              for reason in (row.get('rejection_reasons') or {})
-                          }
-                      },
-                      'synthesis_blocked_day_count': len(row.get('synthesis_blocked_dates') or []),
-                      'day_count': len(row.get('day_patterns') or {}),
-                  }
-                  for key, row in proof.get('pages', {}).items()
-              },
-          }
+          from scripts.run_layered_release_probe import public_safe_summary
+          safe = public_safe_summary(proof)
           target = source.with_name('public_safe_summary.json')
           target.write_text(json.dumps(safe, indent=2), encoding='utf-8')
           print('Read-only V2 source replay:', json.dumps({'published': False, 'calculation_completed': safe['calculation_completed'], 'release_passed': safe['release_passed'], 'canonical_session_count': safe['canonical_session_count'], 'calendar_coverage_count': safe['calendar_coverage_count'], 'pages': sorted(safe['pages'])}))
