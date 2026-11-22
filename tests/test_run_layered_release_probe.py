@@ -164,6 +164,21 @@ class FrozenSourceReplayTests(unittest.TestCase):
                      "data/config/calendar_sources.json"):
             self.assertIn(path, probe.SOURCE_PATHS)
 
+    def test_main_draft_horizon_must_start_on_replay_clock_et_day(self):
+        main = self._comparable_replay()
+        draft = json.loads(json.dumps(main))
+        # Both replays can match each other yet still falsely claim a stale
+        # 90-day baseline. This used to pass the comparison gate.
+        main["replay_clock_utc"] = "2026-11-23T08:18:24+00:00"
+        draft["replay_clock_utc"] = main["replay_clock_utc"]
+        with self.assertRaisesRegex(ValueError, "horizon does not start"):
+            probe.compare_safe_summaries(main, draft)
+
+        # The public horizon follows America/New_York, not the UTC date.
+        main["replay_clock_utc"] = "2026-11-23T02:30:00+00:00"
+        draft["replay_clock_utc"] = main["replay_clock_utc"]
+        self.assertTrue(probe.compare_safe_summaries(main, draft)["same_source_verified"])
+
     def test_main_draft_mismatched_source_clock_or_family_fails_closed(self):
         main = self._comparable_replay()
         for field, wrong in (
