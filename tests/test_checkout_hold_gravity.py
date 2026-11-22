@@ -96,6 +96,56 @@ class ProvisionalCheckoutHoldTests(unittest.TestCase):
         self.assertTrue(any(c["mode"] == "free" for c in later["accepted"]))
 
 
+    def test_same_slot_independent_leases_survive_adapter_dedup_and_one_expiry(self):
+        # Two distinct customers can claim separate capacity-backed seats in
+        # the SAME existing class. The exact occupied geometry matches; when A
+        # leaves, B must not disappear during legacy/occupancy normalization.
+        from tests.test_layered_publication_adapter import LayeredPublicationTests
+        test = LayeredPublicationTests("test_source_records_not_mutated_and_explicit_activation_required")
+        test.setUp()
+        test.windows = []
+        test.coverage = []
+        test.window(11, "08:00", "18:00", next_day=False)
+        test.policy["require_verified_day_gravity"] = True
+
+        def lease(ident, expires):
+            return dict(
+                source_event_id="checkout-lease-" + ident, kind="hold",
+                course_id="359474", instructor="Brian Ennis",
+                resource=test.room, location_resolution="location_resource_map",
+                start=test.at(11, "12:00").isoformat(),
+                end=test.at(11, "14:30").isoformat(),
+                source_file="landerware_public_orders",
+                checkout_hold_status="admitted", hold_admission_attested=True,
+                checkout_hold_capacity_claimed=True,
+                checkout_hold_resource_verified=True,
+                checkout_hold_id="hold-" + ident,
+                checkout_order_id="order-" + ident,
+                hold_admitted_at=test.at(5, "11:50").isoformat(),
+                hold_expires_at=test.at(5, expires).isoformat(),
+            )
+
+        a, b = lease("A", "12:05"), lease("B", "12:20")
+        # Same lease, different source-event alias is not a second claim.
+        mirror = dict(b, source_event_id="mirror-of-B")
+        test.sources = [a, b, mirror]
+        before = test.calculation()
+        self.assertEqual(before["counts"]["failed_windows"], 0, before["issues"])
+        self.assertEqual({item["id"] for item in before["reports"][0]["normalized_occupancy"]},
+                         {"checkout-lease-A", "checkout-lease-B"})
+        self.assertFalse(before["reports"][0]["seated_offers"])
+
+        test.now = test.at(5, "12:06")
+        after = test.calculation()
+        self.assertEqual(after["counts"]["failed_windows"], 0, after["issues"])
+        self.assertEqual({item["id"] for item in after["reports"][0]["normalized_occupancy"]},
+                         {"checkout-lease-B"})
+        self.assertIn({"source_id": "checkout-lease-A", "reason": "checkout_hold_expired"},
+                      after["reports"][0]["ignored_sources"])
+        self.assertTrue(any(candidate["mode"] == "barnacle"
+                            for candidate in after["reports"][0]["accepted"]))
+        self.assertFalse(after["reports"][0]["seated_offers"])
+
     def test_publication_applies_hold_gravity_without_joinable_seat(self):
         # The publisher may see source-attested demand even in a different
         # availability window; it must collapse open-day offers without
