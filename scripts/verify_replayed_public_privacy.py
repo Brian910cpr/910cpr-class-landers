@@ -6,6 +6,7 @@ Never log source identifiers, appointment dates or customer details.
 from __future__ import annotations
 
 import re
+from datetime import datetime
 from pathlib import Path
 
 from scripts import build_index_and_sitemap as catalog
@@ -36,6 +37,7 @@ def verify(root: Path = ROOT) -> dict[str, int]:
     rows = catalog.load_schedule_future_sessions(include_nonpublic_locations=True)
     rejected = set()
     verified_public = set()
+    now = datetime.now(catalog.LOCAL_TZ)
     for row in rows:
         sid = str(row.get("session_id") or row.get("id") or "").strip()
         if not sid:
@@ -43,8 +45,10 @@ def verify(root: Path = ROOT) -> dict[str, int]:
         public = catalog.schedule_future_to_public_session(row)
         if public is None:
             rejected.add(sid)
-        elif NUMERIC_ID.fullmatch(sid):
-            verified_public.add(sid)
+        else:
+            start = row.get('_parsed_start') or catalog.parse_local_datetime(row.get('start_at', ''))
+            if start and start > now and NUMERIC_ID.fullmatch(sid):
+                verified_public.add(sid)
 
     if public_ids != verified_public:
         raise ValueError("Public replay privacy gate: listed IDs disagree with authoritative source")
