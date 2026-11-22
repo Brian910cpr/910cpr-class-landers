@@ -5,7 +5,7 @@ Room hours come from the owner's explicit policy; occupancy always wins.
 """
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
-from scripts.layered_scheduling_engine import run
+from scripts.layered_scheduling_engine import run, attested_checkout_hold, stamp
 
 ZONE = ZoneInfo("America/New_York")
 
@@ -113,8 +113,36 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         return (busy.get("operational_has_active_seat") is True or
                 (busy.get("count_available") is True and type(count) is int and count > 0))
 
+    def live_checkout_lease_key(busy):
+        # An independent, service-attested checkout claim is not a copied
+        # empty calendar shell. Do not allow an expired/unproven lease to
+        # displace a genuine currently held seat during geometry dedup.
+        if not attested_checkout_hold(busy, fixture["now"], fixture["courses"]):
+            return None
+        if stamp(busy["hold_expires_at"]) <= stamp(fixture["now"]):
+            return None
+        return (str(busy["checkout_order_id"]), str(busy["checkout_hold_id"]))
+
+    def independent_live_checkout_hold(busy, previous):
+        key = live_checkout_lease_key(busy)
+        source_id = str(busy.get("source_event_id") or "")
+        if not key or not source_id:
+            return False
+        for item in previous:
+            if source_id == str(item.get("source_event_id") or ""):
+                return False
+            if has_seated_demand(item):
+                continue
+            other = live_checkout_lease_key(item)
+            # Two separately admitted customers can claim separate seats
+            # in one class/interval. A mirrored or repeated lease cannot.
+            if not other or other[0] == key[0] or other[1] == key[1]:
+                return False
+        return True
+
     priority_occupancy = sorted(enumerate(occupancy), key=lambda pair: (
-        not has_seated_demand(pair[1]), pair[0]))
+        0 if has_seated_demand(pair[1]) else
+        1 if live_checkout_lease_key(pair[1]) else 2, pair[0]))
     for index, busy in priority_occupancy:
         if not busy.get("start") or not busy.get("end"):
             raise ValueError("unresolved occupied interval")
@@ -138,9 +166,12 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         # A copied shell or repeated source identity is one physical interval.
         # Two *distinct* verified commitments are not silently deduplicated:
         # preserve both without treating either as a public joinable seat.
-        if previous and not (has_seated_demand(busy) and source_id and
-                all(has_seated_demand(item) and
-                    source_id != str(item.get("source_event_id") or "") for item in previous)):
+        if previous and not (
+                (has_seated_demand(busy) and source_id
+                 and all(has_seated_demand(item)
+                         and source_id != str(item.get("source_event_id") or "")
+                         for item in previous))
+                or independent_live_checkout_hold(busy, previous)):
             continue
         source_keys.setdefault(key, []).append(busy)
         cid = str(busy.get("course_id") or "")
