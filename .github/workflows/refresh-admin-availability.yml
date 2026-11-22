@@ -370,7 +370,7 @@ jobs:
           import re
           from pathlib import Path
           log = Path('/tmp/p0_routing_tests.log').read_text(encoding='utf-8', errors='replace')
-          failures = sorted(set(re.findall(r'^(?:FAIL|ERROR): (test_[A-Za-z0-9_]+) \\(', log, re.M)))
+          failures = sorted(set(re.findall(r'^(?:FAIL|ERROR): (test_[A-Za-z0-9_]+) \(', log, re.M)))
           summary = Path('data/runtime/audit_previews/v2_release_probe/public_safe_summary.json')
           evidence = json.loads(summary.read_text(encoding='utf-8'))
           evidence['coordinated_public_replay'] = {'result': 'blocked', 'test_case_names_only': failures}
