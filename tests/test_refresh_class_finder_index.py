@@ -513,5 +513,45 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
                 bundle.refresh(root=self.root)
         self.assertEqual(index.read_text(encoding="utf-8"), "original listing")
 
+
+    def test_bundle_rolls_back_partial_detail_and_sitemap_writes(self):
+        # A successful finder update followed by a failed detail/sitemap write
+        # must not leave mixed public artifacts in the runner or next commit.
+        old_id, archive_id = "14917169", "12345678"
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text(
+            '<a class="class-finder-secondary" href="/classes/' +
+            old_id + '.html">Details</a>', encoding="utf-8")
+        detail = index.parent / (old_id + ".html")
+        archive = index.parent / (archive_id + ".html")
+        sitemap = self.root / "docs/sitemap.xml"
+        detail.write_text("original public class detail", encoding="utf-8")
+        archive.write_text("unrelated historical archive", encoding="utf-8")
+        sitemap.write_text(
+            "<urlset><url><loc>https://www.910cpr.com/classes/" +
+            old_id + ".html</loc></url></urlset>", encoding="utf-8")
+        originals = {path: path.read_bytes()
+                     for path in (index, detail, archive, sitemap)}
+
+        def fail_after_partial_write(*, root, retired_previous_ids):
+            self.assertEqual(retired_previous_ids, {old_id})
+            detail.write_text("partially rewritten route", encoding="utf-8")
+            sitemap.write_text("<urlset>partial</urlset>", encoding="utf-8")
+            raise OSError("simulated route write failure")
+
+        with (
+            patch.object(bundle.finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(bundle.routes, "refresh",
+                         side_effect=fail_after_partial_write),
+        ):
+            with self.assertRaisesRegex(OSError, "route write failure"):
+                bundle.refresh(root=self.root)
+        for path, original in originals.items():
+            self.assertEqual(path.read_bytes(), original,
+                             f"Public bundle left a partial artifact: {path.name}")
+
+
 if __name__ == "__main__":
     unittest.main()
