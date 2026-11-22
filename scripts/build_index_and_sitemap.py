@@ -468,6 +468,17 @@ def public_session_source_label(sessions: list[dict]) -> str:
 
 
 def schedule_future_to_public_session(session: dict) -> dict | None:
+    # Public location and a legacy enrollment URL are not authorization to
+    # advertise a canonically private or stale appointment. Preserve its
+    # operational scheduling occupancy in the separate canonical feed.
+    visibility = str(session.get("visibility") or "").strip().casefold()
+    if visibility in {"private", "unlisted", "internal"}:
+        return None
+    reconciliation = str(session.get("demand_status") or "").strip().casefold()
+    if session.get("canonical_session_id") and reconciliation in {
+        "stale_reconciliation", "stale_anchor", "ambiguous"
+    }:
+        return None
     if not session_has_public_class_location(session):
         return None
     session_id = str(session.get("session_id") or session.get("id") or "").strip()
