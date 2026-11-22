@@ -12,6 +12,7 @@ on:
   push:
     branches:
       - main
+      - integration/p0-demand-safety-20261119-r1
     paths:
       - '.github/workflows/refresh-admin-availability.yml'
       - 'scripts/build_sessions_current.py'
@@ -277,7 +278,7 @@ jobs:
     concurrency:
       group: v2-release-probe-${{ github.ref_name }}
       cancel-in-progress: false
-    if: github.event_name == 'workflow_dispatch' && inputs.v2_release_probe
+    if: (github.event_name == 'workflow_dispatch' && inputs.v2_release_probe) || (github.event_name == 'push' && github.ref == 'refs/heads/integration/p0-demand-safety-20261119-r1')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -302,13 +303,48 @@ jobs:
           python -B -m scripts.build_schedule_future
           python -B -m scripts.export_calendar_snapshots
           python -B -m scripts.build_live_availability_snapshot
-      - name: Calculate existing V2 and customer previews
-        run: python -B -m scripts.run_layered_release_probe
-      - name: Upload public-safe proof only
+      - name: Calculate actual V2 against fetched live source without publication
+        shell: bash
+        run: |
+          # The full source replay is runner-local: never print class/private dates,
+          # customer routes, or the underlying canonical payload in public logs.
+          if ! python -B -m scripts.run_layered_release_probe >/tmp/v2_probe_private.log 2>&1; then
+            echo "::error::Read-only V2 proof failed; no source, public, or payment state changed"
+            exit 1
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          source = Path('data/runtime/audit_previews/v2_release_probe/proof.json')
+          proof = json.loads(source.read_text(encoding='utf-8'))
+          safe = {
+              'published': False,
+              'calculation_completed': bool(proof.get('calculation_completed')),
+              'release_passed': bool(proof.get('release_passed')),
+              'canonical_session_count': proof.get('canonical_session_count'),
+              'calendar_coverage_count': proof.get('calendar_coverage_count'),
+              'pages': {
+                  key: {
+                      'counts': row.get('counts'),
+                      'offer_roles': row.get('offer_roles'),
+                      'rejection_reasons': row.get('rejection_reasons'),
+                      'synthesis_blocked_day_count': len(row.get('synthesis_blocked_dates') or []),
+                      'day_count': len(row.get('day_patterns') or {}),
+                  }
+                  for key, row in proof.get('pages', {}).items()
+              },
+          }
+          target = source.with_name('public_safe_summary.json')
+          target.write_text(json.dumps(safe, indent=2), encoding='utf-8')
+          print('Read-only V2 source replay:', json.dumps({'published': False, 'calculation_completed': safe['calculation_completed'], 'release_passed': safe['release_passed'], 'canonical_session_count': safe['canonical_session_count'], 'calendar_coverage_count': safe['calendar_coverage_count'], 'pages': sorted(safe['pages'])}))
+          if not safe['calculation_completed'] or not safe['release_passed'] or not (safe['canonical_session_count'] or 0):
+              raise SystemExit('V2 source proof incomplete: leaving public inventory and checkout unchanged')
+          PY
+      - name: Upload aggregate-only replay summary
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: v2-release-probe-${{ github.run_id }}
-          path: data/runtime/audit_previews/v2_release_probe/
+          name: v2-safe-summary-${{ github.run_id }}
+          path: data/runtime/audit_previews/v2_release_probe/public_safe_summary.json
           if-no-files-found: warn
           retention-days: 7
