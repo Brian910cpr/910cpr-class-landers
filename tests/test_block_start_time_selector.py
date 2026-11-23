@@ -23,6 +23,39 @@ def artifact_offers(artifact):
 
 
 class BlockStartTimeSelectorTests(unittest.TestCase):
+    def test_canonical_visibility_survives_operational_occupancy_projection(self):
+        # The real canonical endpoint supplies visibility, even for one-seat
+        # appointment-created sessions without a known instructor. The V2
+        # publication guard must receive it; an occupied time is not a license
+        # to advertise a stale public-looking registration link.
+        for visibility in ('private', 'unlisted', 'internal', 'public'):
+            with self.subTest(visibility=visibility):
+                session = {
+                    'session_status': 'scheduled',
+                    'canonical_session_id': 'synthetic-seated-session',
+                    'start_at': '2026-12-08T10:15:00-05:00',
+                    'end_at': '2026-12-08T12:45:00-05:00',
+                    'consumption_start_at': '2026-12-08T10:15:00-05:00',
+                    'consumption_end_at': '2026-12-08T12:45:00-05:00',
+                    'location_name': 'fixture-unknown-room',
+                    'lead_instructor_name': None,
+                    'visibility': visibility,
+                    'count_available': True,
+                    'active_registration_count': 1,
+                }
+                loaded = {'canonical_demand': {'sessions': [session]},
+                          'location_resource_map': {}}
+                occupancy = block_start_time_selector.build_occupancy(
+                    loaded, {}, allow_unresolved=True)
+                projected = [row for row in occupancy
+                             if row.get('source_file') == 'canonical_class_sessions']
+                self.assertEqual(len(projected), 1)
+                self.assertEqual(projected[0]['visibility'], visibility)
+                self.assertTrue(projected[0]['instructor_unassigned'])
+                self.assertTrue(projected[0]['count_available'])
+                self.assertEqual(projected[0]['active_registration_count'], 1)
+                self.assertEqual(projected[0]['source_event_id'], 'synthetic-seated-session')
+
     def test_existing_inventory_unknown_enrollment_is_visible_across_families(self):
         fixtures = [
             ("13850189", "359474", "BLS", "2026-08-10T13:00:00-04:00", "AHA BLS Provider Renewal"),
