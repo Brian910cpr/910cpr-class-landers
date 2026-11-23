@@ -138,6 +138,37 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(sum(o['offerType']=='seated_class'
                              for o in proven['offers']),1)
 
+    def test_seated_same_course_does_not_suppress_independent_instructor(self):
+        # Publication-only regression: both qualified instructors have genuine
+        # coverage. A verified Michelle seat cannot consume Brian's separate
+        # daywide same-course choices merely by sharing a course ID.
+        # Real room/time collisions are evaluated independently by calculate().
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', name='Brian Ennis', next_day=False)
+        self.window(11, '08:00', '18:00', name='Michelle', next_day=False)
+        clear=self.calculation()
+        self.assertEqual(clear['counts']['evaluated_windows'], 2)
+        source=self.add(11, '12:00', '14:30', cid='209809',
+                        name='Michelle', count=1)
+        clear['projected_sources']=project_sources([source], {})
+        seated=dict(session_id=source['source_event_id'], date='2026-10-11',
+                    startTime='12:00', courseId='209809',
+                    courseName='Verified independent-instructor seat',
+                    instructor='Michelle', offerType='seated_class')
+        result=self.payload([seated], calculation=clear)
+        brian=[offer for offer in result['offers']
+               if offer['courseId']=='209809'
+               and offer.get('instructor')=='Brian Ennis'
+               and offer.get('scheduleRole')=='open_day']
+        michelle=[offer for offer in result['offers']
+                  if offer['courseId']=='209809'
+                  and offer.get('instructor')=='Michelle']
+        self.assertTrue(brian)
+        self.assertEqual([offer['offerType'] for offer in michelle],
+                         ['seated_class'])
+        self.assertIn('existing_course_day_anchor',
+                      result['rejectionReasonCounts'])
+
     def test_private_seat_gravity_has_no_public_joinability_or_global_unknown_instructor_block(self):
         self.windows=[]; self.coverage=[]; self.sources=[]
         self.window(11,'08:00','18:00',next_day=False)
