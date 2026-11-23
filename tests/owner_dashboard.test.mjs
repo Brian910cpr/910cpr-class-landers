@@ -7,4 +7,44 @@ test('cash prompts protect every recorded upcoming obligation and reserve',()=>{
 test('future, expired, missing and incomplete evidence never recommends payments',()=>{assert.equal(financeWindow(null,now).prompts.length,0);for(const change of [{observed_at:'2026-09-14T16:00:00Z'},{expires_at:'2026-09-13T15:30:00Z'},{obligations_through:'2026-09-15T16:00:00Z'}])assert.equal(financeWindow({...snapshot(),...change},now).state,'unavailable');const s=snapshot();s.payload.obligations_complete=false;assert.equal(financeWindow(s,now).prompts.length,0)});
 test('business money cannot cover a personal bill silently',()=>{const s=snapshot();s.payload.accounts[0].available_cents=500;s.payload.accounts.push({id:'business',available_cents:900000,reserve_cents:0,currency:'USD'});assert.equal(financeWindow(s,now).prompts.length,0)});
 test('invalid, duplicate, negative and unassigned bills fail closed',()=>{for(const change of [{amount_cents:-1},{account_id:'unknown'},{due_at:'bad'},{amount_cents:'10000'}]){const s=snapshot();Object.assign(s.payload.bills[0],change);assert.equal(financeWindow(s,now).state,'unavailable')}const s=snapshot();s.payload.bills.push(s.payload.bills[0]);assert.equal(financeWindow(s,now).state,'unavailable')});
-test('Brian ownership alone does not turn the entire Codex backlog into his chores',()=>{const cards=[{id:1,owner:'Brian',lane:'doing',title:'Build feature'},{id:2,owner:'Brian',lane:'decision',title:'Choose rule'},{id:3,lane:'decision',implementation_status:'VERIFIED',title:'Old decision'}];assert.deepEqual(boardPrompts(cards).map(p=>p.id),['board:2'])});
+test('Brian ownership alone does not turn the entire Codex backlog into his chores',()=>{const cards=[{id:1,owner:'Brian',lane:'doing',title:'Build feature'},{id:2,owner:'Brian',lane:'decision',title:'Choose rule'},{id:3,lane:'decision',implementation_status:'VERIFIED',title:'Old decision'}];assert.deepEqual(boardPrompts(cards),[])});
+
+
+test('malformed finance rows fail closed without interrupting the dashboard',()=>{
+  for(const row of [null, false, 7, 'account', []]) {
+    const s=snapshot();s.payload.accounts=[row];
+    assert.equal(financeWindow(s,now).state,'unavailable');
+  }
+  for(const id of [7, {}, [], '   ']) {
+    const s=snapshot();s.payload.accounts[0].id=id;
+    assert.equal(financeWindow(s,now).state,'unavailable');
+  }
+  for(const row of [null, false, 7, 'bill', []]) {
+    const s=snapshot();s.payload.bills.push(row);
+    const result=financeWindow(s,now);
+    assert.equal(result.state,'unavailable');
+    assert.deepEqual(result.prompts,[]);
+  }
+});
+
+test('malformed bill IDs and unsafe aggregate cents never produce payment prompts',()=>{
+  for(const id of [true, 7, {}, [], '   ']) {
+    const s=snapshot();s.payload.bills[0].id=id;
+    assert.equal(financeWindow(s,now).state,'unavailable');
+  }
+  const cases=[];
+  const obligations=snapshot();
+  obligations.payload.bills.forEach(b=>b.amount_cents=Number.MAX_SAFE_INTEGER);
+  cases.push(obligations);
+  const protectedTotal=snapshot();
+  protectedTotal.payload.accounts[0].reserve_cents=Number.MAX_SAFE_INTEGER;
+  cases.push(protectedTotal);
+  const availableTotal=snapshot();
+  availableTotal.payload.accounts.push({id:'business',currency:'USD',available_cents:Number.MAX_SAFE_INTEGER,reserve_cents:0});
+  cases.push(availableTotal);
+  for(const s of cases) {
+    const result=financeWindow(s,now);
+    assert.equal(result.state,'unavailable');
+    assert.deepEqual(result.prompts,[]);
+  }
+});
