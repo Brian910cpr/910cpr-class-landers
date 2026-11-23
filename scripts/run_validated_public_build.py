@@ -23,6 +23,10 @@ BUILD_MODULES = (
     "scripts.build_index_and_sitemap",
     "scripts.ensure_analytics_tags",
     "scripts.inject_global_theme_assets",
+    # Historical detail URLs remain addressable after a class drops out of
+    # a refreshed source. Retire expired registration actions on EVERY full
+    # build; the independent 15-minute scheduled workflow is a backup only.
+    "scripts.retire_expired_public_pages",
 )
 
 
