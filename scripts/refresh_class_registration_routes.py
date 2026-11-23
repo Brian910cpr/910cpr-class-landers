@@ -128,6 +128,39 @@ def refresh(root=ROOT, retired_previous_ids=None):
         if updated != xml:
             changes[sitemap]=updated
 
+    # Public detail sidebars are independent discovery surfaces. Their
+    # "Other current courses" lists can retain a now-private appointment even
+    # after the finder and its direct page have been safely retired. Drop the
+    # entire isolated list entry (including its advertised time), never merely
+    # change the href. Refuse mixed/ambiguous references rather than hiding a
+    # legitimate public seat or leaving a private date visible.
+    if rejected_public_ids:
+        detail_ref = re.compile(
+            r'''(?:href=["'](?:https?://(?:www\.)?910cpr\.com)?/classes/([0-9a-fA-F-]+)\.html(?:[?#][^"']*)?["']|data-session-id=["']([0-9a-fA-F-]+)["'])''',
+            re.IGNORECASE,
+        )
+        def detail_refs(text):
+            return {m.group(1) or m.group(2) for m in detail_ref.finditer(text)}
+
+        for sid in ids:
+            public_detail = root / 'docs/classes' / (sid + '.html')
+            html = changes[public_detail]
+            def remove_private_related_item(match):
+                targets = detail_refs(match.group(0))
+                if not targets & rejected_public_ids:
+                    return match.group(0)
+                if targets - rejected_public_ids:
+                    raise ValueError('mixed public detail related item')
+                return ''
+            cleaned = re.sub(
+                r'(?is)<li\b[^>]*>.*?</li\s*>',
+                remove_private_related_item,
+                html,
+            )
+            if detail_refs(cleaned) & rejected_public_ids:
+                raise ValueError('ambiguous public detail reference to nonpublic class')
+            changes[public_detail] = cleaned
+
     # Remove only *whole isolated archive cards* for explicitly rejected IDs.
     # Changing just the href would leave the private class date visible nearby.
     # A compound card or unstructured reference fails closed at verification;
