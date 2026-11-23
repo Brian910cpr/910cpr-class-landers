@@ -658,6 +658,74 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
                              f"Public bundle left a partial artifact: {path.name}")
 
 
+    def test_public_detail_related_list_scrubs_private_dates_and_preserves_neighbors(self):
+        # Production-shaped privacy replay: an unrelated PUBLIC detail sidebar
+        # can link a canonically unlisted appointment even when the finder and
+        # the appointment's direct page have been retired.
+        current, private, historic = "15000103", "15000102", "15000999"
+        def row(sid, **extra):
+            return {
+                "session_id": sid, "course_id": "209806",
+                "course_number": "209806",
+                "course_name": "AHA BLS Provider (Initial)",
+                "start_at": "2026-11-22T13:00:00-05:00",
+                "location_name": ":: Wilmington; Shipyard Blvd - B",
+                "session_status": "active", "registration_status": "open",
+                "public_direct_booking": True,
+                "registration_url":
+                    "https://coastalcprtraining.enrollware.com/enroll?id=" + sid,
+                **extra,
+            }
+        self.write_source([row(current), row(private, visibility="unlisted")])
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        listing = ('<a class="class-finder-secondary" href="/classes/' +
+                   current + '.html">Details</a>')
+        index.write_text(listing, encoding="utf-8")
+        detail = index.parent / (current + ".html")
+        private_detail = index.parent / (private + ".html")
+        private_detail.write_text("Private appointment date and registration",
+                                  encoding="utf-8")
+        original = (
+            '<aside><ul>'
+            '<li><a href="/classes/' + private +
+            '.html">Nonpublic appointment on Tuesday</a></li>'
+            '<li><a href="/classes/' + historic +
+            '.html">Independent historical public course</a></li>'
+            '</ul></aside>'
+        )
+        detail.write_text(original, encoding="utf-8")
+        with (
+            patch.object(finder, "render_current_class_finder",
+                         return_value=(listing, {current})),
+            patch.object(catalog, "SCHEDULE_FUTURE_FILE", self.path),
+            patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
+        ):
+            routes.refresh(root=self.root)
+            clean = detail.read_text(encoding="utf-8")
+            self.assertNotIn("Nonpublic appointment on Tuesday", clean)
+            self.assertNotIn("/classes/" + private + ".html", clean)
+            self.assertIn("Independent historical public course", clean)
+            self.assertIn("/classes/" + historic + ".html", clean)
+            self.assertIn("noindex,nofollow",
+                          private_detail.read_text(encoding="utf-8"))
+
+            # Never hide an entire card containing a legitimate public link.
+            mixed = ('<li><a href="/classes/' + private + '.html">Hidden</a>'
+                     '<a href="/classes/' + historic + '.html">Public</a></li>')
+            detail.write_text(mixed, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "mixed public detail"):
+                routes.refresh(root=self.root)
+            self.assertEqual(detail.read_text(encoding="utf-8"), mixed)
+
+            # An unstructured private link must fail closed, not be silently
+            # left in a public detail by the refresh.
+            ambiguous = '<aside><a href="/classes/' + private + '.html">Private</a></aside>'
+            detail.write_text(ambiguous, encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "ambiguous public detail"):
+                routes.refresh(root=self.root)
+            self.assertEqual(detail.read_text(encoding="utf-8"), ambiguous)
+
     def test_private_archive_card_is_removed_but_public_neighbors_remain(self):
         # An old topic index must not disclose the private date after its
         # direct detail has been redacted. Preserve distinct public history.
