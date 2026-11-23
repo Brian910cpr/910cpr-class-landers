@@ -145,7 +145,7 @@ def verify(root: Path = ROOT) -> dict[str, int]:
         if resolved.is_file():
             archive_paths.add(resolved)
     blocked_link = re.compile(
-        r"""(?:href=["'](?:https?://(?:www\\.)?910cpr\\.com)?/classes/([0-9a-fA-F-]+)\\.html(?:[?#][^"']*)?["']|data-session-id=["']([0-9a-fA-F-]+)["'])""",
+        r"""(?:href=["'](?:https?://(?:www\.)?910cpr\.com)?/classes/([0-9a-fA-F-]+)\.html(?:[?#][^"']*)?["']|data-session-id=["']([0-9a-fA-F-]+)["'])""",
         re.IGNORECASE,
     )
     for path in sorted(archive_paths):
