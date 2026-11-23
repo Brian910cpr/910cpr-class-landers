@@ -60,6 +60,58 @@ class LayeredPublicationTests(unittest.TestCase):
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
 
+    def test_distant_private_seat_does_not_poison_unrelated_window(self):
+        # Distant private seats retain provenance, but do not force routes
+        # for unrelated free days. Nothing becomes publicly joinable.
+        self.sources.append(dict(
+            source_event_id='synthetic-private-offsite-far',
+            start=self.at(24,'09:00').isoformat(),
+            end=self.at(24,'10:00').isoformat(),
+            instructor='Brian Ennis', location='fixture-unmapped-offsite',
+            resource='fixture-unmapped-offsite',
+            source_file='canonical_class_sessions',
+            visibility='private', count_available=True,
+            active_registration_count=1))
+        result=self.calculation()
+        self.assertEqual(result['counts']['normalized_sources'],1)
+        self.assertEqual(result['counts']['evaluated_windows'],1)
+        self.assertEqual(result['counts']['failed_windows'],0)
+        self.assertTrue(result['reports'][0]['accepted'])
+        self.assertEqual(len(result['projected_sources']),1)
+        self.assertEqual(result['projected_sources'][0]['active_registration_count'],1)
+
+    def test_nearby_private_seat_unknown_route_still_fails_closed(self):
+        self.sources.append(dict(
+            source_event_id='synthetic-private-offsite-near',
+            start=self.at(11,'09:00').isoformat(),
+            end=self.at(11,'10:00').isoformat(),
+            instructor='Brian Ennis', location='fixture-unmapped-offsite',
+            resource='fixture-unmapped-offsite',
+            source_file='canonical_class_sessions',
+            visibility='private', count_available=True,
+            active_registration_count=1))
+        result=self.calculation()
+        self.assertEqual(result['counts']['evaluated_windows'],0)
+        self.assertEqual(result['counts']['failed_windows'],1)
+        self.assertTrue(any('missing directional travel rule' in i['reason']
+                            for i in result['issues']))
+        self.assertEqual(result['projected_sources'][0]['active_registration_count'],1)
+
+    def test_other_instructor_offsite_does_not_block_office(self):
+        self.sources.append(dict(
+            source_event_id='synthetic-unrelated-instructor',
+            start=self.at(11,'09:00').isoformat(),
+            end=self.at(11,'10:00').isoformat(),
+            instructor='Unrelated Instructor',
+            location='fixture-unmapped-offsite',
+            resource='fixture-unmapped-offsite',
+            source_file='canonical_class_sessions',
+            visibility='private', count_available=True,
+            active_registration_count=1))
+        result=self.calculation()
+        self.assertEqual(result['counts']['evaluated_windows'],1)
+        self.assertEqual(result['counts']['failed_windows'],0)
+
     def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
         # Both conflict rejections and expired dynamic URLs pass through this
         # finalizer. Neither may serialize a private record into the public
