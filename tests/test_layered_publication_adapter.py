@@ -233,6 +233,43 @@ class LayeredPublicationTests(unittest.TestCase):
                                  [{'reasons': ['nonpublic_occupied_not_joinable']}])
                 self.assertEqual(published['counts']['normalized_sources'],1)
 
+    def test_private_identity_wins_when_public_source_shadows_shared_external_id(self):
+        # Two independent source DTOs can claim the same external container.
+        # The first public-looking DTO must never override a later canonical
+        # restricted record when generating a seated registration link.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', next_day=False)
+        clear=self.calculation()
+        shared='fixture-shared-external-class'
+        public=dict(source_event_id='fixture-public-mirror',
+                    external_class_id=shared, course_id='209809',
+                    visibility='public', instructor='Brian Ennis',
+                    start=self.at(11,'12:00').isoformat(),
+                    end=self.at(11,'14:30').isoformat(),
+                    count_available=False)
+        restricted=dict(source_event_id='fixture-private-canonical',
+                        external_class_id=shared, course_id='209809',
+                        visibility='private', instructor='Brian Ennis',
+                        start=self.at(11,'12:00').isoformat(),
+                        end=self.at(11,'14:30').isoformat(),
+                        count_available=True, active_registration_count=1)
+        clear['projected_sources']=project_sources([public, restricted], {})
+        registration='https://fixture.invalid/should-never-appear'
+        seated=dict(session_id=shared, date='2026-10-11', startTime='12:00',
+                    courseId='209809', courseName='Private canonical class',
+                    visibility='public', instructor='Brian Ennis',
+                    offerType='seated_class', registrationUrl=registration)
+        result=self.payload([seated], calculation=clear)
+        self.assertFalse(any(o.get('offerType')=='seated_class'
+                             for o in result['offers']))
+        self.assertEqual(result['rejectionReasonCounts'].get(
+            'nonpublic_occupied_not_joinable'),1)
+        self.assertEqual([r for r in result['rejectedCourseStartTimes']
+                          if 'nonpublic_occupied_not_joinable' in r.get('reasons',[])],
+                         [{'reasons':['nonpublic_occupied_not_joinable']}])
+        self.assertNotIn(registration,json.dumps(result))
+        self.assertEqual(clear['projected_sources'][1]['active_registration_count'],1)
+
     def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
         # Both conflict rejections and expired dynamic URLs pass through this
         # finalizer. Neither may serialize a private record into the public
