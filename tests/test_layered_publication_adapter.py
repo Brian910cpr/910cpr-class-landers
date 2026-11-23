@@ -61,6 +61,37 @@ class LayeredPublicationTests(unittest.TestCase):
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
 
+    def test_canonical_seat_visibility_reaches_actual_v2_occupancy_adapter(self):
+        # Unlike a hand-built projected DTO, this exercises the canonical
+        # endpoint-to-publisher bridge used for private occupied sessions.
+        from scripts import block_start_time_selector
+        for visibility in ('private', 'unlisted', 'internal', 'public'):
+            with self.subTest(visibility=visibility):
+                session = {
+                    'session_status': 'scheduled',
+                    'canonical_session_id': 'synthetic-private-demand',
+                    'start_at': '2026-12-08T10:15:00-05:00',
+                    'end_at': '2026-12-08T12:45:00-05:00',
+                    'consumption_start_at': '2026-12-08T10:15:00-05:00',
+                    'consumption_end_at': '2026-12-08T12:45:00-05:00',
+                    'location_name': 'fixture-unknown-room',
+                    'lead_instructor_name': None,
+                    'visibility': visibility,
+                    'count_available': True,
+                    'active_registration_count': 1,
+                }
+                loaded = {'canonical_demand': {'sessions': [session]},
+                          'location_resource_map': {}}
+                occupied = block_start_time_selector.build_occupancy(
+                    loaded, {}, allow_unresolved=True)
+                projected = [row for row in occupied
+                             if row.get('source_file') == 'canonical_class_sessions']
+                self.assertEqual(len(projected), 1)
+                self.assertEqual(projected[0].get('visibility'), visibility)
+                self.assertTrue(projected[0]['instructor_unassigned'])
+                self.assertTrue(projected[0]['count_available'])
+                self.assertEqual(projected[0]['active_registration_count'], 1)
+
     def test_unknown_legacy_shell_blocks_its_time_not_the_entire_day(self):
         # Keep the real geometry, but do not manufacture a paid Anchor.
         self.windows=[]; self.coverage=[]; self.sources=[]
