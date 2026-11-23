@@ -193,6 +193,13 @@ class LayeredPublicationTests(unittest.TestCase):
                 self.assertEqual(published['rejectionReasonCounts'].get(
                     'nonpublic_occupied_not_joinable'),1)
                 self.assertNotIn(legacy_link,json.dumps(published))
+                # A private appointment must not reveal its exact date/time,
+                # course or registration container via public diagnostics.
+                # The aggregate reason remains available for monitoring.
+                private_rejections = [row for row in published['rejectedCourseStartTimes']
+                    if 'nonpublic_occupied_not_joinable' in row.get('reasons', [])]
+                self.assertEqual(private_rejections,
+                                 [{'reasons': ['nonpublic_occupied_not_joinable']}])
                 self.assertEqual(published['counts']['normalized_sources'],1)
 
     def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
