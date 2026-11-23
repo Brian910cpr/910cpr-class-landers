@@ -62,6 +62,8 @@ jobs:
               # Only print fixed, source-code-defined diagnostics; never echo a
               # source identifier, private date, participant, or raw exception.
               allowed = {
+                  "ambiguous public detail reference to nonpublic class",
+                  "mixed public detail related item",
                   "ambiguous archived reference to nonpublic class",
                   "compound archived card mixes public and nonpublic classes",
                   "public class listing mismatches current eligible source",
