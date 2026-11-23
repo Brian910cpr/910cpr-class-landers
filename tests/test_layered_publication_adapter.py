@@ -80,6 +80,33 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(len(result['projected_sources']),1)
         self.assertEqual(result['projected_sources'][0]['active_registration_count'],1)
 
+    def test_private_offsite_unassigned_instructor_near_vs_distant_window(self):
+        # Real canonical seats may lack an instructor assignment. Keep their
+        # physical/time uncertainty for a nearby window without allowing one
+        # distant private appointment to invalidate unrelated clear days.
+        self.sources.append(dict(
+            source_event_id='synthetic-unassigned-private-offsite',
+            start=self.at(11,'09:00').isoformat(),
+            end=self.at(11,'10:00').isoformat(),
+            instructor='unknown', instructor_unassigned=True,
+            location='fixture-unmapped-offsite',
+            resource='fixture-unmapped-offsite',
+            source_file='canonical_class_sessions',
+            visibility='private', count_available=True,
+            active_registration_count=1))
+        nearby=self.calculation()
+        self.assertEqual(nearby['counts']['evaluated_windows'],0)
+        self.assertEqual(nearby['counts']['failed_windows'],1)
+        self.assertTrue(any('missing directional travel rule' in i['reason']
+                            for i in nearby['issues']))
+        self.sources[0]['start']=self.at(24,'09:00').isoformat()
+        self.sources[0]['end']=self.at(24,'10:00').isoformat()
+        distant=self.calculation()
+        self.assertEqual(distant['counts']['evaluated_windows'],1)
+        self.assertEqual(distant['counts']['failed_windows'],0)
+        self.assertEqual(distant['projected_sources'][0]['active_registration_count'],1)
+        self.assertEqual(distant['projected_sources'][0]['visibility'],'private')
+
     def test_long_explicit_travel_buffer_prevents_unsafe_distant_prune(self):
         # An unusually long explicit travel rule extends the safety horizon.
         # The same private commitment without that configured rule is distant;
