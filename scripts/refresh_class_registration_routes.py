@@ -146,8 +146,10 @@ def refresh(root=ROOT, retired_previous_ids=None):
             re.IGNORECASE,
         )
         cards = [
-            re.compile(r'(?is)<li\b[^>]*>.*?</li\s*>'),
+            # Prefer the entire class card over a child list item so private
+            # class labels/dates outside the link are removed as one unit.
             re.compile(r'(?is)<article\b[^>]*>.*?</article\s*>'),
+            re.compile(r'(?is)<li\b[^>]*>.*?</li\s*>'),
         ]
         def references(card):
             return {match.group(1) or match.group(2) for match in id_ref.finditer(card)}
@@ -157,7 +159,9 @@ def refresh(root=ROOT, retired_previous_ids=None):
             for card_pattern in cards:
                 def remove_isolated_card(match):
                     ids = references(match.group(0))
-                    if ids & rejected_public_ids and not (ids - rejected_public_ids):
+                    if ids & rejected_public_ids:
+                        if ids - rejected_public_ids:
+                            raise ValueError('compound archived card mixes public and nonpublic classes')
                         return ''
                     return match.group(0)
                 updated_archive = card_pattern.sub(remove_isolated_card, updated_archive)
