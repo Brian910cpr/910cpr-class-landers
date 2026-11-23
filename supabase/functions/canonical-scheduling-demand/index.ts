@@ -3,7 +3,8 @@ import {localDate, localMidnight, demandRange} from '../_shared/scheduling-clock
 export {localDate, localMidnight, demandRange} from '../_shared/scheduling-clock.ts';
 import {registrationProof} from '../_shared/external-roster-proof.ts';
 
-const ACTIVE = new Set(["registered", "confirmed", "completed"]);
+// Registration lifecycle state active represents a real occupied seat.
+const ACTIVE = new Set(["registered", "confirmed", "completed", "active"]);
 const ALLOWED_ORIGINS = new Set(["https://www.910cpr.com", "https://910cpr.com"]);
 
 function response(origin: string, body: unknown, status = 200) {
