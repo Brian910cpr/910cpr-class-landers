@@ -100,5 +100,55 @@ class PublicReplayPrivacyTests(unittest.TestCase):
         self.assertEqual(result["redacted_uuid_detail_count"], 1)
         self.assertEqual(result["redacted_numeric_detail_count"], 0)
 
+    def test_archive_link_to_known_private_class_blocks_publication(self):
+        (self.details / "index.html").write_text(
+            '<a class="class-finder-secondary" href="/classes/111.html">Details</a>',
+            encoding="utf-8",
+        )
+        (self.details / "111.html").write_text("Verified public detail", encoding="utf-8")
+        archive = self.root / "docs/topics/bls.html"
+        archive.parent.mkdir(parents=True)
+        archive.write_text(
+            '<a href="/classes/222.html">An old class listing</a>', encoding="utf-8"
+        )
+        with self.assertRaisesRegex(ValueError, "archived index links to nonpublic"):
+            self.run_verify()
+        archive.write_text(
+            '<a href="/classes/index.html">Browse current classes</a>', encoding="utf-8"
+        )
+        self.assertEqual(self.run_verify()["public_detail_count"], 1)
+
+    def test_source_absent_tombstone_cannot_stay_in_sitemap_or_archive(self):
+        (self.details / "index.html").write_text(
+            '<a class="class-finder-secondary" href="/classes/111.html">Details</a>',
+            encoding="utf-8",
+        )
+        (self.details / "111.html").write_text("Verified public detail", encoding="utf-8")
+        # This retired identity is NOT in the current source rows; its noindex
+        # tombstone still establishes that this URL must not be advertised.
+        (self.details / "333.html").write_text(
+            '<meta name="robots" content="noindex,nofollow">'
+            '<h1>This class is not publicly listed</h1>', encoding="utf-8"
+        )
+        sitemap = self.root / "docs/sitemap.xml"
+        sitemap.write_text(
+            "<urlset><url><loc>https://www.910cpr.com/classes/333.html"
+            "</loc></url></urlset>", encoding="utf-8"
+        )
+        with self.assertRaisesRegex(ValueError, "tombstoned identity in sitemap"):
+            self.run_verify()
+        sitemap.write_text("<urlset></urlset>", encoding="utf-8")
+        archive = self.root / "docs/topics/bls.html"
+        archive.parent.mkdir(parents=True)
+        archive.write_text(
+            "<a href='/classes/333.html'>Old class</a>", encoding="utf-8"
+        )
+        with self.assertRaisesRegex(ValueError, "archived index links to nonpublic"):
+            self.run_verify()
+        archive.write_text(
+            "<a href='/bls.html'>View current BLS classes</a>", encoding="utf-8"
+        )
+        self.assertEqual(self.run_verify()["public_detail_count"], 1)
+
 if __name__ == "__main__":
     unittest.main()
