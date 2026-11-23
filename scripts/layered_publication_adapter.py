@@ -324,9 +324,20 @@ PUBLIC_REJECTION_DIAGNOSTIC_FIELDS = frozenset({
 
 
 def public_rejection_diagnostics(rows):
-    return [{key: value for key, value in row.items()
-             if key in PUBLIC_REJECTION_DIAGNOSTIC_FIELDS}
-            for row in rows if isinstance(row, dict)]
+    safe = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        reasons = row.get("reasons") or []
+        # A private occupied appointment must not be discoverable through the
+        # rejection diagnostic's otherwise useful course/date/start fields.
+        # Keep only its aggregate reason; source geometry remains internal.
+        if "nonpublic_occupied_not_joinable" in reasons:
+            safe.append({"reasons": ["nonpublic_occupied_not_joinable"]})
+        else:
+            safe.append({key: value for key, value in row.items()
+                         if key in PUBLIC_REJECTION_DIAGNOSTIC_FIELDS})
+    return safe
 
 
 def finalize(payload, now=None):
