@@ -381,11 +381,11 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
         )
         sitemap = self.root / "docs/sitemap.xml"
         sitemap.write_text(
-            '<urlset>\\n'
-            '<url><loc>https://www.910cpr.com/classes/333.html</loc></url>\\n'
-            '<url><loc>https://www.910cpr.com/classes/444.html</loc></url>\\n'
-            '<url><loc>https://www.910cpr.com/bls.html</loc></url>\\n'
-            '</urlset>\\n', encoding="utf-8",
+            '<urlset>\n'
+            '<url><loc>https://www.910cpr.com/classes/333.html</loc></url>\n'
+            '<url><loc>https://www.910cpr.com/classes/444.html</loc></url>\n'
+            '<url><loc>https://www.910cpr.com/bls.html</loc></url>\n'
+            '</urlset>\n', encoding="utf-8",
         )
         archive = self.root / "docs/topics/bls.html"
         archive.parent.mkdir(parents=True, exist_ok=True)
