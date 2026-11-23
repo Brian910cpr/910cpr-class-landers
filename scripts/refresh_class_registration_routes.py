@@ -99,6 +99,21 @@ def refresh(root=ROOT, retired_previous_ids=None):
         if file.is_file():
             changes[file]=UNLISTED_DETAIL_HTML
 
+    # Previously redacted details are source-absent tombstones too. An archive
+    # cannot revive their discovery links just because an old row vanished.
+    for detail in (root / 'docs/classes').glob('*.html'):
+        if not DETAIL_ID.fullmatch(detail.stem) or detail.stem in verified_ids:
+            continue
+        content = changes.get(detail)
+        if content is None:
+            content = detail.read_text(encoding='utf8')
+        if ('name="robots" content="noindex,nofollow"' in content
+                and "This class is not publicly listed" in content):
+            rejected_public_ids.add(detail.stem)
+
+    # Include earlier redacted/source-absent detail tombstones in sitemap
+    # cleanup as well as archive cleanup; otherwise verification halts every
+    # refresh while the same private URL remains discoverable.
     # Retiring a private class detail must also remove its discovery URL from
     # the sitemap in the SAME verified-source publication. Preserve unrelated
     # historic/public URLs and all other sitemap entries byte-for-byte.
@@ -112,18 +127,6 @@ def refresh(root=ROOT, retired_previous_ids=None):
         updated=re.sub(r'(?ms)^[ \t]*<url>.*?</url>[ \t]*(?:\r?\n|$)',retire_url,xml)
         if updated != xml:
             changes[sitemap]=updated
-
-    # Previously redacted details are source-absent tombstones too. An archive
-    # cannot revive their discovery links just because an old row vanished.
-    for detail in (root / 'docs/classes').glob('*.html'):
-        if not DETAIL_ID.fullmatch(detail.stem) or detail.stem in verified_ids:
-            continue
-        content = changes.get(detail)
-        if content is None:
-            content = detail.read_text(encoding='utf8')
-        if ('name="robots" content="noindex,nofollow"' in content
-                and "This class is not publicly listed" in content):
-            rejected_public_ids.add(detail.stem)
 
     # Remove only *whole isolated archive cards* for explicitly rejected IDs.
     # Changing just the href would leave the private class date visible nearby.
