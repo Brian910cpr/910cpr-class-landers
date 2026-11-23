@@ -113,6 +113,59 @@ def refresh(root=ROOT, retired_previous_ids=None):
         if updated != xml:
             changes[sitemap]=updated
 
+    # Previously redacted details are source-absent tombstones too. An archive
+    # cannot revive their discovery links just because an old row vanished.
+    for detail in (root / 'docs/classes').glob('*.html'):
+        if not DETAIL_ID.fullmatch(detail.stem) or detail.stem in verified_ids:
+            continue
+        content = changes.get(detail)
+        if content is None:
+            content = detail.read_text(encoding='utf8')
+        if ('name="robots" content="noindex,nofollow"' in content
+                and "This class is not publicly listed" in content):
+            rejected_public_ids.add(detail.stem)
+
+    # Remove only *whole isolated archive cards* for explicitly rejected IDs.
+    # Changing just the href would leave the private class date visible nearby.
+    # A compound card or unstructured reference fails closed at verification;
+    # unrelated historic class links remain untouched.
+    if rejected_public_ids:
+        archive_paths = set()
+        for directory in class_index.STALE_CLASS_INDEX_DIRS:
+            relative = directory.relative_to(class_index.ROOT)
+            archive_dir = root / relative
+            if archive_dir.is_dir():
+                archive_paths.update(archive_dir.rglob('*.html'))
+        for file in class_index.STALE_CLASS_INDEX_FILES:
+            relative = file.relative_to(class_index.ROOT)
+            archive_file = root / relative
+            if archive_file.is_file():
+                archive_paths.add(archive_file)
+        id_ref = re.compile(
+            r'''(?:href=["'](?:https?://(?:www\.)?910cpr\.com)?/classes/([0-9a-fA-F-]+)\.html(?:[?#][^"']*)?["']|data-session-id=["']([0-9a-fA-F-]+)["'])''',
+            re.IGNORECASE,
+        )
+        cards = [
+            re.compile(r'(?is)<li\b[^>]*>.*?</li\s*>'),
+            re.compile(r'(?is)<article\b[^>]*>.*?</article\s*>'),
+        ]
+        def references(card):
+            return {match.group(1) or match.group(2) for match in id_ref.finditer(card)}
+        for path in sorted(archive_paths):
+            original_archive = path.read_text(encoding='utf8')
+            updated_archive = original_archive
+            for card_pattern in cards:
+                def remove_isolated_card(match):
+                    ids = references(match.group(0))
+                    if ids & rejected_public_ids and not (ids - rejected_public_ids):
+                        return ''
+                    return match.group(0)
+                updated_archive = card_pattern.sub(remove_isolated_card, updated_archive)
+            if references(updated_archive) & rejected_public_ids:
+                raise ValueError('ambiguous archived reference to nonpublic class')
+            if updated_archive != original_archive:
+                changes[path] = updated_archive
+
     # Build every replacement before writing; never partially apply invalid identities.
     for file,content in changes.items():file.write_bytes(content.encode('utf8'))
     return {'listed':len(ids),'files':len(changes)}
