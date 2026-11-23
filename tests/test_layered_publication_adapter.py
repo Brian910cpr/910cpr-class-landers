@@ -134,6 +134,35 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertNotIn('anchored_day_requires_attached_offer',
                          uncertain['rejectionReasonCounts'])
 
+    def test_nonpublic_seated_mirror_remains_occupied_but_not_publicly_joinable(self):
+        # A real registered seat creates occupancy, not permission to expose
+        # an old public-looking registration link for a private appointment.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        for canonical_visibility, offered_visibility in (
+                ('private', 'public'), ('unlisted', 'public'),
+                ('internal', 'public'), ('public', 'private')):
+            with self.subTest(canonical=canonical_visibility, offered=offered_visibility):
+                self.sources=[]
+                source=self.add(11,'12:00','14:30',cid='209809',count=1,
+                                visibility=canonical_visibility)
+                calc=self.calculation()
+                self.assertEqual(calc['counts']['normalized_sources'],1)
+                self.assertTrue(any(r['normalized_occupancy'] for r in calc['reports']))
+                legacy_link='https://fixture.test/legacy-private-registration'
+                seated=dict(session_id=source['source_event_id'],date='2026-10-11',
+                            startTime='12:00',courseId='209809',
+                            courseName='Legacy class shell', instructor='Brian Ennis',
+                            visibility=offered_visibility,offerType='seated_class',
+                            registrationUrl=legacy_link)
+                published=self.payload([seated],calculation=calc)
+                self.assertFalse(any(o.get('offerType')=='seated_class'
+                                     for o in published['offers']))
+                self.assertEqual(published['rejectionReasonCounts'].get(
+                    'nonpublic_occupied_not_joinable'),1)
+                self.assertNotIn(legacy_link,json.dumps(published))
+                self.assertEqual(published['counts']['normalized_sources'],1)
+
     def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
         # Both conflict rejections and expired dynamic URLs pass through this
         # finalizer. Neither may serialize a private record into the public
