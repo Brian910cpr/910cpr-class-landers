@@ -52,8 +52,9 @@ test('untrusted origins and unauthenticated reads fail closed', async () => {
 });
 
 test('only active canonical registrations count; missing and external bridge are unknown', () => {
-  const row = {id:'fixture',registration_backend:'landerware',registrations:[{status:'registered'},{status:'confirmed'},{status:'completed'},{status:'canceled'},{status:'rescheduled'},{status:'no_show'}]};
-  assert.equal(api.projectDemand(row).active_registration_count,3);
+  const row = {id:'fixture',registration_backend:'landerware',registrations:[{status:'registered'},{status:'confirmed'},{status:'completed'},{status:'active'},{status:'canceled'},{status:'rescheduled'},{status:'no_show'}]};
+  assert.equal(api.projectDemand(row).active_registration_count,4);
+  assert.equal(api.projectDemand(row).canonical_recorded_registration_count,4);
   assert.equal(api.projectDemand({...row,registrations:[]}).active_registration_count,0);
   assert.equal(api.projectDemand({...row,registrations:null}).active_registration_count,null);
   assert.equal(api.projectDemand({...row,registration_backend:'enrollware'}).active_registration_count,null);
