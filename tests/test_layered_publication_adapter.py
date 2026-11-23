@@ -80,6 +80,29 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(len(result['projected_sources']),1)
         self.assertEqual(result['projected_sources'][0]['active_registration_count'],1)
 
+    def test_long_explicit_travel_buffer_prevents_unsafe_distant_prune(self):
+        # An unusually long explicit travel rule extends the safety horizon.
+        # The same private commitment without that configured rule is distant;
+        # with it, unknown directional travel must remain fail-closed.
+        self.sources.append(dict(
+            source_event_id='synthetic-long-travel-private',
+            start=self.at(14,'09:00').isoformat(),
+            end=self.at(14,'10:00').isoformat(),
+            instructor='Brian Ennis', location='fixture-unmapped-offsite',
+            resource='fixture-unmapped-offsite',
+            source_file='canonical_class_sessions',
+            visibility='private', count_available=True,
+            active_registration_count=1))
+        self.assertEqual(self.calculation()['counts']['failed_windows'], 0)
+        self.policy['travel_minutes'] = {
+            self.room + '->fixture-known-far-route': 3000,
+        }
+        affected = self.calculation()
+        self.assertEqual(affected['counts']['failed_windows'], 1)
+        self.assertTrue(any('missing directional travel rule' in i['reason']
+                            for i in affected['issues']))
+        self.assertEqual(affected['projected_sources'][0]['active_registration_count'], 1)
+
     def test_nearby_private_seat_unknown_route_still_fails_closed(self):
         self.sources.append(dict(
             source_event_id='synthetic-private-offsite-near',
