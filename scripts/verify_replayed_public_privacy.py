@@ -90,6 +90,74 @@ def verify(root: Path = ROOT) -> dict[str, int]:
                 else:
                     uuid_tombstoned += 1
 
+    # A class absent from the latest source can still have a previously
+    # redacted direct page. Include those tombstone IDs in discovery checks:
+    # source-row rejection alone misses withdrawn/expired historical aliases.
+    tombstoned_ids = set()
+    for detail in (root / "docs/classes").glob("*.html"):
+        if not DETAIL_ID.fullmatch(detail.stem):
+            continue
+        page = detail.read_text(encoding="utf-8")
+        if (
+            'name="robots" content="noindex,nofollow"' in page
+            and "This class is not publicly listed" in page
+        ):
+            tombstoned_ids.add(detail.stem)
+    blocked_ids = rejected | tombstoned_ids
+    if public_ids & blocked_ids:
+        raise ValueError("Public replay privacy gate: tombstoned identity in finder")
+
+    for sid in blocked_ids:
+        if re.search(
+            rf"<loc>\\s*https://(?:www\\.)?910cpr\\.com/classes/{re.escape(sid)}\\.html\\s*</loc>",
+            xml,
+        ):
+            raise ValueError("Public replay privacy gate: tombstoned identity in sitemap")
+        if (
+            f"/classes/{sid}.html" in html
+            or f'data-session-id="{sid}"' in html
+            or any(
+                f"/classes/{sid}.html" in page or f'data-session-id="{sid}"' in page
+                for page in published_details
+            )
+        ):
+            raise ValueError("Public replay privacy gate: tombstoned identity in public cards")
+
+    # Archive/topic indexes are independent public discovery surfaces. The
+    # scheduled refresh must scrub these too, or fail before any Git push.
+    # Inspect the same bounded archive paths the full catalog builder uses;
+    # this includes private/retired IDs whose detail page remains on disk.
+    archive_paths = set()
+    for directory in catalog.STALE_CLASS_INDEX_DIRS:
+        try:
+            relative = directory.relative_to(catalog.ROOT)
+        except ValueError:
+            continue
+        resolved = root / relative
+        if resolved.is_dir():
+            archive_paths.update(resolved.rglob("*.html"))
+    for file in catalog.STALE_CLASS_INDEX_FILES:
+        try:
+            relative = file.relative_to(catalog.ROOT)
+        except ValueError:
+            continue
+        resolved = root / relative
+        if resolved.is_file():
+            archive_paths.add(resolved)
+    blocked_link = re.compile(
+        r'(?:href=["\\\'](?:https?://(?:www\\.)?910cpr\\.com)?/classes/'
+        r'([0-9a-fA-F-]+)\\.html(?:[?#][^"\\\']*)?["\\\']'
+        r'|data-session-id=["\\\']([0-9a-fA-F-]+)["\\\'])',
+        re.IGNORECASE,
+    )
+    for path in sorted(archive_paths):
+        archive_html = path.read_text(encoding="utf-8")
+        if any(
+            (match.group(1) or match.group(2)) in blocked_ids
+            for match in blocked_link.finditer(archive_html)
+        ):
+            raise ValueError("Public replay privacy gate: archived index links to nonpublic class")
+
     return {
         "public_detail_count": len(public_ids),
         "rejected_source_identity_count": len(rejected),
