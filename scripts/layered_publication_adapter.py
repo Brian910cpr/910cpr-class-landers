@@ -269,6 +269,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     anchored_days = set()
     for source in calculation['projected_sources']:
         if (has_verified_demand(source) and source.get('instructor')
+                and not source.get('instructor_unassigned')
                 and source.get('start') and source.get('end')
                 and not source.get('normalization_issue')
                 and aware(source['end']) > aware(source['start'])):
