@@ -710,6 +710,30 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
             self.assertIn("noindex,nofollow",
                           private_detail.read_text(encoding="utf-8"))
 
+            # Legacy detail templates use nested div upcoming cards, not
+            # list items. Retire the whole card, including its date/location.
+            nested = (
+                '<div class="upcoming-grid">'
+                '<div class="upcoming-card js-session-item" data-session-id="' + private + '">'
+                '<div class="upcoming-date">Private appointment date</div>'
+                '<div class="upcoming-location">Private place</div>'
+                '<div class="upcoming-actions"><a href="/classes/' + private +
+                '.html">Book This Class</a></div></div>'
+                '<div class="upcoming-card js-session-item" data-session-id="' + historic + '">'
+                '<div class="upcoming-date">Historic public date</div>'
+                '<div class="upcoming-actions"><a href="/classes/' + historic +
+                '.html">View old class</a></div></div>'
+                '</div>'
+            )
+            detail.write_text(nested, encoding="utf-8")
+            routes.refresh(root=self.root)
+            clean = detail.read_text(encoding="utf-8")
+            self.assertNotIn("Private appointment date", clean)
+            self.assertNotIn("Private place", clean)
+            self.assertNotIn("/classes/" + private + ".html", clean)
+            self.assertIn("Historic public date", clean)
+            self.assertIn("/classes/" + historic + ".html", clean)
+
             # Never hide an entire card containing a legitimate public link.
             mixed = ('<li><a href="/classes/' + private + '.html">Hidden</a>'
                      '<a href="/classes/' + historic + '.html">Public</a></li>')
