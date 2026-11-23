@@ -252,15 +252,21 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                     or offer.get("sourceAvailabilityBlock", {}).get("sessionId"))
         return counts.get(str(identity))
 
-    day_anchors = {
-        (offer['date'], str(offer['courseId']))
-        for offer in accepted
-        if offer.get('offerType') == 'seated_class'
-        and has_verified_demand(matched_source(offer))
-    }
     def instructor_key(name):
         key = str(name or '').strip().casefold()
         return 'brian ennis' if key == 'brian' else key
+
+    # Seat-driven same-course collapse belongs to the occupied instructor's
+    # day. It must not suppress the same qualified course for an independent
+    # instructor on a legitimately separate availability window. Shared-room
+    # collisions remain enforced upstream by calculate().
+    day_anchors = {
+        (offer['date'], str(offer['courseId']), instructor_key(offer.get('instructor')))
+        for offer in accepted
+        if offer.get('offerType') == 'seated_class'
+        and offer.get('instructor')
+        and has_verified_demand(matched_source(offer))
+    }
 
     # Real seated demand creates internal day gravity even when private or
     # missing a public course ID. An unresolved instructor must NOT create an
@@ -288,7 +294,9 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         # A retained skills seat occupies its actual interval; it does not consume
         # the whole day's eligible skills edges. Calculation already checks each
         # candidate's 45-minute instruction plus 15-minute cleanup and conflicts.
-        if offer.get('offerType') != 'seated_class' and (offer['date'], str(offer['courseId'])) in day_anchors and not skills_edge:
+        if (offer.get('offerType') != 'seated_class' and
+                (offer['date'], str(offer['courseId']), instructor_key(offer.get('instructor'))) in day_anchors
+                and not skills_edge):
             rejected.append(dict(offer, reasons=['existing_course_day_anchor']))
         elif offer.get('scheduleRole') == 'open_day' and (
                 (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days or
