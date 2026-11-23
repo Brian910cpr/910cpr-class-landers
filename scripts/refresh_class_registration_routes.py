@@ -157,6 +157,30 @@ def refresh(root=ROOT, retired_previous_ids=None):
                 remove_private_related_item,
                 html,
             )
+            # Some older detail templates use nested <div> "upcoming-card"
+            # blocks instead of <li>. Those blocks include date/time/location
+            # OUTSIDE the enrollment link, so remove the whole balanced block.
+            # Never match a closing tag by the first </div> (nested children).
+            open_card = re.compile(
+                r'<div\s+class="upcoming-card\b[^"]*"[^>]*>', re.I,
+            )
+            div_tag = re.compile(r'</?div\b[^>]*>', re.I)
+            for opening in reversed(list(open_card.finditer(cleaned))):
+                depth = 0
+                end = None
+                for tag in div_tag.finditer(cleaned, opening.start()):
+                    depth += -1 if tag.group(0).lower().startswith('</div') else 1
+                    if depth == 0:
+                        end = tag.end()
+                        break
+                if end is None:
+                    raise ValueError('malformed public upcoming class card')
+                card = cleaned[opening.start():end]
+                targets = detail_refs(card)
+                if targets & rejected_public_ids:
+                    if targets - rejected_public_ids:
+                        raise ValueError('mixed public detail upcoming card')
+                    cleaned = cleaned[:opening.start()] + cleaned[end:]
             if detail_refs(cleaned) & rejected_public_ids:
                 raise ValueError('ambiguous public detail reference to nonpublic class')
             changes[public_detail] = cleaned
