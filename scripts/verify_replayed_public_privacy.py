@@ -70,7 +70,7 @@ def verify(root: Path = ROOT) -> dict[str, int]:
             raise ValueError("Public replay privacy gate: nonpublic identity leaked into public listing")
         if DETAIL_ID.fullmatch(sid):
             if re.search(
-                rf"<loc>\s*https://(?:www\.)?910cpr\.com/classes/{re.escape(sid)}\.html\s*</loc>",
+            rf"<loc>\s*https://(?:www\.)?910cpr\.com/classes/{re.escape(sid)}\.html\s*</loc>",
                 xml,
             ):
                 raise ValueError("Public replay privacy gate: nonpublic sitemap discovery")
