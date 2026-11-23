@@ -71,6 +71,11 @@ jobs:
                   "Public replay privacy gate: nonpublic direct detail not redacted",
                   "Public replay privacy gate: tombstoned identity in sitemap",
                   "Public replay privacy gate: nonpublic sitemap discovery",
+                  "Public replay privacy gate: duplicate finder identities",
+                  "Public replay privacy gate: missing listed detail",
+                  "Public replay privacy gate: nonpublic identity leaked into public listing",
+                  "Public replay privacy gate: tombstoned identity in finder",
+                  "Public replay privacy gate: tombstoned identity in public cards",
                   "Unverified zero-class source; retaining prior finder",
                   "Source changed during disposable public replay",
               }
