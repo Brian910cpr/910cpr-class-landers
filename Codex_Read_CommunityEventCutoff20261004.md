@@ -1,40 +1,15 @@
-# Codex handoff acknowledged: Community event cutoff
+# Community event page cutoff
 
-Reviewed: 2026-10-04T11:27:00Z
-Source handoff: `Codex_Reply_CommunityEventCutoff20261004.md`
-PR: #345
-Merge commit: `e7ff747175dd817885bad210f979a4a04cde27a0`
+Timestamp: October 4, 2026 UTC. Branch: fix/community-event-cutoff-20261004.
+Work item: owner-requested /earl and /jackson replacement at 11:30 AM America/New_York today (15:30 UTC).
+State: locally VERIFIED; publication pending at receipt creation. Commit: git log on this branch.
 
-Review result: ACCEPTED for pre-cutoff publication.
+Both canonical pages preserve their current layout and existing organization logos. Existing owner edits were already identical to current main's lowercase page contents; originals remain untouched. A versioned asset applies the red event-passed banner at the cutoff, disables registration fields/buttons and course-registration switches, guards submission/response handlers, and rechecks open/resumed tabs. All four organization logo destinations remain live. Verified Facebook links are added in the post-event follow-up section. No future free Mobile Mermaid event was verified; the fallback makes no claim that none exist. Footer updated timestamp and owner copy-details control included.
 
-Evidence reviewed:
-- PR #345 is merged.
-- Source integrity, Cloudflare Pages preflight, GitHub Pages build/deployment all completed successfully.
-- Diff is limited to the two event pages, one versioned cutoff asset, the focused Playwright verification script, and the handoff receipt.
-- The cutoff is explicit: 2026-10-04 11:30 America/New_York (15:30Z).
-- Submission, click, keyboard, requestSubmit, asynchronous response, and re-enable paths are guarded after cutoff.
-- The focused verification reports 12 passing before/at/after cases across both pages and mobile/desktop widths, with no real registrations or payments.
-- Live `/earl/` and `/jackson/` currently expose the new October 4 build and remain open before cutoff as intended.
+Validation: node syntax check passed; 12 intercepted browser cases passed across two pages, 390/1280 widths, before/at/after cutoff. Before-cutoff valid submission reaches a mocked API; no post-cutoff POST occurs via click/keyboard/requestSubmit/dispatched submit, and attempted re-enabling is closed again. Already-open transition and organization links tested. No real registrations/payments created. A pre-existing Jackson quoted success-message syntax defect was repaired as part of preserving functional registration.
 
-Remaining verification:
-- Confirm both live pages show the red event-passed state and disabled registration after 15:30Z.
-- No additional repository change or Codex round is requested unless that post-cutoff verification fails.
-- No scheduling V2, backend session, payment, or availability changes were included.
+Timing mechanism: client clock compares an explicit EDT timestamp, not a new server task. Exact timeout plus page-load/focus/pageshow/visibility checks and direct handler guards. Browser clock correctness remains a limitation; old already-open versions cannot acquire new code without reload. Static asset URL is versioned. No backend/session changes or V2 deployment.
 
-## Superseding owner directive — 09:00 cutoff
+Files: docs/earl/index.html, docs/jackson/index.html, docs/assets/community-event-cutoff.js, scripts/check_community_event_cutoff.py, this receipt. Windows case-colliding uppercase alias files are left unstaged; original dirty changes/pycs remain untouched. No broad generators run.
 
-Directive received: 2026-10-04T12:26:34Z
-Repair PR: #347
-Repair merge commit: `2cdd0ae38db713aa9ec6bdb156b8c9d58d1ce5b3`
-
-The 11:30 America/New_York cutoff above was superseded by Brian's explicit instruction to close both `/earl/` and `/jackson/` at 09:00 America/New_York (13:00Z) on October 4.
-
-Repair evidence:
-- Client cutoff and the focused test clock now target 13:00Z.
-- Both pages use cache-busted release `community-cutoff-20261004-r2` / `community-event-cutoff-20261004-r2`.
-- PR #347 Source integrity and Cloudflare Pages preflight completed successfully.
-- GitHub Pages deployment run #4349 (run 37202221286) completed successfully.
-- Both live pages exposed the r2 build and remained open before 13:00Z as intended.
-
-Remaining verification:
-- VERIFIED at 2026-10-04T13:06Z: both live pages show the event-passed banner and follow-up, disable registration controls, and serve the r2 build.
+GitHub Pages hosting confirmed main:/docs, www.910cpr.com. Public completion requires merge, successful Pages build, and live HTML/asset/browser verification; this receipt does not yet claim that. No Cloudflare deployment requested. Current V2 work preserved at 2dc11c641 with latest handoff receipt; no scheduling data modified.

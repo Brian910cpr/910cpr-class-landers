@@ -1,23 +1,17 @@
-# Codex read: V2 release reconciliation
+# V2 release reconciliation
 
-Reviewed 2026-10-07 against PR #353 at `d1225f7facc6674da2efddc828fa8ae9290db26c`.
+Branch codex/v2-production-reconciliation, source commit ff15b2b2c, based on current production 960941475. Original work retained in feat/layered-production-20261005 (repair 1ca63d0ad). Lab repair a70b88aba.
 
-Reviewed the original root receipt `Codex_Reply_v2_release_reconciliation.md`, the six-commit PR history and 31-file diff, the shadow-mode policy, the nonpublishing runner, the source projection/publication adapters, the test coverage described in the receipt, and the latest actual-data runner evidence.
+24 explicit source/config/test paths reconciled using three-way application, no unresolved conflicts. Current production booking data preserved. Added bounded fresh calendar coverage and authoritative venue mapping; retained V2 finalizer lease protection and public edge identities. Spreadsheet detour, historical generated inventory and unrelated pages excluded.
 
-## Result
+171 combined production tests passed in reconciled checkout, including source/coverage/publication/cache, canonical reader, reconciliation, anchors, diagnostic projections and desktop/mobile customer renderer fixtures. Changed Python syntax passed. Lab cadence and actual/fixture browser checks: 3 passed. Negative test error messages were mocks, not denied endpoint retries.
 
-The handoff is genuinely read and acknowledged, but PR #353 is **not accepted for merge or activation**.
+Actual source evidence: local supported calendar exporter captured 161 Brian events at 2026-10-07T00:04:44-04:00 and yielded 1 bounded proof. Production runner artifact for run 37567101064 reports canonical reader success, 25 sessions at 2026-10-07T03:33:36.575Z. That observation is historical, not current local demand.
 
-The latest actual-data probe ([run 37617808899](https://github.com/Brian910cpr/910cpr-class-landers/actions/runs/37617808899)) successfully read 25 canonical sessions, 161 calendar events, and one bounded calendar coverage proof. It then failed closed in `scripts.run_layered_release_probe`: each page received 205 input windows, evaluated zero, and reported 205 `unresolved_occupied_bounds` failures. Publication remained false, as required.
+Public V2 activation/deployment stopped: current local canonical scheduling demand and HOT_SYNC occupancy snapshots absent; fresh actual source-to-V2-to-public-render proof unavailable. Policy remains shadow. Denied local HTTP403/BIC path not retried; secrets untouched; no bookings changed; no public deployment. Push/merge/deploy authorization remains conditional on release checks; live proof outstanding.
 
-A successful Cloudflare branch preview proves only that static preview deployment works; it does not satisfy the source-to-V2 evaluation gate. Keep the policy in shadow and the PR draft. Do not merge, activate, publish, or weaken UNKNOWN/fail-closed behavior.
+Next step: obtain a current source-to-V2 dry-run through the approved production runner with its configured readers; inspect public-safe decision/rejection evidence. Then activate the existing feed path and verify the deployed customer flow.
 
-## Required repair
+Key files: scripts/build_live_availability_snapshot.py, scripts/block_start_time_selector.py, scripts/layered_publication_adapter.py, scripts/layered_day_cache.py, scripts/apply_anchor_policy.py, scripts/build_bls_block_schedule_pilot.py, scripts/publish_scheduling_landscape.py, data/config/layered_scheduling_policy.json. Key tests: tests/test_layered_calendar_coverage.py, tests/test_layered_publication_pipeline.py, tests/test_layered_publication_adapter.py, tests/test_layered_day_cache.py.
 
-1. Trace why the 205 inverse-generated availability windows all intersect occupancy rows without resolvable `start`/`end` or bounded `uncertainty_scope`.
-2. Preserve source identities and physical occupancy; do not drop malformed rows to manufacture availability.
-3. Add an actual-shaped regression proving at least one current window is evaluated while malformed rows close only their real bounded scope.
-4. Re-run the nonpublishing workflow and require: current sources read successfully, `evaluated_windows > 0`, no unbounded occupancy admitted, public output remains unpublished, and the result contains inspectable rejection/decision evidence.
-5. Create the new immutable root receipt `Codex_Reply_PR353_20261007T121500Z_R1.md` with branch/commit, files changed, tests, run URL, before/after window counts, publication statement, and any remaining blocker. Preserve the original reply and this read receipt.
-
-Owner-only action: none; engineering is handling this bounded repair.
+docs/data/schedule_future.json unchanged from production: True
