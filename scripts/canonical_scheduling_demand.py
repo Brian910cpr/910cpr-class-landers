@@ -189,7 +189,13 @@ def resolve_canonical_demand(
             continue
 
         claimed[index] = canonical_id
-        if demand.get("visibility") == "private" or demand.get("registration_status") == "closed":
+        # A legacy public iCal/Enrollware shell must not override the matched
+        # canonical appointment's visibility. Keep the operational seat and
+        # interval below even when this identity is not publicly joinable.
+        visibility = _text(demand.get("visibility")).casefold()
+        if visibility:
+            resolved[index]["visibility"] = visibility
+        if (visibility and visibility != "public") or demand.get("registration_status") == "closed":
             resolved[index]["public_direct_booking"] = False
             resolved[index]["registration_status"] = "closed"
             resolved[index]["registration_status_source"] = "canonical_class_sessions"

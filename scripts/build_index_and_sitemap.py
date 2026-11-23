@@ -84,7 +84,7 @@ def strip_html(value: str) -> str:
     return re.sub(r"\s+", " ", unescape(value)).strip()
 
 
-def contain_stale_class_index_links() -> dict[str, int]:
+def contain_stale_class_index_links(*, eligible_public_session_ids: set[str] | None = None) -> dict[str, int]:
     stats = {
         "files_checked": 0,
         "files_changed": 0,
@@ -120,7 +120,7 @@ def contain_stale_class_index_links() -> dict[str, int]:
             if match.group("session_id"):
                 target_path = href.split("#", 1)[0]
                 target_file = DOCS_DIR / target_path.lstrip("/")
-                if target_file.exists():
+                if target_file.exists() and (eligible_public_session_ids is None or match.group("session_id") in eligible_public_session_ids):
                     stats["existing_numeric_class_links_kept"] += 1
                     return match.group(0)
                 stats["missing_numeric_class_links_rewritten"] += 1
@@ -430,15 +430,19 @@ def course_description(course_name: str) -> str:
     return f"See current upcoming dates for {title}, with direct registration links and a clean course-specific schedule view."
 
 
-def load_schedule_future_sessions() -> list[dict]:
+def load_schedule_future_sessions(*, include_nonpublic_locations: bool = False) -> list[dict]:
     source_file = SCHEDULE_FUTURE_FILE
     if CANONICAL_CLASS_REPORT_FILE.exists():
         try:
             canonical = json.loads(CANONICAL_CLASS_REPORT_FILE.read_text(encoding="utf-8"))
-            if canonical.get("build", {}).get("source_mode") == "class_report_authoritative":
-                source_file = CANONICAL_CLASS_REPORT_FILE
-        except Exception:
-            source_file = SCHEDULE_FUTURE_FILE
+        except (OSError, ValueError, TypeError) as exc:
+            # A damaged authoritative report must not silently revive a legacy
+            # iCal card whose canonical privacy/booking decision is missing.
+            raise ValueError("Canonical class report unreadable; refusing legacy fallback") from exc
+        if not isinstance(canonical, dict) or not isinstance(canonical.get("build"), dict):
+            raise ValueError("Canonical class report malformed; refusing legacy fallback")
+        if canonical["build"].get("source_mode") == "class_report_authoritative":
+            source_file = CANONICAL_CLASS_REPORT_FILE
     if not source_file.exists():
         return []
     payload = json.loads(source_file.read_text(encoding="utf-8"))
@@ -447,7 +451,10 @@ def load_schedule_future_sessions() -> list[dict]:
     for session in sessions:
         if not isinstance(session, dict):
             continue
-        if not session_has_public_class_location(session):
+        # Public builders use the default; only the already-verified route
+        # refresh asks for excluded rows so bookmarked old class details can be
+        # retired without showing the private appointment in public inventory.
+        if not include_nonpublic_locations and not session_has_public_class_location(session):
             continue
         enriched = dict(session)
         enriched["_parsed_start"] = parse_local_datetime(enriched.get("start_at", ""))
@@ -468,6 +475,17 @@ def public_session_source_label(sessions: list[dict]) -> str:
 
 
 def schedule_future_to_public_session(session: dict) -> dict | None:
+    # Public location and a legacy enrollment URL are not authorization to
+    # advertise a canonically private or stale appointment. Preserve its
+    # operational scheduling occupancy in the separate canonical feed.
+    visibility = str(session.get("visibility") or "").strip().casefold()
+    if visibility in {"private", "unlisted", "internal"}:
+        return None
+    reconciliation = str(session.get("demand_status") or "").strip().casefold()
+    if session.get("canonical_session_id") and reconciliation in {
+        "stale_reconciliation", "stale_anchor", "ambiguous"
+    }:
+        return None
     if not session_has_public_class_location(session):
         return None
     session_id = str(session.get("session_id") or session.get("id") or "").strip()
@@ -2228,7 +2246,11 @@ def build():
             encoding="utf-8",
         )
 
-    stale_class_index_containment = contain_stale_class_index_links()
+    # A retained HTML detail file alone is not proof of current public eligibility.
+    # Avoid reintroducing stale/private class links from older topic indexes.
+    stale_class_index_containment = contain_stale_class_index_links(
+        eligible_public_session_ids={str(item["session_id"]) for item in sessions}
+    )
 
     # -----------------------------------------------------------------
     # Sitemap

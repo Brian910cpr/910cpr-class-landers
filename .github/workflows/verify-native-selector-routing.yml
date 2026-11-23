@@ -1,9 +1,9 @@
 name: Verify native selector routing
 on:
   push:
-    paths: ['scripts/build_bls_block_schedule_pilot.py', 'scripts/class_registration_routing.py', 'scripts/refresh_class_registration_routes.py', 'scripts/build_landers.py', 'scripts/build_index_and_sitemap.py', 'data/config/native_class_checkout_capabilities.json', 'tests/test_class_registration_routing.py', 'docs/assets/resolved-selector-availability.js', 'tests/selector_native_routing.test.cjs', '.github/workflows/verify-native-selector-routing.yml']
+    paths: ['scripts/build_bls_block_schedule_pilot.py', 'scripts/canonical_scheduling_demand.py', 'tests/test_canonical_scheduling_demand.py', 'scripts/class_registration_routing.py', 'scripts/refresh_class_registration_routes.py', 'scripts/refresh_class_finder_index.py', 'scripts/refresh_public_class_artifacts.py', 'scripts/verify_replayed_public_privacy.py', 'tests/test_canonical_public_inventory_guard.py', 'tests/test_refresh_class_finder_index.py', 'tests/test_verify_replayed_public_privacy.py', 'scripts/build_landers.py', 'scripts/build_index_and_sitemap.py', 'data/config/native_class_checkout_capabilities.json', 'tests/test_class_registration_routing.py', 'docs/assets/resolved-selector-availability.js', 'tests/selector_native_routing.test.cjs', '.github/workflows/verify-native-selector-routing.yml']
   pull_request:
-    paths: ['scripts/build_bls_block_schedule_pilot.py', 'scripts/class_registration_routing.py', 'scripts/refresh_class_registration_routes.py', 'scripts/build_landers.py', 'scripts/build_index_and_sitemap.py', 'data/config/native_class_checkout_capabilities.json', 'tests/test_class_registration_routing.py', 'docs/assets/resolved-selector-availability.js', 'tests/selector_native_routing.test.cjs', '.github/workflows/verify-native-selector-routing.yml']
+    paths: ['scripts/build_bls_block_schedule_pilot.py', 'scripts/canonical_scheduling_demand.py', 'tests/test_canonical_scheduling_demand.py', 'scripts/class_registration_routing.py', 'scripts/refresh_class_registration_routes.py', 'scripts/refresh_class_finder_index.py', 'scripts/refresh_public_class_artifacts.py', 'scripts/verify_replayed_public_privacy.py', 'tests/test_canonical_public_inventory_guard.py', 'tests/test_refresh_class_finder_index.py', 'tests/test_verify_replayed_public_privacy.py', 'scripts/build_landers.py', 'scripts/build_index_and_sitemap.py', 'data/config/native_class_checkout_capabilities.json', 'tests/test_class_registration_routing.py', 'docs/assets/resolved-selector-availability.js', 'tests/selector_native_routing.test.cjs', '.github/workflows/verify-native-selector-routing.yml']
 permissions:
   contents: read
 jobs:
@@ -19,5 +19,75 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install openpyxl python-dateutil tzdata
-      - run: python -B -m unittest tests.test_class_registration_routing tests.test_public_session_landers tests.test_native_lander_metadata
+      - run: python -B -m unittest tests.test_class_registration_routing tests.test_public_session_landers tests.test_native_lander_metadata tests.test_canonical_public_inventory_guard tests.test_refresh_class_finder_index tests.test_verify_replayed_public_privacy tests.test_canonical_scheduling_demand
       - run: node --test tests/selector_native_routing.test.cjs tests/resolved_selector_availability.test.mjs
+
+      - name: Replay current-main public class artifacts in disposable PR runner (no publish)
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The PR branch's generated pages and schedule may be many refreshes old.
+          # Use one fresh main revision's generated data and pages, while running
+          # the PR's Python publisher code in THIS checkout (module ROOT parity).
+          # This checkout is disposable, has read-only permissions, and never pushes.
+          git fetch --no-tags --depth=1 origin main
+          git restore --source=FETCH_HEAD --worktree -- docs data
+          python -B - <<'PY'
+          import hashlib
+          from pathlib import Path
+          from scripts import refresh_public_class_artifacts, verify_replayed_public_privacy
+
+          sources = [
+              Path("docs/data/schedule_future.json"),
+              Path("docs/data/canonical_schedule_from_class_report.json"),
+          ]
+          def source_fingerprints():
+              return {
+                  str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+                  for path in sources if path.exists()
+              }
+
+          before = source_fingerprints()
+          if "docs/data/schedule_future.json" not in before:
+              raise SystemExit("Current-main source missing; privacy replay blocked")
+          stage = "refresh"
+          try:
+              refreshed = refresh_public_class_artifacts.refresh()
+              stage = "verification"
+              verified = verify_replayed_public_privacy.verify()
+              if source_fingerprints() != before:
+                  raise ValueError("Source changed during disposable public replay")
+          except Exception as exc:
+              # Only print fixed, source-code-defined diagnostics; never echo a
+              # source identifier, private date, participant, or raw exception.
+              allowed = {
+                  "ambiguous public detail reference to nonpublic class",
+                  "mixed public detail related item",
+                  "ambiguous archived reference to nonpublic class",
+                  "compound archived card mixes public and nonpublic classes",
+                  "public class listing mismatches current eligible source",
+                  "public class listing content mismatches current eligible source",
+                  "Public replay privacy gate: listed IDs disagree with authoritative source",
+                  "Public replay privacy gate: archived index links to nonpublic class",
+                  "Public replay privacy gate: nonpublic direct detail not redacted",
+                  "Public replay privacy gate: tombstoned identity in sitemap",
+                  "Public replay privacy gate: nonpublic sitemap discovery",
+                  "Public replay privacy gate: duplicate finder identities",
+                  "Public replay privacy gate: missing listed detail",
+                  "Public replay privacy gate: nonpublic identity leaked into public listing",
+                  "Public replay privacy gate: tombstoned identity in finder",
+                  "Public replay privacy gate: tombstoned identity in public cards",
+                  "Unverified zero-class source; retaining prior finder",
+                  "Source changed during disposable public replay",
+              }
+              code = str(exc) if str(exc) in allowed else "unclassified (private details withheld)"
+              print("Current-main privacy replay BLOCKED:", stage, type(exc).__name__, code)
+              raise SystemExit(1) from None
+          print("Disposable current-main privacy replay PASS")
+          print("Public cards:", verified["public_detail_count"])
+          print("Retired previous cards:", refreshed["retired_previous"])
+          print("Verified numeric and UUID tombstones:",
+                verified["redacted_numeric_detail_count"],
+                verified["redacted_uuid_detail_count"])
+          PY
