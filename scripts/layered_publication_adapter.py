@@ -99,8 +99,15 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
                 start, end = aware(source["start"]), aware(source["end"])
                 if end <= start:
                     raise ValueError("unresolved duration")
-                # Keep known intervals outside the window: travel and block edges
-                # may affect the boundary even without literal overlap.
+                # Keep nearby intervals: travel and the +/-24-hour full-course
+                # repeat gap may affect a window even without literal overlap.
+                # A source more than 48h away from either window boundary
+                # cannot affect this window under the documented limits.
+                # This is pruning, NOT an assumed travel time: near-window
+                # unknown routes still fail closed. projected_sources retains
+                # all records for independent occupancy/privacy audit.
+                if end < ws - timedelta(hours=48) or start > we + timedelta(hours=48):
+                    continue
                 relevant.append(source)
             except (KeyError, TypeError, ValueError):
                 scope = source.get("uncertainty_scope", {})
