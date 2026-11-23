@@ -72,46 +72,35 @@ def selector_availability_path(page_key: str) -> Path:
 
 
 def public_layered_landscape(payload: dict[str, Any]) -> dict[str, Any]:
-    """Public geometry only; private source IDs, course types and rosters stay hidden.
+    """Public selector geometry contains only public-eligible sources.
 
-    Operational commitments must still block real time in the internal
-    calculation. Only explicitly public records may expose joinability
-    metadata; unknown visibility is nonpublic by default.
+    Nonpublic appointment intervals are needed in the internal conflict
+    calculation, but their exact times and derived block geometry must never
+    be serialized into a customer-readable availability feed. The visible
+    start-time offers already reflect the internal hard occupancy checks.
     """
     calculation = payload.get("layeredDiagnostics") or {}
     sources = []
     for source in calculation.get("projected_sources", []):
-        visibility_public = source.get("visibility") == "public"
+        if source.get("visibility") != "public" or source.get("public_direct_booking") is False:
+            continue
         count = source.get("active_registration_count")
         known_count = source.get("count_available") is True
         proven = (source.get("operational_has_active_seat") is True
-                  or source.get("kind") == "paid"
                   or (known_count and type(count) is int and count > 0))
         sources.append({
-            "sourceId": source.get("source_event_id") if visibility_public else None,
-            "role": "anchor" if visibility_public and proven else "blocking",
+            "role": "anchor" if proven else "blocking",
             "start": source.get("start"), "end": source.get("end"),
-            "courseId": source.get("course_id") if visibility_public else None,
+            "courseId": source.get("course_id"),
             "resource": (public_location_display(source.get("resource"))
-                         if visibility_public and source.get("resource") else None),
-            "countAvailable": visibility_public and known_count,
-            "registeredCount": count if visibility_public and known_count else None,
+                         if source.get("resource") else None),
+            "countAvailable": known_count,
+            "registeredCount": count if known_count else None,
         })
-    blocks = []
-    seen = set()
-    for report in calculation.get("reports", []):
-        for block in report.get("blocks", []):
-            key = (block.get("id"), block.get("start"), block.get("end"))
-            if key in seen:
-                continue
-            seen.add(key)
-            blocks.append({
-                "id": "occupied-block-" + str(len(blocks) + 1),
-                "start": block.get("start"), "end": block.get("end"),
-                "source_ids": [],
-            })
+    # Reports include private and unknown blocks; no anonymous exact interval
+    # is safe to publish. Internal diagnostics retain their original geometry.
     return {"schemaVersion": "public-layered-landscape.v1", "sources": sources,
-            "occupiedBlocks": blocks, "offersAreAlternatives": True,
+            "occupiedBlocks": [], "offersAreAlternatives": True,
             "availabilityIsNotAClass": True}
 
 
@@ -174,8 +163,11 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "offerType": course.get("offerType") or "dynamic_appointment",
                     "scheduleRole": course.get("scheduleRole") or course.get("schedule_role"),
-                    "attached_to_session_id": course.get("attached_to_session_id"),
-                    "session_id": course.get("session_id"),
+                    # Barnacle attachment IDs may refer to private appointments;
+                    # publish a session ID only for a genuinely seated class.
+                    "session_id": (course.get("session_id")
+                                   if (course.get("offerType") or "dynamic_appointment") == "seated_class"
+                                   else None),
                     "instructor": course.get("instructor"),
                     "schedulerConsumptionEnd": course.get("schedulerConsumptionEnd"),
                     "occupiedUntil": course.get("occupiedUntil"),
