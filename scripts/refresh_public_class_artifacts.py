@@ -40,6 +40,21 @@ def refresh(root: Path = ROOT) -> dict[str, int]:
         (path, path.read_bytes()) for path in classes_dir.glob("*.html")
         if path.is_file() and routes.DETAIL_ID.fullmatch(path.stem)
     )
+    # Archive/topic indexes may be rewritten by the same guarded route refresh.
+    # They need the same rollback coverage as finder, detail files and sitemap.
+    for directory in routes.class_index.STALE_CLASS_INDEX_DIRS:
+        relative = directory.relative_to(routes.class_index.ROOT)
+        archive_dir = root / relative
+        if archive_dir.is_dir():
+            snapshots.update(
+                (path, path.read_bytes()) for path in archive_dir.rglob("*.html")
+                if path.is_file()
+            )
+    for archive in routes.class_index.STALE_CLASS_INDEX_FILES:
+        relative = archive.relative_to(routes.class_index.ROOT)
+        path = root / relative
+        if path.is_file():
+            snapshots[path] = path.read_bytes()
     sitemap = root / "docs/sitemap.xml"
     if sitemap.is_file():
         snapshots[sitemap] = sitemap.read_bytes()
