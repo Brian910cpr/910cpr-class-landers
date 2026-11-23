@@ -366,6 +366,53 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
             routes.refresh(root=self.root)
 
 
+    def test_source_absent_tombstone_refresh_scrubs_sitemap_and_archive(self):
+        # A prior private detail may outlive its source row. The guarded
+        # publisher must repair any remaining discovery URL, not leave the
+        # next scheduled refresh failing on the same sitemap indefinitely.
+        self.write_source()
+        index = self.root / "docs/classes/index.html"
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text("0 classes found", encoding="utf-8")
+        tombstone = index.parent / "333.html"
+        tombstone.write_text(
+            '<meta name="robots" content="noindex,nofollow">'
+            '<h1>This class is not publicly listed</h1>', encoding="utf-8",
+        )
+        sitemap = self.root / "docs/sitemap.xml"
+        sitemap.write_text(
+            '<urlset>\\n'
+            '<url><loc>https://www.910cpr.com/classes/333.html</loc></url>\\n'
+            '<url><loc>https://www.910cpr.com/classes/444.html</loc></url>\\n'
+            '<url><loc>https://www.910cpr.com/bls.html</loc></url>\\n'
+            '</urlset>\\n', encoding="utf-8",
+        )
+        archive = self.root / "docs/topics/bls.html"
+        archive.parent.mkdir(parents=True, exist_ok=True)
+        archive.write_text(
+            '<article><p>Private appointment date</p>'
+            '<a href="/classes/333.html">Old detail</a></article>'
+            '<article><a href="/classes/444.html">Unrelated public archive</a></article>',
+            encoding="utf-8",
+        )
+        with (
+            patch.object(finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(catalog, "SCHEDULE_FUTURE_FILE", self.path),
+            patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
+        ):
+            result = routes.refresh(root=self.root)
+        self.assertEqual(result, {"listed": 0, "files": 2})
+        self.assertNotIn("/classes/333.html", sitemap.read_text(encoding="utf-8"))
+        self.assertIn("/classes/444.html", sitemap.read_text(encoding="utf-8"))
+        self.assertIn("/bls.html", sitemap.read_text(encoding="utf-8"))
+        updated_archive = archive.read_text(encoding="utf-8")
+        self.assertNotIn("Private appointment date", updated_archive)
+        self.assertNotIn("/classes/333.html", updated_archive)
+        self.assertIn("/classes/444.html", updated_archive)
+        self.assertIn("not publicly listed", tombstone.read_text(encoding="utf-8"))
+
+
     def test_sitemap_drops_verified_unlisted_class_without_erasing_other_urls(self):
         # A numeric detail tombstone is not enough if sitemap discovery still
         # points search engines directly at the formerly private class.
