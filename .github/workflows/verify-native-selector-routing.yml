@@ -51,15 +51,31 @@ jobs:
           before = source_fingerprints()
           if "docs/data/schedule_future.json" not in before:
               raise SystemExit("Current-main source missing; privacy replay blocked")
+          stage = "refresh"
           try:
               refreshed = refresh_public_class_artifacts.refresh()
+              stage = "verification"
               verified = verify_replayed_public_privacy.verify()
               if source_fingerprints() != before:
                   raise ValueError("Source changed during disposable public replay")
           except Exception as exc:
-              # The public CI log must not echo private appointment identities,
-              # times, participant details or raw canonical-source content.
-              print("Current-main privacy replay BLOCKED:", type(exc).__name__)
+              # Only print fixed, source-code-defined diagnostics; never echo a
+              # source identifier, private date, participant, or raw exception.
+              allowed = {
+                  "ambiguous archived reference to nonpublic class",
+                  "compound archived card mixes public and nonpublic classes",
+                  "public class listing mismatches current eligible source",
+                  "public class listing content mismatches current eligible source",
+                  "Public replay privacy gate: listed IDs disagree with authoritative source",
+                  "Public replay privacy gate: archived index links to nonpublic class",
+                  "Public replay privacy gate: nonpublic direct detail not redacted",
+                  "Public replay privacy gate: tombstoned identity in sitemap",
+                  "Public replay privacy gate: nonpublic sitemap discovery",
+                  "Unverified zero-class source; retaining prior finder",
+                  "Source changed during disposable public replay",
+              }
+              code = str(exc) if str(exc) in allowed else "unclassified (private details withheld)"
+              print("Current-main privacy replay BLOCKED:", stage, type(exc).__name__, code)
               raise SystemExit(1) from None
           print("Disposable current-main privacy replay PASS")
           print("Public cards:", verified["public_detail_count"])
