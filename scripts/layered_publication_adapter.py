@@ -224,7 +224,14 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 counts[str(identity)] = source
     for original in seated_offers:
         source = counts.get(str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId")))
-        if source and source.get("count_available") is True and source.get("active_registration_count") == 0:
+        # An explicitly nonpublic canonical session can occupy an instructor
+        # without ever becoming a joinable public legacy booking choice.
+        # Trust the stricter visibility if the two projections disagree.
+        visibility = {str(v).strip().casefold() for v in (
+            original.get("visibility"), (source or {}).get("visibility"))}
+        if visibility.intersection({"private", "unlisted", "internal"}):
+            rejected.append(dict(original, reasons=["nonpublic_occupied_not_joinable"]))
+        elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
         else:
             accepted.append(deepcopy(original))
