@@ -79,6 +79,44 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         sessions, _ = resolve_canonical_demand(rows, [demand(external_class_id="bls")])
         self.assertEqual(["bls"], [row["session_id"] for row in promote_seated_sessions(sessions)])
 
+    def test_private_and_unlisted_canonical_identity_overrides_legacy_public_route(self):
+        for visibility in ("private", "unlisted", "internal"):
+            with self.subTest(visibility=visibility):
+                rows, audit = resolve_canonical_demand(
+                    [occurrence(public_direct_booking=True, visibility="public")],
+                    [demand(visibility=visibility, registration_status="open")],
+                )
+                row = rows[0]
+                self.assertEqual(visibility, row["visibility"])
+                self.assertFalse(row["public_direct_booking"])
+                self.assertEqual("closed", row["registration_status"])
+                self.assertEqual("canonical_class_sessions", row["registration_status_source"])
+                # Privacy cannot erase the registered operational commitment.
+                self.assertEqual(1, row["active_registration_count"])
+                self.assertEqual("current", row["demand_status"])
+                self.assertEqual("matched", audit[0]["result"])
+
+    def test_unlisted_visibility_survives_stale_start_identity(self):
+        rows, _ = resolve_canonical_demand(
+            [occurrence(session_id="13800001", public_direct_booking=True)],
+            [demand(external_class_id="13800001", visibility="unlisted",
+                    registration_status="open", start_at="2026-09-15T11:15:00-04:00")],
+        )
+        row = rows[0]
+        self.assertEqual("unlisted", row["visibility"])
+        self.assertFalse(row["public_direct_booking"])
+        self.assertEqual("closed", row["registration_status"])
+        self.assertEqual("stale_anchor", row["demand_status"])
+
+    def test_public_canonical_visibility_does_not_suppress_existing_open_route(self):
+        rows, _ = resolve_canonical_demand(
+            [occurrence(visibility="private", public_direct_booking=True)],
+            [demand(visibility="public", registration_status="open")],
+        )
+        self.assertEqual("public", rows[0]["visibility"])
+        self.assertTrue(rows[0]["public_direct_booking"])
+        self.assertEqual(1, rows[0]["active_registration_count"])
+
     def test_audit_contains_no_participant_pii(self):
         _, audit = resolve_canonical_demand([occurrence()], [demand()])
         serialized = str(audit).lower()
