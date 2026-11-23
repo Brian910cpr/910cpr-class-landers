@@ -611,5 +611,119 @@ class ZeroSeatedInventoryTests(unittest.TestCase):
                              f"Public bundle left a partial artifact: {path.name}")
 
 
+    def test_private_archive_card_is_removed_but_public_neighbors_remain(self):
+        # An old topic index must not disclose the private date after its
+        # direct detail has been redacted. Preserve distinct public history.
+        self.write_source()
+        classes = self.root / "docs/classes"
+        classes.mkdir(parents=True, exist_ok=True)
+        (classes / "index.html").write_text("0 classes found", encoding="utf-8")
+        (classes / "222.html").write_text(
+            '<meta name="robots" content="noindex,nofollow">'
+            '<h1>This class is not publicly listed</h1>',
+            encoding="utf-8",
+        )
+        archive = self.root / "docs/topics/bls.html"
+        archive.parent.mkdir(parents=True)
+        archive.write_text(
+            '<main><article><h2>Confidential appointment on Tuesday</h2>'
+            '<a href="/classes/222.html">Private class</a></article>'
+            '<article><h2>Historic public class</h2>'
+            '<a href="/classes/444.html">Old public listing</a></article>'
+            '<ul><li><a href="/classes/222.html">Private December time</a></li>'
+            '<li><a href="/classes/444.html">Unrelated historical item</a></li></ul>'
+            '</main>', encoding="utf-8",
+        )
+        with (
+            patch.object(finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(catalog, "SCHEDULE_FUTURE_FILE", self.path),
+            patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
+        ):
+            result = routes.refresh(root=self.root)
+        output = archive.read_text(encoding="utf-8")
+        self.assertEqual(result["listed"], 0)
+        self.assertIn("Historic public class", output)
+        self.assertIn("/classes/444.html", output)
+        self.assertNotIn("Confidential appointment", output)
+        self.assertNotIn("Private December time", output)
+        self.assertNotIn("/classes/222.html", output)
+
+    def test_compound_archive_card_fails_closed_without_rewriting(self):
+        self.write_source()
+        classes = self.root / "docs/classes"
+        classes.mkdir(parents=True, exist_ok=True)
+        index = classes / "index.html"
+        index.write_text("0 classes found", encoding="utf-8")
+        (classes / "222.html").write_text(
+            '<meta name="robots" content="noindex,nofollow">'
+            '<h1>This class is not publicly listed</h1>', encoding="utf-8",
+        )
+        archive = self.root / "docs/topics/bls.html"
+        archive.parent.mkdir(parents=True)
+        original = (
+            '<article><h2>Mixed unverified class grouping</h2>'
+            '<a href="/classes/222.html">Private</a>'
+            '<a href="/classes/444.html">Public</a></article>'
+        )
+        archive.write_text(original, encoding="utf-8")
+        with (
+            patch.object(finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(catalog, "SCHEDULE_FUTURE_FILE", self.path),
+            patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
+        ):
+            with self.assertRaisesRegex(ValueError, "compound archived card"):
+                routes.refresh(root=self.root)
+        self.assertEqual(archive.read_text(encoding="utf-8"), original)
+        self.assertEqual(index.read_text(encoding="utf-8"), "0 classes found")
+
+    def test_unstructured_archive_private_reference_fails_closed(self):
+        self.write_source()
+        classes = self.root / "docs/classes"
+        classes.mkdir(parents=True, exist_ok=True)
+        index = classes / "index.html"
+        index.write_text("0 classes found", encoding="utf-8")
+        (classes / "222.html").write_text(
+            '<meta name="robots" content="noindex,nofollow">'
+            '<h1>This class is not publicly listed</h1>', encoding="utf-8",
+        )
+        archive = self.root / "docs/topics/bls.html"
+        archive.parent.mkdir(parents=True)
+        original = '<aside><a href="/classes/222.html">Private date</a></aside>'
+        archive.write_text(original, encoding="utf-8")
+        with (
+            patch.object(finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(catalog, "SCHEDULE_FUTURE_FILE", self.path),
+            patch.object(catalog, "CANONICAL_CLASS_REPORT_FILE", self.other),
+        ):
+            with self.assertRaisesRegex(ValueError, "ambiguous archived reference"):
+                routes.refresh(root=self.root)
+        self.assertEqual(archive.read_text(encoding="utf-8"), original)
+        self.assertEqual(index.read_text(encoding="utf-8"), "0 classes found")
+
+    def test_bundle_restores_archive_after_mid_publish_failure(self):
+        classes = self.root / "docs/classes"
+        classes.mkdir(parents=True, exist_ok=True)
+        index = classes / "index.html"
+        index.write_text("Original finder", encoding="utf-8")
+        archive = self.root / "docs/topics/bls.html"
+        archive.parent.mkdir(parents=True)
+        archive.write_text("Original archive card", encoding="utf-8")
+        def broken_refresh(*, root, retired_previous_ids):
+            archive.write_text("Partial archived privacy scrub", encoding="utf-8")
+            raise OSError("injected archive write failure")
+        with (
+            patch.object(bundle.finder, "render_current_class_finder",
+                         return_value=("0 classes found", set())),
+            patch.object(bundle.routes, "refresh", side_effect=broken_refresh),
+        ):
+            with self.assertRaisesRegex(OSError, "archive write failure"):
+                bundle.refresh(root=self.root)
+        self.assertEqual(index.read_text(encoding="utf-8"), "Original finder")
+        self.assertEqual(archive.read_text(encoding="utf-8"), "Original archive card")
+
+
 if __name__ == "__main__":
     unittest.main()
