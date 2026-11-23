@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.56.0";
+import { listHistoricalClasses } from "./history.js";
 
 const allowedOrigins = new Set([
   "https://www.910cpr.com",
@@ -722,6 +723,13 @@ Deno.serve(async (req) => {
       const { error: deleteError } = await admin.from("nhcso_documents").delete().eq("id", document.id).eq("class_number", classNumber);
       if (deleteError) throw deleteError;
       return json(req, { ok: true, document_id: document.id, file_name: document.file_name });
+    }
+    if (action === "list_history") {
+      const offset = body.offset ?? 0;
+      if (!Number.isSafeInteger(offset) || offset < 0 || offset > 100000) {
+        return json(req, { error: "Invalid history offset" }, 400);
+      }
+      return json(req, { ok: true, ...await listHistoricalClasses(admin, offset) });
     }
     if (action === "list_classes") {
       await settleEligibleClasses();
