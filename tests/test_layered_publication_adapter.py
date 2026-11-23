@@ -126,7 +126,8 @@ class LayeredPublicationTests(unittest.TestCase):
                          json.dumps(private_projection['offers']))
         # Without a verified instructor, upstream occupancy uncertainty must
         # remain bounded; a customer-wide day Anchor is not justified.
-        private['instructor']=None
+        private['instructor']='UNKNOWN'
+        private['instructor_unassigned']=True
         clear['projected_sources']=project_sources([private],{})
         uncertain=self.payload(calculation=clear)
         self.assertTrue(any(o.get('scheduleRole')=='open_day'
