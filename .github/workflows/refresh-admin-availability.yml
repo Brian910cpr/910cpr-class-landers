@@ -253,6 +253,22 @@ jobs:
             docs/admin/dashboard.html \
             debug/status/build_sessions_current.json \
             debug/status/build_schedule_future.json
+          # Guarded source refresh may retire isolated private archive cards.
+          # Stage existing tracked archive/topic indexes with the finder/detail
+          # changes; a verification pass alone cannot protect the hosted site.
+          python - <<'PY'
+          import subprocess
+          from scripts import build_index_and_sitemap as catalog
+          paths = set()
+          for folder in catalog.STALE_CLASS_INDEX_DIRS:
+              if folder.exists():
+                  paths.add(str(folder.relative_to(catalog.ROOT)))
+          for file in catalog.STALE_CLASS_INDEX_FILES:
+              if file.exists():
+                  paths.add(str(file.relative_to(catalog.ROOT)))
+          if paths:
+              subprocess.run(['git', 'add', '-u', '--', *sorted(paths)], check=True)
+          PY
           if git diff --cached --quiet; then
             echo "No schedule, availability, selector, anchor, calendar, or admin reference changes to commit."
             exit 0
