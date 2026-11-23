@@ -52,13 +52,87 @@ class LayeredPublicationTests(unittest.TestCase):
         return calculate(self.windows,self.sources,self.courses,self.policy,self.resources,self.now,
             lambda w:(w['start'],w['end']),lambda w,c:True,self.coverage,self.policy.get('travel_minutes'))
 
-    def payload(self,seated=()):
-        return publish(self.calculation(),self.page,self.courses,self.windows,self.now,
+    def payload(self,seated=(),calculation=None):
+        return publish(self.calculation() if calculation is None else calculation,
+            self.page,self.courses,self.windows,self.now,
             lambda w,s,c:('fixture-day','fixture-container',f'https://fixture.test/enroll?appointmentDayId=fixture-day&courseId={c}&startTime={s:%H:%M}',None),
             lambda s,c:[],seated)
 
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
+
+    def test_unknown_legacy_shell_blocks_its_time_not_the_entire_day(self):
+        # Keep the real geometry, but do not manufacture a paid Anchor.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        clear=self.calculation()
+        shell=self.add(11,'12:00','13:00',count=None)
+        occupied=self.calculation()
+        self.assertTrue(any(report['normalized_occupancy']
+                            for report in occupied['reports']))
+        # Compare the publication gravity against identical precomputed
+        # windows: a source projection cannot retroactively create a seat.
+        clear['projected_sources']=project_sources([shell],{})
+        published=self.payload(calculation=clear)
+        self.assertTrue(any(o.get('scheduleRole')=='open_day'
+                            for o in published['offers']))
+        self.assertNotIn('anchored_day_requires_attached_offer',
+                         published['rejectionReasonCounts'])
+
+    def test_seated_same_course_collapse_requires_verified_demand(self):
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        clear=self.calculation()
+        source=self.add(11,'12:00','14:30',cid='209809',count=None)
+        clear['projected_sources']=project_sources([source],{})
+        seated=dict(session_id=source['source_event_id'],date='2026-10-11',
+                    startTime='12:00',courseId='209809',
+                    courseName='Unverified legacy shell',
+                    instructor='Brian Ennis',offerType='seated_class')
+        unknown=self.payload([seated],calculation=clear)
+        self.assertTrue(any(o['courseId']=='209809' and
+                            o.get('scheduleRole')=='open_day'
+                            for o in unknown['offers']))
+        self.assertNotIn('existing_course_day_anchor',
+                         unknown['rejectionReasonCounts'])
+        source['count_available']=True
+        source['active_registration_count']=1
+        clear['projected_sources']=project_sources([source],{})
+        proven=self.payload([seated],calculation=clear)
+        self.assertFalse(any(o['courseId']=='209809' and
+                             o.get('scheduleRole')=='open_day'
+                             for o in proven['offers']))
+        self.assertIn('existing_course_day_anchor',
+                      proven['rejectionReasonCounts'])
+        self.assertEqual(sum(o['offerType']=='seated_class'
+                             for o in proven['offers']),1)
+
+    def test_private_seat_gravity_has_no_public_joinability_or_global_unknown_instructor_block(self):
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        clear=self.calculation()
+        private=dict(source_event_id='synthetic-private-seat-not-public',
+                     course_id='',course_key='aha_bls_provider_renewal',
+                     visibility='private',instructor='Brian Ennis',
+                     start=self.at(11,'12:00').isoformat(),
+                     end=self.at(11,'14:30').isoformat(),
+                     operational_has_active_seat=True)
+        clear['projected_sources']=project_sources([private],{})
+        private_projection=self.payload(calculation=clear)
+        self.assertFalse(private_projection['offers'])
+        self.assertIn('anchored_day_requires_attached_offer',
+                      private_projection['rejectionReasonCounts'])
+        self.assertNotIn(private['source_event_id'],
+                         json.dumps(private_projection['offers']))
+        # Without a verified instructor, upstream occupancy uncertainty must
+        # remain bounded; a customer-wide day Anchor is not justified.
+        private['instructor']=None
+        clear['projected_sources']=project_sources([private],{})
+        uncertain=self.payload(calculation=clear)
+        self.assertTrue(any(o.get('scheduleRole')=='open_day'
+                            for o in uncertain['offers']))
+        self.assertNotIn('anchored_day_requires_attached_offer',
+                         uncertain['rejectionReasonCounts'])
 
     def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
         # Both conflict rejections and expired dynamic URLs pass through this
