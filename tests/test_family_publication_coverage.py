@@ -26,8 +26,34 @@ class CoverageCheckpointTests(unittest.TestCase):
         incident=continuity_incident({'bls':summarize(payload,'2026-11-03',now)})
         self.assertEqual(incident['failures'][0]['reason'],'expired_dynamic_appointments')
         payload['validUntil']='2026-11-01T06:15:00Z'
+        payload['dates'][0]['startTimes'][0]['courses'][0]['validUntil'] = payload['validUntil']
         self.assertIsNone(continuity_incident({'bls':summarize(payload,'2026-11-03',now),
             'arc':summarize({},'2026-11-03',now)}))
+
+    def test_individual_expired_or_missing_leases_not_masked_by_global_maximum(self):
+        now = datetime(2026, 11, 1, 6, tzinfo=timezone.utc)
+        live = '2026-11-01T06:15:00Z'
+        courses = [
+            {'courseId': 'live', 'offerType': 'dynamic_appointment', 'validUntil': live},
+            {'courseId': 'expired', 'offerType': 'dynamic_appointment', 'validUntil': '2026-11-01T06:00:00Z'},
+            {'courseId': 'missing', 'offerType': 'dynamic_appointment'},
+            {'courseId': 'naive', 'offerType': 'dynamic_appointment', 'validUntil': '2026-11-01T06:15:00'},
+            {'courseId': 'seated', 'offerType': 'seated_class'},
+        ]
+        payload = {'validUntil': live, 'dates': [{'date': '2026-11-03',
+            'startTimes': [{'startTime': '09:30', 'courses': courses}]}]}
+        summary = summarize(payload, '2026-11-03', now)
+        self.assertEqual((summary['dynamicOffers'], summary['liveDynamicOffers'],
+                          summary['expiredOrMalformedDynamicOffers'], summary['seatedOffers']), (4, 1, 3, 1))
+        self.assertEqual(summary['nextThreeDays']['2026-11-03']['liveDynamicOffers'], 1)
+        self.assertEqual(summary['nextThreeDays']['2026-11-03']['expiredOrMalformedDynamicOffers'], 3)
+        self.assertEqual(continuity_incident({'arc': summary})['failures'][0]['reason'],
+                         'invalid_individual_appointment_leases')
+        courses.pop(0)
+        self.assertEqual(summarize(payload, '2026-11-03', now)['liveDynamicOffers'], 0)
+        self.assertIsNotNone(continuity_incident({'bls': summarize(payload, '2026-11-03', now)}))
+        courses[:] = [courses[-1]]
+        self.assertIsNone(continuity_incident({'arc': summarize(payload, '2026-11-03', now)}))
 
     def test_expired_feed_is_detected_while_seated_counts_remain_separate(self):
         now=datetime(2026,10,12,3,tzinfo=timezone.utc)
@@ -311,10 +337,10 @@ class ScheduledObservationDateTests(unittest.TestCase):
         feed = {'generatedAt': observed.isoformat(), 'validUntil': '2026-11-13T02:10:00Z',
                 'counts': {'failed_windows': 1}, 'dates': [
                     {'date': '2026-11-12', 'startTimes': [{'startTime': '22:00', 'courses': [
-                        {'courseId': 'fixture', 'offerType': 'dynamic_appointment'},
-                        {'courseId': 'second-fixture', 'offerType': 'dynamic_appointment'}]}]},
+                        {'courseId': 'fixture', 'offerType': 'dynamic_appointment', 'validUntil': '2026-11-13T02:10:00Z'},
+                        {'courseId': 'second-fixture', 'offerType': 'dynamic_appointment', 'validUntil': '2026-11-13T02:10:00Z'}]}]},
                     {'date': '2026-10-14', 'startTimes': [{'startTime': '09:00', 'courses': [
-                        {'courseId': 'historical-fixture', 'offerType': 'dynamic_appointment'}]}]}]}
+                        {'courseId': 'historical-fixture', 'offerType': 'dynamic_appointment', 'validUntil': '2026-11-13T02:10:00Z'}]}]}]}
         landscape = {'cells': [{'date': '2026-11-12', 'result': 'fixture-current'},
                                {'date': '2026-10-14', 'result': 'fixture-historical'}], 'sourcePages': {}}
 

@@ -188,6 +188,20 @@ def lead_window_status(day, cutoff):
     return 'partly_inside_lead_window'
 
 
+def live_dynamic_offer(course, now):
+    """A feed-wide maximum lease cannot prove an individual appointment is live."""
+    if course.get("offerType") != "dynamic_appointment":
+        return False
+    raw = course.get("validUntil")
+    if not isinstance(raw, str):
+        return False
+    try:
+        expiry = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+        return expiry.tzinfo is not None and expiry > now
+    except (ValueError, OverflowError):
+        return False
+
+
 def summarize(payload, day, now=None):
     rows = [(d['date'], t['startTime'], c) for d in payload.get('dates', [])
             for t in d.get('startTimes', []) for c in t.get('courses', [])]
@@ -234,11 +248,19 @@ def summarize(payload, day, now=None):
         expired = expiry.tzinfo is None or expiry <= now
     except ValueError:
         expired = True
+    dynamic_rows = [r for r in rows if r[2].get('offerType') != 'seated_class']
+    live_rows = [r for r in dynamic_rows if not expired and live_dynamic_offer(r[2], now)]
+    for date, detail in next_three_days.items():
+        detail['liveDynamicOffers'] = sum(r[0] == date for r in live_rows)
+        detail['expiredOrMalformedDynamicOffers'] = (
+            sum(r[0] == date for r in dynamic_rows) - detail['liveDynamicOffers'])
     return {
         'generatedAt': payload.get('generatedAt'), 'validUntil': payload.get('validUntil'),
         'publicPage': payload.get('publicPage'), 'counts': payload.get('counts'),
         'actualOffers': len(rows), 'actualDates': len({d for d, _, _ in rows}),
-        'dynamicOffers': sum(c.get('offerType') != 'seated_class' for _, _, c in rows),
+        'dynamicOffers': len(dynamic_rows),
+        'liveDynamicOffers': len(live_rows),
+        'expiredOrMalformedDynamicOffers': len(dynamic_rows) - len(live_rows),
         'seatedOffers': sum(c.get('offerType') == 'seated_class' for _, _, c in rows),
         'publicationExpired': expired,
         'perCourse': dict(Counter(str(c['courseId']) for _, _, c in rows)),
@@ -269,6 +291,8 @@ def continuity_incident(feeds):
             failures.append(dict(family=family, reason='missing_dynamic_appointments'))
         elif feed['dynamicOffers'] > 0 and feed['publicationExpired']:
             failures.append(dict(family=family, reason='expired_dynamic_appointments'))
+        elif feed['expiredOrMalformedDynamicOffers']:
+            failures.append(dict(family=family, reason='invalid_individual_appointment_leases'))
     return dict(priority='P0', status='active_booking_outage', failures=failures,
         recovery_owner='Codex',
         next_action='Begin immediate source/lease/publication recovery; refresh or restore a validated release, '
@@ -319,7 +343,7 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     print(json.dumps({k: dict(
-        {f: v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','dayCoverageAlert','coverageAlert','coverageAlertScope','publicDiagnosticsSafe', 'publicShipyardAliasSafe', 'shipyardOffersChecked', 'minimumLeadHours', 'leadCutoffAtEastern', 'dayLeadWindowStatus')},
+        {f: v[f] for f in ('actualOffers','actualDates','liveDynamicOffers','expiredOrMalformedDynamicOffers','dayOffers','dayTimes','dayFailedWindows','dayCoverageAlert','coverageAlert','coverageAlertScope','publicDiagnosticsSafe', 'publicShipyardAliasSafe', 'shipyardOffersChecked', 'minimumLeadHours', 'leadCutoffAtEastern', 'dayLeadWindowStatus')},
         nextThreeDayOffers={day: item['publishedOffers'] for day, item in v['nextThreeDays'].items()})
         for k,v in feeds.items()}, indent=2))
     if incident:
