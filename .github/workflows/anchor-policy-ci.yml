@@ -73,6 +73,8 @@ on:
       - 'codex/issue-157-runtime-projection'
       - 'integration/p0-demand-safety-20261119-r1'
     paths:
+      - 'scripts/validate_public_refresh_output.py'
+      - 'tests/test_validate_public_refresh_output.py'
       - 'scripts/publication_renewal.py'
       - 'tests/test_public_refresh_renewal.py'
       - 'scripts/block_start_time_selector.py'
