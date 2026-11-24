@@ -660,7 +660,10 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertGreater(len(payload["offers"]), 0)
         self.assertEqual(payload["publicPage"], "docs/heartsaver.html")
         course_ids = {offer["courseId"] for offer in payload["offers"]}
-        self.assertLessEqual(course_ids, {"344085", "209808", "209809", "329495", "351632", "251545"})
+        self.assertLessEqual(course_ids, {"344085", "209808", "209809", "329495", "351632", "251545", "509474"})
+        skills = next(option for option in configs["heartsaver"]["course_options"] if option["course_id"] == "509474")
+        self.assertEqual("329495", skills["scheduling_template_course_id"])
+        self.assertEqual("/register/skills-session/", skills["native_registration_path"])
         html = build_bls_block_schedule_pilot.render_html(payload)
         self.assertIn("Heartsaver CPR, AED &amp; First Aid Classes", html)
         self.assertIn("Choose the class that fits your needs, then select a date and time.", html)
@@ -769,7 +772,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                 [(item["course_id"], item["price"]) for item in config["course_options"]],
                 rows,
             )
-            payload = block_start_time_selector.build_block_schedule_page(config)
+            payload = self.build_synthetic_clear_page(config)
             html = build_bls_block_schedule_pilot.render_html(payload)
             self.assertIn("const groupCourseOptions = true", html)
             self.assertTrue(
@@ -841,11 +844,11 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                 demand.return_value = {"sessions": [], "non_session_sources": []}
                 yield selector, now, day, room, instructor, sessions, demand
 
-    def build_synthetic_clear_page(self, config):
+    def build_synthetic_clear_page(self, config, *, final_guard=False):
         with self.synthetic_selector_window() as (selector, now, day, room, instructor, sessions, demand):
             result = selector.build_block_schedule_page(config, replay_now=now)
             demand.assert_called_once()
-            return result
+            return selector.apply_final_live_availability_guard(result) if final_guard else result
 
     def test_heartsaver_artifact_excludes_newly_conflicting_pediatric_offer(self):
         with self.synthetic_selector_window() as (selector, now, day, room, instructor, sessions, demand):
@@ -903,7 +906,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
 
     def test_family_cpr_enters_normal_public_offer_generation(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
-        payload = block_start_time_selector.build_block_schedule_page(configs["family_cpr"])
+        payload = self.build_synthetic_clear_page(configs["family_cpr"])
         artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
         offers = artifact_offers(artifact)
         self.assertGreater(len(offers), 0)
@@ -1047,8 +1050,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
 
     def test_hsi_selector_shell_uses_resolved_authority_without_static_times(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
-        payload = block_start_time_selector.build_block_schedule_page(configs["hsi"])
-        guarded = block_start_time_selector.apply_final_live_availability_guard(payload)
+        guarded = self.build_synthetic_clear_page(configs["hsi"], final_guard=True)
         artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(guarded)
         html = build_bls_block_schedule_pilot.render_html(guarded)
         self.assertEqual("selector-resolved-availability.v1", artifact["schemaVersion"])
@@ -1078,7 +1080,10 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
         offers = artifact_offers(artifact)
         self.assertGreater(len(offers), 0)
-        self.assertLessEqual({offer["courseId"] for offer in offers}, {"463743", "445670"})
+        self.assertLessEqual({offer["courseId"] for offer in offers}, {"463743", "445670", "509474"})
+        skills = next(option for option in configs["hsi"]["course_options"] if option["course_id"] == "509474")
+        self.assertEqual("445670", skills["scheduling_template_course_id"])
+        self.assertEqual("/register/skills-session/", skills["native_registration_path"])
         self.assertFalse([offer for offer in offers if not str(offer.get("location", "")).startswith("::")])
 
     def test_hsi_bls_adult_first_aid_delivery_labels_are_consistent(self):
@@ -1289,7 +1294,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertFalse(uscg["compare_mode"]["enabled"])
         self.assertIn("Fire Department/public-safety partner", uscg["course_id_notes"]["460465"])
 
-        payload = block_start_time_selector.build_block_schedule_page(uscg)
+        payload = self.build_synthetic_clear_page(uscg)
+        self.assertGreater(len(payload["offers"]), 0)
         self.assertEqual(payload["publicPage"], "docs/courses/uscg-first-aid-cpr-aed.html")
         public_ids = {offer["courseId"] for offer in payload["offers"]}
         self.assertLessEqual(public_ids, configured_ids)
@@ -1313,9 +1319,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("courseId=460465", html)
         self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
         artifact_json = json.dumps(build_bls_block_schedule_pilot.public_selector_availability_payload(payload), ensure_ascii=False)
-        if payload["offers"]:
-            self.assertIn("courseId=209809", artifact_json)
-            self.assertIn("courseId=329495", artifact_json)
+        self.assertIn("courseId=209809", artifact_json)
+        self.assertIn("courseId=329495", artifact_json)
 
     def test_canonical_family_pages_use_customer_facing_selector_template(self):
         pages = ["bls", "acls", "pals", "hsi", "heartsaver"]
