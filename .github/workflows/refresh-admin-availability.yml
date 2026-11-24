@@ -395,6 +395,29 @@ jobs:
           print('Refreshed finder/detail/sitemap private-route proof:', counts)
           PY
           echo "Same-source public artifact rebuild, routing and privacy tests passed in runner only; deployment remains prohibited"
+      - name: Enforce complete frozen-source release coverage
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('data/runtime/audit_previews/v2_release_probe')
+          summary = json.loads((root / 'public_safe_summary.json').read_text(encoding='utf-8'))
+          comparison = json.loads((root / 'same_source_main_draft_comparison.json').read_text(encoding='utf-8'))
+          replay = summary.get('coordinated_public_replay') or {}
+          if not (
+              summary.get('published') is False
+              and summary.get('release_passed') is True
+              and comparison.get('published') is False
+              and comparison.get('same_source_verified') is True
+              and comparison.get('draft_release_passed') is True
+              and comparison.get('source_snapshot_sha256') == summary.get('source_snapshot_sha256')
+              and comparison.get('replay_clock_utc') == summary.get('replay_clock_utc')
+              and replay.get('result') == 'source_checked_in_disposable_runner'
+          ):
+              raise SystemExit('Frozen-source release coverage incomplete; diagnostics retained, no publication authorized')
+          print('Frozen-source coverage and artifact replay passed; hosted verification remains separate')
+          PY
       - name: Upload aggregate-only replay summary
         if: always()
         uses: actions/upload-artifact@v4
