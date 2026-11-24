@@ -665,8 +665,9 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertEqual("329495", skills["scheduling_template_course_id"])
         self.assertEqual("/register/skills-session/", skills["native_registration_path"])
         html = build_bls_block_schedule_pilot.render_html(payload)
-        self.assertIn("Heartsaver CPR, AED &amp; First Aid Classes", html)
-        self.assertIn("Choose the class that fits your needs, then select a date and time.", html)
+        self.assertIn("AHA CPR, AED &amp; First Aid Classes in Wilmington, NC", html)
+        self.assertIn("Need First Aid too: choose First Aid CPR AED.", html)
+        self.assertIn("Childcare or pediatric requirement: choose Pediatric First Aid CPR AED.", html)
         self.assertIn("In-person classes are completed entirely at our Wilmington training center.", html)
         self.assertIn("Online + Skills classes begin with an online course, followed by a shorter in-person skills session.", html)
         self.assertNotIn('id="compare-toggle"', html)
@@ -912,8 +913,26 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertGreater(len(offers), 0)
         self.assertEqual({"252737"}, {str(offer.get("courseId")) for offer in offers})
         self.assertTrue(all("courseId=252737" in str(offer.get("appointmentUrl")) for offer in offers))
-        self.assertTrue(all(str(offer.get("location") or "").strip().startswith("::") for offer in offers))
+        self.assertEqual({"Wilmington; Shipyard Blvd"}, {offer.get("location") for offer in offers})
+        self.assertTrue(all(block_start_time_selector.is_public_class_location(offer.get("location"))
+                            for offer in payload["offers"]))
         self.assertNotIn("Registration for this class is closed", json.dumps(artifact, ensure_ascii=False))
+
+    def test_family_cpr_private_location_window_does_not_become_public_offer(self):
+        with self.synthetic_selector_window() as (selector, now, day, room, instructor, sessions, demand):
+            config = selector.load_block_schedule_page_configs()["family_cpr"]
+            clear = selector.build_block_schedule_page(config, replay_now=now)
+            self.assertGreater(len(artifact_offers(build_bls_block_schedule_pilot.public_selector_availability_payload(clear))), 0)
+            live_path = selector.LIVE_AVAILABILITY_PATH
+            live = json.loads(live_path.read_text(encoding="utf-8"))
+            block = live["availability_blocks"][0]
+            block["location_name"] = "Synthetic private training location"
+            block["room_or_resource_name"] = "Synthetic private training location"
+            live_path.write_text(json.dumps(live), encoding="utf-8")
+            private = selector.build_block_schedule_page(config, replay_now=now)
+            artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(private)
+            self.assertEqual([], artifact_offers(artifact))
+            self.assertNotIn("Synthetic private training location", json.dumps(artifact))
 
     def test_family_cpr_offers_are_unique_and_non_overlapping(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
@@ -1062,7 +1081,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("Checking current class times…", html)
         self.assertIn("fetch(availabilityUrl, { cache: 'no-store' })", html)
         self.assertIn("HSI CPR, First Aid &amp; BLS Classes", html)
-        self.assertIn("Choose the HSI class that fits your requirement, then select a date and time.", html)
+        self.assertIn("Use HSI when your employer or program accepts HSI certification.", html)
+        self.assertIn("Choose the class that matches the exact requirement you were given.", html)
         self.assertIn('"courseId": "445670"', html)
         self.assertIn('"deliveryMode": "blended"', html)
         self.assertIn('"deliveryBadge": "BLENDED"', html)
@@ -1084,7 +1104,9 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         skills = next(option for option in configs["hsi"]["course_options"] if option["course_id"] == "509474")
         self.assertEqual("445670", skills["scheduling_template_course_id"])
         self.assertEqual("/register/skills-session/", skills["native_registration_path"])
-        self.assertFalse([offer for offer in offers if not str(offer.get("location", "")).startswith("::")])
+        self.assertEqual({"Wilmington; Shipyard Blvd"}, {offer.get("location") for offer in offers})
+        self.assertTrue(all(block_start_time_selector.is_public_class_location(offer.get("location"))
+                            for offer in guarded["offers"]))
 
     def test_hsi_bls_adult_first_aid_delivery_labels_are_consistent(self):
         config = json.loads((ROOT / "data" / "config" / "block_schedule_pages.json").read_text(encoding="utf-8"))
