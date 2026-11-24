@@ -49,7 +49,7 @@ class CoverageCheckpointTests(unittest.TestCase):
                 'reason': 'missing directional travel rule'}]}, '2026-10-14')
         self.assertTrue(result['coverageAlert'])
         self.assertEqual(result['dayFailedWindows'], 1)
-        self.assertEqual(result['failedWindowReasons'], {'missing directional travel rule': 1})
+        self.assertEqual(result['failedWindowReasons'], {'restricted': 1})
 
     def test_counts_actual_nested_courses_and_does_not_invent_offers(self):
         result = summarize({'counts': {'failed_windows': 0}, 'dates': [
@@ -81,9 +81,9 @@ class CoverageCheckpointTests(unittest.TestCase):
         self.assertEqual([days[d]['publishedOffers'] for d in days], [2, 1, 0])
         self.assertEqual([days[d]['failedWindows'] for d in days], [0, 1, 0])
         self.assertEqual(days['2026-11-01']['failedWindowReasons'], {})
-        self.assertEqual(days['2026-11-02']['failedWindowReasons'], {'missing directional travel rule': 1})
+        self.assertEqual(days['2026-11-02']['failedWindowReasons'], {'restricted': 1})
         self.assertEqual(days['2026-11-03']['failedWindowReasons'], {})
-        self.assertEqual(summary['failedWindowReasons'], {'missing directional travel rule': 2})
+        self.assertEqual(summary['failedWindowReasons'], {'restricted': 2})
         self.assertEqual(days['2026-11-01']['perCourse'], {'bls': 2})
         self.assertEqual(days['2026-11-02']['publishedTimes'], ['12:00'])
         self.assertTrue(summary['coverageAlert'],
@@ -192,6 +192,22 @@ class CoverageCheckpointTests(unittest.TestCase):
                 self.assertFalse(reported['publicDiagnosticsSafe'])
         self.assertTrue(summarize({'reconciliationIssues': []}, '2026-12-06')['publicDiagnosticsSafe'])
 
+
+    def test_unsafe_diagnostic_text_never_reaches_saved_summary(self):
+        secret = 'fixture internal venue and instructor identifier'
+        summary = summarize({'counts': {'failed_windows': 2}, 'reconciliationIssues': [
+            {'reason': secret, 'start': '2026-11-25'},
+            {'reason': {'private': secret}, 'start': '2026-11-25'}]}, '2026-11-25')
+        self.assertFalse(summary['publicDiagnosticsSafe'])
+        self.assertTrue(summary['coverageAlert'])
+        self.assertEqual(summary['failedWindowReasons'], {'restricted': 2})
+        self.assertEqual(summary['nextThreeDays']['2026-11-25']['failedWindowReasons'],
+                         {'restricted': 2})
+        self.assertNotIn(secret, json.dumps(summary))
+        for malformed in (None, {'reason': secret}, [None, secret]):
+            result = summarize({'reconciliationIssues': malformed}, '2026-11-25')
+            self.assertFalse(result['publicDiagnosticsSafe'])
+            self.assertNotIn(secret, json.dumps(result))
 
     def test_host_observer_rejects_public_landscape_private_diagnostics(self):
         safe = {

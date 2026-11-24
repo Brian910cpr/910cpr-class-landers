@@ -18,17 +18,27 @@ ROOT = Path(__file__).resolve().parents[1]
 FAMILIES = ('bls', 'heartsaver', 'acls', 'pals', 'arc', 'hsi', 'uscg_first_aid_cpr_aed', 'family_cpr')
 
 
+_PUBLIC_ISSUE_REASONS = frozenset({"missing_directional_travel_rule", "availability_coverage_unknown"})
+
+
+def safe_issue_reason(issue):
+    """Do not propagate unapproved raw diagnostic text into observer artifacts."""
+    reason = issue.get("reason") if isinstance(issue, dict) else None
+    return reason if isinstance(reason, str) and reason in _PUBLIC_ISSUE_REASONS else "restricted"
+
+
 def public_diagnostics_safe(issues):
     """Fail closed if a public selector exposes operational issue metadata.
 
     Public issue entries can carry only a coarse reason code and an optional
     Eastern date. Never echo a rejected raw issue into observer artifacts.
     """
-    allowed_reasons = {"missing_directional_travel_rule", "availability_coverage_unknown"}
+    if not isinstance(issues, list):
+        return False
     for issue in issues:
         if not isinstance(issue, dict) or not set(issue).issubset({"reason", "start"}):
             return False
-        if issue.get("reason") not in allowed_reasons:
+        if safe_issue_reason(issue) == "restricted":
             return False
         if "start" in issue and (
             not isinstance(issue["start"], str)
@@ -181,7 +191,11 @@ def lead_window_status(day, cutoff):
 def summarize(payload, day, now=None):
     rows = [(d['date'], t['startTime'], c) for d in payload.get('dates', [])
             for t in d.get('startTimes', []) for c in t.get('courses', [])]
-    failures = payload.get('reconciliationIssues', [])
+    raw_failures = payload.get('reconciliationIssues', [])
+    diagnostics_safe = public_diagnostics_safe(raw_failures)
+    failures = (raw_failures if isinstance(raw_failures, list) else [None])
+    # Preserve the count and failure signal even for a malformed issue row.
+    failures = [i if isinstance(i, dict) else {} for i in failures]
     now = now or datetime.now(timezone.utc)
     # Use the policy that the public feed actually carries. A missing or invalid
     # lead is UNKNOWN, not a license to treat an empty day as healthy or blocked.
@@ -202,7 +216,7 @@ def summarize(payload, day, now=None):
             'perCourse': dict(Counter(str(c['courseId']) for d, _, c in rows if d == date)),
             'failedWindows': sum(str(i.get('start', '')).startswith(date) for i in failures),
             'failedWindowReasons': dict(Counter(
-                str(i.get('reason') or 'unknown') for i in failures
+                safe_issue_reason(i) for i in failures
                 if str(i.get('start', '')).startswith(date))),
         }
         for date in next_days
@@ -236,12 +250,12 @@ def summarize(payload, day, now=None):
         'dayTimes': sorted({t for d, t, _ in rows if d == day}),
         'dayPerCourse': dict(Counter(str(c['courseId']) for d, _, c in rows if d == day)),
         'nextThreeDays': next_three_days,
-        'failedWindowReasons': dict(Counter(i.get('reason', 'unknown') for i in failures)),
+        'failedWindowReasons': dict(Counter(safe_issue_reason(i) for i in failures)),
         'dayFailedWindows': day_failed_windows,
         'dayCoverageAlert': bool(day_failed_windows),
         'coverageAlert': global_coverage_alert,
         'coverageAlertScope': coverage_alert_scope,
-        'publicDiagnosticsSafe': public_diagnostics_safe(failures),
+        'publicDiagnosticsSafe': diagnostics_safe,
         'publicShipyardAliasSafe': shipyard_alias_safe,
         'shipyardOffersChecked': shipyard_offers_checked,
     }
@@ -282,7 +296,7 @@ def main():
         path = f'data/block-selector-availability/{family}.json'
         raw = ((urlopen(f'https://www.910cpr.com/{path}?coverage={stamp}', timeout=30).read())
                if args.live else (ROOT / 'docs' / path).read_bytes())
-        return family, dict(summarize(json.loads(raw), args.day), sha256=hashlib.sha256(raw).hexdigest())
+        return family, dict(summarize(json.loads(raw), args.day, observed), sha256=hashlib.sha256(raw).hexdigest())
     with ThreadPoolExecutor(max_workers=4) as pool:
         feeds = dict(pool.map(read, FAMILIES))
     incident = continuity_incident(feeds) if args.continuity else None
