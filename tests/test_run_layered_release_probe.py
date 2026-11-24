@@ -103,6 +103,20 @@ class FrozenSourceReplayTests(unittest.TestCase):
         self.assertEqual(probe._window_issue_category({"reason": "some person's private details"}),
                          "other_window_error")
 
+    def test_fixed_failure_categories_do_not_depend_on_private_identity_suffix(self):
+        cases = {
+            "duplicate source id: private travel instructor@example.com": "duplicate_source_identity",
+            "duplicate durable source id": "duplicate_source_identity",
+            "duplicate availability source identity": "duplicate_source_identity",
+            "invalid course duration: private location": "course_duration_policy_invalid",
+            "invalid evidenced course duration override: private": "course_duration_policy_invalid",
+            "invalid slot grid": "slot_grid_policy_invalid",
+            "unresolved zero-duration occupancy": "unresolved_occupied_bounds",
+        }
+        for reason, expected in cases.items():
+            with self.subTest(reason=reason):
+                self.assertEqual(probe._window_issue_category({"reason": reason}), expected)
+
     def test_public_summary_fails_closed_on_mutable_or_naive_source(self):
         sample = {"source_snapshot_unchanged": False, "source_snapshot_sha256": "a" * 64,
                   "replay_clock_utc": "2026-11-22T07:14:08+00:00", "pages": {}}
