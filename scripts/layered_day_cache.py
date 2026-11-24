@@ -11,8 +11,9 @@ import json
 from scripts.layered_selector_adapter import aware
 from scripts.layered_publication_adapter import calculate, project_sources, SCHEMA
 from scripts.fetch_canonical_scheduling_demand import _atomic_write_json
+from scripts.layered_scheduling_engine import attested_checkout_hold, stamp
 
-VERSION = 'layered-day-cache.v1'
+VERSION = 'layered-day-cache.v2'
 ZONE = ZoneInfo('America/New_York')
 
 
@@ -45,6 +46,12 @@ def scoped_sources(rows, start, end, travel):
     # Unresolved bounds are never discarded to manufacture free time.
     lower = start.astimezone(ZONE).replace(hour=0,minute=0,second=0,microsecond=0)-timedelta(minutes=travel)
     upper = (end.astimezone(ZONE)-timedelta(microseconds=1)).replace(hour=0,minute=0,second=0,microsecond=0)+timedelta(days=1,minutes=travel)
+    # Match calculate()'s fixed context envelope before fingerprinting. A
+    # previous/next-day full course can constrain starts without overlapping
+    # the local day; travel-only scoping would silently discard that evidence.
+    horizon = timedelta(minutes=max(48 * 60, 24 * 60 + travel))
+    lower = min(lower, start - horizon)
+    upper = max(upper, end + horizon)
     chosen = {}
     changed = True
     while changed:
@@ -73,7 +80,8 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
     horizon_end=horizon_start+timedelta(days=horizon_days)
     if not 1 <= horizon_days <= 90: raise ValueError('cache horizon must be 1..90 days')
     cache_dir=Path(cache_dir)
-    travel=max([0]+[int(v) for v in (travel_minutes or {}).values() if isinstance(v,(int,float)) and v>=0])
+    travel=max([0]+[v for v in (travel_minutes or {}).values() if type(v) in (int,float) and v>=0])
+    catalog={str(c['course_id']):c for c in courses}
     code=digest([Path(__file__).read_text(), *[Path(__file__).with_name(name).read_text() for name in
         ('layered_publication_adapter.py','layered_selector_adapter.py','layered_scheduling_engine.py','layered_resource_readiness.py')]])
     reports=[];issues=[];hits=0;rebuilt=[];selected=[]
@@ -111,6 +119,13 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
             deadlines=[now+timedelta(minutes=5)]  # Failed/unknown proof retries remain bounded.
             leases=[r['valid_until'] for r in cached['reports'] if r['valid_until']>now]
             if leases: deadlines=[min(leases)]
+            # A real admitted hold can expire before the calendar coverage
+            # lease, including when calculation fails. Do not replay the
+            # pre-expiration geometry after that boundary.
+            for row in rows:
+                if attested_checkout_hold(row, now, catalog):
+                    expiry=stamp(row['hold_expires_at'])
+                    if expiry>now: deadlines.append(expiry)
             for report in cached['reports']:
                 for candidate in report['accepted']:
                     deadline=aware(candidate['start'])-timedelta(minutes=policy.get('lead_minutes',1440))
@@ -126,7 +141,10 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
             rebuilt.append(dict(date=start.astimezone(ZONE).date().isoformat(),window_id=window['source_availability_window']))
         else: hits+=1
         reports.extend(cached['reports']);issues.extend(cached['issues'])
-    projected=project_sources(occupancy,{str(c['course_id']):c for c in courses})
+    projected=project_sources(occupancy,catalog)
+    # Keep canonical route/seat authority ahead of legacy mirrors, just as
+    # the uncached calculate() path does.
+    projected.sort(key=lambda row: row.get('source_file') != 'canonical_class_sessions')
     return dict(schema=SCHEMA,reports=reports,issues=issues,projected_sources=projected,
         counts=dict(input_sources=len(occupancy),normalized_sources=len(projected),input_windows=len(selected),
             evaluated_windows=len(reports),failed_windows=len(selected)-len(reports),uncertainty_issues=len(issues)),

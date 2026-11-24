@@ -164,6 +164,13 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             matched = [p for p in fresh if p.get("instructor") == window["instructor_name"]
                 and p.get("location") == room and aware(p["start"]) <= ws and we <= aware(p["end"])]
             report["valid_until"] = min((aware(p["valid_until"]).astimezone(timezone.utc) for p in matched), default=now)
+            # A publication generated under a provisional checkout lease must
+            # not outlive that lease, even when calendar proof lasts longer.
+            for source in relevant:
+                if attested_checkout_hold(source, now, metadata):
+                    expiry = stamp(source['hold_expires_at'])
+                    if expiry > now:
+                        report['valid_until'] = min(report['valid_until'], expiry)
             reports.append(report)
         except ValueError as error:
             issues.append(dict(reason=str(error), instructor=window.get("instructor_name"),
