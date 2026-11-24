@@ -14,7 +14,7 @@ SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 CURRENT_SESSIONS_PATH = ROOT / "data" / "sessions_current.json"
 ADMIN_SCHEDULE_PATH = ROOT / "docs" / "data" / "admin_schedule.json"
 SELECTOR_DIR = ROOT / "docs" / "data" / "block-selector-availability"
-REQUIRED_SELECTORS = ("bls", "heartsaver", "acls", "pals")
+REQUIRED_SELECTORS = ("bls", "heartsaver", "acls", "pals", "arc", "hsi", "uscg_first_aid_cpr_aed", "family_cpr")
 
 
 def load_json(path: Path) -> Any:
@@ -87,12 +87,21 @@ def validate_selector_lease(payload: dict, page_key: str) -> None:
     require(expiry.tzinfo is not None, f"{page_key}: publication expiry lacks timezone")
     # Existing classes survive expired offer leases in both V2 finalization
     # and the browser. Only calculated offers depend on that availability proof.
-    calculated = any(course.get('offerType') != 'seated_class'
-                     for day in payload.get('dates', [])
-                     for slot in day.get('startTimes', [])
-                     for course in slot.get('courses', []))
+    calculated = [course for day in payload.get('dates', [])
+                  for slot in day.get('startTimes', [])
+                  for course in slot.get('courses', [])
+                  if course.get('offerType') != 'seated_class']
     if calculated:
-        require(expiry > datetime.now(timezone.utc), f"{page_key}: expired publication")
+        now = datetime.now(timezone.utc)
+        require(expiry > now, f"{page_key}: expired publication")
+        for course in calculated:
+            raw = course.get("validUntil")
+            try:
+                lease = datetime.fromisoformat(raw.replace("Z", "+00:00")) if isinstance(raw, str) else None
+            except (ValueError, OverflowError):
+                lease = None
+            require(lease is not None and lease.tzinfo is not None and lease > now,
+                    f"{page_key}: expired or malformed calculated offer lease")
 
 
 def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, int]:

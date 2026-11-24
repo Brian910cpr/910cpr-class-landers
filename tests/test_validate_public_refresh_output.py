@@ -70,6 +70,26 @@ class ValidatePublicRefreshOutputTests(unittest.TestCase):
                 validate_selector_lease(payload,'acls')
             payload['dates'][0]['startTimes'][0]['courses'].pop()
 
+    def test_all_public_families_and_individual_calculated_lease(self):
+        self.assertEqual(set(validator.REQUIRED_SELECTORS),
+                         {"bls", "heartsaver", "acls", "pals", "arc", "hsi",
+                          "uscg_first_aid_cpr_aed", "family_cpr"})
+        now = datetime.now(timezone.utc)
+        future = (now + timedelta(minutes=10)).isoformat()
+        past = (now - timedelta(minutes=1)).isoformat()
+        for family in validator.REQUIRED_SELECTORS:
+            for bad in (None, "", "not-a-date", "2099-01-01T00:00:00", past):
+                with self.subTest(family=family, lease=bad):
+                    payload = dict(validUntil=future, dates=[dict(startTimes=[dict(courses=[
+                        dict(offerType="seated_class", validUntil=past),
+                        dict(offerType="dynamic_appointment", validUntil=future),
+                        dict(offerType="dynamic_appointment", validUntil=bad),
+                    ])])])
+                    with self.assertRaisesRegex(ValueError, "expired or malformed calculated offer lease"):
+                        validate_selector_lease(payload, family)
+                    payload["dates"][0]["startTimes"][0]["courses"].pop()
+                    validate_selector_lease(payload, family)
+
     def demand(self, count=1):
         now = datetime(2026, 9, 27, 14, 0, tzinfo=timezone.utc)
         return now, {
