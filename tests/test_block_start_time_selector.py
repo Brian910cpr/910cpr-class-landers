@@ -775,16 +775,96 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             self.assertIn("Skills Session Only", skills["family_label"])
             self.assertIn("purchased and completed", skills["clarification"])
     def test_heartsaver_artifact_excludes_newly_conflicting_pediatric_offer(self):
-        configs = block_start_time_selector.load_block_schedule_page_configs()
-        payload = block_start_time_selector.build_block_schedule_page(configs["heartsaver"])
-        artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
-        conflicting = [
-            offer for offer in artifact_offers(artifact)
-            if offer.get("date") == "2026-07-13"
-            and offer.get("startTime") == "15:30"
-            and str(offer.get("courseId")) == "251545"
-        ]
-        self.assertEqual([], conflicting)
+        # Replay a fully synthetic calendar window twice, changing only
+        # canonical demand. Keep strict input-file checks and the real
+        # qualification, cache, route, occupancy and public serializer paths.
+        from tempfile import TemporaryDirectory
+        from unittest.mock import patch
+        from scripts import layered_day_cache
+
+        selector = block_start_time_selector
+        config = selector.load_block_schedule_page_configs()["heartsaver"]
+        now = datetime.fromisoformat("2026-10-05T12:00:00-04:00")
+        day = "2026-10-11"
+        room = ":: Wilmington; Shipyard Blvd - B"
+        instructor = "Brian Ennis"
+        location = ":: Wilmington; Shipyard Blvd"
+        start = day + "T08:00:00-04:00"
+        end = day + "T20:00:00-04:00"
+        availability = {
+            "generated_at": now.isoformat(),
+            "availability_blocks": [{
+                "source_event_id": "synthetic-clear-window",
+                "source_type": "google_calendar",
+                "availability_status": "available",
+                "date": day,
+                "start_datetime": start, "end_datetime": end,
+                "start_time": "08:00", "end_time": "20:00",
+                "instructor_name": instructor,
+                "person_id": "instructor_24057895173",
+                "location_name": location, "room_or_resource_name": room,
+            }],
+            "layered_commitment_coverage": [{
+                "status": "known_complete", "instructor": instructor,
+                "location": room, "start": start, "end": end,
+                "observed_at": now.isoformat(),
+                "valid_until": (now + timedelta(minutes=60)).isoformat(),
+                "source": "synthetic_complete_calendar",
+            }],
+        }
+        private = {
+            "canonical_session_id": "synthetic-private-occupied",
+            "session_status": "scheduled", "visibility": "private",
+            "public_direct_booking": False, "registration_status": "closed",
+            "start_at": day + "T14:00:00-04:00",
+            "end_at": day + "T17:00:00-04:00",
+            "scheduler_course_id": "359474",
+            "location_name": room, "lead_instructor_name": instructor,
+            "count_available": True, "active_registration_count": 1,
+            "operational_has_active_seat": True,
+        }
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            sessions = root / "sessions.json"
+            future = root / "future.json"
+            live = root / "live.json"
+            for path, value in ((sessions, {"sessions": []}),
+                                (future, {"sessions": []}),
+                                (live, availability)):
+                path.write_text(json.dumps(value), encoding="utf-8")
+            real_cache = layered_day_cache.cached_calculate
+
+            def isolated_cache(*args, **kwargs):
+                kwargs["cache_dir"] = root / "cache"
+                return real_cache(*args, **kwargs)
+
+            with patch.multiple(selector, SESSIONS_CURRENT_PATH=sessions,
+                                SCHEDULE_FUTURE_PATH=future, LIVE_AVAILABILITY_PATH=live), \
+                    patch.object(layered_day_cache, "cached_calculate", side_effect=isolated_cache), \
+                    patch.object(selector, "load_publication_demand") as demand:
+                demand.return_value = {"sessions": [], "non_session_sources": []}
+                clear = selector.build_block_schedule_page(config, replay_now=now)
+                demand.assert_called_once()
+                demand.reset_mock()
+                demand.return_value = {"sessions": [private], "non_session_sources": []}
+                occupied = selector.build_block_schedule_page(config, replay_now=now)
+                demand.assert_called_once()
+                # A missing input must still fail, never mean zero occupancy.
+                sessions.unlink()
+                with self.assertRaisesRegex(selector.BlockSelectorInputError, "Required real input is missing"):
+                    selector.build_block_schedule_page(config, replay_now=now)
+
+        def pediatric_starts(payload):
+            artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
+            self.assertNotIn("synthetic-private-occupied", json.dumps(artifact))
+            return {offer["startTime"] for offer in artifact_offers(artifact)
+                    if offer.get("date") == day and str(offer.get("courseId")) == "251545"}
+
+        self.assertIn("15:30", pediatric_starts(clear),
+                      "clear-day positive control must produce a real offer")
+        self.assertNotIn("15:30", pediatric_starts(occupied))
+        self.assertTrue(all(offer.get("session_id") != "synthetic-private-occupied"
+                            for offer in occupied["offers"]))
 
     def test_family_cpr_config_uses_authoritative_course_id_and_duration(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()

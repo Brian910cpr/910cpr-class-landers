@@ -21,7 +21,7 @@ if str(ROOT) not in sys.path:
 
 from scripts import generate_dynamic_offers
 from scripts.anchor_state import anchor_promotion_reason
-from scripts.apply_anchor_policy import sessions_with_canonical_demand, resolve_selector_payload
+from scripts.apply_anchor_policy import apply_demand_projection, resolve_selector_payload
 from scripts.canonical_scheduling_demand import load_publication_demand
 from scripts.build_seed_appointment_url_preview import (
     active_containers,
@@ -1224,8 +1224,8 @@ def build_block_schedule_page(page_config: dict[str, Any], *, replay_now: dateti
     }
     # Candidate consolidation and final daily_anchor_stack_v1 must read the same
     # canonical demand snapshot. Legacy seat snapshots cannot create anchors here.
-    loaded["schedule_future"]["sessions"], _demand_audit = sessions_with_canonical_demand(
-        loaded["schedule_future"].get("sessions", [])
+    loaded["schedule_future"]["sessions"], _demand_audit = apply_demand_projection(
+        loaded["schedule_future"].get("sessions", []), loaded["canonical_demand"]
     )
     course_rules = course_rules_by_id(read_required_json(COURSE_RULES_PATH))
     course_catalog = courses_by_id(loaded["course_catalog"])
