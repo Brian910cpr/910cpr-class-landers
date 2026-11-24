@@ -540,6 +540,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         for course_id, family in (
             ("209806", "BLS"), ("241108", "ACLS"), ("209805", "PALS"),
             ("344085", "Heartsaver"), ("445670", "HSI"), ("248288", "ARC"),
+            ("252737", "Family CPR"),
         ):
             with self.subTest(course_id=course_id, family=family):
                 self.assertEqual([], block_start_time_selector.public_policy_reasons(
@@ -848,18 +849,33 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             )
             self.assertFalse(conflict, reason)
 
-    def test_family_cpr_artifact_excludes_past_and_minimum_lead_offers(self):
+    def test_family_cpr_artifact_respects_publication_clock_and_route_type(self):
         artifact = json.loads((ROOT / "docs" / "data" / "block-selector-availability" / "family_cpr.json").read_text(encoding="utf-8"))
         offers = artifact_offers(artifact)
         self.assertGreater(len(offers), 0)
-        reference = block_start_time_selector.selector_reference_datetime()
-        cutoff = reference + block_start_time_selector.timedelta(hours=24)
+        # A committed artifact is a historical snapshot, not live availability.
+        # The hosted observer separately checks actual wall-clock freshness.
+        reference = block_start_time_selector.parse_dt(artifact["generatedAt"])
+        self.assertIsNotNone(reference)
         for offer in offers:
             with self.subTest(date=offer.get("date"), start=offer.get("startTime")):
                 start = datetime.fromisoformat(f"{offer['date']}T{offer['startTime']}:00")
-                self.assertGreaterEqual(start, cutoff)
+                self.assertGreaterEqual(start, reference)
                 self.assertEqual("252737", offer.get("courseId"))
-                self.assertIn("courseId=252737", offer.get("appointmentUrl", ""))
+                route = urlparse(offer.get("registrationUrl") or offer.get("appointmentUrl") or "")
+                query = parse_qs(route.query)
+                self.assertEqual("https", route.scheme)
+                self.assertEqual("coastalcprtraining.enrollware.com", route.hostname)
+                self.assertEqual("/enroll", route.path)
+                if offer.get("offerType") == "seated_class":
+                    # Existing class registration uses the class ID, not an appointment container.
+                    self.assertTrue(query.get("id", [""])[0])
+                    self.assertNotIn("appointmentDayId", query)
+                else:
+                    self.assertGreaterEqual(start, reference + timedelta(hours=24))
+                    self.assertEqual(["252737"], query.get("courseId"))
+                    self.assertTrue(query.get("appointmentDayId", [""])[0])
+                    self.assertTrue(query.get("startTime", [""])[0])
 
     def test_public_artifact_uses_only_public_double_colon_locations(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
