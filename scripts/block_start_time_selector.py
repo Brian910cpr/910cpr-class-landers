@@ -686,6 +686,7 @@ def normalize_live_calendar_block_occupancy(payload: Any, allow_unresolved: bool
             )
         instructor = clean_text(block.get("instructor_name") or UNKNOWN)
         location = clean_text(block.get("location_name") or block.get("source_location") or UNKNOWN)
+        event_id = clean_text(block.get("source_event_id"))
         if instructor == UNKNOWN and location == UNKNOWN and not allow_unresolved:
             raise BlockSelectorInputError(
                 "Blocked live-calendar occupancy is missing both instructor and location: "
@@ -701,7 +702,11 @@ def normalize_live_calendar_block_occupancy(payload: Any, allow_unresolved: bool
             "source_calendar_id": clean_text(block.get("source_calendar_id") or UNKNOWN),
             "availability_location_mode": block.get("availability_location_mode"),
             "instructor_unassigned": instructor == UNKNOWN,
-            "source_event_id": clean_text(block.get("source_event_id") or UNKNOWN),
+            # A missing event ID is not evidence that all such calendar
+            # blocks are the same event. Keep each input row as a distinct
+            # hard block within this snapshot; do not create seated demand.
+            "source_event_id": (event_id if event_id and event_id.casefold() != UNKNOWN.casefold()
+                                else f"live_availability_snapshot.blocked[{index}]"),
         })
     return out
 
