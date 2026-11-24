@@ -78,6 +78,23 @@ def _window_issue_category(issue):
     return "other_window_error"
 
 
+def coverage_complete(pages):
+    """A diagnostic comparison can run on partial coverage; release cannot."""
+    if set(pages) != EXPECTED_FAMILIES:
+        return False
+    for row in pages.values():
+        counts = row.get("counts")
+        if not isinstance(counts, dict):
+            return False
+        total, evaluated, failed = (counts.get(k) for k in
+                                    ("input_windows", "evaluated_windows", "failed_windows"))
+        if any(type(n) is not int or n < 0 for n in (total, evaluated, failed)):
+            return False
+        if total == 0 or evaluated != total or failed != 0:
+            return False
+    return True
+
+
 def public_safe_summary(proof):
     """Aggregate a real frozen replay without emitting source identities or slot times.
 
@@ -94,7 +111,9 @@ def public_safe_summary(proof):
     safe = {
         "published": False,
         "calculation_completed": bool(proof.get("calculation_completed")),
-        "release_passed": bool(proof.get("release_passed")),
+        "diagnostic_passed": proof.get("diagnostic_passed") is True,
+        "release_passed": (proof.get("diagnostic_passed") is True and
+                           coverage_complete(proof.get("pages") or {})),
         "source_snapshot_unchanged": True,
         "source_snapshot_sha256": proof["source_snapshot_sha256"],
         "replay_clock_utc": proof["replay_clock_utc"],
@@ -151,7 +170,7 @@ def compare_safe_summaries(main, draft):
         if (report.get("published") is not False or
                 report.get("source_snapshot_unchanged") is not True or
                 report.get("calculation_completed") is not True or
-                report.get("release_passed") is not True):
+                report.get("diagnostic_passed") is not True):
             raise ValueError("Main/draft comparison requires completed, unpublished, frozen replays")
         if any(field not in report for field in fields):
             raise ValueError("Main/draft comparison missing snapshot or horizon evidence")
@@ -203,9 +222,19 @@ def compare_safe_summaries(main, draft):
             changed_days += int(changed)
         for values in aggregate.values():
             values["delta"] = values["draft"] - values["main"]
-        families[family] = {"offer_roles": aggregate, "days_with_different_counts": changed_days}
+        coverage = {}
+        for label, report in (("main", main), ("draft", draft)):
+            counts = report["pages"][family].get("counts") or {}
+            coverage[label] = {
+                key: counts.get(key) if type(counts.get(key)) is int and counts[key] >= 0 else None
+                for key in ("input_windows", "evaluated_windows", "failed_windows")
+            }
+        families[family] = {"offer_roles": aggregate, "days_with_different_counts": changed_days,
+                            "window_coverage": coverage}
     return {"published": False, "same_source_verified": True,
             "registration_or_checkout_proven": False,
+            "main_release_passed": main.get("release_passed") is True and coverage_complete(main["pages"]),
+            "draft_release_passed": draft.get("release_passed") is True and coverage_complete(draft["pages"]),
             "source_snapshot_sha256": main["source_snapshot_sha256"],
             "replay_clock_utc": main["replay_clock_utc"],
             "horizon_start": main["horizon_start"], "horizon_end": main["horizon_end"],
@@ -257,14 +286,20 @@ def run(*, replay_clock_utc: datetime | None = None):
         if not result['source_snapshot_unchanged']:
             raise RuntimeError('Read-only V2 source changed during replay; no publication')
         result['calculation_completed']=True
-        result['release_passed']=result['source_snapshot_unchanged'] and all(
-            not (row['counts'].get('input_windows',0)>0 and row['counts'].get('evaluated_windows',0)==0)
-            for row in result['pages'].values())
+        result['diagnostic_passed'] = (result['source_snapshot_unchanged'] and
+            set(result['pages']) == EXPECTED_FAMILIES and all(
+                isinstance(row.get('counts'), dict) and
+                type(row['counts'].get('input_windows')) is int and
+                type(row['counts'].get('evaluated_windows')) is int and
+                0 < row['counts']['evaluated_windows'] <= row['counts']['input_windows']
+                for row in result['pages'].values()))
+        result['release_passed'] = (result['diagnostic_passed'] and
+                                    coverage_complete(result['pages']))
     finally:
         policy_path.write_bytes(original)
         (output/'proof.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
     print(json.dumps(result,indent=2))
-    if not result.get("release_passed"):
+    if not result.get("diagnostic_passed"):
         raise RuntimeError("V2 could not evaluate current source windows; publication remains stopped")
 
 if __name__=='__main__':run()

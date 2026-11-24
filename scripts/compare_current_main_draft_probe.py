@@ -132,7 +132,7 @@ def execute() -> dict:
         raise ComparisonBlocked("draft_proof_invalid") from exc
     clock = _load_clock(draft_proof)
     draft_safe = public_safe_summary(draft_proof)
-    if draft_safe["calculation_completed"] is not True or draft_safe["release_passed"] is not True:
+    if draft_safe["calculation_completed"] is not True or draft_safe["diagnostic_passed"] is not True:
         raise ComparisonBlocked("draft_engine_release_not_passed")
     # The V2 probe fingerprints a *temporary active-mode policy*. After its
     # finally block restores that file, the ordinary on-disk digest must be

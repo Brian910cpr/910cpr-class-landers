@@ -330,8 +330,8 @@ jobs:
           safe = public_safe_summary(proof)
           target = source.with_name('public_safe_summary.json')
           target.write_text(json.dumps(safe, indent=2), encoding='utf-8')
-          print('Read-only V2 source replay:', json.dumps({'published': False, 'calculation_completed': safe['calculation_completed'], 'release_passed': safe['release_passed'], 'canonical_session_count': safe['canonical_session_count'], 'calendar_coverage_count': safe['calendar_coverage_count'], 'pages': sorted(safe['pages'])}))
-          if not safe['calculation_completed'] or not safe['release_passed'] or not safe['source_snapshot_unchanged'] or not (safe['canonical_session_count'] or 0):
+          print('Read-only V2 source replay:', json.dumps({'published': False, 'calculation_completed': safe['calculation_completed'], 'diagnostic_passed': safe['diagnostic_passed'], 'release_passed': safe['release_passed'], 'canonical_session_count': safe['canonical_session_count'], 'calendar_coverage_count': safe['calendar_coverage_count'], 'pages': sorted(safe['pages'])}))
+          if not safe['calculation_completed'] or not safe['diagnostic_passed'] or not safe['source_snapshot_unchanged'] or not (safe['canonical_session_count'] or 0):
               raise SystemExit('V2 source proof incomplete: leaving public inventory and checkout unchanged')
           PY
       - name: Compare actual current-main and draft V2 selectors on frozen sources

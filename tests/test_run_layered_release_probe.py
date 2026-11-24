@@ -46,7 +46,7 @@ class FrozenSourceReplayTests(unittest.TestCase):
             "canonical_session_count": 26,
             "calendar_coverage_count": 2,
             "calculation_completed": True,
-            "release_passed": True,
+            "diagnostic_passed": True, "release_passed": True,
             "pages": {
                 "bls": {
                     "day_patterns": {
@@ -74,6 +74,8 @@ class FrozenSourceReplayTests(unittest.TestCase):
         }
         safe = probe.public_safe_summary(proof)
         self.assertFalse(safe["published"])
+        self.assertTrue(safe["diagnostic_passed"])
+        self.assertFalse(safe["release_passed"])
         self.assertEqual(safe["horizon_days"], 90)
         self.assertEqual(safe["horizon_start"], "2026-11-22")
         self.assertEqual(safe["horizon_end"], "2027-02-19")
@@ -117,7 +119,7 @@ class FrozenSourceReplayTests(unittest.TestCase):
         days = [(first + probe.timedelta(days=i)).date().isoformat() for i in range(90)]
         return {
             "published": False, "source_snapshot_unchanged": True,
-            "calculation_completed": True, "release_passed": True,
+            "calculation_completed": True, "diagnostic_passed": True, "release_passed": True,
             "source_snapshot_sha256": "a" * 64,
             "replay_clock_utc": "2026-11-22T08:18:24+00:00",
             "horizon_start": days[0], "horizon_end": days[-1], "horizon_days": 90,
@@ -140,6 +142,25 @@ class FrozenSourceReplayTests(unittest.TestCase):
                          {"main": 90, "draft": 92, "delta": 2})
         self.assertEqual(delta["families"]["bls"]["offer_roles"]["barnacle"]["delta"], 1)
         self.assertNotIn("ninety_day_offer_counts", delta["families"]["bls"])
+
+    def test_partial_or_missing_window_coverage_is_not_release_success(self):
+        main = self._comparable_replay()
+        for row in main["pages"].values():
+            row["counts"] = {"input_windows": 147, "evaluated_windows": 147, "failed_windows": 0}
+        self.assertTrue(probe.coverage_complete(main["pages"]))
+        draft = json.loads(json.dumps(main))
+        draft["pages"]["acls"]["counts"].update(evaluated_windows=136, failed_windows=11)
+        self.assertFalse(probe.coverage_complete(draft["pages"]))
+        delta = probe.compare_safe_summaries(main, draft)
+        self.assertTrue(delta["same_source_verified"])
+        self.assertTrue(delta["main_release_passed"])
+        self.assertFalse(delta["draft_release_passed"])
+        self.assertEqual(delta["families"]["acls"]["window_coverage"]["draft"]["failed_windows"], 11)
+        for bad_counts in ({}, {"input_windows": 0, "evaluated_windows": 0, "failed_windows": 0},
+                           {"input_windows": 1, "evaluated_windows": 1, "failed_windows": False},
+                           {"input_windows": 2, "evaluated_windows": 1, "failed_windows": 0}):
+            draft["pages"]["acls"]["counts"] = bad_counts
+            self.assertFalse(probe.coverage_complete(draft["pages"]))
 
     def test_main_draft_requires_all_eight_real_family_keys(self):
         main = self._comparable_replay()
@@ -207,7 +228,7 @@ class FrozenSourceReplayTests(unittest.TestCase):
         for field, wrong in (
             ("published", True), ("source_snapshot_unchanged", False),
             ("calculation_completed", False),
-            ("release_passed", False),
+            ("diagnostic_passed", False),
         ):
             bad = json.loads(json.dumps(main))
             bad[field] = wrong
