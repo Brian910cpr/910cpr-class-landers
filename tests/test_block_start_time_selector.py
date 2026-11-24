@@ -342,28 +342,46 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             ),
         )
 
-    def test_august_29_30_31_real_feeds_keep_only_fitting_cross_group_barnacles(self):
-        feed_dir = block_start_time_selector.ROOT / "docs" / "data" / "block-selector-availability"
-        schedule = json.loads((block_start_time_selector.SCHEDULE_FUTURE_PATH).read_text(encoding="utf-8"))
-        anchors = {
-            day: {(str(item.get("course_id")), str(item.get("start_at"))[11:16]) for item in schedule["sessions"] if str(item.get("start_at", "")).startswith(day)}
-            for day in ("2026-08-29", "2026-08-30", "2026-08-31")
-        }
-        self.assertEqual({("209806", "09:30"), ("351632", "11:30")}, anchors["2026-08-29"])
-        self.assertEqual({("209806", "14:00")}, anchors["2026-08-30"])
-        self.assertEqual({("209811", "13:00"), ("209818", "14:00")}, anchors["2026-08-31"])
-
-        def starts(feed_name, day, course_id):
-            payload = json.loads((feed_dir / f"{feed_name}.json").read_text(encoding="utf-8"))
-            date_row = next(item for item in payload["dates"] if item["date"] == day)
-            return [slot["startTime"] for slot in date_row["startTimes"] if any(course["courseId"] == course_id for course in slot["courses"])]
-
-        self.assertEqual(["11:30"], starts("heartsaver", "2026-08-29", "351632"))
-        self.assertEqual([], starts("heartsaver", "2026-08-29", "251545"))
-        self.assertEqual(["17:00", "17:30", "18:00", "18:30", "19:00"], starts("heartsaver", "2026-08-29", "344085"))
-        self.assertEqual(["14:00"], starts("bls", "2026-08-30", "209806"))
-        self.assertTrue(starts("bls", "2026-08-30", "210549"))
-        self.assertTrue(starts("heartsaver", "2026-08-31", "351632"))
+    def test_fixed_source_clear_shell_and_registered_days_keep_only_fitting_bookends(self):
+        # A mutable published feed cannot replay an August scheduling decision.
+        # Exercise the real builder against one controlled window and change
+        # only the authoritative demand. Physical geometry remains identical.
+        with self.synthetic_selector_window() as (selector, now, day, room, instructor, sessions, demand):
+            config = selector.load_block_schedule_page_configs()["family_cpr"]
+            clear = selector.build_block_schedule_page(config, replay_now=now)
+            clear_offers = [o for o in clear["offers"] if o["date"] == day]
+            self.assertGreater(len(clear_offers), 2)
+            self.assertEqual({"open_day"}, {o["scheduleRole"] for o in clear_offers})
+            starts = sorted({o["startTime"] for o in clear_offers})
+            for start in ("14:00", "14:30", "15:00", "15:30"):
+                self.assertIn(start, starts)
+            shell = {
+                "canonical_session_id": "synthetic-cross-family-shell",
+                "session_status": "scheduled", "visibility": "private",
+                "public_direct_booking": False, "registration_status": "closed",
+                "start_at": day + "T14:00:00-04:00",
+                "end_at": day + "T17:00:00-04:00",
+                "scheduler_course_id": "359474",
+                "location_name": room, "lead_instructor_name": instructor,
+                "count_available": True, "active_registration_count": 0,
+                "operational_has_active_seat": False,
+            }
+            demand.return_value = {"sessions": [shell], "non_session_sources": []}
+            empty = selector.build_block_schedule_page(config, replay_now=now)
+            empty_offers = [o for o in empty["offers"] if o["date"] == day]
+            self.assertGreater(len(empty_offers), 2, empty["rejectionReasonCounts"])
+            self.assertEqual({"open_day"}, {o["scheduleRole"] for o in empty_offers})
+            demand.return_value = {"sessions": [{**shell,
+                "active_registration_count": 1, "operational_has_active_seat": True}],
+                "non_session_sources": []}
+            occupied = selector.build_block_schedule_page(config, replay_now=now)
+            bookends = [o for o in occupied["offers"] if o["date"] == day]
+            self.assertGreater(len(bookends), 0, occupied["rejectionReasonCounts"])
+            self.assertEqual({"barnacle"}, {o["scheduleRole"] for o in bookends})
+            self.assertTrue(all(o["schedulerConsumptionEnd"] == "14:00"
+                                or o["startTime"] == "17:00" for o in bookends), bookends)
+            self.assertNotIn("synthetic-cross-family-shell", json.dumps(
+                build_bls_block_schedule_pilot.public_selector_availability_payload(occupied)))
 
     def test_shared_board_cooldown_suppresses_booking_day_and_following_six_days(self):
         anchors = [{"date": "2026-07-20", "startTime": "09:00", "sessionId": "arc-booking"}]
@@ -1128,8 +1146,21 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertEqual("selector-resolved-availability.v1", artifact["schemaVersion"])
         self.assertEqual(1, sum(1 for offer in offers if offer.get("courseId") == "241108"))
         self.assertEqual(1, sum(1 for offer in offers if offer.get("courseId") == "209818"))
-        self.assertEqual(0, sum(1 for offer in offers if offer.get("courseId") == "209811"))
-        self.assertEqual({"seated_class"}, {offer.get("offerType") for offer in offers})
+        # Source-denied HeartCode classes are not joinable, but a qualified
+        # new skills appointment may legally attach to the first occupied class.
+        skill_offers = [offer for offer in guarded["offers"] if offer.get("courseId") == "209811"]
+        self.assertEqual(1, len(skill_offers), skill_offers)
+        skill = skill_offers[0]
+        first = next(offer for offer in guarded["offers"]
+                     if offer.get("offerType") == "seated_class" and offer["date"] == "2026-10-11")
+        self.assertEqual("dynamic_appointment", skill["offerType"], skill)
+        self.assertEqual("barnacle", skill["scheduleRole"], skill)
+        self.assertEqual(first["date"], skill["date"], skill)
+        self.assertEqual(first["schedulerConsumptionEnd"], skill["startTime"], skill)
+        route = parse_qs(urlparse(skill["registrationUrl"]).query)
+        self.assertEqual(["209811"], route.get("courseId"))
+        self.assertTrue(route.get("appointmentDayId"))
+        self.assertEqual({"seated_class", "dynamic_appointment"}, {offer.get("offerType") for offer in offers})
         for denied_id in ("990000002", "990000003", "990000004"):
             self.assertNotIn(denied_id, json.dumps(artifact, ensure_ascii=False))
 
@@ -1149,8 +1180,21 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         offers = artifact_offers(artifact)
         self.assertEqual(1, sum(1 for offer in offers if offer.get("courseId") == "209805"))
         self.assertEqual(1, sum(1 for offer in offers if offer.get("courseId") == "251496"))
-        self.assertEqual(0, sum(1 for offer in offers if offer.get("courseId") == "209812"))
-        self.assertEqual({"seated_class"}, {offer.get("offerType") for offer in offers})
+        # Source-denied HeartCode classes are not joinable, but a qualified
+        # new skills appointment may legally attach to the first occupied class.
+        skill_offers = [offer for offer in guarded["offers"] if offer.get("courseId") == "209812"]
+        self.assertEqual(1, len(skill_offers), skill_offers)
+        skill = skill_offers[0]
+        first = next(offer for offer in guarded["offers"]
+                     if offer.get("offerType") == "seated_class" and offer["date"] == "2026-10-11")
+        self.assertEqual("dynamic_appointment", skill["offerType"], skill)
+        self.assertEqual("barnacle", skill["scheduleRole"], skill)
+        self.assertEqual(first["date"], skill["date"], skill)
+        self.assertEqual(first["schedulerConsumptionEnd"], skill["startTime"], skill)
+        route = parse_qs(urlparse(skill["registrationUrl"]).query)
+        self.assertEqual(["209812"], route.get("courseId"))
+        self.assertTrue(route.get("appointmentDayId"))
+        self.assertEqual({"seated_class", "dynamic_appointment"}, {offer.get("offerType") for offer in offers})
 
     def test_hsi_selector_shell_uses_resolved_authority_without_static_times(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
