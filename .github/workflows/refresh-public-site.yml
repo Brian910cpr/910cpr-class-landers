@@ -15,6 +15,8 @@ on:
       - main
     paths:
       - '.github/workflows/refresh-public-site.yml'
+      - 'scripts/publication_renewal.py'
+      - 'tests/test_public_refresh_renewal.py'
       - 'scripts/fetch_canonical_scheduling_demand.py'
       - 'tests/test_fetch_canonical_scheduling_demand.py'
       - 'scripts/audit_sitewide_links.py'
@@ -143,15 +145,9 @@ jobs:
           # Missing/invalid/near-expiry selectors require fresh source validation.
           # 30-minute cadence + 15-minute build/queue/deploy budget.
           # Renew source-validated publication; never extend an existing lease.
-          $renewBefore = [DateTimeOffset]::UtcNow.AddMinutes(45)
-          $renewPublication = $false
-          foreach ($pageKey in @('bls', 'heartsaver', 'acls', 'pals')) {
-            try {
-              $publication = Get-Content -Raw "docs/data/block-selector-availability/$pageKey.json" | ConvertFrom-Json
-              $expires = [DateTimeOffset]::Parse($publication.validUntil)
-              if ($expires -le $renewBefore) { $renewPublication = $true }
-            } catch { $renewPublication = $true }
-          }
+          $renewResult = python -m scripts.publication_renewal --margin-minutes 45
+          if ($LASTEXITCODE -ne 0 -or $renewResult -notin @('true', 'false')) { throw 'Publication renewal check failed; preserving published inventory.' }
+          $renewPublication = ($renewResult -eq 'true')
           $rebuildRequired = ($currentHash -ne $previousHash) -or $renewPublication
           "changed=$(if ($rebuildRequired) { 'true' } else { 'false' })" >> $env:GITHUB_OUTPUT
           Write-Host "Canonical demand changed: $($currentHash -ne $previousHash); publication renewal required: $renewPublication"
