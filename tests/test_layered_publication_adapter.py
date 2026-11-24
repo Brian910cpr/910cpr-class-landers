@@ -1415,6 +1415,42 @@ class LayeredPublicationTests(unittest.TestCase):
         self.sources = []
 
 
+    def test_normalized_legacy_mirror_keeps_explicit_route_denials(self):
+        from scripts.block_start_time_selector import build_occupancy
+        route = 'https://fixture.test/enroll?id=fixture-class-720'
+        row = dict(session_id='fixture-class-720', course_id='210549',
+                   start_at=self.at(11, '12:00').isoformat(),
+                   end_at=self.at(11, '13:00').isoformat(),
+                   lead_instructor_name='Brian Ennis', location_name=self.room,
+                   course_name='Synthetic skills class', registration_url=route)
+        seated = dict(session_id=row['session_id'], date='2026-10-11',
+                      startTime='12:00', courseId='210549',
+                      courseName='Synthetic skills class', offerType='seated_class',
+                      registrationUrl=route)
+        for denial in ({}, {'visibility': 'unlisted'}, {'registration_status': 'closed'},
+                       {'registration_status': 'full'}, {'session_status': 'cancelled'},
+                       {'public_direct_booking': False}, {'is_full': True}):
+            with self.subTest(denial=denial):
+                self.sources = []
+                self.add(11, '12:00', '13:00', count=1, visibility='public',
+                         external_class_id=row['session_id'], registration_url=route)
+                mirror = build_occupancy(dict(sessions_current={'sessions': [dict(row, **denial)]},
+                    schedule_future={'sessions': []}, location_resource_map=self.resources),
+                    {}, allow_unresolved=True)
+                self.assertEqual(len(mirror), 1)
+                self.sources.extend(mirror)
+                payload = self.payload([seated])
+                public = public_selector_availability_payload(payload)
+                actual = [offer for offer in payload['offers']
+                          if offer.get('offerType') == 'seated_class']
+                self.assertEqual(len(actual), 0 if denial else 1)
+                self.assertTrue(any(source.get('active_registration_count') == 1
+                                    for source in payload['layeredDiagnostics']['projected_sources']))
+                if denial:
+                    self.assertIn('nonpublic_or_unverified_existing_booking_choice',
+                                  payload['rejectionReasonCounts'])
+                    self.assertNotIn(route, json.dumps(public))
+
     def test_mirrored_closed_route_cannot_override_public_canonical_seat(self):
         canonical = self.add(11, '12:00', '13:00', cid='210549', count=1,
                              visibility='public', external_class_id='legacy-class-720')

@@ -733,6 +733,16 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
                     count_available=session.get("count_available") is True,
                     active_registration_count=session.get("active_registration_count"),
                     uncertainty_scope=session.get("uncertainty_scope", {}))
+                # A mirror may explicitly revoke a route. Preserve that denial
+                # through normalization so the publisher cannot revive it from
+                # another source. Missing flags do not imply denial or permission.
+                for field in ("visibility", "registration_status", "session_status"):
+                    if field in session:
+                        block[field] = session[field]
+                if session.get("public_direct_booking") is False:
+                    block["public_direct_booking"] = False
+                if session.get("is_full") is True:
+                    block["is_full"] = True
     calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"), allow_unresolved)
     canonical = []
     for session in loaded.get("canonical_demand", {}).get("sessions", []):
