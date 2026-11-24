@@ -1647,6 +1647,31 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         with self.assertRaises(block_start_time_selector.BlockSelectorInputError):
             block_start_time_selector.normalize_live_calendar_block_occupancy(malformed)
 
+    def test_unidentified_calendar_blocks_keep_distinct_snapshot_identities(self):
+        base = {
+            "availability_status": "blocked",
+            "instructor_name": "Brian Ennis",
+            "location_name": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
+            "availability_location_mode": "instructor_time_only",
+        }
+        rows = [
+            dict(base, start_datetime="2026-07-04T08:00:00-04:00",
+                 end_datetime="2026-07-04T09:00:00-04:00"),
+            dict(base, source_event_id="UNKNOWN", start_datetime="2026-07-04T10:00:00-04:00",
+                 end_datetime="2026-07-04T11:00:00-04:00"),
+            dict(base, source_event_id="actual-event", start_datetime="2026-07-04T12:00:00-04:00",
+                 end_datetime="2026-07-04T13:00:00-04:00"),
+        ]
+        payload = {"availability_blocks": rows}
+        actual = block_start_time_selector.normalize_live_calendar_block_occupancy(payload)
+        self.assertEqual(len(actual), 3)
+        self.assertEqual([row["source_event_id"] for row in actual],
+                         ["live_availability_snapshot.blocked[1]",
+                          "live_availability_snapshot.blocked[2]", "actual-event"])
+        self.assertEqual(actual, block_start_time_selector.normalize_live_calendar_block_occupancy(payload))
+        self.assertTrue(all(row["availability_location_mode"] == "instructor_time_only" for row in actual))
+        self.assertFalse(any(row.get("operational_has_active_seat") for row in actual))
+
     def test_blocked_calendar_occupancy_without_instructor_or_location_fails_closed(self):
         unsafe = {
             "availability_blocks": [{
