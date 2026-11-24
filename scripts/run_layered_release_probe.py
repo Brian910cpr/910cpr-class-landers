@@ -63,6 +63,17 @@ def _reason_category(reason):
 def _window_issue_category(issue):
     """Map private per-window exception text to a fixed nonidentifying taxonomy."""
     value = str(issue.get("reason") or "").casefold()
+    # Match fixed exception prefixes before inspecting the freeform suffix.
+    # Identity values can contain arbitrary source text; never echo them.
+    if value.startswith(("duplicate source id:", "duplicate durable source id",
+                         "duplicate availability source identity")):
+        return "duplicate_source_identity"
+    if value.startswith(("invalid course duration:", "invalid evidenced course duration override:")):
+        return "course_duration_policy_invalid"
+    if value.startswith("invalid slot grid"):
+        return "slot_grid_policy_invalid"
+    if value.startswith("unresolved zero-duration occupancy"):
+        return "unresolved_occupied_bounds"
     if "unresolved_occupied_bounds" in value:
         return "unresolved_occupied_bounds"
     if "travel" in value:
