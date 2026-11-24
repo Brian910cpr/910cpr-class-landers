@@ -1033,12 +1033,62 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                 for offer in offers:
                     self.assertEqual("Wilmington; Shipyard Blvd", offer.get("location"))
 
+    def build_synthetic_seated_page(self, page_key):
+        # Source-owned route, matching canonical occupied row, and explicit
+        # negative controls. No real registrations or network calls.
+        ids = {"acls": ("241108", "209818", "209811"),
+               "pals": ("209805", "251496", "209812")}[page_key]
+        with self.synthetic_selector_window() as (selector, now, day, room, instructor, sessions, demand):
+            base = datetime.fromisoformat(day + "T08:00:00-04:00")
+            rows, canonical = [], []
+            for index, (course_id, status, visibility, is_full) in enumerate((
+                (ids[0], "open", "public", False),
+                (ids[1], "open", "public", False),
+                (ids[2], "closed", "public", False),
+                (ids[2], "open", "public", True),
+                (ids[2], "open", "private", False),
+            )):
+                start = base + timedelta(days=2 * index)
+                end = start + timedelta(hours=6 if index == 0 else 4 if index == 1 else 1)
+                sid = str(990000000 + index)
+                row = {
+                    "session_id": sid, "course_id": course_id,
+                    "course_name": "Synthetic " + page_key.upper() + " class " + str(index),
+                    "start_at": start.isoformat(), "end_at": end.isoformat(),
+                    "location_name": room, "lead_instructor_name": instructor,
+                    "session_status": "scheduled", "registration_status": status,
+                    "visibility": visibility, "is_full": is_full,
+                    "public_direct_booking": status == "open" and visibility == "public" and not is_full,
+                    "registration_url": "https://coastalcprtraining.enrollware.com/enroll?id=" + sid,
+                }
+                rows.append(row)
+                canonical.append({
+                    **row, "canonical_session_id": "synthetic-" + sid,
+                    "external_class_id": sid, "scheduler_course_id": course_id,
+                    "count_available": True, "active_registration_count": 1,
+                    "operational_has_active_seat": True,
+                })
+            for path in (sessions, selector.SCHEDULE_FUTURE_PATH):
+                path.write_text(json.dumps({"sessions": rows}), encoding="utf-8")
+            demand.return_value = {"sessions": canonical, "non_session_sources": []}
+            payload = selector.build_block_schedule_page(
+                selector.load_block_schedule_page_configs()[page_key], replay_now=now)
+            guarded = selector.apply_final_live_availability_guard(payload)
+            occupancy = selector.build_occupancy({
+                "sessions_current": {"sessions": rows}, "schedule_future": {"sessions": rows},
+                "live_availability_snapshot": selector.read_required_json(selector.LIVE_AVAILABILITY_PATH),
+                "location_resource_map": selector.read_required_json(selector.LOCATION_RESOURCE_MAP_PATH),
+                "canonical_demand": demand.return_value,
+            }, selector.course_rules_by_id(selector.read_required_json(selector.COURSE_RULES_PATH)),
+                allow_unresolved=True)
+            return guarded, occupancy
+
     def test_public_acls_pals_artifact_uses_only_public_locations(self):
         # Existing-class location proof is separate from dynamic availability.
         configs = block_start_time_selector.load_block_schedule_page_configs()
         for page_key in ("acls", "pals"):
             with self.subTest(page_key=page_key):
-                payload = block_start_time_selector.build_block_schedule_page(configs[page_key])
+                payload, _occupancy = self.build_synthetic_seated_page(page_key)
                 artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
                 self.assertEqual("selector-resolved-availability.v1", artifact["schemaVersion"])
                 self.assertGreater(len(artifact_offers(artifact)), 0)
@@ -1061,8 +1111,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
 
     def test_acls_selector_shell_and_artifact_support_all_variants_without_static_times(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
-        payload = block_start_time_selector.build_block_schedule_page(configs["acls"])
-        guarded = block_start_time_selector.apply_final_live_availability_guard(payload)
+        guarded, _occupancy = self.build_synthetic_seated_page("acls")
         artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(guarded)
         html = build_bls_block_schedule_pilot.render_html(guarded)
         course_ids = {option["course_id"] for option in configs["acls"]["course_options"]}
@@ -1077,17 +1126,16 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
         offers = artifact_offers(artifact)
         self.assertEqual("selector-resolved-availability.v1", artifact["schemaVersion"])
-        self.assertEqual(7, sum(1 for offer in offers if offer.get("courseId") == "241108"))
-        self.assertEqual(7, sum(1 for offer in offers if offer.get("courseId") == "209818"))
+        self.assertEqual(1, sum(1 for offer in offers if offer.get("courseId") == "241108"))
+        self.assertEqual(1, sum(1 for offer in offers if offer.get("courseId") == "209818"))
         self.assertEqual(0, sum(1 for offer in offers if offer.get("courseId") == "209811"))
         self.assertEqual({"seated_class"}, {offer.get("offerType") for offer in offers})
-        self.assertNotIn("12774086", json.dumps(artifact, ensure_ascii=False))
-        self.assertNotIn("12774096", json.dumps(artifact, ensure_ascii=False))
+        for denied_id in ("990000002", "990000003", "990000004"):
+            self.assertNotIn(denied_id, json.dumps(artifact, ensure_ascii=False))
 
     def test_pals_selector_shell_and_artifact_support_all_variants_without_static_times(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
-        payload = block_start_time_selector.build_block_schedule_page(configs["pals"])
-        guarded = block_start_time_selector.apply_final_live_availability_guard(payload)
+        guarded, _occupancy = self.build_synthetic_seated_page("pals")
         artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(guarded)
         html = build_bls_block_schedule_pilot.render_html(guarded)
         course_ids = {option["course_id"] for option in configs["pals"]["course_options"]}
@@ -1099,8 +1147,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("const embeddedScheduleDates = []", html)
         self.assertNotIn("coastalcprtraining.enrollware.com/enroll?appointmentDayId", html)
         offers = artifact_offers(artifact)
-        self.assertEqual(7, sum(1 for offer in offers if offer.get("courseId") == "209805"))
-        self.assertEqual(7, sum(1 for offer in offers if offer.get("courseId") == "251496"))
+        self.assertEqual(1, sum(1 for offer in offers if offer.get("courseId") == "209805"))
+        self.assertEqual(1, sum(1 for offer in offers if offer.get("courseId") == "251496"))
         self.assertEqual(0, sum(1 for offer in offers if offer.get("courseId") == "209812"))
         self.assertEqual({"seated_class"}, {offer.get("offerType") for offer in offers})
 
@@ -1279,26 +1327,18 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         )[0])
 
     def test_closed_full_classes_remain_occupancy_but_not_direct_selector_offers(self):
-        configs = block_start_time_selector.load_block_schedule_page_configs()
-        payload = block_start_time_selector.build_block_schedule_page(configs["acls"])
-        artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(
-            block_start_time_selector.apply_final_live_availability_guard(payload)
-        )
-        artifact_json = json.dumps(artifact, ensure_ascii=False)
-        self.assertNotIn("12774086", artifact_json)
-        self.assertNotIn("12774096", artifact_json)
-        occupancy = block_start_time_selector.build_occupancy(
-            {
-                "sessions_current": block_start_time_selector.read_required_json(block_start_time_selector.SESSIONS_CURRENT_PATH),
-                "schedule_future": block_start_time_selector.read_required_json(block_start_time_selector.SCHEDULE_FUTURE_PATH),
-                "location_resource_map": block_start_time_selector.read_required_json(block_start_time_selector.LOCATION_RESOURCE_MAP_PATH),
-            },
-            block_start_time_selector.course_rules_by_id(
-                block_start_time_selector.read_required_json(block_start_time_selector.COURSE_RULES_PATH)
-            ),
-        )
-        occupancy_text = json.dumps(occupancy, default=str, ensure_ascii=False)
-        self.assertIn("AHA ACLS HeartCode", occupancy_text)
+        for page_key in ("acls", "pals"):
+            with self.subTest(page_key=page_key):
+                payload, occupancy = self.build_synthetic_seated_page(page_key)
+                artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
+                artifact_json = json.dumps(artifact, ensure_ascii=False)
+                for allowed_id in ("990000000", "990000001"):
+                    self.assertIn(allowed_id, artifact_json)
+                for denied_id in ("990000002", "990000003", "990000004"):
+                    self.assertNotIn(denied_id, artifact_json)
+                    self.assertTrue(any(block.get("source_event_id") == "synthetic-" + denied_id
+                                        and block.get("active_registration_count") == 1
+                                        for block in occupancy))
 
     def test_acls_and_pals_hub_schedule_links_target_real_selector_pages(self):
         slug_hubs = json.loads((ROOT / "data" / "config" / "slug_hubs.json").read_text(encoding="utf-8"))
