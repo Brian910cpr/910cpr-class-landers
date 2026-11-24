@@ -935,18 +935,40 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             self.assertNotIn("Synthetic private training location", json.dumps(artifact))
 
     def test_family_cpr_offers_are_unique_and_non_overlapping(self):
-        configs = block_start_time_selector.load_block_schedule_page_configs()
-        payload = block_start_time_selector.build_block_schedule_page(configs["family_cpr"])
-        loaded = {
-            "live_availability_snapshot": block_start_time_selector.read_required_json(block_start_time_selector.LIVE_AVAILABILITY_PATH),
-            "location_resource_map": block_start_time_selector.read_required_json(block_start_time_selector.LOCATION_RESOURCE_MAP_PATH),
-            "sessions_current": block_start_time_selector.read_required_json(block_start_time_selector.SESSIONS_CURRENT_PATH),
-        }
-        rules = block_start_time_selector.course_rules_by_id(
-            block_start_time_selector.read_required_json(block_start_time_selector.COURSE_RULES_PATH)
-        )
-        occupancy = block_start_time_selector.build_occupancy(loaded, rules)
-        occupancy_index = block_start_time_selector.generate_dynamic_offers.occupancy_by_date(occupancy)
+        with self.synthetic_selector_window() as (selector, now, day, room, instructor, sessions, demand):
+            config = selector.load_block_schedule_page_configs()["family_cpr"]
+            clear = selector.build_block_schedule_page(config, replay_now=now)
+            self.assertGreater(len(clear["offers"]), 0)
+            private = {
+                "canonical_session_id": "synthetic-private-family-conflict",
+                "session_status": "scheduled", "visibility": "private",
+                "public_direct_booking": False, "registration_status": "closed",
+                "start_at": day + "T14:00:00-04:00",
+                "end_at": day + "T17:00:00-04:00",
+                "scheduler_course_id": "359474",
+                "location_name": room, "lead_instructor_name": instructor,
+                "count_available": True, "active_registration_count": 1,
+                "operational_has_active_seat": True,
+            }
+            self.assertTrue(any(offer["date"] == day and offer["startTime"] == "15:00"
+                                for offer in clear["offers"]))
+            demand.return_value = {"sessions": [private], "non_session_sources": []}
+            payload = selector.build_block_schedule_page(config, replay_now=now)
+            loaded = {
+                "live_availability_snapshot": selector.read_required_json(selector.LIVE_AVAILABILITY_PATH),
+                "location_resource_map": selector.read_required_json(selector.LOCATION_RESOURCE_MAP_PATH),
+                "sessions_current": selector.read_required_json(selector.SESSIONS_CURRENT_PATH),
+                "schedule_future": selector.read_required_json(selector.SCHEDULE_FUTURE_PATH),
+                "canonical_demand": demand.return_value,
+            }
+            rules = selector.course_rules_by_id(selector.read_required_json(selector.COURSE_RULES_PATH))
+            occupancy = selector.build_occupancy(loaded, rules, allow_unresolved=True)
+            occupancy_index = selector.generate_dynamic_offers.occupancy_by_date(occupancy)
+        self.assertTrue(any(block.get("source_event_id") == "synthetic-private-family-conflict"
+                            for block in occupancy))
+        self.assertGreater(len(payload["offers"]), 0, "legal bookends must survive")
+        self.assertNotIn("synthetic-private-family-conflict", json.dumps(
+            build_bls_block_schedule_pilot.public_selector_availability_payload(payload)))
         seen = set()
         for offer in payload["offers"]:
             key = (
@@ -999,16 +1021,31 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
 
     def test_public_artifact_uses_only_public_double_colon_locations(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
-        for page_key in ("bls", "heartsaver", "acls", "pals", "uscg_first_aid_cpr_aed", "hsi", "family_cpr"):
+        for page_key in ("bls", "heartsaver", "arc", "uscg_first_aid_cpr_aed", "hsi", "family_cpr"):
+            with self.subTest(page_key=page_key):
+                payload = self.build_synthetic_clear_page(configs[page_key])
+                artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
+                self.assertEqual("selector-resolved-availability.v1", artifact["schemaVersion"])
+                offers = artifact_offers(artifact)
+                self.assertGreater(len(offers), 0, f"{page_key} positive public control")
+                for offer in payload["offers"]:
+                    self.assertTrue(block_start_time_selector.is_public_class_location(offer.get("location")))
+                for offer in offers:
+                    self.assertEqual("Wilmington; Shipyard Blvd", offer.get("location"))
+
+    def test_public_acls_pals_artifact_uses_only_public_locations(self):
+        # Existing-class location proof is separate from dynamic availability.
+        configs = block_start_time_selector.load_block_schedule_page_configs()
+        for page_key in ("acls", "pals"):
             with self.subTest(page_key=page_key):
                 payload = block_start_time_selector.build_block_schedule_page(configs[page_key])
                 artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
                 self.assertEqual("selector-resolved-availability.v1", artifact["schemaVersion"])
+                self.assertGreater(len(artifact_offers(artifact)), 0)
+                for offer in payload["offers"]:
+                    self.assertTrue(block_start_time_selector.is_public_class_location(offer.get("location")))
                 for offer in artifact_offers(artifact):
-                    self.assertTrue(
-                        str(offer.get("location") or "").strip().startswith("::"),
-                        f"{page_key} exposed non-public location: {offer.get('location')}",
-                    )
+                    self.assertEqual("Wilmington; Shipyard Blvd", offer.get("location"))
 
     def test_acls_and_pals_are_deployed_selector_pages(self):
         self.assertIn("acls", build_deployed_selector_pages.DEPLOYED_SELECTOR_PAGE_KEYS)
