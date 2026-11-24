@@ -30,6 +30,12 @@ on:
       - 'scripts/publish_scheduling_landscape.py'
       - 'scripts/publish_admin_reference_data.py'
       - 'scripts/block_start_time_selector.py'
+      - 'tests/test_block_start_time_selector.py'
+      - 'scripts/layered_selector_adapter.py'
+      - 'scripts/layered_scheduling_engine.py'
+      - 'tests/test_layered_selector_adapter.py'
+      - 'tests/test_compare_current_main_draft_probe.py'
+      - 'data/config/layered_scheduling_policy.json'
       - 'scripts/run_layered_release_probe.py'
       - 'scripts/compare_current_main_draft_probe.py'
       - 'tests/test_run_layered_release_probe.py'
@@ -405,6 +411,14 @@ jobs:
           summary = json.loads((root / 'public_safe_summary.json').read_text(encoding='utf-8'))
           comparison = json.loads((root / 'same_source_main_draft_comparison.json').read_text(encoding='utf-8'))
           replay = summary.get('coordinated_public_replay') or {}
+          # Expose only aggregate window counts already permitted in the safe report.
+          # No dates, source IDs, raw exception messages, or registration routes.
+          for family in sorted(summary.get('pages') or {}):
+              counts = summary['pages'][family].get('counts') or {}
+              print('Replay window counts:', family, json.dumps({
+                  key: counts.get(key) if type(counts.get(key)) is int else None
+                  for key in ('input_windows', 'evaluated_windows', 'failed_windows')
+              }, sort_keys=True))
           if not (
               summary.get('published') is False
               and summary.get('release_passed') is True
