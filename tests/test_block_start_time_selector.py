@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import unittest
+from contextlib import contextmanager
 from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -381,18 +382,22 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             )
         )
 
-    def test_arc_config_uses_one_board_for_three_courses_with_six_day_cooldown(self):
+    def test_arc_config_uses_one_board_for_three_courses_and_skills_with_six_day_cooldown(self):
         config = block_start_time_selector.load_block_schedule_page_configs()["arc"]
-        self.assertEqual(["248288", "372258", "369209"], config["allowed_course_ids"])
+        self.assertEqual(["248288", "372258", "369209", "509474"], config["allowed_course_ids"])
         self.assertEqual(6, config["shared_cooldown_days_after_booking"])
         self.assertEqual("372258", config["default_course_id"])
         self.assertEqual("/images/Logo_Vertical-Red-Cross-LTP.jpg", config["header_credential"]["image_url"])
         self.assertEqual("American Red Cross Licensed Training Provider", config["header_credential"]["title"])
-        images = {option["course_id"]: option["image_url"] for option in config["course_options"]}
+        images = {option["course_id"]: option.get("image_url") for option in config["course_options"]}
         self.assertEqual("/images/arc-in-person-training.png", images["248288"])
         self.assertEqual("/images/arc-blended-training.png", images["372258"])
         self.assertEqual("/images/arc-in-person-training.png", images["369209"])
-        self.assertTrue(all(option["image_fit"] == "cover" for option in config["course_options"]))
+        self.assertTrue(all(option["image_fit"] == "cover" for option in config["course_options"] if option["course_id"] != "509474"))
+        skills = next(option for option in config["course_options"] if option["course_id"] == "509474")
+        self.assertEqual("skills-session-only", skills["variant"])
+        self.assertEqual("/register/skills-session/", skills["native_registration_path"])
+        self.assertEqual("372258", skills["scheduling_template_course_id"])
         self.assertIs(config["include_seated_classes"], True)
 
     def test_uses_live_availability_when_present(self):
@@ -589,7 +594,10 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("availabilityReady()", html)
         self.assertIn("renderAvailabilityPlaceholder", html)
         self.assertIn("Current class times are temporarily unavailable.", html)
-        self.assertIn("course.appointmentUrl", html)
+        self.assertIn("ResolvedSelectorAvailability.registrationAction(course,", html)
+        self.assertIn("link.href = action.href", html)
+        self.assertIn("event.preventDefault()", html)
+        self.assertIn("ResolvedSelectorAvailability.datesForPublication(", html)
 
     def test_availability_artifact_keeps_future_enrollware_urls_unchanged(self):
         payload = {
@@ -648,7 +656,8 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
 
     def test_config_driven_heartsaver_page_generates_valid_schedule(self):
         configs = block_start_time_selector.load_block_schedule_page_configs()
-        payload = block_start_time_selector.build_block_schedule_page(configs["heartsaver"])
+        payload = self.build_synthetic_clear_page(configs["heartsaver"])
+        self.assertGreater(len(payload["offers"]), 0)
         self.assertEqual(payload["publicPage"], "docs/heartsaver.html")
         course_ids = {offer["courseId"] for offer in payload["offers"]}
         self.assertLessEqual(course_ids, {"344085", "209808", "209809", "329495", "351632", "251545"})
@@ -732,7 +741,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertNotIn("460465", configured_ids)
         self.assertIn("Fire Department/public-safety partner", heartsaver["course_id_notes"]["460465"])
 
-        payload = block_start_time_selector.build_block_schedule_page(heartsaver)
+        payload = self.build_synthetic_clear_page(heartsaver)
         public_ids = {offer["courseId"] for offer in payload["offers"]}
         self.assertIn("344085", public_ids)
         self.assertIn("209808", public_ids)
@@ -774,16 +783,14 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
             self.assertIn("skills-session", skills["family_group"])
             self.assertIn("Skills Session Only", skills["family_label"])
             self.assertIn("purchased and completed", skills["clarification"])
-    def test_heartsaver_artifact_excludes_newly_conflicting_pediatric_offer(self):
-        # Replay a fully synthetic calendar window twice, changing only
-        # canonical demand. Keep strict input-file checks and the real
-        # qualification, cache, route, occupancy and public serializer paths.
+    @contextmanager
+    def synthetic_selector_window(self):
+        # Fixed clock and explicit source fixtures; real builder and isolated cache.
         from tempfile import TemporaryDirectory
         from unittest.mock import patch
         from scripts import layered_day_cache
 
         selector = block_start_time_selector
-        config = selector.load_block_schedule_page_configs()["heartsaver"]
         now = datetime.fromisoformat("2026-10-05T12:00:00-04:00")
         day = "2026-10-11"
         room = ":: Wilmington; Shipyard Blvd - B"
@@ -812,17 +819,6 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                 "source": "synthetic_complete_calendar",
             }],
         }
-        private = {
-            "canonical_session_id": "synthetic-private-occupied",
-            "session_status": "scheduled", "visibility": "private",
-            "public_direct_booking": False, "registration_status": "closed",
-            "start_at": day + "T14:00:00-04:00",
-            "end_at": day + "T17:00:00-04:00",
-            "scheduler_course_id": "359474",
-            "location_name": room, "lead_instructor_name": instructor,
-            "count_available": True, "active_registration_count": 1,
-            "operational_has_active_seat": True,
-        }
         with TemporaryDirectory() as directory:
             root = Path(directory)
             sessions = root / "sessions.json"
@@ -843,16 +839,37 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
                     patch.object(layered_day_cache, "cached_calculate", side_effect=isolated_cache), \
                     patch.object(selector, "load_publication_demand") as demand:
                 demand.return_value = {"sessions": [], "non_session_sources": []}
-                clear = selector.build_block_schedule_page(config, replay_now=now)
-                demand.assert_called_once()
-                demand.reset_mock()
-                demand.return_value = {"sessions": [private], "non_session_sources": []}
-                occupied = selector.build_block_schedule_page(config, replay_now=now)
-                demand.assert_called_once()
-                # A missing input must still fail, never mean zero occupancy.
-                sessions.unlink()
-                with self.assertRaisesRegex(selector.BlockSelectorInputError, "Required real input is missing"):
-                    selector.build_block_schedule_page(config, replay_now=now)
+                yield selector, now, day, room, instructor, sessions, demand
+
+    def build_synthetic_clear_page(self, config):
+        with self.synthetic_selector_window() as (selector, now, day, room, instructor, sessions, demand):
+            result = selector.build_block_schedule_page(config, replay_now=now)
+            demand.assert_called_once()
+            return result
+
+    def test_heartsaver_artifact_excludes_newly_conflicting_pediatric_offer(self):
+        with self.synthetic_selector_window() as (selector, now, day, room, instructor, sessions, demand):
+            config = selector.load_block_schedule_page_configs()["heartsaver"]
+            private = {
+                "canonical_session_id": "synthetic-private-occupied",
+                "session_status": "scheduled", "visibility": "private",
+                "public_direct_booking": False, "registration_status": "closed",
+                "start_at": day + "T14:00:00-04:00",
+                "end_at": day + "T17:00:00-04:00",
+                "scheduler_course_id": "359474",
+                "location_name": room, "lead_instructor_name": instructor,
+                "count_available": True, "active_registration_count": 1,
+                "operational_has_active_seat": True,
+            }
+            clear = selector.build_block_schedule_page(config, replay_now=now)
+            demand.assert_called_once()
+            demand.reset_mock()
+            demand.return_value = {"sessions": [private], "non_session_sources": []}
+            occupied = selector.build_block_schedule_page(config, replay_now=now)
+            demand.assert_called_once()
+            sessions.unlink()
+            with self.assertRaisesRegex(selector.BlockSelectorInputError, "Required real input is missing"):
+                selector.build_block_schedule_page(config, replay_now=now)
 
         def pediatric_starts(payload):
             artifact = build_bls_block_schedule_pilot.public_selector_availability_payload(payload)
@@ -1340,7 +1357,7 @@ class BlockStartTimeSelectorTests(unittest.TestCase):
         self.assertIn("padding: 0 0 10px", html)
         self.assertRegex(html, r"\.rail-arrow \{\s*position: absolute;\s*top: 44px;")
         self.assertIn("transform: translateY(-50%)", html)
-        self.assertIn("height: 118px", html)
+        self.assertRegex(html, r"\.course-icon img \{\s*display: block;\s*width: 100%;\s*height: [1-9][0-9]*px;\s*object-fit: contain;")
         self.assertIn("object-fit: contain", html)
         self.assertIn("object-position: center", html)
 
