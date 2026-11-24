@@ -1,0 +1,16 @@
+{
+  "function": "scheduling-gateway",
+  "project_ref": "wktwgcnwdvbebcobgyey",
+  "verify_jwt": false,
+  "authorization_boundary": "opaque scheduling token for public routes; x-hot-sync-admin-key for issuance",
+  "runtime_tables": [
+    "landerware_scheduling_tokens",
+    "landerware_scheduling_actions",
+    "landerware_sessions",
+    "landerware_registrations",
+    "landerware_people",
+    "landerware_organizations",
+    "landerware_activity_events"
+  ],
+  "deployment_state": "not_deployed"
+}
