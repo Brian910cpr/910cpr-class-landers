@@ -419,6 +419,26 @@ jobs:
                   key: counts.get(key) if type(counts.get(key)) is int else None
                   for key in ('input_windows', 'evaluated_windows', 'failed_windows')
               }, sort_keys=True))
+          # Fixed taxonomy only: never emit raw exception text or arbitrary map keys.
+          categories = ('duplicate_source_identity', 'course_duration_policy_invalid',
+                        'slot_grid_policy_invalid', 'unresolved_occupied_bounds',
+                        'travel_assumption_unverified', 'commitment_coverage_unverified',
+                        'instructor_unverified', 'resource_unverified',
+                        'interval_unverified', 'other_window_error')
+          for family in ('acls', 'arc', 'bls', 'family_cpr', 'heartsaver', 'hsi',
+                         'pals', 'uscg_first_aid_cpr_aed'):
+              row = (summary.get('pages') or {}).get(family) or {}
+              reasons = row.get('failed_window_issue_categories') or {}
+              safe_reasons = {key: reasons[key] for key in categories
+                              if type(reasons.get(key)) is int and reasons[key] >= 0}
+              print('Replay failed window categories:', family, json.dumps(safe_reasons, sort_keys=True))
+              coverage = ((comparison.get('families') or {}).get(family) or {}).get('window_coverage') or {}
+              for label in ('main', 'draft'):
+                  values = coverage.get(label) or {}
+                  print('Same source coverage:', family, label, json.dumps({
+                      key: values.get(key) if type(values.get(key)) is int and values[key] >= 0 else None
+                      for key in ('input_windows', 'evaluated_windows', 'failed_windows')
+                  }, sort_keys=True))
           if not (
               summary.get('published') is False
               and summary.get('release_passed') is True
