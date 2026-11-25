@@ -55,7 +55,8 @@ class LayeredPublicationTests(unittest.TestCase):
     def payload(self,seated=()):
         return publish(self.calculation(),self.page,self.courses,self.windows,self.now,
             lambda w,s,c:('fixture-day','fixture-container',f'https://fixture.test/enroll?appointmentDayId=fixture-day&courseId={c}&startTime={s:%H:%M}',None),
-            lambda s,c:[],seated)
+            lambda s,c:[],seated,
+            require_verified_day_gravity=self.policy.get('require_verified_day_gravity', False))
 
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
@@ -123,6 +124,40 @@ class LayeredPublicationTests(unittest.TestCase):
                         [{'reasons':['nonpublic_occupied_not_joinable']}])
                     self.assertNotIn(seated['registrationUrl'],json.dumps(result['offers']))
                     self.assertTrue(self.calculation()['reports'][0]['normalized_occupancy'])
+
+    def test_verified_gravity_distinguishes_shell_and_private_demand(self):
+        self.policy['require_verified_day_gravity'] = True
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        self.window(11,'08:00','18:00',name='Michelle',next_day=False)
+        source=self.add(11,'12:00','13:00',cid='359474',count=None,visibility='private')
+        for count in (None,0):
+            source.update(active_registration_count=count,count_available=count is not None)
+            offers=self.payload()['offers']
+            self.assertTrue(any(o['instructor']=='Brian Ennis' and o['courseId']=='329495'
+                                and o['startTime']=='08:00' and o['scheduleRole']=='open_day' for o in offers))
+            self.assertFalse(any(o['startTime']=='12:00' for o in offers))
+        source.update(operational_has_active_seat=True,count_available=False,active_registration_count=None,course_id='')
+        offers=self.payload()['offers']
+        self.assertFalse(any(o['instructor']=='Brian Ennis' and o['scheduleRole']=='open_day' for o in offers))
+        self.assertTrue(any(o['instructor']=='Brian Ennis' and o['scheduleRole']=='barnacle' for o in offers))
+        self.assertTrue(any(o['instructor']=='Michelle' and o['scheduleRole']=='open_day'
+                            and o['startTime']=='08:00' for o in offers))
+        self.assertFalse(any(o['startTime']=='12:00' for o in offers))
+        self.assertNotIn(source['source_event_id'],json.dumps(public_selector_availability_payload(self.payload())))
+
+    def test_verified_gravity_survives_split_windows_and_not_next_clear_day(self):
+        self.policy['require_verified_day_gravity'] = True
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','12:00',next_day=False)
+        self.window(11,'13:00','18:00',next_day=False)
+        self.window(12,'08:00','18:00',next_day=False)
+        self.add(11,'12:00','13:00',cid='359474',count=1,visibility='private')
+        offers=self.payload()['offers']
+        skills=[o for o in offers if o['courseId']=='329495']
+        self.assertEqual({o['startTime'] for o in skills if o['date']=='2026-10-11'},{'11:00','13:00'})
+        self.assertTrue(any(o['date']=='2026-10-12' and o['startTime']=='08:00'
+                            and o['scheduleRole']=='open_day' for o in skills))
 
     def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
         # Both conflict rejections and expired dynamic URLs pass through this

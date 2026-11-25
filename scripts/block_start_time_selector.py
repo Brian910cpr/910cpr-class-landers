@@ -1251,7 +1251,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         windows = [dict(w, public_location_allowed=public_location_allowed(
             clean_text(w.get("location_name")), public_location_policy)) for w in windows]
         effective_layered_policy = dict(layered_policy,
-            lead_minutes=int(public_offer_policy.get("minimum_lead_hours") or 0) * 60)
+            lead_minutes=int(public_offer_policy.get("minimum_lead_hours") or 0) * 60,
+            require_verified_day_gravity=True)
         calculation = cached_calculate(windows, occupancy, selected_courses, effective_layered_policy,
             loaded["location_resource_map"], reference_now, window_datetimes,
             lambda window, course: bool(people.get(normalize_key(window.get("person_id")))
@@ -1274,7 +1275,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             return reasons
         result = publish(calculation, page_config, selected_courses, windows, reference_now,
             lambda window, start, cid: find_url(window, start, cid, containers, loaded["location_resource_map"]),
-            layered_public_reasons, seated)
+            layered_public_reasons, seated, require_verified_day_gravity=True)
         result["inputFiles"] = {"liveAvailabilitySnapshot": str(LIVE_AVAILABILITY_PATH),
             "courseConsumptionRules": str(COURSE_RULES_PATH), "layeredPolicy": str(layered_policy_path)}
         result["horizonDays"] = 90

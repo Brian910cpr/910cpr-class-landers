@@ -165,7 +165,7 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
 
 
 def publish(calculation, page_config, courses, windows, now, url_for, public_reasons,
-            seated_offers=()):
+            seated_offers=(), *, require_verified_day_gravity=False):
     """Translate accepted calculations to the existing URL/feed/renderer contract."""
     from scripts.apply_anchor_policy import _rebuild_dates
     now = aware(now).astimezone(timezone.utc)
@@ -219,6 +219,14 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     # only from this projection; their occupied interval remains in calculation.
     counts = {}
     nonpublic_identities = set()
+    def has_verified_demand(source):
+        if not source or not source.get("instructor") or source.get("instructor_unassigned"):
+            return False
+        if source.get("kind") in {"hold", "commitment", "uncertain"}:
+            return False
+        count = source.get("active_registration_count")
+        return (source.get("operational_has_active_seat") is True
+                or (source.get("count_available") is True and type(count) is int and count > 0))
     for source in calculation["projected_sources"]:
         # Multiple canonical/legacy representations can share an external
         # container ID. First-match lookup is useful for seat evidence, but
@@ -229,7 +237,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         for identity in identities:
             if identity is not None:
                 key = str(identity)
-                if key not in counts:
+                if key not in counts or (require_verified_day_gravity
+                        and has_verified_demand(source) and not has_verified_demand(counts[key])):
                     counts[key] = source
                 if restricted:
                     nonpublic_identities.add(key)
@@ -250,24 +259,43 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
         else:
             accepted.append(deepcopy(original))
-    # Every retained existing class is that exact course's day anchor,
-    # including when its roster count is unknown. Consolidate across separate
-    # Google availability gaps without suppressing different course formats.
-    day_anchors = {(o['date'], str(o['courseId'])) for o in accepted
-                   if o.get('offerType') == 'seated_class'}
     def instructor_key(name):
         key = str(name or '').strip().casefold()
         return 'brian ennis' if key == 'brian' else key
-    # Class occupancy comes from every program, not just the page's selected
-    # courses. A second calendar gap does not reset an instructor's anchored day.
+    def matched_source(offer):
+        identity = (offer.get("session_id") or offer.get("sourceSessionId")
+                    or offer.get("sourceAvailabilityBlock", {}).get("sessionId"))
+        return counts.get(str(identity))
+    def anchor_key(offer):
+        return (offer['date'], str(offer['courseId']),
+                instructor_key(offer.get('instructor')) if require_verified_day_gravity else '')
+    day_anchors = {anchor_key(o) for o in accepted
+                   if o.get('offerType') == 'seated_class' and
+                   (not require_verified_day_gravity or
+                    (o.get('instructor') and has_verified_demand(matched_source(o))))}
+    # Assigned demand establishes day gravity, even when it is not joinable
+    # or has no public course ID. Hard resource occupancy stays independent.
     anchored_days = set()
     for source in calculation['projected_sources']:
-        if (source.get('course_id') and source.get('start') and source.get('end') and
-                not source.get('normalization_issue') and aware(source['end']) > aware(source['start'])):
-            anchored_days.add((aware(source['start']).date().isoformat(),
-                               instructor_key(source.get('instructor'))))
+        if require_verified_day_gravity:
+            if not has_verified_demand(source):
+                continue
+        elif not source.get('course_id'):
+            continue
+        if (source.get('start') and source.get('end') and
+                not source.get('normalization_issue') and
+                aware(source['end']).astimezone(timezone.utc) > aware(source['start']).astimezone(timezone.utc)):
+            day = aware(source['start']).date()
+            last = (aware(source['end']).astimezone(timezone.utc) -
+                    timedelta(microseconds=1)).astimezone(aware(source['end']).tzinfo).date()
+            while day <= last:
+                anchored_days.add((day.isoformat(), instructor_key(source.get('instructor'))))
+                if not require_verified_day_gravity:
+                    break
+                day += timedelta(days=1)
     for offer in accepted:
-        if offer.get('offerType') == 'seated_class':
+        if offer.get('offerType') == 'seated_class' and (not require_verified_day_gravity or
+                (offer.get('instructor') and has_verified_demand(matched_source(offer)))):
             anchored_days.add((offer['date'], instructor_key(offer.get('instructor'))))
     retained = []
     for offer in accepted:
@@ -277,11 +305,11 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         # A retained skills seat occupies its actual interval; it does not consume
         # the whole day's eligible skills edges. Calculation already checks each
         # candidate's 45-minute instruction plus 15-minute cleanup and conflicts.
-        if offer.get('offerType') != 'seated_class' and (offer['date'], str(offer['courseId'])) in day_anchors and not skills_edge:
+        if offer.get('offerType') != 'seated_class' and anchor_key(offer) in day_anchors and not skills_edge:
             rejected.append(dict(offer, reasons=['existing_course_day_anchor']))
         elif offer.get('scheduleRole') == 'open_day' and (
                 (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days or
-                (offer['date'], '') in anchored_days):
+                (not require_verified_day_gravity and (offer['date'], '') in anchored_days)):
             rejected.append(dict(offer, reasons=['anchored_day_requires_attached_offer']))
         else:
             retained.append(offer)

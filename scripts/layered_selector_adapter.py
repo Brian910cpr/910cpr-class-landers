@@ -49,6 +49,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         "full_class_consolidation_scope": policy.get("full_class_consolidation_scope", "family"),
         "travel_minutes": {}, "instructor_family_eligibility": {},
         "shared_room_edges": shared_room_edges,
+        "require_verified_day_gravity": policy.get("require_verified_day_gravity") is True,
         "reject_unknown_full_family_count": commitment_coverage is not None})
     for course in courses:
         cid = str(course["course_id"])
