@@ -218,13 +218,35 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     # Never retire a source record. Confirmed-zero booking choices are retired
     # only from this projection; their occupied interval remains in calculation.
     counts = {}
+    nonpublic_identities = set()
     for source in calculation["projected_sources"]:
-        for identity in [source.get("source_event_id"), source.get("external_class_id")]:
-            if identity is not None and str(identity) not in counts:
-                counts[str(identity)] = source
+        # Multiple canonical/legacy representations can share an external
+        # container ID. First-match lookup is useful for seat evidence, but
+        # must never let a public-looking mirror hide a later private source.
+        identities = [source.get("source_event_id"), source.get("external_class_id")]
+        restricted = str(source.get("visibility") or "").strip().casefold() in {
+            "private", "unlisted", "internal"}
+        for identity in identities:
+            if identity is not None:
+                key = str(identity)
+                if key not in counts:
+                    counts[key] = source
+                if restricted:
+                    nonpublic_identities.add(key)
     for original in seated_offers:
-        source = counts.get(str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId")))
-        if source and source.get("count_available") is True and source.get("active_registration_count") == 0:
+        identity = (original.get("session_id") or original.get("sourceSessionId")
+                    or original.get("sourceAvailabilityBlock", {}).get("sessionId"))
+        source = counts.get(str(identity))
+        # An explicitly nonpublic canonical session can occupy an instructor
+        # without ever becoming a joinable public legacy booking choice.
+        # The most restrictive visibility wins across every identity match,
+        # not merely the first source DTO selected for seat lookup.
+        visibility = {str(v).strip().casefold() for v in (
+            original.get("visibility"), (source or {}).get("visibility"))}
+        if (visibility.intersection({"private", "unlisted", "internal"})
+                or str(identity) in nonpublic_identities):
+            rejected.append(dict(original, reasons=["nonpublic_occupied_not_joinable"]))
+        elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
         else:
             accepted.append(deepcopy(original))
@@ -291,9 +313,16 @@ PUBLIC_REJECTION_DIAGNOSTIC_FIELDS = frozenset({
 
 
 def public_rejection_diagnostics(rows):
-    return [{key: value for key, value in row.items()
-             if key in PUBLIC_REJECTION_DIAGNOSTIC_FIELDS}
-            for row in rows if isinstance(row, dict)]
+    safe = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        if "nonpublic_occupied_not_joinable" in (row.get("reasons") or []):
+            safe.append({"reasons": ["nonpublic_occupied_not_joinable"]})
+        else:
+            safe.append({key: value for key, value in row.items()
+                         if key in PUBLIC_REJECTION_DIAGNOSTIC_FIELDS})
+    return safe
 
 
 def finalize(payload, now=None):

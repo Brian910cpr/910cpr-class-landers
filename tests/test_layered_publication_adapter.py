@@ -76,6 +76,32 @@ class LayeredPublicationTests(unittest.TestCase):
             for report in self.calculation()['reports']
             for x in report['free_intervals']))
 
+    def test_restricted_identity_cannot_inherit_public_mirror_route(self):
+        for visibility in ('private', 'unlisted', 'internal'):
+            with self.subTest(visibility=visibility):
+                self.sources=[]
+                public=self.add(11,'12:00','13:00',count=None,
+                    visibility='public',external_class_id='fixture-shared')
+                public['source_file']='legacy'
+                restricted=dict(public,source_event_id='fixture-restricted',
+                    source_file='canonical_class_sessions',visibility=visibility,
+                    operational_has_active_seat=True,count_available=True,
+                    active_registration_count=1)
+                seated=dict(session_id='fixture-shared',date='2026-10-11',
+                    startTime='12:00',courseId='210549',courseName='Synthetic',
+                    instructor='Brian Ennis',offerType='seated_class',
+                    visibility='public',registrationUrl='https://fixture.invalid/private')
+                for sources in ([public,restricted],[restricted,public]):
+                    self.sources=sources
+                    result=self.payload([seated])
+                    self.assertFalse(any(o.get('offerType')=='seated_class'
+                                         for o in result['offers']))
+                    self.assertEqual([r for r in result['rejectedCourseStartTimes']
+                        if 'nonpublic_occupied_not_joinable' in r.get('reasons',[])],
+                        [{'reasons':['nonpublic_occupied_not_joinable']}])
+                    self.assertNotIn(seated['registrationUrl'],json.dumps(result['offers']))
+                    self.assertTrue(self.calculation()['reports'][0]['normalized_occupancy'])
+
     def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
         # Both conflict rejections and expired dynamic URLs pass through this
         # finalizer. Neither may serialize a private record into the public
