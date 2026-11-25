@@ -146,6 +146,45 @@ class ProvisionalCheckoutHoldTests(unittest.TestCase):
                             for candidate in after["reports"][0]["accepted"]))
         self.assertFalse(after["reports"][0]["seated_offers"])
 
+    def test_expired_offsite_lease_does_not_require_route_but_live_or_unproven_does(self):
+        from tests.test_layered_publication_adapter import LayeredPublicationTests
+        test = LayeredPublicationTests("test_source_records_not_mutated_and_explicit_activation_required")
+        test.setUp()
+        test.windows = []
+        test.coverage = []
+        test.window(11, "08:00", "18:00", next_day=False)
+        lease = dict(source_event_id="fixture-offsite-lease", kind="hold",
+            course_id="359474", instructor="Brian Ennis",
+            location="fixture-unknown-offsite", resource="fixture-unknown-offsite",
+            start=test.at(11, "12:00").isoformat(), end=test.at(11, "14:30").isoformat(),
+            source_file="landerware_public_orders", checkout_hold_status="admitted",
+            hold_admission_attested=True, checkout_hold_capacity_claimed=True,
+            checkout_hold_resource_verified=True, checkout_hold_id="h", checkout_order_id="o",
+            hold_admitted_at=test.at(5, "11:40").isoformat(),
+            hold_expires_at=test.at(5, "11:55").isoformat())
+        test.sources = [lease]
+        expired = test.calculation()
+        self.assertEqual(expired["counts"]["failed_windows"], 0, expired["issues"])
+        self.assertEqual(expired["counts"]["normalized_sources"], 1)
+        self.assertIn({"source_id": "fixture-offsite-lease", "reason": "checkout_hold_expired"},
+                      expired["reports"][0]["ignored_sources"])
+        self.assertTrue(any(c["mode"] == "free" for c in expired["reports"][0]["accepted"]))
+        for change in ({"hold_expires_at": test.at(5, "12:05").isoformat()},
+                       {"hold_admission_attested": False}):
+            with self.subTest(change=change):
+                test.sources = [dict(lease, **change)]
+                blocked = test.calculation()
+                self.assertEqual(blocked["counts"]["failed_windows"], 1)
+                self.assertTrue(any("missing directional travel rule" in issue["reason"]
+                                    for issue in blocked["issues"]))
+        test.sources = [lease, dict(source_event_id="fixture-real-seat",
+            kind="paid", course_id="359474", instructor="Brian Ennis",
+            location="fixture-unknown-offsite", resource="fixture-unknown-offsite",
+            start=test.at(11, "15:00").isoformat(), end=test.at(11, "17:00").isoformat(),
+            source_file="canonical_class_sessions", count_available=True,
+            active_registration_count=1)]
+        self.assertEqual(test.calculation()["counts"]["failed_windows"], 1)
+
     def test_publication_applies_hold_gravity_without_joinable_seat(self):
         # The publisher may see source-attested demand even in a different
         # availability window; it must collapse open-day offers without

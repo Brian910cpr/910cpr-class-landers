@@ -203,7 +203,11 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             for name in fixture["capabilities"]:
                 fixture["sources"].append(dict(fixture["sources"][-1],
                     id="unassigned-"+str(index)+"-"+name, instructor=name, kind="hold"))
-    locations = {s["location"] for s in fixture["sources"]} | {primary}
+    # Match the engine's attested expiry decision before route validation.
+    # Retain the expired source for the engine's ignored-source diagnostics.
+    locations = {s["location"] for s in fixture["sources"]
+                 if not (attested_checkout_hold(s, fixture["now"], fixture["courses"])
+                         and stamp(s["hold_expires_at"]) <= stamp(fixture["now"]))} | {primary}
     for left in locations:
         for right in locations:
             if left == right:
