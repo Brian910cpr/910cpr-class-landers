@@ -259,7 +259,10 @@ def run(fixture):
         else:
             intervals = resource_availability[index]['free']
             for a, b in intervals:
-                step = 60 if b - a >= minutes(policy.get("wide_threshold_minutes", 180)) else 30
+                # Active public V2 must offer legal qualified starts every 30 minutes
+                # on a truly clear day; retain historical lab cadence otherwise.
+                step = grid if layered_windows and grid is not None else (
+                    60 if b - a >= minutes(policy.get("wide_threshold_minutes", 180)) else 30)
                 free_intervals.append({"start": a, "end": b, "step_minutes": step, "instructor": instructor, "location": location})
                 for course, meta in courses.items():
                     course_step = meta.get('display_step_minutes', step) if layered_windows else step
