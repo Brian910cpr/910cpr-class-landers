@@ -244,6 +244,85 @@ END:VCALENDAR
         self.assertEqual(["2026-06-23T13:00:00"], [event["start"] for event in overrides])
         self.assertEqual(1, skipped["suppressed_by_recurrence_override"])
 
+    def test_ambiguous_recurrence_override_preserves_original_and_withholds_proof(self) -> None:
+        source = {"calendar_source_key": "test", "mode": "inverse_blocking"}
+        start, end = datetime(2026, 6, 1), datetime(2026, 7, 1)
+        for recurrence_property in (
+            "RECURRENCE-ID;RANGE=THISANDFUTURE:20260623T090000",
+            "RECURRENCE-ID:invalid",
+        ):
+            with self.subTest(recurrence_property=recurrence_property):
+                ics = f"""BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:series
+DTSTART:20260622T090000
+DTEND:20260622T100000
+RRULE:FREQ=DAILY;COUNT=3
+END:VEVENT
+BEGIN:VEVENT
+UID:series
+{recurrence_property}
+DTSTART:20260623T090000
+DTEND:20260623T110000
+END:VEVENT
+END:VCALENDAR
+"""
+                events, skipped = exporter.parse_ics_events(ics, source, start, end)
+                originals = [e for e in events if e["generated_from_rrule"]]
+                self.assertEqual(
+                    ["2026-06-22T09:00:00", "2026-06-23T09:00:00", "2026-06-24T09:00:00"],
+                    [e["start"] for e in originals],
+                )
+                self.assertEqual(1, skipped["unresolved_recurrence_override"])
+                self.assertTrue(any(e["end"] == "2026-06-23T11:00:00" for e in events))
+
+    def test_malformed_replacement_keeps_original(self) -> None:
+        source = {"calendar_source_key": "test", "mode": "inverse_blocking"}
+        for end_property in ("", "DTEND:20260623T080000"):
+            with self.subTest(end_property=end_property):
+                ics = f"""BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:series
+DTSTART:20260622T090000
+DTEND:20260622T100000
+RRULE:FREQ=DAILY;COUNT=3
+END:VEVENT
+BEGIN:VEVENT
+UID:series
+RECURRENCE-ID:20260623T090000
+DTSTART:20260623T090000
+{end_property}
+END:VEVENT
+END:VCALENDAR
+"""
+                events, skipped = exporter.parse_ics_events(
+                    ics, source, datetime(2026, 6, 1), datetime(2026, 7, 1)
+                )
+                self.assertEqual(3, sum(e["generated_from_rrule"] for e in events))
+                self.assertEqual(1, skipped["unresolved_recurrence_override"])
+
+    def test_moved_override_does_not_erase_another_original_slot(self) -> None:
+        source = {"calendar_source_key": "test", "mode": "inverse_blocking"}
+        ics = """BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:series
+DTSTART;TZID=America/New_York:20260622T090000
+DTEND;TZID=America/New_York:20260622T100000
+RRULE:FREQ=DAILY;COUNT=3
+END:VEVENT
+BEGIN:VEVENT
+UID:series
+RECURRENCE-ID:20260622T130000Z
+DTSTART;TZID=America/New_York:20260623T090000
+DTEND;TZID=America/New_York:20260623T100000
+END:VEVENT
+END:VCALENDAR"""
+        events, skipped = exporter.parse_ics_events(
+            ics, source, datetime(2026, 6, 1), datetime(2026, 7, 1))
+        self.assertEqual(1, skipped["suppressed_by_recurrence_override"])
+        self.assertEqual(3, len(events))
+        self.assertEqual(2, sum(event["recurrence_source"] == "recurring_expanded_instance" for event in events))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -228,7 +228,11 @@ def in_export_window(start: datetime, window_start: datetime, window_end: dateti
 
 
 def recurrence_key(uid: Any, start: datetime | None) -> tuple[str, str]:
-    return clean_text(uid), start.isoformat() if start else ""
+    if start is None:
+        return clean_text(uid), ""
+    # Equivalent timezone-aware recurrence IDs denote the same occurrence.
+    normalized = start.astimezone(timezone.utc) if start.tzinfo is not None else start
+    return clean_text(uid), normalized.isoformat()
 
 
 def parse_recurrence_values(event: dict[str, Any], name: str) -> list[datetime]:
@@ -423,10 +427,29 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
     for event in parsed_events:
         event_start = parse_ics_datetime(event.get("start_raw", ""), event.get("start_params"))
         uid = event.get("event_id") or event.get("raw_properties", {}).get("UID")
-        if event_start and not recurrence_rules(event):
-            duplicate_keys.add(recurrence_key(uid, event_start))
         recurrence_id = parse_ics_datetime(event.get("recurrence_id_raw", ""), event.get("recurrence_id_params"))
+        recurrence_params = event.get("recurrence_id_params") or {}
+        has_recurrence_id = "recurrence_id_raw" in event
+        # Unsupported range semantics or an invalid/missing recurrence
+        # identity cannot authorize releasing the original occupied slot.
+        # The non-benign skip diagnostic also prevents complete-export proof.
+        if has_recurrence_id and (
+            not recurrence_id or not clean_text(uid) or recurrence_params.get("RANGE")
+        ):
+            skipped["unresolved_recurrence_override"] += 1
+            continue
+        # A moved override replaces its original occurrence, not another
+        # generated occurrence whose DTSTART happens to equal the moved time.
+        if event_start and not recurrence_rules(event) and not has_recurrence_id:
+            duplicate_keys.add(recurrence_key(uid, event_start))
         if recurrence_id:
+            # A malformed live replacement is not authoritative evidence that
+            # the original occurrence was released. Preserve the original and
+            # withhold complete source proof rather than infer free time.
+            event_end = parse_ics_datetime(event.get("end_raw", ""), event.get("end_params"))
+            if not event_start or not event_end or comparable_dt(event_end) <= comparable_dt(event_start):
+                skipped["unresolved_recurrence_override"] += 1
+                continue
             override_keys.add(recurrence_key(uid, recurrence_id))
 
     normalized_events = []
