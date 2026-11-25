@@ -175,7 +175,8 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
         except ValueError as error:
             issues.append(dict(reason=str(error), instructor=window.get("instructor_name"),
                 resource=room, start=ws.isoformat(), end=we.isoformat(),
-                route_source_categories=getattr(error, "route_source_categories", [])))
+                route_source_categories=getattr(error, "route_source_categories", []),
+                identity_collision_categories=getattr(error, "identity_collision_categories", [])))
     return dict(schema=SCHEMA, reports=reports, issues=issues, projected_sources=projected,
         counts=dict(input_sources=len(occupancy), normalized_sources=len(projected),
                     input_windows=len(windows), evaluated_windows=len(reports),

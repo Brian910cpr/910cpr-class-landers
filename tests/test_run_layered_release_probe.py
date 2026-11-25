@@ -64,6 +64,10 @@ class FrozenSourceReplayTests(unittest.TestCase):
                         "customer@example.com": 1,
                     },
                     "failed_window_issue_categories": {"travel_assumption_unverified": 11},
+                    "failed_identity_collision_categories": {
+                        "identity_canonical": 2, "identity_distinct_geometry": 2,
+                        "private@example.com": 7, "identity_other": True,
+                    },
                     "calculation_issue_counts": {
                         "HARD_BLOCK_COLLISION": 3,
                         "human name:personal detail": 8,
@@ -89,6 +93,8 @@ class FrozenSourceReplayTests(unittest.TestCase):
                          {"hard_block_collision": 3, "unclassified": 8})
         self.assertEqual(safe["pages"]["bls"]["failed_window_issue_categories"],
                          {"travel_assumption_unverified": 11})
+        self.assertEqual(safe["pages"]["bls"]["failed_identity_collision_categories"],
+                         {"identity_canonical": 2, "identity_distinct_geometry": 2})
         summary = json.dumps(safe)
         self.assertNotIn("private-course-id", summary)
         self.assertNotIn("14:00", summary)

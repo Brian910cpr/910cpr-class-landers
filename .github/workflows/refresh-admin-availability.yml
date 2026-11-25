@@ -441,6 +441,12 @@ jobs:
                   key: route_counts[key] for key in route_categories
                   if type(route_counts.get(key)) is int and route_counts[key] >= 0
               }, sort_keys=True))
+              identity_categories = ["identity_canonical","identity_legacy","identity_calendar","identity_other","identity_generated_unassigned","identity_cross_namespace","identity_same_namespace","identity_distinct_geometry","identity_same_geometry"]
+              identity_counts = row.get('failed_identity_collision_categories') or {}
+              print('Replay failed identity collision categories:', family, json.dumps({
+                  key: identity_counts[key] for key in identity_categories
+                  if type(identity_counts.get(key)) is int and identity_counts[key] >= 0
+              }, sort_keys=True))
               coverage = ((comparison.get('families') or {}).get(family) or {}).get('window_coverage') or {}
               for label in ('main', 'draft'):
                   values = coverage.get(label) or {}

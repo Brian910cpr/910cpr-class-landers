@@ -51,6 +51,7 @@ _ROUTE_SOURCE_CATEGORIES = frozenset({
     "scope_selected_instructor", "scope_shared_resource",
     "interval_overlaps_window", "interval_outside_window",
 })
+_IDENTITY_COLLISION_CATEGORIES = frozenset(["identity_canonical","identity_legacy","identity_calendar","identity_other","identity_generated_unassigned","identity_cross_namespace","identity_same_namespace","identity_distinct_geometry","identity_same_geometry"])
 # Actual selector keys returned by load_block_schedule_page_configs(): normalize_key
 # changes the configured hyphenated USCG page to underscores in the replay output.
 # The comparator must match actual runtime keys, not the raw config map's keys.
@@ -169,6 +170,9 @@ def public_safe_summary(proof):
             "failed_route_source_categories": {key: count for key, count in
                 (row.get("failed_route_source_categories") or {}).items()
                 if key in _ROUTE_SOURCE_CATEGORIES and type(count) is int and count >= 0},
+            "failed_identity_collision_categories": {key: count for key, count in
+                (row.get("failed_identity_collision_categories") or {}).items()
+                if key in _IDENTITY_COLLISION_CATEGORIES and type(count) is int and count >= 0},
             "synthesis_blocked_day_count": len(row.get("synthesis_blocked_dates") or []),
             "day_count": len(per_day),
             "next_three_days": counts_by_day[:3],
@@ -302,6 +306,10 @@ def run(*, replay_clock_utc: datetime | None = None):
                     for issue in (payload.get('layeredDiagnostics') or {}).get('issues', [])
                     for category in set(issue.get('route_source_categories') or [])
                     if category in _ROUTE_SOURCE_CATEGORIES)),
+                failed_identity_collision_categories=dict(Counter(category
+                    for issue in (payload.get('layeredDiagnostics') or {}).get('issues', [])
+                    for category in set(issue.get('identity_collision_categories') or [])
+                    if category in _IDENTITY_COLLISION_CATEGORIES)),
                 failed_window_issue_categories=dict(Counter(_window_issue_category(issue) for issue in
                     (payload.get('layeredDiagnostics') or {}).get('issues', []))),
                 calculation_issue_counts=dict(Counter(issue.get('code') or 'unclassified'

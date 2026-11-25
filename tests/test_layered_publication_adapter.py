@@ -61,6 +61,22 @@ class LayeredPublicationTests(unittest.TestCase):
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
 
+    def test_duplicate_identity_diagnostics_preserve_conflicting_intervals(self):
+        first = self.add(11, '09:00', '10:00', count=1, visibility='private')
+        second = self.add(11, '12:00', '13:00', count=1, visibility='private')
+        second['source_event_id'] = first['source_event_id']
+        result = self.calculation()
+        self.assertEqual(result['counts']['failed_windows'], 1)
+        self.assertEqual(len(result['projected_sources']), 2)
+        self.assertEqual(set(result['issues'][0]['identity_collision_categories']),
+                         {'identity_canonical', 'identity_same_namespace', 'identity_distinct_geometry'})
+        second['source_file'] = 'data/sessions_current.json'
+        result = self.calculation()
+        self.assertEqual(result['counts']['failed_windows'], 1)
+        self.assertEqual(set(result['issues'][0]['identity_collision_categories']),
+                         {'identity_canonical', 'identity_legacy', 'identity_cross_namespace',
+                          'identity_distinct_geometry'})
+
     def test_distant_confirmed_private_offsite_kept_without_poisoning_other_day(self):
         # A private one-seat offsite session is authoritative occupancy for its
         # own day; its missing route must not reject windows two weeks away.

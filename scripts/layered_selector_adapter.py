@@ -297,7 +297,42 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
                     error.route_source_categories = sorted(route_categories)
                     raise error
             fixture["policy"]["travel_minutes"][left+"->"+right] = gap
-    report = run(fixture)
+    try:
+        report = run(fixture)
+    except ValueError as error:
+        if str(error).startswith("duplicate source id:"):
+            # Diagnostic only; the engine still rejects every ambiguous identity.
+            # Geometry is descriptive, not proof of a provider occurrence.
+            groups = {}
+            for source in fixture["sources"]:
+                groups.setdefault(source["id"], []).append(source)
+            categories = set()
+            for group in groups.values():
+                if len(group) < 2:
+                    continue
+                namespaces = set()
+                for source in group:
+                    origin = str(source.get("source_file") or "")
+                    if origin == "canonical_class_sessions":
+                        namespace = "identity_canonical"
+                    elif origin in {"data/sessions_current.json", "docs/data/schedule_future.json"}:
+                        namespace = "identity_legacy"
+                    elif origin.startswith("live_availability_snapshot.blocked["):
+                        namespace = "identity_calendar"
+                    else:
+                        namespace = "identity_other"
+                    namespaces.add(namespace)
+                    if not any(source is item for item, _ in route_origins):
+                        categories.add("identity_generated_unassigned")
+                categories.update(namespaces)
+                categories.add("identity_cross_namespace" if len(namespaces) > 1
+                               else "identity_same_namespace")
+                geometry = {(s["instructor"], s["location"], s["start"], s["end"])
+                            for s in group}
+                categories.add("identity_distinct_geometry" if len(geometry) > 1
+                               else "identity_same_geometry")
+            error.identity_collision_categories = sorted(categories)
+        raise
     report["adapter_mode"] = "shadow"
     report["room_hours_policy"] = policy["owner_room_hours_evidence"]
     report["manual_overlap_resources"] = sorted(manual)
