@@ -5,18 +5,39 @@ INPUT = "docs/data/public_schedule.json"
 OUTPUT = "docs/schedule.html"
 
 
+HEARTSAVER_FORMATS = ("In person", "Blended: online + in-person skills")
+
 PATHWAYS = [
     {
         "title": "Healthcare Provider",
         "body": "For healthcare workers, nursing students, dental offices, hospital staff, EMS, and clinical requirements.",
-        "courses": ["BLS", "ACLS", "PALS"],
-        "links": [("BLS dates", "/bls.html"), ("ACLS dates", "/acls.html"), ("PALS dates", "/pals.html")],
+        "choice_groups": [
+            (
+                family.upper(),
+                [(label, f"/{family}.html#{bookmark}") for label, bookmark in (
+                    ("Provider", "provider"),
+                    ("Renewal", "renewal"),
+                    ("HeartCode + Skills", "heartcode"),
+                )],
+            )
+            for family in ("bls", "acls", "pals")
+        ],
     },
     {
         "title": "Workplace, Daycare, School, or Coach",
         "body": "For workplace safety, childcare, schools, coaches, foster care, camps, and general CPR / first aid needs.",
-        "courses": ["Heartsaver First Aid CPR AED", "Heartsaver CPR AED", "Pediatric First Aid CPR AED", "Family & Friends CPR"],
-        "links": [("Heartsaver dates", "/heartsaver.html"), ("Pediatric dates", "/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended")],
+        "choice_groups": [
+            (
+                label,
+                [(format_label, f"/heartsaver.html#{bookmark}") for format_label, bookmark in zip(HEARTSAVER_FORMATS, bookmarks)],
+            )
+            for label, bookmarks in (
+                ("First Aid, CPR & AED", ("first-aid-cpr-aed", "first-aid-cpr-aed-blended")),
+                ("CPR & AED only", ("cpr-aed", "cpr-aed-online")),
+                ("Pediatric First Aid, CPR & AED", ("pediatric-first-aid-cpr-aed-in-person", "pediatric-first-aid-cpr-aed")),
+            )
+        ],
+        "links": [("Family & Friends CPR (no certification)", "/family-cpr.html#family-cpr")],
     },
     {
         "title": "American Red Cross Required",
@@ -40,7 +61,7 @@ PATHWAYS = [
         "title": "Not Sure What I Need",
         "body": "If your requirement is unclear, contact 910CPR before choosing a class date.",
         "courses": ["Match your employer, school, agency, or licensing wording first"],
-        "links": [("Call 910-395-5193", "tel:9103955193"), ("Ask about a class", "/request_group_session.html")],
+        "links": [("Call 910-395-5193", "tel:9103955193"), ("Ask about a class", "/contact.html")],
     },
 ]
 
@@ -61,16 +82,33 @@ def esc(value):
     )
 
 
+def action_buttons(links, topic=""):
+    return "".join(
+        f'<a class="button" href="{esc(href)}"'
+        + (f' aria-label="{esc(topic)}: {esc(label)}"' if topic else "")
+        + f'>{esc(label)}</a>'
+        for label, href in links
+    )
+
+
 def render_pathway(pathway):
-    courses = "".join(f"<li>{esc(course)}</li>" for course in pathway["courses"])
-    links = "".join(f'<a class="button" href="{esc(href)}">{esc(label)}</a>' for label, href in pathway["links"])
+    links = action_buttons(pathway.get("links", []))
+    if pathway.get("choice_groups"):
+        groups = "\n    ".join(
+            f'<li><strong>{esc(label)}</strong><div class="actions">{action_buttons(choices, label)}</div></li>'
+            for label, choices in pathway["choice_groups"]
+        )
+        course_choices = f'<ul class="schedule-course-choices">\n    {groups}\n  </ul>'
+    else:
+        courses = "".join(f"<li>{esc(course)}</li>" for course in pathway["courses"])
+        course_choices = f'<strong>Common course names</strong>\n  <ul>{courses}</ul>'
+    if links:
+        course_choices += f'\n  <div class="actions">{links}</div>'
     return f"""
 <article class="schedule-route-card">
   <h2>{esc(pathway["title"])}</h2>
   <p>{esc(pathway["body"])}</p>
-  <strong>Common course names</strong>
-  <ul>{courses}</ul>
-  <div class="actions">{links}</div>
+  {course_choices}
 </article>
 """
 
@@ -99,6 +137,8 @@ body {{ margin: 0; font-family: Arial, sans-serif; color: #17324a; background: #
 .schedule-route-card h2 {{ margin: 0 0 8px; color: #123a57; }}
 .schedule-route-card p, .schedule-route-card li {{ color: #5d7488; line-height: 1.55; }}
 .actions {{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }}
+.schedule-course-choices {{ display: grid; gap: 14px; list-style: none; padding: 0; margin: 14px 0 0; }}
+.schedule-course-choices .actions {{ margin-top: 6px; }}
 .button {{ display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 14px; border-radius: 8px; background: #eb7b4d; color: #fff; font-weight: 800; text-decoration: none; }}
 @media (min-width: 820px) {{ .schedule-route-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }} }}
 </style>
