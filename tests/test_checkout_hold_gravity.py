@@ -185,6 +185,40 @@ class ProvisionalCheckoutHoldTests(unittest.TestCase):
             active_registration_count=1)]
         self.assertEqual(test.calculation()["counts"]["failed_windows"], 1)
 
+    def test_expired_lease_cannot_erase_distinct_hard_occupancy_at_same_geometry(self):
+        from tests.test_layered_publication_adapter import LayeredPublicationTests
+        test = LayeredPublicationTests("test_source_records_not_mutated_and_explicit_activation_required")
+        test.setUp()
+        test.windows = []
+        test.coverage = []
+        test.window(11, "08:00", "18:00", next_day=False)
+        geometry = dict(instructor="Brian Ennis", resource=test.room,
+            location_resolution="location_resource_map",
+            start=test.at(11, "12:00").isoformat(), end=test.at(11, "14:30").isoformat())
+        lease = dict(geometry, source_event_id="expired-lease", kind="hold",
+            course_id="359474", source_file="landerware_public_orders",
+            checkout_hold_status="admitted", hold_admission_attested=True,
+            checkout_hold_capacity_claimed=True, checkout_hold_resource_verified=True,
+            checkout_hold_id="h", checkout_order_id="o",
+            hold_admitted_at=test.at(5, "11:40").isoformat(),
+            hold_expires_at=test.at(5, "11:55").isoformat())
+        commitment = dict(geometry, source_event_id="independent-commitment",
+            kind="commitment", source_file="fixture-calendar")
+        for rows in ([lease, commitment], [commitment, lease], [lease, lease, commitment]):
+            with self.subTest(rows=len(rows), first=rows[0]["source_event_id"]):
+                test.sources = rows
+                result = test.calculation()
+                self.assertEqual(result["counts"]["failed_windows"], 0, result["issues"])
+                report = result["reports"][0]
+                self.assertEqual({b["id"] for b in report["normalized_occupancy"]},
+                                 {"independent-commitment"})
+                self.assertIn({"source_id": "expired-lease", "reason": "checkout_hold_expired"},
+                              report["ignored_sources"])
+        # A conflicting record reusing the same ID is not proof of expiry.
+        # Preserve both until engine identity validation fails closed.
+        test.sources = [lease, dict(commitment, source_event_id="expired-lease")]
+        self.assertEqual(test.calculation()["counts"]["failed_windows"], 1)
+
     def test_publication_applies_hold_gravity_without_joinable_seat(self):
         # The publisher may see source-attested demand even in a different
         # availability window; it must collapse open-day offers without

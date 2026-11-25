@@ -161,12 +161,23 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         # Preserve real physical occupancy; source-provided travel buffers are
         # separate commitments and cannot move the paid block's actual edges.
         key = (instructor, location, start, end)
+        # Expired attested leases cannot participate in physical geometry
+        # deduplication: they will be removed by the engine, and must not
+        # erase a distinct still-occupied interval first. Keep exact repeated
+        # expired rows idempotent, but preserve conflicting identities for
+        # the engine's fail-closed source-ID validation.
+        expired = (attested_checkout_hold(busy, fixture["now"], fixture["courses"])
+                   and stamp(busy["hold_expires_at"]) <= stamp(fixture["now"]))
+        if expired:
+            key = ("expired-checkout-lease", str(busy.get("source_event_id") or index))
+            if busy in source_keys.get(key, []):
+                continue
         previous = source_keys.get(key, [])
         source_id = str(busy.get("source_event_id") or "")
         # A copied shell or repeated source identity is one physical interval.
         # Two *distinct* verified commitments are not silently deduplicated:
         # preserve both without treating either as a public joinable seat.
-        if previous and not (
+        if previous and not expired and not (
                 (has_seated_demand(busy) and source_id
                  and all(has_seated_demand(item)
                          and source_id != str(item.get("source_event_id") or "")
