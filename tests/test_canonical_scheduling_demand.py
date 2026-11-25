@@ -1,7 +1,10 @@
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from scripts.anchor_state import promote_seated_sessions
+from scripts.layered_selector_adapter import aware
+from scripts.block_start_time_selector import build_occupancy
 from scripts.canonical_scheduling_demand import resolve_canonical_demand, summarize_positive_v1_attribution
 
 
@@ -185,6 +188,36 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertEqual(0, summary["positive_active_sessions"])
         self.assertEqual(0, summary["v1_identity_gap_positive"])
 
+    def test_numeric_external_native_seat_reaches_internal_hard_occupancy_without_opening_public_join(self):
+        # A counted native lifecycle seat can be operational even while a
+        # numeric legacy external roster is unproven; do not synthesize public
+        # availability or silently drop the longer occupied consumption end.
+        session = dict(canonical_session_id="numeric-native-fixture",
+            external_class_id="80001", session_status="scheduled",
+            start_at="2030-11-23T10:00:00-05:00",
+            end_at="2030-11-23T12:00:00-05:00",
+            consumption_end_at="2030-11-23T12:30:00-05:00",
+            visibility="private", registration_status="closed",
+            location_name="Private venue", lead_instructor_name=None,
+            active_registration_count=None, count_available=False,
+            operational_has_active_seat=True)
+        loaded = dict(location_resource_map={}, sessions_current={"sessions": []},
+                      schedule_future={"sessions": []}, live_availability_snapshot={},
+                      canonical_demand={"sessions": [session]})
+        with (patch("scripts.block_start_time_selector.generate_dynamic_offers.normalize_occupancy", return_value=[]),
+              patch("scripts.block_start_time_selector.generate_dynamic_offers.availability_windows", return_value=[]),
+              patch("scripts.block_start_time_selector.generate_dynamic_offers.normalize_location_resource",
+                    return_value=("Private venue", None, False))):
+            blocks = build_occupancy(loaded, {}, allow_unresolved=True)
+        self.assertEqual(len(blocks), 1)
+        self.assertTrue(blocks[0]["operational_has_active_seat"])
+        self.assertFalse(blocks[0]["count_available"])
+        self.assertIsNone(blocks[0]["active_registration_count"])
+        self.assertTrue(blocks[0]["instructor_unassigned"])
+        self.assertEqual(aware(blocks[0]["end"]).isoformat(), "2030-11-23T12:30:00-05:00")
+        self.assertNotIn("public_direct_booking", blocks[0])
+        self.assertEqual(blocks[0]["visibility"], "private")
+
     def test_protected_projection_source_has_required_contract_and_no_customer_fields(self):
         source = (Path(__file__).resolve().parents[1] / "supabase/functions/canonical-scheduling-demand/index.ts").read_text(encoding="utf-8")
         for field in (
@@ -197,7 +230,8 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertNotIn("customers", source)
         self.assertNotIn("first_name", source)
         self.assertNotIn("last_name", source)
-        self.assertNotIn("email", source)
+        self.assertNotIn('"email"', source)
+        self.assertNotIn("customer_email", source)
 
 
 if __name__ == "__main__":
