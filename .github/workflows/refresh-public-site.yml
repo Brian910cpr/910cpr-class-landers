@@ -145,7 +145,7 @@ jobs:
           # Renew source-validated publication; never extend an existing lease.
           $renewBefore = [DateTimeOffset]::UtcNow.AddMinutes(45)
           $renewPublication = $false
-          foreach ($pageKey in @('bls', 'heartsaver', 'acls', 'pals')) {
+          foreach ($pageKey in @('bls', 'heartsaver', 'acls', 'pals', 'arc', 'hsi', 'uscg_first_aid_cpr_aed', 'family_cpr')) {
             try {
               $publication = Get-Content -Raw "docs/data/block-selector-availability/$pageKey.json" | ConvertFrom-Json
               $expires = [DateTimeOffset]::Parse($publication.validUntil)
