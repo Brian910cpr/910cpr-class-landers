@@ -31,3 +31,14 @@ test('legacy automation auth stays closed to corporate sessions and handles upst
  const req=new Request(endpoint,{headers:{'x-hot-sync-admin-key':'fixture',origin:'https://www.910cpr.com'}});
  for(const status of [200,401,403,503]){const mock=t.mock.method(globalThis,'fetch',async()=>new Response('{}',{status}));if(status===503)await assert.rejects(authorizedOwner(req),{status:503});else assert.equal(await authorizedOwner(req),status===200);mock.mock.restore()}
 });
+
+test('CRM owner credential routing requires both exact Studio path and explicit rollout gate',async()=>{
+ const crm='https://wktwgcnwdvbebcobgyey.supabase.co/functions/v1/customer-interactions';
+ for(const [path,gate,allow] of [['/admin/now.html','enabled',false],['/admin/customer-learning.html','disabled',false],['/admin/customer-learning.html','enabled',true]]){
+  let sent=0;const events=new EventTarget();
+  const context={location:{href:'https://www.910cpr.com'+path,pathname:path,search:'',replace:()=>{}},document:{querySelector:()=>({content:gate})},localStorage:{getItem:()=>session()},sessionStorage:{getItem:()=>null},fetch:async(url,o)=>{sent++;assert.equal(o.headers.get('X-LanderWare-Owner-Session'),token);return new Response('{}')},URL,Headers,AbortController,CustomEvent,Event};
+  context.window=context;context.addEventListener=events.addEventListener.bind(events);context.dispatchEvent=events.dispatchEvent.bind(events);vm.runInNewContext(source,context);
+  if(allow){await context.LanderWareAdminAuth.fetch(crm);assert.equal(sent,1);await assert.rejects(context.LanderWareAdminAuth.fetch(crm+'/other'),/restricted/)}
+  else{await assert.rejects(context.LanderWareAdminAuth.fetch(crm),/restricted/);assert.equal(sent,0)}
+ }
+});

@@ -1,0 +1,30 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createHandler} from '../supabase/functions/customer-interactions/handler.ts';
+const id='11111111-1111-4111-8111-111111111111',caseId='22222222-2222-4222-8222-222222222222';
+const body=()=>({request_id:crypto.randomUUID(),input:{id,case_id:caseId,expected_version:0,kind:'phone',status:'in_progress',source:'manual',source_id:id,document:{callNotes:'Original notes'}}});
+const request=data=>new Request('https://example.test/customer-interactions',{method:'POST',body:JSON.stringify(data)});
+test('unauthorized and corporate-only requests never reach storage',async()=>{const handle=createHandler({authorize:async()=>false,actor:async()=>assert.fail(),rest:async()=>assert.fail()});for(const method of ['GET','POST'])assert.equal((await handle(new Request('https://example.test',{method,headers:{'x-maxim-session':'fixture'}}))).status,401)});
+test('actor comes from server authorization, never the submitted author',async()=>{const b=body();b.actor='forged';const handle=createHandler({authorize:async()=>true,actor:async()=>'server-session-fingerprint',rest:async(path,init)=>{assert.equal(path,'rpc/save_customer_interaction');const p=JSON.parse(init.body);assert.equal(p.p_actor,'server-session-fingerprint');assert.equal(p.p_request_id,b.request_id);return {version:1}}});assert.equal((await handle(request(b))).status,200)});
+test('invalid identity, unsupported ingestion, missing status and oversized writes fail closed',async()=>{const handle=createHandler({authorize:async()=>true,actor:async()=>assert.fail(),rest:async()=>assert.fail()});for(const patch of [{id:'bad'},{source:'gmail'},{status:'sent'},{expected_version:-1},{person_id:'guess'},{document:[]}]){const b=body();Object.assign(b.input,patch);assert.equal((await handle(request(b))).status,400)}const b=body();b.input.document.callNotes='x'.repeat(200001);assert.equal((await handle(request(b))).status,413)});
+test('version and dedup conflicts are explicit; outages hide database details',async()=>{for(const [code,status] of [['40001',409],['23505',409],['23503',400],['private database detail',503]]){const handle=createHandler({authorize:async()=>true,actor:async()=>'owner',rest:async()=>{throw Object.assign(Error('secret diagnostic'),{code})}});const res=await handle(request(body()));assert.equal(res.status,status);assert.doesNotMatch(await res.text(),/secret diagnostic/)} });
+test('GET is owner gated, bounded, and never returns cacheable private data',async()=>{const handle=createHandler({authorize:async()=>true,actor:async()=>assert.fail(),rest:async path=>{assert.match(path,/limit=100/);return []}});const res=await handle(new Request('https://example.test'));assert.equal(res.headers.get('cache-control'),'no-store');assert.deepEqual((await res.json()).interactions,[])});
+
+test('interrupt/resume use one owner-authorized RPC with server actor and operation',async()=>{
+ for(const operation of ['interrupt','resume']){
+  const b={request_id:crypto.randomUUID(),operation,input:{previous:body().input,active:body().input,interrupt_request_id:crypto.randomUUID(),operation:'forged'}};
+  const handle=createHandler({authorize:async()=>true,actor:async()=>'server-owner',rest:async(path,init)=>{assert.equal(path,'rpc/switch_customer_interaction');const p=JSON.parse(init.body);assert.equal(p.p_actor,'server-owner');assert.equal(p.p_input.operation,operation);return {request_id:b.request_id}}});
+  assert.equal((await handle(request(b))).status,200);
+ }
+});
+test('malformed switch records and unsupported operations fail before storage',async()=>{
+ const handle=createHandler({authorize:async()=>true,actor:async()=>assert.fail(),rest:async()=>assert.fail()});
+ for(const b of [{...body(),operation:'send'},{request_id:crypto.randomUUID(),operation:'interrupt',input:{}},{request_id:crypto.randomUUID(),operation:'resume',input:{previous:body().input,active:body().input}}])assert.equal((await handle(request(b))).status,400);
+});
+test('task writes require provenance/completion evidence and use server identity',async()=>{
+ const task={id,case_id:caseId,interaction_id:id,source_key:'manual:callback',title:'Call back',status:'pending',expected_version:0,provenance:{evidence:'Owner promised callback'}};
+ let calls=0;const handle=createHandler({authorize:async()=>true,actor:async()=>'owner',rest:async(path,init)=>{calls++;assert.equal(path,'rpc/save_customer_follow_up_task');assert.equal(JSON.parse(init.body).p_actor,'owner');return {version:1}}});
+ assert.equal((await handle(request({request_id:crypto.randomUUID(),operation:'save_task',input:task}))).status,200);
+ for(const patch of [{provenance:{}},{status:'complete'},{status:'snoozed'},{due_at:'invalid'},{interaction_id:'bad'}])assert.equal((await handle(request({request_id:crypto.randomUUID(),operation:'save_task',input:{...task,...patch}}))).status,400);
+ assert.equal(calls,1);
+});
