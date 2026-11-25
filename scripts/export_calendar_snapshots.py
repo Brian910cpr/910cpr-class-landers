@@ -428,9 +428,19 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         event_start = parse_ics_datetime(event.get("start_raw", ""), event.get("start_params"))
         uid = event.get("event_id") or event.get("raw_properties", {}).get("UID")
         recurrence_id = parse_ics_datetime(event.get("recurrence_id_raw", ""), event.get("recurrence_id_params"))
+        recurrence_params = event.get("recurrence_id_params") or {}
+        has_recurrence_id = "recurrence_id_raw" in event
+        # Unsupported range semantics or an invalid/missing recurrence
+        # identity cannot authorize releasing the original occupied slot.
+        # The non-benign skip diagnostic also prevents complete-export proof.
+        if has_recurrence_id and (
+            not recurrence_id or not clean_text(uid) or recurrence_params.get("RANGE")
+        ):
+            skipped["unresolved_recurrence_override"] += 1
+            continue
         # A moved override replaces its original occurrence, not another
         # generated occurrence whose DTSTART happens to equal the moved time.
-        if event_start and not recurrence_rules(event) and not recurrence_id:
+        if event_start and not recurrence_rules(event) and not has_recurrence_id:
             duplicate_keys.add(recurrence_key(uid, event_start))
         if recurrence_id:
             override_keys.add(recurrence_key(uid, recurrence_id))
