@@ -45,6 +45,12 @@ def source_fingerprint(root=ROOT):
 
 _SAFE_REASON = re.compile(r"^[a-z][a-z0-9_]{0,63}$")
 _ROLES = ("anchor", "barnacle", "open")
+_ROUTE_SOURCE_CATEGORIES = frozenset({
+    "canonical_positive", "canonical_other", "legacy_inventory",
+    "calendar_physical_or_unknown", "other_source", "scope_unassigned",
+    "scope_selected_instructor", "scope_shared_resource",
+    "interval_overlaps_window", "interval_outside_window",
+})
 # Actual selector keys returned by load_block_schedule_page_configs(): normalize_key
 # changes the configured hyphenated USCG page to underscores in the replay output.
 # The comparator must match actual runtime keys, not the raw config map's keys.
@@ -160,6 +166,9 @@ def public_safe_summary(proof):
             "rejection_reason_categories": reasons,
             "reconciliation_issue_code_categories": uncertainty,
             "failed_window_issue_categories": row.get("failed_window_issue_categories") or {},
+            "failed_route_source_categories": {key: count for key, count in
+                (row.get("failed_route_source_categories") or {}).items()
+                if key in _ROUTE_SOURCE_CATEGORIES and type(count) is int and count >= 0},
             "synthesis_blocked_day_count": len(row.get("synthesis_blocked_dates") or []),
             "day_count": len(per_day),
             "next_three_days": counts_by_day[:3],
@@ -289,6 +298,10 @@ def run(*, replay_clock_utc: datetime | None = None):
                         courses.setdefault(course['courseId'],dict(anchor=[],barnacle=[],open=[]))[role].append(slot['startTime'])
                 patterns[day['date']]=courses
             result['pages'][key]=dict(
+                failed_route_source_categories=dict(Counter(category
+                    for issue in (payload.get('layeredDiagnostics') or {}).get('issues', [])
+                    for category in set(issue.get('route_source_categories') or [])
+                    if category in _ROUTE_SOURCE_CATEGORIES)),
                 failed_window_issue_categories=dict(Counter(_window_issue_category(issue) for issue in
                     (payload.get('layeredDiagnostics') or {}).get('issues', []))),
                 calculation_issue_counts=dict(Counter(issue.get('code') or 'unclassified'

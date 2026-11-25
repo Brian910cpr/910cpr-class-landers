@@ -103,6 +103,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
     if commitment_coverage is not None:
         fixture["commitment_coverage"] = commitment_coverage
     source_keys = {}
+    route_origins = []
     # An exact interval may appear in both legacy schedule inventory and the
     # canonical demand feed. Prefer verified demand over an unproven shell.
     # However, independent positive-seat records in the same interval must
@@ -210,6 +211,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             resource_uncertain=busy.get("resource_uncertain", False),
             uncertainty_reason=busy.get("uncertainty_reason"),
             adr_shift="adr" in str(busy.get("course_title") or "").casefold()))
+        route_origins.append((fixture["sources"][-1], busy))
         if busy.get("instructor_unassigned"):
             for name in fixture["capabilities"]:
                 fixture["sources"].append(dict(fixture["sources"][-1],
@@ -219,6 +221,39 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
     locations = {s["location"] for s in fixture["sources"]
                  if not (attested_checkout_hold(s, fixture["now"], fixture["courses"])
                          and stamp(s["hold_expires_at"]) <= stamp(fixture["now"]))} | {primary}
+    # Diagnostic only: classify every origin of a missing primary-room route
+    # before the existing fail-closed validation. No source identities or
+    # location values are included in these fixed categories.
+    missing_locations = {loc for loc in locations if loc != primary
+        and not loc.startswith("instructor-only:") and loc not in known
+        and any((travel_minutes or {}).get(direction) is None
+                for direction in (loc+"->"+primary, primary+"->"+loc))}
+    route_categories = set()
+    if missing_locations:
+        for source, original in route_origins:
+            if source["location"] not in missing_locations:
+                continue
+            if (attested_checkout_hold(source, fixture["now"], fixture["courses"])
+                    and stamp(source["hold_expires_at"]) <= stamp(fixture["now"])):
+                continue
+            origin = str(original.get("source_file") or "")
+            if origin == "canonical_class_sessions":
+                category = ("canonical_positive" if has_seated_demand(original)
+                            else "canonical_other")
+            elif origin in {"data/sessions_current.json", "docs/data/schedule_future.json"}:
+                category = "legacy_inventory"
+            elif origin.startswith("live_availability_snapshot.blocked["):
+                category = "calendar_physical_or_unknown"
+            else:
+                category = "other_source"
+            route_categories.add(category)
+            route_categories.add("scope_unassigned" if original.get("instructor_unassigned")
+                                 else "scope_selected_instructor" if source["instructor"] in fixture["capabilities"]
+                                 else "scope_shared_resource")
+            overlaps = any(aware(source["start"]) < aware(window["end"])
+                           and aware(window["start"]) < aware(source["end"])
+                           for window in fixture["instructor_availability"])
+            route_categories.add("interval_overlaps_window" if overlaps else "interval_outside_window")
     for left in locations:
         for right in locations:
             if left == right:
@@ -232,7 +267,9 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             else:
                 gap = (travel_minutes or {}).get(left+"->"+right)
                 if gap is None:
-                    raise ValueError("missing directional travel rule: "+left+"->"+right)
+                    error = ValueError("missing directional travel rule: "+left+"->"+right)
+                    error.route_source_categories = sorted(route_categories)
+                    raise error
             fixture["policy"]["travel_minutes"][left+"->"+right] = gap
     report = run(fixture)
     report["adapter_mode"] = "shadow"

@@ -97,6 +97,8 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertTrue(any('missing directional travel rule' in issue['reason']
                             for issue in result['issues']))
         self.assertEqual(result['projected_sources'][0]['active_registration_count'], 1)
+        self.assertEqual(set(result['issues'][0]['route_source_categories']),
+                         {'canonical_positive', 'scope_selected_instructor', 'interval_overlaps_window'})
 
     def test_near_boundary_private_offsite_still_requires_known_route(self):
         # A booking ~38 hours after a window remains in the conservative 48h
@@ -113,6 +115,8 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(result['counts']['failed_windows'], 1)
         self.assertTrue(any('missing directional travel rule' in issue['reason']
                             for issue in result['issues']))
+        self.assertEqual(set(result['issues'][0]['route_source_categories']),
+                         {'canonical_positive', 'scope_selected_instructor', 'interval_outside_window'})
 
     def test_other_instructor_private_offsite_does_not_steal_window(self):
         self.sources.append(dict(
