@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from collections import Counter
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -328,6 +329,31 @@ def subtract_intervals(open_intervals: list[tuple[datetime, datetime]], blockers
     return remaining
 
 
+def occupied_calendar_event_id(source: dict[str, Any], event: dict[str, Any]) -> str:
+    """Use the provider's original recurrence slot, never the moved DTSTART."""
+    raw_id = event.get("id") or event.get("event_id") or UNKNOWN
+    kind = event.get("recurrence_source")
+    if kind == "overridden_instance" or event.get("recurrence_id"):
+        occurrence = event.get("recurrence_id")
+    elif kind == "recurring_expanded_instance":
+        occurrence = event.get("occurrence_start")
+    else:
+        return raw_id
+    uid = event.get("original_uid") or event.get("recurrence_source_uid")
+    namespace = source.get("calendar_source_key")
+    if not occurrence or not uid or uid == UNKNOWN or not namespace or namespace == UNKNOWN:
+        return raw_id
+    try:
+        original = datetime.fromisoformat(str(occurrence).replace("Z", "+00:00"))
+    except ValueError:
+        return raw_id
+    if original.tzinfo is not None:
+        original = original.astimezone(timezone.utc)
+    # JSON tuple avoids delimiter ambiguity; hash keeps provider IDs internal.
+    key = json.dumps([namespace, uid, original.isoformat()], separators=(",", ":"))
+    return "calendar-occurrence:" + hashlib.sha256(key.encode("utf-8")).hexdigest()
+
+
 def make_blocking_event_block(source: dict[str, Any], event: dict[str, Any], person: dict[str, Any] | None, start: datetime, end: datetime) -> dict[str, Any]:
     location_key = source.get("default_location_key")
     source_location = clean_text(event.get("location"))
@@ -347,7 +373,7 @@ def make_blocking_event_block(source: dict[str, Any], event: dict[str, Any], per
         "location_name": location_name,
         "allowed_course_families": [],
         "source_calendar_id": source.get("calendar_source_key", UNKNOWN),
-        "source_event_id": event.get("id") or event.get("event_id") or UNKNOWN,
+        "source_event_id": occupied_calendar_event_id(source, event),
         "summary": clean_text(event.get("summary") or event.get("title") or UNKNOWN),
         "source_type": source_type(source),
         "reasons": [
@@ -635,7 +661,8 @@ def normalize_event_block(source: dict[str, Any], event: dict[str, Any], person:
         "location_name": location_name,
         "allowed_course_families": [] if blocking else allowed_families_for_person(person, course_catalog),
         "source_calendar_id": source.get("calendar_source_key", UNKNOWN),
-        "source_event_id": event.get("id") or event.get("event_id") or UNKNOWN,
+        "source_event_id": (occupied_calendar_event_id(source, event) if blocking
+                            else event.get("id") or event.get("event_id") or UNKNOWN),
         "summary": clean_text(event.get("summary") or event.get("title") or UNKNOWN),
         "source_type": stype,
         "confirmed_training_class": confirmed_training_class,

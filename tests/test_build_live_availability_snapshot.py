@@ -575,6 +575,29 @@ END:VCALENDAR
             finally:
                 snapshot.RUNTIME_CALENDAR_SNAPSHOT_DIR = original_runtime_dir
 
+    def test_occupied_recurrence_identity_uses_original_slot_and_calendar(self) -> None:
+        source = {"calendar_source_key": "calendar-a"}
+        event = {"event_id": "series", "original_uid": "series",
+                 "recurrence_source": "overridden_instance",
+                 "recurrence_id": "2026-06-22T09:00:00-04:00",
+                 "start": "2026-06-22T13:00:00-04:00"}
+        identity = snapshot.occupied_calendar_event_id
+        first = identity(source, event)
+        self.assertEqual(first, identity(source, dict(event, start="2026-06-23T15:00:00-04:00")))
+        self.assertEqual(first, identity(source, dict(event, recurrence_id="2026-06-22T13:00:00Z")))
+        self.assertNotEqual(first, identity(source, dict(event, recurrence_id="2026-06-23T13:00:00Z")))
+        self.assertNotEqual(first, identity({"calendar_source_key": "calendar-b"}, event))
+        self.assertEqual(first, identity(source, {
+            "event_id": "series:generated", "original_uid": "series",
+            "recurrence_source": "recurring_expanded_instance",
+            "occurrence_start": "2026-06-22T13:00:00Z"}))
+        self.assertEqual("series", identity(source, dict(event, recurrence_id=None)))
+        # The source's actual moved geometry is not changed by identity projection.
+        block = snapshot.make_blocking_event_block(
+            source, event, None, datetime(2026, 6, 22, 13), datetime(2026, 6, 22, 14))
+        self.assertEqual(first, block["source_event_id"])
+        self.assertEqual("2026-06-22T13:00:00", block["start_datetime"])
+
 
 if __name__ == "__main__":
     unittest.main()
