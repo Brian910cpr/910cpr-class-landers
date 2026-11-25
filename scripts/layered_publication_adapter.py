@@ -247,9 +247,14 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         key = str(name or '').strip().casefold()
         return 'brian ennis' if key == 'brian' else key
 
+    def seated_identities(offer):
+        block = offer.get("sourceAvailabilityBlock")
+        return (offer.get("session_id"), offer.get("sourceSessionId"),
+                block.get("sessionId") if isinstance(block, dict) else None)
+
     for original in seated_offers:
-        identity = (original.get("session_id") or original.get("sourceSessionId")
-                    or original.get("sourceAvailabilityBlock", {}).get("sessionId"))
+        identities = seated_identities(original)
+        identity = next((value for value in identities if value), None)
         source = counts.get(str(identity))
         # An explicitly nonpublic canonical session can occupy an instructor
         # without ever becoming a joinable public legacy booking choice.
@@ -258,7 +263,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         visibility = {str(v).strip().casefold() for v in (
             original.get("visibility"), (source or {}).get("visibility"))}
         if (visibility.intersection({"private", "unlisted", "internal"})
-                or str(identity) in nonpublic_identities):
+                or any(str(value) in nonpublic_identities for value in identities if value is not None)):
             rejected.append(dict(original, reasons=["nonpublic_occupied_not_joinable"]))
         elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
@@ -268,8 +273,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         else:
             accepted.append(deepcopy(original))
     def matched_source(offer):
-        identity = (offer.get("session_id") or offer.get("sourceSessionId")
-                    or offer.get("sourceAvailabilityBlock", {}).get("sessionId"))
+        identity = next((value for value in seated_identities(offer) if value), None)
         return counts.get(str(identity))
     def has_matching_verified_demand(offer):
         source = matched_source(offer)

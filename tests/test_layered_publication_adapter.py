@@ -125,6 +125,33 @@ class LayeredPublicationTests(unittest.TestCase):
                     self.assertNotIn(seated['registrationUrl'],json.dumps(result['offers']))
                     self.assertTrue(self.calculation()['reports'][0]['normalized_occupancy'])
 
+    def test_all_seated_identity_aliases_enforce_restricted_visibility(self):
+        for mode in (False, True):
+            self.policy['require_verified_day_gravity'] = mode
+            for visibility in ('private', 'unlisted', 'internal'):
+                self.sources=[]
+                self.add(11,'12:00','13:00',count=1,visibility=visibility,
+                         external_class_id='fixture-restricted-external')
+                restricted=self.sources[0]
+                base=dict(session_id='fixture-unrelated',date='2026-10-11',
+                          startTime='12:00',courseId='210549',courseName='Synthetic',
+                          instructor='Brian Ennis',offerType='seated_class',
+                          visibility='public',registrationUrl='https://fixture.invalid/alias')
+                for key in (restricted['source_event_id'], restricted['external_class_id']):
+                    for alias in (dict(sourceSessionId=key,sourceAvailabilityBlock=None),
+                                  dict(sourceAvailabilityBlock={'sessionId':key}),
+                                  dict(session_id=key,sourceAvailabilityBlock=None)):
+                        with self.subTest(mode=mode,visibility=visibility,key=key,alias=alias):
+                            result=self.payload([dict(base,**alias)])
+                            self.assertFalse(any(o.get('offerType')=='seated_class'
+                                                 for o in result['offers']))
+                            self.assertIn({'reasons':['nonpublic_occupied_not_joinable']},
+                                          result['rejectedCourseStartTimes'])
+                            self.assertNotIn(base['registrationUrl'],json.dumps(result['offers']))
+                control=self.payload([dict(base,sourceAvailabilityBlock=None)])
+                self.assertTrue(any(o.get('offerType')=='seated_class' for o in control['offers']))
+                self.assertTrue(self.calculation()['reports'][0]['normalized_occupancy'])
+
     def test_verified_gravity_distinguishes_shell_and_private_demand(self):
         self.policy['require_verified_day_gravity'] = True
         self.windows=[]; self.coverage=[]; self.sources=[]
