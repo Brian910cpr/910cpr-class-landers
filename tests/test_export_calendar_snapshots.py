@@ -323,6 +323,60 @@ END:VCALENDAR"""
         self.assertEqual(3, len(events))
         self.assertEqual(2, sum(event["recurrence_source"] == "recurring_expanded_instance" for event in events))
 
+    def test_conflicting_recurrence_override_preserves_original(self) -> None:
+        source = {"calendar_source_key": "test", "mode": "inverse_blocking"}
+        for conflicting in (
+            "DTSTART:20260623T150000\nDTEND:20260623T160000",
+            "DTSTART:20260623T150000",
+            "STATUS:CANCELLED",
+        ):
+            with self.subTest(conflicting=conflicting):
+                ics = f"""BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:series
+DTSTART:20260622T090000
+DTEND:20260622T100000
+RRULE:FREQ=DAILY;COUNT=3
+END:VEVENT
+BEGIN:VEVENT
+UID:series
+RECURRENCE-ID:20260623T090000
+DTSTART:20260623T130000
+DTEND:20260623T140000
+END:VEVENT
+BEGIN:VEVENT
+UID:series
+RECURRENCE-ID:20260623T090000
+{conflicting}
+END:VEVENT
+END:VCALENDAR"""
+                events, skipped = exporter.parse_ics_events(
+                    ics, source, datetime(2026, 6, 1), datetime(2026, 7, 1))
+                self.assertEqual(3, sum(e["generated_from_rrule"] for e in events))
+                self.assertGreaterEqual(skipped["unresolved_recurrence_override"], 1)
+                self.assertTrue(any(e["start"] == "2026-06-23T13:00:00" for e in events))
+
+    def test_moved_recurrence_outside_window_replaces_original(self) -> None:
+        source = {"calendar_source_key": "test", "mode": "inverse_blocking"}
+        ics = """BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:series
+DTSTART:20260622T090000
+DTEND:20260622T100000
+RRULE:FREQ=DAILY;COUNT=3
+END:VEVENT
+BEGIN:VEVENT
+UID:series
+RECURRENCE-ID:20260623T090000
+DTSTART:20260723T130000
+DTEND:20260723T140000
+END:VEVENT
+END:VCALENDAR"""
+        events, skipped = exporter.parse_ics_events(
+            ics, source, datetime(2026, 6, 1), datetime(2026, 7, 1))
+        self.assertEqual(2, len(events))
+        self.assertEqual(1, skipped["suppressed_by_recurrence_override"])
+
 
 if __name__ == "__main__":
     unittest.main()
