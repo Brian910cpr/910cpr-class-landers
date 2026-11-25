@@ -159,6 +159,42 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertTrue(any(o['date']=='2026-10-12' and o['startTime']=='08:00'
                             and o['scheduleRole']=='open_day' for o in skills))
 
+    def test_verified_publication_uses_eastern_day_for_utc_source(self):
+        self.policy['require_verified_day_gravity'] = True
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'18:00','23:30',next_day=False)
+        self.window(12,'08:00','18:00',next_day=False)
+        source=self.add(11,'20:30','22:30',cid='359474',count=1,visibility='private')
+        source.update(start='2026-10-12T00:30:00Z',end='2026-10-12T02:30:00Z')
+        offers=self.payload()['offers']
+        self.assertTrue(any(o['date']=='2026-10-11' and o['scheduleRole']=='barnacle'
+                            for o in offers))
+        self.assertFalse(any(o['date']=='2026-10-11' and o['scheduleRole']=='open_day'
+                             for o in offers))
+        self.assertTrue(any(o['date']=='2026-10-12' and o['startTime']=='08:00'
+                            and o['scheduleRole']=='open_day' for o in offers))
+
+    def test_verified_seated_instructor_must_match_source_assignment(self):
+        self.policy['require_verified_day_gravity'] = True
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        self.window(11,'08:00','18:00',name='Michelle',next_day=False)
+        source=self.add(11,'12:00','14:00',cid='359474',count=1,visibility='public')
+        seated=dict(session_id=source['source_event_id'],date='2026-10-11',
+            startTime='12:00',courseId='359474',courseName='Synthetic',
+            instructor='Michelle',offerType='seated_class',visibility='public',
+            registrationUrl='https://fixture.invalid/enroll')
+        result=self.payload([seated])
+        self.assertIn('seated_instructor_mismatch',result['rejectionReasonCounts'])
+        self.assertFalse(any(o.get('offerType')=='seated_class' for o in result['offers']))
+        self.assertTrue(any(o['instructor']=='Michelle' and o['startTime']=='08:00'
+                            and o['courseId']=='359474' and o['scheduleRole']=='open_day'
+                            for o in result['offers']))
+        # The known Brian alias is not a mismatch.
+        seated['instructor']='Brian'
+        result=self.payload([seated])
+        self.assertTrue(any(o.get('offerType')=='seated_class' for o in result['offers']))
+
     def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
         # Both conflict rejections and expired dynamic URLs pass through this
         # finalizer. Neither may serialize a private record into the public

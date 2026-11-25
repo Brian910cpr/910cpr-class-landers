@@ -7,6 +7,7 @@ missing bounds close the affected resource horizon. Existing records are immutab
 from copy import deepcopy
 from collections import Counter
 from datetime import timedelta, timezone
+from zoneinfo import ZoneInfo
 from scripts.layered_selector_adapter import aware, build_shadow
 from scripts.layered_scheduling_engine import encode as encode_value
 import json
@@ -242,6 +243,10 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                     counts[key] = source
                 if restricted:
                     nonpublic_identities.add(key)
+    def instructor_key(name):
+        key = str(name or '').strip().casefold()
+        return 'brian ennis' if key == 'brian' else key
+
     for original in seated_offers:
         identity = (original.get("session_id") or original.get("sourceSessionId")
                     or original.get("sourceAvailabilityBlock", {}).get("sessionId"))
@@ -257,22 +262,26 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             rejected.append(dict(original, reasons=["nonpublic_occupied_not_joinable"]))
         elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
+        elif (require_verified_day_gravity and has_verified_demand(source)
+                and instructor_key(original.get('instructor')) != instructor_key(source.get('instructor'))):
+            rejected.append(dict(original, reasons=["seated_instructor_mismatch"]))
         else:
             accepted.append(deepcopy(original))
-    def instructor_key(name):
-        key = str(name or '').strip().casefold()
-        return 'brian ennis' if key == 'brian' else key
     def matched_source(offer):
         identity = (offer.get("session_id") or offer.get("sourceSessionId")
                     or offer.get("sourceAvailabilityBlock", {}).get("sessionId"))
         return counts.get(str(identity))
+    def has_matching_verified_demand(offer):
+        source = matched_source(offer)
+        return (has_verified_demand(source) and bool(instructor_key(offer.get('instructor')))
+                and instructor_key(offer.get('instructor')) == instructor_key(source.get('instructor')))
     def anchor_key(offer):
         return (offer['date'], str(offer['courseId']),
                 instructor_key(offer.get('instructor')) if require_verified_day_gravity else '')
     day_anchors = {anchor_key(o) for o in accepted
                    if o.get('offerType') == 'seated_class' and
                    (not require_verified_day_gravity or
-                    (o.get('instructor') and has_verified_demand(matched_source(o))))}
+                    has_matching_verified_demand(o))}
     # Assigned demand establishes day gravity, even when it is not joinable
     # or has no public course ID. Hard resource occupancy stays independent.
     anchored_days = set()
@@ -285,9 +294,12 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         if (source.get('start') and source.get('end') and
                 not source.get('normalization_issue') and
                 aware(source['end']).astimezone(timezone.utc) > aware(source['start']).astimezone(timezone.utc)):
-            day = aware(source['start']).date()
-            last = (aware(source['end']).astimezone(timezone.utc) -
-                    timedelta(microseconds=1)).astimezone(aware(source['end']).tzinfo).date()
+            start, end = aware(source['start']), aware(source['end'])
+            # Match active V2 engine business-day gravity regardless of source offset.
+            zone = ZoneInfo('America/New_York') if require_verified_day_gravity else None
+            day = (start.astimezone(zone) if zone else start).date()
+            last = (end.astimezone(timezone.utc) -
+                    timedelta(microseconds=1)).astimezone(zone or end.tzinfo).date()
             while day <= last:
                 anchored_days.add((day.isoformat(), instructor_key(source.get('instructor'))))
                 if not require_verified_day_gravity:
@@ -295,7 +307,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 day += timedelta(days=1)
     for offer in accepted:
         if offer.get('offerType') == 'seated_class' and (not require_verified_day_gravity or
-                (offer.get('instructor') and has_verified_demand(matched_source(offer)))):
+                has_matching_verified_demand(offer)):
             anchored_days.add((offer['date'], instructor_key(offer.get('instructor'))))
     retained = []
     for offer in accepted:
