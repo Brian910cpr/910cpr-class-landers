@@ -51,7 +51,7 @@ class LayeredAdapterTests(unittest.TestCase):
 
     def test_equivalent_utc_and_local_booking_has_one_anchor_and_real_edges(self):
         from scripts.generate_dynamic_offers import parse_dt
-        self.add('12:00', '13:00', active_registration_count=1)
+        self.add('12:00', '13:00', active_registration_count=1, count_available=True)
         mirrored = dict(self.busy[0], source_event_id='enrollware:real-12:00',
                         start=parse_dt('2026-10-10T16:00:00Z'),
                         end=parse_dt('2026-10-10T17:00:00Z'))
