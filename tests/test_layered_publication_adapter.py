@@ -121,6 +121,8 @@ class LayeredPublicationTests(unittest.TestCase):
 
     def test_owner_interval_policy_keeps_nonoverlapping_private_canonical_context(self):
         self.policy['brian_explicit_interval_only_nonoverlap'] = True
+        baseline = self.calculation()
+        self.assertTrue(baseline['reports'][0]['accepted'])
         self.sources.append(dict(source_event_id='fixture-owner-nonoverlap',
             start=self.at(12, '09:00').isoformat(), end=self.at(12, '10:00').isoformat(),
             instructor='Brian Ennis', location='unmapped-offsite', resource='unmapped-offsite',
@@ -128,10 +130,17 @@ class LayeredPublicationTests(unittest.TestCase):
             count_available=True, active_registration_count=1))
         result=self.calculation()
         self.assertEqual(result['counts']['failed_windows'], 0, result['issues'])
-        self.assertTrue(result['reports'][0]['accepted'])
+        self.assertTrue(result['reports'][0]['accepted'], result['reports'][0]['rejection_reasons'])
+        self.assertEqual(
+            {(x['course'], x['start']) for x in baseline['reports'][0]['accepted']},
+            {(x['course'], x['start']) for x in result['reports'][0]['accepted']})
         self.assertEqual(result['projected_sources'][0]['active_registration_count'], 1)
         self.assertEqual(result['projected_sources'][0]['visibility'], 'private')
         self.assertEqual(len(result['reports'][0]['normalized_occupancy']),1)
+        self.assertEqual(result['reports'][0]['normalized_occupancy'][0]['id'],
+                         'fixture-owner-nonoverlap')
+        self.assertNotIn('fixture-owner-nonoverlap',
+                         json.dumps(public_selector_availability_payload(self.payload(calculation=result))))
         # A verified direction is not replaced with a guessed opposite direction.
         self.policy['travel_minutes']={self.room+'->unmapped-offsite': 30}
         self.assertEqual(self.calculation()['counts']['failed_windows'], 1)
@@ -147,6 +156,21 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(self.calculation()['counts']['failed_windows'], 0)
         self.sources[0].update(start=self.at(11,'09:00').isoformat(),end=self.at(11,'10:00').isoformat())
         self.assertEqual(self.calculation()['counts']['failed_windows'], 1)
+
+    def test_business_day_gravity_keeps_late_evening_same_day_edges(self):
+        # UTC midnight splits the local evening; both sides of the actual
+        # local-day seat must remain Barnacles, not scattered clear-day starts.
+        self.windows=[]; self.coverage=[]
+        self.window(11,'18:00','23:30',next_day=False)
+        self.add(11,'20:30','21:30',cid='210549',count=1,visibility='private')
+        result=self.calculation()
+        self.assertEqual(result['counts']['failed_windows'],0,result['issues'])
+        report=result['reports'][0]
+        self.assertTrue(report['accepted'], report['rejection_reasons'])
+        self.assertTrue(all(c['mode']=='barnacle' for c in report['accepted']))
+        starts={aware(c['start']).strftime('%H:%M') for c in report['accepted']
+                if c['course']=='329495'}
+        self.assertEqual(starts,{'19:30','21:30'})
 
     def test_interval_policy_does_not_apply_to_other_instructors(self):
         self.windows=[]; self.coverage=[]

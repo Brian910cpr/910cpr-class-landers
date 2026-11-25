@@ -285,7 +285,10 @@ def run(fixture):
         if we <= ws:
             raise ValueError("availability must be a positive interval")
         instructor, location = window["instructor"], window["location"]
-        local_zone = datetime.fromisoformat(window["start"].replace("Z", "+00:00")).tzinfo
+        # Resource intersection serializes bounds in UTC. Day gravity must
+        # still use the configured business day, not the UTC date of a bound.
+        local_zone = (ZoneInfo(policy["business_timezone"]) if policy.get("business_timezone")
+                      else datetime.fromisoformat(window["start"].replace("Z", "+00:00")).tzinfo)
         first_day = ws.astimezone(local_zone).date()
         last_day = (we - timedelta(microseconds=1)).astimezone(local_zone).date()
         relevant = [b for b in blocks if
