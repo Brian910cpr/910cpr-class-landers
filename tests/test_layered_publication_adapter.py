@@ -103,6 +103,7 @@ class LayeredPublicationTests(unittest.TestCase):
     def test_near_boundary_private_offsite_still_requires_known_route(self):
         # A booking ~38 hours after a window remains in the conservative 48h
         # transition/repeat-gap envelope; it must not get silently pruned.
+        self.policy['brian_explicit_interval_only_nonoverlap'] = False
         self.sources.append(dict(
             source_event_id='fixture-private-adjacent-offsite',
             start=self.at(13, '08:00').isoformat(),
@@ -117,6 +118,45 @@ class LayeredPublicationTests(unittest.TestCase):
                             for issue in result['issues']))
         self.assertEqual(set(result['issues'][0]['route_source_categories']),
                          {'canonical_positive', 'scope_selected_instructor', 'interval_outside_window'})
+
+    def test_owner_interval_policy_keeps_nonoverlapping_private_canonical_context(self):
+        self.policy['brian_explicit_interval_only_nonoverlap'] = True
+        self.sources.append(dict(source_event_id='fixture-owner-nonoverlap',
+            start=self.at(12, '09:00').isoformat(), end=self.at(12, '10:00').isoformat(),
+            instructor='Brian Ennis', location='unmapped-offsite', resource='unmapped-offsite',
+            source_file='canonical_class_sessions', visibility='private',
+            count_available=True, active_registration_count=1))
+        result=self.calculation()
+        self.assertEqual(result['counts']['failed_windows'], 0, result['issues'])
+        self.assertTrue(result['reports'][0]['accepted'])
+        self.assertEqual(result['projected_sources'][0]['active_registration_count'], 1)
+        self.assertEqual(result['projected_sources'][0]['visibility'], 'private')
+        self.assertEqual(len(result['reports'][0]['normalized_occupancy']),1)
+        # A verified direction is not replaced with a guessed opposite direction.
+        self.policy['travel_minutes']={self.room+'->unmapped-offsite': 30}
+        self.assertEqual(self.calculation()['counts']['failed_windows'], 1)
+        del self.policy['travel_minutes']
+        # A different source type at that location must not inherit the exception.
+        self.sources.append(dict(self.sources[0], source_event_id='fixture-unknown-source',
+            source_file='other_source', start=self.at(12,'11:00').isoformat(), end=self.at(12,'12:00').isoformat()))
+        self.assertEqual(self.calculation()['counts']['failed_windows'], 1)
+        self.sources.pop()
+        # Unassigned commitments stay in the engine and cannot be waived
+        # if they overlap the selected window.
+        self.sources[0].update(instructor='unknown', instructor_unassigned=True)
+        self.assertEqual(self.calculation()['counts']['failed_windows'], 0)
+        self.sources[0].update(start=self.at(11,'09:00').isoformat(),end=self.at(11,'10:00').isoformat())
+        self.assertEqual(self.calculation()['counts']['failed_windows'], 1)
+
+    def test_interval_policy_does_not_apply_to_other_instructors(self):
+        self.windows=[]; self.coverage=[]
+        self.window(11,name='Other Instructor')
+        self.policy['brian_explicit_interval_only_nonoverlap']=True
+        self.sources.append(dict(source_event_id='fixture-other-nonoverlap',
+            start=self.at(12,'09:00').isoformat(),end=self.at(12,'10:00').isoformat(),
+            instructor='Other Instructor',location='unmapped-offsite',resource='unmapped-offsite',
+            source_file='canonical_class_sessions',visibility='private',count_available=True,active_registration_count=1))
+        self.assertEqual(self.calculation()['counts']['failed_windows'],1)
 
     def test_other_instructor_private_offsite_does_not_steal_window(self):
         self.sources.append(dict(

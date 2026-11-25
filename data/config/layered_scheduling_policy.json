@@ -19,5 +19,6 @@
   "slot_minutes": 30,
   "edge_grid_policy": "exact_existing_boundary",
   "brian_person_id": "instructor_24057895173",
+  "brian_explicit_interval_only_nonoverlap": true,
   "brian_excluded_families": ["ACLS", "PALS"]
 }

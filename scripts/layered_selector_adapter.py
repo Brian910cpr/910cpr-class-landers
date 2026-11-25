@@ -254,6 +254,30 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
                            and aware(window["start"]) < aware(source["end"])
                            for window in fixture["instructor_availability"])
             route_categories.add("interval_overlaps_window" if overlaps else "interval_outside_window")
+    # Explicit interval-only owner policy is narrowly scoped to one selected
+    # instructor and non-overlapping canonical commitments. Keep their
+    # actual locations, intervals, demand and repeat-gap context. This does
+    # not infer a route, waive a known directional buffer, or permit an
+    # overlapping unknown-venue source to pass.
+    interval_only_locations = set()
+    if (policy.get("brian_explicit_interval_only_nonoverlap") is True
+            and len(windows) == 1
+            and str(windows[0].get("person_id")) == policy.get("brian_person_id")):
+        selected = fixture["instructor_availability"][0]
+        ws, we = aware(selected["start"]), aware(selected["end"])
+        for loc in missing_locations:
+            if any(direction in (travel_minutes or {})
+                   for direction in (loc+"->"+primary, primary+"->"+loc)):
+                continue
+            matching = [(source, original) for source, original in route_origins
+                        if source["location"] == loc
+                        and not (attested_checkout_hold(source, fixture["now"], fixture["courses"])
+                                 and stamp(source["hold_expires_at"]) <= stamp(fixture["now"]))]
+            if matching and all(
+                    original.get("source_file") == "canonical_class_sessions"
+                    and (aware(source["end"]) <= ws or aware(source["start"]) >= we)
+                    for source, original in matching):
+                interval_only_locations.add(loc)
     for left in locations:
         for right in locations:
             if left == right:
@@ -266,6 +290,8 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
                 gap = 0
             else:
                 gap = (travel_minutes or {}).get(left+"->"+right)
+                if gap is None and (left in interval_only_locations or right in interval_only_locations):
+                    gap = 0  # Owner-entered explicit intervals; no inferred extra travel.
                 if gap is None:
                     error = ValueError("missing directional travel rule: "+left+"->"+right)
                     error.route_source_categories = sorted(route_categories)
