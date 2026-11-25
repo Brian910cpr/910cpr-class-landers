@@ -76,6 +76,28 @@ class LayeredPublicationTests(unittest.TestCase):
             for report in self.calculation()['reports']
             for x in report['free_intervals']))
 
+    def test_attested_private_seat_survives_exact_interval_engine_dedup(self):
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', next_day=False)
+        legacy=self.add(11,'12:00','13:00',cid='359474',count=None)
+        legacy['source_file']='legacy'
+        canonical=dict(legacy,source_event_id='synthetic-attested-private',
+            source_file='canonical_class_sessions',visibility='private',
+            operational_has_active_seat=True)
+        for rows in ([legacy,canonical],[canonical,legacy]):
+            with self.subTest(first=rows[0]['source_file']):
+                self.sources=list(rows)
+                occupied=self.calculation()['reports'][0]['normalized_occupancy']
+                self.assertEqual(len(occupied),1)
+                self.assertEqual(occupied[0]['id'],'synthetic-attested-private')
+                self.assertTrue(occupied[0]['operational_has_active_seat'])
+                self.assertEqual(occupied[0]['kind'],'paid')
+                self.assertIsNone(occupied[0]['headcount'])
+                public=public_selector_availability_payload(self.payload())
+                self.assertNotIn('synthetic-attested-private',json.dumps(public))
+                self.assertFalse(any(o.get('offerType')=='seated_class'
+                    for o in self.payload()['offers']))
+
     def test_restricted_identity_cannot_inherit_public_mirror_route(self):
         for visibility in ('private', 'unlisted', 'internal'):
             with self.subTest(visibility=visibility):

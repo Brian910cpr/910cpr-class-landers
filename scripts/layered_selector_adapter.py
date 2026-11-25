@@ -102,7 +102,18 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
     if commitment_coverage is not None:
         fixture["commitment_coverage"] = commitment_coverage
     source_keys = set()
-    for index, busy in enumerate(occupancy):
+    # Preserve attested demand when canonical and legacy records mirror an
+    # exact interval. Unknown counts remain unknown; do not add seats.
+    def attested(busy):
+        count = busy.get("active_registration_count")
+        return (not busy.get("instructor_unassigned")
+                and busy.get("kind") not in {"hold", "commitment", "uncertain"}
+                and (busy.get("operational_has_active_seat") is True
+                     or (busy.get("count_available") is True
+                         and type(count) is int and count > 0)))
+    ordered = sorted(enumerate(occupancy),
+                     key=lambda pair: (not attested(pair[1]), pair[0]))
+    for index, busy in ordered:
         if not busy.get("start") or not busy.get("end"):
             raise ValueError("unresolved occupied interval")
         start, end = aware(busy["start"]), aware(busy["end"])
@@ -126,11 +137,13 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         cid = str(busy.get("course_id") or "")
         kind = busy.get("kind") or ("commitment" if "blocked" in str(busy.get("source_file")) else "planted")
         count = busy.get("active_registration_count")
-        if isinstance(count, int) and count > 0 and kind == "planted":
+        verified_seat = attested(busy)
+        if verified_seat and kind == "planted":
             kind = "paid"
         fixture["sources"].append(dict(id=str(busy.get("source_event_id") or "occupied-"+str(index)),
             instructor=instructor, location=location, start=start.isoformat(), end=end.isoformat(),
             course=cid if cid in fixture["courses"] else None, kind=kind, headcount=count,
+            operational_has_active_seat=verified_seat,
             evidence=busy.get("source_file"),
             resource_uncertain=busy.get("resource_uncertain", False),
             uncertainty_reason=busy.get("uncertainty_reason"),
@@ -138,7 +151,8 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         if busy.get("instructor_unassigned"):
             for name in fixture["capabilities"]:
                 fixture["sources"].append(dict(fixture["sources"][-1],
-                    id="unassigned-"+str(index)+"-"+name, instructor=name, kind="hold"))
+                    id="unassigned-"+str(index)+"-"+name, instructor=name, kind="hold",
+                    operational_has_active_seat=False))
     locations = {s["location"] for s in fixture["sources"]} | {primary}
     for left in locations:
         for right in locations:
