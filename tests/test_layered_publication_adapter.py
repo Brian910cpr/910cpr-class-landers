@@ -876,7 +876,17 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(any(o.get('scheduleRole')=='open_day' and o.get('instructor')=='Brian Ennis' for o in day))
         self.assertTrue(any(o.get('scheduleRole')=='open_day' and o.get('instructor')=='Michelle' for o in day))
         self.assertTrue(any(o.get('scheduleRole')=='open_day' and o['date']=='2026-10-12' for o in payload['offers']))
-        self.assertIn('anchored_day_requires_attached_offer',payload['rejectionReasonCounts'])
+        # The engine now uses local business dates, so the detached window
+        # is already limited to its own instructor's out-of-window edges.
+        # Require evidence of that rejection, not a redundant publication veto.
+        report=next(r for r in payload['layeredDiagnostics']['reports']
+                    if r['availability_window']==self.windows[1]['source_availability_window'])
+        self.assertFalse(report['accepted'])
+        self.assertTrue(report['rejected'])
+        self.assertTrue(all('outside_explicit_availability' in c['reasons']
+                            for c in report['rejected']))
+        self.assertTrue(any(o.get('scheduleRole')=='open_day' and o.get('instructor')=='Michelle'
+                            and o['startTime']=='20:00' for o in day))
 
     def test_unknown_offsite_travel_affects_only_own_instructor(self):
         self.window(11,name='Michelle')

@@ -295,7 +295,12 @@ def run(fixture):
                     (not policy.get("require_verified_day_gravity")
                      or any(source_id in verified_gravity_ids for source_id in b["source_ids"]))
                     and (b["instructor"] == instructor or (policy.get("shared_room_edges")
-                        and b["start_location"] == location and b["end_location"] == location))
+                        and b["start_location"] == location and b["end_location"] == location
+                        # Another instructor's room use can shape edges only in
+                        # a window that touches that occupied block. It cannot
+                        # impose all-day demand gravity on an independent track.
+                        and b["start"] - minutes(cleanup) <= we
+                        and b["end"] + minutes(cleanup) >= ws))
                     and b["start"].astimezone(local_zone).date() <= last_day
                     and (b["end"] - timedelta(microseconds=1)).astimezone(local_zone).date() >= first_day
                     and (not layered_windows or policy.get('shared_room_edges')
