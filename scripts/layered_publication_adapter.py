@@ -133,8 +133,13 @@ def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qua
             other_span = bounds(other)
             if other_span and (other_span[1] <= span[0] or other_span[0] >= span[1]):
                 continue
+            # A legacy row that explicitly resolves to a different canonical
+            # class cannot be ignored as this class's mirror, even if its legacy
+            # key and occupied interval agree. Contradictory evidence stays busy.
+            linked_canonical = other.get("linked_canonical_session_id")
             if (other_span == span and other_room is True and other_person == owner_key
                     and other.get("source_file") in {"data/sessions_current.json", "docs/data/schedule_future.json"}
+                    and (not linked_canonical or linked_canonical == row.get("source_event_id"))
                     and row.get("external_class_id")
                     and str(row["external_class_id"]) == str(other.get("external_class_id") or "")
                     and str(row.get("course_id") or "") == str(other.get("course_id") or "")):

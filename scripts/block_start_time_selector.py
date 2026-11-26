@@ -744,6 +744,7 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             for block, session in zip(normalized, [r for r in raw if isinstance(r, dict)]):
                 block.update(source_event_id=session.get("session_id") or session.get("id"),
                     course_id=session.get("course_id"), external_class_id=session.get("session_id"),
+                    linked_canonical_session_id=clean_text(session.get("canonical_session_id")) or None,
                     count_available=session.get("count_available") is True,
                     active_registration_count=session.get("active_registration_count"),
                     uncertainty_scope=session.get("uncertainty_scope", {}))

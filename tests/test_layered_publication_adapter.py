@@ -777,6 +777,33 @@ class LayeredPublicationTests(unittest.TestCase):
             self.sources[1] = {**other, **update}
             self.assertIs(self.attribute()[0], row)
 
+    def test_owner_mirror_requires_agreement_with_explicit_canonical_link(self):
+        row = self.add_intake(11, source_event_id='canonical-intake')
+        mirror = dict(row, source_file='docs/data/schedule_future.json',
+                      instructor='Brian', instructor_unassigned=False,
+                      linked_canonical_session_id='canonical-intake')
+        self.sources.append(mirror)
+        self.assertEqual(self.attribute()[0]['instructor'], 'Brian Ennis')
+        self.sources[1] = dict(mirror, linked_canonical_session_id='different-canonical')
+        self.assertIs(self.attribute()[0], row)
+
+        # Before attribution, preserve durable provenance from the actual V2
+        # normalization path; it is not inferred from time or the course label.
+        from scripts.block_start_time_selector import build_occupancy
+        legacy = dict(session_id='1234', canonical_session_id='different-canonical',
+                      start_at='2026-10-11T10:00:00-04:00', end_at='2026-10-11T12:00:00-04:00',
+                      course_id='359474', lead_instructor_name='Brian', location_name='Shipyard Office')
+        [normalized] = build_occupancy({'schedule_future': {'sessions': [legacy]},
+                                       'location_resource_map': self.resources}, {}, allow_unresolved=True)
+        self.assertEqual(normalized['linked_canonical_session_id'], 'different-canonical')
+        [old] = build_occupancy({'schedule_future': {'sessions': [legacy]},
+                                 'location_resource_map': self.resources}, {})
+        self.assertNotIn('linked_canonical_session_id', old)
+        # Two canonical rows are not a mirror, even at exactly the same bounds.
+        self.sources[1] = dict(row, source_event_id='different-canonical', instructor='Brian',
+                               instructor_unassigned=False)
+        self.assertIs(self.attribute()[0], row)
+
     def test_owner_effective_anchor_keeps_bookends_without_join_or_private_identifiers(self):
         self.policy['require_verified_day_gravity'] = True
         row = self.add_intake(11, source_event_id='PRIVATE-OWNER-INTAKE')
