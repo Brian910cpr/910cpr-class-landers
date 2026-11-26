@@ -6,9 +6,9 @@ missing bounds close the affected resource horizon. Existing records are immutab
 """
 from copy import deepcopy
 from collections import Counter
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta, timezone
 from zoneinfo import ZoneInfo
-from scripts.layered_selector_adapter import aware, build_shadow
+from scripts.layered_selector_adapter import aware, build_shadow, occupancy_instant
 from scripts.layered_scheduling_engine import encode as encode_value, stamp
 import json
 
@@ -67,10 +67,10 @@ def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qua
         name = " ".join(str(value or "").casefold().split())
         return "brian ennis" if name == "brian" else name
 
-    def bounds(row):
+    def bounds(row, *, allow_local=True):
         try:
-            start, end = (stamp(value.isoformat() if isinstance(value, datetime) else value)
-                          for value in (row["start"], row["end"]))
+            start, end = (occupancy_instant(row[field], allow_local=allow_local)
+                          for field in ("start", "end"))
             if start < end:
                 return start, end
         except (KeyError, ValueError, TypeError, AttributeError):
@@ -92,7 +92,7 @@ def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qua
         if (proof.get("status") != "known_complete" or proof.get("location") != primary
                 or key(proof.get("instructor")) != owner_key):
             continue
-        span = bounds(proof)
+        span = bounds(proof, allow_local=False)
         try:
             observed = stamp(proof["observed_at"])
             expiry = min(stamp(proof["valid_until"]), observed + timedelta(

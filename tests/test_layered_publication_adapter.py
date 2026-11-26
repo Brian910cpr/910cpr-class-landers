@@ -736,6 +736,20 @@ class LayeredPublicationTests(unittest.TestCase):
                          [None, 1, None, 2, 1])
         self.assertTrue(all(r['visibility'] == 'private' for r in effective))
 
+    def test_owner_fallback_reads_legacy_naive_occupancy_but_not_naive_coverage(self):
+        from scripts.block_start_time_selector import parse_dt
+        from scripts.layered_selector_adapter import occupancy_instant
+        row = self.add_intake(11)
+        row.update(start=parse_dt(row["start"]), end=parse_dt(row["end"]))
+        self.assertEqual(self.attribute()[0]["instructor"], "Brian Ennis")
+        self.coverage[0]["start"] = parse_dt(self.coverage[0]["start"])
+        self.assertIs(self.attribute()[0], row)
+        for ambiguous in ("2026-11-01T01:30:00", "2027-03-14T02:30:00"):
+            with self.assertRaises(ValueError):
+                occupancy_instant(ambiguous)
+        self.assertNotEqual(occupancy_instant("2026-11-01T01:30:00-04:00"),
+                            occupancy_instant("2026-11-01T01:30:00-05:00"))
+
     def test_no_fallback_without_fresh_proof_cert_or_true_unassignment(self):
         row = self.add_intake(11)
         self.assertIs(self.attribute(approved=False)[0], row)

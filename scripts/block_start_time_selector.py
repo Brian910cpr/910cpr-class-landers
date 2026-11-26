@@ -797,16 +797,21 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             block["resource"] = resource
             block["location_resolution"] = "location_resource_map"
     if classify_catalog:
+        from scripts.layered_selector_adapter import occupancy_instant
         # An exact legacy mirror cannot revive a missing or contradictory
         # canonical course identity. It continues to hold the occupied block.
         def identity(block):
             external_id = block.get("external_class_id")
             start, end = block.get("start"), block.get("end")
-            if (not external_id or not isinstance(start, datetime) or not isinstance(end, datetime)
-                    or start.utcoffset() is None or end.utcoffset() is None):
+            if not external_id:
                 return None
-            return (str(external_id), start.astimezone(ZoneInfo("UTC")), end.astimezone(ZoneInfo("UTC")),
-                    block.get("location"), block.get("resource"))
+            try:
+                start, end = occupancy_instant(start), occupancy_instant(end)
+            except (ValueError, TypeError, OverflowError):
+                return None
+            if end <= start:
+                return None
+            return (str(external_id), start, end, block.get("location"), block.get("resource"))
         matches = {}
         for block in canonical_rows:
             if key := identity(block):

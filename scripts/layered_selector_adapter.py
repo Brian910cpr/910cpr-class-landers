@@ -3,7 +3,7 @@
 Shadow adapter; never calls services, changes bookings or creates room records.
 Room hours come from the owner's explicit policy; occupancy always wins.
 """
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from scripts.layered_scheduling_engine import run
 
@@ -14,6 +14,23 @@ def aware(value):
     if isinstance(value, str):
         value = datetime.fromisoformat(value.replace("Z", "+00:00"))
     return value.replace(tzinfo=ZONE) if value.tzinfo is None else value.astimezone(ZONE)
+
+
+def occupancy_instant(value, *, allow_local=True):
+    """Interpret normalized Eastern occupancy without guessing at a clock change."""
+    if isinstance(value, str):
+        value = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if not isinstance(value, datetime):
+        raise ValueError("missing occupancy instant")
+    if value.utcoffset() is None:
+        if not allow_local:
+            raise ValueError("coverage is missing a verified offset")
+        first = value.replace(tzinfo=ZONE, fold=0)
+        second = value.replace(tzinfo=ZONE, fold=1)
+        if first.utcoffset() != second.utcoffset():
+            raise ValueError("ambiguous or nonexistent local occupancy instant")
+        value = first
+    return value.astimezone(timezone.utc)
 
 
 def build_shadow(windows, occupancy, courses, policy, resources, now,
