@@ -152,7 +152,9 @@ test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields'
   assert.deepEqual(calls[0].getAll('start_at'),['gte.2026-11-01T04:00:00.000Z','lt.2026-11-02T05:00:00.000Z']);
   assert.equal(calls[1].get('offset'),'500');
   assert.doesNotMatch(calls[0].get('select'),/customers|email|phone/);
+  assert.match(calls[0].get('select'), /courses!class_sessions_course_id_fkey\(course_key,name,enrollware_course_id\)/);
   assert.equal(body.sessions[0].external_course_id,'359474');
+  assert.equal(body.sessions[0].catalog_course_id,null);
 });
 
 test('classification source failure or canonical conflict blocks the whole publication snapshot', async () => {
@@ -173,7 +175,7 @@ test('authenticated HTTP response exposes an occupancy bit, never raw intake pro
     return Response.json([{
       id:'synthetic-intake', status:'scheduled', source:'confirmed_booking_intake',
       registration_backend:'landerware', visibility:'private', registration_status:'closed',
-      external_class_id:'80003', start_at:'2026-11-01T15:00:00Z', end_at:'2026-11-01T16:00:00Z',
+      external_class_id:'80003', courses:{course_key:'fixture-bls',enrollware_course_id:209806}, start_at:'2026-11-01T15:00:00Z', end_at:'2026-11-01T16:00:00Z',
       consumption_start_at:'2026-11-01T15:00:00Z', consumption_end_at:'2026-11-01T16:00:00Z',
       location_id:'facility', lead_instructor_id:null, email:privateEmail,
       external_session_evidence:{kind:'registration_confirmation',gmail_message_id:messageId,email:privateEmail},
@@ -190,8 +192,11 @@ test('authenticated HTTP response exposes an occupancy bit, never raw intake pro
     'active_registration_statuses','generated_at','non_session_sources','schema_version','sessions',
   ].sort());
   const row = body.sessions[0];
+  assert.equal(row.external_course_id,null);
+  assert.equal(row.catalog_course_id,'209806');
+  assert.equal(row.course_key,'fixture-bls');
   assert.deepEqual(Object.keys(row).sort(), [
-    'canonical_session_id','external_class_id','external_course_id','course_key','start_at','end_at',
+    'canonical_session_id','external_class_id','external_course_id','catalog_course_id','course_key','start_at','end_at',
     'consumption_start_at','consumption_end_at','location_id','location_name','lead_instructor_id',
     'lead_instructor_name','course_name','visibility','registration_backend','registration_status',
     'workspace_projection_status','workspace_session_id','operational_has_active_seat',
@@ -206,4 +211,15 @@ test('authenticated HTTP response exposes an occupancy bit, never raw intake pro
   assert.equal(row.count_available,false);
   assert.doesNotMatch(JSON.stringify(body), new RegExp(
     [messageId, 'privacy-canary', 'gmail_message_id','external_session_evidence','registration_confirmation'].join('|')));
+});
+
+test('catalog course ID is additive, strict, and never hides a disagreement with the session ID', () => {
+  const base = {external_course_id:'359474',courses:{course_key:'bls',enrollware_course_id:'209806'}};
+  const projected=api.projectDemand(base);
+  assert.equal(projected.external_course_id,'359474');
+  assert.equal(projected.catalog_course_id,'209806');
+  assert.equal(projected.course_key,'bls');
+  for (const invalid of [null, undefined, false, {}, ' 209806 ', 'BLS', '0', 0, -1, 0.1, Number.MAX_SAFE_INTEGER+1]) {
+    assert.equal(api.projectDemand({...base,courses:{...base.courses,enrollware_course_id:invalid}}).catalog_course_id,null);
+  }
 });

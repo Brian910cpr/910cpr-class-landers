@@ -37,6 +37,12 @@ async function authorized(req: Request) {
   return result.ok;
 }
 
+function catalogCourseId(value: unknown): string | null {
+  // This is the joined catalog's identifier, not booking or roster evidence.
+  if (typeof value === "number") return Number.isSafeInteger(value) && value > 0 ? String(value) : null;
+  return typeof value === "string" && /^[1-9][0-9]*$/.test(value) ? value : null;
+}
+
 export function projectDemand(row: any) {
   const proof = registrationProof(row);
   const countAvailable = proof.count_available;
@@ -76,6 +82,7 @@ export function projectDemand(row: any) {
     canonical_session_id: row.id,
     external_class_id: row.external_class_id || null,
     external_course_id: row.external_course_id || null,
+    catalog_course_id: catalogCourseId(row.courses?.enrollware_course_id),
     course_key: row.courses?.course_key || null,
     start_at: row.start_at,
     end_at: row.end_at,
@@ -109,7 +116,7 @@ export async function loadDemand(start: string, stop: string) {
   const select = [
     "id", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "external_session_evidence", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
     "consumption_start_at", "consumption_end_at", "source_location_label", "source_instructor_label", "visibility", "registration_status",
-    "courses!class_sessions_course_id_fkey(course_key,name)",
+    "courses!class_sessions_course_id_fkey(course_key,name,enrollware_course_id)",
     "locations!class_sessions_location_id_fkey(name)",
     "people!class_sessions_lead_instructor_id_fkey(display_name)",
     "landerware_sessions!landerware_sessions_class_session_id_fkey(id,starts_at,ends_at)",
