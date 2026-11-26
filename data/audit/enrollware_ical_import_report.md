@@ -1,6 +1,6 @@
 # Enrollware iCal Import Report
 
-- Generated at: `2026-11-26T05:47:25.268912-05:00`
+- Generated at: `2026-11-26T05:59:02.300373-05:00`
 - Source: `enrollware_ical`
 - iCal events read: `160`
 - Public sessions created: `160`
