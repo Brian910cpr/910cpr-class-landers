@@ -38,6 +38,56 @@ END:VCALENDAR
         rows, _ = exporter.parse_ics_events(ics, {**source, "mode":"explicit_availability"}, window_start, window_end)
         self.assertEqual([r["event_id"] for r in rows], ["future"])
 
+    def test_inverse_carry_in_cancellation_is_not_a_block_but_transparent_is(self):
+        source = {"calendar_source_key": "fixture", "mode": "inverse_blocking"}
+        window_start = datetime.fromisoformat("2026-11-26T15:58:18+00:00")
+        window_end = datetime.fromisoformat("2026-12-01T00:00:00+00:00")
+        ics = """BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:cancelled
+DTSTART:20261126T051500Z
+DTEND:20261127T220000Z
+STATUS:CANCELLED
+END:VEVENT
+BEGIN:VEVENT
+UID:transparent
+DTSTART:20261126T051500Z
+DTEND:20261127T220000Z
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR"""
+        events, _ = exporter.parse_ics_events(ics, source, window_start, window_end)
+        self.assertEqual([event["event_id"] for event in events], ["transparent"])
+        self.assertEqual(events[0]["transparency"], "TRANSPARENT")
+
+    def test_inverse_recurrence_cancellation_and_out_of_window_move_suppress_originals(self):
+        source = {"calendar_source_key": "fixture", "mode": "inverse_blocking"}
+        window_start = datetime.fromisoformat("2026-11-26T15:58:18+00:00")
+        window_end = datetime.fromisoformat("2026-12-01T00:00:00+00:00")
+        ics = """BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:repeat
+DTSTART:20261126T170000Z
+DTEND:20261126T180000Z
+RRULE:FREQ=DAILY;COUNT=3
+END:VEVENT
+BEGIN:VEVENT
+UID:repeat
+RECURRENCE-ID:20261126T170000Z
+STATUS:CANCELLED
+END:VEVENT
+BEGIN:VEVENT
+UID:repeat
+RECURRENCE-ID:20261127T170000Z
+DTSTART:20261202T170000Z
+DTEND:20261202T180000Z
+END:VEVENT
+END:VCALENDAR"""
+        events, skipped = exporter.parse_ics_events(ics, source, window_start, window_end)
+        self.assertEqual([event["start"] for event in events], ["2026-11-28T17:00:00+00:00"])
+        self.assertEqual(skipped["suppressed_by_recurrence_override"], 2)
+
     def test_derives_public_ics_url_from_google_calendar_cid(self) -> None:
         source = {
             "calendar_source_key": "amy_availability",
@@ -278,4 +328,5 @@ END:VCALENDAR
 
 if __name__ == "__main__":
     unittest.main()
+
 

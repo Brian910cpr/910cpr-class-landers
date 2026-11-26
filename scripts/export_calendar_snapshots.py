@@ -355,6 +355,7 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
     source_id = source_key(source)
     calendar_id = calendar_id_from_source(source)
     stype = source_type(source)
+    inverse_override_keys: set[tuple[str, str]] = set()
 
     def event_in_window(event: dict[str, Any], start_dt: datetime) -> bool:
         if in_export_window(start_dt, window_start, window_end):
@@ -372,6 +373,19 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         if line == "END:VEVENT":
             if current is None:
                 continue
+            if stype == "inverse_google_calendar":
+                # An ICS override can move outside this export, or be a cancelled
+                # tombstone without DTSTART. Neither should regenerate the original.
+                recurrence_id = parse_ics_datetime(
+                    current.get("recurrence_id_raw", ""), current.get("recurrence_id_params")
+                )
+                uid = current.get("event_id")
+                if uid and recurrence_id:
+                    inverse_override_keys.add(recurrence_key(uid, recurrence_id))
+                if str(current.get("status", "")).strip().upper() == "CANCELLED":
+                    skipped["cancelled_inverse_event"] += 1
+                    current = None
+                    continue
             start_raw = current.get("start_raw")
             start_dt = parse_ics_datetime(start_raw, current.get("start_params")) if start_raw else None
             if not start_dt:
@@ -428,7 +442,7 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         current["read_only_snapshot"] = True
 
     duplicate_keys: set[tuple[str, str]] = set()
-    override_keys: set[tuple[str, str]] = set()
+    override_keys = inverse_override_keys
     for event in parsed_events:
         event_start = parse_ics_datetime(event.get("start_raw", ""), event.get("start_params"))
         uid = event.get("event_id") or event.get("raw_properties", {}).get("UID")
@@ -654,4 +668,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
