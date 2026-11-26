@@ -8,12 +8,13 @@ const end = Date.parse('2026-12-26T17:00:00-05:00');
 const plan = async (offerEdits = {}, evidenceEdits = {}) => {
   const offer = {course:'fixture-advanced-renewal', instructor:'fixture-amy', room:'fixture-room-b',
     start, end, ...offerEdits};
-  return {now, activation:'test', offer, requestedRef:await offerRef(offer), evidence:{
+  return {now, lockedRevision:'fixture-revision-1', activation:'test', offer, requestedRef:await offerRef(offer), evidence:{
     complete:true, revision:'fixture-revision-1', asOf:now - 5000, validUntil:now + 60000,
     capability:{mode:'test', course:'fixture-advanced-renewal', room:'fixture-room-b',
       eligibleInstructors:['fixture-amy'], priceCents:12345, seatLimit:4, minutes:240,
-      turnMinutes:15, leadMinutes:1440},
-    coverage:[{instructor:'fixture-amy',room:'fixture-room-b',start,
+      setupMinutes:15, turnMinutes:15, leadMinutes:1440},
+    qualification:{course:'fixture-advanced-renewal', instructor:'fixture-amy', start:now-60000, end:end+16*60000},
+    coverage:[{instructor:'fixture-amy',room:'fixture-room-b',start:start-15*60000,
       end:Date.parse('2026-12-26T18:00:00-05:00')}], conflicts:[], ...evidenceEdits}};
 };
 
@@ -65,4 +66,35 @@ test('server duration, lead and current price are authoritative', async () => {
   assert.equal((await admitNativeOffer(p)).reason,'invalid_timing');
   p.evidence.capability.priceCents=NaN;
   assert.equal((await admitNativeOffer(p)).reason,'unsupported_capability');
+});
+
+
+test('setup block is covered, can collide before class, and has a legal exact bookend', async () => {
+  const p = await plan();
+  assert.equal((await admitNativeOffer(p)).admission.occupiedFrom, start-15*60000);
+  p.evidence.conflicts=[{room:'fixture-room-b',start:start-16*60000,end:start-14*60000,public:false}];
+  assert.equal((await admitNativeOffer(p)).reason,'occupied');
+  p.evidence.conflicts[0].end=start-15*60000;
+  assert.ok((await admitNativeOffer(p)).ok);
+  p.evidence.coverage[0].start=start;
+  assert.equal((await admitNativeOffer(p)).reason,'outside_coverage');
+});
+test('locked revision must match, and qualification must cover setup through cleanup', async () => {
+  const p=await plan();
+  assert.equal((await admitNativeOffer({...p,lockedRevision:'fixture-revision-2'})).reason,'stale_evidence');
+  assert.equal((await admitNativeOffer({...p,lockedRevision:undefined})).reason,'stale_evidence');
+  const original=p.evidence.qualification;
+  for (const q of [null, {...original,start}, {...original,end}, {...original,instructor:'fixture-brian'}]) {
+    p.evidence.qualification=q;
+    assert.equal((await admitNativeOffer(p)).reason,'qualification_outside_window');
+  }
+});
+test('invalid or overflowing canonical timing fails closed', async () => {
+  const p=await plan();
+  for (const field of ['setupMinutes','turnMinutes','leadMinutes','minutes']) {
+    const saved=p.evidence.capability[field];
+    p.evidence.capability[field]=Number.MAX_SAFE_INTEGER;
+    assert.equal((await admitNativeOffer(p)).ok,false);
+    p.evidence.capability[field]=saved;
+  }
 });

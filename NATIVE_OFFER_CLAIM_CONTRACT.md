@@ -27,7 +27,9 @@ inferred from the test fixtures.
 2. Under a transaction, lock/check both instructor and room across competing
    intervals, checking the canonical facts, fresh covered calendar/occupancy
    revision, qualification and course policy. Run admission against that
-   authoritative state. Evidence completeness and validity must be established
+   authoritative state and pass its locked revision as a separate input. Canonical
+   setup and cleanup both form part of occupancy and must be covered by instructor
+   qualification and availability. Evidence completeness and validity must be established
    by the authoritative adapter, not accepted from a client. If the coverage
    revision changes during claim, fail closed and recalculate.
 3. Atomically select or create the canonical occurrence and attach an expiring
@@ -37,7 +39,9 @@ inferred from the test fixtures.
    equal timestamp is not proof of sameness. An authenticated retry must replay
    the same hold for the same intent and reject changed intent. Expired unpaid
    holds restore capacity and trigger recalculation, not a saved availability
-   snapshot. No runtime store or concurrency guarantee is implemented here.
+   snapshot. A committed canonical hold can outlive the pre-claim calendar lease;
+   an admission alone cannot. Never expire a valid confirmed/paid seat based on
+   that lease. No runtime store or concurrency guarantee is implemented here.
 4. Create Stripe Checkout only against a committed hold, using an idempotent
    provider request. Reconcile Stripe's payment/expiry timing with the shorter
    internal hold, including late paid events, so a second checkout does not
@@ -53,3 +57,4 @@ inferred from the test fixtures.
    notification with test transactions before enabling production. Until that
    proof and separate release, maintain existing request-only behavior wherever
    no owned checkout exists.
+
