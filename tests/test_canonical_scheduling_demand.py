@@ -218,6 +218,61 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertNotIn("public_direct_booking", blocks[0])
         self.assertEqual(blocks[0]["visibility"], "private")
 
+    def test_v2_consumes_only_consistent_explicit_catalog_course_identity(self):
+        from scripts.block_start_time_selector import parse_dt
+        start, end = "2030-11-23T10:00:00-05:00", "2030-11-23T12:30:00-05:00"
+        base = dict(
+            canonical_session_id="synthetic-class", external_class_id="80123",
+            external_course_id=None, course_key="historical-title-is-not-proof",
+            session_status="scheduled", start_at=start, end_at=end,
+            location_name="Shipyard", lead_instructor_name="Brian Ennis",
+            visibility="private", operational_has_active_seat=True,
+            count_available=False, active_registration_count=None,
+        )
+        catalog = {"209806", "359474", "329495", "987654"}
+        rules = {cid: {} for cid in ("209806", "359474", "329495")}
+        scenarios = [
+            ({"catalog_course_id": "209806"}, "209806"),
+            ({"catalog_course_id": 359474}, "359474"),
+            ({"catalog_course_id": "329495"}, "329495"),
+            ({"external_course_id": "359474"}, "359474"),
+            ({"catalog_course_id": "359474", "external_course_id": 359474}, "359474"),
+            ({"catalog_course_id": "359474", "external_course_id": "209806"}, None),
+            ({"catalog_course_id": "987654"}, None),
+            ({"catalog_course_id": "NOT-A-CATALOG-COURSE"}, None),
+            ({}, None),
+        ]
+        for extra, expected in scenarios:
+            with self.subTest(extra=extra):
+                mirror = dict(start=parse_dt(start), end=parse_dt(end), location="Shipyard",
+                              instructor="Brian Ennis", source_file="docs/data/schedule_future.json")
+                distinct = dict(mirror, instructor="Amy Arnold")
+                loaded = dict(location_resource_map={}, sessions_current={"sessions": []},
+                    schedule_future={"sessions": [
+                        {"session_id": "80123", "course_id": "209806",
+                         "count_available": True, "active_registration_count": 1},
+                        {"session_id": "80124", "course_id": "209806",
+                         "count_available": True, "active_registration_count": 1},
+                    ]}, live_availability_snapshot={},
+                    canonical_demand={"sessions": [{**base, **extra}]})
+                with (patch("scripts.block_start_time_selector.generate_dynamic_offers.normalize_occupancy",
+                            side_effect=[[], [mirror, distinct]]),
+                      patch("scripts.block_start_time_selector.generate_dynamic_offers.availability_windows",
+                            return_value=[]),
+                      patch("scripts.block_start_time_selector.generate_dynamic_offers.normalize_location_resource",
+                            return_value=("Shipyard", "Room B", True))):
+                    legacy, other, canonical = build_occupancy(
+                        loaded, rules, allow_unresolved=True, known_catalog_ids=catalog)
+                self.assertEqual(canonical["course_id"], expected)
+                self.assertEqual(canonical.get("kind"), "hold" if expected is None else None)
+                self.assertEqual((canonical["start"], canonical["end"]), (parse_dt(start), parse_dt(end)))
+                self.assertEqual(canonical["external_class_id"], "80123")
+                self.assertEqual(canonical["visibility"], "private")
+                self.assertIsNone(canonical["active_registration_count"])
+                self.assertEqual(legacy.get("kind"), None if expected == "209806" else "hold")
+                self.assertIsNone(other.get("kind"))
+                self.assertEqual(other["instructor"], "Amy Arnold")
+
     def test_protected_projection_source_has_required_contract_and_no_customer_fields(self):
         source = (Path(__file__).resolve().parents[1] / "supabase/functions/canonical-scheduling-demand/index.ts").read_text(encoding="utf-8")
         for field in (

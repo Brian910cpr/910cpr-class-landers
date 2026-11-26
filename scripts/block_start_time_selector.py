@@ -706,7 +706,24 @@ def normalize_live_calendar_block_occupancy(payload: Any, allow_unresolved: bool
     return out
 
 
-def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, Any]], allow_unresolved: bool = False) -> list[dict[str, Any]]:
+def canonical_operational_course_id(session, known_catalog_ids, course_rules):
+    """Recognize only explicit, consistent IDs in both operational catalogs."""
+    ids = set()
+    for key in ("course_id", "external_course_id", "catalog_course_id"):
+        value = session.get(key)
+        if value is None or value == "":
+            continue
+        if type(value) not in (str, int) or (type(value) is str and value != value.strip()):
+            return None
+        ids.add(str(value))
+    if len(ids) != 1:
+        return None
+    cid = next(iter(ids))
+    return cid if cid in known_catalog_ids and cid in course_rules else None
+
+
+def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, Any]],
+                    allow_unresolved: bool = False, *, known_catalog_ids=None) -> list[dict[str, Any]]:
     location_resource_map = loaded.get("location_resource_map")
     sessions_current = apply_occupancy_duration_rules(
         generate_dynamic_offers.normalize_occupancy(loaded.get("sessions_current"), "data/sessions_current.json"),
@@ -731,7 +748,8 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
                     active_registration_count=session.get("active_registration_count"),
                     uncertainty_scope=session.get("uncertainty_scope", {}))
     calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"), allow_unresolved)
-    canonical = []
+    canonical_rows = []
+    classify_catalog = allow_unresolved and known_catalog_ids is not None
     for session in loaded.get("canonical_demand", {}).get("sessions", []):
         if session.get("session_status") not in ("scheduled", "active", "completed"):
             continue
@@ -739,7 +757,9 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
         end = parse_dt(session.get("consumption_end_at") or session.get("end_at"))
         if (not start or not end or end <= start) and not allow_unresolved:
             raise BlockSelectorInputError("Canonical session has an invalid occupied window")
-        canonical.append({
+        operational_course = (canonical_operational_course_id(session, known_catalog_ids, course_rules)
+                              if classify_catalog else session.get("course_id") or session.get("external_course_id"))
+        canonical_rows.append({
             "start": start, "end": end,
             "location": session.get("location_name") or UNKNOWN,
             "instructor": session.get("lead_instructor_name") or UNKNOWN,
@@ -747,7 +767,8 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "source_file": "canonical_class_sessions",
             "source_event_id": session.get("canonical_session_id"),
             "external_class_id": session.get("external_class_id"),
-            "course_id": session.get("course_id") or session.get("external_course_id"),
+            "course_id": operational_course,
+            **({"kind": "hold"} if classify_catalog and operational_course is None else {}),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
             "instructor_unassigned": not session.get("lead_instructor_name"),
             **({
@@ -763,7 +784,7 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "count_available": session.get("count_available") is True,
             "active_registration_count": session.get("active_registration_count"),
         })
-    occupancy = sessions_current + schedule_future + calendar_blocks + canonical
+    occupancy = sessions_current + schedule_future + calendar_blocks + canonical_rows
     for block in occupancy:
         canonical, resource, normalized = generate_dynamic_offers.normalize_location_resource(
             block.get("location"),
@@ -775,6 +796,25 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             block["location"] = canonical
             block["resource"] = resource
             block["location_resolution"] = "location_resource_map"
+    if classify_catalog:
+        # An exact legacy mirror cannot revive a missing or contradictory
+        # canonical course identity. It continues to hold the occupied block.
+        def identity(block):
+            external_id = block.get("external_class_id")
+            start, end = block.get("start"), block.get("end")
+            if (not external_id or not isinstance(start, datetime) or not isinstance(end, datetime)
+                    or start.utcoffset() is None or end.utcoffset() is None):
+                return None
+            return (str(external_id), start.astimezone(ZoneInfo("UTC")), end.astimezone(ZoneInfo("UTC")),
+                    block.get("location"), block.get("resource"))
+        matches = {}
+        for block in canonical_rows:
+            if key := identity(block):
+                matches.setdefault(key, set()).add(block["course_id"])
+        for mirror in (*sessions_current, *schedule_future):
+            if approved := matches.get(identity(mirror)):
+                if approved != {str(mirror.get("course_id") or "")}:
+                    mirror["kind"] = "hold"
     return occupancy
 
 
@@ -1205,7 +1245,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     layered_policy_path = ROOT / "data" / "config" / "layered_scheduling_policy.json"
     layered_policy = read_required_json(layered_policy_path) if layered_policy_path.exists() else {}
     from scripts.layered_publication_adapter import active as layered_active
-    occupancy = build_occupancy(loaded, course_rules, allow_unresolved=layered_active(layered_policy))
+    occupancy = build_occupancy(loaded, course_rules, allow_unresolved=layered_active(layered_policy),
+                                known_catalog_ids=course_catalog)
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy) if not layered_active(layered_policy) else {}
     reference_now = selector_reference_datetime()
     anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
