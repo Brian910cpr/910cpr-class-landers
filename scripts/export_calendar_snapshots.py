@@ -227,11 +227,17 @@ def in_export_window(start: datetime, window_start: datetime, window_end: dateti
     return comparable_dt(window_start) <= comparable_dt(start) <= comparable_dt(window_end)
 
 
-def recurrence_key(uid: Any, start: datetime | None) -> tuple[str, str]:
+def recurrence_key(
+    uid: Any, start: datetime | None, *, normalize_instant: bool = False,
+) -> tuple[str, str]:
+    if start is not None and start.tzinfo is not None and normalize_instant:
+        start = start.astimezone(timezone.utc)
     return clean_text(uid), start.isoformat() if start else ""
 
 
-def parse_recurrence_values(event: dict[str, Any], name: str) -> list[datetime]:
+def parse_recurrence_values(
+    event: dict[str, Any], name: str, *, use_params: bool = False,
+) -> list[datetime]:
     values: list[datetime] = []
     raw_items = event.get("recurrence", [])
     if not isinstance(raw_items, list):
@@ -240,8 +246,9 @@ def parse_recurrence_values(event: dict[str, Any], name: str) -> list[datetime]:
         if not isinstance(item, dict) or name.lower() not in item:
             continue
         raw_value = clean_text(item.get(name.lower()))
+        params = item.get("params") if use_params else None
         for part in raw_value.split(","):
-            parsed = parse_ics_datetime(part)
+            parsed = parse_ics_datetime(part, params)
             if parsed:
                 values.append(parsed)
     return values
@@ -253,6 +260,14 @@ def recurrence_rules(event: dict[str, Any]) -> list[str]:
         if isinstance(item, dict) and item.get("rrule"):
             rules.append(clean_text(item["rrule"]))
     return [rule for rule in rules if rule]
+
+
+def is_recurring_series(event: dict[str, Any]) -> bool:
+    if recurrence_rules(event):
+        return True
+    return event.get("source_type") == "inverse_google_calendar" and bool(
+        parse_recurrence_values(event, "RDATE", use_params=True)
+    )
 
 
 def normalize_rrule_for_dtstart(rule: str, dtstart: datetime) -> str:
@@ -310,17 +325,30 @@ def expand_recurring_event(
         skipped["recurring_invalid_duration"] += 1
         return [], skipped
 
-    exclusions = {comparable_dt(value) for value in parse_recurrence_values(event, "EXDATE")}
-    rdates = parse_recurrence_values(event, "RDATE")
+    inverse = event.get("source_type") == "inverse_google_calendar"
+    exclusions = {
+        comparable_dt(value) for value in parse_recurrence_values(event, "EXDATE", use_params=inverse)
+    }
+    rdates = parse_recurrence_values(event, "RDATE", use_params=inverse)
     occurrence_starts: list[datetime] = []
     bounded_start, bounded_end = rrule_window_bounds(start_dt, window_start, window_end)
-    for rule in recurrence_rules(event):
+    if inverse:
+        # Search in the recurrence's wall clock, including one day for zone offset
+        # changes/folds, then enforce the exact overlap on UTC-comparable endpoints.
+        zone_padding = timedelta(days=1) if start_dt.tzinfo else timedelta()
+        lookback = duration + zone_padding
+        bounded_start -= min(lookback, bounded_start - datetime.min.replace(tzinfo=bounded_start.tzinfo))
+        bounded_end += min(zone_padding, datetime.max.replace(tzinfo=bounded_end.tzinfo) - bounded_end)
+    rules = recurrence_rules(event)
+    if inverse and rdates and not rules:
+        occurrence_starts.append(start_dt)
+    for rule in rules:
         try:
             rule_set = rrulestr(normalize_rrule_for_dtstart(rule, start_dt), dtstart=start_dt)
             occurrence_starts.extend(rule_set.between(bounded_start, bounded_end, inc=True))
         except (ValueError, TypeError) as exc:
             skipped[f"rrule_parse_error:{type(exc).__name__}"] += 1
-    occurrence_starts.extend(value for value in rdates if in_export_window(value, window_start, window_end))
+    occurrence_starts.extend(value for value in rdates if inverse or in_export_window(value, window_start, window_end))
 
     expanded: list[dict[str, Any]] = []
     seen_occurrences: set[str] = set()
@@ -332,7 +360,7 @@ def expand_recurring_event(
             skipped["duplicate_generated_occurrence"] += 1
             continue
         seen_occurrences.add(occurrence_key)
-        key = recurrence_key(uid, occurrence_start)
+        key = recurrence_key(uid, occurrence_start, normalize_instant=inverse)
         if comparable_start in exclusions:
             skipped["excluded_by_exdate"] += 1
             continue
@@ -342,7 +370,16 @@ def expand_recurring_event(
         if key in duplicate_keys:
             skipped["duplicate_explicit_event_same_uid_start"] += 1
             continue
-        occurrence_end = occurrence_start + duration
+        duration_start = occurrence_start
+        if inverse and start_dt.tzinfo and occurrence_start.tzinfo:
+            duration_start = occurrence_start.astimezone(start_dt.tzinfo)
+        occurrence_end = duration_start + duration
+        if inverse and (
+            comparable_start > comparable_dt(window_end)
+            or comparable_dt(occurrence_end) <= comparable_dt(window_start)
+            or comparable_dt(occurrence_end) <= comparable_start
+        ):
+            continue
         expanded.append(clone_event_for_occurrence(event, occurrence_start, occurrence_end, "recurring_expanded_instance"))
     return expanded, skipped
 
@@ -355,6 +392,7 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
     source_id = source_key(source)
     calendar_id = calendar_id_from_source(source)
     stype = source_type(source)
+    inverse_override_keys: set[tuple[str, str]] = set()
 
     def event_in_window(event: dict[str, Any], start_dt: datetime) -> bool:
         if in_export_window(start_dt, window_start, window_end):
@@ -372,12 +410,25 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         if line == "END:VEVENT":
             if current is None:
                 continue
+            if stype == "inverse_google_calendar":
+                # An ICS override can move outside this export, or be a cancelled
+                # tombstone without DTSTART. Neither should regenerate the original.
+                recurrence_id = parse_ics_datetime(
+                    current.get("recurrence_id_raw", ""), current.get("recurrence_id_params")
+                )
+                uid = current.get("event_id")
+                if uid and recurrence_id:
+                    inverse_override_keys.add(recurrence_key(uid, recurrence_id, normalize_instant=True))
+                if str(current.get("status", "")).strip().upper() == "CANCELLED":
+                    skipped["cancelled_inverse_event"] += 1
+                    current = None
+                    continue
             start_raw = current.get("start_raw")
             start_dt = parse_ics_datetime(start_raw, current.get("start_params")) if start_raw else None
             if not start_dt:
                 skipped["missing_parseable_start"] += 1
             else:
-                if event_in_window(current, start_dt) or recurrence_rules(current):
+                if event_in_window(current, start_dt) or is_recurring_series(current):
                     parsed_events.append(current)
                 else:
                     skipped["outside_export_window"] += 1
@@ -420,7 +471,10 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         elif name == "CREATED":
             current["created"] = ics_datetime_to_iso(value) or value
         elif name in {"RRULE", "RDATE", "EXDATE"}:
-            current.setdefault("recurrence", []).append({name.lower(): value})
+            item: dict[str, Any] = {name.lower(): value}
+            if stype == "inverse_google_calendar" and params and name != "RRULE":
+                item["params"] = params
+            current.setdefault("recurrence", []).append(item)
 
         current["calendar_source_id"] = source_id
         current["calendar_id"] = calendar_id
@@ -428,25 +482,29 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         current["read_only_snapshot"] = True
 
     duplicate_keys: set[tuple[str, str]] = set()
-    override_keys: set[tuple[str, str]] = set()
+    override_keys = inverse_override_keys
     for event in parsed_events:
         event_start = parse_ics_datetime(event.get("start_raw", ""), event.get("start_params"))
         uid = event.get("event_id") or event.get("raw_properties", {}).get("UID")
-        if event_start and not recurrence_rules(event):
-            duplicate_keys.add(recurrence_key(uid, event_start))
+        if event_start and not is_recurring_series(event):
+            duplicate_keys.add(recurrence_key(
+                uid, event_start, normalize_instant=stype == "inverse_google_calendar"
+            ))
         recurrence_id = parse_ics_datetime(event.get("recurrence_id_raw", ""), event.get("recurrence_id_params"))
         if recurrence_id:
-            override_keys.add(recurrence_key(uid, recurrence_id))
+            override_keys.add(recurrence_key(
+                uid, recurrence_id, normalize_instant=stype == "inverse_google_calendar"
+            ))
 
     normalized_events = []
     for index, event in enumerate(parsed_events, start=1):
         event_start = parse_ics_datetime(event.get("start_raw", ""), event.get("start_params"))
-        has_rrule = bool(recurrence_rules(event))
+        has_series = is_recurring_series(event)
         has_override = bool(event.get("recurrence_id"))
-        if not has_rrule and event_start and not event_in_window(event, event_start):
+        if not has_series and event_start and not event_in_window(event, event_start):
             skipped["outside_export_window"] += 1
             continue
-        event["recurrence_source"] = "overridden_instance" if has_override else ("recurring_master" if has_rrule else "explicit_event")
+        event["recurrence_source"] = "overridden_instance" if has_override else ("recurring_master" if has_series else "explicit_event")
         event["generated_from_rrule"] = False
         event["original_uid"] = event.get("event_id") or event.get("raw_properties", {}).get("UID") or UNKNOWN
         event["recurrence_source_uid"] = event["original_uid"]
@@ -460,7 +518,7 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         event.setdefault("updated", UNKNOWN)
         event.setdefault("creator", UNKNOWN)
         event.setdefault("organizer", event.get("organizer", UNKNOWN))
-        if has_rrule:
+        if has_series:
             expanded, recurring_skipped = expand_recurring_event(event, window_start, window_end, duplicate_keys, override_keys)
             skipped.update(recurring_skipped)
             normalized_events.extend(expanded)
@@ -654,4 +712,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
