@@ -98,3 +98,25 @@ test('invalid or overflowing canonical timing fails closed', async () => {
     p.evidence.capability[field]=saved;
   }
 });
+
+
+test('reject partial malformed resource fields even with a valid other resource', async () => {
+  const p = await plan();
+  for (const partial of [
+    {room:'fixture-other-room',instructor:'broken instructor identifier'},
+    {instructor:'fixture-other-instructor',room:'broken room identifier'},
+    {room:'fixture-other-room',instructor:0},
+    {instructor:'fixture-other-instructor',room:''},
+    {room:null,instructor:null},
+  ]) {
+    p.evidence.conflicts = [{...partial,start,end}];
+    assert.equal((await admitNativeOffer(p)).reason,'unresolved_occupancy');
+  }
+  for (const scoped of [
+    {room:'fixture-other-room',instructor:null},
+    {instructor:'fixture-other-instructor'},
+  ]) {
+    p.evidence.conflicts = [{...scoped,start,end}];
+    assert.ok((await admitNativeOffer(p)).ok);
+  }
+});

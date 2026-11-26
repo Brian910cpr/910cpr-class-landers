@@ -9,6 +9,9 @@ const safeTime = (s) => Number.isSafeInteger(s) && s > 0;
 const minutes = (n, min = 0) => Number.isSafeInteger(n) && n >= min && Number.isSafeInteger(n * MINUTE);
 const range = (x) => safeTime(x?.start) && safeTime(x?.end) && x.start < x.end;
 const overlap = (a, b) => a.start < b.end && b.start < a.end;
+const validConflict = (x) => range(x) &&
+  (x.room == null || id(x.room)) && (x.instructor == null || id(x.instructor)) &&
+  (id(x.room) || id(x.instructor));
 const fail = (reason) => ({ok: false, reason});
 
 export async function offerRef(offer) {
@@ -51,8 +54,7 @@ export async function admitNativeOffer({activation, offer, requestedRef, evidenc
   if (!Array.isArray(coverage) || !coverage.some((x) => range(x) &&
       x.instructor === offer.instructor && x.room === offer.room &&
       x.start <= occupied.start && x.end >= occupied.end)) return fail('outside_coverage');
-  if (!Array.isArray(conflicts) || conflicts.some((x) => !range(x) ||
-      (!id(x.room) && !id(x.instructor)))) return fail('unresolved_occupancy');
+  if (!Array.isArray(conflicts) || !conflicts.every(validConflict)) return fail('unresolved_occupancy');
   if (conflicts.some((x) => (x.room === offer.room || x.instructor === offer.instructor) &&
       overlap(occupied, x))) return fail('occupied');
   // An authenticated checkout retry and joining seats in an existing class are
@@ -63,4 +65,5 @@ export async function admitNativeOffer({activation, offer, requestedRef, evidenc
     startsAt: offer.start, endsAt: offer.end, occupiedFrom: occupied.start, occupiedUntil: occupied.end,
     priceCents: capability.priceCents, seatLimit: capability.seatLimit, holdUntil}};
 }
+
 
