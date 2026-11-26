@@ -18,7 +18,7 @@ def aware(value):
 
 def build_shadow(windows, occupancy, courses, policy, resources, now,
                  window_interval, qualified, lead_minutes=1440, travel_minutes=None, commitment_coverage=None,
-                 shared_room_edges=False):
+                 shared_room_edges=False, repeat_context=()):
     """All room assignments are explicit or conservatively use the primary room.
 
     The selector's existing freshness/roster/booking guards remain separate.
@@ -170,6 +170,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
                 if gap is None:
                     raise ValueError("missing directional travel rule: "+left+"->"+right)
             fixture["policy"]["travel_minutes"][left+"->"+right] = gap
+    fixture["repeat_context"] = list(repeat_context)
     report = run(fixture)
     report["adapter_mode"] = "shadow"
     report["room_hours_policy"] = policy["owner_room_hours_evidence"]

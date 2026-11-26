@@ -9,7 +9,7 @@ from collections import Counter
 from datetime import timedelta, timezone
 from zoneinfo import ZoneInfo
 from scripts.layered_selector_adapter import aware, build_shadow
-from scripts.layered_scheduling_engine import encode as encode_value
+from scripts.layered_scheduling_engine import encode as encode_value, stamp
 import json
 
 
@@ -52,8 +52,42 @@ def project_sources(rows, course_metadata):
     return result
 
 
+def repeat_context_for_window(projected, metadata, window, start, end):
+    """Confirmed full-course starts only; never use this context as physical occupancy."""
+    def instructor_key(value):
+        key = " ".join(str(value or "").casefold().split())
+        return "brian ennis" if key == "brian" else key
+
+    instructor = instructor_key(window.get("instructor_name"))
+    lower = stamp(start.isoformat()) - timedelta(hours=24)
+    upper = stamp(end.isoformat()) + timedelta(hours=24)
+    matches = set()
+    for row in projected:
+        if (not instructor or instructor_key(row.get("instructor")) != instructor
+                or row.get("instructor_unassigned")
+                or row.get("kind") in {"hold", "commitment", "uncertain"}
+                or (not row.get("kind") and "blocked" in str(row.get("source_file")))
+                or row.get("normalization_issue")):
+            continue
+        count = row.get("active_registration_count")
+        if not (row.get("operational_has_active_seat") is True
+                or (row.get("count_available") is True and type(count) is int and count > 0)):
+            continue
+        cid = row["course_id"]
+        meta = metadata.get(cid)
+        if not meta or meta.get("kind") == "skills" or meta.get("blended_classroom_skills") == "blended":
+            continue
+        try:
+            occupied_start, occupied_end = stamp(row["start"]), stamp(row["end"])
+        except (KeyError, ValueError, TypeError, AttributeError):
+            continue
+        if occupied_end > occupied_start and lower <= occupied_start <= upper:
+            matches.add((cid, occupied_start.isoformat()))
+    return [{"course": cid, "start": when} for cid, when in sorted(matches)]
+
+
 def calculate(windows, occupancy, courses, policy, resources, now, interval,
-              qualified, coverage, travel_minutes=None):
+              qualified, coverage, travel_minutes=None, *, scoped_repeat_context=None):
     """Partition normalization errors by window, retaining all relevant occupancy.
 
     A bad source cannot be removed to manufacture free space. Unknown offsite
@@ -70,6 +104,8 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
     projected.sort(key=lambda row: row.get("source_file") != "canonical_class_sessions")
     known_rooms = {r["resource_name"] for location in resources.get("locations", [])
                    for r in location.get("internal_resources", [])}
+    if scoped_repeat_context is not None and len(windows) != 1:
+        raise ValueError("scoped repeat context requires exactly one window")
     reports, issues = [], []
     for index, window in enumerate(windows):
         try:
@@ -145,10 +181,14 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             issues.extend(invalid)
             continue
         try:
+            repeats = []
+            if policy.get("require_verified_day_gravity") is True:
+                repeats = (scoped_repeat_context if scoped_repeat_context is not None else
+                           repeat_context_for_window(projected, metadata, window, ws, we))
             report = build_shadow([window], relevant, courses, policy, resources, now,
                 interval, qualified, lead_minutes=policy.get("lead_minutes", 1440),
                 travel_minutes=travel_minutes, commitment_coverage=fresh,
-                shared_room_edges=True)
+                shared_room_edges=True, repeat_context=repeats)
             report["adapter_mode"] = "active_local_v2"
             report["availability_window"] = window.get("source_availability_window", str(index))
             # Coverage lease must survive both publication and browser rendering.

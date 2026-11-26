@@ -318,6 +318,11 @@ def run(fixture):
         group = (busy['instructor'], busy['start'].astimezone(zone).date().isoformat(), consolidation_identity(busy['course']))
         seating_positions.setdefault(group, {}).setdefault((busy['start'], busy['location']), []).append(busy['id'])
     for group, positions in seating_positions.items(): family_counts[group] = len(positions)
+    # V2 passes a separate instructor-scoped, verified full-course projection.
+    # Compare elapsed UTC instants, not local wall-clock dates or alternatives.
+    repeats = {}
+    for item in fixture.get("repeat_context", []):
+        repeats.setdefault(item["course"], set()).add(stamp(item["start"]))
     for c in sorted(candidates, key=lambda x: (x["start"], x["course"])):
         reasons = []
         meta = courses[c["course"]]
@@ -350,6 +355,9 @@ def run(fixture):
         key = (c["instructor"], day, consolidation_identity(c['course']))
         if meta["kind"] == "full" and family_counts[key] >= policy.get("paid_full_positions_per_family_day", 1):
             reasons.append("full_course_already_paid_seated" if consolidation_scope == 'course' else "full_family_already_paid_seated")
+        if (meta["kind"] == "full" and any(abs(c["start"] - when) <= timedelta(hours=24)
+                for when in repeats.get(c["course"], ()))):
+            reasons.append("full_course_repeat_within_24_hours")
         if meta["kind"] == "full" and policy.get("reject_unknown_full_family_count") and key in uncertain_family_groups:
             reasons.append("full_course_count_unknown" if consolidation_scope == 'course' else "full_family_count_unknown")
         c["reasons"] = reasons
@@ -369,7 +377,7 @@ def run(fixture):
             remaining_seats=remaining, seats_status='known' if remaining is not None else 'unknown', mode='existing_seated'))
     return {"layered_windows": layered_windows, "seated_offers": seated,
             "customer_options": seated + accepted, "durable_source_ids": sorted(set(durable) - revoked), "resource_availability": resource_availability,
-            "family_seating_diagnostics": {"gap_waits_enabled": False, "uncertain_full_commitments": uncertain_full, "duplicate_paid_positions": [{"instructor": g[0], "date": g[1], "family": g[2], "source_ids": [ident for ids in positions.values() for ident in ids]} for g, positions in seating_positions.items() if len(positions)>1]}, "fixture": fixture["name"], "source_truth": list(sources.values()),
+            "family_seating_diagnostics": {"gap_waits_enabled": verified_gravity, "uncertain_full_commitments": uncertain_full, "duplicate_paid_positions": [{"instructor": g[0], "date": g[1], "family": g[2], "source_ids": [ident for ids in positions.values() for ident in ids]} for g, positions in seating_positions.items() if len(positions)>1]}, "fixture": fixture["name"], "source_truth": list(sources.values()),
             "ignored_sources": ignored, "normalized_occupancy": occupied, "blocks": blocks,
             "edges": edges, "merge_decisions": merge_decisions, "free_intervals": free_intervals, "candidates": candidates,
             "accepted": accepted, "rejected": rejected,

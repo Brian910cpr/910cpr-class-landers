@@ -70,6 +70,27 @@ class DayCacheTests(unittest.TestCase):
         self.assertEqual({r['date'] for r in result['incremental_cache']['rebuilt']},{'2026-10-11','2026-10-14'})
         self.assertEqual(self.decisions(result),self.decisions(f.calculation()))
 
+    def test_repeat_context_rebuilds_adjacent_day_without_importing_route(self):
+        f=self.f;f.policy['require_verified_day_gravity']=True
+        f.window(12)
+        self.run_cache()
+        row=f.add(11,'12:00','13:00',cid='359474',count=1,visibility='private')
+        changed=self.run_cache()
+        self.assertEqual({r['date'] for r in changed['incremental_cache']['rebuilt']},
+                         {'2026-10-11','2026-10-12'})
+        report=next(r for r in changed['reports'] if r['availability_window'].startswith('Brian Ennis-12-'))
+        self.assertFalse(any(c['course']=='359474' and
+            aware(c['start']).strftime('%H:%M')=='11:30' for c in report['accepted']))
+        self.assertTrue(any(c['course']=='359474' and
+            aware(c['start']).strftime('%H:%M')=='12:30' for c in report['accepted']))
+        self.assertTrue(any(c['course']=='329495' and
+            aware(c['start']).strftime('%H:%M')=='11:30' for c in report['accepted']))
+        self.assertFalse(any(s['id']==row['source_event_id'] for s in report['normalized_occupancy']))
+        self.assertEqual(self.decisions(changed),self.decisions(f.calculation()))
+        f.sources=[]; removed=self.run_cache()
+        self.assertEqual({r['date'] for r in removed['incremental_cache']['rebuilt']},
+                         {'2026-10-11','2026-10-12'})
+
     def test_horizon_excludes_windows_after_ninety_days(self):
         f=self.f;window=copy.deepcopy(f.windows[0]);start=f.now+timedelta(days=95)
         window.update(start=start.isoformat(),end=(start+timedelta(hours=2)).isoformat(),source_availability_window='outside-horizon')

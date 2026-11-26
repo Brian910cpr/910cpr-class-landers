@@ -9,10 +9,10 @@ from pathlib import Path
 import hashlib
 import json
 from scripts.layered_selector_adapter import aware
-from scripts.layered_publication_adapter import calculate, project_sources, SCHEMA
+from scripts.layered_publication_adapter import calculate, project_sources, repeat_context_for_window, SCHEMA
 from scripts.fetch_canonical_scheduling_demand import _atomic_write_json
 
-VERSION = 'layered-day-cache.v1'
+VERSION = 'layered-day-cache.v2'
 ZONE = ZoneInfo('America/New_York')
 
 
@@ -76,6 +76,8 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
     travel=max([0]+[int(v) for v in (travel_minutes or {}).values() if isinstance(v,(int,float)) and v>=0])
     code=digest([Path(__file__).read_text(), *[Path(__file__).with_name(name).read_text() for name in
         ('layered_publication_adapter.py','layered_selector_adapter.py','layered_scheduling_engine.py','layered_resource_readiness.py')]])
+    metadata={str(c["course_id"]):c for c in courses}
+    projected=project_sources(occupancy, metadata)
     reports=[];issues=[];hits=0;rebuilt=[];selected=[]
     for index,original in enumerate(windows):
         start,end=map(aware,interval(original))
@@ -94,7 +96,9 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
             except (KeyError,ValueError,TypeError): pass
             proofs.append(proof)
         qualifications=[bool(qualified(window,c)) for c in courses]
-        signature=digest([VERSION,code,window,rows,courses,policy,resources,proofs,travel_minutes,qualifications])
+        repeats=(repeat_context_for_window(projected,metadata,window,start,end)
+                 if policy.get("require_verified_day_gravity") is True else [])
+        signature=digest([VERSION,code,window,rows,courses,policy,resources,proofs,travel_minutes,qualifications,repeats])
         identity=digest([window['source_availability_window'],start.isoformat(),end.isoformat()])[:24]
         path=cache_dir/(start.astimezone(ZONE).date().isoformat()+'-'+identity+'.json')
         cached=None
@@ -107,7 +111,7 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
         except (OSError,ValueError,KeyError,TypeError): pass
         if cached is None:
             cached=calculate([window],rows,courses,policy,resources,now,
-                lambda w:(w['start'],w['end']),qualified,proofs,travel_minutes)
+                lambda w:(w['start'],w['end']),qualified,proofs,travel_minutes, scoped_repeat_context=repeats)
             deadlines=[now+timedelta(minutes=5)]  # Failed/unknown proof retries remain bounded.
             leases=[r['valid_until'] for r in cached['reports'] if r['valid_until']>now]
             if leases: deadlines=[min(leases)]
@@ -126,7 +130,6 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
             rebuilt.append(dict(date=start.astimezone(ZONE).date().isoformat(),window_id=window['source_availability_window']))
         else: hits+=1
         reports.extend(cached['reports']);issues.extend(cached['issues'])
-    projected=project_sources(occupancy,{str(c['course_id']):c for c in courses})
     return dict(schema=SCHEMA,reports=reports,issues=issues,projected_sources=projected,
         counts=dict(input_sources=len(occupancy),normalized_sources=len(projected),input_windows=len(selected),
             evaluated_windows=len(reports),failed_windows=len(selected)-len(reports),uncertainty_issues=len(issues)),

@@ -186,6 +186,42 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertTrue(any(o['date']=='2026-10-12' and o['startTime']=='08:00'
                             and o['scheduleRole']=='open_day' for o in skills))
 
+    def test_verified_full_course_repeat_is_elapsed_and_exact_course(self):
+        self.policy['require_verified_day_gravity'] = True
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(10,'08:00','18:00',next_day=False)
+        self.window(12,'08:00','18:00',next_day=False)
+        self.window(12,'08:00','18:00',name='Michelle',next_day=False)
+        row=self.add(11,'12:00','13:00',cid='359474',count=1,visibility='private')
+        offers=self.payload()['offers']
+        starts=lambda day,cid,name: {o['startTime'] for o in offers
+            if o['date']==f'2026-10-{day:02d}' and o['courseId']==cid and o['instructor']==name}
+        self.assertIn('11:30',starts(10,'359474','Brian Ennis'))
+        self.assertNotIn('12:00',starts(10,'359474','Brian Ennis'))
+        self.assertNotIn('12:30',starts(10,'359474','Brian Ennis'))
+        self.assertNotIn('11:30',starts(12,'359474','Brian Ennis'))
+        self.assertNotIn('12:00',starts(12,'359474','Brian Ennis'))
+        self.assertIn('12:30',starts(12,'359474','Brian Ennis'))
+        self.assertIn('11:30',starts(12,'329495','Brian Ennis'))
+        self.assertIn('11:30',starts(12,'209809','Brian Ennis'))
+        self.assertIn('11:30',starts(12,'359474','Michelle'))
+        row.update(count_available=False,active_registration_count=None)
+        self.assertIn('11:30',self.starts('359474',day=12))
+
+    def test_repeat_context_uses_utc_and_does_not_add_travel_sources(self):
+        from scripts.layered_publication_adapter import repeat_context_for_window, project_sources
+        from scripts.layered_scheduling_engine import stamp
+        metadata={str(c['course_id']):c for c in self.courses}
+        source=self.add(11,'12:00','13:00',cid='359474',count=1,visibility='private')
+        source.update(start='2026-11-01T12:00:00-05:00',end='2026-11-01T13:00:00-05:00',
+                      location='unmapped-synthetic-venue')
+        result=repeat_context_for_window(project_sources(self.sources,metadata),metadata,
+            {'instructor_name':'Brian Ennis'},stamp('2026-10-31T12:00:00-04:00'),
+            stamp('2026-11-01T14:00:00-05:00'))
+        self.assertEqual(result,[{'course':'359474','start':'2026-11-01T17:00:00+00:00'}])
+        self.assertEqual(abs(stamp(result[0]['start'])-stamp('2026-10-31T12:00:00-04:00')),timedelta(hours=25))
+        self.assertEqual(abs(stamp(result[0]['start'])-stamp('2026-10-31T13:00:00-04:00')),timedelta(hours=24))
+
     def test_verified_publication_uses_eastern_day_for_utc_source(self):
         self.policy['require_verified_day_gravity'] = True
         self.windows=[]; self.coverage=[]; self.sources=[]
