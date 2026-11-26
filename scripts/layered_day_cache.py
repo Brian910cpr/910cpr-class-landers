@@ -12,7 +12,7 @@ from scripts.layered_selector_adapter import aware
 from scripts.layered_publication_adapter import calculate, project_sources, repeat_context_for_window, SCHEMA
 from scripts.fetch_canonical_scheduling_demand import _atomic_write_json
 
-VERSION = 'layered-day-cache.v2'
+VERSION = 'layered-day-cache.v3'
 ZONE = ZoneInfo('America/New_York')
 
 
@@ -29,7 +29,9 @@ def pack(value):
 def unpack(value):
     if isinstance(value, dict):
         if set(value) == {'__cache_datetime__'}:
-            return aware(value['__cache_datetime__'])
+            # Keep engine UTC instants as UTC. Converting to a shared local
+            # ZoneInfo here changes elapsed subtraction across DST transitions.
+            return datetime.fromisoformat(value['__cache_datetime__'])
         return {k: unpack(v) for k,v in value.items()}
     if isinstance(value, list):
         return [unpack(v) for v in value]
@@ -117,7 +119,7 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
             if leases: deadlines=[min(leases)]
             for report in cached['reports']:
                 for candidate in report['accepted']:
-                    deadline=aware(candidate['start'])-timedelta(minutes=policy.get('lead_minutes',1440))
+                    deadline=aware(candidate['start']).astimezone(timezone.utc)-timedelta(minutes=policy.get('lead_minutes',1440))
                     if deadline>=now: deadlines.append(deadline+timedelta(microseconds=1))
             for proof in proofs:
                 try:

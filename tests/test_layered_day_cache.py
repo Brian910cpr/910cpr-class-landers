@@ -4,7 +4,8 @@ import unittest
 from pathlib import Path
 from datetime import timedelta
 from tests.test_layered_publication_adapter import LayeredPublicationTests
-from scripts.layered_day_cache import cached_calculate, pack
+from scripts.layered_day_cache import cached_calculate, pack, unpack
+from scripts.layered_scheduling_engine import stamp
 from scripts.layered_selector_adapter import aware
 
 
@@ -62,6 +63,38 @@ class DayCacheTests(unittest.TestCase):
         result=self.run_cache()
         self.assertEqual(result['incremental_cache']['hits'],0)
         self.assertFalse(result['reports'][0]['accepted'])
+
+    def test_cached_instants_preserve_elapsed_duration_across_dst(self):
+        for start,end in (
+            ('2026-11-01T01:30:00-04:00','2026-11-01T01:30:00-05:00'),
+            ('2026-03-08T01:30:00-05:00','2026-03-08T03:30:00-04:00'),
+        ):
+            with self.subTest(start=start):
+                original=dict(start=stamp(start),instruction_end=stamp(end))
+                restored=unpack(pack(original))
+                self.assertEqual(restored['instruction_end']-restored['start'],
+                                 timedelta(hours=1))
+                self.assertEqual(pack(restored),pack(original))
+
+    def test_lead_expiry_uses_elapsed_hours_across_spring_forward(self):
+        f=self.f
+        f.policy['lead_minutes']=1440
+        f.windows=f.windows[:1];f.coverage=f.coverage[:1]
+        f.windows[0].update(start='2026-03-08T09:00:00-04:00',
+                            end='2026-03-08T14:00:00-04:00')
+        f.coverage[0].update(start=f.windows[0]['start'],end=f.windows[0]['end'],
+            observed_at='2026-03-07T12:00:00Z',valid_until='2026-03-07T16:00:00Z',
+            freshness_minutes=240)
+        f.now=aware('2026-03-07T07:30:00-05:00')
+        first=self.run_cache()
+        self.assertTrue(any(aware(c['start']).strftime('%H:%M')=='09:00'
+                            for c in first['reports'][0]['accepted']))
+        self.assertEqual(self.run_cache()['incremental_cache']['hits'],1)
+        f.now=aware('2026-03-07T08:01:00-05:00')
+        next_result=self.run_cache()
+        self.assertEqual(next_result['incremental_cache']['hits'],0)
+        self.assertFalse(any(aware(c['start']).strftime('%H:%M')=='09:00'
+                             for c in next_result['reports'][0]['accepted']))
 
     def test_booking_moved_to_another_day_rebuilds_both_days(self):
         f=self.f;f.add(11,'12:00','13:00',count=1);self.run_cache()
