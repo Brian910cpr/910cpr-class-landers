@@ -4,12 +4,27 @@ from pathlib import Path
 from collections import Counter
 from datetime import datetime, timezone
 from scripts.block_start_time_selector import build_block_schedule_page, load_block_schedule_page_configs, apply_final_live_availability_guard
-from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, render_html
+from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, public_reconciliation_issues, render_html
 ROOT=Path(__file__).resolve().parents[1]
+
+REQUIRED_PAGE_KEYS = frozenset({'bls', 'heartsaver', 'acls', 'pals', 'arc', 'hsi',
+                                'uscg_first_aid_cpr_aed', 'family_cpr'})
+
+
+def public_issue_summary(issues):
+    """Artifacts and logs are public-repository outputs, not restricted traces."""
+    safe = public_reconciliation_issues(issues)
+    counts = Counter(row['reason'] for row in safe)
+    by_date = {}
+    for row in safe:
+        date = row.get('start') or 'unscoped'
+        by_date.setdefault(date, Counter())[row['reason']] += 1
+    return dict(counts), {date: dict(counts) for date, counts in by_date.items()}
+
 
 def coverage_release_passed(pages):
     """Require complete window evaluation; partial coverage is not a release pass."""
-    if not pages:
+    if not pages or not REQUIRED_PAGE_KEYS.issubset(pages):
         return False
     total_windows = 0
     for row in pages.values():
@@ -54,7 +69,8 @@ def run():
                         role='anchor' if course.get('offerType')=='seated_class' else ('barnacle' if course.get('scheduleRole')=='barnacle' else 'open')
                         courses.setdefault(course['courseId'],dict(anchor=[],barnacle=[],open=[]))[role].append(slot['startTime'])
                 patterns[day['date']]=courses
-            result['pages'][key]=dict(calculation_issue_counts=dict(Counter(issue.get('reason') or 'unclassified' for issue in payload.get('reconciliationIssues',[]))),day_patterns=patterns,counts=payload.get('counts'),offer_roles=dict(Counter(o.get('scheduleRole') or o.get('offerType') for o in offers)),rejection_reasons=payload.get('rejectionReasonCounts'),synthesis_blocked_dates=payload.get('synthesisBlockedDates'),model=payload.get('schedulingModel'),valid_until=feed.get('validUntil'))
+            issue_counts, issues_by_date = public_issue_summary(payload.get('reconciliationIssues', []))
+            result['pages'][key]=dict(calculation_issue_counts=issue_counts,calculation_issues_by_date=issues_by_date,day_patterns=patterns,counts=payload.get('counts'),offer_roles=dict(Counter(o.get('scheduleRole') or o.get('offerType') for o in offers)),rejection_reasons=payload.get('rejectionReasonCounts'),synthesis_blocked_dates=payload.get('synthesisBlockedDates'),model=payload.get('schedulingModel'),valid_until=feed.get('validUntil'))
         result['calculation_completed']=True
         result['release_passed']=coverage_release_passed(result['pages'])
     finally:

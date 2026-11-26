@@ -27,9 +27,30 @@ class ProbeTests(unittest.TestCase):
                                    evaluated_windows=evaluated,
                                    failed_windows=failed)}
         complete = page(147, 147, 0)
-        self.assertTrue(probe.coverage_release_passed({'bls': complete, 'acls': page(0, 0, 0)}))
-        self.assertFalse(probe.coverage_release_passed({'bls': complete, 'acls': page(147, 136, 11)}))
-        self.assertFalse(probe.coverage_release_passed({'bls': page(147, 136, 0)}))
-        self.assertFalse(probe.coverage_release_passed({'bls': page(0, 0, 0)}))
-        self.assertFalse(probe.coverage_release_passed({'bls': {'counts': {}}}))
+        pages = {key: complete for key in probe.REQUIRED_PAGE_KEYS}
+        self.assertTrue(probe.coverage_release_passed(pages))
+        self.assertTrue(probe.coverage_release_passed(dict(pages, acls=page(0, 0, 0))))
+        self.assertFalse(probe.coverage_release_passed(dict(pages, acls=page(147, 136, 11))))
+        self.assertFalse(probe.coverage_release_passed(dict(pages, bls=page(147, 136, 0))))
+        self.assertFalse(probe.coverage_release_passed({key: page(0, 0, 0) for key in pages}))
+        self.assertFalse(probe.coverage_release_passed(dict(pages, bls={'counts': {}})))
+        self.assertFalse(probe.coverage_release_passed({'bls': complete}))
         self.assertFalse(probe.coverage_release_passed({}))
+
+    def test_proof_summary_does_not_emit_private_source_details(self):
+        raw = [
+            {'reason': 'missing directional travel rule: private-home->primary',
+             'instructor': 'private-person', 'source_id': 'private-id',
+             'start': '2026-11-26T12:34:00-05:00'},
+            {'reason': 'invalid source private-id'},
+        ]
+        counts, by_date = probe.public_issue_summary(raw)
+        self.assertEqual(counts, {'missing_directional_travel_rule': 1,
+                                  'availability_coverage_unknown': 1})
+        self.assertEqual(by_date, {
+            '2026-11-26': {'missing_directional_travel_rule': 1},
+            'unscoped': {'availability_coverage_unknown': 1},
+        })
+        serialized = json.dumps([counts, by_date])
+        for private in ('private-home', 'private-person', 'private-id', '12:34'):
+            self.assertNotIn(private, serialized)
