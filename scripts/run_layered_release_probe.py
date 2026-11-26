@@ -7,6 +7,24 @@ from scripts.block_start_time_selector import build_block_schedule_page, load_bl
 from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, render_html
 ROOT=Path(__file__).resolve().parents[1]
 
+def coverage_release_passed(pages):
+    """Require complete window evaluation; partial coverage is not a release pass."""
+    if not pages:
+        return False
+    total_windows = 0
+    for row in pages.values():
+        counts = row.get('counts') or {}
+        values = [counts.get(key) for key in
+                  ('input_windows', 'evaluated_windows', 'failed_windows')]
+        if any(type(value) is not int or value < 0 for value in values):
+            return False
+        inputs, evaluated, failed = values
+        if failed or evaluated != inputs:
+            return False
+        total_windows += inputs
+    return total_windows > 0
+
+
 def run():
     output=ROOT/'data/runtime/audit_previews/v2_release_probe'
     output.mkdir(parents=True,exist_ok=True)
@@ -38,12 +56,12 @@ def run():
                 patterns[day['date']]=courses
             result['pages'][key]=dict(calculation_issue_counts=dict(Counter(issue.get('reason') or 'unclassified' for issue in payload.get('reconciliationIssues',[]))),day_patterns=patterns,counts=payload.get('counts'),offer_roles=dict(Counter(o.get('scheduleRole') or o.get('offerType') for o in offers)),rejection_reasons=payload.get('rejectionReasonCounts'),synthesis_blocked_dates=payload.get('synthesisBlockedDates'),model=payload.get('schedulingModel'),valid_until=feed.get('validUntil'))
         result['calculation_completed']=True
-        result['release_passed']=all(not (row['counts'].get('input_windows',0)>0 and row['counts'].get('evaluated_windows',0)==0) for row in result['pages'].values())
+        result['release_passed']=coverage_release_passed(result['pages'])
     finally:
         policy_path.write_bytes(original)
         (output/'proof.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
     print(json.dumps(result,indent=2))
     if not result.get("release_passed"):
-        raise RuntimeError("V2 could not evaluate current source windows; publication remains stopped")
+        raise RuntimeError("V2 window coverage is incomplete or unproven; publication remains stopped")
 
 if __name__=='__main__':run()

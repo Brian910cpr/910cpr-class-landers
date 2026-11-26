@@ -20,3 +20,16 @@ class ProbeTests(unittest.TestCase):
             self.assertEqual(policy.read_bytes(),original)
             result=json.loads((root/'data/runtime/audit_previews/v2_release_probe/proof.json').read_text())
             self.assertFalse(result['published']);self.assertNotIn('calculation_completed',result)
+
+    def test_partial_window_evaluation_is_not_release_proof(self):
+        def page(inputs, evaluated, failed):
+            return {'counts': dict(input_windows=inputs,
+                                   evaluated_windows=evaluated,
+                                   failed_windows=failed)}
+        complete = page(147, 147, 0)
+        self.assertTrue(probe.coverage_release_passed({'bls': complete, 'acls': page(0, 0, 0)}))
+        self.assertFalse(probe.coverage_release_passed({'bls': complete, 'acls': page(147, 136, 11)}))
+        self.assertFalse(probe.coverage_release_passed({'bls': page(147, 136, 0)}))
+        self.assertFalse(probe.coverage_release_passed({'bls': page(0, 0, 0)}))
+        self.assertFalse(probe.coverage_release_passed({'bls': {'counts': {}}}))
+        self.assertFalse(probe.coverage_release_passed({}))
