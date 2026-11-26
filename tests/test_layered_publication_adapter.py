@@ -4,7 +4,7 @@ import unittest
 from datetime import datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
-from scripts.layered_publication_adapter import calculate, publish, project_sources, finalize
+from scripts.layered_publication_adapter import apply_default_owner_occupancy, calculate, publish, project_sources, finalize
 from scripts.layered_selector_adapter import aware
 from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, public_layered_landscape, render_html
 from scripts.apply_anchor_policy import finalize_selector_payload
@@ -706,6 +706,78 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertTrue(self.payload()['offers'])
         self.now=aware('2027-03-14T03:10:00-04:00')
         self.assertFalse(self.payload()['offers'])
+
+    def add_intake(self, day, count=None, **fields):
+        row = self.add(day, '10:00', '12:30', cid='359474', name='UNKNOWN',
+                       count=count, booking_source='confirmed_booking_intake',
+                       registration_backend='landerware', session_status='scheduled',
+                       stored_instructor_absent=True, instructor_unassigned=True,
+                       operational_has_active_seat=True, visibility='private',
+                       external_class_id=f'intake-external-{day}')
+        row.update(fields)
+        return row
+
+    def attribute(self, approved=True):
+        return apply_default_owner_occupancy(
+            self.sources, 'Brian Ennis', self.room, self.now, self.coverage,
+            lambda cid: approved and cid == '359474')
+
+    def test_owner_default_is_effective_only_for_verified_intake(self):
+        for day, count in zip(range(11, 16), [None, 1, None, 2, 1]):
+            if day != 11:
+                self.window(day)
+            self.add_intake(day, count=count)
+        originals = copy.deepcopy(self.sources)
+        effective = self.attribute()
+        self.assertEqual(self.sources, originals)
+        self.assertEqual({r['instructor'] for r in effective}, {'Brian Ennis'})
+        self.assertTrue(all(r['stored_instructor_absent'] for r in effective))
+        self.assertEqual([r['active_registration_count'] for r in effective],
+                         [None, 1, None, 2, 1])
+        self.assertTrue(all(r['visibility'] == 'private' for r in effective))
+
+    def test_no_fallback_without_fresh_proof_cert_or_true_unassignment(self):
+        row = self.add_intake(11)
+        self.assertIs(self.attribute(approved=False)[0], row)
+        for change in [
+            {'stored_instructor_absent': False}, {'instructor_unassigned': False, 'instructor':'Amy Arnold'},
+            {'operational_has_active_seat': False}, {'session_status':'completed'},
+            {'session_status':'canceled'}, {'location_resolution':None}, {'visibility':'public'},
+        ]:
+            self.sources[:] = [{**row, **change}]
+            self.assertIs(self.attribute()[0], self.sources[0])
+        self.sources[:] = [row]
+        self.coverage[0]['valid_until'] = self.now.isoformat()
+        self.assertIs(self.attribute()[0], row)
+
+    def test_distinct_room_and_instructor_conflicts_stay_unassigned_but_exact_mirror_dedups(self):
+        row = self.add_intake(11)
+        other = dict(row, source_file='docs/data/schedule_future.json',
+                     instructor='Brian', instructor_unassigned=False)
+        self.sources.append(other)
+        self.assertEqual(self.attribute()[0]['instructor'], 'Brian Ennis')
+        for update in [
+            {'instructor':'Amy Arnold'}, {'external_class_id':'other-class'},
+            {'resource':'an offsite facility'}, {'end':None}, {'course_id':'another-course'},
+        ]:
+            self.sources[1] = {**other, **update}
+            self.assertIs(self.attribute()[0], row)
+
+    def test_owner_effective_anchor_keeps_bookends_without_join_or_private_identifiers(self):
+        self.policy['require_verified_day_gravity'] = True
+        row = self.add_intake(11, source_event_id='PRIVATE-OWNER-INTAKE')
+        self.sources = self.attribute()
+        seat = dict(offerType='seated_class', session_id=row['external_class_id'],
+                    instructor='Brian Ennis', date='2026-10-11', startTime='10:00',
+                    courseId='359474', registrationUrl='https://fixture.test/PRIVATE-OWNER-LINK')
+        payload = self.payload([seat])
+        offers = payload['offers']
+        self.assertTrue(any(o['scheduleRole'] == 'barnacle' and o['startTime'] == '12:30'
+                            for o in offers))
+        self.assertFalse(any(o['offerType'] == 'seated_class' or o['scheduleRole'] == 'open_day'
+                             for o in offers))
+        self.assertFalse(any(o['courseId'] == '359474' for o in offers))
+        self.assertNotIn('PRIVATE-OWNER', json.dumps(public_selector_availability_payload(payload)))
 
 
 if __name__=='__main__':unittest.main()

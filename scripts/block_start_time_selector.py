@@ -750,6 +750,14 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "course_id": session.get("course_id") or session.get("external_course_id"),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
             "instructor_unassigned": not session.get("lead_instructor_name"),
+            **({
+                "stored_instructor_absent": ("lead_instructor_id" in session
+                                             and session["lead_instructor_id"] is None
+                                             and not session.get("lead_instructor_name")),
+                "booking_source": session.get("source"),
+                "registration_backend": session.get("registration_backend"),
+                "session_status": session.get("session_status"),
+            } if allow_unresolved else {}),
             "visibility": session.get("visibility"),
             "operational_has_active_seat": session.get("operational_has_active_seat") is True,
             "count_available": session.get("count_available") is True,
@@ -1238,7 +1246,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
 
     # V2 remains opt-in. Room hours alone never establish calendar coverage.
     if layered_active(layered_policy):
-        from scripts.layered_publication_adapter import publish
+        from scripts.layered_publication_adapter import apply_default_owner_occupancy, publish
         from scripts.layered_day_cache import cached_calculate
         venue_aliases = {str(value).casefold().strip()
             for venue in loaded["location_resource_map"].get("locations", [])
@@ -1253,6 +1261,20 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         effective_layered_policy = dict(layered_policy,
             lead_minutes=int(public_offer_policy.get("minimum_lead_hours") or 0) * 60,
             require_verified_day_gravity=True)
+        owner = people.get(normalize_key(layered_policy.get("brian_person_id")))
+        def owner_qualified_for_occupied_course(course_id):
+            if not owner or course_id not in course_catalog or course_id not in course_rules:
+                return False
+            course = contextual_course(course_id, {}, course_catalog, course_rules)
+            family = str(course.get("course_family") or course.get("family") or "")
+            subtype = str(course.get("subtype") or family).upper().split()
+            clinical = next((name for name in ("ACLS", "PALS", "BLS") if name in subtype), family)
+            skills = course.get("kind") == "skills" or course.get("blended_classroom_skills") == "blended"
+            return has_required_cert(owner, course) and (
+                skills or clinical not in layered_policy.get("brian_excluded_families", []))
+        occupancy = apply_default_owner_occupancy(
+            occupancy, (owner or {}).get("display_name"), layered_policy["primary_resource"],
+            reference_now, coverage, owner_qualified_for_occupied_course)
         calculation = cached_calculate(windows, occupancy, selected_courses, effective_layered_policy,
             loaded["location_resource_map"], reference_now, window_datetimes,
             lambda window, course: bool(people.get(normalize_key(window.get("person_id")))

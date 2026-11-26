@@ -10,6 +10,25 @@ from scripts.layered_selector_adapter import aware
 
 
 class DayCacheTests(unittest.TestCase):
+    def test_effective_owner_intake_preserves_cross_day_repeat_on_cache_hit(self):
+        f = self.f
+        f.policy['require_verified_day_gravity'] = True
+        f.window(12)
+        f.add_intake(11, start='2026-10-11T10:00:00-04:00',
+                     end='2026-10-11T12:30:00-04:00')
+        f.sources = f.attribute()
+        self.assertEqual(f.sources[0]['instructor'], 'Brian Ennis')
+        cold, warm = self.run_cache(), self.run_cache()
+        self.assertEqual(cold['incremental_cache']['hits'], 0)
+        self.assertEqual(warm['incremental_cache']['hits'], 3)
+        self.assertEqual(self.decisions(warm), self.decisions(cold))
+        adjacent = next(row for row in warm['reports'] if row['availability_window'].endswith('-12-00:00'))
+        self.assertTrue(any(r['course'] == '359474' and
+            'full_course_repeat_within_24_hours' in r.get('reasons', [])
+            for r in adjacent['rejected']))
+        self.assertTrue(any(r['course'] == '359474' and r['start'].hour > 10
+                            for r in adjacent['accepted']))
+
     def decisions(self, result):
         return [[(c['course'],c['start'],c['end'],c['mode']) for c in r['accepted']] for r in result['reports']]
     def setUp(self):

@@ -6,7 +6,7 @@ missing bounds close the affected resource horizon. Existing records are immutab
 """
 from copy import deepcopy
 from collections import Counter
-from datetime import timedelta, timezone
+from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from scripts.layered_selector_adapter import aware, build_shadow
 from scripts.layered_scheduling_engine import encode as encode_value, stamp
@@ -49,6 +49,101 @@ def project_sources(rows, course_metadata):
             row["active_registration_count"] = None
         row.setdefault("source_file", "canonical_class_sessions")
         result.append(row)
+    return result
+
+
+def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qualified):
+    """Project effective ownership only for a proved, genuinely unassigned class.
+
+    This is an in-memory copy, never a roster, a stored assignment, or an
+    entitlement to public registration. Any unresolved conflict keeps the
+    original physical block and its existing unassigned behavior.
+    """
+    owner = str(owner or "").strip()
+    if not owner:
+        return rows
+
+    def key(value):
+        name = " ".join(str(value or "").casefold().split())
+        return "brian ennis" if name == "brian" else name
+
+    def bounds(row):
+        try:
+            start, end = (stamp(value.isoformat() if isinstance(value, datetime) else value)
+                          for value in (row["start"], row["end"]))
+            if start < end:
+                return start, end
+        except (KeyError, ValueError, TypeError, AttributeError):
+            pass
+        return None
+
+    def room_relation(row):
+        if row.get("availability_location_mode") == "instructor_time_only":
+            return False
+        if row.get("location_resolution") == "location_resource_map":
+            resource = row.get("resource")
+            return resource in {None, "", primary, "Shipyard Office"}
+        return None  # Not proof of a separate room.
+
+    owner_key = key(owner)
+    instant = stamp(aware(now).isoformat())
+    fresh_intervals = []
+    for proof in coverage or []:
+        if (proof.get("status") != "known_complete" or proof.get("location") != primary
+                or key(proof.get("instructor")) != owner_key):
+            continue
+        span = bounds(proof)
+        try:
+            observed = stamp(proof["observed_at"])
+            expiry = min(stamp(proof["valid_until"]), observed + timedelta(
+                minutes=proof.get("freshness_minutes", 60)))
+        except (KeyError, ValueError, TypeError, AttributeError, OverflowError):
+            continue
+        if span and observed <= instant < expiry:
+            fresh_intervals.append(span)
+
+    result = list(rows)
+    for index, row in enumerate(rows):
+        if (row.get("source_file") != "canonical_class_sessions"
+                or row.get("booking_source") != "confirmed_booking_intake"
+                or row.get("registration_backend") != "landerware"
+                or row.get("session_status") not in {"scheduled", "active"}
+                or row.get("visibility") not in {"private", "unlisted", "internal"}
+                or row.get("stored_instructor_absent") is not True
+                or not row.get("instructor_unassigned")
+                or row.get("operational_has_active_seat") is not True
+                or room_relation(row) is not True
+                or not owner_qualified(str(row.get("course_id") or ""))):
+            continue
+        span = bounds(row)
+        if not span or not any(start <= span[0] < span[1] <= end
+                              for start, end in fresh_intervals):
+            continue
+
+        conflict = False
+        for other_index, other in enumerate(rows):
+            if other_index == index:
+                continue
+            other_person = key(other.get("instructor"))
+            other_room = room_relation(other)
+            if (other_room is False and other_person
+                    and other_person not in {owner_key, "unknown", "unassigned"}
+                    and not other.get("instructor_unassigned")):
+                continue
+            other_span = bounds(other)
+            if other_span and (other_span[1] <= span[0] or other_span[0] >= span[1]):
+                continue
+            if (other_span == span and other_room is True and other_person == owner_key
+                    and other.get("source_file") in {"data/sessions_current.json", "docs/data/schedule_future.json"}
+                    and row.get("external_class_id")
+                    and str(row["external_class_id"]) == str(other.get("external_class_id") or "")
+                    and str(row.get("course_id") or "") == str(other.get("course_id") or "")):
+                continue  # Exact durable mirror, not evidence of another class.
+            conflict = True
+            break
+        if not conflict:
+            result[index] = dict(row, instructor=owner, instructor_unassigned=False,
+                                 effective_instructor_basis="owner_default_verified_coverage")
     return result
 
 
