@@ -143,6 +143,47 @@ class DayCacheTests(unittest.TestCase):
         self.assertEqual({r['date'] for r in removed['incremental_cache']['rebuilt']},
                          {'2026-10-11','2026-10-12'})
 
+    def test_offsite_route_scope_parity_and_cache_invalidation(self):
+        f=self.f
+        f.windows=f.windows[:1];f.coverage=f.coverage[:1]
+        source=dict(source_event_id='synthetic-offsite', start=f.at(14,'09:00').isoformat(),
+            end=f.at(14,'10:00').isoformat(), instructor='Brian Ennis',
+            location='fixture-unmapped-offsite', resource='fixture-unmapped-offsite',
+            source_file='canonical_class_sessions', visibility='private',
+            active_registration_count=1, count_available=True)
+        f.sources=[source]
+        distant=self.run_cache()
+        self.assertEqual(distant['counts']['failed_windows'],0)
+        self.assertEqual(len(distant['projected_sources']),1)
+        self.assertEqual(self.decisions(distant),self.decisions(f.calculation()))
+        source.update(start=f.at(12,'09:00').isoformat(),end=f.at(12,'10:00').isoformat())
+        near=self.run_cache()
+        self.assertEqual(near['incremental_cache']['hits'],0)
+        self.assertEqual(near['counts']['failed_windows'],1)
+        self.assertEqual(near['counts']['failed_windows'],f.calculation()['counts']['failed_windows'])
+        self.assertTrue(any('missing directional travel rule' in row['reason'] for row in near['issues']))
+        self.assertEqual(self.run_cache()['incremental_cache']['hits'],1)
+        source.update(instructor='Unrelated Instructor')
+        independent=self.run_cache()
+        self.assertEqual(independent['counts']['failed_windows'],0)
+        self.assertEqual(self.decisions(independent),self.decisions(f.calculation()))
+
+    def test_long_explicit_route_extends_offsite_scope(self):
+        f=self.f
+        f.windows=f.windows[:1];f.coverage=f.coverage[:1]
+        f.policy['travel_minutes']={f.room+'->fixture-known-far-route':3000}
+        f.sources=[dict(source_event_id='synthetic-offsite-far',start=f.at(14,'09:00').isoformat(),
+            end=f.at(14,'10:00').isoformat(),instructor='Brian Ennis',
+            location='fixture-unmapped-offsite',resource='fixture-unmapped-offsite',
+            source_file='canonical_class_sessions',visibility='private',
+            active_registration_count=1,count_available=True)]
+        result=cached_calculate(f.windows,f.sources,f.courses,f.policy,f.resources,f.now,
+            lambda w:(w['start'],w['end']),lambda w,c:True,f.coverage,f.policy['travel_minutes'],
+            cache_dir=Path(self.directory.name))
+        self.assertEqual(result['counts']['failed_windows'],1)
+        self.assertEqual(result['counts']['failed_windows'],f.calculation()['counts']['failed_windows'])
+        self.assertEqual(len(result['projected_sources']),1)
+
     def test_horizon_excludes_windows_after_ninety_days(self):
         f=self.f;window=copy.deepcopy(f.windows[0]);start=f.now+timedelta(days=95)
         window.update(start=start.isoformat(),end=(start+timedelta(hours=2)).isoformat(),source_availability_window='outside-horizon')

@@ -9,10 +9,10 @@ from pathlib import Path
 import hashlib
 import json
 from scripts.layered_selector_adapter import aware
-from scripts.layered_publication_adapter import calculate, project_sources, repeat_context_for_window, SCHEMA
+from scripts.layered_publication_adapter import calculate, project_sources, repeat_context_for_window, scoped_sources, SCHEMA
 from scripts.fetch_canonical_scheduling_demand import _atomic_write_json
 
-VERSION = 'layered-day-cache.v3'
+VERSION = 'layered-day-cache.v4'
 ZONE = ZoneInfo('America/New_York')
 
 
@@ -42,31 +42,6 @@ def digest(value):
     return hashlib.sha256(json.dumps(pack(value),sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 
-def scoped_sources(rows, start, end, travel):
-    # Include whole local days, transitions and transitively connected occupancy.
-    # Unresolved bounds are never discarded to manufacture free time.
-    lower = start.astimezone(ZONE).replace(hour=0,minute=0,second=0,microsecond=0)-timedelta(minutes=travel)
-    upper = (end.astimezone(ZONE)-timedelta(microseconds=1)).replace(hour=0,minute=0,second=0,microsecond=0)+timedelta(days=1,minutes=travel)
-    chosen = {}
-    changed = True
-    while changed:
-        changed = False
-        for index,row in enumerate(rows):
-            if index in chosen: continue
-            try:
-                a,b = aware(row['start']),aware(row['end'])
-                if b <= a: raise ValueError('unresolved')
-            except (KeyError,ValueError,TypeError):
-                chosen[index]=row
-                continue
-            if a <= upper and b >= lower:
-                chosen[index]=row
-                new_lower,new_upper=min(lower,a-timedelta(minutes=travel)),max(upper,b+timedelta(minutes=travel))
-                if (new_lower,new_upper)!=(lower,upper):
-                    lower,upper=new_lower,new_upper;changed=True
-    return [chosen[i] for i in sorted(chosen)]
-
-
 def cached_calculate(windows, occupancy, courses, policy, resources, now, interval,
                      qualified, coverage, travel_minutes=None, *, cache_dir, horizon_days=90):
     # Cache expiry is an instant; repeated local-clock hours must not extend it.
@@ -75,7 +50,7 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
     horizon_end=horizon_start+timedelta(days=horizon_days)
     if not 1 <= horizon_days <= 90: raise ValueError('cache horizon must be 1..90 days')
     cache_dir=Path(cache_dir)
-    travel=max([0]+[int(v) for v in (travel_minutes or {}).values() if isinstance(v,(int,float)) and v>=0])
+    known_rooms={r['resource_name'] for loc in resources.get('locations', []) for r in loc.get('internal_resources', [])}
     code=digest([Path(__file__).read_text(), *[Path(__file__).with_name(name).read_text() for name in
         ('layered_publication_adapter.py','layered_selector_adapter.py','layered_scheduling_engine.py','layered_resource_readiness.py')]])
     metadata={str(c["course_id"]):c for c in courses}
@@ -90,7 +65,7 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
         window.update(start=start.isoformat(),end=end.isoformat())
         window.setdefault('source_availability_window',str(index))
         selected.append(window)
-        rows=scoped_sources(occupancy,start,end,travel)
+        rows=scoped_sources(projected,start,end,travel_minutes,known_rooms,policy['primary_resource'])
         proofs=[]
         for proof in coverage or []:
             try:

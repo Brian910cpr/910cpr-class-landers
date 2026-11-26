@@ -181,6 +181,65 @@ def repeat_context_for_window(projected, metadata, window, start, end):
     return [{"course": cid, "start": when} for cid, when in sorted(matches)]
 
 
+def scoped_sources(rows, start, end, travel_minutes, known_rooms, primary):
+    """Shared direct/cache context: physical day edges plus conservative offsite scope.
+
+    Retain malformed bounds and transitively connected physical occupancy. A
+    nearby unresolved offsite direction must not disappear merely because the
+    cached day has no configured route duration. Distant offsite sources remain
+    in the full projected source audit, not the unrelated window calculation.
+    """
+    travel = max([0] + [int(v) for v in (travel_minutes or {}).values()
+                         if type(v) in (int, float) and v >= 0])
+    zone = ZoneInfo("America/New_York")
+    lower = (start.astimezone(zone).replace(hour=0, minute=0, second=0, microsecond=0)
+             .astimezone(timezone.utc) - timedelta(minutes=travel))
+    upper = ((end.astimezone(zone)-timedelta(microseconds=1))
+             .replace(hour=0, minute=0, second=0, microsecond=0)
+             + timedelta(days=1)).astimezone(timezone.utc) + timedelta(minutes=travel)
+    horizon = timedelta(minutes=max(48 * 60, 24 * 60 + travel))
+    route_lower = start.astimezone(timezone.utc) - horizon
+    route_upper = end.astimezone(timezone.utc) + horizon
+    chosen = {}
+    changed = True
+    while changed:
+        changed = False
+        for index, row in enumerate(rows):
+            if index in chosen:
+                continue
+            try:
+                a, b = (occupancy_instant(row[field]) for field in ("start", "end"))
+                if b <= a:
+                    raise ValueError("unresolved")
+            except (KeyError, ValueError, TypeError, AttributeError):
+                chosen[index] = row
+                continue
+            if a <= upper and b >= lower:
+                chosen[index] = row
+                new_lower, new_upper = min(lower, a-timedelta(minutes=travel)), max(upper, b+timedelta(minutes=travel))
+                if (new_lower, new_upper) != (lower, upper):
+                    lower, upper = new_lower, new_upper
+                    changed = True
+    # Do not extend the physical connected component using a merely nearby
+    # offsite route-check source. Match the shadow adapter's venue resolution.
+    for index, row in enumerate(rows):
+        if index in chosen or row.get("availability_location_mode") == "instructor_time_only":
+            continue
+        room = row.get("resource")
+        room = room if room in known_rooms and room != "Shipyard Office" else primary
+        same_venue = row.get("location_resolution") == "location_resource_map" or room != primary
+        if same_venue:
+            continue
+        try:
+            a, b = (occupancy_instant(row[field]) for field in ("start", "end"))
+        except (KeyError, ValueError, TypeError, AttributeError):
+            chosen[index] = row
+            continue
+        if a <= route_upper and b >= route_lower:
+            chosen[index] = row
+    return [chosen[i] for i in sorted(chosen)]
+
+
 def calculate(windows, occupancy, courses, policy, resources, now, interval,
               qualified, coverage, travel_minutes=None, *, scoped_repeat_context=None):
     """Partition normalization errors by window, retaining all relevant occupancy.
@@ -214,7 +273,7 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
         name = str(window.get("instructor_name") or "").casefold().strip()
         room = policy["primary_resource"]
         relevant, invalid = [], []
-        for source in projected:
+        for source in scoped_sources(projected, ws, we, travel_minutes, known_rooms, room):
             person = str(source.get("instructor") or "").casefold().strip()
             same_person = person == name or person in {"brian", "brian ennis"} and "brian" in name
             resource = source.get("resource") or room
