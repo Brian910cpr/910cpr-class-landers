@@ -262,6 +262,14 @@ def recurrence_rules(event: dict[str, Any]) -> list[str]:
     return [rule for rule in rules if rule]
 
 
+def is_recurring_series(event: dict[str, Any]) -> bool:
+    if recurrence_rules(event):
+        return True
+    return event.get("source_type") == "inverse_google_calendar" and bool(
+        parse_recurrence_values(event, "RDATE", use_params=True)
+    )
+
+
 def normalize_rrule_for_dtstart(rule: str, dtstart: datetime) -> str:
     if dtstart.tzinfo is not None:
         return rule
@@ -331,7 +339,10 @@ def expand_recurring_event(
         lookback = duration + zone_padding
         bounded_start -= min(lookback, bounded_start - datetime.min.replace(tzinfo=bounded_start.tzinfo))
         bounded_end += min(zone_padding, datetime.max.replace(tzinfo=bounded_end.tzinfo) - bounded_end)
-    for rule in recurrence_rules(event):
+    rules = recurrence_rules(event)
+    if inverse and rdates and not rules:
+        occurrence_starts.append(start_dt)
+    for rule in rules:
         try:
             rule_set = rrulestr(normalize_rrule_for_dtstart(rule, start_dt), dtstart=start_dt)
             occurrence_starts.extend(rule_set.between(bounded_start, bounded_end, inc=True))
@@ -417,7 +428,7 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
             if not start_dt:
                 skipped["missing_parseable_start"] += 1
             else:
-                if event_in_window(current, start_dt) or recurrence_rules(current):
+                if event_in_window(current, start_dt) or is_recurring_series(current):
                     parsed_events.append(current)
                 else:
                     skipped["outside_export_window"] += 1
@@ -475,7 +486,7 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
     for event in parsed_events:
         event_start = parse_ics_datetime(event.get("start_raw", ""), event.get("start_params"))
         uid = event.get("event_id") or event.get("raw_properties", {}).get("UID")
-        if event_start and not recurrence_rules(event):
+        if event_start and not is_recurring_series(event):
             duplicate_keys.add(recurrence_key(
                 uid, event_start, normalize_instant=stype == "inverse_google_calendar"
             ))
@@ -488,12 +499,12 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
     normalized_events = []
     for index, event in enumerate(parsed_events, start=1):
         event_start = parse_ics_datetime(event.get("start_raw", ""), event.get("start_params"))
-        has_rrule = bool(recurrence_rules(event))
+        has_series = is_recurring_series(event)
         has_override = bool(event.get("recurrence_id"))
-        if not has_rrule and event_start and not event_in_window(event, event_start):
+        if not has_series and event_start and not event_in_window(event, event_start):
             skipped["outside_export_window"] += 1
             continue
-        event["recurrence_source"] = "overridden_instance" if has_override else ("recurring_master" if has_rrule else "explicit_event")
+        event["recurrence_source"] = "overridden_instance" if has_override else ("recurring_master" if has_series else "explicit_event")
         event["generated_from_rrule"] = False
         event["original_uid"] = event.get("event_id") or event.get("raw_properties", {}).get("UID") or UNKNOWN
         event["recurrence_source_uid"] = event["original_uid"]
@@ -507,7 +518,7 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         event.setdefault("updated", UNKNOWN)
         event.setdefault("creator", UNKNOWN)
         event.setdefault("organizer", event.get("organizer", UNKNOWN))
-        if has_rrule:
+        if has_series:
             expanded, recurring_skipped = expand_recurring_event(event, window_start, window_end, duplicate_keys, override_keys)
             skipped.update(recurring_skipped)
             normalized_events.extend(expanded)
@@ -701,6 +712,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-
-

@@ -149,6 +149,38 @@ END:VCALENDAR"""
         self.assertEqual(skipped["suppressed_by_recurrence_override"], 2)
         self.assertEqual(skipped["excluded_by_exdate"], 1)
 
+    def test_inverse_rdate_only_series_keeps_carry_in_and_future_instances(self):
+        start = datetime.fromisoformat("2026-11-26T12:30:00+00:00")
+        end = datetime.fromisoformat("2026-11-26T16:00:00+00:00")
+        ics = """BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:rdate-only
+DTSTART;TZID=America/New_York:20261101T050000
+DTEND;TZID=America/New_York:20261101T070000
+RDATE;TZID=America/New_York:20261126T053000,20261126T060000,20261126T070000,20261126T080000,20261126T090000,20261126T120000
+EXDATE;TZID=America/New_York:20261126T070000
+END:VEVENT
+BEGIN:VEVENT
+UID:rdate-only
+RECURRENCE-ID:20261126T130000Z
+STATUS:CANCELLED
+END:VEVENT
+END:VCALENDAR"""
+        source = {"calendar_source_key": "fixture", "mode": "inverse_blocking"}
+        events, _ = exporter.parse_ics_events(ics, source, start, end)
+        self.assertEqual([(e["start"], e["end"]) for e in events], [
+            ("2026-11-26T06:00:00-05:00", "2026-11-26T08:00:00-05:00"),
+            ("2026-11-26T09:00:00-05:00", "2026-11-26T11:00:00-05:00"),
+        ])
+        source["mode"] = "explicit_availability"
+        events, _ = exporter.parse_ics_events(ics, source, start, end)
+        self.assertEqual(events, [])
+        source["mode"] = "inverse_blocking"
+        master_start = datetime.fromisoformat("2026-11-01T10:00:00+00:00")
+        master_end = datetime.fromisoformat("2026-11-01T12:00:00+00:00")
+        events, _ = exporter.parse_ics_events(ics, source, master_start, master_end)
+        self.assertEqual([e["start"] for e in events], ["2026-11-01T05:00:00-05:00"])
+
     def test_derives_public_ics_url_from_google_calendar_cid(self) -> None:
         source = {
             "calendar_source_key": "amy_availability",
@@ -389,6 +421,3 @@ END:VCALENDAR
 
 if __name__ == "__main__":
     unittest.main()
-
-
-
