@@ -132,3 +132,73 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual([line.strip() for line in job.splitlines() if line.strip().startswith("path:")],
                          ["path: data/runtime/audit_previews/v2_release_probe/proof.json"])
 
+
+
+class IndependentOutcomeComparatorTests(unittest.TestCase):
+    def setUp(self):
+        self.scopes = {(page, "2099-01-01", "fixture-instructor", "fixture-course")
+                       for page in probe.REQUIRED_PAGE_KEYS}
+        self.target = next(scope for scope in self.scopes if scope[0] == "bls")
+        self.offer = ("2099-01-01T13:00:00Z", "2099-01-01T15:00:00Z",
+                      "fixture-room", "open", "request_only")
+        self.expected = {scope: {"offers": [], "zero_reason": "no_qualified_coverage"}
+                         for scope in self.scopes}
+        self.expected[self.target] = {"offers": [self.offer]}
+        self.actual = {scope: list(entry["offers"])
+                       for scope, entry in self.expected.items()}
+
+    def compare(self, actual=None, expected=None, observed_epoch="fixture-epoch"):
+        return probe.compare_expected_outcomes(
+            self.scopes, self.expected if expected is None else expected,
+            self.actual if actual is None else actual,
+            expected_epoch="fixture-epoch", observed_epoch=observed_epoch)
+
+    def test_exact_match_and_independently_explained_zero(self):
+        self.assertEqual(self.compare()["status"], "matched")
+        actual = dict(self.actual)
+        actual[self.target] = [("2099-01-01T08:00:00-05:00", "2099-01-01T10:00:00-05:00",
+                                *self.offer[2:])]
+        self.assertEqual(self.compare(actual)["status"], "matched")
+
+    def test_empty_or_dropped_family_cannot_match(self):
+        all_empty = {scope: [] for scope in self.scopes}
+        self.assertEqual(self.compare(all_empty)["missing_offer_count"], 1)
+        self.assertEqual(self.compare({})["status"], "mismatch")
+        missing = dict(self.actual)
+        del missing[self.target]
+        self.assertEqual(self.compare(missing)["missing_scope_count"], 1)
+
+    def test_matching_counts_wrong_start_role_or_capability_fail(self):
+        mutations = [
+            ("2099-01-01T13:30:00Z", *self.offer[1:]),
+            (*self.offer[:3], "seated", self.offer[4]),
+            (*self.offer[:4], "verified_booking"),
+        ]
+        for mutation in mutations:
+            with self.subTest(mutation=mutation):
+                result = self.compare(self.actual | {self.target: [mutation]})
+                self.assertEqual(result["status"], "mismatch")
+                self.assertEqual(result["missing_offer_count"], 1)
+                self.assertEqual(result["unexpected_offer_count"], 1)
+                self.assertNotRegex(json.dumps(result), "fixture|2099")
+
+    def test_private_seated_leak_and_duplicates_fail(self):
+        scope = next(scope for scope in self.scopes if scope[0] == "acls")
+        result = self.compare(self.actual | {scope: [(*self.offer[:3], "seated", "verified_booking")]})
+        self.assertEqual(result["unexpected_offer_count"], 1)
+        self.assertEqual(result["status"], "mismatch")
+        result = self.compare(self.actual | {self.target: [self.offer, self.offer]})
+        self.assertEqual(result["duplicate_offer_count"], 1)
+
+    def test_missing_stale_or_invalid_expectation_is_not_match(self):
+        self.assertEqual(self.compare(expected={})["status"], "mismatch")
+        self.assertEqual(self.compare(observed_epoch="older")["status"], "unproven")
+        scope = next(scope for scope in self.scopes if scope[0] == "pals")
+        expected = self.expected | {scope: {"offers": []}}
+        self.assertEqual(self.compare(expected=expected)["invalid_scope_count"], 1)
+
+    def test_invalid_offer_bounds_fail(self):
+        invalid = ("2099-01-01T16:00:00Z", *self.offer[1:])
+        result = self.compare(self.actual | {self.target: [invalid]})
+        self.assertEqual(result["invalid_offer_count"], 1)
+        self.assertEqual(result["status"], "mismatch")
