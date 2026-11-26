@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-26T20:06:31.386154+00:00",
+  "generated_at": "2026-11-26T20:19:54.283321+00:00",
   "read_only": true,
   "public_site_affected": false,
   "google_calendar_called": false,
@@ -116,7 +116,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "6ti32dpj74pjcb9j6pi3eb9k70ojcb9p6gr62b9pc8r30db6ccojcp36cc@google.com",
+      "source_event_id": "chi3gchk6oq32bb2c4q36b9kcgp62bb169j36b9h68r64ob36lijap9nc8@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -140,7 +140,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "6so6ccb561h62b9jcgs3ab9k70o64bb1clgjibb460r32opi60s3ed9lc8@google.com",
+      "source_event_id": "64pmcdr36ti64b9n6oomcb9k74o68b9pcgqj4b9p6cqm2d32cpimcchp6o@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -212,7 +212,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "cosm8e1g74s66bb1cor6cb9k6pgj0b9p70q64bb66kr6ap3568sm4p9ic8@google.com",
+      "source_event_id": "cdgmcor364sm8b9l75gm2b9k6limcb9pccp30b9k6kq6ccb1cdi38c9h60@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -332,7 +332,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "6kr66o9i64p36bb470sjab9k6kqj2bb26cq32bb46tij8pj26cq3ephh6o@google.com",
+      "source_event_id": "6so34dhk6osjcbb2cgpj0b9k61i3cbb1c4r3ib9k60o3ccr5cdj3gc3170@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -380,7 +380,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "6hgjidb46sr3ebb5c4s66b9kcli38bb26cq68b9j6tj30ohm64s34pj6cc@google.com",
+      "source_event_id": "6cojid9k68sm8b9k75ijib9kchi32b9p60rm6b9m75gj0dhj75h34d1l74@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -428,7 +428,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "c9hj4o9ockp6ab9o74pj0b9kcph34bb26osm6b9m6lhjic9p6osm4dhlc4@google.com",
+      "source_event_id": "75h6ccpgcph6cb9o6tgmab9k6hgj2b9pcpj66b9ocgr68ophcgrm4d316s@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -500,7 +500,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "ccoj2oj161hjebb16sp6ab9kcdhm8bb1ccs64b9ichim6cj6cdh62pj16k@google.com",
+      "source_event_id": "6or38c9l60pmcb9k65ijcb9kcgq6cb9p6gpjgb9nckpjip1gcoojgohg74@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -668,7 +668,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "6opm2e1l6pj36b9ic4r62b9kc8o3ib9o64p34bb564qj4o9o70rj0c1pc8@google.com",
+      "source_event_id": "cpij4d1ocgr66b9kc4q66b9k6th64b9pcko32bb6cor30o9o68oj8p1i70@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -716,7 +716,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "71h64pho68p32b9oc8pjgb9k71hm2bb270qjabb668q32p9n60rj0c9g6g@google.com",
+      "source_event_id": "cko38phncph68b9n6csj2b9kc8r36b9oc9gm2b9ic4om8p9j71gmapb56s@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -836,7 +836,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "cgqjed34c4r68b9ic9gj0b9kcdj36b9pc8rj2b9k71ij2chic8pjiohjc4@google.com",
+      "source_event_id": "6thjcdb56cr66b9g69i34b9kccpm2bb2coqj0bb36so6cc3665h62d36c4@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -860,7 +860,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "cgs3cpb674s64b9i6kp36b9k71h66b9oc8p3ib9i69hj2cpp6hgjac9lc8@google.com",
+      "source_event_id": "64rjac1p69hjibb2c4ojcb9k65h30bb26go3ab9mc8q6acj4chimcohk6c@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -908,7 +908,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "6cqjachm6goj8bb175j3eb9k6th36b9p6cpm4b9m6oom4c9h75h36or268@google.com",
+      "source_event_id": "6li62p9n68omab9p6sr3gb9k6or62b9p64o3ibb26lim4opn6gqjic1m6o@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -956,7 +956,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "65h64cj16ksm2bb371gm4b9kcko3abb16kr3gbb56hijed1g6li34cb3c8@google.com",
+      "source_event_id": "c4s30ob1c5h34bb160p62b9k70p66b9o6lj3cb9n68pjio9l71h34dpico@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -1148,7 +1148,7 @@
       "location_name": "Riegelwood\\, NC 28456",
       "allowed_course_families": [],
       "source_calendar_id": "brian_do_not_schedule",
-      "source_event_id": "cgs32opi65hjebb36gr3eb9k6sqj0bb16kom4bb56ti38dhmcgr3epb1cc@google.com",
+      "source_event_id": "clh6ae32cor3abb560qj6b9k6oq34bb265ij8b9i6gqj6e1h6krjadr260@google.com",
       "summary": "Shift: ADR",
       "source_type": "inverse_google_calendar",
       "reasons": [
@@ -2240,11 +2240,11 @@
     {
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
-      "start_datetime": "2026-11-26T15:15:00",
+      "start_datetime": "2026-11-26T15:30:00",
       "end_datetime": "2026-11-27T00:00:00",
       "date": "2026-11-26",
       "end_date": "2026-11-27",
-      "start_time": "15:15",
+      "start_time": "15:30",
       "end_time": "00:00",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
@@ -6922,11 +6922,11 @@
       "instructor_name": "Brian Ennis",
       "person_id": "instructor_24057895173",
       "start_datetime": "2027-02-24T07:30:00",
-      "end_datetime": "2027-02-24T15:15:00",
+      "end_datetime": "2027-02-24T15:30:00",
       "date": "2027-02-24",
       "end_date": "2027-02-24",
       "start_time": "07:30",
-      "end_time": "15:15",
+      "end_time": "15:30",
       "availability_status": "available",
       "availability_location_mode": "instructor_time_only",
       "source_location": "UNKNOWN",
@@ -6957,8 +6957,8 @@
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
       "start": "2026-12-26T13:00:00-05:00",
       "end": "2026-12-26T18:00:00-05:00",
-      "observed_at": "2026-11-26T20:06:30.777021+00:00",
-      "valid_until": "2026-11-26T20:21:30.777021+00:00",
+      "observed_at": "2026-11-26T20:19:53.457800+00:00",
+      "valid_until": "2026-11-26T20:34:53.457800+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
@@ -6969,10 +6969,10 @@
       "status": "known_complete",
       "instructor": "Brian Ennis",
       "location": "NC - Wilmington: 4018 Shipyard Blvd @ 910CPR's Office",
-      "start": "2026-11-26T20:06:30.459696+00:00",
-      "end": "2027-02-24T20:06:30.459696+00:00",
-      "observed_at": "2026-11-26T20:06:31.314119+00:00",
-      "valid_until": "2026-11-26T20:21:31.314119+00:00",
+      "start": "2026-11-26T20:19:53.178731+00:00",
+      "end": "2027-02-24T20:19:53.178731+00:00",
+      "observed_at": "2026-11-26T20:19:54.194023+00:00",
+      "valid_until": "2026-11-26T20:34:54.194023+00:00",
       "freshness_minutes": 15,
       "source": "configured_calendar_exports",
       "source_ids": [
