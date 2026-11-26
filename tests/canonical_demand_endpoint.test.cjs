@@ -149,7 +149,8 @@ test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields'
   assert.equal(response.status,200);
   const body = await response.json();
   assert.equal(body.sessions.length,501);
-  assert.deepEqual(calls[0].getAll('start_at'),['gte.2026-11-01T04:00:00.000Z','lt.2026-11-02T05:00:00.000Z']);
+  assert.deepEqual(calls[0].getAll('start_at'),['lt.2026-11-02T05:00:00.000Z']);
+  assert.equal(calls[0].get('or'),'(start_at.gte.2026-11-01T04:00:00.000Z,consumption_end_at.gt.2026-11-01T04:00:00.000Z,and(consumption_end_at.is.null,end_at.gt.2026-11-01T04:00:00.000Z))');
   assert.equal(calls[1].get('offset'),'500');
   assert.doesNotMatch(calls[0].get('select'),/customers|email|phone/);
   assert.match(calls[0].get('select'), /courses!class_sessions_course_id_fkey\(course_key,name,enrollware_course_id\)/);
@@ -222,4 +223,41 @@ test('catalog course ID is additive, strict, and never hides a disagreement with
   for (const invalid of [null, undefined, false, {}, ' 209806 ', 'BLS', '0', 0, -1, 0.1, Number.MAX_SAFE_INTEGER+1]) {
     assert.equal(api.projectDemand({...base,courses:{...base.courses,enrollware_course_id:invalid}}).catalog_course_id,null);
   }
+});
+
+
+test('HTTP demand includes ongoing carry-in until exclusive consumption end, without duplicate rows', async () => {
+  const start='2026-11-01T04:00:00.000Z', stop='2026-11-02T05:00:00.000Z';
+  const prior='2026-11-01T02:00:00.000Z', later='2026-11-01T05:00:00.000Z';
+  const rows=[
+    {id:'cleanup-carry-in',start_at:prior,end_at:start,consumption_end_at:later},
+    {id:'instruction-carry-in',start_at:prior,end_at:later,consumption_end_at:null},
+    {id:'cleanup-exact-end',start_at:prior,end_at:prior,consumption_end_at:start},
+    {id:'instruction-exact-end',start_at:prior,end_at:start,consumption_end_at:null},
+    {id:'in-range',start_at:start,end_at:later,consumption_end_at:later},
+    {id:'in-range-missing-end',start_at:later,end_at:null,consumption_end_at:null},
+    {id:'stop-boundary',start_at:stop,end_at:stop,consumption_end_at:stop}
+  ];
+  const calls=[];
+  const endpoint=loadEndpoint(async url=>{
+    if(String(url).includes('/admin/hot-sync')) return Response.json({});
+    if(String(url).includes('/rpc/')) return Response.json({sessions:[]});
+    const query=new URL(url).searchParams;
+    calls.push(query);
+    const bounds=query.getAll('start_at');
+    const carry=query.get('or');
+    // Simulate the PostgREST logic expression; the old lower start filter excludes carry-ins.
+    const included=rows.filter(row=>row.start_at<stop &&
+      (!bounds.includes('gte.'+start)||row.start_at>=start) &&
+      (!carry||row.start_at>=start||(row.consumption_end_at??row.end_at)>start));
+    return Response.json(included.map(row=>({...row,status:'scheduled',registration_backend:'landerware',registrations:[]})));
+  });
+  const response=await endpoint.handleRequest(new Request('https://endpoint.test/?from=2026-11-01&to=2026-11-02',{headers:{'x-hot-sync-admin-key':'fixture'}}));
+  assert.equal(response.status,200);
+  const body=await response.json();
+  assert.deepEqual(body.sessions.map(row=>row.canonical_session_id).sort(),['cleanup-carry-in','in-range','in-range-missing-end','instruction-carry-in']);
+  assert.equal(calls.length,1);
+  assert.deepEqual(calls[0].getAll('start_at'),['lt.'+stop]);
+  assert.equal(calls[0].get('or'),`(start_at.gte.${start},consumption_end_at.gt.${start},and(consumption_end_at.is.null,end_at.gt.${start}))`);
+  assert.equal(body.sessions.find(row=>row.canonical_session_id==='cleanup-carry-in').consumption_end_at,later);
 });
