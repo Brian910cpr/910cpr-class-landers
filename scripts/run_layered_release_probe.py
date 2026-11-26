@@ -49,6 +49,29 @@ def public_rejection_counts(counts):
     return dict(safe)
 
 
+def aggregate_page_proof(payload, feed):
+    """No offered times, source metadata, or unreviewed payload fields leave CI."""
+    counts = payload.get("counts") or {}
+    roles = Counter()
+    for day in feed.get("dates", []):
+        for slot in day.get("startTimes", []):
+            for course in slot.get("courses", []):
+                role = ("seated" if course.get("offerType") == "seated_class"
+                        else "barnacle" if course.get("scheduleRole") == "barnacle"
+                        else "open")
+                roles[role] += 1
+    issue_counts, _ = public_issue_summary(payload.get("reconciliationIssues", []))
+    return {
+        "calculation_issue_counts": issue_counts,
+        "counts": {key: counts[key] for key in
+                   ("input_windows", "evaluated_windows", "failed_windows")
+                   if type(counts.get(key)) is int and counts[key] >= 0},
+        "offer_roles": dict(roles),
+        "rejection_reasons": public_rejection_counts(payload.get("rejectionReasonCounts")),
+        "synthesis_blocked_date_count": len(payload.get("synthesisBlockedDates") or []),
+    }
+
+
 def coverage_release_passed(pages):
     """Require complete window evaluation; partial coverage is not a release pass."""
     if not pages or not REQUIRED_PAGE_KEYS.issubset(pages):
@@ -79,7 +102,6 @@ def run():
         snapshot=json.loads((ROOT/'data/audit/live_availability_snapshot_preview.json').read_text())
         result['calendar_coverage_count']=len(snapshot.get('layered_commitment_coverage',[]))
         canonical=json.loads((ROOT/'data/runtime/canonical_scheduling_demand.json').read_text())
-        result['canonical_generated_at']=canonical.get('generated_at')
         result['canonical_session_count']=len(canonical.get('sessions',[]))
         for key, config in load_block_schedule_page_configs().items():
             payload=apply_final_live_availability_guard(build_block_schedule_page(config))
@@ -87,17 +109,8 @@ def run():
             (output/(key+'.json')).write_text(json.dumps(feed,ensure_ascii=False),encoding='utf-8')
             html=render_html(payload).replace('<body>','<body><aside>READ-ONLY RELEASE PROBE: not published.</aside>',1)
             (output/(key+'.html')).write_text(html,encoding='utf-8')
-            offers=payload.get('offers',[])
-            patterns={}
-            for day in feed.get('dates',[]):
-                courses={}
-                for slot in day.get('startTimes',[]):
-                    for course in slot.get('courses',[]):
-                        role='anchor' if course.get('offerType')=='seated_class' else ('barnacle' if course.get('scheduleRole')=='barnacle' else 'open')
-                        courses.setdefault(course['courseId'],dict(anchor=[],barnacle=[],open=[]))[role].append(slot['startTime'])
-                patterns[day['date']]=courses
-            issue_counts, issues_by_date = public_issue_summary(payload.get('reconciliationIssues', []))
-            result['pages'][key]=dict(calculation_issue_counts=issue_counts,calculation_issues_by_date=issues_by_date,day_patterns=patterns,counts=payload.get('counts'),offer_roles=dict(Counter(o.get('scheduleRole') or o.get('offerType') for o in offers)),rejection_reasons=public_rejection_counts(payload.get('rejectionReasonCounts')),synthesis_blocked_dates=payload.get('synthesisBlockedDates'),model=payload.get('schedulingModel'),valid_until=feed.get('validUntil'))
+            if key in REQUIRED_PAGE_KEYS:
+                result['pages'][key] = aggregate_page_proof(payload, feed)
         result['calculation_completed']=True
         result['release_passed']=coverage_release_passed(result['pages'])
     finally:

@@ -97,3 +97,31 @@ class ProbeTests(unittest.TestCase):
             self.assertNotIn("fixture-private-source", stdout.call_args.args[0])
             self.assertEqual(json.loads(serialized)["pages"]["bls"]["rejection_reasons"],
                              {"conflict_or_transition": 2})
+
+    def test_public_proof_strips_unpublished_offer_and_block_geometry(self):
+        payload = {
+            "counts": {"input_windows": 2, "evaluated_windows": 2,
+                       "failed_windows": 0, "private-counter": 1},
+            "synthesisBlockedDates": ["2099-10-09"],
+            "schedulingModel": "private-metadata",
+        }
+        feed = {"dates": [{"date": "2099-10-10", "startTimes": [
+            {"startTime": "13:37", "courses": [
+                {"courseId": "private-course", "session_id": "private-session",
+                 "offerType": "seated_class", "instructor": "private-instructor"},
+                {"scheduleRole": "barnacle"},
+                {},
+            ]}
+        ]}]}
+        proof = probe.aggregate_page_proof(payload, feed)
+        self.assertEqual(proof["offer_roles"], {"seated": 1, "barnacle": 1, "open": 1})
+        self.assertEqual(proof["synthesis_blocked_date_count"], 1)
+        self.assertEqual(proof["counts"], {"input_windows": 2,
+                                          "evaluated_windows": 2, "failed_windows": 0})
+        self.assertNotRegex(json.dumps(proof), "2099|13:37|private")
+
+    def test_workflow_uploads_only_aggregate_proof(self):
+        workflow = (probe.ROOT / ".github/workflows/refresh-admin-availability.yml").read_text()
+        job = workflow.split("\n  v2-release-probe:", 1)[1]
+        self.assertEqual([line.strip() for line in job.splitlines() if line.strip().startswith("path:")],
+                         ["path: data/runtime/audit_previews/v2_release_probe/proof.json"])
