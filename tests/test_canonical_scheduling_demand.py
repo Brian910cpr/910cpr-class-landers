@@ -197,7 +197,10 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertNotIn("customers", source)
         self.assertNotIn("first_name", source)
         self.assertNotIn("last_name", source)
-        self.assertNotIn("email", source)
+        # The endpoint may inspect confirmation provenance internally; forbid
+        # participant contact fields, not the word "email" in internal names.
+        for forbidden in ('"email"', "customer_email", "participant_email"):
+            self.assertNotIn(forbidden, source)
 
 
 if __name__ == "__main__":

@@ -163,3 +163,47 @@ test('classification source failure or canonical conflict blocks the whole publi
     assert.equal((await response.json()).sessions,undefined);
   }
 });
+
+test('authenticated HTTP response exposes an occupancy bit, never raw intake provenance or participant data', async () => {
+  const messageId = 'dafefeed12345678';
+  const privateEmail = 'intake-privacy-canary@example.test';
+  const endpoint = loadEndpoint(async url => {
+    if (String(url).includes('/admin/hot-sync')) return Response.json({});
+    if (String(url).includes('/rpc/')) return Response.json({sessions:[]});
+    return Response.json([{
+      id:'synthetic-intake', status:'scheduled', source:'confirmed_booking_intake',
+      registration_backend:'landerware', visibility:'private', registration_status:'closed',
+      external_class_id:'80003', start_at:'2026-11-01T15:00:00Z', end_at:'2026-11-01T16:00:00Z',
+      consumption_start_at:'2026-11-01T15:00:00Z', consumption_end_at:'2026-11-01T16:00:00Z',
+      location_id:'facility', lead_instructor_id:null, email:privateEmail,
+      external_session_evidence:{kind:'registration_confirmation',gmail_message_id:messageId,email:privateEmail},
+      registrations:[{status:'registered',registration_source:'enrollware_email_confirmation',
+                      external_registration_id:null, email:privateEmail, customers:[{email:privateEmail}]}],
+    }]);
+  });
+  const response = await endpoint.handleRequest(new Request(
+    'https://endpoint.test/?from=2026-11-01&to=2026-11-02', {headers:{'x-hot-sync-admin-key':'fixture'}}));
+  assert.equal(response.status,200);
+  assert.match(response.headers.get('cache-control'),/no-store/);
+  const body = await response.json();
+  assert.deepEqual(Object.keys(body).sort(), [
+    'active_registration_statuses','generated_at','non_session_sources','schema_version','sessions',
+  ].sort());
+  const row = body.sessions[0];
+  assert.deepEqual(Object.keys(row).sort(), [
+    'canonical_session_id','external_class_id','external_course_id','course_key','start_at','end_at',
+    'consumption_start_at','consumption_end_at','location_id','location_name','lead_instructor_id',
+    'lead_instructor_name','course_name','visibility','registration_backend','registration_status',
+    'workspace_projection_status','workspace_session_id','operational_has_active_seat',
+    'canonical_recorded_registration_count','source','session_status','active_registration_count',
+    'count_available','demand_status','source_observed_at','reconciled_at','source_sha256',
+    'freshness_minutes','demand_basis',
+  ].sort());
+  assert.equal(row.operational_has_active_seat,true);
+  assert.equal(row.visibility,'private');
+  assert.equal(row.registration_status,'closed');
+  assert.equal(row.active_registration_count,null);
+  assert.equal(row.count_available,false);
+  assert.doesNotMatch(JSON.stringify(body), new RegExp(
+    [messageId, 'privacy-canary', 'gmail_message_id','external_session_evidence','registration_confirmation'].join('|')));
+});
