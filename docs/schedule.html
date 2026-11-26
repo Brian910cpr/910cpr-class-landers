@@ -21,6 +21,12 @@ body { margin: 0; font-family: Arial, sans-serif; color: #17324a; background: #e
 .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 .button { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 14px; border-radius: 8px; background: #eb7b4d; color: #fff; font-weight: 800; text-decoration: none; }
 @media (min-width: 820px) { .schedule-route-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* Small illustrations support the route titles, without taking space from the date buttons. */
+.schedule-card-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(98px, 36%); align-items: start; gap: 12px; margin-bottom: 10px; }
+.schedule-card-intro p { margin: 0; }
+.schedule-card-art { display: block; width: 100%; height: auto; aspect-ratio: 1.55; object-fit: cover; object-position: 88% 55%; border-radius: 12px; background: #dbe9ef; }
+.schedule-route-card ul { margin-top: 6px; }
+@media (max-width: 380px) { .schedule-card-intro { gap: 8px; grid-template-columns: minmax(0, 1fr) 92px; } .schedule-route-card { padding: 14px; } }
 </style>
 <!-- Google Tag Manager -->
 <script>
@@ -54,48 +60,60 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <section class="schedule-route-grid" aria-label="Course selection paths">
 
 <article class="schedule-route-card">
+  <div class="schedule-card-intro"><div>
   <h2>Healthcare Provider</h2>
-  <p>For healthcare workers, nursing students, dental offices, hospital staff, EMS, and clinical requirements.</p>
+  <p>For healthcare workers, nursing students, dental offices, hospital staff, EMS, and clinical requirements.</p></div>
+  <img class="schedule-card-art" src="/assets/schedule-cards/clinical.webp" alt="" width="160" height="103" loading="lazy" decoding="async"></div>
   <strong>Common course names</strong>
   <ul><li>BLS</li><li>ACLS</li><li>PALS</li></ul>
   <div class="actions"><a class="button" href="/bls.html">BLS dates</a><a class="button" href="/acls.html">ACLS dates</a><a class="button" href="/pals.html">PALS dates</a></div>
 </article>
 
 <article class="schedule-route-card">
+  <div class="schedule-card-intro"><div>
   <h2>Workplace, Daycare, School, or Coach</h2>
-  <p>For workplace safety, childcare, schools, coaches, foster care, camps, and general CPR / first aid needs.</p>
+  <p>For workplace safety, childcare, schools, coaches, foster care, camps, and general CPR / first aid needs.</p></div>
+  <img class="schedule-card-art" src="/assets/schedule-cards/childcare.webp" alt="" width="160" height="103" loading="lazy" decoding="async"></div>
   <strong>Common course names</strong>
   <ul><li>Heartsaver First Aid CPR AED</li><li>Heartsaver CPR AED</li><li>Pediatric First Aid CPR AED</li><li>Family &amp; Friends CPR</li></ul>
   <div class="actions"><a class="button" href="/heartsaver.html">Heartsaver dates</a><a class="button" href="/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended">Pediatric dates</a></div>
 </article>
 
 <article class="schedule-route-card">
+  <div class="schedule-card-intro"><div>
   <h2>American Red Cross Required</h2>
-  <p>For students, employers, schools, or programs that specifically require Red Cross certification.</p>
+  <p>For students, employers, schools, or programs that specifically require Red Cross certification.</p></div>
+  <img class="schedule-card-art" src="/assets/schedule-cards/aquatics.webp" alt="" width="160" height="103" loading="lazy" decoding="async"></div>
   <strong>Common course names</strong>
   <ul><li>ARC BLS</li><li>ARC First Aid CPR AED</li><li>ARC blended options where available</li></ul>
   <div class="actions"><a class="button" href="/arc.html">Red Cross options</a></div>
 </article>
 
 <article class="schedule-route-card">
+  <div class="schedule-card-intro"><div>
   <h2>HSI Required</h2>
-  <p>For employers, schools, or organizations that specifically accept or request HSI certification.</p>
+  <p>For employers, schools, or organizations that specifically accept or request HSI certification.</p></div>
+  <img class="schedule-card-art" src="/assets/schedule-cards/workplace.webp" alt="" width="160" height="103" loading="lazy" decoding="async"></div>
   <strong>Common course names</strong>
   <ul><li>HSI CPR AED</li><li>HSI First Aid CPR AED</li><li>HSI blended options where available</li></ul>
   <div class="actions"><a class="button" href="/hsi.html">HSI options</a></div>
 </article>
 
 <article class="schedule-route-card">
+  <div class="schedule-card-intro"><div>
   <h2>USCG / Maritime</h2>
-  <p>For mariners, captains, crews, and maritime employers who need USCG-aligned first aid and CPR.</p>
+  <p>For mariners, captains, crews, and maritime employers who need USCG-aligned first aid and CPR.</p></div>
+  <img class="schedule-card-art" src="/assets/schedule-cards/maritime.webp" alt="" width="160" height="103" loading="lazy" decoding="async"></div>
   <strong>Common course names</strong>
   <ul><li>USCG Elementary First Aid CPR AED</li></ul>
   <div class="actions"><a class="button" href="/uscg-elementary-first-aid-cpr.html">USCG / maritime dates</a></div>
 </article>
 
 <article class="schedule-route-card">
+  <div class="schedule-card-intro"><div>
   <h2>Not Sure What I Need</h2>
-  <p>If your requirement is unclear, contact 910CPR before choosing a class date.</p>
+  <p>If your requirement is unclear, contact 910CPR before choosing a class date.</p></div>
+  <img class="schedule-card-art" src="/assets/schedule-cards/classroom.webp" alt="" width="160" height="103" loading="lazy" decoding="async"></div>
   <strong>Common course names</strong>
   <ul><li>Match your employer, school, agency, or licensing wording first</li></ul>
   <div class="actions"><a class="button" href="tel:9103955193">Call 910-395-5193</a><a class="button" href="/request_group_session.html">Ask about a class</a></div>

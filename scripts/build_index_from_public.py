@@ -8,36 +8,42 @@ OUTPUT = "docs/schedule.html"
 PATHWAYS = [
     {
         "title": "Healthcare Provider",
+        "art": "clinical",
         "body": "For healthcare workers, nursing students, dental offices, hospital staff, EMS, and clinical requirements.",
         "courses": ["BLS", "ACLS", "PALS"],
         "links": [("BLS dates", "/bls.html"), ("ACLS dates", "/acls.html"), ("PALS dates", "/pals.html")],
     },
     {
         "title": "Workplace, Daycare, School, or Coach",
+        "art": "childcare",
         "body": "For workplace safety, childcare, schools, coaches, foster care, camps, and general CPR / first aid needs.",
         "courses": ["Heartsaver First Aid CPR AED", "Heartsaver CPR AED", "Pediatric First Aid CPR AED", "Family & Friends CPR"],
         "links": [("Heartsaver dates", "/heartsaver.html"), ("Pediatric dates", "/heartsaver.html?program=Pediatric%20First%20Aid%20CPR%20AED%20Blended")],
     },
     {
         "title": "American Red Cross Required",
+        "art": "aquatics",
         "body": "For students, employers, schools, or programs that specifically require Red Cross certification.",
         "courses": ["ARC BLS", "ARC First Aid CPR AED", "ARC blended options where available"],
         "links": [("Red Cross options", "/arc.html")],
     },
     {
         "title": "HSI Required",
+        "art": "workplace",
         "body": "For employers, schools, or organizations that specifically accept or request HSI certification.",
         "courses": ["HSI CPR AED", "HSI First Aid CPR AED", "HSI blended options where available"],
         "links": [("HSI options", "/hsi.html")],
     },
     {
         "title": "USCG / Maritime",
+        "art": "maritime",
         "body": "For mariners, captains, crews, and maritime employers who need USCG-aligned first aid and CPR.",
         "courses": ["USCG Elementary First Aid CPR AED"],
         "links": [("USCG / maritime dates", "/uscg-elementary-first-aid-cpr.html")],
     },
     {
         "title": "Not Sure What I Need",
+        "art": "classroom",
         "body": "If your requirement is unclear, contact 910CPR before choosing a class date.",
         "courses": ["Match your employer, school, agency, or licensing wording first"],
         "links": [("Call 910-395-5193", "tel:9103955193"), ("Ask about a class", "/request_group_session.html")],
@@ -66,8 +72,10 @@ def render_pathway(pathway):
     links = "".join(f'<a class="button" href="{esc(href)}">{esc(label)}</a>' for label, href in pathway["links"])
     return f"""
 <article class="schedule-route-card">
+  <div class="schedule-card-intro"><div>
   <h2>{esc(pathway["title"])}</h2>
-  <p>{esc(pathway["body"])}</p>
+  <p>{esc(pathway["body"])}</p></div>
+  <img class="schedule-card-art" src="/assets/schedule-cards/{esc(pathway["art"])}.webp" alt="" width="160" height="103" loading="lazy" decoding="async"></div>
   <strong>Common course names</strong>
   <ul>{courses}</ul>
   <div class="actions">{links}</div>
@@ -101,6 +109,12 @@ body {{ margin: 0; font-family: Arial, sans-serif; color: #17324a; background: #
 .actions {{ display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }}
 .button {{ display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 10px 14px; border-radius: 8px; background: #eb7b4d; color: #fff; font-weight: 800; text-decoration: none; }}
 @media (min-width: 820px) {{ .schedule-route-grid {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }} }}
+/* Small illustrations support the route titles, without taking space from the date buttons. */
+.schedule-card-intro {{ display: grid; grid-template-columns: minmax(0, 1fr) minmax(98px, 36%); align-items: start; gap: 12px; margin-bottom: 10px; }}
+.schedule-card-intro p {{ margin: 0; }}
+.schedule-card-art {{ display: block; width: 100%; height: auto; aspect-ratio: 1.55; object-fit: cover; object-position: 88% 55%; border-radius: 12px; background: #dbe9ef; }}
+.schedule-route-card ul {{ margin-top: 6px; }}
+@media (max-width: 380px) {{ .schedule-card-intro {{ gap: 8px; grid-template-columns: minmax(0, 1fr) 92px; }} .schedule-route-card {{ padding: 14px; }} }}
 </style>
 </head>
 <body>
