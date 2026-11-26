@@ -22,6 +22,33 @@ def public_issue_summary(issues):
     return dict(counts), {date: dict(counts) for date, counts in by_date.items()}
 
 
+PUBLIC_REJECTION_CODES = frozenset({
+    "conflict_or_transition", "commitment_coverage_unknown",
+    "short_skills_duration_exceeds_limit", "instructor_not_qualified",
+    "course_location_not_allowed", "outside_explicit_availability",
+    "lead_time", "off_grid_start", "full_course_already_paid_seated",
+    "full_family_already_paid_seated", "full_course_repeat_within_24_hours",
+    "full_course_count_unknown", "full_family_count_unknown",
+    "course_family_not_allowed_by_availability",
+    "location_not_allowed_by_public_policy", "missing_owned_appointment_url",
+    "expired_coverage_proof", "nonpublic_occupied_not_joinable",
+    "confirmed_zero_existing_booking_choice_retired",
+    "seated_instructor_mismatch", "existing_course_day_anchor",
+    "anchored_day_requires_attached_offer", "expired_or_missing_scoped_lease",
+})
+
+
+def public_rejection_counts(counts):
+    """Keep only allowlisted categories, never source-bearing reason strings."""
+    safe = Counter()
+    for reason, count in (counts or {}).items():
+        if type(count) is not int or count <= 0:
+            continue
+        category = str(reason).partition(":")[0]
+        safe[category if category in PUBLIC_REJECTION_CODES else "other_rejection"] += count
+    return dict(safe)
+
+
 def coverage_release_passed(pages):
     """Require complete window evaluation; partial coverage is not a release pass."""
     if not pages or not REQUIRED_PAGE_KEYS.issubset(pages):
@@ -70,7 +97,7 @@ def run():
                         courses.setdefault(course['courseId'],dict(anchor=[],barnacle=[],open=[]))[role].append(slot['startTime'])
                 patterns[day['date']]=courses
             issue_counts, issues_by_date = public_issue_summary(payload.get('reconciliationIssues', []))
-            result['pages'][key]=dict(calculation_issue_counts=issue_counts,calculation_issues_by_date=issues_by_date,day_patterns=patterns,counts=payload.get('counts'),offer_roles=dict(Counter(o.get('scheduleRole') or o.get('offerType') for o in offers)),rejection_reasons=payload.get('rejectionReasonCounts'),synthesis_blocked_dates=payload.get('synthesisBlockedDates'),model=payload.get('schedulingModel'),valid_until=feed.get('validUntil'))
+            result['pages'][key]=dict(calculation_issue_counts=issue_counts,calculation_issues_by_date=issues_by_date,day_patterns=patterns,counts=payload.get('counts'),offer_roles=dict(Counter(o.get('scheduleRole') or o.get('offerType') for o in offers)),rejection_reasons=public_rejection_counts(payload.get('rejectionReasonCounts')),synthesis_blocked_dates=payload.get('synthesisBlockedDates'),model=payload.get('schedulingModel'),valid_until=feed.get('validUntil'))
         result['calculation_completed']=True
         result['release_passed']=coverage_release_passed(result['pages'])
     finally:

@@ -54,3 +54,46 @@ class ProbeTests(unittest.TestCase):
         serialized = json.dumps([counts, by_date])
         for private in ('private-home', 'private-person', 'private-id', '12:34'):
             self.assertNotIn(private, serialized)
+
+    def test_proof_rejection_histogram_strips_reference_suffixes(self):
+        raw = {"conflict_or_transition:fixture-private-one": 2,
+               "conflict_or_transition:fixture-private-two": 4,
+               "commitment_coverage_unknown:fixture-private-three": 1,
+               "new fixture-private label": 5, "lead_time": 3}
+        safe = probe.public_rejection_counts(raw)
+        self.assertEqual(safe, {"conflict_or_transition": 6,
+                                "commitment_coverage_unknown": 1,
+                                "other_rejection": 5, "lead_time": 3})
+        self.assertNotIn("fixture-private", json.dumps(safe))
+
+    def test_probe_output_never_contains_source_from_rejection_histogram(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for rel, data in {
+                "data/config/layered_scheduling_policy.json": {"mode": "shadow"},
+                "data/audit/live_availability_snapshot_preview.json": {},
+                "data/runtime/canonical_scheduling_demand.json": {},
+            }.items():
+                target = root / rel
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(json.dumps(data))
+            payload = {
+                "counts": {"input_windows": 1, "evaluated_windows": 1, "failed_windows": 0},
+                "rejectionReasonCounts": {"conflict_or_transition:fixture-private-source": 2},
+            }
+            with (
+                patch.object(probe, "ROOT", root),
+                patch.object(probe, "load_block_schedule_page_configs",
+                             return_value={k: {} for k in probe.REQUIRED_PAGE_KEYS}),
+                patch.object(probe, "build_block_schedule_page", return_value=payload),
+                patch.object(probe, "apply_final_live_availability_guard", return_value=payload),
+                patch.object(probe, "public_selector_availability_payload", return_value={"dates": []}),
+                patch.object(probe, "render_html", return_value="<body></body>"),
+                patch("builtins.print") as stdout,
+            ):
+                probe.run()
+            serialized = (root / "data/runtime/audit_previews/v2_release_probe/proof.json").read_text()
+            self.assertNotIn("fixture-private-source", serialized)
+            self.assertNotIn("fixture-private-source", stdout.call_args.args[0])
+            self.assertEqual(json.loads(serialized)["pages"]["bls"]["rejection_reasons"],
+                             {"conflict_or_transition": 2})
