@@ -2,7 +2,7 @@ import {registrationProof} from '../_shared/external-roster-proof.ts';
 import {messageHistory} from './messages.ts';
 import {localDate, localMidnight} from '../_shared/scheduling-clock.ts';
 import {authorizedOwner as authorized} from '../_shared/owner-auth.ts';
-import {storeIntake, validId, viewDocument} from './class-record.ts';
+import {storeIntake, validId, viewDocument, personDocumentReferences} from './class-record.ts';
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const ALLOWED_ORIGINS = new Set(["https://www.910cpr.com", "https://910cpr.com"]);
@@ -146,7 +146,7 @@ async function personDetail(id: string) {
   const people = await rest(`customers?id=eq.${id}&select=id,first_name,last_name,email,phone,created_at,updated_at,organizations(name)&limit=1`);
   if (!people?.length) throw Error("person_not_found");
   const registrations = await rest(`registrations?customer_id=eq.${id}&select=id,status,class_session_id,class_sessions(id,start_at,status,courses(name),locations(name),organizations(name)),participant_credentials(id,credential_type,credential_number,issued_at,expires_on,status)&order=created_at.desc`);
-  return {person: people[0], registrations: registrations || []};
+  return {person: people[0], registrations: registrations || [], documents: await personDocumentReferences(registrations || [], rest)};
 }
 
 Deno.serve(async (req) => {

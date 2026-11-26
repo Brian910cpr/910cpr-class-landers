@@ -176,3 +176,18 @@ export async function viewDocument(sessionId: string, documentId: string, rest: 
   if (url.origin !== new URL(base).origin || !url.pathname.startsWith("/storage/v1/object/sign/class-session-docs/")) throw Error("document_unavailable");
   return {id: doc.id, file_name: doc.file_name, content_type: doc.content_type, url: url.href, expires_in: 300};
 }
+
+// Person history projects class attachments; it never creates personal copies or
+// implies that a registered person attended, completed, or passed the class.
+export async function personDocumentReferences(registrations: any[], rest: Function) {
+  const sessionIds = [...new Set(registrations.map(row => row.class_session_id).filter(Boolean))];
+  sessionIds.forEach(id => validId(String(id)));
+  if (!sessionIds.length) return [];
+  const documents: any[] = [];
+  for (let offset = 0; offset < sessionIds.length; offset += 50) {
+    const ids = sessionIds.slice(offset, offset + 50);
+    const rows = await rest(`class_session_documents?class_session_id=in.(${ids.join(",")})&select=id,class_session_id,file_name,document_type,content_type,file_size,created_at&order=created_at.desc`);
+    documents.push(...(rows || []));
+  }
+  return documents;
+}
