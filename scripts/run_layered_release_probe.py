@@ -72,8 +72,8 @@ def aggregate_page_proof(payload, feed):
     }
 
 
-def coverage_release_passed(pages):
-    """Require complete window evaluation; partial coverage is not a release pass."""
+def coverage_passed(pages):
+    """Window accounting only; not proof the customer can see the right choices."""
     if not pages or not REQUIRED_PAGE_KEYS.issubset(pages):
         return False
     total_windows = 0
@@ -96,7 +96,8 @@ def run():
     policy_path=ROOT/'data/config/layered_scheduling_policy.json'
     original=policy_path.read_bytes()
     policy=json.loads(original);policy['mode']='active_local_v2'
-    result=dict(observed_at=datetime.now(timezone.utc).isoformat(),published=False,pages={})
+    result=dict(observed_at=datetime.now(timezone.utc).isoformat(),published=False,pages={},coverage_passed=False,
+                outcome_status='unproven',release_passed=False)
     try:
         policy_path.write_text(json.dumps(policy),encoding='utf-8')
         snapshot=json.loads((ROOT/'data/audit/live_availability_snapshot_preview.json').read_text())
@@ -112,12 +113,15 @@ def run():
             if key in REQUIRED_PAGE_KEYS:
                 result['pages'][key] = aggregate_page_proof(payload, feed)
         result['calculation_completed']=True
-        result['release_passed']=coverage_release_passed(result['pages'])
+        result['coverage_passed']=coverage_passed(result['pages'])
+        # This runner has no independently reconciled expected customer outcomes.
+        # Never promote a producer's own window counts into an acceptance gate.
     finally:
         policy_path.write_bytes(original)
         (output/'proof.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
     print(json.dumps(result,indent=2))
     if not result.get("release_passed"):
-        raise RuntimeError("V2 window coverage is incomplete or unproven; publication remains stopped")
+        raise RuntimeError("V2 independent customer outcome is unproven; publication remains stopped")
 
 if __name__=='__main__':run()
+

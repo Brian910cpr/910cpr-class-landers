@@ -28,14 +28,14 @@ class ProbeTests(unittest.TestCase):
                                    failed_windows=failed)}
         complete = page(147, 147, 0)
         pages = {key: complete for key in probe.REQUIRED_PAGE_KEYS}
-        self.assertTrue(probe.coverage_release_passed(pages))
-        self.assertTrue(probe.coverage_release_passed(dict(pages, acls=page(0, 0, 0))))
-        self.assertFalse(probe.coverage_release_passed(dict(pages, acls=page(147, 136, 11))))
-        self.assertFalse(probe.coverage_release_passed(dict(pages, bls=page(147, 136, 0))))
-        self.assertFalse(probe.coverage_release_passed({key: page(0, 0, 0) for key in pages}))
-        self.assertFalse(probe.coverage_release_passed(dict(pages, bls={'counts': {}})))
-        self.assertFalse(probe.coverage_release_passed({'bls': complete}))
-        self.assertFalse(probe.coverage_release_passed({}))
+        self.assertTrue(probe.coverage_passed(pages))
+        self.assertTrue(probe.coverage_passed(dict(pages, acls=page(0, 0, 0))))
+        self.assertFalse(probe.coverage_passed(dict(pages, acls=page(147, 136, 11))))
+        self.assertFalse(probe.coverage_passed(dict(pages, bls=page(147, 136, 0))))
+        self.assertFalse(probe.coverage_passed({key: page(0, 0, 0) for key in pages}))
+        self.assertFalse(probe.coverage_passed(dict(pages, bls={'counts': {}})))
+        self.assertFalse(probe.coverage_passed({'bls': complete}))
+        self.assertFalse(probe.coverage_passed({}))
 
     def test_proof_summary_does_not_emit_private_source_details(self):
         raw = [
@@ -91,8 +91,14 @@ class ProbeTests(unittest.TestCase):
                 patch.object(probe, "render_html", return_value="<body></body>"),
                 patch("builtins.print") as stdout,
             ):
-                probe.run()
+                with self.assertRaisesRegex(RuntimeError, "independent customer outcome"):
+                    probe.run()
             serialized = (root / "data/runtime/audit_previews/v2_release_probe/proof.json").read_text()
+            proof = json.loads(serialized)
+            self.assertTrue(proof["calculation_completed"])
+            self.assertTrue(proof["coverage_passed"])
+            self.assertEqual(proof["outcome_status"], "unproven")
+            self.assertFalse(proof["release_passed"])
             self.assertNotIn("fixture-private-source", serialized)
             self.assertNotIn("fixture-private-source", stdout.call_args.args[0])
             self.assertEqual(json.loads(serialized)["pages"]["bls"]["rejection_reasons"],
@@ -125,3 +131,4 @@ class ProbeTests(unittest.TestCase):
         job = workflow.split("\n  v2-release-probe:", 1)[1]
         self.assertEqual([line.strip() for line in job.splitlines() if line.strip().startswith("path:")],
                          ["path: data/runtime/audit_previews/v2_release_probe/proof.json"])
+
