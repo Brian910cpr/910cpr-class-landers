@@ -90,6 +90,96 @@ def coverage_passed(pages):
     return total_windows > 0
 
 
+
+# Comparator only: the protected runner must independently build and attest the
+# expected scope and tuples before it may use this result. This does not enable
+# release or payment, and the runner deliberately remains unproven.
+VALID_ZERO_REASONS = frozenset({
+    "no_qualified_coverage", "outside_lead_time", "all_hard_blocked",
+    "repeat_gap", "no_legal_bookend", "nonpublic_not_joinable",
+})
+OFFER_ROLES = frozenset({"open", "barnacle", "seated"})
+OFFER_CAPABILITIES = frozenset({"request_only", "verified_booking"})
+
+
+def compare_expected_outcomes(required_scopes, expected, observed, *,
+                              expected_epoch, observed_epoch):
+    """Compare restricted normalized offers, returning only fixed aggregate counts.
+
+    Scope: (page, local_date, instructor_key, course_key).
+    Offer: (start_utc, end_utc, room_key, role, capability).
+    Expected scope values: {"offers": [...], "zero_reason": optional code}.
+    Observed scope values: lists of offers, including explicit empty lists.
+    Scope and epoch must be supplied by a trusted independent source adapter.
+    Matching inputs here are not evidence that the adapter is independent.
+    """
+    result = dict(status="unproven", missing_scope_count=0,
+                  unexpected_scope_count=0, missing_offer_count=0,
+                  unexpected_offer_count=0, invalid_scope_count=0,
+                  invalid_offer_count=0, duplicate_offer_count=0)
+    if (not isinstance(expected_epoch, str) or not expected_epoch.strip()
+            or expected_epoch != observed_epoch or not required_scopes
+            or not isinstance(expected, dict) or not isinstance(observed, dict)):
+        return result
+
+    def valid_scope(scope):
+        return (isinstance(scope, tuple) and len(scope) == 4
+                and all(isinstance(part, str) and part.strip() for part in scope)
+                and scope[0] in REQUIRED_PAGE_KEYS)
+
+    def offer_counts(rows):
+        if not isinstance(rows, (list, tuple)):
+            result["invalid_offer_count"] += 1
+            return Counter()
+        counts = Counter()
+        for row in rows:
+            if (not isinstance(row, (list, tuple)) or len(row) != 5
+                    or not all(isinstance(part, str) and part.strip() for part in row)
+                    or row[3] not in OFFER_ROLES or row[4] not in OFFER_CAPABILITIES):
+                result["invalid_offer_count"] += 1
+                continue
+            try:
+                start, end = (datetime.fromisoformat(value.replace("Z", "+00:00"))
+                              for value in row[:2])
+                if start.tzinfo is None or end.tzinfo is None or end <= start:
+                    raise ValueError("invalid bounds")
+                key = (start.astimezone(timezone.utc), end.astimezone(timezone.utc), *row[2:])
+            except (ValueError, OverflowError):
+                result["invalid_offer_count"] += 1
+                continue
+            counts[key] += 1
+        result["duplicate_offer_count"] += sum(n - 1 for n in counts.values())
+        return counts
+
+    if not isinstance(required_scopes, (set, frozenset, list, tuple)):
+        return result
+    if not all(valid_scope(scope) for scope in required_scopes):
+        result["invalid_scope_count"] += 1
+        return result
+    required = set(required_scopes)
+    if {scope[0] for scope in required} != REQUIRED_PAGE_KEYS:
+        return result
+    for collection in (expected, observed):
+        result["missing_scope_count"] += len(required - collection.keys())
+        result["unexpected_scope_count"] += len(collection.keys() - required)
+    for scope in required & expected.keys() & observed.keys():
+        entry = expected[scope]
+        if not isinstance(entry, dict) or "offers" not in entry:
+            result["invalid_scope_count"] += 1
+            continue
+        wanted = offer_counts(entry["offers"])
+        actual = offer_counts(observed[scope])
+        reason = entry.get("zero_reason")
+        if ((not wanted and (not isinstance(reason, str) or reason not in VALID_ZERO_REASONS))
+                or (wanted and reason is not None)):
+            result["invalid_scope_count"] += 1
+        result["missing_offer_count"] += sum((wanted - actual).values())
+        result["unexpected_offer_count"] += sum((actual - wanted).values())
+    result["status"] = ("mismatch" if any(value for key, value in result.items()
+                                          if key != "status") else "matched")
+    return result
+
+
 def run():
     output=ROOT/'data/runtime/audit_previews/v2_release_probe'
     output.mkdir(parents=True,exist_ok=True)
