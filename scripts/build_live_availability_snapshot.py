@@ -12,6 +12,7 @@ from zoneinfo import ZoneInfo
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT_DIR = ROOT / "data" / "audit"
 CALENDAR_SOURCES_PATH = ROOT / "data" / "config" / "calendar_sources.json"
+LAYERED_POLICY_PATH = ROOT / "data" / "config" / "layered_scheduling_policy.json"
 PEOPLE_CATALOG_PATH = ROOT / "data" / "config" / "people_catalog.json"
 COURSE_CATALOG_PATH = ROOT / "data" / "config" / "course_catalog.json"
 APPOINTMENT_CONTAINERS_PATH = ROOT / "data" / "inventory" / "appointment_containers.json"
@@ -283,10 +284,15 @@ def container_matches_source(container: dict[str, Any], source: dict[str, Any], 
     return bool(container_name and (container_name in source_keys or any(key and key in container_name for key in source_keys)))
 
 
-def appointment_container_date_ranges(source: dict[str, Any], person: dict[str, Any] | None, appointment_payload: Any) -> list[tuple[date, date, dict[str, Any]]]:
+def appointment_container_date_ranges(source: dict[str, Any], person: dict[str, Any] | None, appointment_payload: Any,
+                                      *, strict_container_owners=None) -> list[tuple[date, date, dict[str, Any]]]:
     ranges: list[tuple[date, date, dict[str, Any]]] = []
     for container in active_appointment_containers(appointment_payload):
-        if not container_matches_source(container, source, person):
+        if strict_container_owners is not None:
+            pid = (person or {}).get("person_id")
+            if not pid or strict_container_owners.get(str(container.get("container_id") or "")) != pid:
+                continue
+        elif not container_matches_source(container, source, person):
             continue
         first = parse_date(container.get("first_valid_date"))
         last = parse_date(container.get("last_valid_date"))
@@ -407,20 +413,25 @@ def expand_inverse_availability(
     person: dict[str, Any] | None,
     course_catalog: Any,
     appointment_payload: Any,
+    *, strict_container_owners=None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], int]:
     source_key = str(source.get("calendar_source_key") or UNKNOWN)
     blocks: list[dict[str, Any]] = []
     blocked: list[dict[str, Any]] = []
-    container_ranges = appointment_container_date_ranges(source, person, appointment_payload)
+    strict = strict_container_owners is not None
+    container_ranges = appointment_container_date_ranges(source, person, appointment_payload,
+                                                          strict_container_owners=strict_container_owners)
+    invalid_inverse_owner = strict and not person
     require_container = bool(source.get("inverse_expansion_require_active_appointment_container", True))
-    if require_container and not container_ranges:
+    if invalid_inverse_owner or (require_container and not container_ranges):
         blocked.append({
             "calendar_source_key": source_key,
             "source_type": source_type(source),
             "reason_code": "no_active_appointment_container_coverage",
             "message": "Inverse availability expansion requires active appointment container coverage for this instructor.",
         })
-        return blocks, blocked, 0
+        if not strict:
+            return blocks, blocked, 0
 
     horizon_start, horizon_end = inverse_expansion_horizon(source, container_ranges)
     day_start_time = parse_hhmm(source.get("inverse_expansion_day_start_time"), time.min)
@@ -451,6 +462,8 @@ def expand_inverse_availability(
         blocking_intervals.append((start, end))
         blocks.append(make_blocking_event_block(source, event, person, start, end))
 
+    if invalid_inverse_owner or (strict and require_container and not container_ranges):
+        return blocks, blocked, dns_markers  # missing routing authority cannot erase occupancy
     open_intervals: list[tuple[datetime, datetime]] = []
     cursor_day = horizon_start.date()
     while datetime.combine(cursor_day, time.min) < horizon_end:
@@ -499,6 +512,8 @@ def load_runtime_snapshots() -> tuple[Path | None, Any | None, dict[str, str]]:
     events_by_source: dict[str, list[dict[str, Any]]] = {}
     loaded_files = []
     source_evidence = {}
+    ambiguous_exports = set()
+    possible_events_by_source = {}
     for path in snapshot_files:
         payload, error = read_json(path)
         if error:
@@ -509,7 +524,12 @@ def load_runtime_snapshots() -> tuple[Path | None, Any | None, dict[str, str]]:
             continue
         source_key = str(payload.get("calendar_source_id") or path.stem)
         raw_events = payload.get("events", [])
-        events_by_source[source_key] = [event for event in raw_events if isinstance(event, dict)] if isinstance(raw_events, list) else []
+        if (source_key in source_evidence or not isinstance(payload.get("events"), list)
+                or (isinstance(raw_events, list) and any(not isinstance(event, dict) for event in raw_events))):
+            ambiguous_exports.add(source_key)
+        usable_events = [event for event in raw_events if isinstance(event, dict)] if isinstance(raw_events, list) else []
+        events_by_source[source_key] = usable_events
+        possible_events_by_source.setdefault(source_key, []).extend(usable_events)
         source_evidence[source_key] = {key: payload.get(key) for key in
             ("generated_at", "date_range", "export_status", "warnings", "skipped")}
         loaded_files.append(str(path))
@@ -520,6 +540,8 @@ def load_runtime_snapshots() -> tuple[Path | None, Any | None, dict[str, str]]:
         "snapshot_source": "runtime_calendar_snapshots",
         "snapshot_files": loaded_files,
         "source_evidence": source_evidence,
+        "ambiguous_exports": sorted(ambiguous_exports),
+        "ambiguous_events_by_source": {key: possible_events_by_source[key] for key in ambiguous_exports},
         "events_by_source": events_by_source,
     }, missing
 
@@ -655,9 +677,15 @@ def build_snapshot(
     course_payload: Any,
     local_snapshot_payload: Any,
     appointment_payload: Any | None = None,
+    *, identity_policy=None,
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
     sources = calendar_sources(calendar_payload)
     people = people_lookup(people_payload)
+    strict = identity_policy is not None
+    if strict:
+        strict_people, source_owners, _required = calendar_identity_inputs(calendar_payload, people_payload, identity_policy)
+        configured_containers = identity_policy.get("verified_appointment_container_owners")
+        strict_containers = configured_containers if isinstance(configured_containers, dict) else {}
     blocks: list[dict[str, Any]] = []
     blocked: list[dict[str, Any]] = []
     dns_markers = 0
@@ -665,7 +693,8 @@ def build_snapshot(
     for source in sources:
         source_key = str(source.get("calendar_source_key") or UNKNOWN)
         instructor_key = source.get("owner_instructor_key") or source.get("instructor_key")
-        person = people.get(normalize_key(instructor_key))
+        person = (strict_people.get(source_owners.get(source_key)) if strict
+                  else people.get(normalize_key(instructor_key)))
         if person:
             instructors_mapped.append({
                 "calendar_source_key": source_key,
@@ -673,6 +702,10 @@ def build_snapshot(
                 "display_name": person.get("display_name", UNKNOWN),
             })
         events = events_for_source(local_snapshot_payload, source_key)
+        if strict and isinstance(local_snapshot_payload, dict):
+            alternatives = local_snapshot_payload.get("ambiguous_events_by_source", {})
+            if source_key in alternatives:
+                events = alternatives[source_key]  # deny coverage, retain every plausible occupied interval
         snapshot_present = source_snapshot_present(local_snapshot_payload, source_key)
         if not events and not snapshot_present:
             blocked.append({
@@ -689,6 +722,7 @@ def build_snapshot(
                 person,
                 course_payload,
                 appointment_payload or {},
+                strict_container_owners=strict_containers if strict else None,
             )
             blocks.extend(inverse_blocks)
             blocked.extend(inverse_blocked)
@@ -716,7 +750,8 @@ def build_snapshot(
                 continue
             if "dns" in event_text(event) or "do not schedule" in event_text(event):
                 dns_markers += 1
-            blocks.append(block)
+            if not strict or person or block.get("availability_status") == "blocked":
+                blocks.append(block)
     stats = {
         "configured_calendar_sources_found": len(sources),
         "instructors_mapped": instructors_mapped,
@@ -791,7 +826,18 @@ def render_report(stats: dict[str, Any], blocked: list[dict[str, Any]], local_sn
     return "\n".join(lines)
 
 
-def layered_calendar_coverage(calendar_payload, people_payload, snapshot_payload, blocks, *, now=None):
+def calendar_identity_inputs(calendar_payload, people_payload, identity_policy):
+    from scripts.generate_dynamic_offers import scheduler_enabled_people
+    from scripts.layered_instructor_identity import configured_calendar_ownership, unique_scheduler_ids
+    active = scheduler_enabled_people(people_payload)
+    stable = unique_scheduler_ids(active)
+    people = {p["person_id"]: p for p in active if p.get("person_id") in stable}
+    source_owners, required = configured_calendar_ownership(calendar_payload, active, identity_policy)
+    return people, source_owners, required
+
+
+def layered_calendar_coverage(calendar_payload, people_payload, snapshot_payload, blocks, *, now=None,
+                              identity_policy=None):
     """Bound calendar coverage to complete successful exports, never room hours.
 
     Registration completeness is a separate canonical-demand publication gate.
@@ -801,15 +847,25 @@ def layered_calendar_coverage(calendar_payload, people_payload, snapshot_payload
     current = now or datetime.now(LOCAL_TZ)
     people = people_lookup(people_payload)
     evidence = snapshot_payload.get("source_evidence", {})
+    strict = identity_policy is not None
+    if strict:
+        from scripts.layered_instructor_identity import calendar_block_person_id
+        strict_people, source_owners, required = calendar_identity_inputs(calendar_payload, people_payload, identity_policy)
     result = []
     for block in blocks:
         if block.get("availability_status") != "available":
             continue
-        owner = people.get(normalize_key(block.get("person_id")))
+        if strict:
+            pid = calendar_block_person_id(block, source_owners)
+            owner = strict_people.get(pid)
+            sources = [source for source in calendar_sources(calendar_payload)
+                       if source.get("calendar_source_key") in required.get(pid, ())]
+        else:
+            owner = people.get(normalize_key(block.get("person_id")))
+            sources = [source for source in calendar_sources(calendar_payload)
+                       if people.get(normalize_key(source.get("owner_instructor_key") or source.get("instructor_key"))) == owner]
         if not owner:
             continue
-        sources = [source for source in calendar_sources(calendar_payload)
-                   if people.get(normalize_key(source.get("owner_instructor_key") or source.get("instructor_key"))) == owner]
         if not sources:
             continue
         observations, starts, ends = [], [], []
@@ -817,6 +873,12 @@ def layered_calendar_coverage(calendar_payload, people_payload, snapshot_payload
             for source in sources:
                 key = str(source.get("calendar_source_key") or UNKNOWN)
                 item = evidence[key]
+                if strict:
+                    by_source = snapshot_payload.get("events_by_source")
+                    if (key in snapshot_payload.get("ambiguous_exports", ())
+                            or not isinstance(by_source, dict) or not isinstance(by_source.get(key), list)
+                            or any(not isinstance(event, dict) for event in by_source[key])):
+                        raise ValueError("missing_or_malformed_configured_source_export")
                 if item.get("export_status") != "ok" or item.get("warnings") or any(count for reason, count in item.get("skipped", {}).items() if reason not in {"outside_export_window", "excluded_by_exdate", "suppressed_by_recurrence_override", "duplicate_generated_occurrence", "duplicate_explicit_event_same_uid_start"}):
                     raise ValueError("incomplete_export")
                 observed = datetime.fromisoformat(item["generated_at"].replace("Z", "+00:00"))
@@ -873,12 +935,15 @@ def run() -> dict[str, Any]:
     if requirements_error:
         missing[str(RECHECK_REQUIREMENTS_PATH)] = requirements_error
     missing.update(local_snapshot_missing)
+    policy, _policy_error = read_json(LAYERED_POLICY_PATH)
+    identity_policy = (policy if isinstance(policy, dict) and policy.get("mode") == "active_local_v2"
+                       and policy.get("verified_instructor_identity") is True else None)
     blocks, blocked, stats = build_snapshot(
         calendar_payload or {},
         people_payload or {},
         course_payload or {},
         local_snapshot_payload or {},
-        appointment_payload or {},
+        appointment_payload or {}, identity_policy=identity_policy,
     )
     payload = {
         "generated_at": datetime.now().astimezone().isoformat(),
@@ -893,7 +958,7 @@ def run() -> dict[str, Any]:
         "stats": stats,
         "availability_blocks": blocks,
         "layered_commitment_coverage": layered_calendar_coverage(
-            calendar_payload or {}, people_payload or {}, local_snapshot_payload or {}, blocks),
+            calendar_payload or {}, people_payload or {}, local_snapshot_payload or {}, blocks, identity_policy=identity_policy),
         "blocked_or_placeholder_sources": blocked,
     }
     AUDIT_DIR.mkdir(parents=True, exist_ok=True)

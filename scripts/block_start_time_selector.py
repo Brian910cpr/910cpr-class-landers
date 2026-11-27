@@ -739,7 +739,7 @@ def canonical_operational_course_id(session, known_catalog_ids, course_rules):
 
 def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, Any]],
                     allow_unresolved: bool = False, *, known_catalog_ids=None,
-                    strict_instructor_crosswalk=None) -> list[dict[str, Any]]:
+                    strict_instructor_crosswalk=None, strict_calendar_source_owners=None) -> list[dict[str, Any]]:
     location_resource_map = loaded.get("location_resource_map")
     sessions_current = apply_occupancy_duration_rules(
         generate_dynamic_offers.normalize_occupancy(loaded.get("sessions_current"), "data/sessions_current.json"),
@@ -767,16 +767,20 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
     calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"), allow_unresolved)
     strict_identity = strict_instructor_crosswalk is not None
     if strict_identity:
-        from scripts.layered_instructor_identity import canonical_instructor_projection, unique_scheduler_ids
-        trusted_calendar_people = unique_scheduler_ids(
-            generate_dynamic_offers.scheduler_enabled_people(loaded.get("people_catalog")))
+        from scripts.layered_instructor_identity import calendar_block_person_id, canonical_instructor_projection
         for block in calendar_blocks:
             pid = block.pop("_calendar_person_id", None)
-            if pid in trusted_calendar_people:
-                block["effective_instructor_person_id"] = pid
+            proven = calendar_block_person_id(
+                {"person_id": pid, "source_calendar_id": block.get("source_calendar_id")},
+                strict_calendar_source_owners or {})
+            if proven:
+                block["effective_instructor_person_id"] = proven
                 block["instructor_unassigned"] = False
             else:
                 block["instructor_unassigned"] = True
+                intended = (strict_calendar_source_owners or {}).get(block.get("source_calendar_id"))
+                if intended and block.get("availability_location_mode") == "instructor_time_only":
+                    block["uncertain_calendar_owner_id"] = intended
         for legacy in (*sessions_current, *schedule_future):
             # Legacy rows without independently bound identities reserve
             # resources but cannot authorize instructor-specific gravity.
@@ -1186,6 +1190,8 @@ def find_url(
     *, strict_container_owners=None,
 ) -> tuple[int | None, str | None, str | None, str | None]:
     if course_id == "509474":
+        if strict_container_owners is not None:
+            return None, None, None, "native_skills_route_owner_unverified"
         # Native date review has no Enrollware transfer or claimed reservation.
         from urllib.parse import urlencode
         query = urlencode({"course": course_id, "date": start.date().isoformat(),
@@ -1327,14 +1333,19 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                        and layered_policy.get("verified_instructor_identity") is True)
     identity_crosswalk = None
     if strict_identity:
-        from scripts.layered_instructor_identity import explicit_external_crosswalk, unique_scheduler_ids
+        from scripts.layered_instructor_identity import (calendar_block_person_id,
+            configured_calendar_ownership, explicit_external_crosswalk, valid_owned_coverage)
         scheduler_people = generate_dynamic_offers.scheduler_enabled_people(loaded["people_catalog"])
-        trusted_people = unique_scheduler_ids(scheduler_people)
+        calendar_config = read_required_json(ROOT / "data/config/calendar_sources.json")
+        calendar_owners, required_calendars = configured_calendar_ownership(
+            calendar_config, scheduler_people, layered_policy)
         identity_crosswalk = explicit_external_crosswalk(scheduler_people,
             layered_policy.get("instructor_external_crosswalk"))
-        windows = [window for window in windows if window.get("person_id") in trusted_people]
+        windows = [window for window in windows
+                   if calendar_block_person_id(window, calendar_owners) in required_calendars]
     occupancy = build_occupancy(loaded, course_rules, allow_unresolved=layered_active(layered_policy),
-                                known_catalog_ids=course_catalog, strict_instructor_crosswalk=identity_crosswalk)
+                                known_catalog_ids=course_catalog, strict_instructor_crosswalk=identity_crosswalk,
+                                strict_calendar_source_owners=calendar_owners if strict_identity else None)
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy) if not layered_active(layered_policy) else {}
     reference_now = selector_reference_datetime()
     anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
@@ -1384,7 +1395,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             for value in [venue.get("canonical_public_location"), *venue.get("aliases", [])] if value}
         coverage = [dict(proof, location=layered_policy["primary_resource"])
             if str(proof.get("location") or "").casefold().strip() in venue_aliases else dict(proof)
-            for proof in live_availability_snapshot.get("layered_commitment_coverage", [])]
+            for proof in live_availability_snapshot.get("layered_commitment_coverage", [])
+            if not strict_identity or valid_owned_coverage(proof, required_calendars)]
         windows = [dict(w, public_location_allowed=public_location_allowed(
             clean_text(w.get("location_name")), public_location_policy)) for w in windows]
         effective_layered_policy = dict(layered_policy,
@@ -1405,7 +1417,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             occupancy, (owner or {}).get("display_name"), layered_policy["primary_resource"],
             reference_now, coverage, owner_qualified_for_occupied_course,
             owner_person_id=((owner or {}).get("person_id") if strict_identity
-                and (owner or {}).get("person_id") in trusted_people else None),
+                and (owner or {}).get("person_id") in required_calendars else None),
             strict_identity=strict_identity)
         calculation = cached_calculate(windows, occupancy, selected_courses, effective_layered_policy,
             loaded["location_resource_map"], reference_now, layered_window_instants,

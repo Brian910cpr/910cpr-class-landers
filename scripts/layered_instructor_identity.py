@@ -49,3 +49,72 @@ def same_proved_instructor(row, window):
 def strict_coverage_matches(proof, window):
     pid = proof.get("instructor_person_id")
     return bool(pid and pid == window.get("person_id"))
+
+
+def configured_calendar_ownership(calendar_payload, scheduler_people, policy):
+    """Exact logical owner keys, never display/email aliases.
+
+    Compute required sources from the entire configuration, before observing
+    exports. Duplicate source keys deny coverage for all involved owners.
+    """
+    owners = policy.get("calendar_owner_person_ids")
+    if not isinstance(owners, dict) or not isinstance(calendar_payload, dict):
+        return {}, {}
+    sources = calendar_payload.get("calendar_sources")
+    if not isinstance(sources, list):
+        return {}, {}
+    stable = unique_scheduler_ids(scheduler_people)
+    valid = {key: value for key, value in owners.items()
+             if isinstance(key, str) and key and isinstance(value, str) and value in stable}
+    bind = policy.get("calendar_source_owners")
+    if not isinstance(bind, dict):
+        return {}, {}
+    declared = {key: value for key, value in bind.items()
+                if isinstance(key, str) and key and key == key.strip()
+                and isinstance(value, str) and value in stable}
+    occurrences = Counter()
+    required = defaultdict(set)
+    observed = {}
+    invalid = set()
+    for item in sources:
+        if not isinstance(item, dict):
+            continue
+        key = item.get("calendar_source_key")
+        owner_key = item.get("owner_instructor_key")
+        pid = valid.get(owner_key) if isinstance(owner_key, str) else None
+        if isinstance(key, str) and key and key == key.strip():
+            occurrences[key] += 1
+            if pid:
+                required[pid].add(key)
+                if declared.get(key) == pid:
+                    observed[key] = pid
+                else:
+                    invalid.add(pid)
+        elif pid:
+            invalid.add(pid)
+    for key, pid in declared.items():
+        required[pid].add(key)
+        if occurrences[key] != 1 or observed.get(key) != pid:
+            invalid.add(pid)
+    invalid.update(pid for pid, keys in required.items()
+                   if any(occurrences[key] != 1 for key in keys))
+    # A validated source can still establish occupancy without fresh coverage
+    # of the other configured sources needed to open that owner's windows.
+    source_owners = {key: pid for key, pid in observed.items() if occurrences[key] == 1}
+    return source_owners, {pid: frozenset(keys) for pid, keys in required.items()
+                           if keys and pid not in invalid}
+
+
+def calendar_block_person_id(row, source_owners):
+    key, pid = row.get("source_calendar_id"), row.get("person_id")
+    return pid if isinstance(key, str) and isinstance(pid, str) and source_owners.get(key) == pid else None
+
+
+def valid_owned_coverage(proof, required_sources):
+    pid, keys = proof.get("instructor_person_id"), proof.get("source_ids")
+    if (not isinstance(pid, str) or not isinstance(keys, list)
+            or not all(isinstance(k, str) for k in keys)
+            or len(set(keys)) != len(keys)
+            or proof.get("source") != "configured_calendar_exports"):
+        return False
+    return bool(pid in required_sources and set(keys) == required_sources[pid])

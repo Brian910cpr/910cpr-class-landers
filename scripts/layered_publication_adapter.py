@@ -132,6 +132,10 @@ def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qua
                             else key(other.get("instructor")))
             owner_identity = owner_person_id if strict_identity else owner_key
             other_room = room_relation(other)
+            if (strict_identity and other_room is False
+                    and other.get("uncertain_calendar_owner_id")
+                    and other["uncertain_calendar_owner_id"] != owner_person_id):
+                continue
             if (other_room is False and other_person
                     and other_person not in {owner_identity, "unknown", "unassigned"}
                     and not other.get("instructor_unassigned")):
@@ -301,6 +305,9 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             same_room = resource == room and source.get("location_resolution") == "location_resource_map"
             if source.get("availability_location_mode") == "instructor_time_only":
                 same_room = False
+            if (strict_identity and not same_room and source.get("uncertain_calendar_owner_id")
+                    and source["uncertain_calendar_owner_id"] != window.get("person_id")):
+                continue
             if not same_person and not same_room and not source.get("instructor_unassigned"):
                 continue
             try:
@@ -599,7 +606,7 @@ def redact_internal_identity(value):
     if isinstance(value, dict):
         return {key: redact_internal_identity(item) for key, item in value.items()
                 if key not in {"person_id", "stored_instructor_person_id",
-                               "effective_instructor_person_id", "instructor_person_id",
+                               "effective_instructor_person_id", "instructor_person_id", "uncertain_calendar_owner_id",
                                "catalog_external_id", "_verified_instructor_person_id"}}
     if isinstance(value, list):
         return [redact_internal_identity(item) for item in value]
