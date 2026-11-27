@@ -105,6 +105,9 @@
       max-width: 420px;
       margin-bottom: -24px;
     }
+    .family-hero-media.is-character.is-rotating:not([hidden]) { min-height: 380px; }
+    .family-hero-media.is-rotating > img:not([src]),
+    .family-hero-media img[hidden] { display: none; }
     .family-hero-media.is-character img {
       height: 380px;
       max-height: none;
@@ -680,6 +683,7 @@
         margin-bottom: -14px;
       }
       .family-hero-media.is-character img { height: 280px; max-height: none; }
+      .family-hero-media.is-character.is-rotating:not([hidden]) { min-height: 280px; }
       .header-credential {
         grid-template-columns: 44px minmax(0, 1fr);
         gap: 8px;
@@ -814,8 +818,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="muted">New or expired ACLS: choose Provider. Current ACLS card: choose Renewal. Prefer online coursework: choose HeartCode ACLS plus an in-person skills session.</p>
       </div>
       
-      <div class="family-hero-media is-character">
-        <img src="/images/characters/ACLS-1.webp?v=316d0b3a38fd" srcset="/images/characters/ACLS-1-480.webp?v=73a72e4cd8c4 480w, /images/characters/ACLS-1.webp?v=316d0b3a38fd 960w" sizes="(max-width: 820px) 300px, 420px" data-family-hero="acls" data-hero-images="[{&quot;url&quot;: &quot;/images/characters/ACLS-1.webp?v=316d0b3a38fd&quot;, &quot;alt&quot;: &quot;Approved ACLS nurse character with RN badge and a reminder to be ready when the room turns to you.&quot;, &quot;srcset&quot;: &quot;/images/characters/ACLS-1-480.webp?v=73a72e4cd8c4 480w, /images/characters/ACLS-1.webp?v=316d0b3a38fd 960w&quot;}, {&quot;url&quot;: &quot;/images/characters/ACLS-2.webp?v=c50647615ba2&quot;, &quot;alt&quot;: &quot;Approved ACLS paramedic character: I am the designated adult? Yikes.&quot;, &quot;srcset&quot;: &quot;/images/characters/ACLS-2-480.webp?v=a0a2f2f60913 480w, /images/characters/ACLS-2.webp?v=c50647615ba2 960w&quot;}, {&quot;url&quot;: &quot;/images/characters/ACLS-3.webp?v=d6fd96bf5b35&quot;, &quot;alt&quot;: &quot;Approved ACLS emergency department pharmacist character with an imposter-syndrome reminder.&quot;, &quot;srcset&quot;: &quot;/images/characters/ACLS-3-480.webp?v=a03e9bebb375 480w, /images/characters/ACLS-3.webp?v=d6fd96bf5b35 960w&quot;}]" alt="Approved ACLS nurse character with RN badge and a reminder to be ready when the room turns to you." loading="eager" fetchpriority="high">
+      <div class="family-hero-media is-character is-rotating">
+        <img data-family-hero="acls" data-hero-images="[{&quot;url&quot;: &quot;/images/characters/acls/ACLS-1.webp?v=316d0b3a38fd&quot;, &quot;alt&quot;: &quot;Approved ACLS nurse character with RN badge and a reminder to be ready when the room turns to you.&quot;, &quot;srcset&quot;: &quot;/images/characters/acls/ACLS-1-480.webp?v=73a72e4cd8c4 480w, /images/characters/acls/ACLS-1.webp?v=316d0b3a38fd 960w&quot;}, {&quot;url&quot;: &quot;/images/characters/acls/ACLS-2.webp?v=c50647615ba2&quot;, &quot;alt&quot;: &quot;Approved ACLS paramedic character: I am the designated adult? Yikes.&quot;, &quot;srcset&quot;: &quot;/images/characters/acls/ACLS-2-480.webp?v=a0a2f2f60913 480w, /images/characters/acls/ACLS-2.webp?v=c50647615ba2 960w&quot;}, {&quot;url&quot;: &quot;/images/characters/acls/ACLS-3.webp?v=d6fd96bf5b35&quot;, &quot;alt&quot;: &quot;Approved ACLS emergency department pharmacist character with an imposter-syndrome reminder.&quot;, &quot;srcset&quot;: &quot;/images/characters/acls/ACLS-3-480.webp?v=a03e9bebb375 480w, /images/characters/acls/ACLS-3.webp?v=d6fd96bf5b35 960w&quot;}]" sizes="(max-width: 820px) 300px, 420px" alt="" fetchpriority="high"><noscript><img src="/images/characters/acls/ACLS-1.webp?v=316d0b3a38fd" srcset="/images/characters/acls/ACLS-1-480.webp?v=73a72e4cd8c4 480w, /images/characters/acls/ACLS-1.webp?v=316d0b3a38fd 960w" sizes="(max-width: 820px) 300px, 420px" alt="Approved ACLS nurse character with RN badge and a reminder to be ready when the room turns to you." loading="eager" fetchpriority="high"></noscript>
       </div>
     </div>
   </header>
@@ -907,7 +911,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </section>
     
   </main>
-  <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
+  <script src="/assets/family-hero.js?v=461d80e849d9" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20261119-request-containment2"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>

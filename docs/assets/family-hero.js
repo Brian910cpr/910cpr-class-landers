@@ -1,36 +1,37 @@
-/* Select one approved, build-verified image per visit. No timer or slideshow. */
+/* Pick one approved hero at random on each load. Never animate or prefetch the deck. */
 (() => {
   document.querySelectorAll('[data-family-hero]').forEach(image => {
     let images;
     try { images = JSON.parse(image.dataset.heroImages); } catch { return; }
     if (!Array.isArray(images) || !images.length) return;
     const key = `910cpr:family-hero:${image.dataset.familyHero}`;
-    let index = 0;
+    let previous;
     try {
-      const previous = sessionStorage.getItem(key);
-      const lastIndex = images.findIndex(item => item.url === previous);
-      index = (lastIndex + 1) % images.length;
-      sessionStorage.setItem(key, images[index].url);
-    } catch {
-      // Storage can be disabled; the first approved image remains usable.
-    }
-    let attempts = 0;
+      previous = sessionStorage.getItem(key);
+    } catch { /* Storage is optional; selection is still random. */ }
+    const choices = images.filter(item => item.url !== previous);
+    const previousImage = images.find(item => item.url === previous);
+    let selected;
     const show = () => {
-      const selected = images[index];
+      selected = choices.length
+        ? choices.splice(Math.floor(Math.random() * choices.length), 1)[0]
+        : previousImage && previousImage !== selected ? previousImage : null;
+      if (!selected) {
+        image.hidden = true;
+        if (image.parentElement) image.parentElement.hidden = true;
+        return;
+      }
       image.alt = selected.alt;
       if (selected.srcset) image.srcset = selected.srcset;
       else image.removeAttribute('srcset');
       image.src = selected.url;
     };
-    image.addEventListener('error', () => {
-      attempts += 1;
-      if (attempts >= images.length) {
-        image.hidden = true;
-        return;
+    image.addEventListener('load', () => {
+      if (selected) {
+        try { sessionStorage.setItem(key, selected.url); } catch { /* optional */ }
       }
-      index = (index + 1) % images.length;
-      show();
     });
+    image.addEventListener('error', show);
     show();
   });
 })();
