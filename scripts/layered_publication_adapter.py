@@ -35,11 +35,11 @@ def project_sources(rows, course_metadata):
         row["course_id"] = str(row.get("course_id") or row.get("courseId") or "")
         cid = row["course_id"]
         try:
-            if row.get("start") and (not row.get("end") or aware(row["end"]) <= aware(row["start"])):
+            if row.get("start") and (not row.get("end") or occupancy_instant(row["end"]) <= occupancy_instant(row["start"])):
                 meta = course_metadata.get(cid, {})
                 minutes = row.get("duration_minutes") or meta.get("scheduler_consumption_minutes") or meta.get("duration_minutes")
                 if isinstance(minutes, (int, float)) and minutes > 0:
-                    row["end"] = (aware(row["start"]) + timedelta(minutes=minutes)).isoformat()
+                    row["end"] = (occupancy_instant(row["start"]) + timedelta(minutes=minutes)).isoformat()
                     row["duration_resolution"] = "source/course metadata"
         except (ValueError, TypeError):
             row["normalization_issue"] = "invalid_source_timestamp"
@@ -292,7 +292,7 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             if not same_person and not same_room and not source.get("instructor_unassigned"):
                 continue
             try:
-                start, end = aware(source["start"]), aware(source["end"])
+                start, end = occupancy_instant(source["start"]), occupancy_instant(source["end"])
                 if end <= start:
                     raise ValueError("unresolved duration")
                 # Keep known intervals outside the window: travel and block edges

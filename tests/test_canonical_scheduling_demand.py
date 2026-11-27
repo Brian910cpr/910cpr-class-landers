@@ -1,8 +1,13 @@
+from datetime import datetime
+import json
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from scripts.anchor_state import promote_seated_sessions
+from scripts.layered_day_cache import cached_calculate, pack
+from scripts.layered_publication_adapter import calculate, publish
 from scripts.layered_selector_adapter import aware
 from scripts.block_start_time_selector import build_occupancy
 from scripts.canonical_scheduling_demand import resolve_canonical_demand, summarize_positive_v1_attribution
@@ -265,7 +270,8 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
                         loaded, rules, allow_unresolved=True, known_catalog_ids=catalog)
                 self.assertEqual(canonical["course_id"], expected)
                 self.assertEqual(canonical.get("kind"), "hold" if expected is None else None)
-                self.assertEqual((canonical["start"], canonical["end"]), (parse_dt(start), parse_dt(end)))
+                self.assertEqual((canonical["start"], canonical["end"]), tuple(
+                    datetime.fromisoformat(value.replace("Z", "+00:00")) for value in (start, end)))
                 self.assertEqual(canonical["external_class_id"], "80123")
                 self.assertEqual(canonical["visibility"], "private")
                 self.assertIsNone(canonical["active_registration_count"])
@@ -287,6 +293,101 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertNotIn("last_name", source)
         self.assertNotIn('"email"', source)
         self.assertNotIn("customer_email", source)
+
+
+    def test_private_stale_carry_in_blocks_cleanup_without_becoming_an_offer(self):
+        config = Path(__file__).resolve().parents[1] / 'data/config'
+        policy = json.loads((config/'layered_scheduling_policy.json').read_text())
+        policy.update(lead_minutes=0, require_verified_day_gravity=True)
+        resource = json.loads((config/'location_resource_map.json').read_text())
+        page = json.loads((config/'block_schedule_pages.json').read_text())['pages']['heartsaver']
+        now = aware('2026-10-10T12:00:00-04:00')
+        course = dict(course_id='329495', course_family='Heartsaver', kind='skills',
+                      clean_course_name='Heartsaver Blended Skills',blended_classroom_skills='blended')
+        name, location = 'Brian Ennis', ':: Wilmington; Shipyard Blvd'
+        row = dict(canonical_session_id='synthetic-private-night', external_class_id='123123',
+            catalog_course_id='329495', external_course_id='329495', course_name='Heartsaver Blended Skills',
+            visibility='private', registration_status='closed', demand_status='stale_reconciliation',
+            count_available=False, active_registration_count=None, operational_has_active_seat=False,
+            session_status='completed', start_at='2026-10-10T23:00:00-04:00',
+            end_at='2026-10-11T00:00:00-04:00', consumption_end_at='2026-10-11T00:30:00-04:00',
+            lead_instructor_name=name, location_name=policy['primary_resource'])
+        payload = dict(location_resource_map=resource, sessions_current={'sessions': []},
+            schedule_future={'sessions': []}, live_availability_snapshot={},
+            canonical_demand={'sessions': [row]})
+        occupancy = build_occupancy(payload, {'329495': {}}, allow_unresolved=True, known_catalog_ids={'329495'})
+        self.assertEqual(len(occupancy), 1)
+        self.assertEqual(occupancy[0]["end"], aware(row["consumption_end_at"]))
+        self.assertIsNone(occupancy[0]['active_registration_count'])
+        self.assertFalse(occupancy[0]['operational_has_active_seat'])
+        start, end = '2026-10-11T00:00:00-04:00','2026-10-11T03:00:00-04:00'
+        window = dict(instructor_name=name, person_id=policy['brian_person_id'], location_name=location,
+                      start=start, end=end, source_availability_window='synthetic-window')
+        proof = dict(status='known_complete', instructor=name, location=policy['primary_resource'],
+            start=start, end=end, observed_at=now.isoformat(), valid_until='2026-10-10T13:00:00-04:00')
+        args = ([window],occupancy,[course],policy,resource,now,
+            lambda w:(w['start'],w['end']),lambda *_:True,[proof])
+        direct=calculate(*args)
+        with TemporaryDirectory() as directory:
+            cold=cached_calculate(*args,cache_dir=directory)
+            warm=cached_calculate(*args,cache_dir=directory)
+        for calculation in (direct,cold,warm):
+            self.assertFalse(calculation['issues'])
+            report=calculation['reports'][0]
+            self.assertEqual(len(report['normalized_occupancy']),1)
+            self.assertFalse(report['normalized_occupancy'][0]['operational_has_active_seat'])
+            self.assertEqual(min(x['start'] for x in report['accepted']), aware(row['consumption_end_at']))
+            published=publish(calculation,page,[course],[window],now,
+                lambda w,s,c:('day','container',f'https://fixture.test/enroll?appointmentDayId=day&courseId={c}&startTime={s:%H:%M}',None),
+                lambda s,c:[],[],require_verified_day_gravity=True)
+            offers=published['offers']
+            self.assertTrue(offers)
+            self.assertEqual(min(x['startTime'] for x in offers),'00:30')
+            self.assertTrue(all(x['date']=='2026-10-11' and x.get('offerType')!='seated_class' for x in offers))
+            self.assertNotIn('synthetic-private-night',json.dumps(offers))
+        self.assertEqual(warm['incremental_cache']['hits'],1)
+        self.assertEqual(pack(cold["reports"]), pack(warm["reports"]))
+
+    def test_explicit_fall_back_instants_do_not_collapse_in_occupancy(self):
+        config = Path(__file__).resolve().parents[1] / 'data/config'
+        policy = json.loads((config/'layered_scheduling_policy.json').read_text())
+        policy.update(lead_minutes=0)
+        resource = json.loads((config/'location_resource_map.json').read_text())
+        now = aware('2026-10-30T12:00:00-04:00')
+        course = dict(course_id='329495', course_family='Heartsaver', kind='skills')
+        name, location = 'Brian Ennis', ':: Wilmington; Shipyard Blvd'
+        row = dict(canonical_session_id='synthetic-fall-back', catalog_course_id='329495',
+            course_name='Heartsaver', session_status='completed', visibility='private',
+            count_available=False, active_registration_count=None, operational_has_active_seat=False,
+            start_at='2026-11-01T05:30:00Z', end_at='2026-11-01T06:30:00Z',
+            lead_instructor_name=name, location_name=policy['primary_resource'])
+        payload = dict(location_resource_map=resource, sessions_current={'sessions': []},
+            schedule_future={'sessions': []}, live_availability_snapshot={},
+            canonical_demand={'sessions': [row]})
+        occupancy = build_occupancy(payload, {'329495': {}}, allow_unresolved=True, known_catalog_ids={'329495'})
+        start, end = '2026-11-01T00:00:00-04:00','2026-11-01T04:00:00-05:00'
+        window = dict(instructor_name=name, person_id=policy['brian_person_id'], location_name=location,
+                      start=start, end=end, source_availability_window='synthetic-window')
+        proof = dict(status='known_complete', instructor=name, location=policy['primary_resource'],
+            start=start, end=end, observed_at=now.isoformat(), valid_until='2026-10-30T13:00:00-04:00')
+        args = ([window],occupancy,[course],policy,resource,now,
+            lambda w:(w['start'],w['end']),lambda *_:True,[proof])
+        direct=calculate(*args)
+        with TemporaryDirectory() as directory:
+            cold=cached_calculate(*args,cache_dir=directory)
+            warm=cached_calculate(*args,cache_dir=directory)
+        for calculation in (direct,cold,warm):
+            self.assertFalse(calculation['issues'])
+            report=calculation['reports'][0]
+            busy=report['normalized_occupancy'][0]
+            self.assertEqual(busy['start'].isoformat(),'2026-11-01T05:30:00+00:00')
+            self.assertEqual(busy['end'].isoformat(),'2026-11-01T06:30:00+00:00')
+            self.assertFalse(busy['operational_has_active_seat'])
+            self.assertTrue(report['accepted'])
+            self.assertTrue(all(slot['end'] <= busy['start'] or slot['start'] >= busy['end']
+                                for slot in report['accepted']))
+        self.assertEqual(warm['incremental_cache']['hits'],1)
+        self.assertEqual(pack(cold["reports"]), pack(warm["reports"]))
 
 
 if __name__ == "__main__":

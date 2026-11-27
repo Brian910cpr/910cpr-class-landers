@@ -751,11 +751,22 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
     calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"), allow_unresolved)
     canonical_rows = []
     classify_catalog = allow_unresolved and known_catalog_ids is not None
+    if allow_unresolved:
+        from scripts.layered_selector_adapter import occupancy_instant
+
+    def canonical_bound(value):
+        if not allow_unresolved:
+            return parse_dt(value)
+        try:
+            return occupancy_instant(value, allow_local=False)
+        except (ValueError, TypeError, OverflowError):
+            return None  # V2 scopes unresolved bounds; do not guess a clock fold.
+
     for session in loaded.get("canonical_demand", {}).get("sessions", []):
         if session.get("session_status") not in ("scheduled", "active", "completed"):
             continue
-        start = parse_dt(session.get("consumption_start_at") or session.get("start_at"))
-        end = parse_dt(session.get("consumption_end_at") or session.get("end_at"))
+        start = canonical_bound(session.get("consumption_start_at") or session.get("start_at"))
+        end = canonical_bound(session.get("consumption_end_at") or session.get("end_at"))
         if (not start or not end or end <= start) and not allow_unresolved:
             raise BlockSelectorInputError("Canonical session has an invalid occupied window")
         operational_course = (canonical_operational_course_id(session, known_catalog_ids, course_rules)
@@ -798,7 +809,6 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             block["resource"] = resource
             block["location_resolution"] = "location_resource_map"
     if classify_catalog:
-        from scripts.layered_selector_adapter import occupancy_instant
         # An exact legacy mirror cannot revive a missing or contradictory
         # canonical course identity. It continues to hold the occupied block.
         def identity(block):

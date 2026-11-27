@@ -134,7 +134,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
     for index, busy in ordered:
         if not busy.get("start") or not busy.get("end"):
             raise ValueError("unresolved occupied interval")
-        start, end = aware(busy["start"]), aware(busy["end"])
+        start, end = occupancy_instant(busy["start"]), occupancy_instant(busy["end"])
         if end <= start:
             raise ValueError("unresolved zero-duration occupancy")
         # Office is the venue/container label, not permission for a second room.
