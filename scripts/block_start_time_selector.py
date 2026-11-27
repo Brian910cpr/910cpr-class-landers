@@ -785,6 +785,7 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             raise BlockSelectorInputError("Canonical session has an invalid occupied window")
         operational_course = (canonical_operational_course_id(session, known_catalog_ids, course_rules)
                               if classify_catalog else session.get("course_id") or session.get("external_course_id"))
+        stale_commitment = allow_unresolved and session.get("operational_has_stale_commitment") is True
         canonical_rows.append({
             "start": start, "end": end,
             "location": session.get("location_name") or UNKNOWN,
@@ -794,7 +795,8 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "source_event_id": session.get("canonical_session_id"),
             "external_class_id": session.get("external_class_id"),
             "course_id": operational_course,
-            **({"kind": "hold"} if classify_catalog and operational_course is None else {}),
+            **({"kind": "hold", "public_direct_booking": False, "stale_commitment": True}
+               if stale_commitment else ({"kind": "hold"} if classify_catalog and operational_course is None else {})),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
             "instructor_unassigned": not session.get("lead_instructor_name"),
             **({
@@ -838,10 +840,17 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
                 return None
             return (str(external_id), start, end, block.get("location"), block.get("resource"))
         matches = {}
+        occupied_only_mirrors = set()
         for block in canonical_rows:
             if key := identity(block):
                 matches.setdefault(key, set()).add(block["course_id"])
+                if block.get("stale_commitment") is True:
+                    occupied_only_mirrors.add(key)
         for mirror in (*sessions_current, *schedule_future):
+            if identity(mirror) in occupied_only_mirrors:
+                mirror.update(kind="hold", public_direct_booking=False, count_available=False,
+                              active_registration_count=None)
+                continue
             if approved := matches.get(identity(mirror)):
                 if approved != {str(mirror.get("course_id") or "")}:
                     mirror["kind"] = "hold"
