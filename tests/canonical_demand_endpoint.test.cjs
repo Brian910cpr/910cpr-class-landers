@@ -73,6 +73,7 @@ test('numeric legacy identity with native active seats signals occupied demand w
   assert.equal(projection.canonical_recorded_registration_count,1);
   assert.equal(projection.demand_basis,'unknown');
   assert.equal(projection.operational_has_active_seat,true);
+  assert.equal(projection.operational_has_stale_commitment,false);
   assert.equal(projection.visibility,'private');
   assert.equal(projection.registration_status,'closed');
   assert.equal(Object.hasOwn(projection,'registrations'),false);
@@ -200,12 +201,13 @@ test('authenticated HTTP response exposes an occupancy bit, never raw intake pro
     'canonical_session_id','external_class_id','external_course_id','catalog_course_id','course_key','start_at','end_at',
     'consumption_start_at','consumption_end_at','location_id','location_name','lead_instructor_id',
     'lead_instructor_name','course_name','visibility','registration_backend','registration_status',
-    'workspace_projection_status','workspace_session_id','operational_has_active_seat',
+    'workspace_projection_status','workspace_session_id','operational_has_active_seat','operational_has_stale_commitment',
     'canonical_recorded_registration_count','source','session_status','active_registration_count',
     'count_available','demand_status','source_observed_at','reconciled_at','source_sha256',
     'freshness_minutes','demand_basis',
   ].sort());
   assert.equal(row.operational_has_active_seat,true);
+  assert.equal(row.operational_has_stale_commitment,false);
   assert.equal(row.visibility,'private');
   assert.equal(row.registration_status,'closed');
   assert.equal(row.active_registration_count,null);
@@ -272,7 +274,8 @@ test('expired exact external roster retains operational commitment without certi
     registrations:[{status:'registered',registration_source:'enrollware_reconciled',
       external_registration_id:'fixture-reg',canceled_at:null}]};
   const out=api.projectDemand(fixture);
-  assert.equal(out.operational_has_active_seat,true);
+  assert.equal(out.operational_has_active_seat,false);
+  assert.equal(out.operational_has_stale_commitment,true);
   assert.equal(out.demand_status,'stale_reconciliation');
   assert.equal(out.count_available,false);
   assert.equal(out.active_registration_count,null);
@@ -299,6 +302,7 @@ test('expired exact external roster retains operational commitment without certi
   ]) {
     const denied=api.projectDemand({...fixture,...change});
     assert.equal(denied.operational_has_active_seat,false,JSON.stringify(change));
+    assert.equal(denied.operational_has_stale_commitment,false,JSON.stringify(change));
     assert.equal(denied.active_registration_count,null);
   }
 });

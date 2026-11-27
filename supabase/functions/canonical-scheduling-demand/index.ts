@@ -92,8 +92,9 @@ export function projectDemand(row: any) {
     })();
   const operationalHasActiveSeat = ["scheduled", "active"].includes(row.status)
     && ((countAvailable && typeof proof.active_registration_count === "number"
-          && proof.active_registration_count > 0) || nativeCommittedSeat || confirmedEmailIntakeSeat
-          || staleExactCommitment);
+          && proof.active_registration_count > 0) || nativeCommittedSeat || confirmedEmailIntakeSeat);
+  const operationalHasStaleCommitment = ["scheduled", "active"].includes(row.status)
+    && !operationalHasActiveSeat && staleExactCommitment;
   const workspaces = row.landerware_sessions || [];
   const workspace = workspaces.length === 1 ? workspaces[0] : null;
   const workspaceStatus = !workspaces.length ? "missing" : !workspace
@@ -121,6 +122,8 @@ export function projectDemand(row: any) {
     workspace_session_id: workspace?.id || null,
     // Operational demand is not proof of public joinability or total roster size.
     operational_has_active_seat: operationalHasActiveSeat,
+    // A prior exact roster can reserve time, but must never create current paid-seat gravity.
+    operational_has_stale_commitment: operationalHasStaleCommitment,
     canonical_recorded_registration_count: Array.isArray(row.registrations)
       ? row.registrations.filter((item: any) => ACTIVE.has(item.status)).length : null,
     source: row.source,
