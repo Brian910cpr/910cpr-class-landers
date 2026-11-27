@@ -183,3 +183,54 @@ class VerifiedInstructorIdentityTests(unittest.TestCase):
                 strict_instructor_crosswalk={})[0]
             self.assertIsNone(row['course_id'])
             self.assertEqual(row['kind'],'hold')
+
+    def test_advanced_seated_guard_requires_current_exact_roster_not_public_shell(self):
+        from scripts.block_start_time_selector import verify_advanced_seated_inventory, seated_class_selector_offers
+        f=self.f
+        sid='99999001'
+        room=f.room
+        start=f.at(11,'10:00').isoformat()
+        end=f.at(11,'14:00').isoformat()
+        row=dict(session_id=sid,course_id='241108',course_number='241108',mapped_family='ACLS',
+            external_instructor_id='9876',lead_instructor_name='Legacy display',
+            location_name=room,start_at=start,end_at=end,registration_status='open',session_status='active',
+            public_direct_booking=True,registration_url='https://coastalcprtraining.enrollware.com/enroll?id='+sid)
+        witness=dict(external_class_id=sid,external_course_id='241108',catalog_course_id='241108',
+            count_available=True, active_registration_count=2, demand_status='current',
+            demand_basis='canonical_active_registrations',source='enrollware_reconciled',
+            registration_backend='enrollware',registration_status='open',session_status='scheduled',
+            visibility='public',lead_instructor_name='Canonical instructor',lead_instructor_id='synthetic-person',
+            lead_instructor_identity={'status':'verified','catalog_external_id':'9876'},
+            start_at=start,end_at=end,location_name=room,source_observed_at=f.now.isoformat(),freshness_minutes=60)
+        course_catalog={'241108':dict(course_family='ACLS'),'209818':dict(course_family='ACLS'),
+                        '209805':dict(course_family='PALS')}
+        rules={k:{} for k in course_catalog}
+        def read(rows,proofs,**kw):
+            return verify_advanced_seated_inventory({'sessions':rows},{'sessions':proofs},
+                rules,course_catalog,f.resources,f.now,**kw)
+        unchanged=copy.deepcopy(row)
+        eligible,reject=read([row],[witness],strict_instructor_crosswalk={'9876':self.other})
+        self.assertEqual(row,unchanged)
+        self.assertFalse(reject)
+        self.assertEqual(eligible['sessions'][0]['advanced_seated_route'],'request')
+        self.assertEqual(eligible['sessions'][0]['_verified_instructor_person_id'],self.other)
+        offers=seated_class_selector_offers(schedule_future_payload=eligible,selected_courses=[],
+            selected_course_ids={'241108'},course_rules=rules)
+        self.assertEqual(len(offers),1)
+        self.assertEqual(offers[0]['offerType'],'seated_class')
+        self.assertEqual(offers[0]['instructor'],'Canonical instructor')
+        self.assertTrue(offers[0]['registrationUrl'].startswith('mailto:'))
+        self.assertNotIn('enrollware.com',json.dumps(offers))
+        for records,proofs,code in [
+            ([row],[],'roster_unverified'),([row],[{**witness,'active_registration_count':0}],'roster_unverified'),
+            ([row],[{**witness,'source_observed_at':f.at(5,'11:00').isoformat()}],'roster_unverified'),
+            ([row],[{**witness,'visibility':'private'}],'public_eligibility_unverified'),
+            ([row],[{**witness,'catalog_course_id':'209818'}],'course_mismatch'),
+            ([row],[{**witness,'end_at':f.at(11,'14:30').isoformat()}],'occurrence_mismatch'),
+            ([{**row,'external_instructor_id':'8888'}],[witness],'instructor_unverified'),
+            ([row,{**row,'course_id':'209818'}],[witness],'source_identity_ambiguous'),
+            ([row,{**row,'course_id':'209805'}],[witness],'source_identity_ambiguous')]:
+            result,neg=read(records,proofs)
+            self.assertEqual(result['sessions'],[])
+            self.assertTrue(all(n['reasons']==['advanced_seated_'+code] for n in neg))
+            self.assertNotIn(sid,json.dumps(neg))

@@ -1102,6 +1102,120 @@ def matching_shared_cooldown_anchor(
     return max(matches, key=lambda item: (item["date"], item["startTime"])) if matches else None
 
 
+def verify_advanced_seated_inventory(schedule, demand, course_rules, course_catalog, location_map, now,
+                                      *, strict_instructor_crosswalk=None, strict_owner_person_id=None):
+    """Attest existing ACLS/PALS listings independently of the iCal projection.
+
+    This only filters the seated selector DTO. Source records remain occupied
+    and unchanged; registration destinations are independently gated.
+    """
+    from scripts.class_registration_routing import registration_action
+    from scripts.layered_selector_adapter import occupancy_instant
+
+    rows = schedule.get("sessions", []) if isinstance(schedule, dict) else []
+    canonical = demand.get("sessions", []) if isinstance(demand, dict) else []
+    def key(row):
+        return clean_text(row.get("external_class_id") or row.get("session_id") or row.get("id"))
+    def index(items):
+        out = defaultdict(list)
+        for row in items:
+            if isinstance(row, dict) and key(row):
+                out[key(row)].append(row)
+        return out
+    def bounds(row):
+        return tuple(occupancy_instant(row[field], allow_local=False) for field in ("start_at", "end_at"))
+    def venue(row):
+        label = clean_text(row.get("location_name") or row.get("location_display"))
+        return generate_dynamic_offers.normalize_location_resource(label, label, location_map)
+    def legacy_instructor(row):
+        aliases = [clean_text(row.get(k)) for k in ("external_instructor_id", "enrollware_instructor_id")
+                   if row.get(k)]
+        return aliases[0] if len(set(aliases)) == 1 and aliases[0].isascii() and aliases[0].isdigit() \
+            and not aliases[0].startswith("0") else None
+    source_map, demand_map = index(rows), index(canonical)
+    now = occupancy_instant(now, allow_local=False)
+    allowed, rejected = [], []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        cid = clean_text(row.get("course_id"))
+        course = course_catalog.get(cid, {})
+        family = str(course.get("course_family") or course.get("family") or row.get("mapped_family") or "").upper()
+        if family not in {"ACLS", "PALS"}:
+            continue
+        sid = key(row)
+        candidates = demand_map.get(sid, ())
+        reason = ""
+        aliases = {clean_text(row.get(k)) for k in ("session_id", "external_class_id") if row.get(k)}
+        if not sid or len(aliases) > 1 or len(source_map.get(sid, ())) != 1 or len(candidates) > 1:
+            reason = "advanced_seated_source_identity_ambiguous"
+        elif len(candidates) != 1:
+            reason = "advanced_seated_roster_unverified"
+        else:
+            proof = candidates[0]
+            count = proof.get("active_registration_count")
+            if (proof.get("count_available") is not True or type(count) is not int or count < 1
+                    or proof.get("demand_status") != "current"
+                    or proof.get("demand_basis") != "canonical_active_registrations"):
+                reason = "advanced_seated_roster_unverified"
+            else:
+                try:
+                    span = bounds(row)
+                    if span != bounds(proof) or span[0] >= span[1] or span[0] <= now:
+                        reason = "advanced_seated_occurrence_mismatch"
+                except (KeyError, ValueError, TypeError, OverflowError):
+                    reason = "advanced_seated_occurrence_mismatch"
+            if not reason and (cid != canonical_operational_course_id(proof, course_catalog, course_rules)
+                    or any(str(row[k]) != cid for k in ("course_number", "external_course_id") if row.get(k))):
+                reason = "advanced_seated_course_mismatch"
+            if not reason and (venue(row) != venue(proof) or not venue(proof)[2]):
+                reason = "advanced_seated_venue_unverified"
+            if not reason:
+                person = proof.get("lead_instructor_identity") or {}
+                if (not isinstance(person, dict) or person.get("status") != "verified"
+                        or not legacy_instructor(row) or legacy_instructor(row) != person.get("catalog_external_id")):
+                    reason = "advanced_seated_instructor_unverified"
+            if not reason:
+                if (proof.get("session_status") not in {"scheduled", "active"} or proof.get("visibility") != "public"
+                        or proof.get("registration_status") != "open" or not public_direct_bookable_session(row)):
+                    reason = "advanced_seated_public_eligibility_unverified"
+                elif proof.get("registration_backend") == "enrollware":
+                    try:
+                        observed = occupancy_instant(proof["source_observed_at"], allow_local=False)
+                        life = proof["freshness_minutes"]
+                        if (proof.get("source") != "enrollware_reconciled" or type(life) is not int
+                                or not 0 < life <= 60 or not observed <= now < observed + timedelta(minutes=life)):
+                            reason = "advanced_seated_roster_unverified"
+                    except (KeyError, ValueError, TypeError, OverflowError):
+                        reason = "advanced_seated_roster_unverified"
+                elif (proof.get("registration_backend") != "landerware"
+                        or proof.get("workspace_projection_status") != "current"):
+                    reason = "advanced_seated_roster_unverified"
+        if reason:
+            label = parse_dt(row.get("start_at"))
+            rejected.append(dict(courseId=cid, courseFamily=family,
+                date=label.date().isoformat() if label else None,
+                startTime=label.strftime("%H:%M") if label else None,
+                offerType="seated_class", reasons=[reason]))
+            continue
+        # Remove the foreign booking URL before anything is serialized. An
+        # attested external roster is a real class, not a native checkout grant.
+        # Only an exact explicitly enabled native capability may supply a link.
+        candidate = dict(row, external_class_id=sid,
+            lead_instructor_name=proof.get("lead_instructor_name"), registration_url="", register_url="")
+        route = registration_action(candidate)
+        candidate["registration_url"] = route["href"]
+        if strict_instructor_crosswalk is not None:
+            from scripts.layered_instructor_identity import canonical_instructor_projection
+            _, configured_id = canonical_instructor_projection(proof, strict_instructor_crosswalk,
+                                                                owner_person_id=strict_owner_person_id)
+            if configured_id:
+                candidate["_verified_instructor_person_id"] = configured_id
+        candidate["advanced_seated_route"] = route["mode"]
+        allowed.append(candidate)
+    return {"sessions": allowed}, rejected
+
+
 def seated_class_selector_offers(
     *,
     schedule_future_payload: Any,
@@ -1169,6 +1283,10 @@ def seated_class_selector_offers(
             "location": clean_text(session.get("location_name") or session.get("location_display") or UNKNOWN),
             "offerType": "seated_class",
             "publicSelectable": True,
+            **({"seatedBookingMode": session["advanced_seated_route"]}
+               if session.get("advanced_seated_route") else {}),
+            **({"_verified_instructor_person_id": session["_verified_instructor_person_id"]}
+               if session.get("_verified_instructor_person_id") else {}),
             **({"session_id": clean_text(session.get("session_id")),
                 "resource": ":: Wilmington; Shipyard Blvd - B",
                 "sourceSessionIds": [clean_text(session.get("session_id"))],
@@ -1367,6 +1485,14 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                                 strict_owner_person_id=strict_owner if strict_identity else None)
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy) if not layered_active(layered_policy) else {}
     reference_now = selector_reference_datetime()
+    seated_inventory = loaded.get("schedule_future")
+    advanced_rejections = []
+    if page_key in {"acls", "pals"}:
+        seated_inventory, advanced_rejections = verify_advanced_seated_inventory(
+            seated_inventory, loaded.get("canonical_demand"), course_rules, course_catalog,
+            loaded["location_resource_map"], reference_now.replace(tzinfo=PUBLIC_TZ),
+            strict_instructor_crosswalk=identity_crosswalk,
+            strict_owner_person_id=strict_owner if strict_identity else None)
     anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
     same_day_anchors = seated_family_anchors(
         schedule_future_payload=loaded.get("schedule_future"),
@@ -1447,7 +1573,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             horizon_days=90)
         windows = calculation.pop('selected_windows')
         seated = seated_class_selector_offers(
-            schedule_future_payload=loaded.get("schedule_future"), selected_courses=selected_courses,
+            schedule_future_payload=seated_inventory, selected_courses=selected_courses,
             selected_course_ids=set(allowed_course_ids), course_rules=course_rules,
             minimum_enrollment=0) if page_config.get("include_seated_classes", True) else []
         def layered_public_reasons(start, course):
@@ -1464,13 +1590,19 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 if strict_identity else None),
             layered_public_reasons, seated, require_verified_day_gravity=True,
             strict_instructor_identity=strict_identity)
+        if advanced_rejections:
+            result["rejectedCourseStartTimes"].extend(
+                r for r in advanced_rejections if r["courseId"] in allowed_course_ids)
+            result["rejectionReasonCounts"] = dict(Counter(
+                reason for row in result["rejectedCourseStartTimes"] for reason in row.get("reasons", [])))
         result["inputFiles"] = {"liveAvailabilitySnapshot": str(LIVE_AVAILABILITY_PATH),
             "courseConsumptionRules": str(COURSE_RULES_PATH), "layeredPolicy": str(layered_policy_path)}
         result["horizonDays"] = 90
         result["minimumLeadHours"] = int(public_offer_policy.get("minimum_lead_hours") or 0)
         return result
 
-    rejections: list[dict[str, Any]] = []
+    rejections: list[dict[str, Any]] = [
+        r for r in advanced_rejections if r["courseId"] in allowed_course_ids]
     rejection_counts_by_date: dict[str, Counter[str]] = defaultdict(Counter)
     blocks_seen = 0
     public_blocks_seen = 0
@@ -1623,7 +1755,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     if page_config.get("include_seated_classes", True) is True:
         offers.extend(
             seated_class_selector_offers(
-                schedule_future_payload=loaded.get("schedule_future"),
+                schedule_future_payload=seated_inventory,
                 selected_courses=selected_courses,
                 selected_course_ids=set(allowed_course_ids),
                 course_rules=course_rules,
