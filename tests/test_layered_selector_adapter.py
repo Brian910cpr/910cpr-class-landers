@@ -189,11 +189,12 @@ COURSES=[dict(course_id='1',course_family='BLS',kind='skills')]
 def at(clock): return '2026-12-10T'+clock+':00-05:00'
 def src(person,unassigned=False,venue='Offsite'):
  return dict(instructor=person,instructor_unassigned=unassigned,start=at('10:00'),end=at('12:00'),location=venue)
-def calc(name,persons,extend=False,person_id=None):
+def calc(name,persons,extend=False,person_id=None,travel=None):
  p=dict(POLICY,owner_travel_in_calendar_only=True) if extend else POLICY
  out=build_shadow([dict(instructor_name=name,person_id=person_id or (P if name==B else 'other'),location_name='Shipyard',
  start=at('08:00'),end=at('16:00'))],persons,COURSES,p,RES,datetime.fromisoformat('2026-12-01T13:00:00Z'),
- lambda w:(w['start'],w['end']),lambda w,c:True,lead_minutes=0)
+ lambda w:(w['start'],w['end']),lambda w,c:True,lead_minutes=0,
+ travel_minutes=travel)
  return [(i[0].isoformat(),i[1].isoformat()) for i in out['resource_availability'][0]['free']]
 
 class OwnerTravelExactIntervalTests(unittest.TestCase):
@@ -211,6 +212,16 @@ class OwnerTravelExactIntervalTests(unittest.TestCase):
  def test_separate_owner_calendar_block_not_doubled(self):
   travel=dict(src(B),start=at('09:30'),end=at('10:00'),availability_location_mode='instructor_time_only')
   self.assertEqual(calc(B,[src(B),travel],True),[('2026-12-10T13:00:00+00:00','2026-12-10T14:30:00+00:00'),('2026-12-10T17:00:00+00:00','2026-12-10T21:00:00+00:00')])
+ def test_explicit_asymmetric_routes_win_over_owner_fallback(self):
+  self.assertEqual(calc(B,[src(B)],True,travel={
+      'Room B->Offsite': 30, 'Offsite->Room B': 45}),
+      [('2026-12-10T13:00:00+00:00','2026-12-10T14:30:00+00:00'),
+       ('2026-12-10T17:45:00+00:00','2026-12-10T21:00:00+00:00')])
+ def test_invalid_explicit_route_does_not_fall_back(self):
+  for invalid in (None, -10, True, float('nan'), float('inf')):
+   with self.subTest(invalid=invalid):
+    with self.assertRaisesRegex(ValueError,'invalid directional travel'):
+     calc(B,[src(B)],True,travel={'Room B->Offsite':invalid})
  def test_no_opt_in_unchanged(self):
   with self.assertRaisesRegex(ValueError,'missing directional travel'):
    calc(B,[src(B)])

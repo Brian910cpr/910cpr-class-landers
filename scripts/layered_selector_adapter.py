@@ -188,15 +188,17 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
                 gap = 0  # Calendar explicitly blocks instructor time, not a physical trip.
             elif left in known and right in known:
                 gap = 0
+            elif left+"->"+right in (travel_minutes or {}):
+                gap = travel_minutes[left+"->"+right]
+                if type(gap) not in (int, float) or not 0 <= gap < float("inf"):
+                    raise ValueError("invalid directional travel rule: "+left+"->"+right)
             elif (len(windows) == 1 and exact_owner_interval_names
                     and (right if left == primary else left) not in non_owner_route_locations):
                 # Owner enters travel as separate calendar blocks. Preserve the
                 # offsite commitment itself; do not apply this to unassigned work.
                 gap = 0
             else:
-                gap = (travel_minutes or {}).get(left+"->"+right)
-                if gap is None:
-                    raise ValueError("missing directional travel rule: "+left+"->"+right)
+                raise ValueError("missing directional travel rule: "+left+"->"+right)
             fixture["policy"]["travel_minutes"][left+"->"+right] = gap
     fixture["repeat_context"] = list(repeat_context)
     report = run(fixture)
