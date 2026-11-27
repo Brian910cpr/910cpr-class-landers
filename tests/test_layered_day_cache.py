@@ -143,6 +143,24 @@ class DayCacheTests(unittest.TestCase):
         self.assertEqual({r['date'] for r in removed['incremental_cache']['rebuilt']},
                          {'2026-10-11','2026-10-12'})
 
+    def test_course_claim_conflict_clears_adjacent_repeat_and_keeps_cache_parity(self):
+        f=self.f
+        f.policy['require_verified_day_gravity']=True
+        f.window(12)
+        f.add(11,'12:00','13:00',cid='359474',count=1,visibility='private')
+        def before_repeat(result):
+            report=next(r for r in result['reports'] if r['availability_window'].startswith('Brian Ennis-12-'))
+            return any(c['course']=='359474' and aware(c['start']).strftime('%H:%M')=='11:30'
+                       for c in report['accepted'])
+        self.assertFalse(before_repeat(self.run_cache()))
+        other=f.add(11,'12:00','13:00',cid='209809',count=1,visibility='private')
+        other['source_event_id']='distinct-canonical-overlap'
+        result=self.run_cache()
+        self.assertTrue(before_repeat(result))
+        self.assertEqual(self.decisions(result),self.decisions(f.calculation()))
+        self.assertEqual({r['date'] for r in result['incremental_cache']['rebuilt']},
+                         {'2026-10-11','2026-10-12'})
+
     def test_offsite_route_scope_parity_and_cache_invalidation(self):
         f=self.f
         f.windows=f.windows[:1];f.coverage=f.coverage[:1]

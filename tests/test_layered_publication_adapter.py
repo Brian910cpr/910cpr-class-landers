@@ -416,6 +416,21 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual(abs(stamp(result[0]['start'])-stamp('2026-10-31T12:00:00-04:00')),timedelta(hours=25))
         self.assertEqual(abs(stamp(result[0]['start'])-stamp('2026-10-31T13:00:00-04:00')),timedelta(hours=24))
 
+    def test_conflicting_attested_interval_has_no_hidden_repeat_gravity(self):
+        from scripts.layered_publication_adapter import repeat_context_for_window, project_sources
+        from scripts.layered_scheduling_engine import stamp
+        metadata = {str(c['course_id']): c for c in self.courses}
+        self.add(11, '12:00', '13:00', cid='359474', count=1, visibility='private')
+        second = self.add(11, '12:00', '13:00', cid='209809', count=1, visibility='private')
+        window = {'instructor_name': 'Brian Ennis'}
+        def repeats():
+            return repeat_context_for_window(project_sources(self.sources, metadata), metadata, window,
+                stamp('2026-10-10T12:00:00-04:00'), stamp('2026-10-12T14:00:00-04:00'))
+        self.assertIn('359474', metadata)
+        self.assertEqual(repeats(), [])
+        second.update(count_available=False, active_registration_count=None)
+        self.assertEqual([r['course'] for r in repeats()], ['359474'])
+
     def test_verified_publication_uses_eastern_day_for_utc_source(self):
         self.policy['require_verified_day_gravity'] = True
         self.windows=[]; self.coverage=[]; self.sources=[]

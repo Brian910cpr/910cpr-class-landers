@@ -34,6 +34,25 @@ def occupancy_instant(value, *, allow_local=True):
     return value.astimezone(timezone.utc)
 
 
+def attested_seat(busy):
+    count = busy.get("active_registration_count")
+    return (not busy.get("instructor_unassigned")
+            and busy.get("kind") not in {"hold", "commitment", "uncertain"}
+            and (busy.get("operational_has_active_seat") is True
+                 or (busy.get("count_available") is True
+                     and type(count) is int and count > 0)))
+
+
+def occupied_location(busy, known, primary, instructor):
+    if busy.get("availability_location_mode") == "instructor_time_only":
+        return "instructor-only:" + str(instructor)
+    resource = busy.get("resource")
+    room = resource if resource in known and resource != "Shipyard Office" else primary
+    if busy.get("location_resolution") == "location_resource_map" or room != primary:
+        return room
+    return str(busy.get("location") or "unknown-offsite")
+
+
 def build_shadow(windows, occupancy, courses, policy, resources, now,
                  window_interval, qualified, lead_minutes=1440, travel_minutes=None, commitment_coverage=None,
                  shared_room_edges=False, repeat_context=()):
@@ -146,15 +165,8 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
     non_owner_route_locations = set()
     # Preserve attested demand when canonical and legacy records mirror an
     # exact interval. Unknown counts remain unknown; do not add seats.
-    def attested(busy):
-        count = busy.get("active_registration_count")
-        return (not busy.get("instructor_unassigned")
-                and busy.get("kind") not in {"hold", "commitment", "uncertain"}
-                and (busy.get("operational_has_active_seat") is True
-                     or (busy.get("count_available") is True
-                         and type(count) is int and count > 0)))
     ordered = sorted(enumerate(occupancy),
-                     key=lambda pair: (not attested(pair[1]), pair[0]))
+                     key=lambda pair: (not attested_seat(pair[1]), pair[0]))
     normalized = []
     attested_claims = {}
     for index, busy in ordered:
@@ -163,12 +175,6 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         start, end = occupancy_instant(busy["start"]), occupancy_instant(busy["end"])
         if end <= start:
             raise ValueError("unresolved zero-duration occupancy")
-        # Office is the venue/container label, not permission for a second room.
-        room = busy.get("resource") if busy.get("resource") in known and busy.get("resource") != "Shipyard Office" else primary
-        same_venue = bool(busy.get("location_resolution") == "location_resource_map" or room != primary)
-        location = room if same_venue else str(busy.get("location") or "unknown-offsite")
-        if busy.get("availability_location_mode") == "instructor_time_only":
-            location = "instructor-only:" + str(busy.get("instructor") or "unassigned")
         instructor = busy.get("instructor") or "unassigned"
         stable_id = busy.get("effective_instructor_person_id")
         if strict_identity:
@@ -180,10 +186,9 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
                 instructor = other_people.setdefault(stable_id, "unmatched instructor "+str(len(other_people)+1))
             else:
                 instructor = "unassigned"
-            if busy.get("availability_location_mode") == "instructor_time_only":
-                location = "instructor-only:" + instructor
         elif len(brian_names) == 1 and instructor.casefold().strip() in {"brian", "brian ennis"}:
             instructor = next(iter(brian_names))
+        location = occupied_location(busy, known, primary, instructor)
         # Preserve real physical occupancy; source-provided travel buffers are
         # separate commitments and cannot move the paid block's actual edges.
         is_owner = (stable_id == policy.get("brian_person_id") if strict_identity
@@ -194,7 +199,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         normalized.append((index, busy, key, instructor, location, start, end))
         # Geometry alone is not session identity. One legacy mirror with no
         # verified demand must not override the attributed canonical class.
-        if attested(busy) and (cid := str(busy.get("course_id") or "")):
+        if attested_seat(busy) and (cid := str(busy.get("course_id") or "")):
             attested_claims.setdefault(key, {}).setdefault(cid, []).append(busy)
     for index, busy, key, instructor, location, start, end in normalized:
         adr_shift = "adr" in str(busy.get("course_title") or "").casefold()
@@ -229,7 +234,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         cid = str(busy.get("course_id") or "")
         kind = busy.get("kind") or ("commitment" if "blocked" in str(busy.get("source_file")) else "planted")
         count = busy.get("active_registration_count")
-        verified_seat = attested(busy)
+        verified_seat = attested_seat(busy)
         if verified_seat and kind == "planted":
             kind = "paid"
         fixture["sources"].append(dict(id=str(busy.get("source_event_id") or "occupied-"+str(index)),

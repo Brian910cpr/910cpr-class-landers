@@ -84,7 +84,8 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
             proofs.append(proof)
         qualifications=[bool(qualified(window,c)) for c in courses]
         repeats=(repeat_context_for_window(projected,metadata,window,start,end,
-                    strict_identity=policy.get("verified_instructor_identity") is True)
+                    strict_identity=policy.get("verified_instructor_identity") is True,
+                    known_rooms=known_rooms, primary=policy["primary_resource"])
                  if policy.get("require_verified_day_gravity") is True else [])
         signature=digest([VERSION,code,window,rows,courses,policy,resources,proofs,travel_minutes,qualifications,repeats])
         identity=digest([window['source_availability_window'],start.isoformat(),end.isoformat()])[:24]

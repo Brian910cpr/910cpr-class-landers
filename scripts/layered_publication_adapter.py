@@ -8,7 +8,7 @@ from copy import deepcopy
 from collections import Counter
 from datetime import timedelta, timezone
 from zoneinfo import ZoneInfo
-from scripts.layered_selector_adapter import aware, build_shadow, occupancy_instant
+from scripts.layered_selector_adapter import attested_seat, aware, build_shadow, occupied_location, occupancy_instant
 from scripts.layered_instructor_identity import same_proved_instructor, strict_coverage_matches
 from scripts.layered_scheduling_engine import encode as encode_value, stamp
 import json
@@ -164,7 +164,8 @@ def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qua
     return result
 
 
-def repeat_context_for_window(projected, metadata, window, start, end, *, strict_identity=False):
+def repeat_context_for_window(projected, metadata, window, start, end, *, strict_identity=False,
+                              known_rooms=(), primary=None):
     """Confirmed full-course starts only; never use this context as physical occupancy."""
     def instructor_key(value):
         key = " ".join(str(value or "").casefold().split())
@@ -173,30 +174,32 @@ def repeat_context_for_window(projected, metadata, window, start, end, *, strict
     instructor = instructor_key(window.get("instructor_name"))
     lower = stamp(start.isoformat()) - timedelta(hours=24)
     upper = stamp(end.isoformat()) + timedelta(hours=24)
-    matches = set()
+    claims = {}
     for row in projected:
         matches_person = (same_proved_instructor(row, window) if strict_identity else
                           bool(instructor and instructor_key(row.get("instructor")) == instructor))
-        if (not matches_person
-                or row.get("instructor_unassigned")
-                or row.get("kind") in {"hold", "commitment", "uncertain"}
+        if (not matches_person or not attested_seat(row)
                 or (not row.get("kind") and "blocked" in str(row.get("source_file")))
                 or row.get("normalization_issue")):
             continue
-        count = row.get("active_registration_count")
-        if not (row.get("operational_has_active_seat") is True
-                or (row.get("count_available") is True and type(count) is int and count > 0)):
-            continue
         cid = row["course_id"]
-        meta = metadata.get(cid)
-        if not meta or meta.get("kind") == "skills" or meta.get("blended_classroom_skills") == "blended":
+        if not cid:
             continue
         try:
             occupied_start, occupied_end = stamp(row["start"]), stamp(row["end"])
         except (KeyError, ValueError, TypeError, AttributeError):
             continue
         if occupied_end > occupied_start and lower <= occupied_start <= upper:
-            matches.add((cid, occupied_start.isoformat()))
+            location = occupied_location(row, known_rooms, primary, instructor)
+            claims.setdefault((occupied_start.isoformat(), occupied_end.isoformat(), location), set()).add(cid)
+    matches = set()
+    for (when, _, _), course_ids in claims.items():
+        if len(course_ids) != 1:
+            continue  # Same instructor/physical interval cannot pick an arbitrary course.
+        cid = next(iter(course_ids))
+        meta = metadata.get(cid)
+        if meta and meta.get("kind") != "skills" and meta.get("blended_classroom_skills") != "blended":
+            matches.add((cid, when))
     return [{"course": cid, "start": when} for cid, when in sorted(matches)]
 
 
@@ -365,7 +368,8 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             repeats = []
             if policy.get("require_verified_day_gravity") is True:
                 repeats = (scoped_repeat_context if scoped_repeat_context is not None else
-                           repeat_context_for_window(projected, metadata, window, ws, we, strict_identity=strict_identity))
+                           repeat_context_for_window(projected, metadata, window, ws, we, strict_identity=strict_identity,
+                                                     known_rooms=known_rooms, primary=room))
             report = build_shadow([window], relevant, courses, policy, resources, now,
                 interval, qualified, lead_minutes=policy.get("lead_minutes", 1440),
                 travel_minutes=travel_minutes, commitment_coverage=fresh,
