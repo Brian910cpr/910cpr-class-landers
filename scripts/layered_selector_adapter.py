@@ -90,6 +90,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             provider=course.get("provider") or course.get("brand"), locations=[primary])
     origins = {}
     brian_names = set()
+    exact_owner_interval_names = set()
     for index, window in enumerate(windows):
         if str(window.get("location_name") or "").casefold().strip() not in venue_aliases:
             raise ValueError("instructor window has no known Shipyard venue assignment")
@@ -114,12 +115,15 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         fixture["capabilities"][instructor] = sorted(set(fixture["capabilities"][instructor]) | eligible)
         if str(window.get("person_id")) == policy["brian_person_id"]:
             brian_names.add(instructor)
+            if policy.get("owner_travel_in_calendar_only") is True:
+                exact_owner_interval_names.add(instructor)
             fixture["policy"]["instructor_family_eligibility"][instructor] = dict(
                 mode="all_except_families", excluded_families=policy["brian_excluded_families"],
                 all_skills=True)
     if commitment_coverage is not None:
         fixture["commitment_coverage"] = commitment_coverage
     source_keys = set()
+    non_owner_route_locations = set()
     # Preserve attested demand when canonical and legacy records mirror an
     # exact interval. Unknown counts remain unknown; do not add seats.
     def attested(busy):
@@ -148,6 +152,8 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             instructor = next(iter(brian_names))
         # Preserve real physical occupancy; source-provided travel buffers are
         # separate commitments and cannot move the paid block's actual edges.
+        if busy.get("instructor_unassigned") or instructor not in exact_owner_interval_names:
+            non_owner_route_locations.add(location)
         key = (instructor, location, start, end)
         if key in source_keys:
             continue
@@ -181,6 +187,11 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             if left.startswith("instructor-only:") or right.startswith("instructor-only:"):
                 gap = 0  # Calendar explicitly blocks instructor time, not a physical trip.
             elif left in known and right in known:
+                gap = 0
+            elif (len(windows) == 1 and exact_owner_interval_names
+                    and (right if left == primary else left) not in non_owner_route_locations):
+                # Owner enters travel as separate calendar blocks. Preserve the
+                # offsite commitment itself; do not apply this to unassigned work.
                 gap = 0
             else:
                 gap = (travel_minutes or {}).get(left+"->"+right)

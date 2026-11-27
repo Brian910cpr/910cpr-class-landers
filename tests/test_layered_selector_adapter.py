@@ -178,5 +178,74 @@ class LayeredAdapterTests(unittest.TestCase):
             self.report()
 
 
+B='Brian Ennis'; A='Amy Arnold'; P='instructor_24057895173'; ROOM='Room B'
+POLICY=dict(room_hours='24/7',simultaneous_classes_per_room=1,primary_resource=ROOM,
+ automatic_relocation=False,slot_minutes=30,edge_grid_policy='exact_existing_boundary',
+ full_family_paid_positions_per_day=1,skills_instruction_minutes=45,skills_cleanup_minutes=15,
+ full_instruction_minutes=120,full_cleanup_minutes=30,owner_room_hours_evidence='fixture',
+ brian_person_id=P,brian_excluded_families=['ACLS','PALS'])
+RES={'locations':[dict(canonical_public_location='Shipyard',internal_resources=[{'resource_name':ROOM}])]}
+COURSES=[dict(course_id='1',course_family='BLS',kind='skills')]
+def at(clock): return '2026-12-10T'+clock+':00-05:00'
+def src(person,unassigned=False,venue='Offsite'):
+ return dict(instructor=person,instructor_unassigned=unassigned,start=at('10:00'),end=at('12:00'),location=venue)
+def calc(name,persons,extend=False,person_id=None):
+ p=dict(POLICY,owner_travel_in_calendar_only=True) if extend else POLICY
+ out=build_shadow([dict(instructor_name=name,person_id=person_id or (P if name==B else 'other'),location_name='Shipyard',
+ start=at('08:00'),end=at('16:00'))],persons,COURSES,p,RES,datetime.fromisoformat('2026-12-01T13:00:00Z'),
+ lambda w:(w['start'],w['end']),lambda w,c:True,lead_minutes=0)
+ return [(i[0].isoformat(),i[1].isoformat()) for i in out['resource_availability'][0]['free']]
+
+class OwnerTravelExactIntervalTests(unittest.TestCase):
+ def test_named_owner_uses_exact_intervals(self):
+  self.assertEqual(calc(B,[src(B)],True),[('2026-12-10T13:00:00+00:00','2026-12-10T15:00:00+00:00'),('2026-12-10T17:00:00+00:00','2026-12-10T21:00:00+00:00')])
+ def test_amy_unchanged(self):
+  with self.assertRaisesRegex(ValueError,'missing directional travel'):
+   calc(A,[src(A)],True)
+ def test_unassigned_even_if_shares_route(self):
+  with self.assertRaisesRegex(ValueError,'missing directional travel'):
+   calc(B,[src(B),dict(src('unassigned',True),start=at('11:00'))],True)
+ def test_display_name_alone_is_not_authority(self):
+  with self.assertRaisesRegex(ValueError,'missing directional travel'):
+   calc(B,[src(B)],True,person_id='unrelated-id')
+ def test_separate_owner_calendar_block_not_doubled(self):
+  travel=dict(src(B),start=at('09:30'),end=at('10:00'),availability_location_mode='instructor_time_only')
+  self.assertEqual(calc(B,[src(B),travel],True),[('2026-12-10T13:00:00+00:00','2026-12-10T14:30:00+00:00'),('2026-12-10T17:00:00+00:00','2026-12-10T21:00:00+00:00')])
+ def test_no_opt_in_unchanged(self):
+  with self.assertRaisesRegex(ValueError,'missing directional travel'):
+   calc(B,[src(B)])
+
+
+ def test_opt_in_invalidates_cache_and_preserves_direct_candidate_decisions(self):
+  from tempfile import TemporaryDirectory
+  from scripts.layered_day_cache import cached_calculate
+  from scripts.layered_publication_adapter import calculate
+
+  window = dict(instructor_name=B, person_id=P, location_name='Shipyard',
+                start=at('08:00'), end=at('16:00'))
+  now = datetime.fromisoformat('2026-12-01T13:00:00Z')
+  proof = dict(instructor=B, location=ROOM, status='known_complete',
+               start=window['start'], end=window['end'],
+               observed_at=now.isoformat(), valid_until='2026-12-01T14:00:00Z')
+  def args(opt_in):
+   return ([window], [src(B)], COURSES,
+           dict(POLICY, mode='active_local_v2', owner_travel_in_calendar_only=opt_in, lead_minutes=0),
+           RES, now, lambda w:(w['start'],w['end']), lambda *_:True, [proof])
+
+  with TemporaryDirectory() as temp:
+   def cached(opt_in):
+    return cached_calculate(*args(opt_in), cache_dir=Path(temp))
+   self.assertEqual(cached(False)['counts']['failed_windows'], 1)
+   cold, warm = cached(True), cached(True)
+   direct = calculate(*args(True))
+   self.assertEqual(cold['incremental_cache']['hits'], 0)
+   self.assertEqual(warm['incremental_cache']['hits'], 1)
+   self.assertTrue(direct['reports'][0]['accepted'])
+   for key in ('accepted', 'rejected'):
+    self.assertEqual(cold['reports'][0][key], direct['reports'][0][key])
+    self.assertEqual(warm['reports'][0][key], direct['reports'][0][key])
+   self.assertEqual(cached(False)['counts']['failed_windows'], 1)
+
+
 if __name__=='__main__':
     unittest.main()
