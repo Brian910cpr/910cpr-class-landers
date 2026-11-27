@@ -47,7 +47,13 @@ function strictInstructorId(value: unknown): string | null {
   return typeof value === "string" && /^[1-9][0-9]{0,19}$/.test(value) ? value : null;
 }
 
-function instructorIdentity(row: any, peopleByExternalId: Map<string, string>) {
+const CANONICAL_OWNER_KEY = "brian";
+const OWNER_PROVENANCE = "LanderWare instructor identity";
+const OCCUPANCY_ONLY_COURSE_KEY = "hist-course:7107a1c4f42ee0b1";
+const OCCUPANCY_ONLY_CATALOG_ID = "252737";
+const UUID = /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/;
+
+function instructorIdentity(row: any, peopleByExternalId: Map<string, string>, ownerId: string | null) {
   const joined = row.people;
   const candidate = strictInstructorId(joined?.enrollware_instructor_id);
   if (!row.lead_instructor_id) return { status: "unassigned", catalog_external_id: null };
@@ -61,7 +67,10 @@ function instructorIdentity(row: any, peopleByExternalId: Map<string, string>) {
   if (/^[0-9]+$/.test(legacy) && /[1-9]/.test(legacy) && legacy !== candidate) {
     return { status: "conflicting", catalog_external_id: null };
   }
-  return { status: "verified", catalog_external_id: candidate };
+  const logicalOwner = ownerId === joined.id && joined.person_key === CANONICAL_OWNER_KEY
+    && joined.external_reference === OWNER_PROVENANCE;
+  return { status: "verified", catalog_external_id: candidate,
+    ...(logicalOwner ? { verified_role: "configured_910cpr_owner" } : {}) };
 }
 
 async function uniqueActiveInstructorMappings(rows: any[], url: string, key: string) {
@@ -94,7 +103,65 @@ async function uniqueActiveInstructorMappings(rows: any[], url: string, key: str
   return unique;
 }
 
-export function projectDemand(row: any, peopleByExternalId = new Map<string, string>()) {
+async function restrictedOwnerId(rows: any[], url: string, key: string) {
+  if (!rows.some(row => row.people?.person_key === CANONICAL_OWNER_KEY)) return null;
+  const params = new URLSearchParams({ select: "id,person_key,active,external_reference",
+    person_key: `eq.${CANONICAL_OWNER_KEY}`, limit: "2" });
+  try {
+    const res = await fetch(`${url}/rest/v1/people?${params}`, {
+      headers: { apikey: key, authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(20000),
+    });
+    const hits = await res.json();
+    if (!res.ok || !Array.isArray(hits) || hits.length !== 1) return null;
+    const hit = hits[0];
+    return hit.person_key === CANONICAL_OWNER_KEY && hit.active === true
+      && hit.external_reference === OWNER_PROVENANCE && typeof hit.id === "string" && hit.id
+      ? hit.id : null;
+  } catch {
+    return null;
+  }
+}
+
+function exactHistoricalOccupancyTarget(row: any) {
+  return row.source === "confirmed_booking_intake" && row.registration_backend === "landerware"
+    && ["scheduled", "active"].includes(row.status) && ["private", "unlisted", "internal"].includes(row.visibility)
+    && !row.external_course_id && !row.courses?.enrollware_course_id
+    && row.courses?.course_key === OCCUPANCY_ONLY_COURSE_KEY
+    && typeof row.course_id === "string" && UUID.test(row.course_id) && row.course_id === row.courses?.id;
+}
+
+async function restrictedOccupancyCourseFk(rows: any[], url: string, key: string) {
+  const ids = new Set<string>(rows.filter(exactHistoricalOccupancyTarget).map(row => row.course_id));
+  if (ids.size !== 1) return null;
+  const id = [...ids][0];
+  const params = new URLSearchParams({ select: "course_id,external_class_id,external_course_id,record_scope,source,external_reconciliation,external_session_evidence",
+    course_id: `eq.${id}`, external_course_id: "not.is.null", limit: "500" });
+  try {
+    const res = await fetch(`${url}/rest/v1/class_sessions?${params}`, {
+      headers: { apikey: key, authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(20000),
+    });
+    const hits = await res.json();
+    if (!res.ok || !Array.isArray(hits) || !hits.length || hits.length >= 500
+        || hits.some(hit => hit.course_id !== id || hit.external_course_id !== OCCUPANCY_ONLY_CATALOG_ID)) return null;
+    const attested = hits.some(hit => {
+      const ev = hit.external_session_evidence;
+      const re = hit.external_reconciliation;
+      return hit.record_scope === "operational" && hit.source === "enrollware_reconciled"
+        && typeof hit.external_class_id === "string" && /^[0-9]+$/.test(hit.external_class_id)
+        && ev?.source_kind === "authenticated_enrollware_roster" && ev.committed === true
+        && ev.complete_roster === true && ev.workspace_link_basis === "verified_owner_request_and_current_roster"
+        && ev.course_key === OCCUPANCY_ONLY_COURSE_KEY && String(ev.external_class_id) === hit.external_class_id
+        && String(ev.external_course_id) === OCCUPANCY_ONLY_CATALOG_ID && re?.complete === true
+        && typeof ev.ingest_job_id === "string" && ev.ingest_job_id && ev.ingest_job_id === re.ingest_job_id;
+    });
+    return attested ? id : null;
+  } catch {
+    return null;
+  }
+}
+
+export function projectDemand(row: any, peopleByExternalId = new Map<string, string>(),
+                              ownerId: string | null = null, historicalCourseFk: string | null = null) {
   const now = new Date();
   const proof = registrationProof(row, now);
   const countAvailable = proof.count_available;
@@ -157,6 +224,11 @@ export function projectDemand(row: any, peopleByExternalId = new Map<string, str
     external_course_id: row.external_course_id || null,
     catalog_course_id: catalogCourseId(row.courses?.enrollware_course_id),
     course_key: row.courses?.course_key || null,
+    ...(historicalCourseFk && row.course_id === historicalCourseFk
+      && operationalHasActiveSeat && exactHistoricalOccupancyTarget(row)
+      && Array.isArray(row.registrations) && row.registrations.some((r: any) =>
+        ACTIVE.has(r.status) && r.canceled_at == null)
+      ? { verified_occupancy_course_id: OCCUPANCY_ONLY_CATALOG_ID } : {}),
     start_at: row.start_at,
     end_at: row.end_at,
     consumption_start_at: row.consumption_start_at,
@@ -164,7 +236,7 @@ export function projectDemand(row: any, peopleByExternalId = new Map<string, str
     location_id: row.location_id,
     location_name: row.source_location_label || row.locations?.name || null,
     lead_instructor_id: row.lead_instructor_id,
-    lead_instructor_identity: instructorIdentity(row, peopleByExternalId),
+    lead_instructor_identity: instructorIdentity(row, peopleByExternalId, ownerId),
     lead_instructor_name: row.source_instructor_label || row.people?.display_name || null,
     course_name: row.courses?.name || null,
     visibility: row.visibility,
@@ -192,9 +264,9 @@ export async function loadDemand(start: string, stop: string) {
   const select = [
     "id", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "external_session_evidence", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id", "external_instructor_id",
     "consumption_start_at", "consumption_end_at", "source_location_label", "source_instructor_label", "visibility", "registration_status",
-    "courses!class_sessions_course_id_fkey(course_key,name,enrollware_course_id)",
+    "course_id", "courses!class_sessions_course_id_fkey(id,course_key,name,enrollware_course_id)",
     "locations!class_sessions_location_id_fkey(name)",
-    "people!class_sessions_lead_instructor_id_fkey(id,display_name,active,enrollware_instructor_id)",
+    "people!class_sessions_lead_instructor_id_fkey(id,display_name,active,enrollware_instructor_id,person_key,external_reference)",
     "landerware_sessions!landerware_sessions_class_session_id_fkey(id,starts_at,ends_at)",
     "registrations!registrations_class_session_id_fkey(status,external_registration_id,registration_source,canceled_at)",
   ].join(",");
@@ -212,8 +284,12 @@ export async function loadDemand(start: string, stop: string) {
     });
     const body = await result.json();
     if (!result.ok || !Array.isArray(body)) throw new Error(`Database request failed (${result.status})`);
-    const peopleByExternalId = await uniqueActiveInstructorMappings(body, url, key);
-    sessions.push(...body.map(row => projectDemand(row, peopleByExternalId)));
+    const [peopleByExternalId, ownerId, historicalCourseFk] = await Promise.all([
+      uniqueActiveInstructorMappings(body, url, key),
+      restrictedOwnerId(body, url, key),
+      restrictedOccupancyCourseFk(body, url, key),
+    ]);
+    sessions.push(...body.map(row => projectDemand(row, peopleByExternalId, ownerId, historicalCourseFk)));
     if (body.length < 500) return sessions;
   }
 }

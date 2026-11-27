@@ -132,3 +132,54 @@ class VerifiedInstructorIdentityTests(unittest.TestCase):
                                 strict_container_owners={'wrong': self.other, 'proved': self.owner})
             self.assertEqual(approved[1], 'proved')
             self.assertEqual(match.call_args.args[1], [candidates[1]])
+
+    def test_owner_role_is_separate_from_numeric_namespace(self):
+        from scripts.layered_instructor_identity import canonical_instructor_projection
+        proof = {'status':'verified','catalog_external_id':'50001'}
+        row = {'lead_instructor_id':'synthetic-owner-fk','lead_instructor_identity':proof}
+        self.assertEqual(canonical_instructor_projection(row, {'50001':self.owner},
+                         owner_person_id=self.owner), ('unresolved',None))
+        proof['verified_role']='configured_910cpr_owner'
+        self.assertEqual(canonical_instructor_projection(row, {},owner_person_id=self.owner),
+                         ('verified',self.owner))
+        proof['status']='conflicting'
+        self.assertEqual(canonical_instructor_projection(row, {},owner_person_id=self.owner),
+                         ('unresolved',None))
+
+    def test_exact_historical_course_keeps_private_shape_and_mirror_nonbookable(self):
+        f=self.f
+        date=f.at(11,'12:00').isoformat()
+        end=f.at(11,'14:30').isoformat()
+        historic=dict(canonical_session_id='synthetic-private-session',external_class_id='808888',
+            lead_instructor_id=None,lead_instructor_identity={'status':'unassigned','catalog_external_id':None},
+            start_at=date,end_at=end,location_name=f.windows[0]['location_name'],
+            course_key='hist-course:7107a1c4f42ee0b1',course_name='Same title',
+            verified_occupancy_course_id='252737', visibility='private',source='confirmed_booking_intake',
+            registration_backend='landerware',session_status='scheduled',operational_has_active_seat=True)
+        legacy=dict(session_id='808888', course_id='252737',start_at=date,end_at=end,
+            location=f.windows[0]['location_name'], instructor='Brian Ennis')
+        rows=build_occupancy({'canonical_demand':{'sessions':[historic]},'location_resource_map':f.resources,
+            'schedule_future':{'sessions':[legacy]}},{'252737':{}},True,
+            known_catalog_ids={'252737'},strict_instructor_crosswalk={})
+        mirror, canonical=rows
+        self.assertEqual(canonical['course_id'],'252737')
+        self.assertTrue(canonical['instructor_unassigned'])
+        self.assertFalse(canonical['public_direct_booking'])
+        self.assertFalse(mirror['public_direct_booking'])
+        self.assertEqual(mirror['kind'],'hold')
+        f.sources=rows
+        seated=dict(session_id='808888',date='2026-10-11',startTime='12:00',courseId='252737',
+            offerType='seated_class',visibility='public',instructor='Brian Ennis')
+        result=publish(f.calculation(), f.page, f.courses, f.windows, f.now,
+            lambda *_:('fixture-day','fixture-container','https://fixture.invalid/register',None),
+            lambda *_:[], [seated], strict_instructor_identity=True)
+        self.assertFalse(any(o.get('offerType')=='seated_class' for o in result['offers']))
+        public=public_selector_availability_payload(result)
+        for private in ('synthetic-private-session','808888'):
+            self.assertNotIn(private,json.dumps(public))
+        for corrupt in [{'course_key':'wrong'},{'external_course_id':'unknown'},{'visibility':'public'}]:
+            row=build_occupancy({'canonical_demand':{'sessions':[{**historic,**corrupt}]},
+                'location_resource_map':f.resources},{'252737':{}},True,known_catalog_ids={'252737'},
+                strict_instructor_crosswalk={})[0]
+            self.assertIsNone(row['course_id'])
+            self.assertEqual(row['kind'],'hold')

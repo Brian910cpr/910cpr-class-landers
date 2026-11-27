@@ -25,7 +25,7 @@ def explicit_external_crosswalk(people, configured):
             if len(ids) == 1 and references[external] == 1}
 
 
-def canonical_instructor_projection(row, crosswalk):
+def canonical_instructor_projection(row, crosswalk, *, owner_person_id=None):
     proof = row.get("lead_instructor_identity")
     if not isinstance(proof, dict):
         return "unresolved", None
@@ -36,7 +36,9 @@ def canonical_instructor_projection(row, crosswalk):
             and stored is None and not row.get("lead_instructor_name")):
         return "unassigned", None
     if state == "verified" and isinstance(stored, str) and stored and isinstance(external, str):
-        if person := crosswalk.get(external):
+        if owner_person_id and proof.get("verified_role") == "configured_910cpr_owner":
+            return "verified", owner_person_id
+        if (person := crosswalk.get(external)) and person != owner_person_id:
             return "verified", person
     return "unresolved", None
 

@@ -154,7 +154,7 @@ test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields'
   assert.equal(calls[0].get('or'),'(start_at.gte.2026-11-01T04:00:00.000Z,consumption_end_at.gt.2026-11-01T04:00:00.000Z,and(consumption_end_at.is.null,end_at.gt.2026-11-01T04:00:00.000Z))');
   assert.equal(calls[1].get('offset'),'500');
   assert.doesNotMatch(calls[0].get('select'),/customers|email|phone/);
-  assert.match(calls[0].get('select'), /courses!class_sessions_course_id_fkey\(course_key,name,enrollware_course_id\)/);
+  assert.match(calls[0].get('select'), /courses!class_sessions_course_id_fkey\(id,course_key,name,enrollware_course_id\)/);
   assert.equal(body.sessions[0].external_course_id,'359474');
   assert.equal(body.sessions[0].catalog_course_id,null);
 });
@@ -358,4 +358,79 @@ test('restricted instructor proof is canonical FK plus globally unique active ca
   assert.equal(calls.length,2);
   assert.equal(calls[0].get('active'),'eq.true');
   assert.equal(calls[0].get('enrollware_instructor_id'),'in.(70001,70002,70003,70004,70005)');
+});
+
+
+test('restricted owner role requires unique independent exact active owner key and provenance', async () => {
+  const person={id:'synthetic-fk',person_key:'brian',active:true,
+    external_reference:'LanderWare instructor identity',enrollware_instructor_id:'70100'};
+  const base={id:'assigned',lead_instructor_id:person.id,people:person,status:'scheduled',
+    registration_backend:'landerware',registrations:[{status:'registered'}]};
+  const rows=[base,{...base,id:'conflict',external_instructor_id:'00070100'},
+    {...base,id:'wrong-joined-provenance',people:{...person,external_reference:'legacy-label'}}];
+  for (const ownerCandidates of [[person],[],[person,{...person,id:'duplicate',active:false}],
+       [{...person,active:false}],[{...person,id:'wrong-fk'}],[{...person,external_reference:'Untrusted'}]]) {
+    const api=loadEndpoint(async raw=>{
+      const u=new URL(raw);
+      if(u.pathname.includes('/admin/hot-sync'))return Response.json({});
+      if(u.pathname.includes('/rpc/'))return Response.json({sessions:[]});
+      if(u.pathname.endsWith('/people'))return Response.json(
+        u.searchParams.has('person_key') ? ownerCandidates : [person]);
+      return Response.json(rows);
+    });
+    const res=await api.handleRequest(new Request('https://demand.test/?from=2026-11-27&to=2026-12-31',
+      {headers:{'x-hot-sync-admin-key':'fixture'}}));
+    assert.equal(res.status,200);
+    const body=await res.json();
+    assert.equal(body.sessions[0].lead_instructor_identity.verified_role,
+      ownerCandidates[0]===person && ownerCandidates.length===1 ? 'configured_910cpr_owner' : undefined);
+    assert.equal(body.sessions[1].lead_instructor_identity.status,'conflicting');
+    assert.equal(body.sessions[2].lead_instructor_identity.verified_role,undefined);
+    assert.ok(body.sessions.every(x=>x.operational_has_active_seat));
+    assert.doesNotMatch(JSON.stringify(body), /person_key|external_reference|LanderWare instructor identity|legacy-label/);
+  }
+});
+
+
+test('historical course proof binds exact FK, explicit roster identity and only occupied private intakes', async () => {
+  const fk='81111111-1111-1111-1111-111111111111',other='82222222-2222-2222-2222-222222222222';
+  const key='hist-course:7107a1c4f42ee0b1';
+  const candidate={id:'intake',course_id:fk, courses:{id:fk,course_key:key,name:'Same title'},
+    registration_backend:'landerware',source:'confirmed_booking_intake',visibility:'private',status:'scheduled',
+    external_session_evidence:{kind:'registration_confirmation',gmail_message_id:'1111111111111111'},
+    registrations:[{status:'registered',registration_source:'enrollware_email_confirmation',canceled_at:null}]};
+  const rows=[candidate,{...candidate,id:'public',visibility:'public'},
+    {...candidate,id:'title-only',courses:{id:fk,course_key:'wrong',name:'Same title'}},
+    {...candidate,id:'wrong-join',course_id:other},
+    {...candidate,id:'contradictory',external_course_id:'209806'},
+    {...candidate,id:'cancelled',registrations:[{...candidate.registrations[0],canceled_at:'2026-11-28'}]}];
+  const witness={course_id:fk,external_course_id:'252737',external_class_id:'99000',
+    record_scope:'operational',source:'enrollware_reconciled',
+    external_reconciliation:{complete:true,ingest_job_id:'synthetic-ingest'},
+    external_session_evidence:{source_kind:'authenticated_enrollware_roster',committed:true,
+      complete_roster:true,workspace_link_basis:'verified_owner_request_and_current_roster',course_key:key,
+      external_class_id:'99000',external_course_id:'252737',ingest_job_id:'synthetic-ingest'}};
+  for(const [hits,expected] of [[[witness],true],[[],false],
+    [[witness,{...witness,external_course_id:'209806'}],false],
+    [[{...witness,course_id:other}],false],
+    [[{...witness,external_session_evidence:{...witness.external_session_evidence,external_class_id:'wrong'}}],false]]){
+    const api=loadEndpoint(async raw=>{
+      const u=new URL(raw);
+      if(u.pathname.includes('/admin/hot-sync'))return Response.json({});
+      if(u.pathname.includes('/rpc/'))return Response.json({sessions:[]});
+      if(u.searchParams.has('course_id')){
+        assert.equal(u.searchParams.get('course_id'),'eq.'+fk);
+        return Response.json(hits);
+      }
+      return Response.json(rows);
+    });
+    const res=await api.handleRequest(new Request('https://demand.test/?from=2026-11-27&to=2026-12-31',
+      {headers:{'x-hot-sync-admin-key':'fixture'}}));
+    assert.equal(res.status,200);
+    const body=await res.json();
+    assert.deepEqual(body.sessions.filter(r=>r.verified_occupancy_course_id).map(r=>r.canonical_session_id),
+      expected?['intake']:[]);
+    assert.equal(body.sessions[0].external_course_id,null);
+    assert.doesNotMatch(JSON.stringify(body), /synthetic-ingest|99000|81111111/);
+  }
 });
