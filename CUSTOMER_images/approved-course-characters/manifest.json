@@ -9,7 +9,7 @@
     "alt": "Anjla pointing toward the BLS class choices with her Schedule it reminder.",
     "variants": {
       "960": {
-        "path": "docs/images/characters/BLS-1.webp",
+        "path": "docs/images/characters/bls/BLS-1.webp",
         "bytes": 165834,
         "dimensions": [
           960,
@@ -17,7 +17,7 @@
         ]
       },
       "480": {
-        "path": "docs/images/characters/BLS-1-480.webp",
+        "path": "docs/images/characters/bls/BLS-1-480.webp",
         "bytes": 56292,
         "dimensions": [
           480,
@@ -36,7 +36,7 @@
     "alt": "Approved ACLS nurse character with RN badge and a reminder to be ready when the room turns to you.",
     "variants": {
       "960": {
-        "path": "docs/images/characters/ACLS-1.webp",
+        "path": "docs/images/characters/acls/ACLS-1.webp",
         "bytes": 263278,
         "dimensions": [
           960,
@@ -44,7 +44,7 @@
         ]
       },
       "480": {
-        "path": "docs/images/characters/ACLS-1-480.webp",
+        "path": "docs/images/characters/acls/ACLS-1-480.webp",
         "bytes": 92348,
         "dimensions": [
           480,
@@ -63,7 +63,7 @@
     "alt": "Approved ACLS paramedic character: I am the designated adult? Yikes.",
     "variants": {
       "960": {
-        "path": "docs/images/characters/ACLS-2.webp",
+        "path": "docs/images/characters/acls/ACLS-2.webp",
         "bytes": 276754,
         "dimensions": [
           960,
@@ -71,7 +71,7 @@
         ]
       },
       "480": {
-        "path": "docs/images/characters/ACLS-2-480.webp",
+        "path": "docs/images/characters/acls/ACLS-2-480.webp",
         "bytes": 94508,
         "dimensions": [
           480,
@@ -90,7 +90,7 @@
     "alt": "Approved ACLS emergency department pharmacist character with an imposter-syndrome reminder.",
     "variants": {
       "960": {
-        "path": "docs/images/characters/ACLS-3.webp",
+        "path": "docs/images/characters/acls/ACLS-3.webp",
         "bytes": 125358,
         "dimensions": [
           960,
@@ -98,7 +98,7 @@
         ]
       },
       "480": {
-        "path": "docs/images/characters/ACLS-3-480.webp",
+        "path": "docs/images/characters/acls/ACLS-3-480.webp",
         "bytes": 46468,
         "dimensions": [
           480,
@@ -122,7 +122,7 @@
     ],
     "variants": {
       "960": {
-        "path": "docs/images/characters/PALS-1.webp",
+        "path": "docs/images/characters/pals/PALS-1.webp",
         "bytes": 125214,
         "dimensions": [
           960,
@@ -130,11 +130,67 @@
         ]
       },
       "480": {
-        "path": "docs/images/characters/PALS-1-480.webp",
+        "path": "docs/images/characters/pals/PALS-1-480.webp",
         "bytes": 52600,
         "dimensions": [
           480,
           439
+        ]
+      }
+    }
+  },
+  "BLS-2": {
+    "source_filename": "BLS-2-generated-source.png",
+    "source_sha256": "64976e84b9234377261b536ea66e03f20d81979736990d39eca678f8b37f0f29",
+    "source_dimensions": [
+      1190,
+      1322
+    ],
+    "alt": "Nurse in teal scrubs pointing toward the class choices: My coffee can wait.",
+    "provenance": "Original generated artwork for 910CPR BLS. Public derivatives preserve transparency.",
+    "variants": {
+      "960": {
+        "path": "docs/images/characters/bls/BLS-2.webp",
+        "bytes": 212350,
+        "dimensions": [
+          960,
+          1066
+        ]
+      },
+      "480": {
+        "path": "docs/images/characters/bls/BLS-2-480.webp",
+        "bytes": 64206,
+        "dimensions": [
+          480,
+          533
+        ]
+      }
+    }
+  },
+  "BLS-3": {
+    "source_filename": "BLS-3-generated-source.png",
+    "source_sha256": "e2860cde18018c234d75abe6ed7dd3d680aeecd4c7d2ee6e1fab8c2863c39694",
+    "source_dimensions": [
+      1199,
+      1312
+    ],
+    "alt": "Nurse beside CPR training equipment: Practice makes less panic.",
+    "provenance": "Original generated artwork for 910CPR BLS. Public derivatives preserve transparency.",
+    "variants": {
+      "960": {
+        "path": "docs/images/characters/bls/BLS-3.webp",
+        "bytes": 229258,
+        "dimensions": [
+          960,
+          1050
+        ]
+      },
+      "480": {
+        "path": "docs/images/characters/bls/BLS-3-480.webp",
+        "bytes": 79006,
+        "dimensions": [
+          480,
+          525
         ]
       }
     }

@@ -41,6 +41,29 @@ class FamilyCourseArtTests(unittest.TestCase):
     def test_unavailable_fallback_is_not_rendered(self):
         self.assertEqual("", art.hero_markup({"hero_image": {"url": "/missing-approved-art.webp"}}))
 
+    def test_real_course_pages_have_one_family_specific_deck_and_no_eager_number_one(self):
+        import html
+        import re
+
+        pages = json.loads((art.ROOT / "data/config/block_schedule_pages.json").read_text())["pages"]
+        for family, expected in {"bls": 3, "acls": 3, "pals": 5}.items():
+            with self.subTest(family=family):
+                candidates = art.hero_candidates(pages[family])
+                self.assertGreaterEqual(len(candidates), expected)
+                self.assertTrue(all(row["url"].startswith(f"/images/characters/{family}/")
+                                    for row in candidates))
+                path = art.ROOT / pages[family]["output_path"]
+                text = path.read_text()
+                img = re.search(r'<img data-family-hero="[^"]+"[^>]*>', text).group()
+                self.assertNotIn(" src=", img)
+                self.assertNotIn(" srcset=", img)
+                self.assertIn("<noscript><img src=", text)
+                self.assertEqual(candidates, json.loads(html.unescape(
+                    re.search(r'data-hero-images="([^"]+)"', img).group(1))))
+                self.assertIn(art.asset_url("/assets/family-hero.js"), text)
+                for alias in pages[family]["alias_output_paths"]:
+                    self.assertEqual((art.ROOT / alias).read_text(), text)
+
     def test_published_character_manifest_preserves_full_size_sources(self):
         manifest = json.loads((art.ROOT / "CUSTOMER_images/approved-course-characters/manifest.json").read_text())
         self.assertTrue({"BLS-1", "ACLS-1", "ACLS-2", "ACLS-3", "PALS-1"}.issubset(manifest))

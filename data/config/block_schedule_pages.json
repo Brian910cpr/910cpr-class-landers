@@ -127,9 +127,16 @@
         }
       ],
       "hero_image": {
-        "url": "/images/characters/BLS-1.webp",
+        "url": "/images/characters/bls/BLS-1.webp",
         "alt": "Anjla pointing toward the BLS class choices with her Schedule it reminder.",
-        "variant": "character"
+        "variant": "character",
+        "rotation_prefix": "BLS",
+        "rotation_directory": "bls",
+        "rotation_alts": {
+          "BLS-1": "Anjla pointing toward the BLS class choices with her Schedule it reminder.",
+          "BLS-2": "Nurse in teal scrubs pointing toward the class choices: My coffee can wait.",
+          "BLS-3": "Nurse beside CPR training equipment: Practice makes less panic."
+        }
       },
       "certification_notice": {
         "title": "Does this meet an AHA BLS requirement?",
@@ -261,10 +268,11 @@
         }
       ],
       "hero_image": {
-        "url": "/images/characters/ACLS-1.webp",
+        "url": "/images/characters/acls/ACLS-1.webp",
         "alt": "Approved ACLS nurse character with RN badge and a reminder to be ready when the room turns to you.",
         "variant": "character",
         "rotation_prefix": "ACLS",
+        "rotation_directory": "acls",
         "rotation_alts": {
           "ACLS-1": "Approved ACLS nurse character with RN badge and a reminder to be ready when the room turns to you.",
           "ACLS-2": "Approved ACLS paramedic character: I am the designated adult? Yikes.",
@@ -401,10 +409,11 @@
         }
       ],
       "hero_image": {
-        "url": "/images/characters/PALS-1.webp",
+        "url": "/images/characters/pals/PALS-1.webp",
         "alt": "Smiling baby saying You got dis! — Don’t make this weird.",
         "variant": "character",
         "rotation_prefix": "PALS",
+        "rotation_directory": "pals",
         "rotation_alts": {
           "PALS-1": "Smiling baby saying You got dis! — Don’t make this weird.",
           "PALS-2": "Respiratory therapist holding a bag-mask device with a Circulation, Airway, Breathing speech bubble.",

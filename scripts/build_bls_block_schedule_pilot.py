@@ -411,6 +411,9 @@ def css() -> str:
       max-width: 420px;
       margin-bottom: -24px;
     }
+    .family-hero-media.is-character.is-rotating:not([hidden]) { min-height: 380px; }
+    .family-hero-media.is-rotating > img:not([src]),
+    .family-hero-media img[hidden] { display: none; }
     .family-hero-media.is-character img {
       height: 380px;
       max-height: none;
@@ -986,6 +989,7 @@ def css() -> str:
         margin-bottom: -14px;
       }
       .family-hero-media.is-character img { height: 280px; max-height: none; }
+      .family-hero-media.is-character.is-rotating:not([hidden]) { min-height: 280px; }
       .header-credential {
         grid-template-columns: 44px minmax(0, 1fr);
         gap: 8px;
