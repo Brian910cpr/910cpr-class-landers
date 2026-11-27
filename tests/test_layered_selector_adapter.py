@@ -63,6 +63,44 @@ class LayeredAdapterTests(unittest.TestCase):
         for offer in report['accepted']:
             self.assertEqual(offer['source_ids'], ['real-12:00'])
 
+    def test_contradictory_attested_courses_hold_geometry_without_arbitrary_gravity(self):
+        self.add('12:00', '13:00', '209806', active_registration_count=1, count_available=True)
+        self.add('12:00', '13:00', '209809', active_registration_count=2, count_available=True)
+        self.busy[-1]['source_event_id'] = 'distinct-canonical-session'
+        for order in (list(self.busy), list(reversed(self.busy))):
+            self.busy = order
+            report = self.report()
+            self.assertEqual(len(report['normalized_occupancy']), 1)
+            occupied = report['normalized_occupancy'][0]
+            self.assertEqual(occupied['kind'], 'hold')
+            self.assertEqual(occupied['uncertainty_reason'], 'conflicting_attested_course_identity')
+            self.assertIsNone(occupied['course'])
+            self.assertIsNone(occupied['headcount'])
+            self.assertEqual(report['seated_offers'], [])
+            for cid in ('209806', '209809', '210549'):
+                self.assertNotIn('12:00', self.starts(report, cid))
+
+    def test_unknown_conflicting_legacy_mirror_does_not_veto_attributed_seat(self):
+        self.add('12:00', '13:00', '209806', active_registration_count=1, count_available=True)
+        self.add('12:00', '13:00', '209809', active_registration_count=None, count_available=False)
+        self.busy[-1].update(source_file='docs/data/schedule_future.json', source_event_id='mirror')
+        self.busy.reverse()
+        report = self.report()
+        self.assertEqual(len(report['normalized_occupancy']), 1)
+        self.assertEqual(report['normalized_occupancy'][0]['course'], '209806')
+        self.assertEqual(report['normalized_occupancy'][0]['headcount'], 1)
+        self.assertEqual(len(report['seated_offers']), 1)
+
+    def test_other_instructor_and_room_same_instant_are_not_course_ambiguity(self):
+        self.add('12:00', '13:00', '209806', active_registration_count=1, count_available=True)
+        self.add('12:00', '13:00', '209809', active_registration_count=2, count_available=True)
+        self.busy[-1].update(source_event_id='other-canonical-session', instructor='Other instructor',
+                             resource=':: Wilmington; Shipyard Blvd - C')
+        report = self.report()
+        self.assertEqual(len(report['normalized_occupancy']), 2)
+        self.assertEqual({row['course'] for row in report['normalized_occupancy']}, {'209806','209809'})
+        self.assertNotIn('12:00', self.starts(report, '210549'))
+
     def test_utc_conversion_preserves_eastern_winter_and_dst_clock(self):
         from scripts.generate_dynamic_offers import parse_dt
         for utc, local in [('2026-01-10T17:00:00Z', '2026-01-10T12:00:00'),

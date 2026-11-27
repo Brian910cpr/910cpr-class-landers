@@ -155,6 +155,8 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
                          and type(count) is int and count > 0)))
     ordered = sorted(enumerate(occupancy),
                      key=lambda pair: (not attested(pair[1]), pair[0]))
+    normalized = []
+    attested_claims = {}
     for index, busy in ordered:
         if not busy.get("start") or not busy.get("end"):
             raise ValueError("unresolved occupied interval")
@@ -189,6 +191,12 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         if busy.get("instructor_unassigned") or not is_owner:
             non_owner_route_locations.add(location)
         key = ((stable_id if strict_identity else instructor), location, start, end)
+        normalized.append((index, busy, key, instructor, location, start, end))
+        # Geometry alone is not session identity. One legacy mirror with no
+        # verified demand must not override the attributed canonical class.
+        if attested(busy) and (cid := str(busy.get("course_id") or "")):
+            attested_claims.setdefault(key, {}).setdefault(cid, []).append(busy)
+    for index, busy, key, instructor, location, start, end in normalized:
         adr_shift = "adr" in str(busy.get("course_title") or "").casefold()
         if busy.get("instructor_unassigned"):
             # An assigned mirror may win the normal interval dedup. It must
@@ -208,6 +216,16 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         if key in source_keys:
             continue
         source_keys.add(key)
+        if len(conflict := attested_claims.get(key, {})) > 1:
+            claims = [candidate for records in conflict.values() for candidate in records]
+            fixture["sources"].append(dict(id="ambiguous-course-"+str(index),
+                instructor=instructor, location=location, start=start.isoformat(), end=end.isoformat(),
+                course=None, kind="hold", headcount=None, operational_has_active_seat=False,
+                evidence="conflicting_attested_courses_at_same_physical_interval",
+                resource_uncertain=any(c.get("resource_uncertain") for c in claims),
+                uncertainty_reason="conflicting_attested_course_identity",
+                adr_shift=any("adr" in str(c.get("course_title") or "").casefold() for c in claims)))
+            continue
         cid = str(busy.get("course_id") or "")
         kind = busy.get("kind") or ("commitment" if "blocked" in str(busy.get("source_file")) else "planted")
         count = busy.get("active_registration_count")
