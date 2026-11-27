@@ -713,6 +713,7 @@ def normalize_live_calendar_block_occupancy(payload: Any, allow_unresolved: bool
             "course_title": clean_text(block.get("summary") or block.get("source_type") or "Authoritative calendar block"),
             "source_file": f"live_availability_snapshot.blocked[{index}]",
             "source_calendar_id": clean_text(block.get("source_calendar_id") or UNKNOWN),
+            **({"_calendar_person_id": block.get("person_id")} if allow_unresolved else {}),
             "availability_location_mode": block.get("availability_location_mode"),
             "instructor_unassigned": instructor == UNKNOWN,
             "source_event_id": clean_text(block.get("source_event_id") or UNKNOWN),
@@ -737,7 +738,8 @@ def canonical_operational_course_id(session, known_catalog_ids, course_rules):
 
 
 def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, Any]],
-                    allow_unresolved: bool = False, *, known_catalog_ids=None) -> list[dict[str, Any]]:
+                    allow_unresolved: bool = False, *, known_catalog_ids=None,
+                    strict_instructor_crosswalk=None) -> list[dict[str, Any]]:
     location_resource_map = loaded.get("location_resource_map")
     sessions_current = apply_occupancy_duration_rules(
         generate_dynamic_offers.normalize_occupancy(loaded.get("sessions_current"), "data/sessions_current.json"),
@@ -763,6 +765,25 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
                     active_registration_count=session.get("active_registration_count"),
                     uncertainty_scope=session.get("uncertainty_scope", {}))
     calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"), allow_unresolved)
+    strict_identity = strict_instructor_crosswalk is not None
+    if strict_identity:
+        from scripts.layered_instructor_identity import canonical_instructor_projection, unique_scheduler_ids
+        trusted_calendar_people = unique_scheduler_ids(
+            generate_dynamic_offers.scheduler_enabled_people(loaded.get("people_catalog")))
+        for block in calendar_blocks:
+            pid = block.pop("_calendar_person_id", None)
+            if pid in trusted_calendar_people:
+                block["effective_instructor_person_id"] = pid
+                block["instructor_unassigned"] = False
+            else:
+                block["instructor_unassigned"] = True
+        for legacy in (*sessions_current, *schedule_future):
+            # Legacy rows without independently bound identities reserve
+            # resources but cannot authorize instructor-specific gravity.
+            legacy.update(kind="hold", instructor_unassigned=True, public_direct_booking=False)
+    else:
+        for block in calendar_blocks:
+            block.pop("_calendar_person_id", None)
     canonical_rows = []
     classify_catalog = allow_unresolved and known_catalog_ids is not None
     if allow_unresolved:
@@ -786,6 +807,8 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
         operational_course = (canonical_operational_course_id(session, known_catalog_ids, course_rules)
                               if classify_catalog else session.get("course_id") or session.get("external_course_id"))
         stale_commitment = allow_unresolved and session.get("operational_has_stale_commitment") is True
+        instructor_state, person = (canonical_instructor_projection(session, strict_instructor_crosswalk)
+                                    if strict_identity else (None, None))
         canonical_rows.append({
             "start": start, "end": end,
             "location": session.get("location_name") or UNKNOWN,
@@ -807,6 +830,13 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
                 "registration_backend": session.get("registration_backend"),
                 "session_status": session.get("session_status"),
             } if allow_unresolved else {}),
+            **({"stored_instructor_identity_state": instructor_state,
+                "stored_instructor_person_id": person,
+                "effective_instructor_person_id": person,
+                "stored_instructor_absent": instructor_state == "unassigned",
+                "instructor_unassigned": person is None,
+                **({"public_direct_booking": False} if person is None else {}),
+                } if strict_identity else {}),
             "visibility": session.get("visibility"),
             "operational_has_active_seat": session.get("operational_has_active_seat") is True,
             "count_available": session.get("count_available") is True,
@@ -1153,6 +1183,7 @@ def find_url(
     course_id: str,
     containers: list[dict[str, Any]],
     location_resource_map: Any,
+    *, strict_container_owners=None,
 ) -> tuple[int | None, str | None, str | None, str | None]:
     if course_id == "509474":
         # Native date review has no Enrollware transfer or claimed reservation.
@@ -1161,6 +1192,14 @@ def find_url(
             "startTime": start.strftime("%H:%M"), "location": window.get("location_name") or "",
             "instructor": window.get("instructor_name") or ""})
         return None, None, "/register/skills-session/?" + query, None
+    if strict_container_owners is not None:
+        if not isinstance(strict_container_owners, dict):
+            return None, None, None, "invalid_appointment_container_owner_proof"
+        pid = window.get("person_id")
+        containers = [container for container in containers if pid and
+            strict_container_owners.get(str(container.get("container_id") or "")) == pid]
+        if not containers:
+            return None, None, None, "unverified_appointment_container_owner"
     seed = {
         "date": start.date().isoformat(),
         "start_time": start.strftime("%H:%M"),
@@ -1284,8 +1323,18 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     layered_policy_path = ROOT / "data" / "config" / "layered_scheduling_policy.json"
     layered_policy = read_required_json(layered_policy_path) if layered_policy_path.exists() else {}
     from scripts.layered_publication_adapter import active as layered_active
+    strict_identity = (layered_active(layered_policy)
+                       and layered_policy.get("verified_instructor_identity") is True)
+    identity_crosswalk = None
+    if strict_identity:
+        from scripts.layered_instructor_identity import explicit_external_crosswalk, unique_scheduler_ids
+        scheduler_people = generate_dynamic_offers.scheduler_enabled_people(loaded["people_catalog"])
+        trusted_people = unique_scheduler_ids(scheduler_people)
+        identity_crosswalk = explicit_external_crosswalk(scheduler_people,
+            layered_policy.get("instructor_external_crosswalk"))
+        windows = [window for window in windows if window.get("person_id") in trusted_people]
     occupancy = build_occupancy(loaded, course_rules, allow_unresolved=layered_active(layered_policy),
-                                known_catalog_ids=course_catalog)
+                                known_catalog_ids=course_catalog, strict_instructor_crosswalk=identity_crosswalk)
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy) if not layered_active(layered_policy) else {}
     reference_now = selector_reference_datetime()
     anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
@@ -1354,7 +1403,10 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 skills or clinical not in layered_policy.get("brian_excluded_families", []))
         occupancy = apply_default_owner_occupancy(
             occupancy, (owner or {}).get("display_name"), layered_policy["primary_resource"],
-            reference_now, coverage, owner_qualified_for_occupied_course)
+            reference_now, coverage, owner_qualified_for_occupied_course,
+            owner_person_id=((owner or {}).get("person_id") if strict_identity
+                and (owner or {}).get("person_id") in trusted_people else None),
+            strict_identity=strict_identity)
         calculation = cached_calculate(windows, occupancy, selected_courses, effective_layered_policy,
             loaded["location_resource_map"], reference_now, layered_window_instants,
             lambda window, course: bool(people.get(normalize_key(window.get("person_id")))
@@ -1376,8 +1428,11 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 reasons.append("course_not_appointment_eligible")
             return reasons
         result = publish(calculation, page_config, selected_courses, windows, reference_now,
-            lambda window, start, cid: find_url(window, start, cid, containers, loaded["location_resource_map"]),
-            layered_public_reasons, seated, require_verified_day_gravity=True)
+            lambda window, start, cid: find_url(window, start, cid, containers, loaded["location_resource_map"],
+                strict_container_owners=(layered_policy.get("verified_appointment_container_owners") or {})
+                if strict_identity else None),
+            layered_public_reasons, seated, require_verified_day_gravity=True,
+            strict_instructor_identity=strict_identity)
         result["inputFiles"] = {"liveAvailabilitySnapshot": str(LIVE_AVAILABILITY_PATH),
             "courseConsumptionRules": str(COURSE_RULES_PATH), "layeredPolicy": str(layered_policy_path)}
         result["horizonDays"] = 90

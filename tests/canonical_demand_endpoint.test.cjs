@@ -199,7 +199,7 @@ test('authenticated HTTP response exposes an occupancy bit, never raw intake pro
   assert.equal(row.course_key,'fixture-bls');
   assert.deepEqual(Object.keys(row).sort(), [
     'canonical_session_id','external_class_id','external_course_id','catalog_course_id','course_key','start_at','end_at',
-    'consumption_start_at','consumption_end_at','location_id','location_name','lead_instructor_id',
+    'consumption_start_at','consumption_end_at','location_id','location_name','lead_instructor_id','lead_instructor_identity',
     'lead_instructor_name','course_name','visibility','registration_backend','registration_status',
     'workspace_projection_status','workspace_session_id','operational_has_active_seat','operational_has_stale_commitment',
     'canonical_recorded_registration_count','source','session_status','active_registration_count',
@@ -305,4 +305,57 @@ test('expired exact external roster retains operational commitment without certi
     assert.equal(denied.operational_has_stale_commitment,false,JSON.stringify(change));
     assert.equal(denied.active_registration_count,null);
   }
+});
+
+
+test('restricted instructor proof is canonical FK plus globally unique active catalog mapping, never a label', async () => {
+  const person=(id,ext,active=true)=>({id,display_name:'Same Name',enrollware_instructor_id:ext,active});
+  const occupied=(id,lead,p,legacy)=>({id,lead_instructor_id:lead,people:p,external_instructor_id:legacy,
+    source_instructor_label:'Same Name',status:'scheduled',registration_backend:'landerware',registrations:[{status:'registered'}]});
+  const rows=[
+    occupied('verified','p1',person('p1','70001'),'PRIVATE-SENTINEL'),
+    occupied('conflict','p1',person('p1','70001'),'78901'),
+    occupied('legacy-format','p1',person('p1','70001'),'070001'),
+    occupied('duplicate','p2',person('p2','70002'),'70002'),
+    occupied('inactive','p3',person('p3','70003',false),'70003'),
+    occupied('wrong-join','p4',person('p99','70004'),'70004'),
+    occupied('good-same-name','p5',person('p5','70005'),'70005'),
+    occupied('no-fk',null,person('p1','70001'),'70001'),
+    occupied('no-numeric','p6',person('p6','not-numeric'),'70005'),
+  ];
+  const calls=[];
+  const matches=[person('p1','70001'),person('p2','70002'),person('p2-copy','70002'),
+    person('p99','70004'),person('p5','70005')];
+  const request=()=>new Request('https://demand.test/?from=2026-11-27&to=2026-12-31',
+    {headers:{'x-hot-sync-admin-key':'fixture'}});
+  for(const lookupFails of [false,true]){
+    const api=loadEndpoint(async raw=>{
+      const url=new URL(raw);
+      if(url.pathname.includes('/admin/hot-sync')) return Response.json({});
+      if(url.pathname.includes('/rpc/')) return Response.json({sessions:[]});
+      if(url.pathname.endsWith('/people')){
+        calls.push(url.searchParams);
+        return lookupFails ? Response.json({}, {status:503}) : Response.json(matches);
+      }
+      assert.match(url.searchParams.get('select'),/lead_instructor_id,external_instructor_id/);
+      return Response.json(rows);
+    });
+    const res=await api.handleRequest(request());
+    assert.equal(res.status,200);
+    const body=await res.json();
+    assert.equal(body.sessions.length,rows.length);
+    assert.ok(body.sessions.every(r=>r.operational_has_active_seat && !Object.hasOwn(r,'people')));
+    assert.doesNotMatch(JSON.stringify(body), /PRIVATE-SENTINEL|78901|p2-copy/);
+    const statuses=body.sessions.map(x=>x.lead_instructor_identity);
+    if (lookupFails) assert.deepEqual(statuses.map(s=>s.status),['unresolved','unresolved','unresolved',
+      'unresolved','unresolved','unresolved','unresolved','unassigned','unresolved']);
+    else {
+      assert.deepEqual(statuses.map(s=>s.status),['verified','conflicting','conflicting',
+        'unresolved','unresolved','unresolved','verified','unassigned','unresolved']);
+      assert.deepEqual(statuses.filter(s=>s.catalog_external_id).map(s=>s.catalog_external_id),['70001','70005']);
+    }
+  }
+  assert.equal(calls.length,2);
+  assert.equal(calls[0].get('active'),'eq.true');
+  assert.equal(calls[0].get('enrollware_instructor_id'),'in.(70001,70002,70003,70004,70005)');
 });

@@ -43,7 +43,58 @@ function catalogCourseId(value: unknown): string | null {
   return typeof value === "string" && /^[1-9][0-9]*$/.test(value) ? value : null;
 }
 
-export function projectDemand(row: any) {
+function strictInstructorId(value: unknown): string | null {
+  return typeof value === "string" && /^[1-9][0-9]{0,19}$/.test(value) ? value : null;
+}
+
+function instructorIdentity(row: any, peopleByExternalId: Map<string, string>) {
+  const joined = row.people;
+  const candidate = strictInstructorId(joined?.enrollware_instructor_id);
+  if (!row.lead_instructor_id) return { status: "unassigned", catalog_external_id: null };
+  if (!candidate || joined?.active !== true || joined?.id !== row.lead_instructor_id
+      || peopleByExternalId.get(candidate) !== joined.id) {
+    return { status: "unresolved", catalog_external_id: null };
+  }
+  const legacy = typeof row.external_instructor_id === "string" ? row.external_instructor_id.trim() : "";
+  // Legacy nonnumeric placeholders aren't identities. A conflicting positive
+  // number, even one with noncanonical formatting, must not authorize routing.
+  if (/^[0-9]+$/.test(legacy) && /[1-9]/.test(legacy) && legacy !== candidate) {
+    return { status: "conflicting", catalog_external_id: null };
+  }
+  return { status: "verified", catalog_external_id: candidate };
+}
+
+async function uniqueActiveInstructorMappings(rows: any[], url: string, key: string) {
+  const ids = [...new Set(rows.map(row => strictInstructorId(row.people?.enrollware_instructor_id))
+    .filter((id): id is string => id !== null))];
+  const unique = new Map<string, string>();
+  for (let offset = 0; offset < ids.length; offset += 50) {
+    const batch = new Set(ids.slice(offset, offset + 50));
+    const params = new URLSearchParams({select: "id,enrollware_instructor_id",
+      active: "eq.true", enrollware_instructor_id: `in.(${[...batch].join(",")})`, limit: "500"});
+    try {
+      const result = await fetch(`${url}/rest/v1/people?${params}`, {
+        headers: { apikey: key, authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(20000),
+      });
+      const body = await result.json();
+      // A truncated or failed check cannot attest uniqueness. Keep sessions.
+      if (!result.ok || !Array.isArray(body) || body.length >= 500) continue;
+      const counts = new Map<string, number>();
+      for (const person of body) {
+        const id = strictInstructorId(person?.enrollware_instructor_id);
+        if (!id || !batch.has(id)) continue;
+        counts.set(id, (counts.get(id) ?? 0) + 1);
+        if (typeof person.id === "string" && person.id) unique.set(id, person.id);
+      }
+      for (const id of batch) if (counts.get(id) !== 1) unique.delete(id);
+    } catch {
+      // Failure is unresolved instructor evidence, not missing occupancy.
+    }
+  }
+  return unique;
+}
+
+export function projectDemand(row: any, peopleByExternalId = new Map<string, string>()) {
   const now = new Date();
   const proof = registrationProof(row, now);
   const countAvailable = proof.count_available;
@@ -113,6 +164,7 @@ export function projectDemand(row: any) {
     location_id: row.location_id,
     location_name: row.source_location_label || row.locations?.name || null,
     lead_instructor_id: row.lead_instructor_id,
+    lead_instructor_identity: instructorIdentity(row, peopleByExternalId),
     lead_instructor_name: row.source_instructor_label || row.people?.display_name || null,
     course_name: row.courses?.name || null,
     visibility: row.visibility,
@@ -138,11 +190,11 @@ export function projectDemand(row: any) {
 export async function loadDemand(start: string, stop: string) {
   const { url, key } = serviceConfig();
   const select = [
-    "id", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "external_session_evidence", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
+    "id", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "external_session_evidence", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id", "external_instructor_id",
     "consumption_start_at", "consumption_end_at", "source_location_label", "source_instructor_label", "visibility", "registration_status",
     "courses!class_sessions_course_id_fkey(course_key,name,enrollware_course_id)",
     "locations!class_sessions_location_id_fkey(name)",
-    "people!class_sessions_lead_instructor_id_fkey(display_name)",
+    "people!class_sessions_lead_instructor_id_fkey(id,display_name,active,enrollware_instructor_id)",
     "landerware_sessions!landerware_sessions_class_session_id_fkey(id,starts_at,ends_at)",
     "registrations!registrations_class_session_id_fkey(status,external_registration_id,registration_source,canceled_at)",
   ].join(",");
@@ -160,7 +212,8 @@ export async function loadDemand(start: string, stop: string) {
     });
     const body = await result.json();
     if (!result.ok || !Array.isArray(body)) throw new Error(`Database request failed (${result.status})`);
-    sessions.push(...body.map(projectDemand));
+    const peopleByExternalId = await uniqueActiveInstructorMappings(body, url, key);
+    sessions.push(...body.map(row => projectDemand(row, peopleByExternalId)));
     if (body.length < 500) return sessions;
   }
 }

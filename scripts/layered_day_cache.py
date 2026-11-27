@@ -53,7 +53,7 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
     cache_dir=Path(cache_dir)
     known_rooms={r['resource_name'] for loc in resources.get('locations', []) for r in loc.get('internal_resources', [])}
     code=digest([Path(__file__).read_text(), *[Path(__file__).with_name(name).read_text() for name in
-        ('layered_publication_adapter.py','layered_selector_adapter.py','layered_scheduling_engine.py','layered_resource_readiness.py')]])
+        ('layered_publication_adapter.py','layered_instructor_identity.py','layered_selector_adapter.py','layered_scheduling_engine.py','layered_resource_readiness.py')]])
     metadata={str(c["course_id"]):c for c in courses}
     projected=project_sources(occupancy, metadata)
     reports=[];issues=[];hits=0;rebuilt=[];selected=[]
@@ -83,7 +83,8 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
             except (KeyError,ValueError,TypeError): pass
             proofs.append(proof)
         qualifications=[bool(qualified(window,c)) for c in courses]
-        repeats=(repeat_context_for_window(projected,metadata,window,start,end)
+        repeats=(repeat_context_for_window(projected,metadata,window,start,end,
+                    strict_identity=policy.get("verified_instructor_identity") is True)
                  if policy.get("require_verified_day_gravity") is True else [])
         signature=digest([VERSION,code,window,rows,courses,policy,resources,proofs,travel_minutes,qualifications,repeats])
         identity=digest([window['source_availability_window'],start.isoformat(),end.isoformat()])[:24]

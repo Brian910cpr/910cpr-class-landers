@@ -844,6 +844,7 @@ def layered_calendar_coverage(calendar_payload, people_payload, snapshot_payload
             if end <= start:
                 continue
             result.append(dict(status="known_complete", instructor=owner["display_name"],
+                instructor_person_id=owner["person_id"],
                 location=block["location_name"], start=start.isoformat(), end=end.isoformat(),
                 observed_at=min(observations).isoformat(), valid_until=(min(observations)+timedelta(minutes=15)).isoformat(),
                 freshness_minutes=15, source="configured_calendar_exports", source_ids=[source["calendar_source_key"] for source in sources]))

@@ -9,6 +9,7 @@ from collections import Counter
 from datetime import timedelta, timezone
 from zoneinfo import ZoneInfo
 from scripts.layered_selector_adapter import aware, build_shadow, occupancy_instant
+from scripts.layered_instructor_identity import same_proved_instructor, strict_coverage_matches
 from scripts.layered_scheduling_engine import encode as encode_value, stamp
 import json
 
@@ -52,7 +53,8 @@ def project_sources(rows, course_metadata):
     return result
 
 
-def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qualified):
+def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qualified,
+                                  *, owner_person_id=None, strict_identity=False):
     """Project effective ownership only for a proved, genuinely unassigned class.
 
     This is an in-memory copy, never a roster, a stored assignment, or an
@@ -60,7 +62,7 @@ def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qua
     original physical block and its existing unassigned behavior.
     """
     owner = str(owner or "").strip()
-    if not owner:
+    if not owner or (strict_identity and not owner_person_id):
         return rows
 
     def key(value):
@@ -90,7 +92,8 @@ def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qua
     fresh_intervals = []
     for proof in coverage or []:
         if (proof.get("status") != "known_complete" or proof.get("location") != primary
-                or key(proof.get("instructor")) != owner_key):
+                or not (strict_coverage_matches(proof, {"person_id": owner_person_id})
+                        if strict_identity else key(proof.get("instructor")) == owner_key)):
             continue
         span = bounds(proof, allow_local=False)
         try:
@@ -110,6 +113,7 @@ def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qua
                 or row.get("session_status") not in {"scheduled", "active"}
                 or row.get("visibility") not in {"private", "unlisted", "internal"}
                 or row.get("stored_instructor_absent") is not True
+                or (strict_identity and row.get("stored_instructor_identity_state") != "unassigned")
                 or not row.get("instructor_unassigned")
                 or row.get("operational_has_active_seat") is not True
                 or room_relation(row) is not True
@@ -124,10 +128,12 @@ def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qua
         for other_index, other in enumerate(rows):
             if other_index == index:
                 continue
-            other_person = key(other.get("instructor"))
+            other_person = (other.get("effective_instructor_person_id") if strict_identity
+                            else key(other.get("instructor")))
+            owner_identity = owner_person_id if strict_identity else owner_key
             other_room = room_relation(other)
             if (other_room is False and other_person
-                    and other_person not in {owner_key, "unknown", "unassigned"}
+                    and other_person not in {owner_identity, "unknown", "unassigned"}
                     and not other.get("instructor_unassigned")):
                 continue
             other_span = bounds(other)
@@ -137,7 +143,7 @@ def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qua
             # class cannot be ignored as this class's mirror, even if its legacy
             # key and occupied interval agree. Contradictory evidence stays busy.
             linked_canonical = other.get("linked_canonical_session_id")
-            if (other_span == span and other_room is True and other_person == owner_key
+            if (other_span == span and other_room is True and other_person == owner_identity
                     and other.get("source_file") in {"data/sessions_current.json", "docs/data/schedule_future.json"}
                     and (not linked_canonical or linked_canonical == row.get("source_event_id"))
                     and row.get("external_class_id")
@@ -149,10 +155,12 @@ def apply_default_owner_occupancy(rows, owner, primary, now, coverage, owner_qua
         if not conflict:
             result[index] = dict(row, instructor=owner, instructor_unassigned=False,
                                  effective_instructor_basis="owner_default_verified_coverage")
+            if strict_identity:
+                result[index]["effective_instructor_person_id"] = owner_person_id
     return result
 
 
-def repeat_context_for_window(projected, metadata, window, start, end):
+def repeat_context_for_window(projected, metadata, window, start, end, *, strict_identity=False):
     """Confirmed full-course starts only; never use this context as physical occupancy."""
     def instructor_key(value):
         key = " ".join(str(value or "").casefold().split())
@@ -163,7 +171,9 @@ def repeat_context_for_window(projected, metadata, window, start, end):
     upper = stamp(end.isoformat()) + timedelta(hours=24)
     matches = set()
     for row in projected:
-        if (not instructor or instructor_key(row.get("instructor")) != instructor
+        matches_person = (same_proved_instructor(row, window) if strict_identity else
+                          bool(instructor and instructor_key(row.get("instructor")) == instructor))
+        if (not matches_person
                 or row.get("instructor_unassigned")
                 or row.get("kind") in {"hold", "commitment", "uncertain"}
                 or (not row.get("kind") and "blocked" in str(row.get("source_file")))
@@ -258,6 +268,7 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
     # Leases measure elapsed time, not Eastern wall time. During the fall-back
     # hour, ZoneInfo comparisons ignore fold when both operands share a zone.
     now = aware(now).astimezone(timezone.utc)
+    strict_identity = policy.get("verified_instructor_identity") is True
     metadata = {str(c["course_id"]): c for c in courses}
     projected = project_sources(occupancy, metadata)
     projected.sort(key=lambda row: row.get("source_file") != "canonical_class_sessions")
@@ -280,7 +291,8 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
         relevant, invalid = [], []
         for source in scoped_sources(projected, ws, we, travel_minutes, known_rooms, room):
             person = str(source.get("instructor") or "").casefold().strip()
-            same_person = person == name or person in {"brian", "brian ennis"} and "brian" in name
+            same_person = (same_proved_instructor(source, window) if strict_identity else
+                           person == name or person in {"brian", "brian ennis"} and "brian" in name)
             resource = source.get("resource") or room
             # Match build_shadow's conservative venue-only primary-room fallback
             # before filtering other instructors' occupied intervals.
@@ -322,7 +334,8 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
         fresh = []
         for proof in coverage or []:
             try:
-                if proof.get("status") != "known_complete":
+                if (proof.get("status") != "known_complete"
+                        or (strict_identity and not strict_coverage_matches(proof, window))):
                     continue
                 for field in ("start", "end", "observed_at", "valid_until"):
                     stamp(proof[field])  # Proof bounds must explicitly carry timezone.
@@ -331,7 +344,11 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
                 lease = min(aware(proof["valid_until"]).astimezone(timezone.utc), observed+freshness)
                 if observed > now or freshness.total_seconds() <= 0 or lease <= now:
                     continue
-                fresh.append(dict(proof,valid_until=lease.isoformat()))
+                normalized_proof = dict(proof, valid_until=lease.isoformat())
+                if strict_identity:
+                    normalized_proof["instructor"] = window["instructor_name"]
+                    normalized_proof.pop("instructor_person_id", None)
+                fresh.append(normalized_proof)
             except (KeyError, ValueError, TypeError):
                 continue  # Invalid evidence cannot open a window.
         if invalid:
@@ -341,7 +358,7 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             repeats = []
             if policy.get("require_verified_day_gravity") is True:
                 repeats = (scoped_repeat_context if scoped_repeat_context is not None else
-                           repeat_context_for_window(projected, metadata, window, ws, we))
+                           repeat_context_for_window(projected, metadata, window, ws, we, strict_identity=strict_identity))
             report = build_shadow([window], relevant, courses, policy, resources, now,
                 interval, qualified, lead_minutes=policy.get("lead_minutes", 1440),
                 travel_minutes=travel_minutes, commitment_coverage=fresh,
@@ -363,13 +380,14 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
 
 
 def publish(calculation, page_config, courses, windows, now, url_for, public_reasons,
-            seated_offers=(), *, require_verified_day_gravity=False):
+            seated_offers=(), *, require_verified_day_gravity=False, strict_instructor_identity=False):
     """Translate accepted calculations to the existing URL/feed/renderer contract."""
     from scripts.apply_anchor_policy import _rebuild_dates
     now = aware(now).astimezone(timezone.utc)
     catalog = {str(c["course_id"]): c for c in courses}
     origins = {str(w.get("source_availability_window", i)): w for i, w in enumerate(windows)}
     accepted, rejected = [], []
+    offer_people = {}  # never serialized
     def diagnostic(candidate):
         row = encode(candidate)
         start = aware(candidate["start"])
@@ -418,6 +436,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 offerType="dynamic_appointment", scheduleRole="barnacle" if candidate["mode"]=="barnacle" else "open_day",
                 sourceSessionIds=candidate["source_ids"], edgeIds=candidate["edge_ids"],
                 validUntil=report["valid_until"].isoformat(), publicSelectable=True))
+            if strict_instructor_identity:
+                offer_people[id(accepted[-1])] = window.get("person_id")
     # Never retire a source record. Confirmed-zero booking choices are retired
     # only from this projection; their occupied interval remains in calculation.
     counts = {}
@@ -455,6 +475,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 block.get("sessionId") if isinstance(block, dict) else None)
 
     for original in seated_offers:
+        original = dict(original)
+        verified_seated_person = original.pop("_verified_instructor_person_id", None)
         identities = seated_identities(original)
         identity = next((value for value in identities if value), None)
         source = counts.get(str(identity))
@@ -469,21 +491,32 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             rejected.append(dict(original, reasons=["nonpublic_occupied_not_joinable"]))
         elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
-        elif (require_verified_day_gravity and has_verified_demand(source)
+        elif strict_instructor_identity and not (source and source.get("stored_instructor_person_id")
+                and verified_seated_person == source["stored_instructor_person_id"]):
+            rejected.append(dict(original, reasons=["seated_instructor_identity_unverified"]))
+        elif (not strict_instructor_identity and require_verified_day_gravity and has_verified_demand(source)
                 and instructor_key(original.get('instructor')) != instructor_key(source.get('instructor'))):
             rejected.append(dict(original, reasons=["seated_instructor_mismatch"]))
         else:
             accepted.append(deepcopy(original))
+            if strict_instructor_identity:
+                offer_people[id(accepted[-1])] = verified_seated_person
     def matched_source(offer):
         identity = next((value for value in seated_identities(offer) if value), None)
         return counts.get(str(identity))
     def has_matching_verified_demand(offer):
         source = matched_source(offer)
+        if strict_instructor_identity:
+            return (has_verified_demand(source) and bool(offer_people.get(id(offer)))
+                    and offer_people[id(offer)] == source.get("stored_instructor_person_id"))
         return (has_verified_demand(source) and bool(instructor_key(offer.get('instructor')))
                 and instructor_key(offer.get('instructor')) == instructor_key(source.get('instructor')))
+    def offer_instructor(offer):
+        return (offer_people.get(id(offer)) if strict_instructor_identity
+                else instructor_key(offer.get("instructor")))
     def anchor_key(offer):
         return (offer['date'], str(offer['courseId']),
-                instructor_key(offer.get('instructor')) if require_verified_day_gravity else '')
+                offer_instructor(offer) if require_verified_day_gravity else '')
     day_anchors = {anchor_key(o) for o in accepted
                    if o.get('offerType') == 'seated_class' and
                    (not require_verified_day_gravity or
@@ -507,14 +540,17 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             last = (end.astimezone(timezone.utc) -
                     timedelta(microseconds=1)).astimezone(zone or end.tzinfo).date()
             while day <= last:
-                anchored_days.add((day.isoformat(), instructor_key(source.get('instructor'))))
+                instructor = (source.get("effective_instructor_person_id") if strict_instructor_identity
+                              else instructor_key(source.get('instructor')))
+                if not strict_instructor_identity or instructor:
+                    anchored_days.add((day.isoformat(), instructor))
                 if not require_verified_day_gravity:
                     break
                 day += timedelta(days=1)
     for offer in accepted:
         if offer.get('offerType') == 'seated_class' and (not require_verified_day_gravity or
                 has_matching_verified_demand(offer)):
-            anchored_days.add((offer['date'], instructor_key(offer.get('instructor'))))
+            anchored_days.add((offer['date'], offer_instructor(offer)))
     retained = []
     for offer in accepted:
         course = catalog.get(str(offer['courseId']), {})
@@ -526,15 +562,24 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         if offer.get('offerType') != 'seated_class' and anchor_key(offer) in day_anchors and not skills_edge:
             rejected.append(dict(offer, reasons=['existing_course_day_anchor']))
         elif offer.get('scheduleRole') == 'open_day' and (
-                (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days or
+                (offer['date'], offer_instructor(offer)) in anchored_days or
                 (not require_verified_day_gravity and (offer['date'], '') in anchored_days)):
             rejected.append(dict(offer, reasons=['anchored_day_requires_attached_offer']))
         else:
             retained.append(offer)
     accepted = retained
     seen = set(); unique=[]
+    def rendered_key(offer):
+        return (offer["date"],offer["startTime"],offer["courseId"],offer.get("instructor"),offer.get("offerType"))
+    rendered_people = {}
+    if strict_instructor_identity:
+        for offer in accepted:
+            rendered_people.setdefault(rendered_key(offer), set()).add(offer_instructor(offer))
     for offer in accepted:
-        key = (offer["date"],offer["startTime"],offer["courseId"],offer.get("instructor"),offer.get("offerType"))
+        key = rendered_key(offer)
+        if strict_instructor_identity and len(rendered_people[key]) > 1:
+            rejected.append(dict(offer, reasons=["ambiguous_rendered_instructor_identity"]))
+            continue
         if key not in seen: unique.append(offer);seen.add(key)
     payload=dict(generatedAt=now.isoformat(), pageKey=page_config["page_key"], pageConfig=page_config,
         publicPage=page_config.get("output_path", ""), pilot="block_start_time_selector", readOnlyDataBuild=True,
@@ -542,11 +587,23 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         whole_block_presented_as_class=False, availability_source_used="explicit_layered_coverage",
         availability_fallback_used=False, horizonDays=0, minimumLeadHours=0,
         rejectedCourseStartTimes=rejected, rejectionReasonCounts=dict(Counter(reason for row in rejected for reason in row.get("reasons",[]))),
-        reconciliationIssues=calculation["issues"], layeredDiagnostics=encode(calculation),
+        reconciliationIssues=calculation["issues"],
+        layeredDiagnostics=encode(redact_internal_identity(calculation) if strict_instructor_identity else calculation),
         proof=dict(whole_block_presented_as_class=False, availability_windows_are_not_rendered_as_class_times=True))
     _rebuild_dates(payload,unique)
     payload["counts"].update(calculation["counts"])
     return finalize(payload, now)
+
+
+def redact_internal_identity(value):
+    if isinstance(value, dict):
+        return {key: redact_internal_identity(item) for key, item in value.items()
+                if key not in {"person_id", "stored_instructor_person_id",
+                               "effective_instructor_person_id", "instructor_person_id",
+                               "catalog_external_id", "_verified_instructor_person_id"}}
+    if isinstance(value, list):
+        return [redact_internal_identity(item) for item in value]
+    return value
 
 
 # Customer-facing rejection reports must not retain raw source offers.

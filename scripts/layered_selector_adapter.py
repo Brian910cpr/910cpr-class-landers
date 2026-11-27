@@ -122,6 +122,11 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
                 all_skills=True)
     if commitment_coverage is not None:
         fixture["commitment_coverage"] = commitment_coverage
+    strict_identity = policy.get("verified_instructor_identity") is True
+    window_ids = {w.get("person_id"): w["instructor_name"] for w in windows if w.get("person_id")}
+    if strict_identity and (len(windows) != 1 or len(window_ids) != 1):
+        raise ValueError("verified identity calculation requires one trusted instructor window")
+    other_people = {}
     source_keys = set()
     unassigned_hold_keys = set()
     non_owner_route_locations = set()
@@ -149,13 +154,27 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         if busy.get("availability_location_mode") == "instructor_time_only":
             location = "instructor-only:" + str(busy.get("instructor") or "unassigned")
         instructor = busy.get("instructor") or "unassigned"
-        if len(brian_names) == 1 and instructor.casefold().strip() in {"brian", "brian ennis"}:
+        stable_id = busy.get("effective_instructor_person_id")
+        if strict_identity:
+            # Internal neutral labels protect the engine from conflating two
+            # people with the same display name and never expose their IDs.
+            if stable_id in window_ids:
+                instructor = window_ids[stable_id]
+            elif stable_id:
+                instructor = other_people.setdefault(stable_id, "unmatched instructor "+str(len(other_people)+1))
+            else:
+                instructor = "unassigned"
+            if busy.get("availability_location_mode") == "instructor_time_only":
+                location = "instructor-only:" + instructor
+        elif len(brian_names) == 1 and instructor.casefold().strip() in {"brian", "brian ennis"}:
             instructor = next(iter(brian_names))
         # Preserve real physical occupancy; source-provided travel buffers are
         # separate commitments and cannot move the paid block's actual edges.
-        if busy.get("instructor_unassigned") or instructor not in exact_owner_interval_names:
+        is_owner = (stable_id == policy.get("brian_person_id") if strict_identity
+                    else instructor in exact_owner_interval_names)
+        if busy.get("instructor_unassigned") or not is_owner:
             non_owner_route_locations.add(location)
-        key = (instructor, location, start, end)
+        key = ((stable_id if strict_identity else instructor), location, start, end)
         adr_shift = "adr" in str(busy.get("course_title") or "").casefold()
         if busy.get("instructor_unassigned"):
             # An assigned mirror may win the normal interval dedup. It must
