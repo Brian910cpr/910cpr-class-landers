@@ -8,6 +8,7 @@ from zoneinfo import ZoneInfo
 from scripts.layered_scheduling_engine import run
 
 ZONE = ZoneInfo("America/New_York")
+ADVANCED_FULL_PROVIDER_IDS = frozenset({"241108", "209818", "209805", "251496"})
 
 
 def aware(value):
@@ -74,11 +75,24 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         instruction = policy["skills_instruction_minutes" if skills else "full_instruction_minutes"]
         cleanup = policy["skills_cleanup_minutes" if skills else "full_cleanup_minutes"]
         override = policy.get("course_duration_overrides", {}).get(cid)
+        duration_evidence = "owner45+15skills/120+30full; actual occupied intervals preserved"
         if override is not None:
             instruction, cleanup = override['instruction_minutes'], override['cleanup_minutes']
             if (type(instruction) is not int or instruction <= 0 or
                     type(cleanup) is not int or cleanup < 0 or not override.get('evidence')):
                 raise ValueError('invalid evidenced course duration override: '+cid)
+            duration_evidence = override['evidence']
+        if cid in ADVANCED_FULL_PROVIDER_IDS:
+            # contextual_course merges the checked inventory rule into this
+            # exact course. Calendar start spacing is not a lesson duration.
+            minutes = course.get("duration_minutes")
+            minimum = course.get("minimum_reservation_block_minutes")
+            if (skills or type(minutes) is not int or minutes < 240 or
+                    type(minimum) is not int or minimum < 240):
+                raise ValueError("advanced provider duration has no valid inventory rule: " + cid)
+            instruction = max(minutes, instruction) if override is not None else minutes
+            cleanup = max(cleanup, minimum - instruction)
+            duration_evidence = "course_consumption_rules: " + cid + "; configured full-course cleanup"
         family = str(course.get("course_family") or course.get("family") or "")
         semantic = str(course.get("subtype") or family).upper()
         clinical = next((f for f in ["ACLS", "PALS", "BLS"] if f in semantic.split()), family)
@@ -86,7 +100,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             kind="skills" if skills else "full", duration_minutes=instruction+cleanup,
             instruction_minutes=instruction, cleanup_minutes=cleanup,
             source_course_id=cid,
-            duration_evidence=override['evidence'] if override else "owner45+15skills/120+30full; actual occupied intervals preserved",
+            duration_evidence=duration_evidence,
             provider=course.get("provider") or course.get("brand"), locations=[primary])
     origins = {}
     brian_names = set()

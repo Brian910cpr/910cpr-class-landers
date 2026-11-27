@@ -77,6 +77,56 @@ class LayeredPublicationTests(unittest.TestCase):
             for report in self.calculation()['reports']
             for x in report['free_intervals']))
 
+    def test_advanced_provider_inventory_bounds_fit_and_do_not_prove_a_route(self):
+        from scripts.block_start_time_selector import contextual_course, course_rules_by_id
+        rules = course_rules_by_id(json.loads((ROOT/'data/inventory/course_consumption_rules.json').read_text()))
+        ids = ('241108', '209818', '209805', '251496')
+        # Qualification and routing are independent, controlled test inputs.
+        # Only duration comes from the real production inventory rules.
+        catalog = {c: dict(course_id=c, blended_classroom_skills='classroom') for c in ids}
+        full = [contextual_course(c, {}, catalog, rules) for c in ids]
+        controls = [dict(course_id='209811', course_family='ACLS', kind='skills',
+                         duration_minutes=240, minimum_reservation_block_minutes=240),
+                    self.courses[-1], dict(course_id='344085', course_family='Heartsaver', kind='full')]
+        self.courses = full + controls
+        self.now = aware('2026-12-24T12:00:00-05:00')
+
+        def interval(end, *, name='Amy Arnold'):
+            w = dict(instructor_name=name, person_id='synthetic-amy' if name.startswith('Amy') else self.policy['brian_person_id'],
+                location_name=':: Wilmington; Shipyard Blvd', source_availability_window='test-window',
+                start='2026-12-26T13:00:00-05:00', end=f'2026-12-26T{end}:00-05:00')
+            self.windows = [w]
+            self.coverage = [dict(status='known_complete', instructor=name, location=self.room,
+                start=w['start'], end=w['end'], observed_at=self.now.isoformat(),
+                valid_until=(self.now+timedelta(minutes=30)).isoformat(), source='explicit_fixture_complete_calendar')]
+
+        interval('18:00')
+        published = self.payload()['offers']
+        for cid in ids:
+            matches = [o for o in published if o['courseId'] == cid]
+            self.assertEqual({o['startTime'] for o in matches}, {'13:00', '13:30'})
+            self.assertEqual({(o['durationMinutes'], o['cleanupBufferMinutes'], o['schedulerConsumptionMinutes'])
+                for o in matches}, {(240, 30, 270)})
+        for cid, expected in [('209811', 60), ('359474', 150), ('344085', 105)]:
+            self.assertEqual({o['schedulerConsumptionMinutes'] for o in published if o['courseId']==cid}, {expected})
+
+        unrouted = publish(self.calculation(), self.page, self.courses, self.windows, self.now,
+            lambda w,s,c:(None,None,None,'missing_verified_route'), lambda s,c:[], ())
+        self.assertFalse(unrouted['offers'])
+        interval('15:30')
+        self.assertFalse(any(o['courseId'] in ids for o in self.payload()['offers']))
+        self.assertTrue(any(o['courseId']=='359474' for o in self.payload()['offers']))
+        interval('18:00', name='Brian Ennis')
+        self.assertFalse(any(o['courseId'] in ids for o in self.payload()['offers']))
+
+        interval('18:00')
+        for broken in (dict(full[0], duration_minutes=120), dict(full[0], kind='skills'),
+                       dict(full[0], minimum_reservation_block_minutes=None)):
+            self.courses = [broken]
+            failed = self.calculation()
+            self.assertFalse(failed['reports'])
+            self.assertIn('no valid inventory rule', failed['issues'][0]['reason'])
+
     def test_attested_private_seat_survives_exact_interval_engine_dedup(self):
         self.windows=[]; self.coverage=[]; self.sources=[]
         self.window(11, '08:00', '18:00', next_day=False)

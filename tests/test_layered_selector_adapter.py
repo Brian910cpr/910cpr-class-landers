@@ -17,7 +17,7 @@ class LayeredAdapterTests(unittest.TestCase):
         self.courses = [dict(course_id=cid, course_family=family, kind=kind)
                         for cid, family, kind in [('210549','BLS','skills'),('209808','Heartsaver','skills'),
                                                   ('209806','BLS','full'),('209809','Heartsaver','full'),
-                                                  ('209818','ACLS','skills')]]
+                                                  ('fixture-acls-skills','ACLS','skills')]]
         self.busy = []
 
     def at(self, clock, day=10):
@@ -74,7 +74,7 @@ class LayeredAdapterTests(unittest.TestCase):
         self.add('14:00','16:30','209809',active_registration_count=1)
         for cid in ['210549','209808']:
             self.assertEqual(self.starts(self.report(),cid),{'13:00','16:30'})
-        self.assertEqual(self.starts(self.report(),'209818'),{'13:00','16:30'})
+        self.assertEqual(self.starts(self.report(),'fixture-acls-skills'),{'13:00','16:30'})
 
     def test_brian_all_skills_keeps_advanced_full_courses_excluded(self):
         self.courses.extend([dict(course_id='advanced-full',course_family='PALS',kind='full'),
