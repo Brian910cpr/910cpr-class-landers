@@ -1,10 +1,15 @@
 """Dry-run the existing V2 producer and customer renderer; never publish."""
 import json
+import os
+import subprocess
+from contextlib import nullcontext
+from unittest.mock import patch
 from pathlib import Path
 from collections import Counter
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from scripts.block_start_time_selector import build_block_schedule_page, load_block_schedule_page_configs, apply_final_live_availability_guard
 from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, public_reconciliation_issues, render_html
+from scripts import layered_release_oracle as oracle
 ROOT=Path(__file__).resolve().parents[1]
 
 REQUIRED_PAGE_KEYS = frozenset({'bls', 'heartsaver', 'acls', 'pals', 'arc', 'hsi',
@@ -97,6 +102,7 @@ def coverage_passed(pages):
 VALID_ZERO_REASONS = frozenset({
     "no_qualified_coverage", "outside_lead_time", "all_hard_blocked",
     "repeat_gap", "no_legal_bookend", "nonpublic_not_joinable",
+    "no_authorized_route", "container_unavailable",
 })
 OFFER_ROLES = frozenset({"open", "barnacle", "seated"})
 OFFER_CAPABILITIES = frozenset({"request_only", "verified_booking"})
@@ -123,11 +129,16 @@ def compare_expected_outcomes(required_scopes, expected, observed, *,
         return result
 
     def valid_scope(scope):
-        return (isinstance(scope, tuple) and len(scope) == 4
+        if not (isinstance(scope, tuple) and len(scope) == 4
                 and all(isinstance(part, str) and part.strip() for part in scope)
-                and scope[0] in REQUIRED_PAGE_KEYS)
+                and scope[0] in REQUIRED_PAGE_KEYS):
+            return False
+        try:
+            return date.fromisoformat(scope[1]).isoformat() == scope[1]
+        except ValueError:
+            return False
 
-    def offer_counts(rows):
+    def offer_counts(rows, scope):
         if not isinstance(rows, (list, tuple)):
             result["invalid_offer_count"] += 1
             return Counter()
@@ -139,9 +150,8 @@ def compare_expected_outcomes(required_scopes, expected, observed, *,
                 result["invalid_offer_count"] += 1
                 continue
             try:
-                start, end = (datetime.fromisoformat(value.replace("Z", "+00:00"))
-                              for value in row[:2])
-                if start.tzinfo is None or end.tzinfo is None or end <= start:
+                start, end = map(oracle.instant, row[:2])
+                if end <= start or start.astimezone(oracle.ET).date().isoformat() != scope[1]:
                     raise ValueError("invalid bounds")
                 key = (start.astimezone(timezone.utc), end.astimezone(timezone.utc), *row[2:])
             except (ValueError, OverflowError):
@@ -157,6 +167,8 @@ def compare_expected_outcomes(required_scopes, expected, observed, *,
         result["invalid_scope_count"] += 1
         return result
     required = set(required_scopes)
+    if len(required) != len(required_scopes):
+        result["invalid_scope_count"] += len(required_scopes) - len(required)
     if {scope[0] for scope in required} != REQUIRED_PAGE_KEYS:
         return result
     for collection in (expected, observed):
@@ -167,8 +179,8 @@ def compare_expected_outcomes(required_scopes, expected, observed, *,
         if not isinstance(entry, dict) or "offers" not in entry:
             result["invalid_scope_count"] += 1
             continue
-        wanted = offer_counts(entry["offers"])
-        actual = offer_counts(observed[scope])
+        wanted = offer_counts(entry["offers"], scope)
+        actual = offer_counts(observed[scope], scope)
         reason = entry.get("zero_reason")
         if ((not wanted and (not isinstance(reason, str) or reason not in VALID_ZERO_REASONS))
                 or (wanted and reason is not None)):
@@ -180,7 +192,7 @@ def compare_expected_outcomes(required_scopes, expected, observed, *,
     return result
 
 
-def run():
+def run(oracle_file=None):
     output=ROOT/'data/runtime/audit_previews/v2_release_probe'
     output.mkdir(parents=True,exist_ok=True)
     policy_path=ROOT/'data/config/layered_scheduling_policy.json'
@@ -189,23 +201,61 @@ def run():
     result=dict(observed_at=datetime.now(timezone.utc).isoformat(),published=False,pages={},coverage_passed=False,
                 outcome_status='unproven',release_passed=False)
     try:
+        configs = load_block_schedule_page_configs()
+        frozen = None
+        if oracle_file is not None:
+            try:
+                manifest = json.loads(Path(oracle_file).read_text(encoding="utf-8"))
+                hashes = oracle.freeze_inputs(ROOT)
+                frozen = oracle.configure(manifest, hashes, configs, REQUIRED_PAGE_KEYS,
+                                          Path(oracle_file).parent / "authorities")
+            except (ValueError, KeyError, TypeError, OSError, AttributeError, OverflowError):
+                # Private authority files, names, paths and errors never leave CI.
+                result["outcome_status"] = "invalid_independent_manifest"
+        if frozen is not None:
+            now, required, expected = frozen
+            from scripts import block_start_time_selector as selector
+            reference = selector.selector_reference_datetime
+            clock = patch.object(selector, "selector_reference_datetime",
+                lambda explicit=None: reference(now if explicit is None else explicit))
+        else:
+            clock = nullcontext()
+        feeds, html_pages = {}, {}
         policy_path.write_text(json.dumps(policy),encoding='utf-8')
         snapshot=json.loads((ROOT/'data/audit/live_availability_snapshot_preview.json').read_text())
         result['calendar_coverage_count']=len(snapshot.get('layered_commitment_coverage',[]))
         canonical=json.loads((ROOT/'data/runtime/canonical_scheduling_demand.json').read_text())
         result['canonical_session_count']=len(canonical.get('sessions',[]))
-        for key, config in load_block_schedule_page_configs().items():
-            payload=apply_final_live_availability_guard(build_block_schedule_page(config))
-            feed=public_selector_availability_payload(payload)
-            (output/(key+'.json')).write_text(json.dumps(feed,ensure_ascii=False),encoding='utf-8')
-            html=render_html(payload).replace('<body>','<body><aside>READ-ONLY RELEASE PROBE: not published.</aside>',1)
-            (output/(key+'.html')).write_text(html,encoding='utf-8')
-            if key in REQUIRED_PAGE_KEYS:
-                result['pages'][key] = aggregate_page_proof(payload, feed)
+        with clock:
+            for key, config in configs.items():
+                payload=apply_final_live_availability_guard(build_block_schedule_page(config))
+                feed=public_selector_availability_payload(payload)
+                (output/(key+'.json')).write_text(json.dumps(feed,ensure_ascii=False),encoding='utf-8')
+                html=render_html(payload).replace('<body>','<body><aside>READ-ONLY RELEASE PROBE: not published.</aside>',1)
+                (output/(key+'.html')).write_text(html,encoding='utf-8')
+                if key in REQUIRED_PAGE_KEYS:
+                    result['pages'][key] = aggregate_page_proof(payload, feed)
+                    feeds[key], html_pages[key] = feed, html
         result['calculation_completed']=True
         result['coverage_passed']=coverage_passed(result['pages'])
-        # This runner has no independently reconciled expected customer outcomes.
-        # Never promote a producer's own window counts into an acceptance gate.
+        if frozen is not None:
+            try:
+                if oracle.freeze_inputs(ROOT, policy_bytes=original) != hashes:
+                    result["outcome_status"] = "inputs_changed_during_replay"
+                else:
+                    observed = oracle.observed_outcomes(ROOT, feeds, html_pages, configs, manifest, now, required)
+                    comparison = compare_expected_outcomes(required, expected, observed,
+                        expected_epoch=manifest["epoch"], observed_epoch=oracle.epoch_for(now, hashes))
+                    result["local_replay_comparison"] = comparison
+                    result["outcome_status"] = ("local_replay_matched" if comparison["status"] == "matched"
+                        else comparison["status"])
+            except (ValueError, KeyError, TypeError, OSError, AttributeError, OverflowError, subprocess.SubprocessError):
+                result["outcome_status"] = "unresolved_customer_preview"
+        # A local match is not hosted route/privacy/checkout proof. No activation.
+    except Exception:
+        if oracle_file is None:
+            raise
+        result["outcome_status"] = "preview_failed"
     finally:
         policy_path.write_bytes(original)
         (output/'proof.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
@@ -213,5 +263,5 @@ def run():
     if not result.get("release_passed"):
         raise RuntimeError("V2 independent customer outcome is unproven; publication remains stopped")
 
-if __name__=='__main__':run()
+if __name__=='__main__':run(os.getenv("LAYERED_INDEPENDENT_ORACLE_FILE"))
 

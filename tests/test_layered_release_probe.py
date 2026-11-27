@@ -202,3 +202,131 @@ class IndependentOutcomeComparatorTests(unittest.TestCase):
         result = self.compare(self.actual | {self.target: [invalid]})
         self.assertEqual(result["invalid_offer_count"], 1)
         self.assertEqual(result["status"], "mismatch")
+
+
+class FrozenRunnerTests(unittest.TestCase):
+    def test_frozen_local_runner_checks_real_route_and_authority_axes(self):
+        import hashlib
+        import shutil
+        from datetime import timedelta
+        from scripts import layered_release_oracle as o
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            authorities = root / "restricted" / "authorities"
+            authorities.mkdir(parents=True)
+            target = authorities.parent / "expected.json"
+            for rel in o.INPUTS:
+                path = root / rel
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("{}")
+            shutil.copyfile(probe.ROOT / "docs/assets/resolved-selector-availability.js",
+                            root / "docs/assets/resolved-selector-availability.js")
+            now = o.instant("2026-10-31T14:00:00Z")
+            pages = probe.REQUIRED_PAGE_KEYS
+            configs = {page: {"allowed_course_ids": ["101"], "output_path": f"docs/{page}.html"}
+                       for page in pages}
+            configs["bls"]["allowed_course_ids"].append("202")
+            hashes = o.freeze_inputs(root)
+            epoch = o.epoch_for(now, hashes)
+            manifest = dict(schema=o.SCHEMA, as_of=now.isoformat(), epoch=epoch, input_sha256=hashes,
+                page_courses={p: c["allowed_course_ids"] for p, c in configs.items()},
+                instructors={"primary-key": "Fixture Lead", "other-key": "Fixture Other"},
+                rooms={"Fixture Room": "fixture-room"}, authority_sha256={}, outcomes=[])
+            witnesses = {"qualified_instructors": {"instructors": manifest["instructors"]},
+                         "resources": {"rooms": manifest["rooms"]},
+                         "catalog": {"page_courses": manifest["page_courses"]}}
+            for lane in o.AUTHORITIES:
+                content = json.dumps(dict(epoch=epoch, **witnesses.get(lane, {}))).encode()
+                (authorities / (lane + ".json")).write_bytes(content)
+                manifest["authority_sha256"][lane] = hashlib.sha256(content).hexdigest()
+            slot_date = "2026-10-31"
+            scope = ("bls", slot_date, "primary-key", "101")
+            extra_scope = ("bls", slot_date, "primary-key", "202")
+            seated_scope = ("bls", "2026-11-01", "primary-key", "101")
+            expected = {
+                scope: ["2026-11-01T03:30:00Z", "2026-11-01T05:30:00Z", "fixture-room", "open", "request_only"],
+                extra_scope: ["2026-11-01T03:30:00Z", "2026-11-01T04:30:00Z", "fixture-room", "barnacle", "request_only"],
+                seated_scope: ["2026-11-01T18:00:00Z", "2026-11-01T19:00:00Z", "fixture-room", "seated", "request_only"],
+            }
+            for i in range(90):
+                day = (now.astimezone(o.ET).date() + timedelta(days=i)).isoformat()
+                for page in pages:
+                    for teacher in manifest["instructors"]:
+                        for course in manifest["page_courses"][page]:
+                            key = (page, day, teacher, course)
+                            row = dict(scope=list(key), offers=[expected[key]] if key in expected else [])
+                            if key not in expected:
+                                row["zero_reason"] = "no_authorized_route" if teacher == "primary-key" else "no_qualified_coverage"
+                            manifest["outcomes"].append(row)
+            target.write_text(json.dumps(manifest))
+
+            course = dict(courseId="101", instructor="Fixture Lead", location="Fixture Room",
+                          schedulerConsumptionMinutes=120, offerType="dynamic_appointment")
+            edge = dict(course, courseId="202", schedulerConsumptionMinutes=60, scheduleRole="barnacle")
+            seated = dict(course, offerType="seated_class", schedulerConsumptionMinutes=60,
+                          registrationUrl="https://www.910cpr.com/register/?session=123")
+            populated = dict(validUntil="2026-10-31T15:00:00Z", dates=[
+                dict(date=slot_date, startTimes=[dict(startTime="23:30", courses=[course, edge])]),
+                dict(date="2026-11-01", startTimes=[dict(startTime="13:00", courses=[seated])])])
+            capabilities = {"sessions": {}}
+
+            def build(config):
+                from scripts.block_start_time_selector import selector_reference_datetime
+                self.assertEqual(selector_reference_datetime(), now.astimezone(o.ET).replace(tzinfo=None))
+                page = next(k for k, v in configs.items() if config is v)
+                return dict(page=page, counts=dict(input_windows=1, evaluated_windows=1, failed_windows=0))
+
+            def render(payload):
+                p = payload["page"]
+                return (
+                    '<body>\nconst availabilityUrl = ' + json.dumps('/data/block-selector-availability/' + p + '.json?v=one') +
+                    ';\nconst courseOptions = [{"courseId":"101"},{"courseId":"202"}];\n' +
+                    'const nativeClassCapabilities = ' + json.dumps(capabilities) + ';\n</body>')
+
+            def run():
+                with (
+                    patch.object(probe, "ROOT", root),
+                    patch.object(probe, "load_block_schedule_page_configs", return_value=configs),
+                    patch.object(probe, "build_block_schedule_page", side_effect=build),
+                    patch.object(probe, "apply_final_live_availability_guard", side_effect=lambda x: x),
+                    patch.object(probe, "render_html", side_effect=render),
+                    patch.object(probe, "public_selector_availability_payload",
+                        side_effect=lambda payload: populated if payload["page"]=="bls" else {"dates": []}),
+                    patch("builtins.print") as stdout,
+                ):
+                    with self.assertRaisesRegex(RuntimeError, "publication remains stopped"):
+                        probe.run(target)
+                saved = root / "data/runtime/audit_previews/v2_release_probe/proof.json"
+                report = json.loads(saved.read_text())
+                self.assertNotRegex(saved.read_text() + str(stdout.call_args), "Fixture|fixture-room|primary-key|23:30")
+                self.assertFalse(report["release_passed"])
+                return report
+
+            self.assertEqual(run()["outcome_status"], "local_replay_matched")
+            capabilities["sessions"]["123"] = dict(courseId="101", date="2026-11-01",
+                                                    startTime="13:00", location="Fixture Room")
+            mismatch = run()
+            self.assertEqual(mismatch["outcome_status"], "mismatch")
+            self.assertEqual(mismatch["local_replay_comparison"]["unexpected_offer_count"], 1)
+            capabilities["sessions"].clear()
+            originals = manifest["outcomes"]
+            manifest["outcomes"] = [r for r in originals if r["scope"][1] != "2026-11-16"
+                                     and r["scope"][2] != "other-key"]
+            target.write_text(json.dumps(manifest))
+            self.assertGreater(run()["local_replay_comparison"]["missing_scope_count"], 90)
+            manifest["outcomes"] = originals
+            manifest["epoch"] = "wrong-epoch"
+            target.write_text(json.dumps(manifest))
+            # Bad manifest fails before any attested/frozen replay may run.
+            with self.assertRaisesRegex(ValueError, "epoch mismatch"):
+                o.configure(manifest, hashes, configs, pages, authorities)
+
+    def test_wrong_local_date_does_not_match_even_when_both_sides_are_wrong(self):
+        case = IndependentOutcomeComparatorTests()
+        case.setUp()
+        offer = ("2099-01-01T02:00:00Z", "2099-01-01T06:00:00Z", *case.offer[2:])
+        result = case.compare(case.actual | {case.target: [offer]},
+                              case.expected | {case.target: {"offers":[offer]}})
+        self.assertEqual(result["status"], "mismatch")
+        self.assertEqual(result["invalid_offer_count"], 2)

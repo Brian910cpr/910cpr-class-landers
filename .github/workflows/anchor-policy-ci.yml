@@ -67,6 +67,7 @@ on:
       - 'scripts/layered_selector_adapter.py'
       - 'scripts/layered_publication_adapter.py'
       - 'scripts/run_layered_release_probe.py'
+      - 'scripts/layered_release_oracle.py'
       - 'tests/test_layered_release_probe.py'
       - 'tests/test_layered_publication_adapter.py'
       - 'scripts/audit_family_publication_coverage.py'
