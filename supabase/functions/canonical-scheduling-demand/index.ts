@@ -44,7 +44,8 @@ function catalogCourseId(value: unknown): string | null {
 }
 
 export function projectDemand(row: any) {
-  const proof = registrationProof(row);
+  const now = new Date();
+  const proof = registrationProof(row, now);
   const countAvailable = proof.count_available;
   const registrations = countAvailable ? row.registrations : [];
   // Internal occupied-time signal only. A numeric legacy external_class_id can
@@ -70,9 +71,29 @@ export function projectDemand(row: any) {
     && Array.isArray(row.registrations)
     && row.registrations.some((item: any) => ACTIVE.has(item.status)
       && item.registration_source === "enrollware_email_confirmation");
+  // An expired previously complete external roster is not a current seat
+  // count. But an exact, still-active relationship match is conservative
+  // evidence of an existing commitment: reserve time, not public capacity.
+  // Reuse the shared relationship validator at its original observation
+  // epoch; the normal current-time proof and all public gates stay unchanged.
+  const priorObserved = Date.parse(row.external_reconciliation?.source_observed_at || "");
+  const staleExactCommitment = proof.demand_status === "stale_reconciliation"
+    && row.registration_backend === "enrollware"
+    && row.source === "enrollware_reconciled"
+    && /^\d+$/.test(String(row.external_class_id || ""))
+    && Number.isFinite(priorObserved)
+    && now.getTime() - priorObserved > 3600000
+    && Array.isArray(row.registrations)
+    && !row.registrations.some((item: any) => ACTIVE.has(item.status) && item.canceled_at != null)
+    && (() => {
+      const prior = registrationProof(row, new Date(priorObserved));
+      return prior.count_available && typeof prior.active_registration_count === "number"
+        && prior.active_registration_count > 0;
+    })();
   const operationalHasActiveSeat = ["scheduled", "active"].includes(row.status)
     && ((countAvailable && typeof proof.active_registration_count === "number"
-          && proof.active_registration_count > 0) || nativeCommittedSeat || confirmedEmailIntakeSeat);
+          && proof.active_registration_count > 0) || nativeCommittedSeat || confirmedEmailIntakeSeat
+          || staleExactCommitment);
   const workspaces = row.landerware_sessions || [];
   const workspace = workspaces.length === 1 ? workspaces[0] : null;
   const workspaceStatus = !workspaces.length ? "missing" : !workspace
@@ -120,7 +141,7 @@ export async function loadDemand(start: string, stop: string) {
     "locations!class_sessions_location_id_fkey(name)",
     "people!class_sessions_lead_instructor_id_fkey(display_name)",
     "landerware_sessions!landerware_sessions_class_session_id_fkey(id,starts_at,ends_at)",
-    "registrations!registrations_class_session_id_fkey(status,external_registration_id,registration_source)",
+    "registrations!registrations_class_session_id_fkey(status,external_registration_id,registration_source,canceled_at)",
   ].join(",");
   const params = new URLSearchParams({
     select, record_scope: "eq.operational", status: "in.(scheduled,active,completed)", order: "start_at.asc,id.asc", limit: "500",

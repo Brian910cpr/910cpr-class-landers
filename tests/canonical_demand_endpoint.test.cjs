@@ -261,3 +261,44 @@ test('HTTP demand includes ongoing carry-in until exclusive consumption end, wit
   assert.equal(calls[0].get('or'),`(start_at.gte.${start},consumption_end_at.gt.${start},and(consumption_end_at.is.null,end_at.gt.${start}))`);
   assert.equal(body.sessions.find(row=>row.canonical_session_id==='cleanup-carry-in').consumption_end_at,later);
 });
+
+test('expired exact external roster retains operational commitment without certifying public seats', () => {
+  const observed = new Date(Date.now() - 2 * 3600000).toISOString();
+  const fixture = {id:'synthetic-stale',status:'scheduled',source:'enrollware_reconciled',
+    registration_backend:'enrollware',external_class_id:'80004',visibility:'unlisted',
+    registration_status:'closed',
+    external_reconciliation:{complete:true,source_observed_at:observed,
+      active_external_registration_ids:['fixture-reg'],active_registration_count:1},
+    registrations:[{status:'registered',registration_source:'enrollware_reconciled',
+      external_registration_id:'fixture-reg',canceled_at:null}]};
+  const out=api.projectDemand(fixture);
+  assert.equal(out.operational_has_active_seat,true);
+  assert.equal(out.demand_status,'stale_reconciliation');
+  assert.equal(out.count_available,false);
+  assert.equal(out.active_registration_count,null);
+  assert.equal(out.demand_basis,'unknown');
+  assert.equal(out.visibility,'unlisted');
+  assert.equal(out.registration_status,'closed');
+  assert.equal(Object.hasOwn(out,'registrations'),false);
+  assert.doesNotMatch(JSON.stringify(out),/fixture-reg/);
+
+  for (const change of [
+    {source:'manual'},
+    {external_class_id:'non-numeric'},
+    {status:'canceled'},
+    {registrations:null},
+    {registrations:[]},
+    {registrations:[{...fixture.registrations[0],status:'canceled'}]},
+    {registrations:[{...fixture.registrations[0],canceled_at:observed}]},
+    {registrations:[{...fixture.registrations[0],external_registration_id:'different'}]},
+    {registrations:[fixture.registrations[0],fixture.registrations[0]]},
+    {external_reconciliation:{...fixture.external_reconciliation,complete:false}},
+    {external_reconciliation:{...fixture.external_reconciliation,active_registration_count:2}},
+    {external_reconciliation:{...fixture.external_reconciliation,active_external_registration_ids:['fixture-reg','fixture-reg'],active_registration_count:2}},
+    {external_reconciliation:{...fixture.external_reconciliation,source_observed_at:new Date(Date.now()+2*3600000).toISOString()}}
+  ]) {
+    const denied=api.projectDemand({...fixture,...change});
+    assert.equal(denied.operational_has_active_seat,false,JSON.stringify(change));
+    assert.equal(denied.active_registration_count,null);
+  }
+});
