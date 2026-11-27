@@ -105,6 +105,9 @@
       max-width: 420px;
       margin-bottom: -24px;
     }
+    .family-hero-media.is-character.is-rotating:not([hidden]) { min-height: 380px; }
+    .family-hero-media.is-rotating > img:not([src]),
+    .family-hero-media img[hidden] { display: none; }
     .family-hero-media.is-character img {
       height: 380px;
       max-height: none;
@@ -680,6 +683,7 @@
         margin-bottom: -14px;
       }
       .family-hero-media.is-character img { height: 280px; max-height: none; }
+      .family-hero-media.is-character.is-rotating:not([hidden]) { min-height: 280px; }
       .header-credential {
         grid-template-columns: 44px minmax(0, 1fr);
         gap: 8px;
@@ -791,7 +795,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <script src="/assets/analytics-attribution.js?v=20260912-1" defer></script>
   <link rel="stylesheet" href="/assets/site-theme.css?v=20261108.1">
 <script src="/assets/site-theme.js"></script>
-
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -886,13 +889,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </section>
     
   </main>
-  <script src="/assets/family-hero.js?v=6d88341997f7" defer></script>
+  <script src="/assets/family-hero.js?v=461d80e849d9" defer></script>
   <script src="/assets/interaction-motion.js?v=20260809.1"></script>
   <script src="/assets/resolved-selector-availability.js?v=20261119-request-containment2"></script>
   <script src="/assets/calendar-time-filters.js?v=20261013.1"></script>
   <script>
     const embeddedScheduleDates = [];
-    const availabilityUrl = "/data/block-selector-availability/family_cpr.json?v=2026-11-27T17%3A38%3A38.342065%2B00%3A00";
+    const availabilityUrl = "/data/block-selector-availability/family_cpr.json?v=2026-11-27T17%3A49%3A48.520628%2B00%3A00";
     const courseOptions = [{"courseId": "252737", "courseName": "Family & Friends CPR", "family": "Heartsaver", "variant": "family-cpr", "deliveryMode": "in-person", "recommended": true, "deepLinkAliases": ["family-cpr", "family", "family-friends", "family-and-friends", "friends"], "iconLabel": "CPR", "imageUrl": "/images/FF-CPR-2.jpg", "imageFit": "contain", "imageAlt": "Family CPR practice with an infant CPR manikin", "deliveryBadge": "IN-PERSON", "clarification": "Relaxed, hands-on CPR practice for families and community members. No certification card is included.", "familyGroup": "", "familyLabel": "", "optionLabel": "", "price": 45, "fullWidth": false, "skillsContexts": [], "details": {}}];
     const nativeClassCapabilities = {"sessions": {"14996400": {"courseId": "209806", "date": "2026-12-01", "startTime": "11:00", "location": "Wilmington; Shipyard Blvd"}, "15026275": {"courseId": "209806", "date": "2026-11-20", "startTime": "11:00", "location": "Wilmington; Shipyard Blvd"}, "15000715": {"courseId": "209806", "date": "2026-11-22", "startTime": "15:00", "location": "Wilmington; Shipyard Blvd"}, "15007373": {"courseId": "209806", "date": "2026-11-23", "startTime": "10:00", "location": "Wilmington; Shipyard Blvd"}, "14999858": {"courseId": "209806", "date": "2026-11-24", "startTime": "11:30", "location": "Wilmington; Shipyard Blvd"}, "15026054": {"courseId": "209806", "date": "2026-11-25", "startTime": "09:30", "location": "Wilmington; Shipyard Blvd"}}};
     const optionGroups = {"Heartsaver": {"family": "Heartsaver", "label": "Family & Friends CPR", "courseIds": ["252737"]}};
