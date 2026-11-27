@@ -390,5 +390,69 @@ class CanonicalSchedulingDemandTests(unittest.TestCase):
         self.assertEqual(pack(cold["reports"]), pack(warm["reports"]))
 
 
+    def test_fall_back_availability_scope_proof_and_public_clock(self):
+        from scripts.block_start_time_selector import layered_window_instants
+
+        config = Path(__file__).resolve().parents[1] / 'data/config'
+        policy = json.loads((config/'layered_scheduling_policy.json').read_text())
+        policy.update(lead_minutes=0)
+        resource = json.loads((config/'location_resource_map.json').read_text())
+        page = json.loads((config/'block_schedule_pages.json').read_text())['pages']['heartsaver']
+        now = aware('2026-10-30T12:00:00-04:00')
+        cid, name = '329495', 'Brian Ennis'
+        course = dict(course_id=cid, course_family='Heartsaver', kind='skills')
+        first, second = '2026-11-01T01:30:00-04:00', '2026-11-01T01:30:00-05:00'
+        after = '2026-11-01T03:00:00-05:00'
+        window = dict(instructor_name=name, person_id=policy['brian_person_id'],
+                      location_name=':: Wilmington; Shipyard Blvd', start_datetime=first, end_datetime=second,
+                      source_availability_window='cross-fold')
+        proof = dict(status='known_complete', instructor=name, location=policy['primary_resource'],
+                     start=first, end=after, observed_at=now.isoformat(),
+                     valid_until='2026-10-30T13:00:00-04:00')
+        next_window = dict(window,start_datetime=second,end_datetime=after,source_availability_window='after-scope')
+        bad = dict(instructor=name, resource=policy['primary_resource'],
+                   location_resolution='location_resource_map',
+                   source_event_id='synthetic-unclear-source', start='unresolved', end='unresolved',
+                   uncertainty_scope=dict(start=first,end=second))
+        later_proof = dict(proof, start=second)
+        for selected, sources, proofs, expected_open in (
+                (window, [], [proof], True),
+                (window, [], [later_proof], False),
+                (window, [bad], [proof], False),
+                (next_window, [bad], [later_proof], True)):
+            args = ([selected],sources,[course],policy,resource,now,
+                    layered_window_instants,lambda *_:True,proofs)
+            direct=calculate(*args)
+            with TemporaryDirectory() as directory:
+                cold=cached_calculate(*args,cache_dir=directory)
+                warm=cached_calculate(*args,cache_dir=directory)
+            self.assertEqual(warm['incremental_cache']['hits'],1)
+            self.assertEqual(pack(direct['reports']),pack(cold['reports']))
+            self.assertEqual(pack(cold['reports']),pack(warm['reports']))
+            self.assertTrue(direct['reports'],direct['issues'])
+            report=direct['reports'][0]
+            self.assertEqual(bool(report['accepted']),expected_open)
+            self.assertEqual(bool(direct['issues']),bool(sources and selected is window))
+            if selected is window and proofs == [later_proof]:
+                self.assertEqual(report['valid_until'],now)
+            visited = []
+            def url_for(w, start, c):
+                visited.append(start.strftime('%H:%M'))
+                return 'day','container',f'/register/?startTime={start:%H:%M}',None
+            published=publish(direct,page,[course],[selected],now,url_for,lambda *_:[])
+            self.assertFalse(any(t.startswith('01:') for t in visited))
+            self.assertEqual([x['startTime'] for x in published['offers']],
+                             ['02:00'] if selected is next_window else [])
+
+        ambiguous = dict(window, start_datetime='2026-11-01T01:30:00')
+        args = ([ambiguous],[],[course],policy,resource,now,
+                layered_window_instants,lambda *_:True,[proof])
+        with TemporaryDirectory() as directory:
+            result=cached_calculate(*args,cache_dir=directory)
+        self.assertFalse(result['reports'])
+        self.assertEqual(result['issues'],calculate(*args)['issues'])
+        self.assertIn('ambiguous',result['issues'][0]['reason'])
+
+
 if __name__ == "__main__":
     unittest.main()

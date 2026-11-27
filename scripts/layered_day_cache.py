@@ -8,7 +8,7 @@ from zoneinfo import ZoneInfo
 from pathlib import Path
 import hashlib
 import json
-from scripts.layered_selector_adapter import aware
+from scripts.layered_selector_adapter import aware, occupancy_instant
 from scripts.layered_publication_adapter import calculate, project_sources, repeat_context_for_window, scoped_sources, SCHEMA
 from scripts.fetch_canonical_scheduling_demand import _atomic_write_json
 
@@ -47,7 +47,8 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
     # Cache expiry is an instant; repeated local-clock hours must not extend it.
     now=aware(now).astimezone(timezone.utc)
     horizon_start=now.astimezone(ZONE).replace(hour=0,minute=0,second=0,microsecond=0)
-    horizon_end=horizon_start+timedelta(days=horizon_days)
+    horizon_end=(horizon_start+timedelta(days=horizon_days)).astimezone(timezone.utc)
+    horizon_start=horizon_start.astimezone(timezone.utc)
     if not 1 <= horizon_days <= 90: raise ValueError('cache horizon must be 1..90 days')
     cache_dir=Path(cache_dir)
     known_rooms={r['resource_name'] for loc in resources.get('locations', []) for r in loc.get('internal_resources', [])}
@@ -57,19 +58,28 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
     projected=project_sources(occupancy, metadata)
     reports=[];issues=[];hits=0;rebuilt=[];selected=[]
     for index,original in enumerate(windows):
-        start,end=map(aware,interval(original))
+        try:
+            start,end=map(occupancy_instant,interval(original))
+            if end <= start:
+                raise ValueError("invalid_resource_window")
+        except (KeyError, ValueError, TypeError, AttributeError):
+            selected.append(original)
+            unresolvable=calculate([original],[],courses,policy,resources,now,interval,qualified,[])
+            issues.extend(unresolvable['issues'])
+            continue
         if end<=horizon_start or start>=horizon_end: continue
         window=dict(original)
         # Clipping only at rolling horizon boundaries; preserve ordinary windows.
         start,end=max(start,horizon_start),min(end,horizon_end)
-        window.update(start=start.isoformat(),end=end.isoformat())
+        window.update(start=start.astimezone(ZONE).isoformat(),end=end.astimezone(ZONE).isoformat())
         window.setdefault('source_availability_window',str(index))
         selected.append(window)
         rows=scoped_sources(projected,start,end,travel_minutes,known_rooms,policy['primary_resource'])
         proofs=[]
         for proof in coverage or []:
             try:
-                if aware(proof['end'])<=start or aware(proof['start'])>=end: continue
+                if (occupancy_instant(proof['end'], allow_local=False)<=start
+                        or occupancy_instant(proof['start'], allow_local=False)>=end): continue
             except (KeyError,ValueError,TypeError): pass
             proofs.append(proof)
         qualifications=[bool(qualified(window,c)) for c in courses]

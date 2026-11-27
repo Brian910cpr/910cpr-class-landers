@@ -199,8 +199,8 @@ def scoped_sources(rows, start, end, travel_minutes, known_rooms, primary):
     zone = ZoneInfo("America/New_York")
     lower = (start.astimezone(zone).replace(hour=0, minute=0, second=0, microsecond=0)
              .astimezone(timezone.utc) - timedelta(minutes=travel))
-    upper = ((end.astimezone(zone)-timedelta(microseconds=1))
-             .replace(hour=0, minute=0, second=0, microsecond=0)
+    end_day = (end.astimezone(timezone.utc) - timedelta(microseconds=1)).astimezone(zone)
+    upper = (end_day.replace(hour=0, minute=0, second=0, microsecond=0)
              + timedelta(days=1)).astimezone(timezone.utc) + timedelta(minutes=travel)
     horizon = timedelta(minutes=max(48 * 60, 24 * 60 + travel))
     route_lower = start.astimezone(timezone.utc) - horizon
@@ -268,10 +268,10 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
     reports, issues = [], []
     for index, window in enumerate(windows):
         try:
-            ws, we = map(aware, interval(window))
+            ws, we = map(occupancy_instant, interval(window))
             if we <= ws:
                 raise ValueError("invalid_resource_window")
-        except (ValueError, TypeError, KeyError) as error:
+        except (ValueError, TypeError, KeyError, AttributeError) as error:
             issues.append(dict(reason=str(error), instructor=window.get("instructor_name"),
                 resource=policy["primary_resource"], window_id=window.get("source_availability_window")))
             continue
@@ -300,13 +300,12 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
                 relevant.append(source)
             except (KeyError, TypeError, ValueError):
                 scope = source.get("uncertainty_scope", {})
-                bounded = scope.get("start") and scope.get("end")
-                if bounded:
-                    try:
-                        bounded = aware(scope["end"]) > aware(scope["start"])
-                    except (ValueError, TypeError):
-                        bounded = False
-                if bounded and (aware(scope["end"]) <= ws or aware(scope["start"]) >= we):
+                try:
+                    scope_start, scope_end = (occupancy_instant(scope[key]) for key in ("start", "end"))
+                    bounded = scope_start < scope_end
+                except (KeyError, ValueError, TypeError, AttributeError):
+                    bounded = False
+                if bounded and (scope_end <= ws or scope_start >= we):
                     continue
                 if bounded:
                     uncertain = dict(source, start=scope["start"], end=scope["end"],
@@ -323,7 +322,6 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
         fresh = []
         for proof in coverage or []:
             try:
-                from scripts.layered_scheduling_engine import stamp
                 if proof.get("status") != "known_complete":
                     continue
                 for field in ("start", "end", "observed_at", "valid_until"):
@@ -352,7 +350,7 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
             report["availability_window"] = window.get("source_availability_window", str(index))
             # Coverage lease must survive both publication and browser rendering.
             matched = [p for p in fresh if p.get("instructor") == window["instructor_name"]
-                and p.get("location") == room and aware(p["start"]) <= ws and we <= aware(p["end"])]
+                and p.get("location") == room and stamp(p["start"]) <= ws and we <= stamp(p["end"])]
             report["valid_until"] = min((aware(p["valid_until"]).astimezone(timezone.utc) for p in matched), default=now)
             reports.append(report)
         except ValueError as error:
@@ -386,6 +384,11 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
             course = catalog[candidate["course"]]
             start, end = aware(candidate["start"]), aware(candidate["end"])
             window = origins[report["availability_window"]]
+            # Current public appointment URLs encode local date/HH:MM, not an offset.
+            # Neither occurrence of a repeated wall time can be booked unambiguously.
+            if start.replace(fold=0).utcoffset() != start.replace(fold=1).utcoffset():
+                rejected.append(dict(diagnostic(candidate), reasons=["ambiguous_public_start_time"]))
+                continue
             day_id, container_id, url, blocker = url_for(window, start, candidate["course"])
             reasons = list(public_reasons(start, course))
             allowed_families = set(window.get("allowed_course_families", []))

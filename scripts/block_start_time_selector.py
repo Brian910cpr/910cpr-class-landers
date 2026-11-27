@@ -487,6 +487,20 @@ def window_datetimes(window: dict[str, Any]) -> tuple[datetime, datetime]:
     return start, end
 
 
+def layered_window_instants(window: dict[str, Any]) -> tuple[datetime, datetime]:
+    """Preserve live offset-bearing bounds before the legacy wall-time parser."""
+    from scripts.layered_selector_adapter import occupancy_instant
+
+    start = window.get("start_datetime") or window.get("start_at")
+    end = window.get("end_datetime") or window.get("end_at")
+    if not start or not end:
+        # Do not replace one supplied bound with a guessed display-clock value.
+        if start or end:
+            raise ValueError("incomplete_resource_window_bounds")
+        start, end, _ = generate_dynamic_offers.availability_window_datetimes(window)
+    return occupancy_instant(start), occupancy_instant(end)
+
+
 def public_location_allowed(location: str, policy: dict[str, Any]) -> bool:
     return is_public_class_location(location)
 
@@ -1333,7 +1347,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             occupancy, (owner or {}).get("display_name"), layered_policy["primary_resource"],
             reference_now, coverage, owner_qualified_for_occupied_course)
         calculation = cached_calculate(windows, occupancy, selected_courses, effective_layered_policy,
-            loaded["location_resource_map"], reference_now, window_datetimes,
+            loaded["location_resource_map"], reference_now, layered_window_instants,
             lambda window, course: bool(people.get(normalize_key(window.get("person_id")))
                 and has_required_cert(people[normalize_key(window.get("person_id"))], course)),
             coverage, layered_policy.get("travel_minutes", {}),
