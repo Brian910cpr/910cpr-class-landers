@@ -125,7 +125,8 @@ export async function loadDemand(start: string, stop: string) {
   const params = new URLSearchParams({
     select, record_scope: "eq.operational", status: "in.(scheduled,active,completed)", order: "start_at.asc,id.asc", limit: "500",
   });
-  params.append("start_at", `gte.${start}`);
+  // Include carry-in commitments until their consumption end (or instructional end if absent).
+  params.set("or", `(start_at.gte.${start},consumption_end_at.gt.${start},and(consumption_end_at.is.null,end_at.gt.${start}))`);
   params.append("start_at", `lt.${stop}`);
   const sessions = [];
   for (let offset = 0; ; offset += 500) {
