@@ -258,5 +258,32 @@ class OwnerTravelExactIntervalTests(unittest.TestCase):
    self.assertEqual(cached(False)['counts']['failed_windows'], 1)
 
 
+
+ def test_attested_same_interval_mirror_preserves_unassigned_hold_in_both_orders(self):
+  assigned = dict(src(B), source_event_id='paid', kind='paid',
+                  operational_has_active_seat=True)
+  unassigned = dict(src(B, unassigned=True), source_event_id='unknown')
+  windows = [
+      dict(instructor_name=B, person_id=P, location_name='Shipyard',
+           start=at('08:00'), end=at('16:00')),
+      dict(instructor_name=A, person_id='other', location_name='Shipyard',
+           start=at('08:00'), end=at('16:00')),
+  ]
+  for rows in ([assigned, unassigned], [unassigned, assigned]):
+   with self.subTest(order=rows[0]['source_event_id']):
+    out = build_shadow(windows, rows, COURSES, POLICY, RES,
+                       datetime.fromisoformat('2026-12-01T13:00:00Z'),
+                       lambda w:(w['start'],w['end']),lambda *_:True,
+                       lead_minutes=0,travel_minutes={
+                         'Room B->Offsite':30,'Offsite->Room B':45})
+    hold = [r for r in out['source_truth'] if r['instructor']==A and r['kind']=='hold']
+    self.assertEqual(len(hold),1)
+    self.assertFalse(hold[0]['operational_has_active_seat'])
+    amy = next(r for r in out['resource_availability'] if r['instructor']==A)
+    self.assertEqual([(a.isoformat(),b.isoformat()) for a,b in amy['free']],
+                     [('2026-12-10T13:00:00+00:00','2026-12-10T14:30:00+00:00'),
+                      ('2026-12-10T17:45:00+00:00','2026-12-10T21:00:00+00:00')])
+
+
 if __name__=='__main__':
     unittest.main()

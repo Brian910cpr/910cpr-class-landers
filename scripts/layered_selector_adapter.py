@@ -123,6 +123,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
     if commitment_coverage is not None:
         fixture["commitment_coverage"] = commitment_coverage
     source_keys = set()
+    unassigned_hold_keys = set()
     non_owner_route_locations = set()
     # Preserve attested demand when canonical and legacy records mirror an
     # exact interval. Unknown counts remain unknown; do not add seats.
@@ -155,6 +156,22 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         if busy.get("instructor_unassigned") or instructor not in exact_owner_interval_names:
             non_owner_route_locations.add(location)
         key = (instructor, location, start, end)
+        adr_shift = "adr" in str(busy.get("course_title") or "").casefold()
+        if busy.get("instructor_unassigned"):
+            # An assigned mirror may win the normal interval dedup. It must
+            # not erase independent evidence that this can occupy other staff.
+            hold_key = (location, start, end, adr_shift, bool(busy.get("resource_uncertain")),
+                        str(busy.get("uncertainty_reason") or ""))
+            if hold_key not in unassigned_hold_keys:
+                unassigned_hold_keys.add(hold_key)
+                for name in fixture["capabilities"]:
+                    fixture["sources"].append(dict(
+                        id="unassigned-"+str(index)+"-"+name, instructor=name,
+                        location=location, start=start.isoformat(), end=end.isoformat(),
+                        kind="hold", operational_has_active_seat=False,
+                        evidence=busy.get("source_file"),
+                        resource_uncertain=busy.get("resource_uncertain", False),
+                        uncertainty_reason=busy.get("uncertainty_reason"), adr_shift=adr_shift))
         if key in source_keys:
             continue
         source_keys.add(key)
@@ -171,12 +188,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             evidence=busy.get("source_file"),
             resource_uncertain=busy.get("resource_uncertain", False),
             uncertainty_reason=busy.get("uncertainty_reason"),
-            adr_shift="adr" in str(busy.get("course_title") or "").casefold()))
-        if busy.get("instructor_unassigned"):
-            for name in fixture["capabilities"]:
-                fixture["sources"].append(dict(fixture["sources"][-1],
-                    id="unassigned-"+str(index)+"-"+name, instructor=name, kind="hold",
-                    operational_has_active_seat=False))
+            adr_shift=adr_shift))
     locations = {s["location"] for s in fixture["sources"]} | {primary}
     for left in locations:
         for right in locations:
