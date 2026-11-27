@@ -122,7 +122,7 @@ class LayeredPublicationTests(unittest.TestCase):
 
         interval('18:00')
         self.policy['verified_instructor_identity']=True
-        self.windows[0]['public_location_allowed']=True
+        self.windows[0].update(public_location_allowed=True, visibility='public', public_selectable=True)
         self.coverage[0]['instructor_person_id']='synthetic-amy'
         for course in full: course['blended_classroom_skills']='classroom'
         def advance_request(check):
@@ -143,7 +143,7 @@ class LayeredPublicationTests(unittest.TestCase):
     def test_route_only_dynamic_request_through_compact_renderer(self):
         self.windows=[]; self.coverage=[]
         w=self.window(11,'08:00','18:00',next_day=False)
-        w.update(public_location_allowed=True, source_live_availability_block={'id':'private-window-id'})
+        w.update(public_location_allowed=True, visibility='public', public_selectable=True, source_live_availability_block={'id':'private-window-id'})
         self.coverage[0]['instructor_person_id']=w['person_id']
         self.policy.update(verified_instructor_identity=True, require_verified_day_gravity=True)
         self.add(11,'12:00','14:30','359474',count=1,
@@ -194,11 +194,71 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(requests(run(reasons=lambda *_:['inside_minimum_lead_time'])))
         self.assertFalse(requests(run(reasons=lambda *_:['course_not_appointment_eligible'])))
         self.assertFalse(requests(run(route=lambda *_:(None,None,None,'invalid_appointment_container_owner_proof'))))
-        w['visibility']='private'
-        self.assertFalse(requests(run()))
-        w['visibility']='public'
+        for field, values in [('visibility',(None,'','unknown','private','unlisted','internal')),
+                              ('public_selectable',(None,'',False,'true',1))]:
+            old=w.pop(field)
+            self.assertFalse(requests(run()))
+            for v in values:
+                with self.subTest(field=field,value=v):
+                    w[field]=v
+                    self.assertFalse(requests(run()))
+            w[field]=old
         self.coverage[0]['valid_until']=self.now.isoformat()
         self.assertFalse(requests(run()))
+
+    def test_dynamic_inquiry_uses_real_window_and_classroom_policy(self):
+        from scripts.block_start_time_selector import (
+            contextual_course, course_rules_by_id, find_url, layered_dynamic_public_reasons,
+            layered_window_instants, public_location_allowed, request_cert_valid_through,
+            selected_public_page_live_windows)
+        def read(path): return json.loads((ROOT/path).read_text())
+        classroom='209809'
+        course_catalog={str(c['course_id']):c for c in read('data/config/course_catalog.json')['courses']}
+        rules=course_rules_by_id(read('data/inventory/course_consumption_rules.json'))
+        policy=read('data/config/public_offer_policy.json')
+        venue_policy=read('data/config/public_location_policy.json')
+        allowed={o['course_id'] for o in self.page['course_options']}
+        option=next(o for o in self.page['course_options'] if o['course_id']==classroom)
+        course=contextual_course(classroom,option,course_catalog,rules)
+        credential={'certifications':[{'certification_code':code,'expiration_date':'2026-12-01'}
+            for code in course['required_instructor_certifications']]}
+        source=dict(source_type='google_calendar',availability_status='available',person_id='fixture-teacher',
+            source_calendar_id='explicit-test-calendar',source_event_id='private-fixture-calendar-event',
+            instructor_name='Fixture Teacher',start_datetime='2026-10-11T08:00:00-04:00',
+            end_datetime='2026-10-11T18:00:00-04:00',location_name=':: Wilmington; Shipyard Blvd')
+        self.policy['verified_instructor_identity']=True
+        def run(flags, klass=course, now=self.now):
+            windows,_=selected_public_page_live_windows({'availability_blocks':[dict(source,**flags)]},self.resources)
+            w=windows[0]
+            w['public_location_allowed']=public_location_allowed(w['location_name'],venue_policy)
+            proof=dict(status='known_complete',instructor=w['instructor_name'],
+                instructor_person_id=w['person_id'],location=self.room,start=source['start_datetime'],
+                end=source['end_datetime'],observed_at=now.isoformat(),
+                valid_until=(now+timedelta(minutes=45)).isoformat(),source='explicit_fixture_complete_calendar')
+            calculation=calculate(windows,[],[klass],self.policy,self.resources,now,
+                layered_window_instants,lambda *_:True,[proof])
+            return publish(calculation,self.page,[klass],windows,now,
+                lambda w,s,c:find_url(w,s,c,[],self.resources,strict_container_owners={}),
+                lambda s,c:layered_dynamic_public_reasons(s,c,policy,allowed,now),
+                strict_instructor_identity=True,request_course_ids=[classroom],
+                request_qualification=lambda w,c,end:request_cert_valid_through(credential,c,end))
+        positive={'visibility':'public','public_selectable':True}
+        payload=run(positive)
+        feed=public_selector_availability_payload(payload)
+        assert all(o['dynamicBookingMode']=='request' for o in payload['offers'])
+        self.assertTrue(payload['offers'])
+        self.assertIn('"dynamicBookingMode": "request"',json.dumps(feed))
+        self.assertNotIn('private-fixture-calendar-event',json.dumps(feed))
+        html=render_html(payload)
+        self.assertIn('const embeddedScheduleDates = [];',html)
+        self.assertIn('block-selector-availability/heartsaver.json',html)
+        self.assertIn('ResolvedSelectorAvailability.registrationAction(course',html)
+        self.assertFalse(run({})['offers'])
+        self.assertFalse(run(positive, dict(course,appointment_allowed=False))['offers'])
+        with patch('scripts.block_start_time_selector.native_reservation_reasons',
+                   return_value=['native_reservation_not_configured']):
+            self.assertFalse(run(positive)['offers'])
+        self.assertFalse(run(positive,now=aware('2026-10-10T18:00:00-04:00'))['offers'])
 
     def test_request_requires_matching_dated_credential_through_local_finish(self):
         from scripts.block_start_time_selector import request_cert_valid_through

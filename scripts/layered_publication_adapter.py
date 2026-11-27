@@ -434,8 +434,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 and blocker in {"no_matching_appointment_container", "unverified_appointment_container_owner"}
                 and strict_instructor_identity and bool(window.get("person_id"))
                 and window.get("public_location_allowed") is True
-                and str(window.get("visibility") or "public").casefold().strip() == "public"
-                and window.get("public_selectable") is not False
+                and str(window.get("visibility") or "").casefold().strip() == "public"
+                and window.get("public_selectable") is True
                 and candidate["course"] in request_courses
                 and candidate["course"] != "509474"
                 and course.get("kind") in (None, "full")

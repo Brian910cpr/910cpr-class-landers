@@ -163,9 +163,12 @@ async function restrictedOccupancyCourseFk(rows: any[], url: string, key: string
 export function projectDemand(row: any, peopleByExternalId = new Map<string, string>(),
                               ownerId: string | null = null, historicalCourseFk: string | null = null) {
   const now = new Date();
-  const proof = registrationProof(row, now);
+  const lifecycleActive = (item: any) => ACTIVE.has(item.status) && item.canceled_at == null;
+  // Use the same lifecycle relationship for evidence and known counts.
+  const registrations = Array.isArray(row.registrations) ? row.registrations.filter(lifecycleActive) : null;
+  const proofRow = { ...row, registrations };
+  const proof = registrationProof(proofRow, now);
   const countAvailable = proof.count_available;
-  const registrations = countAvailable ? row.registrations : [];
   // Internal occupied-time signal only. A numeric legacy external_class_id can
   // coexist with genuine native registrations; without a fresh complete
   // external roster we must NOT infer the total, remaining seats, or public
@@ -173,9 +176,7 @@ export function projectDemand(row: any, peopleByExternalId = new Map<string, str
   // to reserve the instructor's time and supply Anchor gravity.
   const nativeCommittedSeat = row.registration_backend === "landerware"
     && row.source === "landerware_public_offer"
-    && Array.isArray(row.registrations)
-    && row.registrations.some((item: any) => ACTIVE.has(item.status)
-      && item.registration_source === "landerware_native_checkout"
+    && (registrations || []).some((item: any) => item.registration_source === "landerware_native_checkout"
       && !item.external_registration_id);
   // A confirmed appointment intake can have a real seated registration even
   // while its legacy numeric class roster remains unproven. Require the original
@@ -186,9 +187,7 @@ export function projectDemand(row: any, peopleByExternalId = new Map<string, str
     && row.source === "confirmed_booking_intake"
     && emailEvidence.kind === "registration_confirmation"
     && /^[0-9a-f]{16}$/i.test(String(emailEvidence.gmail_message_id || ""))
-    && Array.isArray(row.registrations)
-    && row.registrations.some((item: any) => ACTIVE.has(item.status)
-      && item.registration_source === "enrollware_email_confirmation");
+    && (registrations || []).some((item: any) => item.registration_source === "enrollware_email_confirmation");
   // An expired previously complete external roster is not a current seat
   // count. But an exact, still-active relationship match is conservative
   // evidence of an existing commitment: reserve time, not public capacity.
@@ -204,7 +203,7 @@ export function projectDemand(row: any, peopleByExternalId = new Map<string, str
     && Array.isArray(row.registrations)
     && !row.registrations.some((item: any) => ACTIVE.has(item.status) && item.canceled_at != null)
     && (() => {
-      const prior = registrationProof(row, new Date(priorObserved));
+      const prior = registrationProof(proofRow, new Date(priorObserved));
       return prior.count_available && typeof prior.active_registration_count === "number"
         && prior.active_registration_count > 0;
     })();
@@ -226,8 +225,7 @@ export function projectDemand(row: any, peopleByExternalId = new Map<string, str
     course_key: row.courses?.course_key || null,
     ...(historicalCourseFk && row.course_id === historicalCourseFk
       && operationalHasActiveSeat && exactHistoricalOccupancyTarget(row)
-      && Array.isArray(row.registrations) && row.registrations.some((r: any) =>
-        ACTIVE.has(r.status) && r.canceled_at == null)
+      && (registrations?.length ?? 0) > 0
       ? { verified_occupancy_course_id: OCCUPANCY_ONLY_CATALOG_ID } : {}),
     start_at: row.start_at,
     end_at: row.end_at,
@@ -248,11 +246,9 @@ export function projectDemand(row: any, peopleByExternalId = new Map<string, str
     operational_has_active_seat: operationalHasActiveSeat,
     // A prior exact roster can reserve time, but must never create current paid-seat gravity.
     operational_has_stale_commitment: operationalHasStaleCommitment,
-    canonical_recorded_registration_count: Array.isArray(row.registrations)
-      ? row.registrations.filter((item: any) => ACTIVE.has(item.status)).length : null,
+    canonical_recorded_registration_count: registrations?.length ?? null,
     source: row.source,
     session_status: row.status,
-    active_registration_count: countAvailable ? registrations.filter((item: any) => ACTIVE.has(item.status)).length : null,
     count_available: countAvailable,
     ...proof,
     demand_basis: countAvailable ? "canonical_active_registrations" : "unknown",

@@ -60,6 +60,38 @@ test('only active canonical registrations count; missing and external bridge are
   assert.equal(api.projectDemand({...row,registration_backend:'enrollware'}).active_registration_count,null);
 });
 
+test('cancel timestamp wins over active status without removing live manual or rescheduled replacement seats', () => {
+  const base={id:'fixture',status:'scheduled',registration_backend:'landerware'};
+  const revoked={status:'active',canceled_at:'2026-01-01T12:00:00Z'};
+  const old={status:'rescheduled',canceled_at:null};
+  for(const [source,registration_source,external_session_evidence] of [
+    ['landerware_public_offer','landerware_native_checkout',undefined],
+    ['confirmed_booking_intake','enrollware_email_confirmation',
+      {kind:'registration_confirmation',gmail_message_id:'0123456789abcdef'}]
+  ]) {
+    const numeric={...base,source,external_class_id:'12345',external_session_evidence};
+    const project=(...registrations)=>api.projectDemand({...numeric,registrations});
+    const empty=project({...revoked,registration_source},{...old,registration_source});
+    assert.equal(empty.canonical_recorded_registration_count,0);
+    assert.equal(empty.operational_has_active_seat,false);
+    assert.equal(empty.active_registration_count,null);
+    const live=project({...revoked,registration_source},{status:'registered',registration_source});
+    assert.equal(live.canonical_recorded_registration_count,1);
+    assert.equal(live.operational_has_active_seat,true);
+    assert.equal(live.active_registration_count,null);
+  }
+  for(const registration_source of ['manual','owner_requested_reschedule','owner_voice_fragment']) {
+    const local={...base,source:'confirmed_booking_intake'};
+    const empty=api.projectDemand({...local,registrations:[revoked,old]});
+    assert.equal(empty.active_registration_count,0);
+    assert.equal(empty.operational_has_active_seat,false);
+    const live=api.projectDemand({...local,registrations:[revoked,old,{status:'confirmed',registration_source}]});
+    assert.equal(live.active_registration_count,1);
+    assert.equal(live.canonical_recorded_registration_count,1);
+    assert.equal(live.operational_has_active_seat,true);
+  }
+});
+
 test('numeric legacy identity with native active seats signals occupied demand without inventing a known external roster', () => {
   // Synthetic numeric/legacy source shape: LanderWare-owned active rows
   // can coexist with a numeric legacy ID and absent external reconciliation.

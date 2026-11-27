@@ -1440,6 +1440,18 @@ def native_reservation_reasons(course):
     return []
 
 
+def layered_dynamic_public_reasons(start, course, public_offer_policy, allowed_course_ids, reference_now):
+    reasons = public_policy_reasons(start, str(course["course_id"]),
+        str(course.get("course_family") or course.get("family") or ""),
+        public_offer_policy, allowed_course_ids, reference_now=reference_now)
+    # Native activation and the course's own eligibility are hard gates. The
+    # publication adapter may serve an inquiry only for missing URL ownership.
+    reasons.extend(native_reservation_reasons(course))
+    if course.get("appointment_eligible") is not True or course.get("appointment_allowed") is not True:
+        reasons.append("course_not_appointment_eligible")
+    return reasons
+
+
 def contextual_course(course_id, option, catalog, rules):
     """Reuse the selected provider's established skills qualification/family policy."""
     course = {**catalog[course_id], **rules[course_id]}
@@ -1616,19 +1628,13 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             schedule_future_payload=seated_inventory, selected_courses=selected_courses,
             selected_course_ids=set(allowed_course_ids), course_rules=course_rules,
             minimum_enrollment=0) if page_config.get("include_seated_classes", True) else []
-        def layered_public_reasons(start, course):
-            reasons = public_policy_reasons(start, str(course["course_id"]),
-                str(course.get("course_family") or course.get("family") or ""),
-                public_offer_policy, set(allowed_course_ids), reference_now=reference_now)
-            reasons.extend(native_reservation_reasons(course))
-            if course.get("appointment_eligible") is not True or course.get("appointment_allowed") is not True:
-                reasons.append("course_not_appointment_eligible")
-            return reasons
         result = publish(calculation, page_config, selected_courses, windows, reference_now,
             lambda window, start, cid: find_url(window, start, cid, containers, loaded["location_resource_map"],
                 strict_container_owners=(layered_policy.get("verified_appointment_container_owners") or {})
                 if strict_identity else None),
-            layered_public_reasons, seated, require_verified_day_gravity=True,
+            lambda start, course: layered_dynamic_public_reasons(
+                start, course, public_offer_policy, set(allowed_course_ids), reference_now),
+            seated, require_verified_day_gravity=True,
             strict_instructor_identity=strict_identity,
             request_course_ids=layered_policy.get("dynamic_request_course_ids", ()),
             request_qualification=lambda window, course, end: request_cert_valid_through(
