@@ -1,6 +1,7 @@
 import copy
 import json
 import unittest
+import subprocess
 from datetime import datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
@@ -120,12 +121,95 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertFalse(any(o['courseId'] in ids for o in self.payload()['offers']))
 
         interval('18:00')
+        self.policy['verified_instructor_identity']=True
+        self.windows[0]['public_location_allowed']=True
+        self.coverage[0]['instructor_person_id']='synthetic-amy'
+        for course in full: course['blended_classroom_skills']='classroom'
+        def advance_request(check):
+            return publish(self.calculation(),self.page,self.courses,self.windows,self.now,
+                lambda *_:(None,None,None,'unverified_appointment_container_owner'),lambda *_:[],
+                strict_instructor_identity=True,request_course_ids=ids,request_qualification=check)['offers']
+        self.assertEqual({(o['courseId'],o['startTime']) for o in advance_request(lambda *_:True)},
+                         {(cid,start) for cid in ids for start in ('13:00','13:30')})
+        self.assertFalse(advance_request(lambda *_:False))
+        self.policy.pop('verified_instructor_identity')
         for broken in (dict(full[0], duration_minutes=120), dict(full[0], kind='skills'),
                        dict(full[0], minimum_reservation_block_minutes=None)):
             self.courses = [broken]
             failed = self.calculation()
             self.assertFalse(failed['reports'])
             self.assertIn('no valid inventory rule', failed['issues'][0]['reason'])
+
+    def test_route_only_dynamic_request_through_compact_renderer(self):
+        self.windows=[]; self.coverage=[]
+        w=self.window(11,'08:00','18:00',next_day=False)
+        w.update(public_location_allowed=True, source_live_availability_block={'id':'private-window-id'})
+        self.coverage[0]['instructor_person_id']=w['person_id']
+        self.policy.update(verified_instructor_identity=True, require_verified_day_gravity=True)
+        self.add(11,'12:00','14:30','359474',count=1,
+                 effective_instructor_person_id=w['person_id'], stored_instructor_person_id=w['person_id'],
+                 visibility='private')
+        def resolve(window,start,course):
+            if course == '359474':
+                return ('fixture-day','fixture-container','https://www.910cpr.com/register/?session=123',None)
+            return ('private-day','private-container',None,'unverified_appointment_container_owner')
+        def run(*, opts=('209809','210549'), reasons=lambda *_:[], route=resolve, strict=True, qualified=True):
+            calculation=calculate(self.windows,self.sources,self.courses,self.policy,self.resources,self.now,
+                lambda window:(window['start'],window['end']),lambda *_:qualified,self.coverage)
+            return publish(calculation,self.page,self.courses,self.windows,self.now,route,reasons,(),
+                require_verified_day_gravity=True, strict_instructor_identity=strict, request_course_ids=opts,
+                request_qualification=lambda *_:qualified)
+        def requests(result): return [o for o in result['offers'] if o.get('dynamicBookingMode') == 'request']
+        result=run()
+        rows=requests(result)
+        self.assertTrue(rows)
+        self.assertEqual({o['courseId'] for o in rows},{'209809'})
+        self.assertTrue(all(o['scheduleRole']=='barnacle' for o in rows))
+        self.assertTrue(all(o['startTime'] < '12:00' or o['startTime'] >= '14:30' for o in rows))
+        original_sources=self.sources; self.sources=[]
+        self.assertTrue(any(o['registrationUrl'] and o['courseId']=='359474' for o in run()['offers']))
+        self.sources=original_sources
+        compact=public_selector_availability_payload(result)
+        rows=[o for day in compact['dates'] for slot in day['startTimes'] for o in slot['courses']
+              if o.get('dynamicBookingMode')=='request']
+        self.assertTrue(rows)
+        self.assertNotRegex(json.dumps(rows),'private-(day|container|window-id)|fixture-11-12')
+        self.assertTrue(all(o.get('registrationUrl') is None and o.get('appointmentUrl') is None for o in rows))
+        js="""
+        let row=JSON.parse(process.argv[1]);
+        const api=require('./docs/assets/resolved-selector-availability.js');
+        let stale={...row,offerType:'seated_class',registrationUrl:'/register/?session=123'};
+        const caps={sessions:{123:{courseId:row.courseId,date:row.date,startTime:row.startTime,location:row.location}}};
+        console.log(JSON.stringify([api.registrationAction(row),api.registrationAction(stale,{},caps),
+          api.registrationAction({...stale,dynamicBookingMode:undefined},{},caps)]));
+        """
+        output=json.loads(subprocess.check_output(['node','-e',js,json.dumps(rows[0])],cwd=ROOT,text=True))
+        self.assertEqual([o['mode'] for o in output],['request','request','native'])
+        self.assertTrue(all('mailto:brian@910cpr.com' in o['href'] and '123' not in o['href']
+                            for o in output[:2]))
+        self.assertFalse(requests(run(opts=())))
+        self.assertFalse(requests(run(opts=['209809',{}])))
+        self.assertFalse(requests(run(strict=False)))
+        self.assertFalse(requests(run(qualified=False)))
+        self.assertFalse(requests(run(reasons=lambda *_:['inside_minimum_lead_time'])))
+        self.assertFalse(requests(run(reasons=lambda *_:['course_not_appointment_eligible'])))
+        self.assertFalse(requests(run(route=lambda *_:(None,None,None,'invalid_appointment_container_owner_proof'))))
+        w['visibility']='private'
+        self.assertFalse(requests(run()))
+        w['visibility']='public'
+        self.coverage[0]['valid_until']=self.now.isoformat()
+        self.assertFalse(requests(run()))
+
+    def test_request_requires_matching_dated_credential_through_local_finish(self):
+        from scripts.block_start_time_selector import request_cert_valid_through
+        course={'course_id':'241108','required_instructor_certifications':['ACLS-I']}
+        finish=aware('2026-12-27T02:30:00Z')  # still December 26 Eastern
+        for expiry, expected in [('UNKNOWN',False),('2026-12-25',False),('2026-12-26',True),
+                                 ('2026-12-27',True),('2026-99-99',False)]:
+            with self.subTest(expiry=expiry):
+                certs=[dict(certification_code='ACLS-I',expiration_date=expiry)]
+                self.assertEqual(request_cert_valid_through({'certifications':certs},course,finish),expected)
+        self.assertFalse(request_cert_valid_through({'certifications':['ACLS-I']},course,finish))
 
     def test_attested_private_seat_survives_exact_interval_engine_dedup(self):
         self.windows=[]; self.coverage=[]; self.sources=[]

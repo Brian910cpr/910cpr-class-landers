@@ -211,6 +211,8 @@ def selected_public_page_live_windows(live_payload: dict[str, Any], location_res
         normalized = generate_dynamic_offers.normalize_live_availability_window(window, index, location_resource_map)
         normalized["source_availability_window"] = block_id
         normalized["approved_inverse_generated"] = inverse_generated
+        normalized["visibility"] = window.get("visibility")
+        normalized["public_selectable"] = window.get("public_selectable")
         normalized["source_live_availability_block"] = {
             "sourceAvailabilityBlockId": block_id,
             "date": window.get("date"),
@@ -603,6 +605,26 @@ def has_required_cert(person: dict[str, Any], course: dict[str, Any]) -> bool:
     if not requirements:
         return False
     return bool(generate_dynamic_offers.person_certification_codes(person).intersection(requirements))
+
+
+def request_cert_valid_through(person: dict[str, Any], course: dict[str, Any], end: datetime) -> bool:
+    """An imported certificate code with an unknown date is not public inquiry proof."""
+    if not has_required_cert(person, course):
+        return False
+    required = {str(code).strip() for code in course.get("required_instructor_certifications", [])}
+    through = end.astimezone(PUBLIC_TZ).date()
+    for cert in person.get("certifications") or []:
+        if not isinstance(cert, dict) or str(cert.get("certification_code") or "").strip() not in required:
+            continue
+        raw = str(cert.get("expiration_date") or "")
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", raw):
+            continue
+        try:
+            if date.fromisoformat(raw) >= through:
+                return True
+        except ValueError:
+            continue
+    return False
 
 
 def session_course_id(session: dict[str, Any]) -> str:
@@ -1580,10 +1602,12 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             owner_person_id=((owner or {}).get("person_id") if strict_identity
                 and (owner or {}).get("person_id") in required_calendars else None),
             strict_identity=strict_identity)
+        def window_qualified(window, course):
+            person = people.get(normalize_key(window.get("person_id")))
+            return bool(person and has_required_cert(person, course))
+
         calculation = cached_calculate(windows, occupancy, selected_courses, effective_layered_policy,
-            loaded["location_resource_map"], reference_now, layered_window_instants,
-            lambda window, course: bool(people.get(normalize_key(window.get("person_id")))
-                and has_required_cert(people[normalize_key(window.get("person_id"))], course)),
+            loaded["location_resource_map"], reference_now, layered_window_instants, window_qualified,
             coverage, layered_policy.get("travel_minutes", {}),
             cache_dir=ROOT / 'data/runtime/layered_day_cache' / page_key,
             horizon_days=90)
@@ -1605,7 +1629,10 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 strict_container_owners=(layered_policy.get("verified_appointment_container_owners") or {})
                 if strict_identity else None),
             layered_public_reasons, seated, require_verified_day_gravity=True,
-            strict_instructor_identity=strict_identity)
+            strict_instructor_identity=strict_identity,
+            request_course_ids=layered_policy.get("dynamic_request_course_ids", ()),
+            request_qualification=lambda window, course, end: request_cert_valid_through(
+                people.get(normalize_key(window.get("person_id"))) or {}, course, end))
         if advanced_rejections:
             result["rejectedCourseStartTimes"].extend(
                 r for r in advanced_rejections if r["courseId"] in allowed_course_ids)

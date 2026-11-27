@@ -387,12 +387,15 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
 
 
 def publish(calculation, page_config, courses, windows, now, url_for, public_reasons,
-            seated_offers=(), *, require_verified_day_gravity=False, strict_instructor_identity=False):
+            seated_offers=(), *, require_verified_day_gravity=False, strict_instructor_identity=False,
+            request_course_ids=(), request_qualification=None):
     """Translate accepted calculations to the existing URL/feed/renderer contract."""
     from scripts.apply_anchor_policy import _rebuild_dates
     now = aware(now).astimezone(timezone.utc)
     catalog = {str(c["course_id"]): c for c in courses}
     origins = {str(w.get("source_availability_window", i)): w for i, w in enumerate(windows)}
+    request_courses = set(request_course_ids) if isinstance(request_course_ids, (tuple, list)) and all(
+        isinstance(cid, str) and cid.isdecimal() for cid in request_course_ids) else set()
     accepted, rejected = [], []
     offer_people = {}  # never serialized
     def diagnostic(candidate):
@@ -421,9 +424,31 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 reasons.append("course_family_not_allowed_by_availability")
             if window.get("public_location_allowed") is False:
                 reasons.append("location_not_allowed_by_public_policy")
-            if blocker: reasons.append(blocker)
-            if not url: reasons.append("missing_owned_appointment_url")
-            if report["valid_until"] <= now: reasons.append("expired_coverage_proof")
+            if report["valid_until"] <= now:
+                reasons.append("expired_coverage_proof")
+            # Upgrade only explicit public classroom inquiries, never an ambiguous
+            # checkout, policy failure, or skills reservation. Coverage and geometry
+            # have already passed calculate(); booking proof remains independent.
+            request_only = (
+                not reasons and url is None
+                and blocker in {"no_matching_appointment_container", "unverified_appointment_container_owner"}
+                and strict_instructor_identity and bool(window.get("person_id"))
+                and window.get("public_location_allowed") is True
+                and str(window.get("visibility") or "public").casefold().strip() == "public"
+                and window.get("public_selectable") is not False
+                and candidate["course"] in request_courses
+                and candidate["course"] != "509474"
+                and course.get("kind") in (None, "full")
+                and (course.get("blended_classroom_skills") or course.get("delivery_type")) == "classroom"
+                and not course.get("schedule_page_option", {}).get("native_registration_path")
+                and request_qualification is not None
+                and request_qualification(window, course, end) is True
+            )
+            if not request_only:
+                if blocker:
+                    reasons.append(blocker)
+                if not url:
+                    reasons.append("missing_owned_appointment_url")
             if reasons:
                 rejected.append(dict(diagnostic(candidate), reasons=reasons))
                 continue
@@ -437,11 +462,16 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 schedulerConsumptionEnd=end.strftime("%H:%M"), occupiedUntil=end.isoformat(),
                 setupBufferMinutes=0, cleanupBufferMinutes=candidate["duration_minutes"]-instruction,
                 instructor=candidate["instructor"], location=window.get("location_name"),
-                resource=candidate["location"], appointmentDayId=day_id, matchedContainerId=container_id,
-                appointmentUrl=url, registrationUrl=url, availabilityBlockId=report["availability_window"],
-                availabilityWindow=report["availability_window"], sourceAvailabilityBlock=window.get("source_live_availability_block", {}),
+                resource=candidate["location"], appointmentDayId=None if request_only else day_id,
+                matchedContainerId=None if request_only else container_id,
+                appointmentUrl=url, registrationUrl=url,
+                availabilityBlockId=None if request_only else report["availability_window"],
+                availabilityWindow=None if request_only else report["availability_window"],
+                sourceAvailabilityBlock={} if request_only else window.get("source_live_availability_block", {}),
+                **({"dynamicBookingMode": "request"} if request_only else {}),
                 offerType="dynamic_appointment", scheduleRole="barnacle" if candidate["mode"]=="barnacle" else "open_day",
-                sourceSessionIds=candidate["source_ids"], edgeIds=candidate["edge_ids"],
+                sourceSessionIds=[] if request_only else candidate["source_ids"],
+                edgeIds=[] if request_only else candidate["edge_ids"],
                 validUntil=report["valid_until"].isoformat(), publicSelectable=True))
             if strict_instructor_identity:
                 offer_people[id(accepted[-1])] = window.get("person_id")

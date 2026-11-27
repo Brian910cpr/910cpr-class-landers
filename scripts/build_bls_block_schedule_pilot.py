@@ -163,6 +163,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "offerType": course.get("offerType") or "dynamic_appointment",
                     "seatedBookingMode": course.get("seatedBookingMode"),
+                    **({"dynamicBookingMode": "request"} if course.get("dynamicBookingMode") == "request" else {}),
                     "scheduleRole": course.get("scheduleRole") or course.get("schedule_role"),
                     # Barnacle attachment IDs may refer to private appointments;
                     # publish a session ID only for a genuinely seated class.
@@ -1156,6 +1157,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     "location": public_location_display(course["location"]),
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "sourceAvailabilityBlock": course.get("sourceAvailabilityBlock", {}),
+                    **({"dynamicBookingMode": "request"} if course.get("dynamicBookingMode") == "request" else {}),
                     "offerType": course.get("offerType") or "dynamic_appointment",
                     "publicSelectable": course.get("publicSelectable") is True,
                 }
