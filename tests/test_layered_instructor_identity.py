@@ -221,6 +221,54 @@ class VerifiedInstructorIdentityTests(unittest.TestCase):
         self.assertEqual(offers[0]['instructor'],'Canonical instructor')
         self.assertTrue(offers[0]['registrationUrl'].startswith('mailto:'))
         self.assertNotIn('enrollware.com',json.dumps(offers))
+        projected = dict(external_class_id=sid, start=start, end=end,
+            instructor='Canonical instructor', count_available=True, active_registration_count=2,
+            effective_instructor_person_id=self.other, stored_instructor_person_id=self.other,
+            kind='paid', visibility='public')
+        calculation = dict(projected_sources=[projected], reports=[], issues=[], counts={})
+        page = dict(f.page, page_key='acls')
+        def feed(source):
+            view = publish(dict(calculation, projected_sources=[source]), page, [], [], f.now,
+                lambda *_: (None,None,None,None), lambda *_: [], offers,
+                require_verified_day_gravity=True, strict_instructor_identity=True)
+            return public_selector_availability_payload(view)
+        visible = feed(projected)
+        compact = visible['dates'][0]['startTimes'][0]['courses'][0]
+        self.assertEqual(compact['seatedBookingMode'], 'request')
+        self.assertTrue(compact['registrationUrl'].startswith('mailto:'))
+        self.assertNotIn(self.other,json.dumps(visible))
+        self.assertEqual(feed(dict(projected,stored_instructor_person_id='not-the-same'))['dates'], [])
+        from scripts import class_registration_routing as route
+        from scripts.block_start_time_selector import advanced_verified_anchor_inventory
+        outside = dict(row, session_id='99999002', course_id='209818', course_number='209818')
+        ordinary = dict(row, session_id='99999003', course_id='209806', course_number='209806',mapped_family='BLS')
+        raw = {'sessions':[row, outside, ordinary]}
+        anchors = advanced_verified_anchor_inventory(raw, eligible, course_catalog)
+        self.assertEqual({item['session_id'] for item in anchors['sessions']}, {sid, ordinary['session_id']})
+        self.assertEqual(len(raw['sessions']), 3)
+        with tempfile.TemporaryDirectory() as folder:
+            cap = Path(folder)/'caps.json'
+            cap.write_text(json.dumps({'sessions':{sid:{'course_id':'241108',
+                'starts_at':start, 'location':room}}}))
+            with patch.object(route,'CAPABILITIES',cap):
+                again, _ = read([row],[witness],strict_instructor_crosswalk={'9876':self.other})
+                self.assertEqual(again['sessions'][0]['advanced_seated_route'], 'request')
+                local = dict(witness, registration_backend='landerware',
+                    workspace_projection_status='current')
+                native, _ = read([row],[local],strict_instructor_crosswalk={'9876':self.other})
+                self.assertEqual(native['sessions'][0]['advanced_seated_route'], 'native')
+                unsafe_row = dict(row, registration_url='https://www.910cpr.com/register/?session='+sid)
+                directory = route.rewrite_directory_routes(
+                    '<article class="class-finder-card"><a class="class-finder-primary" href="old">Register</a>'
+                    '<a class="class-finder-secondary" href="/classes/'+sid+'.html">Details</a></article>',
+                    {sid:unsafe_row})
+                detail = route.rewrite_detail_routes(
+                    '<div class="cta-panel"><div class="cta-row">'
+                    '<a class="button primary" href="old">Continue to Registration</a></div></div>', unsafe_row)
+                for html in (directory,detail):
+                    self.assertIn('Request this class',html)
+                    self.assertIn('mailto:brian@910cpr.com',html)
+                    self.assertNotIn('/register/?session=',html)
         for records,proofs,code in [
             ([row],[],'roster_unverified'),([row],[{**witness,'active_registration_count':0}],'roster_unverified'),
             ([row],[{**witness,'source_observed_at':f.at(5,'11:00').isoformat()}],'roster_unverified'),

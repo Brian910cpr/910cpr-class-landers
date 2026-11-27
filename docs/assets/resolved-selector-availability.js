@@ -69,7 +69,10 @@
     const sid = ids[0] || '';
     const cap = capabilities.sessions?.[sid];
     const closed = ['closed','full','cancelled','canceled','completed'].includes(String(course.registrationStatus || course.registration_status || course.status || '').toLowerCase()) || course.isFull === true;
-    if (!badIdentity && ids.length && ids.every(id => id === sid) && cap && !closed &&
+    const advanced = ['241108','209818','209811','209805','251496','209812'].includes(String(course.courseId)) ||
+      ['ACLS','PALS'].includes(String(course.courseFamily || course.family || '').trim().toUpperCase());
+    if (course.seatedBookingMode !== 'request' && (!advanced || course.seatedBookingMode === 'native') &&
+        !badIdentity && ids.length && ids.every(id => id === sid) && cap && !closed &&
         course.offerType === 'seated_class' && String(course.courseId) === String(cap.courseId) &&
         date === cap.date && Number.isFinite(startMinutes(time)) && startMinutes(time) === startMinutes(cap.startTime) &&
         course.location === cap.location) {

@@ -162,6 +162,7 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "location": public_location_display(course.get("location")),
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "offerType": course.get("offerType") or "dynamic_appointment",
+                    "seatedBookingMode": course.get("seatedBookingMode"),
                     "scheduleRole": course.get("scheduleRole") or course.get("schedule_role"),
                     # Barnacle attachment IDs may refer to private appointments;
                     # publish a session ID only for a genuinely seated class.

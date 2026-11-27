@@ -1201,9 +1201,11 @@ def verify_advanced_seated_inventory(schedule, demand, course_rules, course_cata
         # Remove the foreign booking URL before anything is serialized. An
         # attested external roster is a real class, not a native checkout grant.
         # Only an exact explicitly enabled native capability may supply a link.
-        candidate = dict(row, external_class_id=sid,
+        candidate = dict(row, external_class_id=sid, mapped_family=family,
             lead_instructor_name=proof.get("lead_instructor_name"), registration_url="", register_url="")
-        route = registration_action(candidate)
+        route = registration_action(candidate, verified_advanced_workspace=(
+            proof.get("registration_backend") == "landerware"
+            and proof.get("workspace_projection_status") == "current"))
         candidate["registration_url"] = route["href"]
         if strict_instructor_crosswalk is not None:
             from scripts.layered_instructor_identity import canonical_instructor_projection
@@ -1214,6 +1216,16 @@ def verify_advanced_seated_inventory(schedule, demand, course_rules, course_cata
         candidate["advanced_seated_route"] = route["mode"]
         allowed.append(candidate)
     return {"sessions": allowed}, rejected
+
+
+def advanced_verified_anchor_inventory(raw_schedule, verified_schedule, course_catalog):
+    """Strip only unsupported advanced gravity; never edit the occupancy source."""
+    from scripts.class_registration_routing import advanced_route_requires_proof
+    rows = (raw_schedule or {}).get("sessions", [])
+    return {"sessions": [row for row in rows if isinstance(row, dict)
+        and not advanced_route_requires_proof({
+            **course_catalog.get(clean_text(row.get("course_id")), {}), **row})]
+        + verified_schedule["sessions"]}
 
 
 def seated_class_selector_offers(
@@ -1486,6 +1498,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy) if not layered_active(layered_policy) else {}
     reference_now = selector_reference_datetime()
     seated_inventory = loaded.get("schedule_future")
+    anchor_inventory = seated_inventory
     advanced_rejections = []
     if page_key in {"acls", "pals"}:
         seated_inventory, advanced_rejections = verify_advanced_seated_inventory(
@@ -1493,15 +1506,18 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             loaded["location_resource_map"], reference_now.replace(tzinfo=PUBLIC_TZ),
             strict_instructor_crosswalk=identity_crosswalk,
             strict_owner_person_id=strict_owner if strict_identity else None)
+        # Keep room/instructor occupancy built from the original source, but
+        # never let a raw advanced projection alone create legacy day gravity.
+        anchor_inventory = advanced_verified_anchor_inventory(anchor_inventory, seated_inventory, course_catalog)
     anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
     same_day_anchors = seated_family_anchors(
-        schedule_future_payload=loaded.get("schedule_future"),
+        schedule_future_payload=anchor_inventory,
         selected_course_ids=set(allowed_course_ids),
         minimum_enrollment=anchor_minimum_enrollment,
         location_resource_map=loaded["location_resource_map"],
     ) if page_config.get("consolidate_after_seated_family_anchor") is True else []
     scheduled_day_anchors = seated_family_anchors(
-        schedule_future_payload=loaded.get("schedule_future"),
+        schedule_future_payload=anchor_inventory,
         selected_course_ids=set(),
         minimum_enrollment=0,
         location_resource_map=loaded["location_resource_map"],
@@ -1509,7 +1525,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     scheduled_day_anchors.extend(confirmed_calendar_training_anchors(live_availability_snapshot))
     shared_cooldown_days = int(page_config.get("shared_cooldown_days_after_booking") or 0)
     shared_cooldown_anchors = seated_family_anchors(
-        schedule_future_payload=loaded.get("schedule_future"),
+        schedule_future_payload=anchor_inventory,
         selected_course_ids=set(allowed_course_ids),
         minimum_enrollment=max(1, int(page_config.get("shared_cooldown_minimum_enrollment") or 1)),
         location_resource_map=loaded["location_resource_map"],
