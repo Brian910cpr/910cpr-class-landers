@@ -57,6 +57,13 @@ on:
       - 'scripts/layered_day_cache.py'
       - 'tests/test_layered_day_cache.py'
       - 'scripts/layered_scheduling_engine.py'
+      - 'scripts/layered_instructor_identity.py'
+      - 'scripts/build_live_availability_snapshot.py'
+      - 'data/config/calendar_sources.json'
+      - 'data/config/layered_scheduling_policy.json'
+      - 'tests/test_layered_calendar_identity.py'
+      - 'tests/test_layered_instructor_identity.py'
+      - 'tests/test_stale_commitment_hold.py'
       - 'scripts/layered_selector_adapter.py'
       - 'scripts/layered_publication_adapter.py'
       - 'scripts/run_layered_release_probe.py'
@@ -101,6 +108,8 @@ jobs:
         run: python -m py_compile scripts/anchor_state.py scripts/apply_anchor_policy.py scripts/canonical_scheduling_demand.py scripts/fetch_canonical_scheduling_demand.py scripts/block_start_time_selector.py
       - name: Run anchor regressions
         run: python -B -m unittest tests.test_anchor_state tests.test_apply_anchor_policy tests.test_canonical_scheduling_demand tests.test_fetch_canonical_scheduling_demand tests.test_demand_publication tests.test_selector_clock tests.test_enrollware_roster_reconciliation tests.test_enrollware_registration_probe_gate tests.test_validate_public_refresh_output tests.test_scheduling_reconciliation tests.test_publish_scheduling_landscape tests.test_layered_publication_adapter tests.test_layered_release_probe tests.test_layered_location_aliases tests.test_layered_selector_adapter tests.test_layered_day_cache tests.test_zero_duration_pipeline tests.test_family_publication_coverage tests.test_published_selector_lead_policy tests.test_wait_for_pages_publication
+      - name: Test strict calendar identity and stale commitment guards
+        run: python -B -m unittest tests.test_layered_calendar_identity tests.test_layered_instructor_identity tests.test_stale_commitment_hold
       - name: Test expired static class lifecycle and validated-build order
         run: python -B -m unittest tests.test_run_validated_public_build tests.test_public_session_landers tests.test_retire_expired_public_pages
       - name: Test deployed endpoint code with isolated database and auth fixtures
