@@ -4,6 +4,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 WORKFLOW=ROOT/'.github/workflows/refresh-public-site.yml'
 NOW=datetime.datetime(2026,10,2,10,43,tzinfo=datetime.timezone.utc)
+FAMILIES=('bls', 'heartsaver', 'acls', 'pals', 'arc', 'hsi', 'uscg_first_aid_cpr_aed', 'family_cpr')
 class PublicationRenewalTests(unittest.TestCase):
  @classmethod
  def setUpClass(cls):
@@ -12,15 +13,15 @@ class PublicationRenewalTests(unittest.TestCase):
   start=cls.source.index('          $renewBefore =');end=cls.source.index('\n\n      - name: Upload canonical',start)
   cls.gate='\n'.join(line[10:] for line in cls.source[start:end].splitlines())
   cls.gate=cls.gate.replace('[DateTimeOffset]::UtcNow',"[DateTimeOffset]::Parse('"+NOW.isoformat()+"')")
- def evaluate(self,minutes=90,current='same',previous='same',bad=None,missing=None,root=None):
+ def evaluate(self,minutes=90,current='same',previous='same',bad=None,missing=None,root=None,due_family=None):
   def run(directory):
    folder=directory/'docs/data/block-selector-availability';folder.mkdir(parents=True,exist_ok=True)
-   for key in ['bls','heartsaver','acls','pals']:
+   for key in FAMILIES:
     p=folder/(key+'.json')
     if key==missing:
      if p.exists():p.unlink()
      continue
-    p.write_text(json.dumps({'validUntil':bad if key=='bls' and bad is not None else (NOW+datetime.timedelta(minutes=minutes)).isoformat()}))
+    p.write_text(json.dumps({'validUntil':bad if key=='bls' and bad is not None else (NOW+datetime.timedelta(minutes=10 if key==due_family else minutes)).isoformat()}))
    before={p.name:p.read_bytes() for p in folder.glob('*.json')};output=directory/'output.txt';output.write_text('')
    script="$currentHash='"+current+"';$previousHash='"+previous+"';$env:GITHUB_OUTPUT='"+str(output).replace("'","''")+"'\n"+self.gate
    result=subprocess.run([self.shell,'-NoProfile','-NonInteractive','-Command',script],cwd=directory,capture_output=True,text=True)
@@ -36,6 +37,11 @@ class PublicationRenewalTests(unittest.TestCase):
  def test_inventory_change_still_rebuilds(self):self.assertTrue(self.evaluate(current='new'))
  def test_missing_or_invalid_lease_renews(self):
   self.assertTrue(self.evaluate(missing='pals'));self.assertTrue(self.evaluate(bad='not-a-date'))
+ def test_every_family_independently_requires_renewal(self):
+  for family in FAMILIES:
+   with self.subTest(family=family):
+    self.assertTrue(self.evaluate(due_family=family))
+    self.assertTrue(self.evaluate(missing=family))
  def test_queued_contender_rechecks_new_publication(self):
   with tempfile.TemporaryDirectory() as d:
    root=Path(d);self.assertTrue(self.evaluate(minutes=20,root=root));self.assertFalse(self.evaluate(minutes=90,root=root))
