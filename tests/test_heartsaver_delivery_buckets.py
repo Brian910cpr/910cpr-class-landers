@@ -1,7 +1,11 @@
 import os
 import re
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
+
+from scripts import build_slug_hubs as builder
 
 from scripts.build_slug_hubs import (
     debug_display_dt,
@@ -190,6 +194,57 @@ class HeartsaverDeliveryBucketTests(unittest.TestCase):
         self.assertIn("AHA Heartsaver First Aid CPR AED - Blended", blended_chunk)
         self.assertNotIn("appointmentDayId", in_person_chunk)
         self.assertIn("appointmentDayId", blended_chunk)
+
+    def test_first_aid_course_entry_retires_all_legacy_inventory_channels(self):
+        """The active split-page writer must not revive legacy booking actions."""
+        import json
+
+        manifest = json.loads(builder.MANIFEST_PATH.read_text(encoding='utf-8'))
+        page = next(row for row in manifest['pages'] if row['slug'] == 'heartsaver')
+        legacy = 'https://coastalcprtraining.enrollware.com/enroll?appointmentDayId=777'
+        seed = {
+            'appointment_registration_url': legacy,
+            'course_key': 'aha_heartsaver_first_aid_cpr_aed',
+            'tab_ids': ['hs-fa-cpr-aed-ip'],
+            'flexible_start_choices': [
+                {'appointment_registration_url': legacy + '&startTime=0900'},
+                {'appointment_registration_url': legacy + '&startTime=0930'},
+            ],
+            'source_offer_id': 'restricted-fixture',
+        }
+        session = {'registration_url': legacy, 'session_id': 'legacy-private-fixture'}
+        with (
+            TemporaryDirectory() as tmp,
+            patch.object(builder, 'COURSES_OUTPUT_DIR', Path(tmp)),
+            patch.object(builder, 'visible_tabs_for_page', return_value=[]),
+        ):
+            # Don't permit the old course renderer to see these seeds on
+            # the cutover page, but leave other course outputs alone.
+            real_flow = builder.render_heartsaver_course_flow
+            with patch.object(builder, 'render_heartsaver_course_flow', wraps=real_flow) as legacy_flow:
+                builder.write_heartsaver_split_course_pages(
+                    page, [session], requestable_offers=[seed], appointment_seed_offers=[seed],
+                    universal_offers=[seed], build_meta={},
+                )
+            self.assertTrue(legacy_flow.called)
+            self.assertNotIn(
+                {"heartsaver-first-aid-cpr-aed"},
+                [call.kwargs["only_group_ids"] for call in legacy_flow.call_args_list],
+            )
+            rendered = (Path(tmp) / 'heartsaver-first-aid-cpr-aed.html').read_text()
+            unaffected = (Path(tmp) / 'heartsaver-cpr-aed.html').read_text()
+        for token in (
+            'enrollware', 'appointmentdayid', 'data-row-href', 'data-original-href',
+            'live-sessions.js', 'session-expiry.js', 'hybrid-inventory.js', 'hub-ui.js',
+            'restricted-fixture', 'legacy-private-fixture', '/register/?',
+        ):
+            self.assertNotIn(token, rendered.lower())
+        self.assertIn('href="/heartsaver.html#first-aid-cpr-aed">See in-person options', rendered)
+        self.assertIn('href="/heartsaver.html#first-aid-cpr-aed-blended">See blended options', rendered)
+        self.assertIn('id="hs-fa-cpr-aed-ip"', rendered)
+        self.assertIn('id="hs-fa-cpr-aed-bl"', rendered)
+        self.assertIn('href="https://www.910cpr.com/courses/heartsaver-first-aid-cpr-aed.html"', rendered)
+        self.assertIn('live-sessions.js', unaffected)
 
 
 if __name__ == "__main__":

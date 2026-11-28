@@ -1,0 +1,39 @@
+name: Verify Heartsaver First Aid entry point
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/verify-heartsaver-first-aid-entrypoint.yml'
+      - 'scripts/build_slug_hubs.py'
+      - 'scripts/build_bls_block_schedule_pilot.py'
+      - 'data/config/slug_hubs.json'
+      - 'docs/courses/heartsaver-first-aid-cpr-aed.html'
+      - 'docs/heartsaver.html'
+      - 'docs/assets/resolved-selector-availability.js'
+      - 'tests/test_heartsaver_delivery_buckets.py'
+      - 'tests/heartsaver-first-aid-entrypoint.test.cjs'
+      - 'tests/heartsaver-first-aid-browser.py'
+
+permissions:
+  contents: read
+
+jobs:
+  route-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: python -m pip install openpyxl python-dateutil tzdata
+      - run: python -m unittest tests.test_heartsaver_delivery_buckets
+      - run: node --test tests/heartsaver-first-aid-entrypoint.test.cjs
+      - name: Install isolated browser
+        run: |
+          python -m pip install playwright==1.62.0
+          python -m playwright install --with-deps chromium
+      - name: Click both course-format links in Chromium
+        run: python tests/heartsaver-first-aid-browser.py
