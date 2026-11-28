@@ -881,7 +881,9 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
                 } if strict_identity else {}),
             "visibility": session.get("visibility"),
             "operational_has_active_seat": session.get("operational_has_active_seat") is True,
-            "count_available": session.get("count_available") is True,
+            "count_available": (session.get("count_available") is True or (allow_unresolved
+                and session.get("count_available") is not False
+                and type(session.get("active_registration_count")) is int)),
             "active_registration_count": session.get("active_registration_count"),
         })
     occupancy = sessions_current + schedule_future + calendar_blocks + canonical_rows
@@ -1581,6 +1583,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
 
     # V2 remains opt-in. Room hours alone never establish calendar coverage.
     if layered_active(layered_policy):
+        from scripts.fetch_canonical_scheduling_demand import stable_hash
         from scripts.layered_publication_adapter import apply_default_owner_occupancy, publish
         from scripts.layered_day_cache import cached_calculate
         venue_aliases = {str(value).casefold().strip()
@@ -1646,6 +1649,9 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
                 reason for row in result["rejectedCourseStartTimes"] for reason in row.get("reasons", [])))
         result["inputFiles"] = {"liveAvailabilitySnapshot": str(LIVE_AVAILABILITY_PATH),
             "courseConsumptionRules": str(COURSE_RULES_PATH), "layeredPolicy": str(layered_policy_path)}
+        # Restricted provenance for the pre-publication gate; not rendered.
+        snapshot = loaded["canonical_demand"]
+        result["_canonicalDemandFingerprint"] = (snapshot.get("generated_at"), stable_hash(snapshot))
         result["horizonDays"] = 90
         result["minimumLeadHours"] = int(public_offer_policy.get("minimum_lead_hours") or 0)
         return result

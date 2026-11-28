@@ -67,6 +67,10 @@ class ProbeTests(unittest.TestCase):
         self.assertNotIn("fixture-private", json.dumps(safe))
 
     def test_probe_output_never_contains_source_from_rejection_histogram(self):
+        from scripts.fetch_canonical_scheduling_demand import stable_hash
+        from scripts.validate_layered_occupancy_projection import SCHEMA
+        endpoint = {"generated_at": "2026-10-31T14:00:00Z", "sessions": []}
+        fingerprint = (endpoint["generated_at"], stable_hash(endpoint))
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             for rel, data in {
@@ -84,9 +88,12 @@ class ProbeTests(unittest.TestCase):
             with (
                 patch.object(probe, "ROOT", root),
                 patch.object(probe, "load_block_schedule_page_configs",
-                             return_value={k: {} for k in probe.REQUIRED_PAGE_KEYS}),
-                patch.object(probe, "build_block_schedule_page", return_value=payload),
-                patch.object(probe, "apply_final_live_availability_guard", return_value=payload),
+                             return_value={k: {"key": k} for k in probe.REQUIRED_PAGE_KEYS}),
+                patch.object(probe, "load_publication_demand", return_value=endpoint),
+                patch.object(probe, "build_block_schedule_page", side_effect=lambda config: dict(payload,
+                    pageKey=config["key"], schedulingModel=SCHEMA,
+                    _canonicalDemandFingerprint=fingerprint, layeredDiagnostics={"projected_sources": []})),
+                patch.object(probe, "apply_final_live_availability_guard", side_effect=lambda row: row),
                 patch.object(probe, "public_selector_availability_payload", return_value={"dates": []}),
                 patch.object(probe, "render_html", return_value="<body></body>"),
                 patch("builtins.print") as stdout,
@@ -210,6 +217,8 @@ class FrozenRunnerTests(unittest.TestCase):
         import shutil
         from datetime import timedelta
         from scripts import layered_release_oracle as o
+        from scripts.fetch_canonical_scheduling_demand import stable_hash
+        from scripts.validate_layered_occupancy_projection import SCHEMA
 
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -224,6 +233,8 @@ class FrozenRunnerTests(unittest.TestCase):
                             root / "docs/assets/resolved-selector-availability.js")
             now = o.instant("2026-10-31T14:00:00Z")
             pages = probe.REQUIRED_PAGE_KEYS
+            endpoint = {"generated_at": now.isoformat(), "sessions": []}
+            fingerprint = (endpoint["generated_at"], stable_hash(endpoint))
             configs = {page: {"allowed_course_ids": ["101"], "output_path": f"docs/{page}.html"}
                        for page in pages}
             configs["bls"]["allowed_course_ids"].append("202")
@@ -275,7 +286,10 @@ class FrozenRunnerTests(unittest.TestCase):
                 from scripts.block_start_time_selector import selector_reference_datetime
                 self.assertEqual(selector_reference_datetime(), now.astimezone(o.ET).replace(tzinfo=None))
                 page = next(k for k, v in configs.items() if config is v)
-                return dict(page=page, counts=dict(input_windows=1, evaluated_windows=1, failed_windows=0))
+                return dict(page=page, pageKey=page, schedulingModel=SCHEMA,
+                            _canonicalDemandFingerprint=fingerprint,
+                            layeredDiagnostics={"projected_sources": []},
+                            counts=dict(input_windows=1, evaluated_windows=1, failed_windows=0))
 
             def render(payload):
                 p = payload["page"]
@@ -288,6 +302,7 @@ class FrozenRunnerTests(unittest.TestCase):
                 with (
                     patch.object(probe, "ROOT", root),
                     patch.object(probe, "load_block_schedule_page_configs", return_value=configs),
+                    patch.object(probe, "load_publication_demand", return_value=endpoint),
                     patch.object(probe, "build_block_schedule_page", side_effect=build),
                     patch.object(probe, "apply_final_live_availability_guard", side_effect=lambda x: x),
                     patch.object(probe, "render_html", side_effect=render),

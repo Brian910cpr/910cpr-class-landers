@@ -10,10 +10,11 @@ from datetime import date, datetime, timezone
 from scripts.block_start_time_selector import build_block_schedule_page, load_block_schedule_page_configs, apply_final_live_availability_guard
 from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, public_reconciliation_issues, render_html
 from scripts import layered_release_oracle as oracle
+from scripts.canonical_scheduling_demand import load_publication_demand
+from scripts.validate_layered_occupancy_projection import OccupancyGate, REQUIRED_PAGES
 ROOT=Path(__file__).resolve().parents[1]
 
-REQUIRED_PAGE_KEYS = frozenset({'bls', 'heartsaver', 'acls', 'pals', 'arc', 'hsi',
-                                'uscg_first_aid_cpr_aed', 'family_cpr'})
+REQUIRED_PAGE_KEYS = REQUIRED_PAGES
 
 
 def public_issue_summary(issues):
@@ -224,11 +225,13 @@ def run(oracle_file=None):
         policy_path.write_text(json.dumps(policy),encoding='utf-8')
         snapshot=json.loads((ROOT/'data/audit/live_availability_snapshot_preview.json').read_text())
         result['calendar_coverage_count']=len(snapshot.get('layered_commitment_coverage',[]))
-        canonical=json.loads((ROOT/'data/runtime/canonical_scheduling_demand.json').read_text())
+        canonical=load_publication_demand(ROOT)
+        gate=OccupancyGate(canonical, active=True)
         result['canonical_session_count']=len(canonical.get('sessions',[]))
         with clock:
             for key, config in configs.items():
                 payload=apply_final_live_availability_guard(build_block_schedule_page(config))
+                gate.observe(key, payload)
                 feed=public_selector_availability_payload(payload)
                 (output/(key+'.json')).write_text(json.dumps(feed,ensure_ascii=False),encoding='utf-8')
                 html=render_html(payload).replace('<body>','<body><aside>READ-ONLY RELEASE PROBE: not published.</aside>',1)
@@ -236,6 +239,8 @@ def run(oracle_file=None):
                 if key in REQUIRED_PAGE_KEYS:
                     result['pages'][key] = aggregate_page_proof(payload, feed)
                     feeds[key], html_pages[key] = feed, html
+        gate.finish(load_publication_demand(ROOT))
+        result['canonical_projection']=gate.summary()
         result['calculation_completed']=True
         result['coverage_passed']=coverage_passed(result['pages'])
         if frozen is not None:
