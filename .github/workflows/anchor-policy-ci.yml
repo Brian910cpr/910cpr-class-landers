@@ -3,6 +3,8 @@ name: Anchor policy CI
 on:
   pull_request:
     paths:
+      - 'scripts/export_calendar_snapshots.py'
+      - 'tests/test_export_calendar_snapshots.py'
       - 'scripts/anchor_state.py'
       - 'scripts/run_validated_public_build.py'
       - 'scripts/retire_expired_public_pages.py'
@@ -92,6 +94,8 @@ jobs:
         run: python -m pip install openpyxl python-dateutil tzdata
       - name: Compile anchor modules
         run: python -m py_compile scripts/anchor_state.py scripts/apply_anchor_policy.py scripts/canonical_scheduling_demand.py scripts/fetch_canonical_scheduling_demand.py scripts/block_start_time_selector.py
+      - name: Test calendar snapshot boundaries
+        run: python -B -m unittest tests.test_export_calendar_snapshots
       - name: Run anchor regressions
         run: python -B -m unittest tests.test_anchor_state tests.test_apply_anchor_policy tests.test_canonical_scheduling_demand tests.test_fetch_canonical_scheduling_demand tests.test_demand_publication tests.test_selector_clock tests.test_enrollware_roster_reconciliation tests.test_enrollware_registration_probe_gate tests.test_validate_public_refresh_output tests.test_scheduling_reconciliation tests.test_publish_scheduling_landscape tests.test_layered_publication_adapter tests.test_layered_location_aliases tests.test_layered_selector_adapter tests.test_zero_duration_pipeline tests.test_family_publication_coverage tests.test_published_selector_lead_policy tests.test_wait_for_pages_publication
       - name: Test expired static class lifecycle and validated-build order

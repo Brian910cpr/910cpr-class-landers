@@ -356,6 +356,15 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
     calendar_id = calendar_id_from_source(source)
     stype = source_type(source)
 
+    def event_in_window(event: dict[str, Any], start_dt: datetime) -> bool:
+        if in_export_window(start_dt, window_start, window_end):
+            return True
+        if stype != "inverse_google_calendar" or comparable_dt(start_dt) >= comparable_dt(window_start):
+            return False
+        end_raw = event.get("end_raw")
+        end_dt = parse_ics_datetime(end_raw, event.get("end_params")) if end_raw else None
+        return end_dt is not None and comparable_dt(end_dt) > comparable_dt(window_start)
+
     for line in lines:
         if line == "BEGIN:VEVENT":
             current = {"raw_properties": {}, "recurrence": []}
@@ -368,7 +377,7 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
             if not start_dt:
                 skipped["missing_parseable_start"] += 1
             else:
-                if in_export_window(start_dt, window_start, window_end) or recurrence_rules(current):
+                if event_in_window(current, start_dt) or recurrence_rules(current):
                     parsed_events.append(current)
                 else:
                     skipped["outside_export_window"] += 1
@@ -434,7 +443,7 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
         event_start = parse_ics_datetime(event.get("start_raw", ""), event.get("start_params"))
         has_rrule = bool(recurrence_rules(event))
         has_override = bool(event.get("recurrence_id"))
-        if not has_rrule and event_start and not in_export_window(event_start, window_start, window_end):
+        if not has_rrule and event_start and not event_in_window(event, event_start):
             skipped["outside_export_window"] += 1
             continue
         event["recurrence_source"] = "overridden_instance" if has_override else ("recurring_master" if has_rrule else "explicit_event")
@@ -645,3 +654,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

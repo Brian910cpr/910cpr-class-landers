@@ -7,6 +7,37 @@ from scripts import export_calendar_snapshots as exporter
 
 
 class ExportCalendarSnapshotsTest(unittest.TestCase):
+    def test_poll_after_start_keeps_inverse_block_until_exact_end(self):
+        source = {"calendar_source_key": "fixture", "mode": "inverse_blocking"}
+        window_start = datetime.fromisoformat("2026-11-26T15:58:18+00:00")
+        window_end = datetime.fromisoformat("2026-12-01T00:00:00+00:00")
+        ics = """BEGIN:VCALENDAR
+BEGIN:VEVENT
+UID:ongoing
+DTSTART:20261126T051500Z
+DTEND:20261127T220000Z
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+UID:ended
+DTSTART:20261126T051500Z
+DTEND:20261126T155818Z
+END:VEVENT
+BEGIN:VEVENT
+UID:future
+DTSTART:20261130T160000Z
+DTEND:20261130T170000Z
+END:VEVENT
+END:VCALENDAR
+"""
+        rows, details = exporter.parse_ics_events(ics, source, window_start, window_end)
+        self.assertEqual({r["event_id"] for r in rows}, {"ongoing", "future"})
+        self.assertEqual(rows[0]["start"], "2026-11-26T05:15:00+00:00")
+        self.assertEqual(rows[0]["end"], "2026-11-27T22:00:00+00:00")
+        # Explicit availability sources retain their existing start-window behavior.
+        rows, _ = exporter.parse_ics_events(ics, {**source, "mode":"explicit_availability"}, window_start, window_end)
+        self.assertEqual([r["event_id"] for r in rows], ["future"])
+
     def test_derives_public_ics_url_from_google_calendar_cid(self) -> None:
         source = {
             "calendar_source_key": "amy_availability",
@@ -247,3 +278,4 @@ END:VCALENDAR
 
 if __name__ == "__main__":
     unittest.main()
+
