@@ -169,6 +169,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
                      key=lambda pair: (not attested_seat(pair[1]), pair[0]))
     normalized = []
     attested_claims = {}
+    canonical_groups = {}
     for index, busy in ordered:
         if not busy.get("start") or not busy.get("end"):
             raise ValueError("unresolved occupied interval")
@@ -197,6 +198,9 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             non_owner_route_locations.add(location)
         key = ((stable_id if strict_identity else instructor), location, start, end)
         normalized.append((index, busy, key, instructor, location, start, end))
+        if (busy.get("source_file") == "canonical_class_sessions"
+                and (ident := str(busy.get("source_event_id") or "").strip())):
+            canonical_groups.setdefault(key, set()).add(ident)
         # Geometry alone is not session identity. One legacy mirror with no
         # verified demand must not override the attributed canonical class.
         if attested_seat(busy) and (cid := str(busy.get("course_id") or "")):
@@ -221,14 +225,21 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
         if key in source_keys:
             continue
         source_keys.add(key)
-        if len(conflict := attested_claims.get(key, {})) > 1:
-            claims = [candidate for records in conflict.values() for candidate in records]
+        canonical_ids = sorted(canonical_groups.get(key, ()))
+        conflict = attested_claims.get(key, {})
+        if len(conflict) > 1 or len(canonical_ids) > 1:
+            # Identical geometry can protect the physical interval once, but it
+            # cannot prove the identity, qualification or seats of two classes.
+            # Preserve both IDs in the actual hard block, never pick a winner.
+            reason = ("conflicting_attested_course_identity" if len(conflict) > 1
+                      else "multiple_canonical_commitments_at_same_interval")
+            claims = [candidate for _, candidate, candidate_key, *_ in normalized if candidate_key == key]
             fixture["sources"].append(dict(id="ambiguous-course-"+str(index),
                 instructor=instructor, location=location, start=start.isoformat(), end=end.isoformat(),
                 course=None, kind="hold", headcount=None, operational_has_active_seat=False,
                 evidence="conflicting_attested_courses_at_same_physical_interval",
                 resource_uncertain=any(c.get("resource_uncertain") for c in claims),
-                uncertainty_reason="conflicting_attested_course_identity",
+                uncertainty_reason=reason, canonical_source_ids=canonical_ids,
                 adr_shift=any("adr" in str(c.get("course_title") or "").casefold() for c in claims)))
             continue
         cid = str(busy.get("course_id") or "")
@@ -241,7 +252,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             instructor=instructor, location=location, start=start.isoformat(), end=end.isoformat(),
             course=cid if cid in fixture["courses"] else None, kind=kind, headcount=count,
             operational_has_active_seat=verified_seat,
-            evidence=busy.get("source_file"),
+            evidence=busy.get("source_file"), canonical_source_ids=canonical_ids,
             resource_uncertain=busy.get("resource_uncertain", False),
             uncertainty_reason=busy.get("uncertainty_reason"),
             adr_shift=adr_shift))

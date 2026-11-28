@@ -65,6 +65,7 @@ def expected_occupancy(endpoint):
 
 def observed_occupancy(projected):
     actual = {}
+    assignments = {}
     for row in projected:
         if (row.get("source_file") != "canonical_class_sessions"
                 or row.get("session_status") not in ACTIVE):
@@ -80,8 +81,48 @@ def observed_occupancy(projected):
         value = (tag, times)
         if key in actual and actual[key] != value:
             raise ValueError("V2 selector has conflicting occupied identity")
+        assignment = tuple(row.get(field) for field in
+                           ("instructor", "instructor_unassigned", "resource", "location",
+                            "availability_location_mode", "stored_instructor_identity_state"))
+        if key in assignments and assignments[key] != assignment:
+            raise ValueError("V2 selector has conflicting canonical occupancy assignments")
+        assignments[key] = assignment
         actual[key] = value
     return actual
+
+
+def validate_engine_coverage(reports):
+    """Prove submitted source IDs survived actual engine normalization.
+
+    This is not an independent room/instructor oracle: source rows filtered
+    out *before* submission can still need protection. An empty report list
+    remains valid projection evidence only; release needs separate coverage.
+    """
+    if not isinstance(reports, list):
+        raise ValueError("V2 engine report evidence is missing")
+    for report in reports:
+        expected = report.get("canonical_window_input")
+        blocks = report.get("normalized_occupancy")
+        if not isinstance(expected, list) or not isinstance(blocks, list):
+            raise ValueError("V2 engine occupied-source evidence is missing")
+        actual = []
+        for block in blocks:
+            ids = block.get("canonical_source_ids", [])
+            if not isinstance(ids, list) or any(not isinstance(key, str) or not key for key in ids):
+                raise ValueError("V2 engine occupied-source evidence is invalid")
+            if not ids:
+                continue
+            times = span(block.get("start"), block.get("raw_end"))
+            location = block.get("location")
+            if times is None or not isinstance(location, str) or not location:
+                raise ValueError("V2 engine occupied-source bounds or room are invalid")
+            if location.startswith("instructor-only:"):
+                location = "instructor-only:"
+            actual.extend([key, *(value.isoformat() for value in times), location] for key in ids)
+        if (any(not isinstance(row, list) or len(row) != 4 or
+                any(not isinstance(value, str) or not value for value in row) for row in expected)
+                or sorted(expected) != sorted(actual) or len({row[0] for row in actual}) != len(actual)):
+            raise ValueError("V2 engine occupied canonical identities, bounds or rooms differ from window input")
 
 
 class OccupancyGate:
@@ -106,6 +147,7 @@ class OccupancyGate:
         if not isinstance(rows, list):
             raise ValueError("V2 selector canonical projection evidence is missing")
         actual = observed_occupancy(rows)
+        validate_engine_coverage(payload["layeredDiagnostics"].get("reports"))
         if actual != self.expected:
             # No raw IDs, dates, or customer data in public CI logs.
             raise ValueError("V2 canonical occupied identity/bounds projection mismatch")

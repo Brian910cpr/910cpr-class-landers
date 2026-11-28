@@ -53,12 +53,15 @@ class LayeredAdapterTests(unittest.TestCase):
         from scripts.generate_dynamic_offers import parse_dt
         self.add('12:00', '13:00', active_registration_count=1, count_available=True)
         mirrored = dict(self.busy[0], source_event_id='enrollware:real-12:00',
+                        source_file='docs/data/schedule_future.json',
+                        linked_canonical_session_id='real-12:00',
                         start=parse_dt('2026-10-10T16:00:00Z'),
                         end=parse_dt('2026-10-10T17:00:00Z'))
         self.busy.append(mirrored)
         report = self.report()
         self.assertEqual(len(report['normalized_occupancy']), 1)
         self.assertEqual(len(report['seated_offers']), 1)
+        self.assertEqual(report['normalized_occupancy'][0]['canonical_source_ids'], ['real-12:00'])
         self.assertEqual(self.starts(report), {'11:00', '13:00'})
         for offer in report['accepted']:
             self.assertEqual(offer['source_ids'], ['real-12:00'])
@@ -79,6 +82,19 @@ class LayeredAdapterTests(unittest.TestCase):
             self.assertEqual(report['seated_offers'], [])
             for cid in ('209806', '209809', '210549'):
                 self.assertNotIn('12:00', self.starts(report, cid))
+
+    def test_independent_same_course_claims_preserve_both_ids_as_block_not_joinable(self):
+        self.add('12:00', '13:00', '209806', active_registration_count=1, count_available=True)
+        self.add('12:00', '13:00', '209806', active_registration_count=2, count_available=True)
+        self.busy[-1]['source_event_id'] = 'second-canonical'
+        for order in (list(self.busy), list(reversed(self.busy))):
+            self.busy = order
+            report = self.report()
+            occupied, = report['normalized_occupancy']
+            self.assertEqual(occupied["canonical_source_ids"], ["real-12:00", "second-canonical"])
+            self.assertEqual(occupied["kind"], "hold")
+            self.assertEqual(report['seated_offers'], [])
+            self.assertNotIn('12:00', self.starts(report))
 
     def test_unknown_conflicting_legacy_mirror_does_not_veto_attributed_seat(self):
         self.add('12:00', '13:00', '209806', active_registration_count=1, count_available=True)

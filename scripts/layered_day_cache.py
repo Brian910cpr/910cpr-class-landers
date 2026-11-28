@@ -12,7 +12,7 @@ from scripts.layered_selector_adapter import aware, occupancy_instant
 from scripts.layered_publication_adapter import calculate, project_sources, repeat_context_for_window, scoped_sources, SCHEMA
 from scripts.fetch_canonical_scheduling_demand import _atomic_write_json
 
-VERSION = 'layered-day-cache.v4'
+VERSION = 'layered-day-cache.v5'
 ZONE = ZoneInfo('America/New_York')
 
 

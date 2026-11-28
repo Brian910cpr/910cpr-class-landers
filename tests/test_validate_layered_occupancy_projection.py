@@ -32,7 +32,7 @@ class OccupancyGateTest(unittest.TestCase):
     def payload(self, page="bls"):
         return {"pageKey": page, "schedulingModel": SCHEMA,
                 "_canonicalDemandFingerprint": (self.endpoint["generated_at"], stable_hash(self.endpoint)),
-                "layeredDiagnostics": {"projected_sources": copy.deepcopy(self.rows)}}
+                "layeredDiagnostics": {"projected_sources": copy.deepcopy(self.rows), "reports": []}}
 
     def gate(self):
         return OccupancyGate(self.endpoint, active=True)
@@ -94,6 +94,28 @@ class OccupancyGateTest(unittest.TestCase):
         v1.finish(None)
         with self.assertRaisesRegex(ValueError, "mode differ"):
             v1.observe("bls", self.payload())
+
+    def test_engine_rejects_dropped_or_misrouted_source(self):
+        payload = self.payload()
+        room = "Fixture room"
+        start, end = "2026-11-28T04:45:00+00:00", "2026-11-28T05:30:00+00:00"
+        occupancy = {"canonical_source_ids": ["PRIVATE-A"], "start": start, "raw_end": end, "location": room}
+        report = {"canonical_window_input": [["PRIVATE-A", start, end, room]],
+                  "normalized_occupancy": [occupancy]}
+        payload["layeredDiagnostics"]["reports"] = [report]
+        self.gate().observe("bls", payload)
+        for change in ({"location": "Wrong room"}, {"canonical_source_ids": []},
+                       {"raw_end": "2026-11-28T05:40:00+00:00"}):
+            report["normalized_occupancy"] = [dict(occupancy, **change)]
+            with self.assertRaisesRegex(ValueError, "identities, bounds or rooms differ"):
+                self.gate().observe("bls", payload)
+
+    def test_same_source_with_conflicting_assignments_is_rejected(self):
+        payload = self.payload()
+        projection = payload["layeredDiagnostics"]["projected_sources"]
+        projection.append(dict(projection[0], instructor="Different lead", resource="Different room"))
+        with self.assertRaisesRegex(ValueError, "conflicting canonical occupancy assignments"):
+            self.gate().observe("bls", payload)
 
     def test_publication_and_probe_wire_the_gate_before_public_serialization(self):
         root = Path(__file__).resolve().parents[1]

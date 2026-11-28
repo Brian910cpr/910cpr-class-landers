@@ -374,6 +374,21 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
                 interval, qualified, lead_minutes=policy.get("lead_minutes", 1440),
                 travel_minutes=travel_minutes, commitment_coverage=fresh,
                 shared_room_edges=True, repeat_context=repeats)
+            traces = set()
+            for row in relevant:
+                if row.get("source_file") != "canonical_class_sessions":
+                    continue
+                ident = str(row.get("source_event_id") or "").strip()
+                if not ident:
+                    continue
+                start, end = (occupancy_instant(row[field]).isoformat() for field in ("start", "end"))
+                # Independently read the source's approved resource mapping;
+                # instructor-only locations use safe, engine-local aliases.
+                location = occupied_location(row, known_rooms, room, row.get("instructor"))
+                if location.startswith("instructor-only:"):
+                    location = "instructor-only:"
+                traces.add((ident, start, end, location))
+            report["canonical_window_input"] = [list(trace) for trace in sorted(traces)]
             report["adapter_mode"] = "active_local_v2"
             report["availability_window"] = window.get("source_availability_window", str(index))
             # Coverage lease must survive both publication and browser rendering.

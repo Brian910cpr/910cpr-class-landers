@@ -67,6 +67,25 @@ class LayeredPublicationTests(unittest.TestCase):
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
 
+    def test_actual_engine_trace_keeps_private_occupied_interval_and_room(self):
+        from scripts.validate_layered_occupancy_projection import validate_engine_coverage
+        source = self.add(11, "12:00", "13:00", count=1, visibility="private",
+                          session_status="scheduled")
+        report, = self.calculation()["reports"]
+        ident = source["source_event_id"]
+        self.assertEqual(report["canonical_window_input"],
+                         [[ident, "2026-10-11T16:00:00+00:00", "2026-10-11T17:00:00+00:00", self.room]])
+        validate_engine_coverage([report])
+        block, = [row for row in report["normalized_occupancy"] if row.get("canonical_source_ids")]
+        self.assertEqual(block["canonical_source_ids"], [ident])
+        starts = self.starts("210549", day=11)
+        self.assertEqual(starts, {"11:00", "13:00"})
+        public = json.dumps(public_selector_availability_payload(self.payload()))
+        self.assertNotIn("canonical_window_input", public)
+        self.assertNotIn("canonical_source_ids", public)
+        # Private lineage must not be serialized in the compact feed.
+        self.assertNotIn(ident, public)
+
     def test_clear_day_offers_all_qualified_courses_at_every_half_hour(self):
         # Owner doctrine #16: an open ten-hour qualified window does not
         # automatically thin a course's valid starts to an hourly cadence.
