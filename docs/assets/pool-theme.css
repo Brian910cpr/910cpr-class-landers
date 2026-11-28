@@ -1,0 +1,49 @@
+/* Community event surfaces own their colors; layout wrappers remain transparent.
+   Scoped to these two pages so shared theme rules keep their existing behavior. */
+.pool-page{--event-bg:#f5f9fa;--event-surface:#fff;--event-soft:#eaf4f6;--event-text:#18364b;--event-muted:#496575;--event-line:#c7dae2;--event-link:#006b80}
+html[data-theme="dark"] .pool-page{--event-bg:#0b1521;--event-surface:#142536;--event-soft:#10202e;--event-text:#eff6fb;--event-muted:#bfd0de;--event-line:#405b70;--event-link:#8ddbea}
+html body.pool-page{background:var(--event-bg)!important;color:var(--event-text)!important}
+html body.pool-page .wrap{background:transparent!important;color:inherit!important}
+html body.pool-page .section{background:var(--event-soft)!important;color:var(--event-text)!important}
+html body.pool-page .story{background:var(--event-surface)!important}
+html body.pool-page :is(.partner,.pressitem,.story blockquote){background:var(--event-surface)!important;color:var(--event-text)!important;border-color:var(--event-line)!important}
+html body.pool-page .story blockquote{background:var(--event-soft)!important;border-left-color:#d5a538!important}
+html body.pool-page :is(.partner,.pressitem){box-shadow:0 5px 18px rgb(0 28 45 / 6%);transition:border-color .15s,box-shadow .15s}
+html body.pool-page :is(.partner,.pressitem):hover{border-color:var(--event-link)!important;box-shadow:0 7px 20px rgb(0 28 45 / 12%)}
+html body.pool-page :is(.partner,.pressitem) strong{color:var(--event-text)!important}
+html body.pool-page :is(.partner,.pressitem) small{color:var(--event-muted)!important}
+html body.pool-page .section :is(p,li,.muted){color:var(--event-muted)!important}
+html body.pool-page .section a:not(.cta):not(.submit):not(.checkout-resume){color:var(--event-link)!important}
+html body.pool-page .eyebrow{background:transparent!important;color:#006b80!important}
+html[data-theme="dark"] body.pool-page .eyebrow{color:#8ddbea!important}
+html body.pool-page :is(.hero,.top,.foot,.section.dark){background:#08263e!important;color:#fff!important}
+html body.pool-page .hero{background:radial-gradient(ellipse at right top,#126776,transparent 60%),linear-gradient(125deg,#081c35,#103a58 65%,#075468)!important}
+html body.pool-page :is(.hero,.top,.foot,.section.dark) :is(p,li,small){color:#d8e8ef!important}
+html body.pool-page :is(.hero,.top,.foot,.section.dark) :is(h1,h2,h3,strong){color:#fff!important}
+html body.pool-page :is(.hero,.top,.foot,.section.dark) :is(a,.eyebrow){color:#a2e9ef!important}
+html body.pool-page .hero a.cta{background:#ffd36b!important;color:#0a273a!important}
+html body.pool-page .sharewrap{background:var(--event-soft)!important;border-color:var(--event-line)!important}
+html body.pool-page .share-intro :is(h2,p){color:var(--event-text)!important}
+html body.pool-page .share :is(a,button){background:var(--event-surface)!important;color:var(--event-text)!important;border:1px solid var(--event-line)!important}
+html body.pool-page .share :is(.share-native,.share-facebook,.share-text){background:#145b70!important;color:#fff!important;border-color:#398396!important}
+html body.pool-page .pool-checkout{--pool-ink:var(--event-text);--pool-muted:var(--event-muted);--pool-line:var(--event-line);--pool-input:var(--event-line);--pool-tint:var(--event-soft);--pool-accent:var(--event-link)}
+html body.pool-page .pool-checkout :is(.card,.price-choice,.attendee-entry,.survey){background:var(--event-surface)!important;color:var(--event-text)!important;border-color:var(--event-line)!important}
+html body.pool-page .pool-checkout .price-choice.active{background:var(--event-soft)!important;border:2px solid var(--event-link)!important;box-shadow:inset 0 0 0 1px var(--event-link)}
+html body.pool-page .pool-checkout :is(input,select){background:var(--event-bg)!important;color:var(--event-text)!important;border-color:var(--event-line)!important}
+html body.pool-page .pool-checkout :is(.regcall,.seat,.checkout-switch){background:var(--event-surface)!important;color:var(--event-text)!important;border-color:var(--event-line)!important}
+html body.pool-page .pool-checkout :is(.help,.breakdown,.price-choice small,label.field){color:var(--event-muted)!important;font-size:.875rem;line-height:1.5}
+html body.pool-page .pool-checkout .req{font-size:.65rem;color:var(--event-link)!important}
+html body.pool-page .pool-checkout :is(.submit,.checkout-resume){background:#126b49!important;color:white!important;border-color:#68b894!important}
+html body.pool-page .pool-checkout .summary{background:#08263e!important;color:white!important}
+html body.pool-page .pool-checkout .summary small{color:#d8e8ef!important}
+html body.pool-page :is(a,button,input,select,summary):focus-visible{outline:3px solid #b77800!important;outline-offset:4px!important}
+html[data-theme="dark"] body.pool-page :is(a,button,input,select,summary):focus-visible{outline-color:#ffd36b!important}
+@media(max-width:600px){.pool-page .nav{flex-wrap:wrap;gap:10px}.pool-page .nav>span{font-size:.8rem}.pool-page .partners{grid-template-columns:1fr}.pool-page .partner,.pool-page .pressitem{min-width:0;overflow-wrap:anywhere}}
+@media(prefers-reduced-motion:reduce){.pool-page :is(.partner,.pressitem){transition:none}}
+
+/* Preserve high contrast on the hero action and the practical arrival note. */
+html body.pool-page .hero p a.cta.cta{color:#0a273a!important}
+html body.pool-page .note{background:var(--event-soft)!important;color:var(--event-text)!important;border-left-color:var(--event-link)!important}
+html body.pool-page .share{display:grid}
+html body.pool-page .nav{padding:16px 20px}
+@media(max-width:680px){html body.pool-page .pool-checkout .submit{position:static}}
