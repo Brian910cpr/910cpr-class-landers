@@ -390,6 +390,70 @@ def calculate(windows, occupancy, courses, policy, resources, now, interval,
                     failed_windows=len(windows)-len(reports), uncertainty_issues=len(issues)))
 
 
+def canonical_occupancy_accounting(sources, *, strict_instructor_identity=False):
+    """Restricted aggregate of normalized hard blocks and instructor attribution.
+
+    These are not public joinable offers, per-window coverage, or a substitute
+    for comparing against an independently scoped canonical input snapshot.
+    """
+    grouped, stale_holds = {}, set()
+    missing = 0
+    for row in sources:
+        count = row.get("active_registration_count")
+        if (row.get("source_file") != "canonical_class_sessions"
+                or row.get("session_status") not in {None, "active", "scheduled"}):
+            continue
+        positive = (row.get("operational_has_active_seat") is True
+                    or (row.get("count_available") is True and type(count) is int and count > 0))
+        key = str(row.get("source_event_id") or "").strip()
+        if not positive:
+            if not key or row.get("stale_commitment") is not True:
+                continue
+        elif not key:
+            missing += 1
+            continue
+        try:
+            start, end = (occupancy_instant(row[k]) for k in ("start", "end"))
+            bounds = ((start, end) if start < end and not row.get("normalization_issue")
+                      and not row.get("duration_resolution") else None)
+        except (KeyError, ValueError, TypeError, AttributeError):
+            bounds = None
+        if not positive:
+            if bounds is not None:
+                stale_holds.add(key)
+            continue
+        owner = (row.get("effective_instructor_person_id") if strict_instructor_identity
+                 else str(row.get("instructor") or "").strip().casefold())
+        owner = owner if owner and owner not in {"unknown", "unassigned"} and not row.get("instructor_unassigned") else None
+        grouped.setdefault(key, set()).add((bounds, owner, row.get("kind") in {"hold", "commitment", "uncertain"}))
+    reasons = Counter()
+    bounded = named = attributed = unambiguous = 0
+    for states in grouped.values():
+        # Conflicting mirrors must not inflate counts or prove an instructor.
+        bounded += any(bounds is not None for bounds, _, _ in states)
+        if len(states) != 1:
+            reasons["ambiguous_canonical_projection"] += 1
+            continue
+        bounds, owner, hard_only = next(iter(states))
+        if bounds is None:
+            reasons["missing_authoritative_bounds"] += 1
+            continue
+        unambiguous += 1
+        named += owner is not None
+        if hard_only:
+            reasons["hard_occupancy_only"] += 1
+        elif not owner:
+            reasons["missing_effective_instructor"] += 1
+        else:
+            attributed += 1
+    return dict(positive_canonical_identities=len(grouped), positive_rows_missing_identity=missing,
+                bounded_identity_count=bounded, unambiguous_bounded_identity_count=unambiguous,
+                stale_bounded_hold_only_count=len(stale_holds.difference(grouped)),
+                effective_instructor_attributed_count=named,
+                positive_demand_ready_for_instructor_accounting_count=attributed,
+                unresolved_identity_count=len(grouped)-attributed, rejection_reason_counts=dict(reasons))
+
+
 def publish(calculation, page_config, courses, windows, now, url_for, public_reasons,
             seated_offers=(), *, require_verified_day_gravity=False, strict_instructor_identity=False,
             request_course_ids=(), request_qualification=None):
@@ -630,6 +694,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         rejectedCourseStartTimes=rejected, rejectionReasonCounts=dict(Counter(reason for row in rejected for reason in row.get("reasons",[]))),
         reconciliationIssues=calculation["issues"],
         layeredDiagnostics=encode(redact_internal_identity(calculation) if strict_instructor_identity else calculation),
+        canonicalOccupancyAccounting=canonical_occupancy_accounting(
+            calculation["projected_sources"], strict_instructor_identity=strict_instructor_identity),
         proof=dict(whole_block_presented_as_class=False, availability_windows_are_not_rendered_as_class_times=True))
     _rebuild_dates(payload,unique)
     payload["counts"].update(calculation["counts"])
