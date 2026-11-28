@@ -218,34 +218,88 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
     # Never retire a source record. Confirmed-zero booking choices are retired
     # only from this projection; their occupied interval remains in calculation.
     counts = {}
+    nonpublic_identities = set()
     for source in calculation["projected_sources"]:
-        for identity in [source.get("source_event_id"), source.get("external_class_id")]:
-            if identity is not None and str(identity) not in counts:
-                counts[str(identity)] = source
+        # Multiple canonical/legacy representations can share an external
+        # container ID. First-match lookup is useful for seat evidence, but
+        # must never let a public-looking mirror hide a later private source.
+        identities = [source.get("source_event_id"), source.get("external_class_id")]
+        restricted = str(source.get("visibility") or "").strip().casefold() in {
+            "private", "unlisted", "internal"}
+        for identity in identities:
+            if identity is not None:
+                key = str(identity)
+                if key not in counts:
+                    counts[key] = source
+                if restricted:
+                    nonpublic_identities.add(key)
     for original in seated_offers:
-        source = counts.get(str(original.get("session_id") or original.get("sourceSessionId") or original.get("sourceAvailabilityBlock", {}).get("sessionId")))
-        if source and source.get("count_available") is True and source.get("active_registration_count") == 0:
+        identity = (original.get("session_id") or original.get("sourceSessionId")
+                    or original.get("sourceAvailabilityBlock", {}).get("sessionId"))
+        source = counts.get(str(identity))
+        # An explicitly nonpublic canonical session can occupy an instructor
+        # without ever becoming a joinable public legacy booking choice.
+        # The most restrictive visibility wins across every identity match,
+        # not merely the first source DTO selected for seat lookup.
+        visibility = {str(v).strip().casefold() for v in (
+            original.get("visibility"), (source or {}).get("visibility"))}
+        if (visibility.intersection({"private", "unlisted", "internal"})
+                or str(identity) in nonpublic_identities):
+            rejected.append(dict(original, reasons=["nonpublic_occupied_not_joinable"]))
+        elif source and source.get("count_available") is True and source.get("active_registration_count") == 0:
             rejected.append(dict(original, reasons=["confirmed_zero_existing_booking_choice_retired"]))
         else:
             accepted.append(deepcopy(original))
-    # Every retained existing class is that exact course's day anchor,
-    # including when its roster count is unknown. Consolidate across separate
-    # Google availability gaps without suppressing different course formats.
-    day_anchors = {(o['date'], str(o['courseId'])) for o in accepted
-                   if o.get('offerType') == 'seated_class'}
+    # An empty public class shell is never evidence of real registered demand.
+    # The calculation has already reserved its physical interval; this flag
+    # controls ONLY daywide Anchor gravity and never public joinability.
+    def has_verified_demand(source):
+        if not source:
+            return False
+        if source.get("operational_has_active_seat") is True:
+            return True
+        count = source.get("active_registration_count")
+        return (source.get("count_available") is True
+                and type(count) is int and count > 0)
+
+    def matched_source(offer):
+        identity = (offer.get("session_id") or offer.get("sourceSessionId")
+                    or offer.get("sourceAvailabilityBlock", {}).get("sessionId"))
+        return counts.get(str(identity))
+
     def instructor_key(name):
         key = str(name or '').strip().casefold()
         return 'brian ennis' if key == 'brian' else key
-    # Class occupancy comes from every program, not just the page's selected
-    # courses. A second calendar gap does not reset an instructor's anchored day.
+
+    # Seat-driven same-course collapse belongs to the occupied instructor's
+    # day. It must not suppress the same qualified course for an independent
+    # instructor on a legitimately separate availability window. Shared-room
+    # collisions remain enforced upstream by calculate().
+    day_anchors = {
+        (offer['date'], str(offer['courseId']), instructor_key(offer.get('instructor')))
+        for offer in accepted
+        if offer.get('offerType') == 'seated_class'
+        and offer.get('instructor')
+        and has_verified_demand(matched_source(offer))
+    }
+
+    # Real seated demand creates internal day gravity even when private or
+    # missing a public course ID. An unresolved instructor must NOT create an
+    # unbounded all-instructor day suppression; its hard occupancy and scope
+    # uncertainty are handled upstream by calculate().
     anchored_days = set()
     for source in calculation['projected_sources']:
-        if (source.get('course_id') and source.get('start') and source.get('end') and
-                not source.get('normalization_issue') and aware(source['end']) > aware(source['start'])):
+        if (has_verified_demand(source) and source.get('instructor')
+                and not source.get('instructor_unassigned')
+                and source.get('start') and source.get('end')
+                and not source.get('normalization_issue')
+                and aware(source['end']) > aware(source['start'])):
             anchored_days.add((aware(source['start']).date().isoformat(),
                                instructor_key(source.get('instructor'))))
     for offer in accepted:
-        if offer.get('offerType') == 'seated_class':
+        if (offer.get('offerType') == 'seated_class'
+                and offer.get('instructor')
+                and has_verified_demand(matched_source(offer))):
             anchored_days.add((offer['date'], instructor_key(offer.get('instructor'))))
     retained = []
     for offer in accepted:
@@ -255,7 +309,9 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         # A retained skills seat occupies its actual interval; it does not consume
         # the whole day's eligible skills edges. Calculation already checks each
         # candidate's 45-minute instruction plus 15-minute cleanup and conflicts.
-        if offer.get('offerType') != 'seated_class' and (offer['date'], str(offer['courseId'])) in day_anchors and not skills_edge:
+        if (offer.get('offerType') != 'seated_class' and
+                (offer['date'], str(offer['courseId']), instructor_key(offer.get('instructor'))) in day_anchors
+                and not skills_edge):
             rejected.append(dict(offer, reasons=['existing_course_day_anchor']))
         elif offer.get('scheduleRole') == 'open_day' and (
                 (offer['date'], instructor_key(offer.get('instructor'))) in anchored_days or
@@ -291,9 +347,20 @@ PUBLIC_REJECTION_DIAGNOSTIC_FIELDS = frozenset({
 
 
 def public_rejection_diagnostics(rows):
-    return [{key: value for key, value in row.items()
-             if key in PUBLIC_REJECTION_DIAGNOSTIC_FIELDS}
-            for row in rows if isinstance(row, dict)]
+    safe = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        reasons = row.get("reasons") or []
+        # A private occupied appointment must not be discoverable through the
+        # rejection diagnostic's otherwise useful course/date/start fields.
+        # Keep only its aggregate reason; source geometry remains internal.
+        if "nonpublic_occupied_not_joinable" in reasons:
+            safe.append({"reasons": ["nonpublic_occupied_not_joinable"]})
+        else:
+            safe.append({key: value for key, value in row.items()
+                         if key in PUBLIC_REJECTION_DIAGNOSTIC_FIELDS})
+    return safe
 
 
 def finalize(payload, now=None):

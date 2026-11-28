@@ -750,6 +750,10 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "course_id": session.get("course_id") or session.get("external_course_id"),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
             "instructor_unassigned": not session.get("lead_instructor_name"),
+            # The authoritative canonical endpoint includes visibility. Losing it
+            # here lets a private/unlisted seat inherit a public legacy URL.
+            # Keep the raw policy state; never infer public joinability.
+            "visibility": session.get("visibility"),
             "count_available": session.get("count_available") is True,
             "active_registration_count": session.get("active_registration_count"),
         })
