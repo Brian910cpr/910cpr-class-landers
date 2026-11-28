@@ -6,7 +6,9 @@ from urllib.parse import urlsplit, parse_qs
 from zoneinfo import ZoneInfo
 from pathlib import Path
 from typing import Any
+from scripts.block_start_time_selector import load_block_schedule_page_configs
 from scripts.canonical_scheduling_demand import load_publication_demand, resolve_canonical_demand
+from scripts.layered_publication_adapter import SCHEMA as LAYERED_SCHEMA
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,7 +16,15 @@ SCHEDULE_PATH = ROOT / "docs" / "data" / "schedule_future.json"
 CURRENT_SESSIONS_PATH = ROOT / "data" / "sessions_current.json"
 ADMIN_SCHEDULE_PATH = ROOT / "docs" / "data" / "admin_schedule.json"
 SELECTOR_DIR = ROOT / "docs" / "data" / "block-selector-availability"
-REQUIRED_SELECTORS = ("bls", "heartsaver", "acls", "pals")
+REQUIRED_SELECTORS = ("bls", "heartsaver", "acls", "pals", "arc", "hsi",
+                      "uscg_first_aid_cpr_aed", "family_cpr")
+REQUEST_PUBLIC_FIELDS = frozenset({
+    "courseId", "courseName", "courseFamily", "deliveryMode", "displayStartTime",
+    "durationMinutes", "schedulerConsumptionMinutes", "cleanupBufferMinutes",
+    "setupBufferMinutes", "location", "offerType", "dynamicBookingMode", "scheduleRole",
+    "instructor", "schedulerConsumptionEnd", "occupiedUntil", "resource", "validUntil",
+    "date", "startTime",
+})
 
 
 def load_json(path: Path) -> Any:
@@ -109,6 +119,7 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
     date_count = len(dates)
     start_count = 0
     offer_count = 0
+    request_ids: set[str] | None = None
     for day in dates:
         require(isinstance(day, dict) and day.get("date"), f"{page_key}: date row lacks date")
         starts = day.get("startTimes")
@@ -127,7 +138,14 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
                 # Internal pipeline DTOs retain this trace before serialization.
                 require(not any(field in course for field in ("sourceSessionIds", "edgeIds")),
                         f"{page_key}: public offer leaks internal source trace")
-                if course.get("offerType") == "seated_class":
+                if course.get("dynamicBookingMode") == "request":
+                    if request_ids is None:
+                        options = load_block_schedule_page_configs().get(page_key, {}).get("course_options", [])
+                        request_ids = {str(o["course_id"]) for o in options if o.get("delivery_mode") == "in-person"}
+                    require(day["date"] not in blocked, f"{page_key}: request on unreconciled date")
+                    validate_layered_request(course, payload, page_key, day["date"], slot["startTime"],
+                                             day["date"] in occupied, request_ids)
+                elif course.get("offerType") == "seated_class":
                     # Public selector payloads are intentionally compact: they retain
                     # the seated identity as availabilityBlockId="seated:<session_id>"
                     # and expose the registration destination as appointmentUrl.
@@ -159,6 +177,49 @@ def validate_selector(page_key: str, public_session_ids: set[str]) -> dict[str, 
     require(counts.get("publicSelectableOfferCount") == offer_count, f"{page_key}: offer count mismatch")
     # A correctly closed feed must replace stale inventory even when it has no offers.
     return {"dates": date_count, "starts": start_count, "offers": offer_count}
+
+
+def validate_layered_request(course: dict, payload: dict, page_key: str, day: str, clock: str,
+                             occupied: bool, allowed_course_ids: set[str]) -> None:
+    """Check the public shape; the layered publisher has already proved scheduling fit."""
+    prefix = f"{page_key}: request"
+    require(payload.get("pageKey") == page_key and payload.get("schedulingModel") == LAYERED_SCHEMA and
+            (payload.get("anchor_policy") or {}).get("mode") == LAYERED_SCHEMA,
+            f"{prefix} requires finalized layered publication")
+    require(course.keys() <= REQUEST_PUBLIC_FIELDS, f"{prefix} carries a route or private provenance")
+    require(course.get("offerType") == "dynamic_appointment" and course.get("deliveryMode") == "classroom"
+            and str(course.get("courseId")) in allowed_course_ids and str(course.get("courseId")) != "509474",
+            f"{prefix} is not a configured classroom course")
+    role = course.get("scheduleRole")
+    require(role in {"open_day", "barnacle"} and (not occupied or role == "barnacle"),
+            f"{prefix} has inconsistent scheduling role")
+    require(course.get("date") == day and course.get("startTime") == clock,
+            f"{prefix} has inconsistent date or start time")
+    require(all(isinstance(course.get(field), str) and course[field].strip()
+                for field in ("instructor", "location", "resource")), f"{prefix} lacks public resource or instructor")
+    minutes, setup, cleanup, total = (course.get(key) for key in
+        ("durationMinutes", "setupBufferMinutes", "cleanupBufferMinutes", "schedulerConsumptionMinutes"))
+    require(all(type(value) is int for value in (minutes, setup, cleanup, total)) and
+            minutes > 0 and setup == 0 and cleanup >= 0 and total == minutes + cleanup,
+            f"{prefix} has inconsistent duration")
+    zone = ZoneInfo("America/New_York")
+    wall = datetime.fromisoformat(f"{day}T{clock}")
+    require(wall.tzinfo is None, f"{prefix} start must be a local slot")
+    start = wall.replace(tzinfo=zone)
+    require(start.utcoffset() == start.replace(fold=1).utcoffset() and
+            start.strftime("%H:%M") == clock and start.date().isoformat() == day,
+            f"{prefix} has ambiguous or malformed local start")
+    end = datetime.fromisoformat(str(course.get("occupiedUntil") or "").replace("Z", "+00:00"))
+    require(end.tzinfo is not None and
+            end.astimezone(timezone.utc) == start.astimezone(timezone.utc) + timedelta(minutes=total) and
+            end.astimezone(zone).strftime("%H:%M") == course.get("schedulerConsumptionEnd"),
+            f"{prefix} has inconsistent occupied interval")
+    lease = datetime.fromisoformat(str(course.get("validUntil") or "").replace("Z", "+00:00"))
+    feed_lease = datetime.fromisoformat(str(payload["validUntil"]).replace("Z", "+00:00"))
+    now = datetime.now(timezone.utc)
+    require(start.astimezone(timezone.utc) > now, f"{prefix} start has passed")
+    require(lease.tzinfo is not None and now < lease <= feed_lease,
+            f"{prefix} lacks a fresh scoped lease")
 
 
 def validate_native_skills_offer(course: dict, page_key: str, day: str, clock: str) -> None:
