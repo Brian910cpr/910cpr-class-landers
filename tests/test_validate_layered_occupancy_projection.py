@@ -96,6 +96,57 @@ class OccupancyGateTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "mode differ"):
             v1.observe("bls", self.payload())
 
+    def seated_payload(self, *, visibility="public"):
+        row = self.endpoint["sessions"][0]
+        row.update(external_class_id="PUBLIC-ALIAS", catalog_course_id="209806",
+                   start_at=self.a, end_at=self.b, visibility=visibility,
+                   registration_status="open", external_course_id=None, count_available=True, active_registration_count=1,
+                   demand_status="current", demand_basis="canonical_active_registrations",
+                   lead_instructor_identity={"status": "verified"}, lead_instructor_name="Fixture Lead")
+        offer = {"offerType": "seated_class", "date": "2026-11-27", "startTime": "23:45",
+                 "courseId": "209806", "instructor": "Fixture Lead",
+                 "availabilityBlockId": "seated:PUBLIC-ALIAS",
+                 "sourceAvailabilityBlock": {"sessionId": "PUBLIC-ALIAS"}}
+        payload = self.payload()
+        payload["offers"] = [copy.deepcopy(offer)]
+        payload["dates"] = [{"date": offer["date"], "startTimes": [
+            {"startTime": offer["startTime"], "courses": [offer]}]}]
+        return payload
+
+    def test_public_exact_seated_source_passes_and_private_injection_fails(self):
+        payload = self.seated_payload()
+        self.gate().observe("bls", payload)
+        for visibility in ("private", "unlisted", "internal", None):
+            with self.subTest(visibility=visibility):
+                payload = self.seated_payload(visibility=visibility)
+                with self.assertRaisesRegex(ValueError, "^V2 seated offer has no current public joinable canonical source$"):
+                    self.gate().observe("bls", payload)
+
+    def test_nested_only_or_relocated_seated_offer_fails(self):
+        payload = self.seated_payload()
+        payload["offers"] = []
+        with self.assertRaisesRegex(ValueError, "seated offers differ from renderer input"):
+            self.gate().observe("bls", payload)
+        payload = self.seated_payload()
+        payload["dates"][0]["startTimes"][0]["startTime"] = "23:50"
+        with self.assertRaisesRegex(ValueError, "seated renderer coordinates"):
+            self.gate().observe("bls", payload)
+
+    def test_stale_zero_or_nonunique_source_cannot_be_rendered(self):
+        for patch in ({"demand_status": "stale"}, {"active_registration_count": 0},
+                      {"registration_status": "closed"}, {"lead_instructor_identity": {}},
+                      {"external_course_id": "different"}):
+            payload = self.seated_payload()
+            self.endpoint["sessions"][0].update(patch)
+            payload["_canonicalDemandFingerprint"] = (self.endpoint["generated_at"], stable_hash(self.endpoint))
+            with self.assertRaisesRegex(ValueError, "no current public joinable canonical source"):
+                self.gate().observe("bls", payload)
+        payload = self.seated_payload()
+        self.endpoint["sessions"][1]["external_class_id"] = "PUBLIC-ALIAS"
+        payload["_canonicalDemandFingerprint"] = (self.endpoint["generated_at"], stable_hash(self.endpoint))
+        with self.assertRaisesRegex(ValueError, "unique canonical source"):
+            self.gate().observe("bls", payload)
+
     def test_engine_rejects_dropped_or_misrouted_source(self):
         payload = self.payload()
         room = "Fixture room"

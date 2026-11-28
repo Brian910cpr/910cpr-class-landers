@@ -1,7 +1,7 @@
 """In-process, restricted V2 occupancy gate. Never serialize source evidence."""
 from __future__ import annotations
 
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
@@ -239,6 +239,66 @@ def validate_dynamic_provenance(payload, reports):
             raise ValueError("V2 dynamic offer does not match an accepted engine candidate")
 
 
+def validate_seated_provenance(payload, endpoint):
+    """Independently attest final seated rows against the fresh canonical source."""
+    by_alias = defaultdict(list)
+    for row in endpoint["sessions"]:
+        for alias in {str(row.get(key) or "").strip() for key in
+                      ("canonical_session_id", "external_class_id")} - {""}:
+            by_alias[alias].append(row)
+
+    def attest(offer):
+        block = offer.get("sourceAvailabilityBlock")
+        if not isinstance(block, dict):
+            raise ValueError("V2 seated offer lacks source identity")
+        sid = str(block.get("sessionId") or "").strip()
+        if (not sid or any(str(offer[key]).strip() != sid for key in
+                           ("session_id", "sourceSessionId") if offer.get(key) is not None)
+                or offer.get("availabilityBlockId") != "seated:" + sid):
+            raise ValueError("V2 seated offer has conflicting source identity")
+        matches = by_alias[sid]
+        if len(matches) != 1:
+            raise ValueError("V2 seated offer lacks unique canonical source")
+        row = matches[0]
+        count = row.get("active_registration_count")
+        lead = row.get("lead_instructor_identity")
+        course_ids = {str(row[key]) for key in ("catalog_course_id", "external_course_id")
+                      if row.get(key) is not None and str(row[key]).strip()}
+        times = span(row.get("start_at"), row.get("end_at"))
+        if (row.get("session_status") not in ACTIVE or row.get("visibility") != "public"
+                or row.get("registration_status") != "open"
+                or row.get("demand_status") != "current"
+                or row.get("demand_basis") != "canonical_active_registrations"
+                or row.get("count_available") is not True or type(count) is not int or count < 1
+                or not isinstance(lead, dict) or lead.get("status") != "verified"
+                or not offer.get("instructor")
+                or str(offer["instructor"]).strip().casefold()
+                   != str(row.get("lead_instructor_name") or "").strip().casefold()
+                or course_ids != {str(offer.get("courseId"))} or times is None):
+            raise ValueError("V2 seated offer has no current public joinable canonical source")
+        local = times[0].astimezone(ZoneInfo("America/New_York"))
+        if (offer.get("date"), offer.get("startTime")) != (local.date().isoformat(), local.strftime("%H:%M")):
+            raise ValueError("V2 seated offer differs from its canonical occurrence")
+        canonical_id = str(row.get("canonical_session_id") or "").strip()
+        if not canonical_id:
+            raise ValueError("V2 seated offer lacks a durable canonical source identity")
+        return canonical_id, dynamic_offer_key(offer)
+
+    top = [attest(offer) for offer in payload.get("offers", [])
+           if offer.get("offerType") == "seated_class"]
+    nested = []
+    for day in payload.get("dates", []):
+        for slot in day.get("startTimes", []):
+            for offer in slot.get("courses", []):
+                if offer.get("offerType") != "seated_class":
+                    continue
+                if (offer.get("date"), offer.get("startTime")) != (day.get("date"), slot.get("startTime")):
+                    raise ValueError("V2 seated renderer coordinates differ from its occurrence")
+                nested.append(attest(offer))
+    if Counter(top) != Counter(nested) or len({ident for ident, _ in top}) != len(top):
+        raise ValueError("V2 seated offers differ from renderer input")
+
+
 def validate_engine_coverage(reports):
     """Prove submitted source IDs survived actual engine normalization.
 
@@ -278,6 +338,7 @@ class OccupancyGate:
         self.active = active
         self.fingerprint = (endpoint.get("generated_at"), stable_hash(endpoint)) if active else None
         self.expected = expected_occupancy(endpoint) if active else {}
+        self.endpoint = endpoint if active else None
         self.seen = set()
         self.calendar_snapshot_hash = None
         self.calendar_window_inventory = None
@@ -312,6 +373,7 @@ class OccupancyGate:
             raise ValueError("V2 expected calendar window scope differs between families")
         validate_engine_coverage(reports)
         validate_dynamic_provenance(payload, reports)
+        validate_seated_provenance(payload, self.endpoint)
         self.calendar_snapshot_hash = snapshot_hash
         self.calendar_window_inventory = inventory_hash
         if actual != self.expected:
