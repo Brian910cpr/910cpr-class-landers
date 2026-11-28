@@ -20,12 +20,12 @@
       "title": "AHA BLS Provider Renewal",
       "certifying_body": "AHA",
       "family": "BLS",
-      "short_description": "Focused BLS renewal for students who already hold or recently held BLS certification.",
-      "who_this_is_for": "Current or recently expired BLS providers renewing an AHA BLS Provider card.",
+      "short_description": "Focused BLS renewal for students with a current AHA BLS Provider card.",
+      "who_this_is_for": "Students renewing a current AHA BLS Provider card.",
       "topics_covered": ["BLS skills review", "CPR and AED practice", "Ventilation practice", "Choking response"],
       "required_materials": ["Current AHA BLS Provider Student Manual or accepted eBook when required."],
       "certification_issued": "American Heart Association BLS Provider eCard, valid for two years after successful completion.",
-      "compliance_acceptance_notes": ["Choose the full Provider option if your employer or school requires an initial course."],
+      "compliance_acceptance_notes": ["Choose the full BLS Provider option if your card has expired or your employer or school requires an initial course."],
       "full_course_page": "/bls.html"
     },
     "210549": {

@@ -81,7 +81,7 @@
           "price": 75,
           "display_label": "AHA BLS Provider Renewal",
           "icon_label": "RN",
-          "clarification": "Renewal path for providers who already hold current or recently expired BLS.",
+          "clarification": "Choose Renewal if your AHA BLS Provider card is still current. If it expired, choose BLS Provider.",
           "delivery_mode": "in-person",
           "variant": "renewal",
           "deep_link_aliases": [

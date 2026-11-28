@@ -329,5 +329,35 @@ class ScheduledObservationDateTests(unittest.TestCase):
                     self.assertIsNone(result['incident'])
 
 
+class BLSRenewalCopyTests(unittest.TestCase):
+    def test_current_card_guidance_survives_generation_and_matches_checked_in_pages(self):
+        import re
+        from scripts.block_start_time_selector import load_block_schedule_page_configs
+        from scripts.build_bls_block_schedule_pilot import render_html
+
+        root = Path(__file__).resolve().parents[1]
+        config = load_block_schedule_page_configs()["bls"]
+        fresh = render_html({"pageConfig": config, "pageKey": "bls", "dates": [], "counts": {}})
+        published = [(root / "docs" / path).read_text(encoding="utf8")
+                     for path in ("bls.html", "BLS.html")]
+        self.assertEqual(*published)
+        eligibility = ("Choose Renewal if your AHA BLS Provider card is still current. "
+                       "If it expired, choose BLS Provider.")
+        for html in [fresh, *published]:
+            self.assertIn("New or expired card: choose BLS Provider.", html)
+            self.assertNotRegex(html, r"(?i)recently expired|recently held BLS")
+            match = re.search(r"const courseOptions = (.*?);\n", html)
+            self.assertIsNotNone(match)
+            options = json.loads(match[1])
+            renewal = next(row for row in options if row["courseId"] == "359474")
+            self.assertEqual(renewal["clarification"], eligibility)
+            self.assertIn("current AHA BLS Provider card", renewal["details"]["who_this_is_for"])
+            self.assertIn("card has expired", renewal["details"]["compliance_acceptance_notes"][0])
+            schema = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', html)[1])
+            entry = next(row for row in schema["@graph"] if row["offers"]["url"].endswith("?course=359474"))
+            self.assertEqual(entry["description"], eligibility)
+            self.assertTrue(entry["offers"]["url"].endswith("?course=359474"))
+
+
 if __name__ == '__main__':
     unittest.main()
