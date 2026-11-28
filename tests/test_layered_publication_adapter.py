@@ -60,6 +60,108 @@ class LayeredPublicationTests(unittest.TestCase):
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
 
+    def test_distant_private_seat_does_not_poison_unrelated_window(self):
+        # Distant private seats retain provenance, but do not force routes
+        # for unrelated free days. Nothing becomes publicly joinable.
+        self.sources.append(dict(
+            source_event_id='synthetic-private-offsite-far',
+            start=self.at(24,'09:00').isoformat(),
+            end=self.at(24,'10:00').isoformat(),
+            instructor='Brian Ennis', location='fixture-unmapped-offsite',
+            resource='fixture-unmapped-offsite',
+            source_file='canonical_class_sessions',
+            visibility='private', count_available=True,
+            active_registration_count=1))
+        result=self.calculation()
+        self.assertEqual(result['counts']['normalized_sources'],1)
+        self.assertEqual(result['counts']['evaluated_windows'],1)
+        self.assertEqual(result['counts']['failed_windows'],0)
+        self.assertTrue(result['reports'][0]['accepted'])
+        self.assertEqual(len(result['projected_sources']),1)
+        self.assertEqual(result['projected_sources'][0]['active_registration_count'],1)
+
+    def test_private_offsite_unassigned_instructor_near_vs_distant_window(self):
+        # Real canonical seats may lack an instructor assignment. Keep their
+        # physical/time uncertainty for a nearby window without allowing one
+        # distant private appointment to invalidate unrelated clear days.
+        self.sources.append(dict(
+            source_event_id='synthetic-unassigned-private-offsite',
+            start=self.at(11,'09:00').isoformat(),
+            end=self.at(11,'10:00').isoformat(),
+            instructor='unknown', instructor_unassigned=True,
+            location='fixture-unmapped-offsite',
+            resource='fixture-unmapped-offsite',
+            source_file='canonical_class_sessions',
+            visibility='private', count_available=True,
+            active_registration_count=1))
+        nearby=self.calculation()
+        self.assertEqual(nearby['counts']['evaluated_windows'],0)
+        self.assertEqual(nearby['counts']['failed_windows'],1)
+        self.assertTrue(any('missing directional travel rule' in i['reason']
+                            for i in nearby['issues']))
+        self.sources[0]['start']=self.at(24,'09:00').isoformat()
+        self.sources[0]['end']=self.at(24,'10:00').isoformat()
+        distant=self.calculation()
+        self.assertEqual(distant['counts']['evaluated_windows'],1)
+        self.assertEqual(distant['counts']['failed_windows'],0)
+        self.assertEqual(distant['projected_sources'][0]['active_registration_count'],1)
+        self.assertEqual(distant['projected_sources'][0]['visibility'],'private')
+
+    def test_long_explicit_travel_buffer_prevents_unsafe_distant_prune(self):
+        # An unusually long explicit travel rule extends the safety horizon.
+        # The same private commitment without that configured rule is distant;
+        # with it, unknown directional travel must remain fail-closed.
+        self.sources.append(dict(
+            source_event_id='synthetic-long-travel-private',
+            start=self.at(14,'09:00').isoformat(),
+            end=self.at(14,'10:00').isoformat(),
+            instructor='Brian Ennis', location='fixture-unmapped-offsite',
+            resource='fixture-unmapped-offsite',
+            source_file='canonical_class_sessions',
+            visibility='private', count_available=True,
+            active_registration_count=1))
+        self.assertEqual(self.calculation()['counts']['failed_windows'], 0)
+        self.policy['travel_minutes'] = {
+            self.room + '->fixture-known-far-route': 3000,
+        }
+        affected = self.calculation()
+        self.assertEqual(affected['counts']['failed_windows'], 1)
+        self.assertTrue(any('missing directional travel rule' in i['reason']
+                            for i in affected['issues']))
+        self.assertEqual(affected['projected_sources'][0]['active_registration_count'], 1)
+
+    def test_nearby_private_seat_unknown_route_still_fails_closed(self):
+        self.sources.append(dict(
+            source_event_id='synthetic-private-offsite-near',
+            start=self.at(11,'09:00').isoformat(),
+            end=self.at(11,'10:00').isoformat(),
+            instructor='Brian Ennis', location='fixture-unmapped-offsite',
+            resource='fixture-unmapped-offsite',
+            source_file='canonical_class_sessions',
+            visibility='private', count_available=True,
+            active_registration_count=1))
+        result=self.calculation()
+        self.assertEqual(result['counts']['evaluated_windows'],0)
+        self.assertEqual(result['counts']['failed_windows'],1)
+        self.assertTrue(any('missing directional travel rule' in i['reason']
+                            for i in result['issues']))
+        self.assertEqual(result['projected_sources'][0]['active_registration_count'],1)
+
+    def test_other_instructor_offsite_does_not_block_office(self):
+        self.sources.append(dict(
+            source_event_id='synthetic-unrelated-instructor',
+            start=self.at(11,'09:00').isoformat(),
+            end=self.at(11,'10:00').isoformat(),
+            instructor='Unrelated Instructor',
+            location='fixture-unmapped-offsite',
+            resource='fixture-unmapped-offsite',
+            source_file='canonical_class_sessions',
+            visibility='private', count_available=True,
+            active_registration_count=1))
+        result=self.calculation()
+        self.assertEqual(result['counts']['evaluated_windows'],1)
+        self.assertEqual(result['counts']['failed_windows'],0)
+
     def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
         # Both conflict rejections and expired dynamic URLs pass through this
         # finalizer. Neither may serialize a private record into the public
