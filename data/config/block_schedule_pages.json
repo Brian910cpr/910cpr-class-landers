@@ -136,8 +136,8 @@
           "BLS-1": "Anjla pointing toward the BLS class choices with her Schedule it reminder.",
           "BLS-2": "Nurse in teal scrubs pointing toward the class choices: My coffee can wait.",
           "BLS-3": "Nurse beside CPR training equipment: Practice makes less panic.",
-          "BLS-4": "Instructor holding an AED trainer. “Ready when it counts.”",
-          "BLS-5": "Clinician beside a CPR manikin. “Skills beat guesswork.”"
+          "BLS-4": "Instructor holding an AED trainer. “The AED is bossy. We like that about her.”",
+          "BLS-5": "Clinician beside a CPR manikin. “Full recoil. Save the leaning for the nurses’ station.”"
         }
       },
       "certification_notice": {
@@ -279,8 +279,8 @@
           "ACLS-1": "Approved ACLS nurse character with RN badge and a reminder to be ready when the room turns to you.",
           "ACLS-2": "Approved ACLS paramedic character: I am the designated adult? Yikes.",
           "ACLS-3": "Approved ACLS emergency department pharmacist character with an imposter-syndrome reminder.",
-          "ACLS-4": "Emergency nurse holding a run sheet. “Calm is a skill.”",
-          "ACLS-5": "Critical care clinician with a clipboard. “Practice the pressure.”"
+          "ACLS-4": "Emergency nurse holding a run sheet. “Say it back. My telepathy’s on break.”",
+          "ACLS-5": "Critical care clinician with a clipboard. “Name that rhythm. The monitor loves drama.”"
         }
       },
       "certification_notice": {
@@ -424,8 +424,8 @@
           "PALS-3": "Respiratory therapist in blue scrubs holding a bag-mask device in a critical-care setting.",
           "PALS-4": "Respiratory therapy team in blue scrubs at a critical-care bedside.",
           "PALS-5": "Respiratory therapy team together in a critical-care setting.",
-          "PALS-6": "Pediatric nurse beside a simulation manikin. “Small patient. Big teamwork.”",
-          "PALS-7": "Respiratory therapist holding a pediatric bag-mask trainer. “Little lungs. Big focus.”"
+          "PALS-6": "Pediatric nurse beside a simulation manikin. “Weight in kilos. Pounds can sit this one out.”",
+          "PALS-7": "Respiratory therapist holding a pediatric bag-mask trainer. “Chest rise. Save the big squeeze for your stress ball.”"
         }
       },
       "certification_notice": {
