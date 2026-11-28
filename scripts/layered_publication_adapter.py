@@ -481,6 +481,8 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         isinstance(cid, str) and cid.isdecimal() for cid in request_course_ids) else set()
     accepted, rejected = [], []
     offer_people = {}  # never serialized
+    offer_windows = {}
+    from scripts.validate_layered_occupancy_projection import dynamic_offer_key
     def diagnostic(candidate):
         row = encode(candidate)
         start = aware(candidate["start"])
@@ -556,6 +558,7 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
                 sourceSessionIds=[] if request_only else candidate["source_ids"],
                 edgeIds=[] if request_only else candidate["edge_ids"],
                 validUntil=report["valid_until"].isoformat(), publicSelectable=True))
+            offer_windows[id(accepted[-1])] = report["availability_window"]
             if strict_instructor_identity:
                 offer_people[id(accepted[-1])] = window.get("person_id")
     # Never retire a source record. Confirmed-zero booking choices are retired
@@ -712,6 +715,9 @@ def publish(calculation, page_config, courses, windows, now, url_for, public_rea
         canonicalOccupancyAccounting=canonical_occupancy_accounting(
             calculation["projected_sources"], strict_instructor_identity=strict_instructor_identity),
         proof=dict(whole_block_presented_as_class=False, availability_windows_are_not_rendered_as_class_times=True))
+    # Kept outside all offer DTOs: request variants expose no source ID or route.
+    payload["_dynamicOfferLineage"] = {dynamic_offer_key(offer): offer_windows[id(offer)]
+                                    for offer in unique if id(offer) in offer_windows}
     _rebuild_dates(payload,unique)
     payload["counts"].update(calculation["counts"])
     return finalize(payload, now)

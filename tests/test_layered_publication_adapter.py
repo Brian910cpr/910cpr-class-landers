@@ -174,7 +174,7 @@ class LayeredPublicationTests(unittest.TestCase):
                  effective_instructor_person_id=w['person_id'], stored_instructor_person_id=w['person_id'],
                  visibility='private')
         def resolve(window,start,course):
-            if course == '359474':
+            if course in {'359474','210549'}:
                 return ('fixture-day','fixture-container','https://www.910cpr.com/register/?session=123',None)
             return ('private-day','private-container',None,'unverified_appointment_container_owner')
         def run(*, opts=('209809','210549'), reasons=lambda *_:[], route=resolve, strict=True, qualified=True):
@@ -190,6 +190,64 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertEqual({o['courseId'] for o in rows},{'209809'})
         self.assertTrue(all(o['scheduleRole']=='barnacle' for o in rows))
         self.assertTrue(all(o['startTime'] < '12:00' or o['startTime'] >= '14:30' for o in rows))
+        from scripts.apply_anchor_policy import _rebuild_dates
+        from scripts.block_start_time_selector import apply_final_live_availability_guard
+        from scripts.validate_layered_occupancy_projection import (
+            dynamic_offer_key, validate_dynamic_provenance)
+
+        window_id = w["source_availability_window"]
+        self.assertTrue(all(o.get("availabilityBlockId") is None for o in rows))
+        with patch("scripts.block_start_time_selector.current_public_live_block_index", return_value={
+            window_id: dict(block={"start_datetime": w["start"], "end_datetime": w["end"]},
+                            start=aware(w["start"]).replace(tzinfo=None),
+                            end=aware(w["end"]).replace(tzinfo=None))}):
+            guarded = apply_final_live_availability_guard(deepcopy(result))
+        self.assertEqual(requests(guarded), rows)
+        self.assertTrue(any(o["courseId"] == "210549" and o["scheduleRole"] == "barnacle"
+                            and o["registrationUrl"] for o in guarded["offers"]))
+        validate_dynamic_provenance(guarded, guarded["layeredDiagnostics"]["reports"])
+        for removed_id in ("now-closed", "now-unknown", None):
+            altered = deepcopy(guarded)
+            key = dynamic_offer_key(requests(altered)[0])
+            altered["_dynamicOfferLineage"].pop(key)
+            if removed_id is not None:
+                altered["_dynamicOfferLineage"][key] = removed_id
+            with self.assertRaisesRegex(ValueError, "lacks an evaluated calendar window"):
+                validate_dynamic_provenance(altered, altered["layeredDiagnostics"]["reports"])
+        for changes in ({"courseId":"not-accepted"},
+                        {"schedulerConsumptionMinutes":1},
+                        {"occupiedUntil":"2026-10-11T15:23:00-04:00", "schedulerConsumptionEnd":"15:23"}):
+            altered = deepcopy(guarded)
+            offer = requests(altered)[0]
+            altered["_dynamicOfferLineage"].pop(dynamic_offer_key(offer))
+            offer.update(changes)
+            # Even if an invalid row claims lineage from the same real window,
+            # the actual accepted engine candidate must match its geometry.
+            altered["_dynamicOfferLineage"][dynamic_offer_key(offer)] = window_id
+            _rebuild_dates(altered, altered["offers"])
+            with self.assertRaisesRegex(ValueError, "does not match an accepted engine candidate"):
+                validate_dynamic_provenance(altered, altered["layeredDiagnostics"]["reports"])
+        altered = deepcopy(guarded)
+        altered["offers"] = [o for o in altered["offers"] if not o.get("dynamicBookingMode")]
+        with self.assertRaisesRegex(ValueError, "differ from renderer input"):
+            validate_dynamic_provenance(altered, altered["layeredDiagnostics"]["reports"])
+
+        altered = deepcopy(guarded)
+        slot = next(slot for day in altered["dates"] for slot in day["startTimes"]
+                    if any(o.get("dynamicBookingMode") == "request" for o in slot["courses"]))
+        slot["startTime"] = "03:23"
+        with self.assertRaisesRegex(ValueError, "renderer coordinates differ"):
+            validate_dynamic_provenance(altered, altered["layeredDiagnostics"]["reports"])
+
+        with patch("scripts.block_start_time_selector.current_public_live_block_index", return_value={}):
+            stale = apply_final_live_availability_guard(deepcopy(result))
+        self.assertFalse(requests(stale))
+        suppressed_requests = [r for r in public_selector_availability_payload(stale)
+                               ["liveAvailabilityGuard"]["suppressedStaleOrOrphanedOffers"]
+                               if r["courseId"] == "209809"]
+        self.assertTrue(suppressed_requests)
+        self.assertNotIn(window_id, json.dumps(suppressed_requests))
+
         original_sources=self.sources; self.sources=[]
         self.assertTrue(any(o['registrationUrl'] and o['courseId']=='359474' for o in run()['offers']))
         self.sources=original_sources
@@ -198,6 +256,8 @@ class LayeredPublicationTests(unittest.TestCase):
               if o.get('dynamicBookingMode')=='request']
         self.assertTrue(rows)
         self.assertNotRegex(json.dumps(rows),'private-(day|container|window-id)|fixture-11-12')
+        self.assertNotIn("_dynamicOfferLineage", json.dumps(compact))
+        self.assertNotIn(window_id, json.dumps(rows))
         self.assertTrue(all(o.get('registrationUrl') is None and o.get('appointmentUrl') is None for o in rows))
         js="""
         let row=JSON.parse(process.argv[1]);

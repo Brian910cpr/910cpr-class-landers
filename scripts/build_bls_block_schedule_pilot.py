@@ -2522,7 +2522,7 @@ def write_page_outputs(payload: dict[str, Any], report_json_path: Path, report_m
     report_json_path.parent.mkdir(parents=True, exist_ok=True)
     report_md_path.parent.mkdir(parents=True, exist_ok=True)
     availability_path.parent.mkdir(parents=True, exist_ok=True)
-    restricted_keys = {"_windowCoverageEvidence", "_canonicalDemandFingerprint"}
+    restricted_keys = {"_windowCoverageEvidence", "_canonicalDemandFingerprint", "_dynamicOfferLineage"}
     report = {key: value for key, value in payload.items() if key not in restricted_keys}
     report_json_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     report_md_path.write_text(render_report(payload), encoding="utf-8")

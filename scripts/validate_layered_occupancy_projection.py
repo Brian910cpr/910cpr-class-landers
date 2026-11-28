@@ -1,6 +1,7 @@
 """In-process, restricted V2 occupancy gate. Never serialize source evidence."""
 from __future__ import annotations
 
+from collections import Counter
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 
@@ -165,6 +166,79 @@ def validate_window_dispositions(expected, reports, closed, offers):
             raise ValueError("V2 closed calendar window produced a public offer")
 
 
+def dynamic_offer_key(offer):
+    """Restricted lookup for a stable offer DTO across finalizer deep copies."""
+    return stable_hash({"offer": offer})
+
+
+def accepted_candidate_shape(row):
+    try:
+        local = instant(row["start"]).astimezone(ZoneInfo("America/New_York"))
+        return (row["course"], local.date().isoformat(), local.strftime("%H:%M"),
+                instant(row["end"]), row["instructor"], row["location"],
+                "barnacle" if row["mode"] == "barnacle" else "open_day",
+                row["duration_minutes"],
+                int((instant(row["instruction_end"]) - instant(row["start"])).total_seconds() / 60))
+    except (ValueError, TypeError, KeyError, AttributeError, OverflowError):
+        raise ValueError("V2 engine candidate has invalid accepted geometry") from None
+
+
+def validate_dynamic_provenance(payload, reports):
+    """Compare final top-level AND renderer input offers to accepted engine rows."""
+    lineage = payload.get("_dynamicOfferLineage")
+    offers = payload.get("offers", [])
+    visible = []
+    for row in offers:
+        if row.get("offerType") == "seated_class":
+            continue
+        if row.get("offerType") != "dynamic_appointment":
+            raise ValueError("V2 final offer has no recognized source type")
+        visible.append(row)
+    nested = []
+    for day in payload.get("dates", []):
+        for slot in day.get("startTimes", []):
+            for row in slot.get("courses", []):
+                if row.get("offerType") == "seated_class":
+                    continue
+                if row.get("offerType") != "dynamic_appointment":
+                    raise ValueError("V2 final renderer offer has no recognized source type")
+                if (row.get("date"), row.get("startTime")) != (day.get("date"), slot.get("startTime")):
+                    raise ValueError("V2 dynamic renderer coordinates differ from accepted offer")
+                nested.append(row)
+    keys = [dynamic_offer_key(row) for row in visible]
+    if Counter(keys) != Counter(dynamic_offer_key(row) for row in nested):
+        raise ValueError("V2 dynamic offers differ from renderer input")
+    if not keys:
+        return
+    if not isinstance(lineage, dict):
+        raise ValueError("V2 dynamic offer lineage is missing")
+    accepted = {rep["availability_window"]: {accepted_candidate_shape(row) for row in rep["accepted"]}
+                for rep in reports if rep.get("accepted") is not None}
+    for row, key in zip(visible, keys):
+        window = lineage.get(key)
+        if not isinstance(window, str) or window not in accepted:
+            raise ValueError("V2 dynamic offer lacks an evaluated calendar window")
+        if row.get("dynamicBookingMode") == "request":
+            if any(row.get(f) for f in ("availabilityBlockId", "availabilityWindow",
+                                       "matchedContainerId", "appointmentDayId", "appointmentUrl",
+                                       "registrationUrl", "sourceAvailabilityBlock",
+                                       "sourceSessionIds", "edgeIds")):
+                raise ValueError("V2 request-only offer contains booking or private source data")
+        elif (row.get("availabilityBlockId") != window or row.get("availabilityWindow") != window):
+            raise ValueError("V2 dynamic booking window differs from restricted lineage")
+        try:
+            end = instant(row["occupiedUntil"])
+            if end.astimezone(ZoneInfo("America/New_York")).strftime("%H:%M") != row["schedulerConsumptionEnd"]:
+                raise ValueError("inconsistent visible end")
+            shape = (row["courseId"], row["date"], row["startTime"], end,
+                     row["instructor"], row["resource"], row["scheduleRole"],
+                     row["schedulerConsumptionMinutes"], row["durationMinutes"])
+        except (ValueError, TypeError, AttributeError, KeyError, OverflowError):
+            raise ValueError("V2 dynamic offer has invalid consumption geometry") from None
+        if shape not in accepted[window]:
+            raise ValueError("V2 dynamic offer does not match an accepted engine candidate")
+
+
 def validate_engine_coverage(reports):
     """Prove submitted source IDs survived actual engine normalization.
 
@@ -237,6 +311,7 @@ class OccupancyGate:
         if self.calendar_window_inventory is not None and inventory_hash != self.calendar_window_inventory:
             raise ValueError("V2 expected calendar window scope differs between families")
         validate_engine_coverage(reports)
+        validate_dynamic_provenance(payload, reports)
         self.calendar_snapshot_hash = snapshot_hash
         self.calendar_window_inventory = inventory_hash
         if actual != self.expected:

@@ -302,13 +302,21 @@ def rebuild_payload_dates(payload: dict[str, Any]) -> list[dict[str, Any]]:
 
 def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, Any]:
     live_blocks = current_public_live_block_index()
+    from scripts.validate_layered_occupancy_projection import SCHEMA, dynamic_offer_key, instant
+    v2 = payload.get("schedulingModel") == SCHEMA
     kept: list[dict[str, Any]] = []
     suppressed: list[dict[str, Any]] = []
     for offer in payload.get("offers", []):
         if clean_text(offer.get("offerType")) == "seated_class":
             kept.append(offer)
             continue
-        block_id = clean_text(offer.get("availabilityBlockId"))
+        public_block_id = clean_text(offer.get("availabilityBlockId"))
+        request_only = v2 and offer.get("dynamicBookingMode") == "request"
+        block_id = public_block_id
+        if request_only:
+            block_id = (payload.get("_dynamicOfferLineage") or {}).get(dynamic_offer_key(offer))
+            if not isinstance(block_id, str) or not block_id:
+                raise ValueError("V2 request-only offer has no restricted calendar lineage")
         block = live_blocks.get(block_id)
         start = parse_dt(f"{offer.get('date')}T{offer.get('startTime')}")
         consumption_end = parse_dt(offer.get("occupiedUntil")) if offer.get("occupiedUntil") else parse_dt(f"{offer.get('date')}T{offer.get('schedulerConsumptionEnd')}")
@@ -317,6 +325,15 @@ def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, An
             reason = "source_availability_block_missing_from_current_live_snapshot"
         elif not start or not consumption_end:
             reason = "invalid_offer_consumption_window"
+        elif request_only:
+            try:
+                lower, upper = layered_window_instants(block["block"])
+                request_start = instant(start.replace(tzinfo=PUBLIC_TZ))
+                request_end = instant(offer["occupiedUntil"])
+                if not lower <= request_start < request_end <= upper:
+                    reason = "offer_consumption_window_no_longer_fits_current_live_block"
+            except (ValueError, TypeError, KeyError, AttributeError):
+                reason = "invalid_offer_consumption_window"
         elif start < block["start"] or consumption_end > block["end"]:
             reason = "offer_consumption_window_no_longer_fits_current_live_block"
         if reason:
@@ -325,8 +342,8 @@ def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, An
                 "startTime": offer.get("startTime"),
                 "courseId": offer.get("courseId"),
                 "courseName": offer.get("courseName"),
-                "sourceAvailabilityBlockId": block_id,
-                "availabilityWindow": offer.get("availabilityWindow"),
+                "sourceAvailabilityBlockId": public_block_id,
+                "availabilityWindow": None if request_only else offer.get("availabilityWindow"),
                 "reason": reason,
             })
         else:
@@ -362,7 +379,7 @@ def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, An
     payload["proof"] = {
         **payload.get("proof", {}),
         "visibleStartLabels": sorted({offer["displayStartTime"] for offer in kept})[:20],
-        "availabilityWindowsThatGeneratedOffers": sorted({offer["availabilityWindow"] for offer in kept}),
+        "availabilityWindowsThatGeneratedOffers": sorted({w for offer in kept if (w := offer.get("availabilityWindow"))}),
     }
     return payload
 
