@@ -11,6 +11,14 @@ ROOT=Path(__file__).resolve().parents[1]
 ORIGIN='https://www.910cpr.com'
 CAPABILITIES=ROOT/'data/config/native_class_checkout_capabilities.json'
 LOCATION_RESOURCES=ROOT/'data/config/location_resource_map.json'
+ADVANCED_COURSE_IDS=frozenset({'241108','209818','209811','209805','251496','209812'})
+
+
+def advanced_route_requires_proof(session):
+    return (any(str(session.get(k) or '') in ADVANCED_COURSE_IDS
+                for k in ('course_number','course_id','external_course_id'))
+            or any(str(session.get(k) or '').strip().upper() in {'ACLS','PALS'}
+                   for k in ('mapped_family','course_family','family')))
 
 
 @lru_cache(maxsize=1)
@@ -55,12 +63,17 @@ def owned_registration(value, sid, course=''):
     except ValueError: return ''
 
 
-def registration_action(session):
+def registration_action(session, *, verified_advanced_workspace=False):
     sid=str(session.get('session_id') or session.get('id') or '')
     course=str(session.get('course_number') or session.get('course_id') or '')
     start=session.get('start_at') or session.get('start_sort') or ''
     location=str(session.get('location_display') or session.get('location_name') or '')
-    cap=json.loads(CAPABILITIES.read_text(encoding='utf8'))['sessions'].get(sid)
+    advanced = advanced_route_requires_proof(session)
+    # An imported or static URL is never sufficient authority for an advanced
+    # course. Directory/detail sites lack the verified workspace context and
+    # therefore intentionally show Request.
+    cap=(json.loads(CAPABILITIES.read_text(encoding='utf8'))['sessions'].get(sid)
+         if not advanced or verified_advanced_workspace else None)
     native=''
     numeric_courses={str(session.get(k) or '') for k in ('course_id','course_number') if str(session.get(k) or '').isdigit()}
     eligible=(len(numeric_courses)<=1 and str(session.get('registration_status') or '').lower() not in {'closed','full','cancelled','canceled'} and str(session.get('session_status') or '').lower() not in {'cancelled','canceled','completed','proposed','rescheduled'} and session.get('is_full') is not True)
@@ -71,7 +84,7 @@ def registration_action(session):
                 and location.strip().lstrip(': ').casefold()==cap['location'].lstrip(': ').casefold())
         except (ValueError,TypeError): matches=False
         if matches: native=ORIGIN+'/register/?'+urlencode({'session':sid})
-    elif not cap and eligible:
+    elif not cap and eligible and not advanced:
         # Preserve an explicit owned session route; never convert a foreign host.
         native=owned_registration(session.get('registration_url') or session.get('register_url'),sid,course)
     if native: return dict(mode='native',href=native,label='Register',notice='')

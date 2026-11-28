@@ -265,3 +265,21 @@ test("BLS and ACLS real artifacts are only narrowed, preserving course IDs and r
     assert.equal(JSON.stringify(source), original);
   }
 });
+
+test('advanced external or unproven seats cannot inherit a cached native registration grant', () => {
+  for (const courseId of ['241108', '209805']) {
+    const session = '99999001', date = '2026-12-26', startTime = '13:00';
+    const course = {courseId, offerType: 'seated_class', location: 'Wilmington; Shipyard Blvd',
+      registrationUrl: 'https://www.910cpr.com/register/?session=' + session};
+    const capabilities = {sessions: {[session]: {courseId, date, startTime, location: course.location}}};
+    const context = {date, startTime};
+    for (const seatedBookingMode of [undefined, 'request']) {
+      const action = shared.registrationAction({...course, seatedBookingMode}, context, capabilities);
+      assert.equal(action.mode, 'request');
+      assert.equal(action.label, 'Request this class');
+      assert.match(action.href, /^mailto:/);
+      assert.doesNotMatch(action.href, /register/);
+    }
+    assert.equal(shared.registrationAction({...course, seatedBookingMode:'native'}, context, capabilities).mode, 'native');
+  }
+});

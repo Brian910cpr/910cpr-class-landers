@@ -1,0 +1,284 @@
+import copy
+import json
+from pathlib import Path
+import tempfile
+import unittest
+from unittest.mock import patch
+
+from scripts.block_start_time_selector import build_occupancy, find_url
+from scripts.layered_day_cache import cached_calculate
+from scripts.layered_instructor_identity import explicit_external_crosswalk
+from scripts.layered_publication_adapter import apply_default_owner_occupancy, publish
+from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload
+from tests import test_layered_publication_adapter as fixtures
+
+
+class VerifiedInstructorIdentityTests(unittest.TestCase):
+    def setUp(self):
+        self.f = f = fixtures.LayeredPublicationTests()
+        f.setUp()
+        f.policy.update(verified_instructor_identity=True, require_verified_day_gravity=True)
+        f.windows[:] = []
+        f.coverage[:] = []
+        f.window(11, '08:00', '18:00', next_day=False)
+        self.owner = f.windows[0]['person_id']
+        self.other = 'synthetic-second-instructor-id'
+        f.coverage[0]['instructor_person_id'] = self.owner
+
+    def test_crosswalk_requires_unique_explicit_ids(self):
+        people = [{"person_id": self.owner}, {"person_id": self.other}]
+        self.assertEqual(explicit_external_crosswalk(people, {}), {})
+        self.assertEqual(explicit_external_crosswalk(people, {self.owner: '8765'}), {'8765': self.owner})
+        for extra in (self.other, 'inactive-person'):
+            self.assertEqual(explicit_external_crosswalk(people, {self.owner: '8765', extra: '8765'}), {})
+        self.assertEqual(explicit_external_crosswalk(people, {self.owner: '08765'}), {})
+        self.assertEqual(explicit_external_crosswalk(people + people[:1], {self.owner: '8765'}), {})
+
+    def test_normalization_accepts_five_verified_and_five_unassigned_keeps_others_busy(self):
+        f = self.f
+        sessions = []
+        for i in range(11):
+            known = i < 5
+            unassigned = 5 <= i < 10
+            sessions.append(dict(canonical_session_id=f'synthetic-{i}', session_status='scheduled',
+                start_at=f.at(11, '10:00').isoformat(), end_at=f.at(11, '12:30').isoformat(),
+                external_course_id=None if i == 10 else '359474',
+                location_name=f.windows[0]['location_name'], operational_has_active_seat=True,
+                lead_instructor_id=None if unassigned else f'fake-fk-{i}',
+                lead_instructor_name=None if unassigned else 'Not identity evidence',
+                lead_instructor_identity={'status': 'verified' if known or not unassigned else 'unassigned',
+                                          'catalog_external_id': '8765' if known else None}))
+        before = copy.deepcopy(sessions)
+        rows = build_occupancy({'canonical_demand': {'sessions': sessions},
+                               'location_resource_map': f.resources},
+                              {'359474': {}}, True, known_catalog_ids={'359474'},
+                              strict_instructor_crosswalk={'8765': self.owner})
+        self.assertEqual(sessions, before)
+        self.assertEqual([r['stored_instructor_identity_state'] for r in rows],
+                         ['verified']*5 + ['unassigned']*5 + ['unresolved'])
+        self.assertEqual([r['effective_instructor_person_id'] for r in rows],
+                         [self.owner]*5 + [None]*6)
+        self.assertEqual(rows[-1]['kind'], 'hold')
+        self.assertTrue(rows[-1]['instructor_unassigned'])
+        self.assertEqual(len({(r['start'], r['end']) for r in rows}), 1)
+        self.assertNotIn('fake-fk-', str(rows))
+
+    def test_default_owner_requires_compatible_fresh_proof_and_does_not_set_stored_id(self):
+        f = self.f
+        row = f.add_intake(11, stored_instructor_identity_state='unassigned',
+                           stored_instructor_person_id=None)
+        def run():
+            return apply_default_owner_occupancy(f.sources, 'Brian Ennis', f.room,
+                f.now, f.coverage, lambda _: True, strict_identity=True, owner_person_id=self.owner)[0]
+        attributed = run()
+        self.assertEqual(attributed['effective_instructor_person_id'], self.owner)
+        self.assertIsNone(attributed['stored_instructor_person_id'])
+        self.assertNotIn('effective_instructor_person_id', row)
+        f.coverage[0]['instructor_person_id'] = self.other
+        self.assertIs(run(), row)
+        f.coverage[0]['instructor_person_id'] = self.owner
+        row['stored_instructor_identity_state'] = 'unresolved'
+        self.assertIs(run(), row)
+
+    def test_shared_name_different_id_holds_room_but_does_not_create_selected_instructor_anchor(self):
+        f = self.f
+        row = f.add(11,'12:00','14:30',cid='359474', count=1,
+            stored_instructor_person_id=self.other, effective_instructor_person_id=self.other)
+        baseline = f.calculation()
+        r = baseline['reports'][0]
+        self.assertTrue(r['accepted'])
+        self.assertEqual(r['normalized_occupancy'][0]['instructor'], 'unmatched instructor 1')
+        self.assertTrue(all(o['end'] <= f.at(11,'12:00') or o['start'] >= f.at(11,'14:30')
+                            for o in r['accepted']))
+        self.assertTrue(any(o['mode']=='free' for o in r['accepted']))
+        with tempfile.TemporaryDirectory() as work:
+            def compute():
+                return cached_calculate(f.windows,f.sources,f.courses,f.policy,f.resources,f.now,
+                    lambda w:(w['start'],w['end']),lambda *_:True,f.coverage,cache_dir=Path(work))
+            cold, warm = compute(), compute()
+            self.assertEqual(warm['incremental_cache']['hits'], 1)
+            self.assertEqual(cold['reports'][0]['accepted'], r['accepted'])
+            self.assertEqual(warm['reports'][0]['accepted'], r['accepted'])
+            row['stored_instructor_person_id'] = row['effective_instructor_person_id'] = self.owner
+            changed = compute()
+            self.assertEqual(changed['incremental_cache']['hits'], 0)
+            self.assertEqual(changed['reports'][0]['normalized_occupancy'][0]['instructor'], 'Brian Ennis')
+            f.coverage[0]['instructor_person_id'] = self.other
+            self.assertFalse(compute()['reports'][0]['accepted'])
+
+    def test_public_serializer_never_exports_new_instructor_id_fields(self):
+        f = self.f
+        f.add(11,'12:00','14:30',cid='359474', count=1,
+            stored_instructor_person_id=self.other, effective_instructor_person_id=self.other)
+        result = publish(f.calculation(), f.page, f.courses, f.windows, f.now,
+            lambda *_:('fixture-day','fixture-container','https://fixture.invalid/register',None),
+            lambda *_:[], require_verified_day_gravity=True, strict_instructor_identity=True)
+        self.assertTrue(result['offers'])
+        for payload in (result, public_selector_availability_payload(result)):
+            self.assertNotIn(self.other, json.dumps(payload))
+            self.assertNotIn(self.owner, json.dumps(payload))
+
+    def test_same_name_container_without_identity_is_not_a_route(self):
+        f = self.f
+        window = f.windows[0]
+        candidates = [{'container_id': 'wrong', 'instructor_name': 'Brian Ennis'},
+                      {'container_id': 'proved', 'instructor_name': 'Brian Ennis'}]
+        rejected = find_url(window, f.at(11, '09:00'), '359474', candidates, f.resources,
+                            strict_container_owners={'wrong': self.other})
+        self.assertEqual(rejected, (None, None, None, 'unverified_appointment_container_owner'))
+        with patch('scripts.block_start_time_selector.matching_container',
+                   return_value=(candidates[1], 1234, None)) as match:
+            approved = find_url(window, f.at(11, '09:00'), '359474', candidates, f.resources,
+                                strict_container_owners={'wrong': self.other, 'proved': self.owner})
+            self.assertEqual(approved[1], 'proved')
+            self.assertEqual(match.call_args.args[1], [candidates[1]])
+
+    def test_owner_role_is_separate_from_numeric_namespace(self):
+        from scripts.layered_instructor_identity import canonical_instructor_projection
+        proof = {'status':'verified','catalog_external_id':'50001'}
+        row = {'lead_instructor_id':'synthetic-owner-fk','lead_instructor_identity':proof}
+        self.assertEqual(canonical_instructor_projection(row, {'50001':self.owner},
+                         owner_person_id=self.owner), ('unresolved',None))
+        proof['verified_role']='configured_910cpr_owner'
+        self.assertEqual(canonical_instructor_projection(row, {},owner_person_id=self.owner),
+                         ('verified',self.owner))
+        proof['status']='conflicting'
+        self.assertEqual(canonical_instructor_projection(row, {},owner_person_id=self.owner),
+                         ('unresolved',None))
+
+    def test_exact_historical_course_keeps_private_shape_and_mirror_nonbookable(self):
+        f=self.f
+        date=f.at(11,'12:00').isoformat()
+        end=f.at(11,'14:30').isoformat()
+        historic=dict(canonical_session_id='synthetic-private-session',external_class_id='808888',
+            lead_instructor_id=None,lead_instructor_identity={'status':'unassigned','catalog_external_id':None},
+            start_at=date,end_at=end,location_name=f.windows[0]['location_name'],
+            course_key='hist-course:7107a1c4f42ee0b1',course_name='Same title',
+            verified_occupancy_course_id='252737', visibility='private',source='confirmed_booking_intake',
+            registration_backend='landerware',session_status='scheduled',operational_has_active_seat=True)
+        legacy=dict(session_id='808888', course_id='252737',start_at=date,end_at=end,
+            location=f.windows[0]['location_name'], instructor='Brian Ennis')
+        rows=build_occupancy({'canonical_demand':{'sessions':[historic]},'location_resource_map':f.resources,
+            'schedule_future':{'sessions':[legacy]}},{'252737':{}},True,
+            known_catalog_ids={'252737'},strict_instructor_crosswalk={})
+        mirror, canonical=rows
+        self.assertEqual(canonical['course_id'],'252737')
+        self.assertTrue(canonical['instructor_unassigned'])
+        self.assertFalse(canonical['public_direct_booking'])
+        self.assertFalse(mirror['public_direct_booking'])
+        self.assertEqual(mirror['kind'],'hold')
+        f.sources=rows
+        seated=dict(session_id='808888',date='2026-10-11',startTime='12:00',courseId='252737',
+            offerType='seated_class',visibility='public',instructor='Brian Ennis')
+        result=publish(f.calculation(), f.page, f.courses, f.windows, f.now,
+            lambda *_:('fixture-day','fixture-container','https://fixture.invalid/register',None),
+            lambda *_:[], [seated], strict_instructor_identity=True)
+        self.assertFalse(any(o.get('offerType')=='seated_class' for o in result['offers']))
+        public=public_selector_availability_payload(result)
+        for private in ('synthetic-private-session','808888'):
+            self.assertNotIn(private,json.dumps(public))
+        for corrupt in [{'course_key':'wrong'},{'external_course_id':'unknown'},{'visibility':'public'}]:
+            row=build_occupancy({'canonical_demand':{'sessions':[{**historic,**corrupt}]},
+                'location_resource_map':f.resources},{'252737':{}},True,known_catalog_ids={'252737'},
+                strict_instructor_crosswalk={})[0]
+            self.assertIsNone(row['course_id'])
+            self.assertEqual(row['kind'],'hold')
+
+    def test_advanced_seated_guard_requires_current_exact_roster_not_public_shell(self):
+        from scripts.block_start_time_selector import verify_advanced_seated_inventory, seated_class_selector_offers
+        f=self.f
+        sid='99999001'
+        room=f.room
+        start=f.at(11,'10:00').isoformat()
+        end=f.at(11,'14:00').isoformat()
+        row=dict(session_id=sid,course_id='241108',course_number='241108',mapped_family='ACLS',
+            external_instructor_id='9876',lead_instructor_name='Legacy display',
+            location_name=room,start_at=start,end_at=end,registration_status='open',session_status='active',
+            public_direct_booking=True,registration_url='https://coastalcprtraining.enrollware.com/enroll?id='+sid)
+        witness=dict(external_class_id=sid,external_course_id='241108',catalog_course_id='241108',
+            count_available=True, active_registration_count=2, demand_status='current',
+            demand_basis='canonical_active_registrations',source='enrollware_reconciled',
+            registration_backend='enrollware',registration_status='open',session_status='scheduled',
+            visibility='public',lead_instructor_name='Canonical instructor',lead_instructor_id='synthetic-person',
+            lead_instructor_identity={'status':'verified','catalog_external_id':'9876'},
+            start_at=start,end_at=end,location_name=room,source_observed_at=f.now.isoformat(),freshness_minutes=60)
+        course_catalog={'241108':dict(course_family='ACLS'),'209818':dict(course_family='ACLS'),
+                        '209805':dict(course_family='PALS')}
+        rules={k:{} for k in course_catalog}
+        def read(rows,proofs,**kw):
+            return verify_advanced_seated_inventory({'sessions':rows},{'sessions':proofs},
+                rules,course_catalog,f.resources,f.now,**kw)
+        unchanged=copy.deepcopy(row)
+        eligible,reject=read([row],[witness],strict_instructor_crosswalk={'9876':self.other})
+        self.assertEqual(row,unchanged)
+        self.assertFalse(reject)
+        self.assertEqual(eligible['sessions'][0]['advanced_seated_route'],'request')
+        self.assertEqual(eligible['sessions'][0]['_verified_instructor_person_id'],self.other)
+        offers=seated_class_selector_offers(schedule_future_payload=eligible,selected_courses=[],
+            selected_course_ids={'241108'},course_rules=rules)
+        self.assertEqual(len(offers),1)
+        self.assertEqual(offers[0]['offerType'],'seated_class')
+        self.assertEqual(offers[0]['instructor'],'Canonical instructor')
+        self.assertTrue(offers[0]['registrationUrl'].startswith('mailto:'))
+        self.assertNotIn('enrollware.com',json.dumps(offers))
+        projected = dict(external_class_id=sid, start=start, end=end,
+            instructor='Canonical instructor', count_available=True, active_registration_count=2,
+            effective_instructor_person_id=self.other, stored_instructor_person_id=self.other,
+            kind='paid', visibility='public')
+        calculation = dict(projected_sources=[projected], reports=[], issues=[], counts={})
+        page = dict(f.page, page_key='acls')
+        def feed(source):
+            view = publish(dict(calculation, projected_sources=[source]), page, [], [], f.now,
+                lambda *_: (None,None,None,None), lambda *_: [], offers,
+                require_verified_day_gravity=True, strict_instructor_identity=True)
+            return public_selector_availability_payload(view)
+        visible = feed(projected)
+        compact = visible['dates'][0]['startTimes'][0]['courses'][0]
+        self.assertEqual(compact['seatedBookingMode'], 'request')
+        self.assertTrue(compact['registrationUrl'].startswith('mailto:'))
+        self.assertNotIn(self.other,json.dumps(visible))
+        self.assertEqual(feed(dict(projected,stored_instructor_person_id='not-the-same'))['dates'], [])
+        from scripts import class_registration_routing as route
+        from scripts.block_start_time_selector import advanced_verified_anchor_inventory
+        outside = dict(row, session_id='99999002', course_id='209818', course_number='209818')
+        ordinary = dict(row, session_id='99999003', course_id='209806', course_number='209806',mapped_family='BLS')
+        raw = {'sessions':[row, outside, ordinary]}
+        anchors = advanced_verified_anchor_inventory(raw, eligible, course_catalog)
+        self.assertEqual({item['session_id'] for item in anchors['sessions']}, {sid, ordinary['session_id']})
+        self.assertEqual(len(raw['sessions']), 3)
+        with tempfile.TemporaryDirectory() as folder:
+            cap = Path(folder)/'caps.json'
+            cap.write_text(json.dumps({'sessions':{sid:{'course_id':'241108',
+                'starts_at':start, 'location':room}}}))
+            with patch.object(route,'CAPABILITIES',cap):
+                again, _ = read([row],[witness],strict_instructor_crosswalk={'9876':self.other})
+                self.assertEqual(again['sessions'][0]['advanced_seated_route'], 'request')
+                local = dict(witness, registration_backend='landerware',
+                    workspace_projection_status='current')
+                native, _ = read([row],[local],strict_instructor_crosswalk={'9876':self.other})
+                self.assertEqual(native['sessions'][0]['advanced_seated_route'], 'native')
+                unsafe_row = dict(row, registration_url='https://www.910cpr.com/register/?session='+sid)
+                directory = route.rewrite_directory_routes(
+                    '<article class="class-finder-card"><a class="class-finder-primary" href="old">Register</a>'
+                    '<a class="class-finder-secondary" href="/classes/'+sid+'.html">Details</a></article>',
+                    {sid:unsafe_row})
+                detail = route.rewrite_detail_routes(
+                    '<div class="cta-panel"><div class="cta-row">'
+                    '<a class="button primary" href="old">Continue to Registration</a></div></div>', unsafe_row)
+                for html in (directory,detail):
+                    self.assertIn('Request this class',html)
+                    self.assertIn('mailto:brian@910cpr.com',html)
+                    self.assertNotIn('/register/?session=',html)
+        for records,proofs,code in [
+            ([row],[],'roster_unverified'),([row],[{**witness,'active_registration_count':0}],'roster_unverified'),
+            ([row],[{**witness,'source_observed_at':f.at(5,'11:00').isoformat()}],'roster_unverified'),
+            ([row],[{**witness,'visibility':'private'}],'public_eligibility_unverified'),
+            ([row],[{**witness,'catalog_course_id':'209818'}],'course_mismatch'),
+            ([row],[{**witness,'end_at':f.at(11,'14:30').isoformat()}],'occurrence_mismatch'),
+            ([{**row,'external_instructor_id':'8888'}],[witness],'instructor_unverified'),
+            ([row,{**row,'course_id':'209818'}],[witness],'source_identity_ambiguous'),
+            ([row,{**row,'course_id':'209805'}],[witness],'source_identity_ambiguous')]:
+            result,neg=read(records,proofs)
+            self.assertEqual(result['sessions'],[])
+            self.assertTrue(all(n['reasons']==['advanced_seated_'+code] for n in neg))
+            self.assertNotIn(sid,json.dumps(neg))

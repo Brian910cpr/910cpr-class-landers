@@ -60,6 +60,114 @@ test('only active canonical registrations count; missing and external bridge are
   assert.equal(api.projectDemand({...row,registration_backend:'enrollware'}).active_registration_count,null);
 });
 
+test('cancel timestamp wins over active status without removing live manual or rescheduled replacement seats', () => {
+  const base={id:'fixture',status:'scheduled',registration_backend:'landerware'};
+  const revoked={status:'active',canceled_at:'2026-01-01T12:00:00Z'};
+  const old={status:'rescheduled',canceled_at:null};
+  for(const [source,registration_source,external_session_evidence] of [
+    ['landerware_public_offer','landerware_native_checkout',undefined],
+    ['confirmed_booking_intake','enrollware_email_confirmation',
+      {kind:'registration_confirmation',gmail_message_id:'0123456789abcdef'}]
+  ]) {
+    const numeric={...base,source,external_class_id:'12345',external_session_evidence};
+    const project=(...registrations)=>api.projectDemand({...numeric,registrations});
+    const empty=project({...revoked,registration_source},{...old,registration_source});
+    assert.equal(empty.canonical_recorded_registration_count,0);
+    assert.equal(empty.operational_has_active_seat,false);
+    assert.equal(empty.active_registration_count,null);
+    const live=project({...revoked,registration_source},{status:'registered',registration_source});
+    assert.equal(live.canonical_recorded_registration_count,1);
+    assert.equal(live.operational_has_active_seat,true);
+    assert.equal(live.active_registration_count,null);
+  }
+  for(const registration_source of ['manual','owner_requested_reschedule','owner_voice_fragment']) {
+    const local={...base,source:'confirmed_booking_intake'};
+    const empty=api.projectDemand({...local,registrations:[revoked,old]});
+    assert.equal(empty.active_registration_count,0);
+    assert.equal(empty.operational_has_active_seat,false);
+    const live=api.projectDemand({...local,registrations:[revoked,old,{status:'confirmed',registration_source}]});
+    assert.equal(live.active_registration_count,1);
+    assert.equal(live.canonical_recorded_registration_count,1);
+    assert.equal(live.operational_has_active_seat,true);
+  }
+});
+
+test('numeric legacy identity with native active seats signals occupied demand without inventing a known external roster', () => {
+  // Synthetic numeric/legacy source shape: LanderWare-owned active rows
+  // can coexist with a numeric legacy ID and absent external reconciliation.
+  const row = {id:'numeric-native',status:'scheduled',source:'landerware_public_offer',
+    visibility:'private',registration_status:'closed',registration_backend:'landerware',
+    external_class_id:'80001',
+    registrations:[{status:'active',registration_source:'landerware_native_checkout',external_registration_id:null}]};
+  const projection=api.projectDemand(row);
+  assert.equal(projection.count_available,false);
+  assert.equal(projection.active_registration_count,null);
+  assert.equal(projection.canonical_recorded_registration_count,1);
+  assert.equal(projection.demand_basis,'unknown');
+  assert.equal(projection.operational_has_active_seat,true);
+  assert.equal(projection.operational_has_stale_commitment,false);
+  assert.equal(projection.visibility,'private');
+  assert.equal(projection.registration_status,'closed');
+  assert.equal(Object.hasOwn(projection,'registrations'),false);
+  assert.equal(Object.hasOwn(projection,'customers'),false);
+
+  const mixed=api.projectDemand({...row,registrations:[
+    {status:'registered',registration_source:'enrollware_email_confirmation',external_registration_id:null},
+    {status:'active',registration_source:'landerware_native_checkout',external_registration_id:null},
+    {status:'active',registration_source:'landerware_native_checkout',external_registration_id:null},
+    {status:'active',registration_source:'landerware_native_checkout',external_registration_id:null}
+  ]});
+  assert.equal(mixed.active_registration_count,null);
+  assert.equal(mixed.canonical_recorded_registration_count,4);
+  assert.equal(mixed.operational_has_active_seat,true);
+
+  for(const change of [
+    {registrations:[{status:'registered',registration_source:'enrollware_email_confirmation'}]},
+    {registrations:[{status:'canceled',registration_source:'landerware_native_checkout'}]},
+    {registrations:[{status:'active',registration_source:'enrollware'}]},
+    {registration_backend:'enrollware'},
+    {source:'enrollware_reconciled'},
+    {status:'canceled'}
+  ]) {
+    const unproven=api.projectDemand({...row,...change});
+    assert.equal(unproven.operational_has_active_seat,false);
+    assert.equal(unproven.active_registration_count,null);
+  }
+});
+
+test('verified email-confirmed private intake is internal occupancy, not external roster or a public seat', () => {
+  const fixture = {id:'synthetic-private-intake',status:'scheduled',
+    source:'confirmed_booking_intake',registration_backend:'landerware',
+    visibility:'private',registration_status:'closed',external_class_id:'80002',
+    external_session_evidence:{kind:'registration_confirmation',gmail_message_id:'0123456789abcdef'},
+    registrations:[{status:'registered',registration_source:'enrollware_email_confirmation',external_registration_id:null}]};
+  const projected = api.projectDemand(fixture);
+  assert.equal(projected.operational_has_active_seat,true);
+  assert.equal(projected.count_available,false);
+  assert.equal(projected.active_registration_count,null);
+  assert.equal(projected.demand_basis,'unknown');
+  assert.equal(projected.canonical_recorded_registration_count,1);
+  assert.equal(projected.visibility,'private');
+  assert.equal(projected.registration_status,'closed');
+  assert.equal(Object.hasOwn(projected,'registrations'),false);
+  assert.equal(Object.hasOwn(projected,'external_session_evidence'),false);
+
+  for (const change of [
+    {source:'manual'},
+    {registration_backend:'enrollware'},
+    {status:'canceled'},
+    {external_session_evidence:{kind:'registration_confirmation'}},
+    {external_session_evidence:{kind:'owner_confirmed_booking',gmail_message_id:'0123456789abcdef'}},
+    {registrations:[{status:'canceled',registration_source:'enrollware_email_confirmation'}]},
+    {registrations:[{status:'registered',registration_source:'owner_voice_fragment'}]},
+    {registrations:null}
+  ]) {
+    const unverified = api.projectDemand({...fixture,...change});
+    assert.equal(unverified.operational_has_active_seat,false,JSON.stringify(change));
+    assert.equal(unverified.active_registration_count,null);
+  }
+});
+
 test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields', async () => {
   const calls = [];
   const endpoint = loadEndpoint(async url => {
@@ -74,10 +182,13 @@ test('HTTP endpoint uses DST bounds, paginates, and excludes participant fields'
   assert.equal(response.status,200);
   const body = await response.json();
   assert.equal(body.sessions.length,501);
-  assert.deepEqual(calls[0].getAll('start_at'),['gte.2026-11-01T04:00:00.000Z','lt.2026-11-02T05:00:00.000Z']);
+  assert.deepEqual(calls[0].getAll('start_at'),['lt.2026-11-02T05:00:00.000Z']);
+  assert.equal(calls[0].get('or'),'(start_at.gte.2026-11-01T04:00:00.000Z,consumption_end_at.gt.2026-11-01T04:00:00.000Z,and(consumption_end_at.is.null,end_at.gt.2026-11-01T04:00:00.000Z))');
   assert.equal(calls[1].get('offset'),'500');
   assert.doesNotMatch(calls[0].get('select'),/customers|email|phone/);
+  assert.match(calls[0].get('select'), /courses!class_sessions_course_id_fkey\(id,course_key,name,enrollware_course_id\)/);
   assert.equal(body.sessions[0].external_course_id,'359474');
+  assert.equal(body.sessions[0].catalog_course_id,null);
 });
 
 test('classification source failure or canonical conflict blocks the whole publication snapshot', async () => {
@@ -86,5 +197,272 @@ test('classification source failure or canonical conflict blocks the whole publi
     const response = await endpoint.handleRequest(new Request('https://endpoint.test/?from=2026-09-27',{headers:{'x-hot-sync-admin-key':'fixture'}}));
     assert.equal(response.status,500);
     assert.equal((await response.json()).sessions,undefined);
+  }
+});
+
+test('authenticated HTTP response exposes an occupancy bit, never raw intake provenance or participant data', async () => {
+  const messageId = 'dafefeed12345678';
+  const privateEmail = 'intake-privacy-canary@example.test';
+  const endpoint = loadEndpoint(async url => {
+    if (String(url).includes('/admin/hot-sync')) return Response.json({});
+    if (String(url).includes('/rpc/')) return Response.json({sessions:[]});
+    return Response.json([{
+      id:'synthetic-intake', status:'scheduled', source:'confirmed_booking_intake',
+      registration_backend:'landerware', visibility:'private', registration_status:'closed',
+      external_class_id:'80003', courses:{course_key:'fixture-bls',enrollware_course_id:209806}, start_at:'2026-11-01T15:00:00Z', end_at:'2026-11-01T16:00:00Z',
+      consumption_start_at:'2026-11-01T15:00:00Z', consumption_end_at:'2026-11-01T16:00:00Z',
+      location_id:'facility', lead_instructor_id:null, email:privateEmail,
+      external_session_evidence:{kind:'registration_confirmation',gmail_message_id:messageId,email:privateEmail},
+      registrations:[{status:'registered',registration_source:'enrollware_email_confirmation',
+                      external_registration_id:null, email:privateEmail, customers:[{email:privateEmail}]}],
+    }]);
+  });
+  const response = await endpoint.handleRequest(new Request(
+    'https://endpoint.test/?from=2026-11-01&to=2026-11-02', {headers:{'x-hot-sync-admin-key':'fixture'}}));
+  assert.equal(response.status,200);
+  assert.match(response.headers.get('cache-control'),/no-store/);
+  const body = await response.json();
+  assert.deepEqual(Object.keys(body).sort(), [
+    'active_registration_statuses','generated_at','non_session_sources','schema_version','sessions',
+  ].sort());
+  const row = body.sessions[0];
+  assert.equal(row.external_course_id,null);
+  assert.equal(row.catalog_course_id,'209806');
+  assert.equal(row.course_key,'fixture-bls');
+  assert.deepEqual(Object.keys(row).sort(), [
+    'canonical_session_id','external_class_id','external_course_id','catalog_course_id','course_key','start_at','end_at',
+    'consumption_start_at','consumption_end_at','location_id','location_name','lead_instructor_id','lead_instructor_identity',
+    'lead_instructor_name','course_name','visibility','registration_backend','registration_status',
+    'workspace_projection_status','workspace_session_id','operational_has_active_seat','operational_has_stale_commitment',
+    'canonical_recorded_registration_count','source','session_status','active_registration_count',
+    'count_available','demand_status','source_observed_at','reconciled_at','source_sha256',
+    'freshness_minutes','demand_basis',
+  ].sort());
+  assert.equal(row.operational_has_active_seat,true);
+  assert.equal(row.operational_has_stale_commitment,false);
+  assert.equal(row.visibility,'private');
+  assert.equal(row.registration_status,'closed');
+  assert.equal(row.active_registration_count,null);
+  assert.equal(row.count_available,false);
+  assert.doesNotMatch(JSON.stringify(body), new RegExp(
+    [messageId, 'privacy-canary', 'gmail_message_id','external_session_evidence','registration_confirmation'].join('|')));
+});
+
+test('catalog course ID is additive, strict, and never hides a disagreement with the session ID', () => {
+  const base = {external_course_id:'359474',courses:{course_key:'bls',enrollware_course_id:'209806'}};
+  const projected=api.projectDemand(base);
+  assert.equal(projected.external_course_id,'359474');
+  assert.equal(projected.catalog_course_id,'209806');
+  assert.equal(projected.course_key,'bls');
+  for (const invalid of [null, undefined, false, {}, ' 209806 ', 'BLS', '0', 0, -1, 0.1, Number.MAX_SAFE_INTEGER+1]) {
+    assert.equal(api.projectDemand({...base,courses:{...base.courses,enrollware_course_id:invalid}}).catalog_course_id,null);
+  }
+});
+
+
+test('HTTP demand includes ongoing carry-in until exclusive consumption end, without duplicate rows', async () => {
+  const start='2026-11-01T04:00:00.000Z', stop='2026-11-02T05:00:00.000Z';
+  const prior='2026-11-01T02:00:00.000Z', later='2026-11-01T05:00:00.000Z';
+  const rows=[
+    {id:'cleanup-carry-in',start_at:prior,end_at:start,consumption_end_at:later},
+    {id:'instruction-carry-in',start_at:prior,end_at:later,consumption_end_at:null},
+    {id:'cleanup-exact-end',start_at:prior,end_at:prior,consumption_end_at:start},
+    {id:'instruction-exact-end',start_at:prior,end_at:start,consumption_end_at:null},
+    {id:'in-range',start_at:start,end_at:later,consumption_end_at:later},
+    {id:'in-range-missing-end',start_at:later,end_at:null,consumption_end_at:null},
+    {id:'stop-boundary',start_at:stop,end_at:stop,consumption_end_at:stop}
+  ];
+  const calls=[];
+  const endpoint=loadEndpoint(async url=>{
+    if(String(url).includes('/admin/hot-sync')) return Response.json({});
+    if(String(url).includes('/rpc/')) return Response.json({sessions:[]});
+    const query=new URL(url).searchParams;
+    calls.push(query);
+    const bounds=query.getAll('start_at');
+    const carry=query.get('or');
+    // Simulate the PostgREST logic expression; the old lower start filter excludes carry-ins.
+    const included=rows.filter(row=>row.start_at<stop &&
+      (!bounds.includes('gte.'+start)||row.start_at>=start) &&
+      (!carry||row.start_at>=start||(row.consumption_end_at??row.end_at)>start));
+    return Response.json(included.map(row=>({...row,status:'scheduled',registration_backend:'landerware',registrations:[]})));
+  });
+  const response=await endpoint.handleRequest(new Request('https://endpoint.test/?from=2026-11-01&to=2026-11-02',{headers:{'x-hot-sync-admin-key':'fixture'}}));
+  assert.equal(response.status,200);
+  const body=await response.json();
+  assert.deepEqual(body.sessions.map(row=>row.canonical_session_id).sort(),['cleanup-carry-in','in-range','in-range-missing-end','instruction-carry-in']);
+  assert.equal(calls.length,1);
+  assert.deepEqual(calls[0].getAll('start_at'),['lt.'+stop]);
+  assert.equal(calls[0].get('or'),`(start_at.gte.${start},consumption_end_at.gt.${start},and(consumption_end_at.is.null,end_at.gt.${start}))`);
+  assert.equal(body.sessions.find(row=>row.canonical_session_id==='cleanup-carry-in').consumption_end_at,later);
+});
+
+test('expired exact external roster retains operational commitment without certifying public seats', () => {
+  const observed = new Date(Date.now() - 2 * 3600000).toISOString();
+  const fixture = {id:'synthetic-stale',status:'scheduled',source:'enrollware_reconciled',
+    registration_backend:'enrollware',external_class_id:'80004',visibility:'unlisted',
+    registration_status:'closed',
+    external_reconciliation:{complete:true,source_observed_at:observed,
+      active_external_registration_ids:['fixture-reg'],active_registration_count:1},
+    registrations:[{status:'registered',registration_source:'enrollware_reconciled',
+      external_registration_id:'fixture-reg',canceled_at:null}]};
+  const out=api.projectDemand(fixture);
+  assert.equal(out.operational_has_active_seat,false);
+  assert.equal(out.operational_has_stale_commitment,true);
+  assert.equal(out.demand_status,'stale_reconciliation');
+  assert.equal(out.count_available,false);
+  assert.equal(out.active_registration_count,null);
+  assert.equal(out.demand_basis,'unknown');
+  assert.equal(out.visibility,'unlisted');
+  assert.equal(out.registration_status,'closed');
+  assert.equal(Object.hasOwn(out,'registrations'),false);
+  assert.doesNotMatch(JSON.stringify(out),/fixture-reg/);
+
+  for (const change of [
+    {source:'manual'},
+    {external_class_id:'non-numeric'},
+    {status:'canceled'},
+    {registrations:null},
+    {registrations:[]},
+    {registrations:[{...fixture.registrations[0],status:'canceled'}]},
+    {registrations:[{...fixture.registrations[0],canceled_at:observed}]},
+    {registrations:[{...fixture.registrations[0],external_registration_id:'different'}]},
+    {registrations:[fixture.registrations[0],fixture.registrations[0]]},
+    {external_reconciliation:{...fixture.external_reconciliation,complete:false}},
+    {external_reconciliation:{...fixture.external_reconciliation,active_registration_count:2}},
+    {external_reconciliation:{...fixture.external_reconciliation,active_external_registration_ids:['fixture-reg','fixture-reg'],active_registration_count:2}},
+    {external_reconciliation:{...fixture.external_reconciliation,source_observed_at:new Date(Date.now()+2*3600000).toISOString()}}
+  ]) {
+    const denied=api.projectDemand({...fixture,...change});
+    assert.equal(denied.operational_has_active_seat,false,JSON.stringify(change));
+    assert.equal(denied.operational_has_stale_commitment,false,JSON.stringify(change));
+    assert.equal(denied.active_registration_count,null);
+  }
+});
+
+
+test('restricted instructor proof is canonical FK plus globally unique active catalog mapping, never a label', async () => {
+  const person=(id,ext,active=true)=>({id,display_name:'Same Name',enrollware_instructor_id:ext,active});
+  const occupied=(id,lead,p,legacy)=>({id,lead_instructor_id:lead,people:p,external_instructor_id:legacy,
+    source_instructor_label:'Same Name',status:'scheduled',registration_backend:'landerware',registrations:[{status:'registered'}]});
+  const rows=[
+    occupied('verified','p1',person('p1','70001'),'PRIVATE-SENTINEL'),
+    occupied('conflict','p1',person('p1','70001'),'78901'),
+    occupied('legacy-format','p1',person('p1','70001'),'070001'),
+    occupied('duplicate','p2',person('p2','70002'),'70002'),
+    occupied('inactive','p3',person('p3','70003',false),'70003'),
+    occupied('wrong-join','p4',person('p99','70004'),'70004'),
+    occupied('good-same-name','p5',person('p5','70005'),'70005'),
+    occupied('no-fk',null,person('p1','70001'),'70001'),
+    occupied('no-numeric','p6',person('p6','not-numeric'),'70005'),
+  ];
+  const calls=[];
+  const matches=[person('p1','70001'),person('p2','70002'),person('p2-copy','70002'),
+    person('p99','70004'),person('p5','70005')];
+  const request=()=>new Request('https://demand.test/?from=2026-11-27&to=2026-12-31',
+    {headers:{'x-hot-sync-admin-key':'fixture'}});
+  for(const lookupFails of [false,true]){
+    const api=loadEndpoint(async raw=>{
+      const url=new URL(raw);
+      if(url.pathname.includes('/admin/hot-sync')) return Response.json({});
+      if(url.pathname.includes('/rpc/')) return Response.json({sessions:[]});
+      if(url.pathname.endsWith('/people')){
+        calls.push(url.searchParams);
+        return lookupFails ? Response.json({}, {status:503}) : Response.json(matches);
+      }
+      assert.match(url.searchParams.get('select'),/lead_instructor_id,external_instructor_id/);
+      return Response.json(rows);
+    });
+    const res=await api.handleRequest(request());
+    assert.equal(res.status,200);
+    const body=await res.json();
+    assert.equal(body.sessions.length,rows.length);
+    assert.ok(body.sessions.every(r=>r.operational_has_active_seat && !Object.hasOwn(r,'people')));
+    assert.doesNotMatch(JSON.stringify(body), /PRIVATE-SENTINEL|78901|p2-copy/);
+    const statuses=body.sessions.map(x=>x.lead_instructor_identity);
+    if (lookupFails) assert.deepEqual(statuses.map(s=>s.status),['unresolved','unresolved','unresolved',
+      'unresolved','unresolved','unresolved','unresolved','unassigned','unresolved']);
+    else {
+      assert.deepEqual(statuses.map(s=>s.status),['verified','conflicting','conflicting',
+        'unresolved','unresolved','unresolved','verified','unassigned','unresolved']);
+      assert.deepEqual(statuses.filter(s=>s.catalog_external_id).map(s=>s.catalog_external_id),['70001','70005']);
+    }
+  }
+  assert.equal(calls.length,2);
+  assert.equal(calls[0].get('active'),'eq.true');
+  assert.equal(calls[0].get('enrollware_instructor_id'),'in.(70001,70002,70003,70004,70005)');
+});
+
+
+test('restricted owner role requires unique independent exact active owner key and provenance', async () => {
+  const person={id:'synthetic-fk',person_key:'brian',active:true,
+    external_reference:'LanderWare instructor identity',enrollware_instructor_id:'70100'};
+  const base={id:'assigned',lead_instructor_id:person.id,people:person,status:'scheduled',
+    registration_backend:'landerware',registrations:[{status:'registered'}]};
+  const rows=[base,{...base,id:'conflict',external_instructor_id:'00070100'},
+    {...base,id:'wrong-joined-provenance',people:{...person,external_reference:'legacy-label'}}];
+  for (const ownerCandidates of [[person],[],[person,{...person,id:'duplicate',active:false}],
+       [{...person,active:false}],[{...person,id:'wrong-fk'}],[{...person,external_reference:'Untrusted'}]]) {
+    const api=loadEndpoint(async raw=>{
+      const u=new URL(raw);
+      if(u.pathname.includes('/admin/hot-sync'))return Response.json({});
+      if(u.pathname.includes('/rpc/'))return Response.json({sessions:[]});
+      if(u.pathname.endsWith('/people'))return Response.json(
+        u.searchParams.has('person_key') ? ownerCandidates : [person]);
+      return Response.json(rows);
+    });
+    const res=await api.handleRequest(new Request('https://demand.test/?from=2026-11-27&to=2026-12-31',
+      {headers:{'x-hot-sync-admin-key':'fixture'}}));
+    assert.equal(res.status,200);
+    const body=await res.json();
+    assert.equal(body.sessions[0].lead_instructor_identity.verified_role,
+      ownerCandidates[0]===person && ownerCandidates.length===1 ? 'configured_910cpr_owner' : undefined);
+    assert.equal(body.sessions[1].lead_instructor_identity.status,'conflicting');
+    assert.equal(body.sessions[2].lead_instructor_identity.verified_role,undefined);
+    assert.ok(body.sessions.every(x=>x.operational_has_active_seat));
+    assert.doesNotMatch(JSON.stringify(body), /person_key|external_reference|LanderWare instructor identity|legacy-label/);
+  }
+});
+
+
+test('historical course proof binds exact FK, explicit roster identity and only occupied private intakes', async () => {
+  const fk='81111111-1111-1111-1111-111111111111',other='82222222-2222-2222-2222-222222222222';
+  const key='hist-course:7107a1c4f42ee0b1';
+  const candidate={id:'intake',course_id:fk, courses:{id:fk,course_key:key,name:'Same title'},
+    registration_backend:'landerware',source:'confirmed_booking_intake',visibility:'private',status:'scheduled',
+    external_session_evidence:{kind:'registration_confirmation',gmail_message_id:'1111111111111111'},
+    registrations:[{status:'registered',registration_source:'enrollware_email_confirmation',canceled_at:null}]};
+  const rows=[candidate,{...candidate,id:'public',visibility:'public'},
+    {...candidate,id:'title-only',courses:{id:fk,course_key:'wrong',name:'Same title'}},
+    {...candidate,id:'wrong-join',course_id:other},
+    {...candidate,id:'contradictory',external_course_id:'209806'},
+    {...candidate,id:'cancelled',registrations:[{...candidate.registrations[0],canceled_at:'2026-11-28'}]}];
+  const witness={course_id:fk,external_course_id:'252737',external_class_id:'99000',
+    record_scope:'operational',source:'enrollware_reconciled',
+    external_reconciliation:{complete:true,ingest_job_id:'synthetic-ingest'},
+    external_session_evidence:{source_kind:'authenticated_enrollware_roster',committed:true,
+      complete_roster:true,workspace_link_basis:'verified_owner_request_and_current_roster',course_key:key,
+      external_class_id:'99000',external_course_id:'252737',ingest_job_id:'synthetic-ingest'}};
+  for(const [hits,expected] of [[[witness],true],[[],false],
+    [[witness,{...witness,external_course_id:'209806'}],false],
+    [[{...witness,course_id:other}],false],
+    [[{...witness,external_session_evidence:{...witness.external_session_evidence,external_class_id:'wrong'}}],false]]){
+    const api=loadEndpoint(async raw=>{
+      const u=new URL(raw);
+      if(u.pathname.includes('/admin/hot-sync'))return Response.json({});
+      if(u.pathname.includes('/rpc/'))return Response.json({sessions:[]});
+      if(u.searchParams.has('course_id')){
+        assert.equal(u.searchParams.get('course_id'),'eq.'+fk);
+        return Response.json(hits);
+      }
+      return Response.json(rows);
+    });
+    const res=await api.handleRequest(new Request('https://demand.test/?from=2026-11-27&to=2026-12-31',
+      {headers:{'x-hot-sync-admin-key':'fixture'}}));
+    assert.equal(res.status,200);
+    const body=await res.json();
+    assert.deepEqual(body.sessions.filter(r=>r.verified_occupancy_course_id).map(r=>r.canonical_session_id),
+      expected?['intake']:[]);
+    assert.equal(body.sessions[0].external_course_id,null);
+    assert.doesNotMatch(JSON.stringify(body), /synthetic-ingest|99000|81111111/);
   }
 });

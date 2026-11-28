@@ -1,13 +1,19 @@
 import copy
 import json
 import unittest
+import subprocess
 from datetime import datetime, timedelta
+from copy import deepcopy
 from pathlib import Path
 from unittest.mock import patch
-from scripts.layered_publication_adapter import calculate, publish, project_sources, finalize
+from scripts.layered_publication_adapter import apply_default_owner_occupancy, calculate, publish, project_sources, finalize
 from scripts.layered_selector_adapter import aware
 from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload, public_layered_landscape, render_html
 from scripts.apply_anchor_policy import finalize_selector_payload
+from scripts import validate_public_refresh_output as output
+from scripts.block_start_time_selector import (
+    contextual_course, course_rules_by_id, load_block_schedule_page_configs,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -55,10 +61,495 @@ class LayeredPublicationTests(unittest.TestCase):
     def payload(self,seated=()):
         return publish(self.calculation(),self.page,self.courses,self.windows,self.now,
             lambda w,s,c:('fixture-day','fixture-container',f'https://fixture.test/enroll?appointmentDayId=fixture-day&courseId={c}&startTime={s:%H:%M}',None),
-            lambda s,c:[],seated)
+            lambda s,c:[],seated,
+            require_verified_day_gravity=self.policy.get('require_verified_day_gravity', False))
 
     def starts(self,cid='209809',day=None):
         return {o['startTime'] for o in self.payload()['offers'] if o['courseId']==cid and (day is None or o['date']==f'2026-10-{day:02d}')}
+
+    def test_actual_engine_trace_keeps_private_occupied_interval_and_room(self):
+        from scripts.validate_layered_occupancy_projection import validate_engine_coverage
+        source = self.add(11, "12:00", "13:00", count=1, visibility="private",
+                          session_status="scheduled")
+        report, = self.calculation()["reports"]
+        ident = source["source_event_id"]
+        self.assertEqual(report["canonical_window_input"],
+                         [[ident, "2026-10-11T16:00:00+00:00", "2026-10-11T17:00:00+00:00", self.room]])
+        validate_engine_coverage([report])
+        block, = [row for row in report["normalized_occupancy"] if row.get("canonical_source_ids")]
+        self.assertEqual(block["canonical_source_ids"], [ident])
+        starts = self.starts("210549", day=11)
+        self.assertEqual(starts, {"11:00", "13:00"})
+        public = json.dumps(public_selector_availability_payload(self.payload()))
+        self.assertNotIn("canonical_window_input", public)
+        self.assertNotIn("canonical_source_ids", public)
+        # Private lineage must not be serialized in the compact feed.
+        self.assertNotIn(ident, public)
+
+    def test_clear_day_offers_all_qualified_courses_at_every_half_hour(self):
+        # Owner doctrine #16: an open ten-hour qualified window does not
+        # automatically thin a course's valid starts to an hourly cadence.
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', next_day=False)
+        for course in self.courses:
+            cid = course['course_id']
+            last = 18 if course['kind'] == 'skills' else 15
+            expected = {(self.at(11, '08:00') + timedelta(minutes=30*i)).strftime('%H:%M')
+                        for i in range(last+1)}
+            with self.subTest(cid=cid):
+                self.assertEqual(self.starts(cid, day=11), expected)
+        self.assertTrue(all(x['step_minutes'] == 30
+            for report in self.calculation()['reports']
+            for x in report['free_intervals']))
+
+    def test_advanced_provider_inventory_bounds_fit_and_do_not_prove_a_route(self):
+        from scripts.block_start_time_selector import contextual_course, course_rules_by_id
+        rules = course_rules_by_id(json.loads((ROOT/'data/inventory/course_consumption_rules.json').read_text()))
+        ids = ('241108', '209818', '209805', '251496')
+        # Qualification and routing are independent, controlled test inputs.
+        # Only duration comes from the real production inventory rules.
+        catalog = {c: dict(course_id=c, blended_classroom_skills='classroom') for c in ids}
+        full = [contextual_course(c, {}, catalog, rules) for c in ids]
+        controls = [dict(course_id='209811', course_family='ACLS', kind='skills',
+                         duration_minutes=240, minimum_reservation_block_minutes=240),
+                    self.courses[-1], dict(course_id='344085', course_family='Heartsaver', kind='full')]
+        self.courses = full + controls
+        self.now = aware('2026-12-24T12:00:00-05:00')
+
+        def interval(end, *, name='Amy Arnold'):
+            w = dict(instructor_name=name, person_id='synthetic-amy' if name.startswith('Amy') else self.policy['brian_person_id'],
+                location_name=':: Wilmington; Shipyard Blvd', source_availability_window='test-window',
+                start='2026-12-26T13:00:00-05:00', end=f'2026-12-26T{end}:00-05:00')
+            self.windows = [w]
+            self.coverage = [dict(status='known_complete', instructor=name, location=self.room,
+                start=w['start'], end=w['end'], observed_at=self.now.isoformat(),
+                valid_until=(self.now+timedelta(minutes=30)).isoformat(), source='explicit_fixture_complete_calendar')]
+
+        interval('18:00')
+        published = self.payload()['offers']
+        for cid in ids:
+            matches = [o for o in published if o['courseId'] == cid]
+            self.assertEqual({o['startTime'] for o in matches}, {'13:00', '13:30'})
+            self.assertEqual({(o['durationMinutes'], o['cleanupBufferMinutes'], o['schedulerConsumptionMinutes'])
+                for o in matches}, {(240, 30, 270)})
+        for cid, expected in [('209811', 60), ('359474', 150), ('344085', 105)]:
+            self.assertEqual({o['schedulerConsumptionMinutes'] for o in published if o['courseId']==cid}, {expected})
+
+        unrouted = publish(self.calculation(), self.page, self.courses, self.windows, self.now,
+            lambda w,s,c:(None,None,None,'missing_verified_route'), lambda s,c:[], ())
+        self.assertFalse(unrouted['offers'])
+        interval('15:30')
+        self.assertFalse(any(o['courseId'] in ids for o in self.payload()['offers']))
+        self.assertTrue(any(o['courseId']=='359474' for o in self.payload()['offers']))
+        interval('18:00', name='Brian Ennis')
+        self.assertFalse(any(o['courseId'] in ids for o in self.payload()['offers']))
+
+        interval('18:00')
+        self.policy['verified_instructor_identity']=True
+        self.windows[0].update(public_location_allowed=True, visibility='public', public_selectable=True)
+        self.coverage[0]['instructor_person_id']='synthetic-amy'
+        for course in full: course['blended_classroom_skills']='classroom'
+        def advance_request(check):
+            return publish(self.calculation(),self.page,self.courses,self.windows,self.now,
+                lambda *_:(None,None,None,'unverified_appointment_container_owner'),lambda *_:[],
+                strict_instructor_identity=True,request_course_ids=ids,request_qualification=check)['offers']
+        self.assertEqual({(o['courseId'],o['startTime']) for o in advance_request(lambda *_:True)},
+                         {(cid,start) for cid in ids for start in ('13:00','13:30')})
+        self.assertFalse(advance_request(lambda *_:False))
+        self.policy.pop('verified_instructor_identity')
+        for broken in (dict(full[0], duration_minutes=120), dict(full[0], kind='skills'),
+                       dict(full[0], minimum_reservation_block_minutes=None)):
+            self.courses = [broken]
+            failed = self.calculation()
+            self.assertFalse(failed['reports'])
+            self.assertIn('no valid inventory rule', failed['issues'][0]['reason'])
+
+    def test_route_only_dynamic_request_through_compact_renderer(self):
+        self.windows=[]; self.coverage=[]
+        w=self.window(11,'08:00','18:00',next_day=False)
+        w.update(public_location_allowed=True, visibility='public', public_selectable=True, source_live_availability_block={'id':'private-window-id'})
+        self.coverage[0]['instructor_person_id']=w['person_id']
+        self.policy.update(verified_instructor_identity=True, require_verified_day_gravity=True)
+        self.add(11,'12:00','14:30','359474',count=1,
+                 effective_instructor_person_id=w['person_id'], stored_instructor_person_id=w['person_id'],
+                 visibility='private')
+        def resolve(window,start,course):
+            if course in {'359474','210549'}:
+                return ('fixture-day','fixture-container','https://www.910cpr.com/register/?session=123',None)
+            return ('private-day','private-container',None,'unverified_appointment_container_owner')
+        def run(*, opts=('209809','210549'), reasons=lambda *_:[], route=resolve, strict=True, qualified=True):
+            calculation=calculate(self.windows,self.sources,self.courses,self.policy,self.resources,self.now,
+                lambda window:(window['start'],window['end']),lambda *_:qualified,self.coverage)
+            return publish(calculation,self.page,self.courses,self.windows,self.now,route,reasons,(),
+                require_verified_day_gravity=True, strict_instructor_identity=strict, request_course_ids=opts,
+                request_qualification=lambda *_:qualified)
+        def requests(result): return [o for o in result['offers'] if o.get('dynamicBookingMode') == 'request']
+        result=run()
+        rows=requests(result)
+        self.assertTrue(rows)
+        self.assertEqual({o['courseId'] for o in rows},{'209809'})
+        self.assertTrue(all(o['scheduleRole']=='barnacle' for o in rows))
+        self.assertTrue(all(o['startTime'] < '12:00' or o['startTime'] >= '14:30' for o in rows))
+        from scripts.apply_anchor_policy import _rebuild_dates
+        from scripts.block_start_time_selector import apply_final_live_availability_guard
+        from scripts.validate_layered_occupancy_projection import (
+            dynamic_offer_key, validate_dynamic_provenance)
+
+        window_id = w["source_availability_window"]
+        self.assertTrue(all(o.get("availabilityBlockId") is None for o in rows))
+        with patch("scripts.block_start_time_selector.current_public_live_block_index", return_value={
+            window_id: dict(block={"start_datetime": w["start"], "end_datetime": w["end"]},
+                            start=aware(w["start"]).replace(tzinfo=None),
+                            end=aware(w["end"]).replace(tzinfo=None))}):
+            guarded = apply_final_live_availability_guard(deepcopy(result))
+        self.assertEqual(requests(guarded), rows)
+        self.assertTrue(any(o["courseId"] == "210549" and o["scheduleRole"] == "barnacle"
+                            and o["registrationUrl"] for o in guarded["offers"]))
+        validate_dynamic_provenance(guarded, guarded["layeredDiagnostics"]["reports"])
+        for removed_id in ("now-closed", "now-unknown", None):
+            altered = deepcopy(guarded)
+            key = dynamic_offer_key(requests(altered)[0])
+            altered["_dynamicOfferLineage"].pop(key)
+            if removed_id is not None:
+                altered["_dynamicOfferLineage"][key] = removed_id
+            with self.assertRaisesRegex(ValueError, "lacks an evaluated calendar window"):
+                validate_dynamic_provenance(altered, altered["layeredDiagnostics"]["reports"])
+        for changes in ({"courseId":"not-accepted"},
+                        {"schedulerConsumptionMinutes":1},
+                        {"occupiedUntil":"2026-10-11T15:23:00-04:00", "schedulerConsumptionEnd":"15:23"}):
+            altered = deepcopy(guarded)
+            offer = requests(altered)[0]
+            altered["_dynamicOfferLineage"].pop(dynamic_offer_key(offer))
+            offer.update(changes)
+            # Even if an invalid row claims lineage from the same real window,
+            # the actual accepted engine candidate must match its geometry.
+            altered["_dynamicOfferLineage"][dynamic_offer_key(offer)] = window_id
+            _rebuild_dates(altered, altered["offers"])
+            with self.assertRaisesRegex(ValueError, "does not match an accepted engine candidate"):
+                validate_dynamic_provenance(altered, altered["layeredDiagnostics"]["reports"])
+        altered = deepcopy(guarded)
+        altered["offers"] = [o for o in altered["offers"] if not o.get("dynamicBookingMode")]
+        with self.assertRaisesRegex(ValueError, "differ from renderer input"):
+            validate_dynamic_provenance(altered, altered["layeredDiagnostics"]["reports"])
+
+        altered = deepcopy(guarded)
+        slot = next(slot for day in altered["dates"] for slot in day["startTimes"]
+                    if any(o.get("dynamicBookingMode") == "request" for o in slot["courses"]))
+        slot["startTime"] = "03:23"
+        with self.assertRaisesRegex(ValueError, "renderer coordinates differ"):
+            validate_dynamic_provenance(altered, altered["layeredDiagnostics"]["reports"])
+
+        with patch("scripts.block_start_time_selector.current_public_live_block_index", return_value={}):
+            stale = apply_final_live_availability_guard(deepcopy(result))
+        self.assertFalse(requests(stale))
+        suppressed_requests = [r for r in public_selector_availability_payload(stale)
+                               ["liveAvailabilityGuard"]["suppressedStaleOrOrphanedOffers"]
+                               if r["courseId"] == "209809"]
+        self.assertTrue(suppressed_requests)
+        self.assertNotIn(window_id, json.dumps(suppressed_requests))
+
+        original_sources=self.sources; self.sources=[]
+        self.assertTrue(any(o['registrationUrl'] and o['courseId']=='359474' for o in run()['offers']))
+        self.sources=original_sources
+        compact=public_selector_availability_payload(result)
+        rows=[o for day in compact['dates'] for slot in day['startTimes'] for o in slot['courses']
+              if o.get('dynamicBookingMode')=='request']
+        self.assertTrue(rows)
+        self.assertNotRegex(json.dumps(rows),'private-(day|container|window-id)|fixture-11-12')
+        self.assertNotIn("_dynamicOfferLineage", json.dumps(compact))
+        self.assertNotIn(window_id, json.dumps(rows))
+        self.assertTrue(all(o.get('registrationUrl') is None and o.get('appointmentUrl') is None for o in rows))
+        js="""
+        let row=JSON.parse(process.argv[1]);
+        const api=require('./docs/assets/resolved-selector-availability.js');
+        let stale={...row,offerType:'seated_class',registrationUrl:'/register/?session=123'};
+        const caps={sessions:{123:{courseId:row.courseId,date:row.date,startTime:row.startTime,location:row.location}}};
+        console.log(JSON.stringify([api.registrationAction(row),api.registrationAction(stale,{},caps),
+          api.registrationAction({...stale,dynamicBookingMode:undefined},{},caps)]));
+        """
+        output=json.loads(subprocess.check_output(['node','-e',js,json.dumps(rows[0])],cwd=ROOT,text=True))
+        self.assertEqual([o['mode'] for o in output],['request','request','native'])
+        self.assertTrue(all('mailto:brian@910cpr.com' in o['href'] and '123' not in o['href']
+                            for o in output[:2]))
+        self.assertFalse(requests(run(opts=())))
+        self.assertFalse(requests(run(opts=['209809',{}])))
+        self.assertFalse(requests(run(strict=False)))
+        self.assertFalse(requests(run(qualified=False)))
+        self.assertFalse(requests(run(reasons=lambda *_:['inside_minimum_lead_time'])))
+        self.assertFalse(requests(run(reasons=lambda *_:['course_not_appointment_eligible'])))
+        self.assertFalse(requests(run(route=lambda *_:(None,None,None,'invalid_appointment_container_owner_proof'))))
+        for field, values in [('visibility',(None,'','unknown','private','unlisted','internal')),
+                              ('public_selectable',(None,'',False,'true',1))]:
+            old=w.pop(field)
+            self.assertFalse(requests(run()))
+            for v in values:
+                with self.subTest(field=field,value=v):
+                    w[field]=v
+                    self.assertFalse(requests(run()))
+            w[field]=old
+        self.coverage[0]['valid_until']=self.now.isoformat()
+        self.assertFalse(requests(run()))
+
+    def test_dynamic_inquiry_uses_real_window_and_classroom_policy(self):
+        from scripts.block_start_time_selector import (
+            contextual_course, course_rules_by_id, find_url, layered_dynamic_public_reasons,
+            layered_window_instants, public_location_allowed, request_cert_valid_through,
+            selected_public_page_live_windows)
+        def read(path): return json.loads((ROOT/path).read_text())
+        classroom='209809'
+        course_catalog={str(c['course_id']):c for c in read('data/config/course_catalog.json')['courses']}
+        rules=course_rules_by_id(read('data/inventory/course_consumption_rules.json'))
+        policy=read('data/config/public_offer_policy.json')
+        venue_policy=read('data/config/public_location_policy.json')
+        allowed={o['course_id'] for o in self.page['course_options']}
+        option=next(o for o in self.page['course_options'] if o['course_id']==classroom)
+        course=contextual_course(classroom,option,course_catalog,rules)
+        credential={'certifications':[{'certification_code':code,'expiration_date':'2026-12-01'}
+            for code in course['required_instructor_certifications']]}
+        source=dict(source_type='google_calendar',availability_status='available',person_id='fixture-teacher',
+            source_calendar_id='explicit-test-calendar',source_event_id='private-fixture-calendar-event',
+            instructor_name='Fixture Teacher',start_datetime='2026-10-11T08:00:00-04:00',
+            end_datetime='2026-10-11T18:00:00-04:00',location_name=':: Wilmington; Shipyard Blvd')
+        self.policy['verified_instructor_identity']=True
+        def run(flags, klass=course, now=self.now):
+            windows,_=selected_public_page_live_windows({'availability_blocks':[dict(source,**flags)]},self.resources)
+            w=windows[0]
+            w['public_location_allowed']=public_location_allowed(w['location_name'],venue_policy)
+            proof=dict(status='known_complete',instructor=w['instructor_name'],
+                instructor_person_id=w['person_id'],location=self.room,start=source['start_datetime'],
+                end=source['end_datetime'],observed_at=now.isoformat(),
+                valid_until=(now+timedelta(minutes=45)).isoformat(),source='explicit_fixture_complete_calendar')
+            calculation=calculate(windows,[],[klass],self.policy,self.resources,now,
+                layered_window_instants,lambda *_:True,[proof])
+            return publish(calculation,self.page,[klass],windows,now,
+                lambda w,s,c:find_url(w,s,c,[],self.resources,strict_container_owners={}),
+                lambda s,c:layered_dynamic_public_reasons(s,c,policy,allowed,now),
+                strict_instructor_identity=True,request_course_ids=[classroom],
+                request_qualification=lambda w,c,end:request_cert_valid_through(credential,c,end))
+        positive={'visibility':'public','public_selectable':True}
+        payload=run(positive)
+        feed=public_selector_availability_payload(payload)
+        assert all(o['dynamicBookingMode']=='request' for o in payload['offers'])
+        self.assertTrue(payload['offers'])
+        self.assertIn('"dynamicBookingMode": "request"',json.dumps(feed))
+        self.assertNotIn('private-fixture-calendar-event',json.dumps(feed))
+        html=render_html(payload)
+        self.assertIn('const embeddedScheduleDates = [];',html)
+        self.assertIn('block-selector-availability/heartsaver.json',html)
+        self.assertIn('ResolvedSelectorAvailability.registrationAction(course',html)
+        self.assertFalse(run({})['offers'])
+        self.assertFalse(run(positive, dict(course,appointment_allowed=False))['offers'])
+        with patch('scripts.block_start_time_selector.native_reservation_reasons',
+                   return_value=['native_reservation_not_configured']):
+            self.assertFalse(run(positive)['offers'])
+        self.assertFalse(run(positive,now=aware('2026-10-10T18:00:00-04:00'))['offers'])
+
+    def test_request_requires_matching_dated_credential_through_local_finish(self):
+        from scripts.block_start_time_selector import request_cert_valid_through
+        course={'course_id':'241108','required_instructor_certifications':['ACLS-I']}
+        finish=aware('2026-12-27T02:30:00Z')  # still December 26 Eastern
+        for expiry, expected in [('UNKNOWN',False),('2026-12-25',False),('2026-12-26',True),
+                                 ('2026-12-27',True),('2026-99-99',False)]:
+            with self.subTest(expiry=expiry):
+                certs=[dict(certification_code='ACLS-I',expiration_date=expiry)]
+                self.assertEqual(request_cert_valid_through({'certifications':certs},course,finish),expected)
+        self.assertFalse(request_cert_valid_through({'certifications':['ACLS-I']},course,finish))
+
+    def test_attested_private_seat_survives_exact_interval_engine_dedup(self):
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11, '08:00', '18:00', next_day=False)
+        legacy=self.add(11,'12:00','13:00',cid='359474',count=None)
+        legacy['source_file']='legacy'
+        canonical=dict(legacy,source_event_id='synthetic-attested-private',
+            source_file='canonical_class_sessions',visibility='private',
+            operational_has_active_seat=True)
+        for rows in ([legacy,canonical],[canonical,legacy]):
+            with self.subTest(first=rows[0]['source_file']):
+                self.sources=list(rows)
+                occupied=self.calculation()['reports'][0]['normalized_occupancy']
+                self.assertEqual(len(occupied),1)
+                self.assertEqual(occupied[0]['id'],'synthetic-attested-private')
+                self.assertTrue(occupied[0]['operational_has_active_seat'])
+                self.assertEqual(occupied[0]['kind'],'paid')
+                self.assertIsNone(occupied[0]['headcount'])
+                public=public_selector_availability_payload(self.payload())
+                self.assertNotIn('synthetic-attested-private',json.dumps(public))
+                self.assertFalse(any(o.get('offerType')=='seated_class'
+                    for o in self.payload()['offers']))
+
+    def test_restricted_identity_cannot_inherit_public_mirror_route(self):
+        for visibility in ('private', 'unlisted', 'internal'):
+            with self.subTest(visibility=visibility):
+                self.sources=[]
+                public=self.add(11,'12:00','13:00',count=None,
+                    visibility='public',external_class_id='fixture-shared')
+                public['source_file']='legacy'
+                restricted=dict(public,source_event_id='fixture-restricted',
+                    source_file='canonical_class_sessions',visibility=visibility,
+                    operational_has_active_seat=True,count_available=True,
+                    active_registration_count=1)
+                seated=dict(session_id='fixture-shared',date='2026-10-11',
+                    startTime='12:00',courseId='210549',courseName='Synthetic',
+                    instructor='Brian Ennis',offerType='seated_class',
+                    visibility='public',registrationUrl='https://fixture.invalid/private')
+                for sources in ([public,restricted],[restricted,public]):
+                    self.sources=sources
+                    result=self.payload([seated])
+                    self.assertFalse(any(o.get('offerType')=='seated_class'
+                                         for o in result['offers']))
+                    self.assertEqual([r for r in result['rejectedCourseStartTimes']
+                        if 'nonpublic_occupied_not_joinable' in r.get('reasons',[])],
+                        [{'reasons':['nonpublic_occupied_not_joinable']}])
+                    self.assertNotIn(seated['registrationUrl'],json.dumps(result['offers']))
+                    self.assertTrue(self.calculation()['reports'][0]['normalized_occupancy'])
+
+    def test_all_seated_identity_aliases_enforce_restricted_visibility(self):
+        for mode in (False, True):
+            self.policy['require_verified_day_gravity'] = mode
+            for visibility in ('private', 'unlisted', 'internal'):
+                self.sources=[]
+                self.add(11,'12:00','13:00',count=1,visibility=visibility,
+                         external_class_id='fixture-restricted-external')
+                restricted=self.sources[0]
+                base=dict(session_id='fixture-unrelated',date='2026-10-11',
+                          startTime='12:00',courseId='210549',courseName='Synthetic',
+                          instructor='Brian Ennis',offerType='seated_class',
+                          visibility='public',registrationUrl='https://fixture.invalid/alias')
+                for key in (restricted['source_event_id'], restricted['external_class_id']):
+                    for alias in (dict(sourceSessionId=key,sourceAvailabilityBlock=None),
+                                  dict(sourceAvailabilityBlock={'sessionId':key}),
+                                  dict(session_id=key,sourceAvailabilityBlock=None)):
+                        with self.subTest(mode=mode,visibility=visibility,key=key,alias=alias):
+                            result=self.payload([dict(base,**alias)])
+                            self.assertFalse(any(o.get('offerType')=='seated_class'
+                                                 for o in result['offers']))
+                            self.assertIn({'reasons':['nonpublic_occupied_not_joinable']},
+                                          result['rejectedCourseStartTimes'])
+                            self.assertNotIn(base['registrationUrl'],json.dumps(result['offers']))
+                control=self.payload([dict(base,sourceAvailabilityBlock=None)])
+                self.assertTrue(any(o.get('offerType')=='seated_class' for o in control['offers']))
+                self.assertTrue(self.calculation()['reports'][0]['normalized_occupancy'])
+
+    def test_verified_gravity_distinguishes_shell_and_private_demand(self):
+        self.policy['require_verified_day_gravity'] = True
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        self.window(11,'08:00','18:00',name='Michelle',next_day=False)
+        source=self.add(11,'12:00','13:00',cid='359474',count=None,visibility='private')
+        for count in (None,0):
+            source.update(active_registration_count=count,count_available=count is not None)
+            offers=self.payload()['offers']
+            self.assertTrue(any(o['instructor']=='Brian Ennis' and o['courseId']=='329495'
+                                and o['startTime']=='08:00' and o['scheduleRole']=='open_day' for o in offers))
+            self.assertFalse(any(o['startTime']=='12:00' for o in offers))
+        source.update(operational_has_active_seat=True,count_available=False,active_registration_count=None,course_id='')
+        offers=self.payload()['offers']
+        self.assertFalse(any(o['instructor']=='Brian Ennis' and o['scheduleRole']=='open_day' for o in offers))
+        self.assertTrue(any(o['instructor']=='Brian Ennis' and o['scheduleRole']=='barnacle' for o in offers))
+        self.assertTrue(any(o['instructor']=='Michelle' and o['scheduleRole']=='open_day'
+                            and o['startTime']=='08:00' for o in offers))
+        self.assertFalse(any(o['startTime']=='12:00' for o in offers))
+        self.assertNotIn(source['source_event_id'],json.dumps(public_selector_availability_payload(self.payload())))
+
+    def test_verified_gravity_survives_split_windows_and_not_next_clear_day(self):
+        self.policy['require_verified_day_gravity'] = True
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','12:00',next_day=False)
+        self.window(11,'13:00','18:00',next_day=False)
+        self.window(12,'08:00','18:00',next_day=False)
+        self.add(11,'12:00','13:00',cid='359474',count=1,visibility='private')
+        offers=self.payload()['offers']
+        skills=[o for o in offers if o['courseId']=='329495']
+        self.assertEqual({o['startTime'] for o in skills if o['date']=='2026-10-11'},{'11:00','13:00'})
+        self.assertTrue(any(o['date']=='2026-10-12' and o['startTime']=='08:00'
+                            and o['scheduleRole']=='open_day' for o in skills))
+
+    def test_verified_full_course_repeat_is_elapsed_and_exact_course(self):
+        self.policy['require_verified_day_gravity'] = True
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(10,'08:00','18:00',next_day=False)
+        self.window(12,'08:00','18:00',next_day=False)
+        self.window(12,'08:00','18:00',name='Michelle',next_day=False)
+        row=self.add(11,'12:00','13:00',cid='359474',count=1,visibility='private')
+        offers=self.payload()['offers']
+        starts=lambda day,cid,name: {o['startTime'] for o in offers
+            if o['date']==f'2026-10-{day:02d}' and o['courseId']==cid and o['instructor']==name}
+        self.assertIn('11:30',starts(10,'359474','Brian Ennis'))
+        self.assertNotIn('12:00',starts(10,'359474','Brian Ennis'))
+        self.assertNotIn('12:30',starts(10,'359474','Brian Ennis'))
+        self.assertNotIn('11:30',starts(12,'359474','Brian Ennis'))
+        self.assertNotIn('12:00',starts(12,'359474','Brian Ennis'))
+        self.assertIn('12:30',starts(12,'359474','Brian Ennis'))
+        self.assertIn('11:30',starts(12,'329495','Brian Ennis'))
+        self.assertIn('11:30',starts(12,'209809','Brian Ennis'))
+        self.assertIn('11:30',starts(12,'359474','Michelle'))
+        row.update(count_available=False,active_registration_count=None)
+        self.assertIn('11:30',self.starts('359474',day=12))
+
+    def test_repeat_context_uses_utc_and_does_not_add_travel_sources(self):
+        from scripts.layered_publication_adapter import repeat_context_for_window, project_sources
+        from scripts.layered_scheduling_engine import stamp
+        metadata={str(c['course_id']):c for c in self.courses}
+        source=self.add(11,'12:00','13:00',cid='359474',count=1,visibility='private')
+        source.update(start='2026-11-01T12:00:00-05:00',end='2026-11-01T13:00:00-05:00',
+                      location='unmapped-synthetic-venue')
+        result=repeat_context_for_window(project_sources(self.sources,metadata),metadata,
+            {'instructor_name':'Brian Ennis'},stamp('2026-10-31T12:00:00-04:00'),
+            stamp('2026-11-01T14:00:00-05:00'))
+        self.assertEqual(result,[{'course':'359474','start':'2026-11-01T17:00:00+00:00'}])
+        self.assertEqual(abs(stamp(result[0]['start'])-stamp('2026-10-31T12:00:00-04:00')),timedelta(hours=25))
+        self.assertEqual(abs(stamp(result[0]['start'])-stamp('2026-10-31T13:00:00-04:00')),timedelta(hours=24))
+
+    def test_conflicting_attested_interval_has_no_hidden_repeat_gravity(self):
+        from scripts.layered_publication_adapter import repeat_context_for_window, project_sources
+        from scripts.layered_scheduling_engine import stamp
+        metadata = {str(c['course_id']): c for c in self.courses}
+        self.add(11, '12:00', '13:00', cid='359474', count=1, visibility='private')
+        second = self.add(11, '12:00', '13:00', cid='209809', count=1, visibility='private')
+        window = {'instructor_name': 'Brian Ennis'}
+        def repeats():
+            return repeat_context_for_window(project_sources(self.sources, metadata), metadata, window,
+                stamp('2026-10-10T12:00:00-04:00'), stamp('2026-10-12T14:00:00-04:00'))
+        self.assertIn('359474', metadata)
+        self.assertEqual(repeats(), [])
+        second.update(count_available=False, active_registration_count=None)
+        self.assertEqual([r['course'] for r in repeats()], ['359474'])
+
+    def test_verified_publication_uses_eastern_day_for_utc_source(self):
+        self.policy['require_verified_day_gravity'] = True
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'18:00','23:30',next_day=False)
+        self.window(12,'08:00','18:00',next_day=False)
+        source=self.add(11,'20:30','22:30',cid='359474',count=1,visibility='private')
+        source.update(start='2026-10-12T00:30:00Z',end='2026-10-12T02:30:00Z')
+        offers=self.payload()['offers']
+        self.assertTrue(any(o['date']=='2026-10-11' and o['scheduleRole']=='barnacle'
+                            for o in offers))
+        self.assertFalse(any(o['date']=='2026-10-11' and o['scheduleRole']=='open_day'
+                             for o in offers))
+        self.assertTrue(any(o['date']=='2026-10-12' and o['startTime']=='08:00'
+                            and o['scheduleRole']=='open_day' for o in offers))
+
+    def test_verified_seated_instructor_must_match_source_assignment(self):
+        self.policy['require_verified_day_gravity'] = True
+        self.windows=[]; self.coverage=[]; self.sources=[]
+        self.window(11,'08:00','18:00',next_day=False)
+        self.window(11,'08:00','18:00',name='Michelle',next_day=False)
+        source=self.add(11,'12:00','14:00',cid='359474',count=1,visibility='public')
+        seated=dict(session_id=source['source_event_id'],date='2026-10-11',
+            startTime='12:00',courseId='359474',courseName='Synthetic',
+            instructor='Michelle',offerType='seated_class',visibility='public',
+            registrationUrl='https://fixture.invalid/enroll')
+        result=self.payload([seated])
+        self.assertIn('seated_instructor_mismatch',result['rejectionReasonCounts'])
+        self.assertFalse(any(o.get('offerType')=='seated_class' for o in result['offers']))
+        self.assertTrue(any(o['instructor']=='Michelle' and o['startTime']=='08:00'
+                            and o['courseId']=='359474' and o['scheduleRole']=='open_day'
+                            for o in result['offers']))
+        # The known Brian alias is not a mismatch.
+        seated['instructor']='Brian'
+        result=self.payload([seated])
+        self.assertTrue(any(o.get('offerType')=='seated_class' for o in result['offers']))
 
     def test_rejected_public_diagnostics_never_echo_private_source_dtos(self):
         # Both conflict rejections and expired dynamic URLs pass through this
@@ -298,7 +789,7 @@ class LayeredPublicationTests(unittest.TestCase):
         self.assertTrue(full['occupiedUntil'].startswith('2026-10-12T00:00'))
         self.sources=[]
         self.assertIn('00:00',self.starts('210549'))
-        self.assertNotIn('00:30',self.starts('210549'))
+        self.assertIn('00:30',self.starts('210549'))
         self.windows=[];self.coverage=[];self.window(11,'03:00','05:00',next_day=False)
         self.assertEqual(self.starts('210549'),{'03:00','03:30','04:00'})
 
@@ -509,5 +1000,214 @@ class LayeredPublicationTests(unittest.TestCase):
         self.now=aware('2027-03-14T03:10:00-04:00')
         self.assertFalse(self.payload()['offers'])
 
+    def add_intake(self, day, count=None, **fields):
+        row = self.add(day, '10:00', '12:30', cid='359474', name='UNKNOWN',
+                       count=count, booking_source='confirmed_booking_intake',
+                       registration_backend='landerware', session_status='scheduled',
+                       stored_instructor_absent=True, instructor_unassigned=True,
+                       operational_has_active_seat=True, visibility='private',
+                       external_class_id=f'intake-external-{day}')
+        row.update(fields)
+        return row
+
+    def attribute(self, approved=True):
+        return apply_default_owner_occupancy(
+            self.sources, 'Brian Ennis', self.room, self.now, self.coverage,
+            lambda cid: approved and cid == '359474')
+
+    def test_owner_default_is_effective_only_for_verified_intake(self):
+        for day, count in zip(range(11, 16), [None, 1, None, 2, 1]):
+            if day != 11:
+                self.window(day)
+            self.add_intake(day, count=count)
+        originals = copy.deepcopy(self.sources)
+        effective = self.attribute()
+        self.assertEqual(self.sources, originals)
+        self.assertEqual({r['instructor'] for r in effective}, {'Brian Ennis'})
+        self.assertTrue(all(r['stored_instructor_absent'] for r in effective))
+        self.assertEqual([r['active_registration_count'] for r in effective],
+                         [None, 1, None, 2, 1])
+        self.assertTrue(all(r['visibility'] == 'private' for r in effective))
+
+    def test_owner_fallback_reads_legacy_naive_occupancy_but_not_naive_coverage(self):
+        from scripts.block_start_time_selector import parse_dt
+        from scripts.layered_selector_adapter import occupancy_instant
+        row = self.add_intake(11)
+        row.update(start=parse_dt(row["start"]), end=parse_dt(row["end"]))
+        self.assertEqual(self.attribute()[0]["instructor"], "Brian Ennis")
+        self.coverage[0]["start"] = parse_dt(self.coverage[0]["start"])
+        self.assertIs(self.attribute()[0], row)
+        for ambiguous in ("2026-11-01T01:30:00", "2027-03-14T02:30:00"):
+            with self.assertRaises(ValueError):
+                occupancy_instant(ambiguous)
+        self.assertNotEqual(occupancy_instant("2026-11-01T01:30:00-04:00"),
+                            occupancy_instant("2026-11-01T01:30:00-05:00"))
+
+    def test_no_fallback_without_fresh_proof_cert_or_true_unassignment(self):
+        row = self.add_intake(11)
+        self.assertIs(self.attribute(approved=False)[0], row)
+        for change in [
+            {'stored_instructor_absent': False}, {'instructor_unassigned': False, 'instructor':'Amy Arnold'},
+            {'operational_has_active_seat': False}, {'session_status':'completed'},
+            {'session_status':'canceled'}, {'location_resolution':None}, {'visibility':'public'},
+        ]:
+            self.sources[:] = [{**row, **change}]
+            self.assertIs(self.attribute()[0], self.sources[0])
+        self.sources[:] = [row]
+        self.coverage[0]['valid_until'] = self.now.isoformat()
+        self.assertIs(self.attribute()[0], row)
+
+    def test_distinct_room_and_instructor_conflicts_stay_unassigned_but_exact_mirror_dedups(self):
+        row = self.add_intake(11)
+        other = dict(row, source_file='docs/data/schedule_future.json',
+                     instructor='Brian', instructor_unassigned=False)
+        self.sources.append(other)
+        self.assertEqual(self.attribute()[0]['instructor'], 'Brian Ennis')
+        for update in [
+            {'instructor':'Amy Arnold'}, {'external_class_id':'other-class'},
+            {'resource':'an offsite facility'}, {'end':None}, {'course_id':'another-course'},
+        ]:
+            self.sources[1] = {**other, **update}
+            self.assertIs(self.attribute()[0], row)
+
+    def test_owner_mirror_requires_agreement_with_explicit_canonical_link(self):
+        row = self.add_intake(11, source_event_id='canonical-intake')
+        mirror = dict(row, source_file='docs/data/schedule_future.json',
+                      instructor='Brian', instructor_unassigned=False,
+                      linked_canonical_session_id='canonical-intake')
+        self.sources.append(mirror)
+        self.assertEqual(self.attribute()[0]['instructor'], 'Brian Ennis')
+        self.sources[1] = dict(mirror, linked_canonical_session_id='different-canonical')
+        self.assertIs(self.attribute()[0], row)
+
+        # Before attribution, preserve durable provenance from the actual V2
+        # normalization path; it is not inferred from time or the course label.
+        from scripts.block_start_time_selector import build_occupancy
+        legacy = dict(session_id='1234', canonical_session_id='different-canonical',
+                      start_at='2026-10-11T10:00:00-04:00', end_at='2026-10-11T12:00:00-04:00',
+                      course_id='359474', lead_instructor_name='Brian', location_name='Shipyard Office')
+        [normalized] = build_occupancy({'schedule_future': {'sessions': [legacy]},
+                                       'location_resource_map': self.resources}, {}, allow_unresolved=True)
+        self.assertEqual(normalized['linked_canonical_session_id'], 'different-canonical')
+        [old] = build_occupancy({'schedule_future': {'sessions': [legacy]},
+                                 'location_resource_map': self.resources}, {})
+        self.assertNotIn('linked_canonical_session_id', old)
+        # Two canonical rows are not a mirror, even at exactly the same bounds.
+        self.sources[1] = dict(row, source_event_id='different-canonical', instructor='Brian',
+                               instructor_unassigned=False)
+        self.assertIs(self.attribute()[0], row)
+
+    def test_owner_effective_anchor_keeps_bookends_without_join_or_private_identifiers(self):
+        self.policy['require_verified_day_gravity'] = True
+        row = self.add_intake(11, source_event_id='PRIVATE-OWNER-INTAKE')
+        self.sources = self.attribute()
+        seat = dict(offerType='seated_class', session_id=row['external_class_id'],
+                    instructor='Brian Ennis', date='2026-10-11', startTime='10:00',
+                    courseId='359474', registrationUrl='https://fixture.test/PRIVATE-OWNER-LINK')
+        payload = self.payload([seat])
+        offers = payload['offers']
+        self.assertTrue(any(o['scheduleRole'] == 'barnacle' and o['startTime'] == '12:30'
+                            for o in offers))
+        self.assertFalse(any(o['offerType'] == 'seated_class' or o['scheduleRole'] == 'open_day'
+                             for o in offers))
+        self.assertFalse(any(o['courseId'] == '359474' for o in offers))
+        self.assertNotIn('PRIVATE-OWNER', json.dumps(public_selector_availability_payload(payload)))
+
 
 if __name__=='__main__':unittest.main()
+
+
+class FrozenClock(datetime):
+    @classmethod
+    def now(cls, tz=None):
+        return cls.fromisoformat("2026-10-05T16:00:00+00:00").astimezone(tz)
+
+
+class LayeredRequestReleaseTests(unittest.TestCase):
+    def compact(self, occupied=False, key="heartsaver"):
+        fixture = LayeredPublicationTests()
+        fixture.setUp()
+        fixture.windows, fixture.coverage = [], []
+        window = fixture.window(11, "08:00", "19:00", next_day=False,
+                                name="Amy Arnold" if key in {"acls", "pals"} else "Brian Ennis")
+        window.update(public_location_allowed=True, visibility="public", public_selectable=True,
+                      source_live_availability_block={"private": "SENSITIVE-CALENDAR-ID"})
+        fixture.coverage[0]["instructor_person_id"] = window["person_id"]
+        fixture.policy.update(verified_instructor_identity=True, require_verified_day_gravity=True)
+        page = load_block_schedule_page_configs()[key]
+        cid = "209809" if key in {"heartsaver", "uscg_first_aid_cpr_aed"} else next(
+            o["course_id"] for o in page["course_options"] if o["delivery_mode"] == "in-person"
+        )
+        if key in {"acls", "pals"}:
+            rules = course_rules_by_id(json.loads(
+                (ROOT / "data/inventory/course_consumption_rules.json").read_text()))
+            course = contextual_course(cid, {}, {cid: dict(course_id=cid, blended_classroom_skills="classroom")}, rules)
+            course["blended_classroom_skills"] = "classroom"
+            fixture.courses.append(course)
+        elif cid not in {course["course_id"] for course in fixture.courses}:
+            fixture.courses.append(dict(course_id=cid, course_family=page["family"], kind="full",
+                                        clean_course_name="Exact classroom", blended_classroom_skills="classroom",
+                                        duration_minutes=120, minimum_reservation_block_minutes=150))
+        if occupied:
+            fixture.add(11, "12:00", "14:30", "359474", count=1, visibility="private",
+                        effective_instructor_person_id=window["person_id"],
+                        stored_instructor_person_id=window["person_id"])
+        p = publish(fixture.calculation(), page, fixture.courses, fixture.windows, fixture.now,
+                    lambda *_: ("SENSITIVE-DAY-ID", "SENSITIVE-SESSION-ID", None,
+                                "unverified_appointment_container_owner"),
+                    lambda *_: [], (), require_verified_day_gravity=True, strict_instructor_identity=True,
+                    request_course_ids=[cid], request_qualification=lambda *_: True)
+        return public_selector_availability_payload(p)
+
+    def validate(self, payload, key="heartsaver"):
+        with patch.object(output, "datetime", FrozenClock), patch.object(output, "load_json", return_value=payload):
+            return output.validate_selector(key, set())
+
+    def test_actual_compact_requests_are_accepted_without_a_checkout_or_private_ids(self):
+        for occupied in (False, True):
+            with self.subTest(occupied=occupied):
+                payload = self.compact(occupied=occupied)
+                rows = [c for d in payload["dates"] for s in d["startTimes"] for c in s["courses"]]
+                self.assertTrue(rows)
+                self.assertEqual({c["scheduleRole"] for c in rows}, {"barnacle" if occupied else "open_day"})
+                self.assertNotIn("SENSITIVE", json.dumps(payload))
+                self.assertNotIn("fixture-11-12", json.dumps(payload))
+                if occupied:
+                    self.assertTrue(all(c["startTime"] < "12:00" or c["startTime"] >= "14:30" for c in rows))
+                self.assertEqual(self.validate(payload)["offers"], len(rows))
+                script = "const a=require('./docs/assets/resolved-selector-availability.js'); console.log(JSON.stringify(a.registrationAction(JSON.parse(process.argv[1]))));"
+                action = json.loads(subprocess.check_output(["node","-e",script,json.dumps(rows[0])], cwd=ROOT, text=True))
+                self.assertEqual(action["mode"], "request")
+                self.assertTrue(action["href"].startswith("mailto:brian@910cpr.com?"))
+                self.assertIn("No seat is reserved", action["notice"])
+
+    def test_route_and_authority_tampering_fail(self):
+        base = self.compact(occupied=True)
+        for key, value in (("registrationUrl", "/register/?session=123"),
+                           ("appointmentUrl", "https://legacy.example/enroll"),
+                           ("appointmentDayId", "secret"), ("attached_to_session_id", "secret"),
+                           ("availabilityBlockId", "secret"), ("sourceAvailabilityBlock", {}),
+                           ("courseId", "509474"), ("courseId", "359474"), ("date", "2026-10-12"),
+                           ("startTime", "10:30"), ("scheduleRole", "weird"),
+                           ("schedulerConsumptionMinutes", 0), ("deliveryMode", "blended"),
+                           ("occupiedUntil", "2026-10-11T10:30:00-04:00"),
+                           ("validUntil", "2026-10-05T15:59:59Z"),
+                           ("validUntil", "2026-10-05T18:00:00Z")):
+            p = deepcopy(base)
+            p["dates"][0]["startTimes"][0]["courses"][0][key] = value
+            with self.subTest(key=key, value=value), self.assertRaises(ValueError):
+                self.validate(p)
+        for attr, value in (("pageKey", "bls"), ("schedulingModel", "legacy"), ("anchor_policy", {"finalized": True, "mode": "legacy"}),
+                            ("synthesisBlockedDates", ["2026-10-11"])):
+            p = deepcopy(base)
+            p[attr] = value
+            with self.subTest(attr=attr), self.assertRaises(ValueError):
+                self.validate(p)
+
+    def test_all_generated_family_feeds_are_in_release_validator_scope(self):
+        configured = set(load_block_schedule_page_configs())
+        self.assertEqual(set(output.REQUIRED_SELECTORS), configured)
+        for key in sorted(configured):
+            with self.subTest(key=key):
+                self.assertGreater(self.validate(self.compact(key=key), key)["offers"], 0)
+

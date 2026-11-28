@@ -49,7 +49,7 @@ class CoverageCheckpointTests(unittest.TestCase):
                 'reason': 'missing directional travel rule'}]}, '2026-10-14')
         self.assertTrue(result['coverageAlert'])
         self.assertEqual(result['dayFailedWindows'], 1)
-        self.assertEqual(result['failedWindowReasons'], {'missing directional travel rule': 1})
+        self.assertEqual(result['failedWindowReasons'], {'unknown': 1})
 
     def test_counts_actual_nested_courses_and_does_not_invent_offers(self):
         result = summarize({'counts': {'failed_windows': 0}, 'dates': [
@@ -81,9 +81,9 @@ class CoverageCheckpointTests(unittest.TestCase):
         self.assertEqual([days[d]['publishedOffers'] for d in days], [2, 1, 0])
         self.assertEqual([days[d]['failedWindows'] for d in days], [0, 1, 0])
         self.assertEqual(days['2026-11-01']['failedWindowReasons'], {})
-        self.assertEqual(days['2026-11-02']['failedWindowReasons'], {'missing directional travel rule': 1})
+        self.assertEqual(days['2026-11-02']['failedWindowReasons'], {'unknown': 1})
         self.assertEqual(days['2026-11-03']['failedWindowReasons'], {})
-        self.assertEqual(summary['failedWindowReasons'], {'missing directional travel rule': 2})
+        self.assertEqual(summary['failedWindowReasons'], {'unknown': 2})
         self.assertEqual(days['2026-11-01']['perCourse'], {'bls': 2})
         self.assertEqual(days['2026-11-02']['publishedTimes'], ['12:00'])
         self.assertTrue(summary['coverageAlert'],
@@ -108,6 +108,31 @@ class CoverageCheckpointTests(unittest.TestCase):
              'outside_lead_window'])
         self.assertEqual(result['dayOffers'], 0)
         self.assertTrue(result['coverageAlert'], 'known travel uncertainty remains RED')
+
+    def test_forward_observation_uses_full_dates_after_lead_and_counts_distinct_starts(self):
+        now = datetime(2026, 11, 27, 0, 59, tzinfo=timezone.utc)
+        payload = {'minimumLeadHours': 24, 'counts': {'failed_windows': 2},
+                   'dates': [{'date': '2026-11-28', 'startTimes': [
+                       {'startTime': '08:30', 'courses': [
+                           {'courseId': 'a'}, {'courseId': 'a'}, {'courseId': 'b'}]}]}],
+                   'reconciliationIssues': [
+                       {'reason': 'missing_directional_travel_rule', 'start': '2026-11-29'},
+                       {'reason': 'private diagnostic text', 'start': '2026-11-30'}]}
+        result = summarize(payload, '2026-11-26', now)
+        self.assertEqual(list(result['nextThreeDays']),
+                         ['2026-11-26', '2026-11-27', '2026-11-28'])
+        forward = result['nextThreeFullDatesOutsideLead']
+        self.assertEqual(list(forward), ['2026-11-28', '2026-11-29', '2026-11-30'])
+        self.assertEqual(forward['2026-11-28']['publishedOffers'], 3)
+        self.assertEqual(forward['2026-11-28']['distinctCourseStarts'], 2)
+        self.assertEqual(forward['2026-11-29']['failedWindowReasons'],
+                         {'missing_directional_travel_rule': 1})
+        self.assertEqual(forward['2026-11-30']['failedWindowReasons'], {'unknown': 1})
+        self.assertNotIn('private diagnostic text', json.dumps(result))
+        self.assertFalse(result['publicDiagnosticsSafe'])
+        self.assertTrue(result['coverageAlert'])
+        self.assertTrue(all(x['leadWindowStatus'] == 'outside_lead_window'
+                            for x in forward.values()))
 
     def test_global_travel_failures_are_not_mislabeled_as_same_day_lead_outage(self):
         # A past/current day can be fully inside the 24h lead rule while real
@@ -137,10 +162,13 @@ class CoverageCheckpointTests(unittest.TestCase):
         result = summarize({'minimumLeadHours': 24}, '2026-11-18', now)
         self.assertEqual(result['nextThreeDays']['2026-11-19']['leadWindowStatus'],
                          'outside_lead_window')
+        self.assertEqual(list(result['nextThreeFullDatesOutsideLead']),
+                         ['2026-11-19', '2026-11-20', '2026-11-21'])
         for bad in (None, '24', -1, True):
             result = summarize({'minimumLeadHours': bad}, '2026-11-18', now)
             self.assertEqual(result['dayLeadWindowStatus'], 'unknown')
             self.assertIsNone(result['leadCutoffAtEastern'])
+            self.assertIsNone(result['nextThreeFullDatesOutsideLead'])
 
     def test_live_shipyard_offer_location_is_public_alias_not_internal_room(self):
         # Verify only browser-visible offer fields. No source ID or attendee
@@ -293,6 +321,7 @@ class ScheduledObservationDateTests(unittest.TestCase):
                 return observed.astimezone(tz) if tz is not None else observed.replace(tzinfo=None)
 
         feed = {'generatedAt': observed.isoformat(), 'validUntil': '2026-11-13T02:10:00Z',
+                'minimumLeadHours': 24,
                 'counts': {'failed_windows': 1}, 'dates': [
                     {'date': '2026-11-12', 'startTimes': [{'startTime': '22:00', 'courses': [
                         {'courseId': 'fixture', 'offerType': 'dynamic_appointment'},
@@ -325,6 +354,9 @@ class ScheduledObservationDateTests(unittest.TestCase):
                     for family in result['families'].values():
                         self.assertEqual((family['day'], family['dayOffers']), (expected_day, offers))
                         self.assertTrue(family['coverageAlert'])
+                        self.assertEqual(family['leadCutoffAtEastern'], '2026-11-13T21:00:00-05:00')
+                        self.assertEqual(list(family['nextThreeFullDatesOutsideLead']),
+                                         ['2026-11-14', '2026-11-15', '2026-11-16'])
                     self.assertEqual(result['landscape']['dayCellResults'], {cell: 1})
                     self.assertIsNone(result['incident'])
 

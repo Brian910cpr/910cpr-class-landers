@@ -310,5 +310,88 @@ class ApplyAnchorPolicyTests(unittest.TestCase):
 
 
 
+class SelectorAnchorAccountingTests(unittest.TestCase):
+    def test_post_build_pass_does_not_relabel_eight_v2_feeds_with_v1_counts(self):
+        import json
+        from datetime import datetime, timezone
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+        from unittest.mock import patch
+        from scripts import apply_anchor_policy as policy
+        from scripts.layered_publication_adapter import SCHEMA, finalize
+
+        now = datetime(2026, 11, 28, tzinfo=timezone.utc)
+        with TemporaryDirectory() as base:
+            root = Path(base)
+            selectors = root / "selectors"
+            schedule = root / "schedule.json"
+            anchor_feed = root / "anchor_state.json"
+            demand = root / "canonical.json"
+            policy.write(schedule, {"sessions": []})
+            policy.write(demand, {})
+            v2_paths = [selectors / f"{name}.json" for name in
+                        ("bls", "acls", "pals", "heartsaver", "hsi", "arc", "uscg-first-aid-cpr-aed", "family_cpr")]
+            v2 = finalize({"schedulingModel": SCHEMA, "offers": []}, now)
+            for path in v2_paths:
+                # Deliberate formatting fingerprint to detect even a no-op rewrite.
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(json.dumps(v2, indent=2), encoding="utf-8")
+            before = [path.read_bytes() for path in v2_paths]
+            legacy = selectors / "legacy-control.json"
+            policy.write(legacy, {"anchor_policy": {"finalized": True, "anchors_promoted": 42}})
+            with patch.multiple(policy, ROOT=root, SCHEDULE_PATH=schedule, SELECTOR_DIR=selectors,
+                                ADMIN_SCHEDULE_PATH=root / "no-admin.json", ANCHOR_FEED_PATH=anchor_feed,
+                                CANONICAL_DEMAND_PATH=demand, DEMAND_MATCH_AUDIT_PATH=root / "audit.json"), \
+                    patch.object(policy, "validate_payload", return_value={"sessions": []}):
+                stats = policy.run()
+            self.assertEqual(stats["selector_files_processed"], 9)
+            self.assertEqual(stats["anchors_promoted"], 0)
+            self.assertEqual(policy.load(legacy)["anchor_policy"]["anchors_promoted"], 0)
+            self.assertEqual([path.read_bytes() for path in v2_paths], before)
+
+    def test_private_positive_demand_accounting_keeps_hard_blocks_separate_from_leads(self):
+        from scripts.layered_publication_adapter import SCHEMA, canonical_occupancy_accounting
+        from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload
+
+        base = {"source_file": "canonical_class_sessions", "session_status": "scheduled",
+                "operational_has_active_seat": True, "start": "2026-11-30T15:00:00Z",
+                "end": "2026-11-30T17:00:00Z", "visibility": "private"}
+        rows = [dict(base, source_event_id=f"private-test-{i}", instructor_unassigned=i < 5,
+                     effective_instructor_person_id=None if i < 5 else "synthetic-brian")
+                for i in range(9)]
+        public = dict(base, source_event_id="public-test", visibility="public",
+                      count_available=True, active_registration_count=2,
+                      effective_instructor_person_id="synthetic-brian")
+        rows.extend([public, dict(public),
+                     dict(public, source_file="data/sessions_current.json"),
+                     dict(public, source_event_id="canceled", session_status="canceled"),
+                     dict(public, source_event_id="unpaid", operational_has_active_seat=False,
+                          active_registration_count=0),
+                     dict(public, source_event_id="stale", operational_has_active_seat=False,
+                          count_available=False, active_registration_count=None, stale_commitment=True)])
+        report = canonical_occupancy_accounting(rows, strict_instructor_identity=True)
+        self.assertEqual(report, {"positive_canonical_identities": 10, "positive_rows_missing_identity": 0,
+                                 "bounded_identity_count": 10, "unambiguous_bounded_identity_count": 10,
+                                 "stale_bounded_hold_only_count": 1,
+                                 "effective_instructor_attributed_count": 5,
+                                 "positive_demand_ready_for_instructor_accounting_count": 5,
+                                 "unresolved_identity_count": 5,
+                                 "rejection_reason_counts": {"missing_effective_instructor": 5}})
+        rows.extend([dict(public, source_event_id="no-bounds", duration_resolution="fallback"),
+                     dict(public, effective_instructor_person_id="other"),
+                     dict(public, source_event_id=None)])
+        invalid = canonical_occupancy_accounting(rows, strict_instructor_identity=True)
+        self.assertEqual(invalid["bounded_identity_count"], 10)
+        self.assertEqual(invalid["unambiguous_bounded_identity_count"], 9)
+        self.assertEqual(invalid["positive_rows_missing_identity"], 1)
+        self.assertEqual(invalid["rejection_reason_counts"], {"missing_effective_instructor": 5,
+                         "missing_authoritative_bounds": 1, "ambiguous_canonical_projection": 1})
+        public_feed = public_selector_availability_payload({"schedulingModel": SCHEMA,
+                      "canonicalOccupancyAccounting": report, "dates": [],
+                      "anchor_policy": {"mode": SCHEMA, "finalized": True}})
+        self.assertNotIn("canonicalOccupancyAccounting", public_feed)
+        self.assertNotIn("anchors_promoted", public_feed["anchor_policy"])
+
+
 if __name__ == "__main__":
     unittest.main()

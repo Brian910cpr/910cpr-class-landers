@@ -162,6 +162,8 @@ def public_selector_availability_payload(payload: dict[str, Any]) -> dict[str, A
                     "location": public_location_display(course.get("location")),
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "offerType": course.get("offerType") or "dynamic_appointment",
+                    "seatedBookingMode": course.get("seatedBookingMode"),
+                    **({"dynamicBookingMode": "request"} if course.get("dynamicBookingMode") == "request" else {}),
                     "scheduleRole": course.get("scheduleRole") or course.get("schedule_role"),
                     # Barnacle attachment IDs may refer to private appointments;
                     # publish a session ID only for a genuinely seated class.
@@ -1159,6 +1161,7 @@ def render_html(payload: dict[str, Any]) -> str:
                     "location": public_location_display(course["location"]),
                     "availabilityBlockId": course.get("availabilityBlockId"),
                     "sourceAvailabilityBlock": course.get("sourceAvailabilityBlock", {}),
+                    **({"dynamicBookingMode": "request"} if course.get("dynamicBookingMode") == "request" else {}),
                     "offerType": course.get("offerType") or "dynamic_appointment",
                     "publicSelectable": course.get("publicSelectable") is True,
                 }
@@ -2523,7 +2526,9 @@ def write_page_outputs(payload: dict[str, Any], report_json_path: Path, report_m
     report_json_path.parent.mkdir(parents=True, exist_ok=True)
     report_md_path.parent.mkdir(parents=True, exist_ok=True)
     availability_path.parent.mkdir(parents=True, exist_ok=True)
-    report_json_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    restricted_keys = {"_windowCoverageEvidence", "_canonicalDemandFingerprint", "_dynamicOfferLineage"}
+    report = {key: value for key, value in payload.items() if key not in restricted_keys}
+    report_json_path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     report_md_path.write_text(render_report(payload), encoding="utf-8")
     availability_path.write_text(
         json.dumps(public_selector_availability_payload(payload), separators=(",", ":"), ensure_ascii=False) + "\n",

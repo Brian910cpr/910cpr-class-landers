@@ -182,7 +182,7 @@ def summarize(payload, day, now=None):
     rows = [(d['date'], t['startTime'], c) for d in payload.get('dates', [])
             for t in d.get('startTimes', []) for c in t.get('courses', [])]
     failures = payload.get('reconciliationIssues', [])
-    now = now or datetime.now(timezone.utc)
+    now = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
     # Use the policy that the public feed actually carries. A missing or invalid
     # lead is UNKNOWN, not a license to treat an empty day as healthy or blocked.
     raw_lead = payload.get('minimumLeadHours')
@@ -195,23 +195,40 @@ def summarize(payload, day, now=None):
     # failures with an expired dynamic-feed lease.
     next_days = [(datetime.fromisoformat(day).date() + timedelta(days=n)).isoformat()
                  for n in range(3)]
-    next_three_days = {
-        date: {
-            'publishedOffers': sum(d == date for d, _, _ in rows),
-            'publishedTimes': sorted({t for d, t, _ in rows if d == date}),
-            'perCourse': dict(Counter(str(c['courseId']) for d, _, c in rows if d == date)),
-            'failedWindows': sum(str(i.get('start', '')).startswith(date) for i in failures),
-            'failedWindowReasons': dict(Counter(
-                str(i.get('reason') or 'unknown') for i in failures
-                if str(i.get('start', '')).startswith(date))),
+    def safe_reason(issue):
+        # Never echo an unapproved reason string into a monitoring artifact.
+        return issue['reason'] if public_diagnostics_safe([issue]) else 'unknown'
+
+    def date_details(date):
+        day_rows = [(t, c) for d, t, c in rows if d == date]
+        day_failures = [i for i in failures if isinstance(i, dict)
+                        and str(i.get('start', '')).startswith(date)]
+        return {
+            'publishedOffers': len(day_rows),
+            'distinctCourseStarts': len({(t, str(c['courseId'])) for t, c in day_rows}),
+            'publishedTimes': sorted({t for t, _ in day_rows}),
+            'perCourse': dict(Counter(str(c['courseId']) for _, c in day_rows)),
+            'failedWindows': len(day_failures),
+            'failedWindowReasons': dict(Counter(safe_reason(i) for i in day_failures)),
+            'leadWindowStatus': lead_window_status(date, lead_cutoff),
         }
-        for date in next_days
-    }
-    for next_date, detail in next_three_days.items():
-        detail['leadWindowStatus'] = lead_window_status(next_date, lead_cutoff)
+
+    next_three_days = {date: date_details(date) for date in next_days}
+    # Observe three entire local dates outside the lead cutoff, not just
+    # today/tomorrow. A midnight cutoff includes that date. An unknown
+    # policy produces no forward date claim, rather than guessed availability.
+    forward_days = None
+    if lead_cutoff is not None:
+        first = lead_cutoff.astimezone(ZoneInfo('America/New_York')).date()
+        if lead_window_status(first.isoformat(), lead_cutoff) != 'outside_lead_window':
+            first += timedelta(days=1)
+        forward_days = {
+            date: date_details(date) for date in
+            ((first + timedelta(days=n)).isoformat() for n in range(3))
+        }
     # A healthy lead cutoff and a global failed-window alert can coexist.
     # Preserve the global fail-closed gate while attributing which date is affected.
-    day_failed_windows = sum(str(i.get('start', '')).startswith(day) for i in failures)
+    day_failed_windows = sum(isinstance(i, dict) and str(i.get('start', '')).startswith(day) for i in failures)
     global_coverage_alert = bool((payload.get('counts') or {}).get('failed_windows'))
     coverage_alert_scope = ('includes_observed_day' if day_failed_windows else
                             'other_or_unscoped_windows' if global_coverage_alert else 'none')
@@ -236,7 +253,8 @@ def summarize(payload, day, now=None):
         'dayTimes': sorted({t for d, t, _ in rows if d == day}),
         'dayPerCourse': dict(Counter(str(c['courseId']) for d, _, c in rows if d == day)),
         'nextThreeDays': next_three_days,
-        'failedWindowReasons': dict(Counter(i.get('reason', 'unknown') for i in failures)),
+        'nextThreeFullDatesOutsideLead': forward_days,
+        'failedWindowReasons': dict(Counter(safe_reason(i) for i in failures)),
         'dayFailedWindows': day_failed_windows,
         'dayCoverageAlert': bool(day_failed_windows),
         'coverageAlert': global_coverage_alert,
@@ -282,7 +300,7 @@ def main():
         path = f'data/block-selector-availability/{family}.json'
         raw = ((urlopen(f'https://www.910cpr.com/{path}?coverage={stamp}', timeout=30).read())
                if args.live else (ROOT / 'docs' / path).read_bytes())
-        return family, dict(summarize(json.loads(raw), args.day), sha256=hashlib.sha256(raw).hexdigest())
+        return family, dict(summarize(json.loads(raw), args.day, observed), sha256=hashlib.sha256(raw).hexdigest())
     with ThreadPoolExecutor(max_workers=4) as pool:
         feeds = dict(pool.map(read, FAMILIES))
     incident = continuity_incident(feeds) if args.continuity else None
@@ -306,7 +324,12 @@ def main():
     args.output.write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8')
     print(json.dumps({k: dict(
         {f: v[f] for f in ('actualOffers','actualDates','dayOffers','dayTimes','dayFailedWindows','dayCoverageAlert','coverageAlert','coverageAlertScope','publicDiagnosticsSafe', 'publicShipyardAliasSafe', 'shipyardOffersChecked', 'minimumLeadHours', 'leadCutoffAtEastern', 'dayLeadWindowStatus')},
-        nextThreeDayOffers={day: item['publishedOffers'] for day, item in v['nextThreeDays'].items()})
+        nextThreeDayOffers={day: item['publishedOffers'] for day, item in v['nextThreeDays'].items()},
+        nextThreeFullDatesOutsideLead=(
+            {day: {key: item[key] for key in ('publishedOffers', 'distinctCourseStarts',
+                                              'failedWindows', 'failedWindowReasons')}
+             for day, item in v['nextThreeFullDatesOutsideLead'].items()}
+            if v['nextThreeFullDatesOutsideLead'] is not None else None))
         for k,v in feeds.items()}, indent=2))
     if incident:
         print('::error title=P0 public booking outage::' +

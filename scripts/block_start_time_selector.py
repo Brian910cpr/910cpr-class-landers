@@ -211,6 +211,8 @@ def selected_public_page_live_windows(live_payload: dict[str, Any], location_res
         normalized = generate_dynamic_offers.normalize_live_availability_window(window, index, location_resource_map)
         normalized["source_availability_window"] = block_id
         normalized["approved_inverse_generated"] = inverse_generated
+        normalized["visibility"] = window.get("visibility")
+        normalized["public_selectable"] = window.get("public_selectable")
         normalized["source_live_availability_block"] = {
             "sourceAvailabilityBlockId": block_id,
             "date": window.get("date"),
@@ -300,13 +302,21 @@ def rebuild_payload_dates(payload: dict[str, Any]) -> list[dict[str, Any]]:
 
 def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, Any]:
     live_blocks = current_public_live_block_index()
+    from scripts.validate_layered_occupancy_projection import SCHEMA, dynamic_offer_key, instant
+    v2 = payload.get("schedulingModel") == SCHEMA
     kept: list[dict[str, Any]] = []
     suppressed: list[dict[str, Any]] = []
     for offer in payload.get("offers", []):
         if clean_text(offer.get("offerType")) == "seated_class":
             kept.append(offer)
             continue
-        block_id = clean_text(offer.get("availabilityBlockId"))
+        public_block_id = clean_text(offer.get("availabilityBlockId"))
+        request_only = v2 and offer.get("dynamicBookingMode") == "request"
+        block_id = public_block_id
+        if request_only:
+            block_id = (payload.get("_dynamicOfferLineage") or {}).get(dynamic_offer_key(offer))
+            if not isinstance(block_id, str) or not block_id:
+                raise ValueError("V2 request-only offer has no restricted calendar lineage")
         block = live_blocks.get(block_id)
         start = parse_dt(f"{offer.get('date')}T{offer.get('startTime')}")
         consumption_end = parse_dt(offer.get("occupiedUntil")) if offer.get("occupiedUntil") else parse_dt(f"{offer.get('date')}T{offer.get('schedulerConsumptionEnd')}")
@@ -315,6 +325,15 @@ def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, An
             reason = "source_availability_block_missing_from_current_live_snapshot"
         elif not start or not consumption_end:
             reason = "invalid_offer_consumption_window"
+        elif request_only:
+            try:
+                lower, upper = layered_window_instants(block["block"])
+                request_start = instant(start.replace(tzinfo=PUBLIC_TZ))
+                request_end = instant(offer["occupiedUntil"])
+                if not lower <= request_start < request_end <= upper:
+                    reason = "offer_consumption_window_no_longer_fits_current_live_block"
+            except (ValueError, TypeError, KeyError, AttributeError):
+                reason = "invalid_offer_consumption_window"
         elif start < block["start"] or consumption_end > block["end"]:
             reason = "offer_consumption_window_no_longer_fits_current_live_block"
         if reason:
@@ -323,8 +342,8 @@ def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, An
                 "startTime": offer.get("startTime"),
                 "courseId": offer.get("courseId"),
                 "courseName": offer.get("courseName"),
-                "sourceAvailabilityBlockId": block_id,
-                "availabilityWindow": offer.get("availabilityWindow"),
+                "sourceAvailabilityBlockId": public_block_id,
+                "availabilityWindow": None if request_only else offer.get("availabilityWindow"),
                 "reason": reason,
             })
         else:
@@ -360,7 +379,7 @@ def apply_final_live_availability_guard(payload: dict[str, Any]) -> dict[str, An
     payload["proof"] = {
         **payload.get("proof", {}),
         "visibleStartLabels": sorted({offer["displayStartTime"] for offer in kept})[:20],
-        "availabilityWindowsThatGeneratedOffers": sorted({offer["availabilityWindow"] for offer in kept}),
+        "availabilityWindowsThatGeneratedOffers": sorted({w for offer in kept if (w := offer.get("availabilityWindow"))}),
     }
     return payload
 
@@ -487,6 +506,20 @@ def window_datetimes(window: dict[str, Any]) -> tuple[datetime, datetime]:
     return start, end
 
 
+def layered_window_instants(window: dict[str, Any]) -> tuple[datetime, datetime]:
+    """Preserve live offset-bearing bounds before the legacy wall-time parser."""
+    from scripts.layered_selector_adapter import occupancy_instant
+
+    start = window.get("start_datetime") or window.get("start_at")
+    end = window.get("end_datetime") or window.get("end_at")
+    if not start or not end:
+        # Do not replace one supplied bound with a guessed display-clock value.
+        if start or end:
+            raise ValueError("incomplete_resource_window_bounds")
+        start, end, _ = generate_dynamic_offers.availability_window_datetimes(window)
+    return occupancy_instant(start), occupancy_instant(end)
+
+
 def public_location_allowed(location: str, policy: dict[str, Any]) -> bool:
     return is_public_class_location(location)
 
@@ -589,6 +622,26 @@ def has_required_cert(person: dict[str, Any], course: dict[str, Any]) -> bool:
     if not requirements:
         return False
     return bool(generate_dynamic_offers.person_certification_codes(person).intersection(requirements))
+
+
+def request_cert_valid_through(person: dict[str, Any], course: dict[str, Any], end: datetime) -> bool:
+    """An imported certificate code with an unknown date is not public inquiry proof."""
+    if not has_required_cert(person, course):
+        return False
+    required = {str(code).strip() for code in course.get("required_instructor_certifications", [])}
+    through = end.astimezone(PUBLIC_TZ).date()
+    for cert in person.get("certifications") or []:
+        if not isinstance(cert, dict) or str(cert.get("certification_code") or "").strip() not in required:
+            continue
+        raw = str(cert.get("expiration_date") or "")
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", raw):
+            continue
+        try:
+            if date.fromisoformat(raw) >= through:
+                return True
+        except ValueError:
+            continue
+    return False
 
 
 def session_course_id(session: dict[str, Any]) -> str:
@@ -699,6 +752,7 @@ def normalize_live_calendar_block_occupancy(payload: Any, allow_unresolved: bool
             "course_title": clean_text(block.get("summary") or block.get("source_type") or "Authoritative calendar block"),
             "source_file": f"live_availability_snapshot.blocked[{index}]",
             "source_calendar_id": clean_text(block.get("source_calendar_id") or UNKNOWN),
+            **({"_calendar_person_id": block.get("person_id")} if allow_unresolved else {}),
             "availability_location_mode": block.get("availability_location_mode"),
             "instructor_unassigned": instructor == UNKNOWN,
             "source_event_id": clean_text(block.get("source_event_id") or UNKNOWN),
@@ -706,7 +760,26 @@ def normalize_live_calendar_block_occupancy(payload: Any, allow_unresolved: bool
     return out
 
 
-def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, Any]], allow_unresolved: bool = False) -> list[dict[str, Any]]:
+def canonical_operational_course_id(session, known_catalog_ids, course_rules):
+    """Recognize only explicit, consistent IDs in both operational catalogs."""
+    ids = set()
+    for key in ("course_id", "external_course_id", "catalog_course_id"):
+        value = session.get(key)
+        if value is None or value == "":
+            continue
+        if type(value) not in (str, int) or (type(value) is str and value != value.strip()):
+            return None
+        ids.add(str(value))
+    if len(ids) != 1:
+        return None
+    cid = next(iter(ids))
+    return cid if cid in known_catalog_ids and cid in course_rules else None
+
+
+def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, Any]],
+                    allow_unresolved: bool = False, *, known_catalog_ids=None,
+                    strict_instructor_crosswalk=None, strict_calendar_source_owners=None,
+                    strict_owner_person_id=None) -> list[dict[str, Any]]:
     location_resource_map = loaded.get("location_resource_map")
     sessions_current = apply_occupancy_duration_rules(
         generate_dynamic_offers.normalize_occupancy(loaded.get("sessions_current"), "data/sessions_current.json"),
@@ -727,19 +800,73 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             for block, session in zip(normalized, [r for r in raw if isinstance(r, dict)]):
                 block.update(source_event_id=session.get("session_id") or session.get("id"),
                     course_id=session.get("course_id"), external_class_id=session.get("session_id"),
+                    linked_canonical_session_id=clean_text(session.get("canonical_session_id")) or None,
                     count_available=session.get("count_available") is True,
                     active_registration_count=session.get("active_registration_count"),
                     uncertainty_scope=session.get("uncertainty_scope", {}))
     calendar_blocks = normalize_live_calendar_block_occupancy(loaded.get("live_availability_snapshot"), allow_unresolved)
-    canonical = []
+    strict_identity = strict_instructor_crosswalk is not None
+    if strict_identity:
+        from scripts.layered_instructor_identity import calendar_block_person_id, canonical_instructor_projection
+        for block in calendar_blocks:
+            pid = block.pop("_calendar_person_id", None)
+            proven = calendar_block_person_id(
+                {"person_id": pid, "source_calendar_id": block.get("source_calendar_id")},
+                strict_calendar_source_owners or {})
+            if proven:
+                block["effective_instructor_person_id"] = proven
+                block["instructor_unassigned"] = False
+            else:
+                block["instructor_unassigned"] = True
+                intended = (strict_calendar_source_owners or {}).get(block.get("source_calendar_id"))
+                if intended and block.get("availability_location_mode") == "instructor_time_only":
+                    block["uncertain_calendar_owner_id"] = intended
+        for legacy in (*sessions_current, *schedule_future):
+            # Legacy rows without independently bound identities reserve
+            # resources but cannot authorize instructor-specific gravity.
+            legacy.update(kind="hold", instructor_unassigned=True, public_direct_booking=False)
+    else:
+        for block in calendar_blocks:
+            block.pop("_calendar_person_id", None)
+    canonical_rows = []
+    classify_catalog = allow_unresolved and known_catalog_ids is not None
+    if allow_unresolved:
+        from scripts.layered_selector_adapter import occupancy_instant
+
+    def canonical_bound(value):
+        if not allow_unresolved:
+            return parse_dt(value)
+        try:
+            return occupancy_instant(value, allow_local=False)
+        except (ValueError, TypeError, OverflowError):
+            return None  # V2 scopes unresolved bounds; do not guess a clock fold.
+
     for session in loaded.get("canonical_demand", {}).get("sessions", []):
         if session.get("session_status") not in ("scheduled", "active", "completed"):
             continue
-        start = parse_dt(session.get("consumption_start_at") or session.get("start_at"))
-        end = parse_dt(session.get("consumption_end_at") or session.get("end_at"))
+        start = canonical_bound(session.get("consumption_start_at") or session.get("start_at"))
+        end = canonical_bound(session.get("consumption_end_at") or session.get("end_at"))
         if (not start or not end or end <= start) and not allow_unresolved:
             raise BlockSelectorInputError("Canonical session has an invalid occupied window")
-        canonical.append({
+        operational_course = (canonical_operational_course_id(session, known_catalog_ids, course_rules)
+                              if classify_catalog else session.get("course_id") or session.get("external_course_id"))
+        occupancy_course = None
+        if (strict_identity and classify_catalog and operational_course is None
+                and session.get("course_key") == "hist-course:7107a1c4f42ee0b1"
+                and session.get("verified_occupancy_course_id") == "252737"
+                and "252737" in known_catalog_ids and "252737" in course_rules
+                and not any(session.get(k) for k in ("course_id", "external_course_id", "catalog_course_id"))
+                and session.get("source") == "confirmed_booking_intake"
+                and session.get("registration_backend") == "landerware"
+                and session.get("session_status") in {"scheduled", "active"}
+                and session.get("visibility") in {"private", "unlisted", "internal"}
+                and session.get("operational_has_active_seat") is True):
+            occupancy_course = "252737"
+        stale_commitment = allow_unresolved and session.get("operational_has_stale_commitment") is True
+        instructor_state, person = (canonical_instructor_projection(
+            session, strict_instructor_crosswalk, owner_person_id=strict_owner_person_id)
+                                    if strict_identity else (None, None))
+        canonical_rows.append({
             "start": start, "end": end,
             "location": session.get("location_name") or UNKNOWN,
             "instructor": session.get("lead_instructor_name") or UNKNOWN,
@@ -747,13 +874,36 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             "source_file": "canonical_class_sessions",
             "source_event_id": session.get("canonical_session_id"),
             "external_class_id": session.get("external_class_id"),
-            "course_id": session.get("course_id") or session.get("external_course_id"),
+            "course_id": operational_course or occupancy_course,
+            **({"public_direct_booking": False, "course_identity_basis": "restricted_occupancy_only"}
+               if occupancy_course else {}),
+            **({"kind": "hold", "public_direct_booking": False, "stale_commitment": True}
+               if stale_commitment else ({"kind": "hold"} if classify_catalog and operational_course is None and not occupancy_course else {})),
             "uncertainty_scope": session.get("uncertainty_scope", {}),
             "instructor_unassigned": not session.get("lead_instructor_name"),
-            "count_available": session.get("count_available") is True,
+            **({
+                "stored_instructor_absent": ("lead_instructor_id" in session
+                                             and session["lead_instructor_id"] is None
+                                             and not session.get("lead_instructor_name")),
+                "booking_source": session.get("source"),
+                "registration_backend": session.get("registration_backend"),
+                "session_status": session.get("session_status"),
+            } if allow_unresolved else {}),
+            **({"stored_instructor_identity_state": instructor_state,
+                "stored_instructor_person_id": person,
+                "effective_instructor_person_id": person,
+                "stored_instructor_absent": instructor_state == "unassigned",
+                "instructor_unassigned": person is None,
+                **({"public_direct_booking": False} if person is None else {}),
+                } if strict_identity else {}),
+            "visibility": session.get("visibility"),
+            "operational_has_active_seat": session.get("operational_has_active_seat") is True,
+            "count_available": (session.get("count_available") is True or (allow_unresolved
+                and session.get("count_available") is not False
+                and type(session.get("active_registration_count")) is int)),
             "active_registration_count": session.get("active_registration_count"),
         })
-    occupancy = sessions_current + schedule_future + calendar_blocks + canonical
+    occupancy = sessions_current + schedule_future + calendar_blocks + canonical_rows
     for block in occupancy:
         canonical, resource, normalized = generate_dynamic_offers.normalize_location_resource(
             block.get("location"),
@@ -765,6 +915,36 @@ def build_occupancy(loaded: dict[str, Any], course_rules: dict[str, dict[str, An
             block["location"] = canonical
             block["resource"] = resource
             block["location_resolution"] = "location_resource_map"
+    if classify_catalog:
+        # An exact legacy mirror cannot revive a missing or contradictory
+        # canonical course identity. It continues to hold the occupied block.
+        def identity(block):
+            external_id = block.get("external_class_id")
+            start, end = block.get("start"), block.get("end")
+            if not external_id:
+                return None
+            try:
+                start, end = occupancy_instant(start), occupancy_instant(end)
+            except (ValueError, TypeError, OverflowError):
+                return None
+            if end <= start:
+                return None
+            return (str(external_id), start, end, block.get("location"), block.get("resource"))
+        matches = {}
+        occupied_only_mirrors = set()
+        for block in canonical_rows:
+            if key := identity(block):
+                matches.setdefault(key, set()).add(block["course_id"])
+                if block.get("stale_commitment") is True or block.get("course_identity_basis") == "restricted_occupancy_only":
+                    occupied_only_mirrors.add(key)
+        for mirror in (*sessions_current, *schedule_future):
+            if identity(mirror) in occupied_only_mirrors:
+                mirror.update(kind="hold", public_direct_booking=False, count_available=False,
+                              active_registration_count=None)
+                continue
+            if approved := matches.get(identity(mirror)):
+                if approved != {str(mirror.get("course_id") or "")}:
+                    mirror["kind"] = "hold"
     return occupancy
 
 
@@ -963,6 +1143,132 @@ def matching_shared_cooldown_anchor(
     return max(matches, key=lambda item: (item["date"], item["startTime"])) if matches else None
 
 
+def verify_advanced_seated_inventory(schedule, demand, course_rules, course_catalog, location_map, now,
+                                      *, strict_instructor_crosswalk=None, strict_owner_person_id=None):
+    """Attest existing ACLS/PALS listings independently of the iCal projection.
+
+    This only filters the seated selector DTO. Source records remain occupied
+    and unchanged; registration destinations are independently gated.
+    """
+    from scripts.class_registration_routing import registration_action
+    from scripts.layered_selector_adapter import occupancy_instant
+
+    rows = schedule.get("sessions", []) if isinstance(schedule, dict) else []
+    canonical = demand.get("sessions", []) if isinstance(demand, dict) else []
+    def key(row):
+        return clean_text(row.get("external_class_id") or row.get("session_id") or row.get("id"))
+    def index(items):
+        out = defaultdict(list)
+        for row in items:
+            if isinstance(row, dict) and key(row):
+                out[key(row)].append(row)
+        return out
+    def bounds(row):
+        return tuple(occupancy_instant(row[field], allow_local=False) for field in ("start_at", "end_at"))
+    def venue(row):
+        label = clean_text(row.get("location_name") or row.get("location_display"))
+        return generate_dynamic_offers.normalize_location_resource(label, label, location_map)
+    def legacy_instructor(row):
+        aliases = [clean_text(row.get(k)) for k in ("external_instructor_id", "enrollware_instructor_id")
+                   if row.get(k)]
+        return aliases[0] if len(set(aliases)) == 1 and aliases[0].isascii() and aliases[0].isdigit() \
+            and not aliases[0].startswith("0") else None
+    source_map, demand_map = index(rows), index(canonical)
+    now = occupancy_instant(now, allow_local=False)
+    allowed, rejected = [], []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        cid = clean_text(row.get("course_id"))
+        course = course_catalog.get(cid, {})
+        family = str(course.get("course_family") or course.get("family") or row.get("mapped_family") or "").upper()
+        if family not in {"ACLS", "PALS"}:
+            continue
+        sid = key(row)
+        candidates = demand_map.get(sid, ())
+        reason = ""
+        aliases = {clean_text(row.get(k)) for k in ("session_id", "external_class_id") if row.get(k)}
+        if not sid or len(aliases) > 1 or len(source_map.get(sid, ())) != 1 or len(candidates) > 1:
+            reason = "advanced_seated_source_identity_ambiguous"
+        elif len(candidates) != 1:
+            reason = "advanced_seated_roster_unverified"
+        else:
+            proof = candidates[0]
+            count = proof.get("active_registration_count")
+            if (proof.get("count_available") is not True or type(count) is not int or count < 1
+                    or proof.get("demand_status") != "current"
+                    or proof.get("demand_basis") != "canonical_active_registrations"):
+                reason = "advanced_seated_roster_unverified"
+            else:
+                try:
+                    span = bounds(row)
+                    if span != bounds(proof) or span[0] >= span[1] or span[0] <= now:
+                        reason = "advanced_seated_occurrence_mismatch"
+                except (KeyError, ValueError, TypeError, OverflowError):
+                    reason = "advanced_seated_occurrence_mismatch"
+            if not reason and (cid != canonical_operational_course_id(proof, course_catalog, course_rules)
+                    or any(str(row[k]) != cid for k in ("course_number", "external_course_id") if row.get(k))):
+                reason = "advanced_seated_course_mismatch"
+            if not reason and (venue(row) != venue(proof) or not venue(proof)[2]):
+                reason = "advanced_seated_venue_unverified"
+            if not reason:
+                person = proof.get("lead_instructor_identity") or {}
+                if (not isinstance(person, dict) or person.get("status") != "verified"
+                        or not legacy_instructor(row) or legacy_instructor(row) != person.get("catalog_external_id")):
+                    reason = "advanced_seated_instructor_unverified"
+            if not reason:
+                if (proof.get("session_status") not in {"scheduled", "active"} or proof.get("visibility") != "public"
+                        or proof.get("registration_status") != "open" or not public_direct_bookable_session(row)):
+                    reason = "advanced_seated_public_eligibility_unverified"
+                elif proof.get("registration_backend") == "enrollware":
+                    try:
+                        observed = occupancy_instant(proof["source_observed_at"], allow_local=False)
+                        life = proof["freshness_minutes"]
+                        if (proof.get("source") != "enrollware_reconciled" or type(life) is not int
+                                or not 0 < life <= 60 or not observed <= now < observed + timedelta(minutes=life)):
+                            reason = "advanced_seated_roster_unverified"
+                    except (KeyError, ValueError, TypeError, OverflowError):
+                        reason = "advanced_seated_roster_unverified"
+                elif (proof.get("registration_backend") != "landerware"
+                        or proof.get("workspace_projection_status") != "current"):
+                    reason = "advanced_seated_roster_unverified"
+        if reason:
+            label = parse_dt(row.get("start_at"))
+            rejected.append(dict(courseId=cid, courseFamily=family,
+                date=label.date().isoformat() if label else None,
+                startTime=label.strftime("%H:%M") if label else None,
+                offerType="seated_class", reasons=[reason]))
+            continue
+        # Remove the foreign booking URL before anything is serialized. An
+        # attested external roster is a real class, not a native checkout grant.
+        # Only an exact explicitly enabled native capability may supply a link.
+        candidate = dict(row, external_class_id=sid, mapped_family=family,
+            lead_instructor_name=proof.get("lead_instructor_name"), registration_url="", register_url="")
+        route = registration_action(candidate, verified_advanced_workspace=(
+            proof.get("registration_backend") == "landerware"
+            and proof.get("workspace_projection_status") == "current"))
+        candidate["registration_url"] = route["href"]
+        if strict_instructor_crosswalk is not None:
+            from scripts.layered_instructor_identity import canonical_instructor_projection
+            _, configured_id = canonical_instructor_projection(proof, strict_instructor_crosswalk,
+                                                                owner_person_id=strict_owner_person_id)
+            if configured_id:
+                candidate["_verified_instructor_person_id"] = configured_id
+        candidate["advanced_seated_route"] = route["mode"]
+        allowed.append(candidate)
+    return {"sessions": allowed}, rejected
+
+
+def advanced_verified_anchor_inventory(raw_schedule, verified_schedule, course_catalog):
+    """Strip only unsupported advanced gravity; never edit the occupancy source."""
+    from scripts.class_registration_routing import advanced_route_requires_proof
+    rows = (raw_schedule or {}).get("sessions", [])
+    return {"sessions": [row for row in rows if isinstance(row, dict)
+        and not advanced_route_requires_proof({
+            **course_catalog.get(clean_text(row.get("course_id")), {}), **row})]
+        + verified_schedule["sessions"]}
+
+
 def seated_class_selector_offers(
     *,
     schedule_future_payload: Any,
@@ -1030,6 +1336,10 @@ def seated_class_selector_offers(
             "location": clean_text(session.get("location_name") or session.get("location_display") or UNKNOWN),
             "offerType": "seated_class",
             "publicSelectable": True,
+            **({"seatedBookingMode": session["advanced_seated_route"]}
+               if session.get("advanced_seated_route") else {}),
+            **({"_verified_instructor_person_id": session["_verified_instructor_person_id"]}
+               if session.get("_verified_instructor_person_id") else {}),
             **({"session_id": clean_text(session.get("session_id")),
                 "resource": ":: Wilmington; Shipyard Blvd - B",
                 "sourceSessionIds": [clean_text(session.get("session_id"))],
@@ -1064,14 +1374,25 @@ def find_url(
     course_id: str,
     containers: list[dict[str, Any]],
     location_resource_map: Any,
+    *, strict_container_owners=None,
 ) -> tuple[int | None, str | None, str | None, str | None]:
     if course_id == "509474":
+        if strict_container_owners is not None:
+            return None, None, None, "native_skills_route_owner_unverified"
         # Native date review has no Enrollware transfer or claimed reservation.
         from urllib.parse import urlencode
         query = urlencode({"course": course_id, "date": start.date().isoformat(),
             "startTime": start.strftime("%H:%M"), "location": window.get("location_name") or "",
             "instructor": window.get("instructor_name") or ""})
         return None, None, "/register/skills-session/?" + query, None
+    if strict_container_owners is not None:
+        if not isinstance(strict_container_owners, dict):
+            return None, None, None, "invalid_appointment_container_owner_proof"
+        pid = window.get("person_id")
+        containers = [container for container in containers if pid and
+            strict_container_owners.get(str(container.get("container_id") or "")) == pid]
+        if not containers:
+            return None, None, None, "unverified_appointment_container_owner"
     seed = {
         "date": start.date().isoformat(),
         "start_time": start.strftime("%H:%M"),
@@ -1138,6 +1459,18 @@ def native_reservation_reasons(course):
     return []
 
 
+def layered_dynamic_public_reasons(start, course, public_offer_policy, allowed_course_ids, reference_now):
+    reasons = public_policy_reasons(start, str(course["course_id"]),
+        str(course.get("course_family") or course.get("family") or ""),
+        public_offer_policy, allowed_course_ids, reference_now=reference_now)
+    # Native activation and the course's own eligibility are hard gates. The
+    # publication adapter may serve an inquiry only for missing URL ownership.
+    reasons.extend(native_reservation_reasons(course))
+    if course.get("appointment_eligible") is not True or course.get("appointment_allowed") is not True:
+        reasons.append("course_not_appointment_eligible")
+    return reasons
+
+
 def contextual_course(course_id, option, catalog, rules):
     """Reuse the selected provider's established skills qualification/family policy."""
     course = {**catalog[course_id], **rules[course_id]}
@@ -1195,18 +1528,49 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     layered_policy_path = ROOT / "data" / "config" / "layered_scheduling_policy.json"
     layered_policy = read_required_json(layered_policy_path) if layered_policy_path.exists() else {}
     from scripts.layered_publication_adapter import active as layered_active
-    occupancy = build_occupancy(loaded, course_rules, allow_unresolved=layered_active(layered_policy))
+    strict_identity = (layered_active(layered_policy)
+                       and layered_policy.get("verified_instructor_identity") is True)
+    identity_crosswalk = None
+    if strict_identity:
+        from scripts.layered_instructor_identity import (calendar_block_person_id,
+            configured_calendar_ownership, explicit_external_crosswalk, unique_scheduler_ids, valid_owned_coverage)
+        scheduler_people = generate_dynamic_offers.scheduler_enabled_people(loaded["people_catalog"])
+        configured_owner = layered_policy.get("brian_person_id")
+        strict_owner = configured_owner if configured_owner in unique_scheduler_ids(scheduler_people) else None
+        calendar_config = read_required_json(ROOT / "data/config/calendar_sources.json")
+        calendar_owners, required_calendars = configured_calendar_ownership(
+            calendar_config, scheduler_people, layered_policy)
+        identity_crosswalk = explicit_external_crosswalk(scheduler_people,
+            layered_policy.get("instructor_external_crosswalk"))
+        windows = [window for window in windows
+                   if calendar_block_person_id(window, calendar_owners) in required_calendars]
+    occupancy = build_occupancy(loaded, course_rules, allow_unresolved=layered_active(layered_policy),
+                                known_catalog_ids=course_catalog, strict_instructor_crosswalk=identity_crosswalk,
+                                strict_calendar_source_owners=calendar_owners if strict_identity else None,
+                                strict_owner_person_id=strict_owner if strict_identity else None)
     occupancy_index = generate_dynamic_offers.occupancy_by_date(occupancy) if not layered_active(layered_policy) else {}
     reference_now = selector_reference_datetime()
+    seated_inventory = loaded.get("schedule_future")
+    anchor_inventory = seated_inventory
+    advanced_rejections = []
+    if page_key in {"acls", "pals"}:
+        seated_inventory, advanced_rejections = verify_advanced_seated_inventory(
+            seated_inventory, loaded.get("canonical_demand"), course_rules, course_catalog,
+            loaded["location_resource_map"], reference_now.replace(tzinfo=PUBLIC_TZ),
+            strict_instructor_crosswalk=identity_crosswalk,
+            strict_owner_person_id=strict_owner if strict_identity else None)
+        # Keep room/instructor occupancy built from the original source, but
+        # never let a raw advanced projection alone create legacy day gravity.
+        anchor_inventory = advanced_verified_anchor_inventory(anchor_inventory, seated_inventory, course_catalog)
     anchor_minimum_enrollment = max(1, int(page_config.get("same_day_anchor_minimum_enrollment") or 1))
     same_day_anchors = seated_family_anchors(
-        schedule_future_payload=loaded.get("schedule_future"),
+        schedule_future_payload=anchor_inventory,
         selected_course_ids=set(allowed_course_ids),
         minimum_enrollment=anchor_minimum_enrollment,
         location_resource_map=loaded["location_resource_map"],
     ) if page_config.get("consolidate_after_seated_family_anchor") is True else []
     scheduled_day_anchors = seated_family_anchors(
-        schedule_future_payload=loaded.get("schedule_future"),
+        schedule_future_payload=anchor_inventory,
         selected_course_ids=set(),
         minimum_enrollment=0,
         location_resource_map=loaded["location_resource_map"],
@@ -1214,7 +1578,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     scheduled_day_anchors.extend(confirmed_calendar_training_anchors(live_availability_snapshot))
     shared_cooldown_days = int(page_config.get("shared_cooldown_days_after_booking") or 0)
     shared_cooldown_anchors = seated_family_anchors(
-        schedule_future_payload=loaded.get("schedule_future"),
+        schedule_future_payload=anchor_inventory,
         selected_course_ids=set(allowed_course_ids),
         minimum_enrollment=max(1, int(page_config.get("shared_cooldown_minimum_enrollment") or 1)),
         location_resource_map=loaded["location_resource_map"],
@@ -1236,8 +1600,28 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
 
     # V2 remains opt-in. Room hours alone never establish calendar coverage.
     if layered_active(layered_policy):
-        from scripts.layered_publication_adapter import publish
+        from scripts.fetch_canonical_scheduling_demand import stable_hash
+        from scripts.layered_publication_adapter import apply_default_owner_occupancy, publish
         from scripts.layered_day_cache import cached_calculate
+        from scripts.validate_layered_occupancy_projection import expected_public_windows
+
+        def independently_eligible_window(raw):
+            if (raw.get("availability_status") != "available"
+                    or raw.get("source_type") not in {"google_calendar", "inverse_google_calendar"}):
+                return False
+            if (raw.get("inverse_generated") is True
+                    and clean_text(raw.get("source_calendar_id")) not in APPROVED_INVERSE_AVAILABILITY_SOURCE_CALENDAR_IDS):
+                return False
+            return (not strict_identity
+                    or calendar_block_person_id(raw, calendar_owners) in required_calendars)
+
+        if not isinstance(live_availability_snapshot.get("availability_blocks"), list):
+            raise ValueError("V2 calendar window inventory is missing")
+        expected_windows = expected_public_windows(live_availability_snapshot,
+            now=reference_now.replace(tzinfo=PUBLIC_TZ) if reference_now.tzinfo is None else reference_now,
+            windows=generate_dynamic_offers.availability_windows, eligible=independently_eligible_window,
+            interval=layered_window_instants, source_id=live_snapshot_block_id,
+            resource=layered_policy["primary_resource"])
         venue_aliases = {str(value).casefold().strip()
             for venue in loaded["location_resource_map"].get("locations", [])
             if any(resource.get("resource_name") == layered_policy["primary_resource"]
@@ -1245,41 +1629,74 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             for value in [venue.get("canonical_public_location"), *venue.get("aliases", [])] if value}
         coverage = [dict(proof, location=layered_policy["primary_resource"])
             if str(proof.get("location") or "").casefold().strip() in venue_aliases else dict(proof)
-            for proof in live_availability_snapshot.get("layered_commitment_coverage", [])]
+            for proof in live_availability_snapshot.get("layered_commitment_coverage", [])
+            if not strict_identity or valid_owned_coverage(proof, required_calendars)]
         windows = [dict(w, public_location_allowed=public_location_allowed(
             clean_text(w.get("location_name")), public_location_policy)) for w in windows]
         effective_layered_policy = dict(layered_policy,
-            lead_minutes=int(public_offer_policy.get("minimum_lead_hours") or 0) * 60)
+            lead_minutes=int(public_offer_policy.get("minimum_lead_hours") or 0) * 60,
+            require_verified_day_gravity=True)
+        owner = people.get(normalize_key(layered_policy.get("brian_person_id")))
+        def owner_qualified_for_occupied_course(course_id):
+            if not owner or course_id not in course_catalog or course_id not in course_rules:
+                return False
+            course = contextual_course(course_id, {}, course_catalog, course_rules)
+            family = str(course.get("course_family") or course.get("family") or "")
+            subtype = str(course.get("subtype") or family).upper().split()
+            clinical = next((name for name in ("ACLS", "PALS", "BLS") if name in subtype), family)
+            skills = course.get("kind") == "skills" or course.get("blended_classroom_skills") == "blended"
+            return has_required_cert(owner, course) and (
+                skills or clinical not in layered_policy.get("brian_excluded_families", []))
+        occupancy = apply_default_owner_occupancy(
+            occupancy, (owner or {}).get("display_name"), layered_policy["primary_resource"],
+            reference_now, coverage, owner_qualified_for_occupied_course,
+            owner_person_id=((owner or {}).get("person_id") if strict_identity
+                and (owner or {}).get("person_id") in required_calendars else None),
+            strict_identity=strict_identity)
+        def window_qualified(window, course):
+            person = people.get(normalize_key(window.get("person_id")))
+            return bool(person and has_required_cert(person, course))
+
         calculation = cached_calculate(windows, occupancy, selected_courses, effective_layered_policy,
-            loaded["location_resource_map"], reference_now, window_datetimes,
-            lambda window, course: bool(people.get(normalize_key(window.get("person_id")))
-                and has_required_cert(people[normalize_key(window.get("person_id"))], course)),
+            loaded["location_resource_map"], reference_now, layered_window_instants, window_qualified,
             coverage, layered_policy.get("travel_minutes", {}),
             cache_dir=ROOT / 'data/runtime/layered_day_cache' / page_key,
             horizon_days=90)
         windows = calculation.pop('selected_windows')
+        closed_windows = calculation.pop('closed_windows')
         seated = seated_class_selector_offers(
-            schedule_future_payload=loaded.get("schedule_future"), selected_courses=selected_courses,
+            schedule_future_payload=seated_inventory, selected_courses=selected_courses,
             selected_course_ids=set(allowed_course_ids), course_rules=course_rules,
             minimum_enrollment=0) if page_config.get("include_seated_classes", True) else []
-        def layered_public_reasons(start, course):
-            reasons = public_policy_reasons(start, str(course["course_id"]),
-                str(course.get("course_family") or course.get("family") or ""),
-                public_offer_policy, set(allowed_course_ids), reference_now=reference_now)
-            reasons.extend(native_reservation_reasons(course))
-            if course.get("appointment_eligible") is not True or course.get("appointment_allowed") is not True:
-                reasons.append("course_not_appointment_eligible")
-            return reasons
         result = publish(calculation, page_config, selected_courses, windows, reference_now,
-            lambda window, start, cid: find_url(window, start, cid, containers, loaded["location_resource_map"]),
-            layered_public_reasons, seated)
+            lambda window, start, cid: find_url(window, start, cid, containers, loaded["location_resource_map"],
+                strict_container_owners=(layered_policy.get("verified_appointment_container_owners") or {})
+                if strict_identity else None),
+            lambda start, course: layered_dynamic_public_reasons(
+                start, course, public_offer_policy, set(allowed_course_ids), reference_now),
+            seated, require_verified_day_gravity=True,
+            strict_instructor_identity=strict_identity,
+            request_course_ids=layered_policy.get("dynamic_request_course_ids", ()),
+            request_qualification=lambda window, course, end: request_cert_valid_through(
+                people.get(normalize_key(window.get("person_id"))) or {}, course, end))
+        if advanced_rejections:
+            result["rejectedCourseStartTimes"].extend(
+                r for r in advanced_rejections if r["courseId"] in allowed_course_ids)
+            result["rejectionReasonCounts"] = dict(Counter(
+                reason for row in result["rejectedCourseStartTimes"] for reason in row.get("reasons", [])))
         result["inputFiles"] = {"liveAvailabilitySnapshot": str(LIVE_AVAILABILITY_PATH),
             "courseConsumptionRules": str(COURSE_RULES_PATH), "layeredPolicy": str(layered_policy_path)}
+        # Restricted provenance for the pre-publication gate; not rendered.
+        snapshot = loaded["canonical_demand"]
+        result["_canonicalDemandFingerprint"] = (snapshot.get("generated_at"), stable_hash(snapshot))
+        result["_windowCoverageEvidence"] = dict(calendar_hash=stable_hash({"snapshot": live_availability_snapshot}),
+                                                 expected=expected_windows, closed=closed_windows)
         result["horizonDays"] = 90
         result["minimumLeadHours"] = int(public_offer_policy.get("minimum_lead_hours") or 0)
         return result
 
-    rejections: list[dict[str, Any]] = []
+    rejections: list[dict[str, Any]] = [
+        r for r in advanced_rejections if r["courseId"] in allowed_course_ids]
     rejection_counts_by_date: dict[str, Counter[str]] = defaultdict(Counter)
     blocks_seen = 0
     public_blocks_seen = 0
@@ -1432,7 +1849,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
     if page_config.get("include_seated_classes", True) is True:
         offers.extend(
             seated_class_selector_offers(
-                schedule_future_payload=loaded.get("schedule_future"),
+                schedule_future_payload=seated_inventory,
                 selected_courses=selected_courses,
                 selected_course_ids=set(allowed_course_ids),
                 course_rules=course_rules,

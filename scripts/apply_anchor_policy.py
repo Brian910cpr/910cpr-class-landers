@@ -602,6 +602,8 @@ def resolve_selector_payload(payload: dict[str, Any]) -> dict[str, Any]:
 
 
 def run() -> dict[str, int]:
+    from scripts.layered_publication_adapter import SCHEMA as LAYERED_SCHEMA
+
     schedule = load(SCHEDULE_PATH)
     sessions = schedule.get("sessions", []) if isinstance(schedule, dict) else []
     demand_audit: list[dict[str, Any]] = []
@@ -636,8 +638,15 @@ def run() -> dict[str, int]:
             payload = load(path)
             if payload.get("anchor_policy", {}).get("finalized") is not True:
                 raise ValueError(f"Selector must be finalized by the shared decision path: {path}")
-            payload["anchor_policy"]["anchors_promoted"] = len(anchors)
-            write(path, payload)
+            # This is the V1 public-occurrence join, not V2 operational demand.
+            # V2 has already resolved its own occupancy and offer roles. In
+            # particular, zero public V1 matches is legitimate on private days.
+            is_layered = payload.get("schedulingModel") == LAYERED_SCHEMA
+            if is_layered != (payload["anchor_policy"].get("mode") == LAYERED_SCHEMA):
+                raise ValueError(f"Selector scheduling model and final policy disagree: {path}")
+            if not is_layered:
+                payload["anchor_policy"]["anchors_promoted"] = len(anchors)
+                write(path, payload)
             stats["selector_files_processed"] += 1
 
     write(ANCHOR_FEED_PATH, {

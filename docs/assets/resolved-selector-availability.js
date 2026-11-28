@@ -10,6 +10,7 @@
   function registrationAction(course, context = {}, capabilities = {}) {
     course = course || {};
     const clean = value => String(value || '').replace(/[\r\n]+/g, ' ').slice(0, 400);
+    const requestOnly = course.dynamicBookingMode === 'request';
     const date = context.date || course.date || '';
     const time = context.startTime || course.startTime || '';
     // Preserve only the explicitly selected Heartsaver Skills variants. This is
@@ -17,7 +18,7 @@
     const skillsVariants = ['cpr-aed', 'first-aid-cpr-aed'];
     const venue = value => ['Wilmington; Shipyard Blvd', ':: Wilmington; Shipyard Blvd'].includes(value)
       ? 'Wilmington; Shipyard Blvd' : '';
-    if (String(course.courseId) === '509474' && context.familyContext === 'heartsaver' &&
+    if (!requestOnly && String(course.courseId) === '509474' && context.familyContext === 'heartsaver' &&
         skillsVariants.includes(context.skillsContext) && context.skillsContextVerified === true &&
         /^\d{4}-\d{2}-\d{2}$/.test(date) && /^\d{2}:\d{2}$/.test(time) && Number.isFinite(startMinutes(time)) &&
         String(context.pagePath || '').toLowerCase() === '/heartsaver.html' && course.publicSelectable === true &&
@@ -49,7 +50,7 @@
     }
     const ids = [];
     let badIdentity = false;
-    for (const value of [course.registrationUrl, course.appointmentUrl]) {
+    for (const value of requestOnly ? [] : [course.registrationUrl, course.appointmentUrl]) {
       if (!value) continue;
       try {
         const url = new URL(value, 'https://www.910cpr.com');
@@ -69,7 +70,10 @@
     const sid = ids[0] || '';
     const cap = capabilities.sessions?.[sid];
     const closed = ['closed','full','cancelled','canceled','completed'].includes(String(course.registrationStatus || course.registration_status || course.status || '').toLowerCase()) || course.isFull === true;
-    if (!badIdentity && ids.length && ids.every(id => id === sid) && cap && !closed &&
+    const advanced = ['241108','209818','209811','209805','251496','209812'].includes(String(course.courseId)) ||
+      ['ACLS','PALS'].includes(String(course.courseFamily || course.family || '').trim().toUpperCase());
+    if (course.seatedBookingMode !== 'request' && (!advanced || course.seatedBookingMode === 'native') &&
+        !badIdentity && ids.length && ids.every(id => id === sid) && cap && !closed &&
         course.offerType === 'seated_class' && String(course.courseId) === String(cap.courseId) &&
         date === cap.date && Number.isFinite(startMinutes(time)) && startMinutes(time) === startMinutes(cap.startTime) &&
         course.location === cap.location) {

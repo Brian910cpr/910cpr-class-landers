@@ -48,7 +48,8 @@ def intersect_resource_layers(fixture):
             if start < end:
                 windows.append(dict(id='window-'+str(len(windows)+1), instructor=instructor['instructor'],
                     location=room['location'], start=start.isoformat(), end=end.isoformat(),
-                    room_source_id=room['id'], instructor_source_id=instructor['id']))
+                    room_source_id=room['id'], instructor_source_id=instructor['id'],
+                    **({'person_token': instructor['person_token']} if 'person_token' in instructor else {})))
     if not windows: raise ValueError('no room/instructor intersections; no offers')
     return {**fixture, 'availability': windows}, windows
 
@@ -215,6 +216,10 @@ def run(fixture):
     grid = policy.get('slot_minutes')
     if grid is not None and (not isinstance(grid, int) or grid <= 0 or 60 % grid):
         raise ValueError('invalid slot grid')
+    verified_gravity = policy.get("require_verified_day_gravity") is True
+    verified_ids = {item["id"] for item in occupied
+                    if item.get("operational_has_active_seat") is True
+                    and item["kind"] in {"paid", "seated"}}
     candidates, edges, free_intervals = [], [], []
     def candidate(course, start, instructor, location, origin):
         candidates.append({"id": "candidate-" + str(len(candidates) + 1), "course": course,
@@ -233,15 +238,25 @@ def run(fixture):
         if we <= ws:
             raise ValueError("availability must be a positive interval")
         instructor, location = window["instructor"], window["location"]
-        local_zone = datetime.fromisoformat(window["start"].replace("Z", "+00:00")).tzinfo
+        local_zone = (ZoneInfo(policy.get("business_timezone", "America/New_York"))
+                      if verified_gravity else
+                      datetime.fromisoformat(window["start"].replace("Z", "+00:00")).tzinfo)
         first_day = ws.astimezone(local_zone).date()
         last_day = (we - timedelta(microseconds=1)).astimezone(local_zone).date()
-        relevant = [b for b in blocks if (b["instructor"] == instructor or (policy.get("shared_room_edges")
-                        and b["start_location"] == location and b["end_location"] == location))
+        relevant = [b for b in blocks if
+                    ((b["instructor"] == instructor
+                      and any(s in verified_ids for s in b["source_ids"]))
+                     if verified_gravity else
+                     (b["instructor"] == instructor or (policy.get("shared_room_edges")
+                        and b["start_location"] == location and b["end_location"] == location)))
                     and b["start"].astimezone(local_zone).date() <= last_day
                     and (b["end"] - timedelta(microseconds=1)).astimezone(local_zone).date() >= first_day
-                    and (not layered_windows or policy.get('shared_room_edges')
+                    and (verified_gravity or not layered_windows or policy.get('shared_room_edges')
                          or (b['start'] < we and b['end'] > ws))]
+        def anchored_date(day):
+            return any(b["start"].astimezone(local_zone).date() <= day <=
+                       (b["end"] - timedelta(microseconds=1)).astimezone(local_zone).date()
+                       for b in relevant)
         if relevant:
             for block in relevant:
                 for side in ("left", "right"):
@@ -256,10 +271,13 @@ def run(fixture):
                         start = edge["time"] - minutes(gap + meta["duration_minutes"]) if side == "left" else edge["time"] + minutes(gap)
                         candidate(course, start, instructor, location,
                                   {"mode": "barnacle", "edge_id": edge["id"], "source_ids": edge["source_ids"]})
-        else:
+        if not relevant or verified_gravity:
             intervals = resource_availability[index]['free']
             for a, b in intervals:
-                step = 60 if b - a >= minutes(policy.get("wide_threshold_minutes", 180)) else 30
+                # Active public V2 must offer legal qualified starts every 30 minutes
+                # on a truly clear day; retain historical lab cadence otherwise.
+                step = grid if layered_windows and grid is not None else (
+                    60 if b - a >= minutes(policy.get("wide_threshold_minutes", 180)) else 30)
                 free_intervals.append({"start": a, "end": b, "step_minutes": step, "instructor": instructor, "location": location})
                 for course, meta in courses.items():
                     course_step = meta.get('display_step_minutes', step) if layered_windows else step
@@ -269,7 +287,8 @@ def run(fixture):
                         remainder = start.timestamp() % (grid * 60)
                         if remainder: start += timedelta(seconds=grid * 60 - remainder)
                     while start + minutes(meta["duration_minutes"]) <= b:
-                        candidate(course, start, instructor, location, {"mode": "free", "source_ids": []})
+                        if not verified_gravity or not anchored_date(start.astimezone(local_zone).date()):
+                            candidate(course, start, instructor, location, {"mode": "free", "source_ids": []})
                         start += minutes(course_step)
     unique = {}
     for c in candidates:
@@ -300,6 +319,11 @@ def run(fixture):
         group = (busy['instructor'], busy['start'].astimezone(zone).date().isoformat(), consolidation_identity(busy['course']))
         seating_positions.setdefault(group, {}).setdefault((busy['start'], busy['location']), []).append(busy['id'])
     for group, positions in seating_positions.items(): family_counts[group] = len(positions)
+    # V2 passes a separate instructor-scoped, verified full-course projection.
+    # Compare elapsed UTC instants, not local wall-clock dates or alternatives.
+    repeats = {}
+    for item in fixture.get("repeat_context", []):
+        repeats.setdefault(item["course"], set()).add(stamp(item["start"]))
     for c in sorted(candidates, key=lambda x: (x["start"], x["course"])):
         reasons = []
         meta = courses[c["course"]]
@@ -332,6 +356,9 @@ def run(fixture):
         key = (c["instructor"], day, consolidation_identity(c['course']))
         if meta["kind"] == "full" and family_counts[key] >= policy.get("paid_full_positions_per_family_day", 1):
             reasons.append("full_course_already_paid_seated" if consolidation_scope == 'course' else "full_family_already_paid_seated")
+        if (meta["kind"] == "full" and any(abs(c["start"] - when) <= timedelta(hours=24)
+                for when in repeats.get(c["course"], ()))):
+            reasons.append("full_course_repeat_within_24_hours")
         if meta["kind"] == "full" and policy.get("reject_unknown_full_family_count") and key in uncertain_family_groups:
             reasons.append("full_course_count_unknown" if consolidation_scope == 'course' else "full_family_count_unknown")
         c["reasons"] = reasons
@@ -351,7 +378,7 @@ def run(fixture):
             remaining_seats=remaining, seats_status='known' if remaining is not None else 'unknown', mode='existing_seated'))
     return {"layered_windows": layered_windows, "seated_offers": seated,
             "customer_options": seated + accepted, "durable_source_ids": sorted(set(durable) - revoked), "resource_availability": resource_availability,
-            "family_seating_diagnostics": {"gap_waits_enabled": False, "uncertain_full_commitments": uncertain_full, "duplicate_paid_positions": [{"instructor": g[0], "date": g[1], "family": g[2], "source_ids": [ident for ids in positions.values() for ident in ids]} for g, positions in seating_positions.items() if len(positions)>1]}, "fixture": fixture["name"], "source_truth": list(sources.values()),
+            "family_seating_diagnostics": {"gap_waits_enabled": verified_gravity, "uncertain_full_commitments": uncertain_full, "duplicate_paid_positions": [{"instructor": g[0], "date": g[1], "family": g[2], "source_ids": [ident for ids in positions.values() for ident in ids]} for g, positions in seating_positions.items() if len(positions)>1]}, "fixture": fixture["name"], "source_truth": list(sources.values()),
             "ignored_sources": ignored, "normalized_occupancy": occupied, "blocks": blocks,
             "edges": edges, "merge_decisions": merge_decisions, "free_intervals": free_intervals, "candidates": candidates,
             "accepted": accepted, "rejected": rejected,
