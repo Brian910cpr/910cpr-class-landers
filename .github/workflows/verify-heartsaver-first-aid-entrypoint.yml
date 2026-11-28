@@ -33,7 +33,7 @@ jobs:
       - run: node --test tests/heartsaver-first-aid-entrypoint.test.cjs
       - name: Install isolated browser
         run: |
-          python -m pip install playwright==1.56.1
+          python -m pip install playwright==1.62.0
           python -m playwright install --with-deps chromium
       - name: Click both course-format links in Chromium
         run: python tests/heartsaver-first-aid-browser.py
