@@ -12,6 +12,7 @@ on:
       - 'docs/assets/resolved-selector-availability.js'
       - 'tests/test_heartsaver_delivery_buckets.py'
       - 'tests/heartsaver-first-aid-entrypoint.test.cjs'
+      - 'tests/heartsaver-first-aid-browser.py'
 
 permissions:
   contents: read
@@ -30,3 +31,9 @@ jobs:
       - run: python -m pip install openpyxl python-dateutil tzdata
       - run: python -m unittest tests.test_heartsaver_delivery_buckets
       - run: node --test tests/heartsaver-first-aid-entrypoint.test.cjs
+      - name: Install isolated browser
+        run: |
+          python -m pip install playwright==1.56.1
+          python -m playwright install --with-deps chromium
+      - name: Click both course-format links in Chromium
+        run: python tests/heartsaver-first-aid-browser.py
