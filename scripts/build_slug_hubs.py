@@ -3250,6 +3250,48 @@ def render_heartsaver_course_flow(
     return "\n".join(rendered)
 
 
+# Use the live family selector as the only inventory view for this landing page.
+# The static course page must not publish a second schedule from legacy seeds.
+FIRST_AID_CPR_AED_FORMATS = (
+    (
+        "hs-fa-cpr-aed-ip",
+        "Fully in person",
+        "Learn and practice first aid, CPR, and AED skills in a classroom.",
+        "/heartsaver.html#first-aid-cpr-aed",
+        "See in-person options",
+    ),
+    (
+        "hs-fa-cpr-aed-bl",
+        "Online + in-person skills",
+        "Complete the online lessons first, then attend an in-person skills session.",
+        "/heartsaver.html#first-aid-cpr-aed-blended",
+        "See blended options",
+    ),
+)
+
+
+def render_first_aid_cpr_aed_formats() -> str:
+    cards = "\n".join(
+        f"""
+      <article class="training-option-card" id="{escape(anchor, quote=True)}">
+        <h3>{escape(title)}</h3>
+        <p>{escape(copy)}</p>
+        <a class="button primary" href="{escape(href, quote=True)}">{escape(label)}</a>
+      </article>
+"""
+        for anchor, title, copy, href, label in FIRST_AID_CPR_AED_FORMATS
+    )
+    return f"""
+  <section class="section-box heartsaver-course-flow" id="heartsaver-first-aid-cpr-aed" aria-labelledby="first-aid-cpr-aed-formats">
+    <div class="section-heading heartsaver-course-heading">
+      <h2 id="first-aid-cpr-aed-formats">Choose your class format</h2>
+      <p class="section-copy">The 910CPR schedule shows the available options and whether you can register or need to request a time.</p>
+    </div>
+    <div class="training-option-grid">{cards}</div>
+  </section>
+"""
+
+
 def render_heartsaver_split_course_page(
     page: dict[str, Any],
     visible_tabs: list[tuple[dict[str, Any], list[dict[str, Any]]]],
@@ -3261,7 +3303,8 @@ def render_heartsaver_split_course_page(
     requestable_offers: list[dict[str, Any]],
     universal_offers: list[dict[str, Any]],
 ) -> str:
-    flow = render_heartsaver_course_flow(
+    use_live_selector = group_id == "heartsaver-first-aid-cpr-aed"
+    flow = render_first_aid_cpr_aed_formats() if use_live_selector else render_heartsaver_course_flow(
         page,
         visible_tabs,
         group_mode=False,
@@ -3295,6 +3338,12 @@ def render_heartsaver_split_course_page(
   {render_other_training_options(page)}
 </div>
 """
+    # Never let the retired inventory scripts rehydrate this static entry point.
+    inventory_scripts = "" if use_live_selector else """
+<script src="/assets/hub-ui.js?v=20260511-hash-tabs"></script>
+<script src="/assets/live-sessions.js"></script>
+<script src="/assets/session-expiry.js"></script>
+<script src="/assets/hybrid-inventory.js"></script>""".strip()
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -3315,10 +3364,7 @@ def render_heartsaver_split_course_page(
     {body}
   </div>
 </div>
-<script src="/assets/hub-ui.js?v=20260511-hash-tabs"></script>
-<script src="/assets/live-sessions.js"></script>
-<script src="/assets/session-expiry.js"></script>
-<script src="/assets/hybrid-inventory.js"></script>
+{inventory_scripts}
 </body>
 </html>"""
 
