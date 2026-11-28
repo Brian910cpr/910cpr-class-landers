@@ -228,7 +228,11 @@ def in_export_window(start: datetime, window_start: datetime, window_end: dateti
 
 
 def recurrence_key(uid: Any, start: datetime | None) -> tuple[str, str]:
-    return clean_text(uid), start.isoformat() if start else ""
+    if start is None:
+        return clean_text(uid), ""
+    # Equivalent timezone-aware recurrence IDs denote the same occurrence.
+    normalized = start.astimezone(timezone.utc) if start.tzinfo is not None else start
+    return clean_text(uid), normalized.isoformat()
 
 
 def parse_recurrence_values(event: dict[str, Any], name: str) -> list[datetime]:
@@ -365,7 +369,16 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
                 continue
             start_raw = current.get("start_raw")
             start_dt = parse_ics_datetime(start_raw, current.get("start_params")) if start_raw else None
-            if not start_dt:
+            # Keep override evidence for an original slot in scope even when
+            # the replacement has no valid start or was moved outside scope.
+            recurrence_id = parse_ics_datetime(current.get("recurrence_id_raw", ""), current.get("recurrence_id_params"))
+            if "recurrence_id_raw" in current and (
+                not recurrence_id or not start_dt
+                or in_export_window(recurrence_id, window_start, window_end)
+                or in_export_window(start_dt, window_start, window_end)
+            ):
+                parsed_events.append(current)
+            elif not start_dt:
                 skipped["missing_parseable_start"] += 1
             else:
                 if in_export_window(start_dt, window_start, window_end) or recurrence_rules(current):
@@ -420,20 +433,65 @@ def parse_ics_events(ics_text: str, source: dict[str, Any], window_start: dateti
 
     duplicate_keys: set[tuple[str, str]] = set()
     override_keys: set[tuple[str, str]] = set()
+    unresolved_keys: set[tuple[str, str]] = set()
+    unresolved_uids: set[str] = set()
+    override_signatures: dict[tuple[str, str], tuple[str, ...]] = {}
     for event in parsed_events:
         event_start = parse_ics_datetime(event.get("start_raw", ""), event.get("start_params"))
         uid = event.get("event_id") or event.get("raw_properties", {}).get("UID")
-        if event_start and not recurrence_rules(event):
-            duplicate_keys.add(recurrence_key(uid, event_start))
         recurrence_id = parse_ics_datetime(event.get("recurrence_id_raw", ""), event.get("recurrence_id_params"))
+        recurrence_params = event.get("recurrence_id_params") or {}
+        has_recurrence_id = "recurrence_id_raw" in event
+        # Unsupported range semantics or an invalid/missing recurrence
+        # identity cannot authorize releasing the original occupied slot.
+        # The non-benign skip diagnostic also prevents complete-export proof.
+        if has_recurrence_id and (
+            not recurrence_id or not clean_text(uid) or recurrence_params.get("RANGE")
+        ):
+            skipped["unresolved_recurrence_override"] += 1
+            if clean_text(uid):
+                # Range and malformed identities may concern other slots.
+                unresolved_uids.add(clean_text(uid))
+            continue
+        # A moved override replaces its original occurrence, not another
+        # generated occurrence whose DTSTART happens to equal the moved time.
+        if event_start and not recurrence_rules(event) and not has_recurrence_id:
+            duplicate_keys.add(recurrence_key(uid, event_start))
         if recurrence_id:
-            override_keys.add(recurrence_key(uid, recurrence_id))
+            # A malformed live replacement is not authoritative evidence that
+            # the original occurrence was released. Preserve the original and
+            # withhold complete source proof rather than infer free time.
+            event_end = parse_ics_datetime(event.get("end_raw", ""), event.get("end_params"))
+            if not event_start or not event_end or comparable_dt(event_end) <= comparable_dt(event_start):
+                skipped["unresolved_recurrence_override"] += 1
+                unresolved_keys.add(recurrence_key(uid, recurrence_id))
+                continue
+            key = recurrence_key(uid, recurrence_id)
+            signature = (
+                recurrence_key(uid, event_start)[1], recurrence_key(uid, event_end)[1],
+                clean_text(event.get("status")).upper(),
+                clean_text(event.get("transparency")).upper(),
+                clean_text(event.get("location")),
+                clean_text(event.get("title")),
+                clean_text(event.get("description")),
+            )
+            if key in override_signatures and override_signatures[key] != signature:
+                skipped["unresolved_recurrence_override"] += 1
+                unresolved_keys.add(key)
+            override_signatures[key] = signature
+            override_keys.add(key)
 
+    # Conflicting evidence cannot authorize releasing the generated original.
+    override_keys = {key for key in override_keys if key not in unresolved_keys and key[0] not in unresolved_uids}
     normalized_events = []
     for index, event in enumerate(parsed_events, start=1):
         event_start = parse_ics_datetime(event.get("start_raw", ""), event.get("start_params"))
         has_rrule = bool(recurrence_rules(event))
         has_override = bool(event.get("recurrence_id"))
+        if not event_start:
+            # The override has already been considered for conflict detection;
+            # it supplies no publishable occupied geometry.
+            continue
         if not has_rrule and event_start and not in_export_window(event_start, window_start, window_end):
             skipped["outside_export_window"] += 1
             continue
