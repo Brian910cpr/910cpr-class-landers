@@ -37,10 +37,64 @@ async function authorized(req: Request) {
   return result.ok;
 }
 
+function catalogCourseId(value: unknown): string | null {
+  // This is the joined catalog's identifier, not booking or roster evidence.
+  if (typeof value === "number") return Number.isSafeInteger(value) && value > 0 ? String(value) : null;
+  return typeof value === "string" && /^[1-9][0-9]*$/.test(value) ? value : null;
+}
+
 export function projectDemand(row: any) {
-  const proof = registrationProof(row);
+  const now = new Date();
+  const lifecycleActive = (item: any) => ACTIVE.has(item.status) && item.canceled_at == null;
+  // Use the same registration relationship everywhere. Inconsistent lifecycle
+  // rows cannot create an occupied anchor or count as a confirmed active seat.
+  const registrations = Array.isArray(row.registrations) ? row.registrations.filter(lifecycleActive) : null;
+  const proofRow = { ...row, registrations };
+  const proof = registrationProof(proofRow, now);
   const countAvailable = proof.count_available;
-  const registrations = countAvailable ? row.registrations : [];
+  // Internal occupied-time signal only. A numeric legacy external_class_id can
+  // coexist with genuine native registrations; without a fresh complete
+  // external roster we must NOT infer the total, remaining seats, or public
+  // joinability from those rows. Verified local native lifecycle is sufficient
+  // to reserve the instructor's time and supply Anchor gravity.
+  const nativeCommittedSeat = row.registration_backend === "landerware"
+    && row.source === "landerware_public_offer"
+    && (registrations || []).some((item: any) => item.registration_source === "landerware_native_checkout"
+      && !item.external_registration_id);
+  // A confirmed appointment intake can have a real seated registration even
+  // while its legacy numeric class roster remains unproven. Require the original
+  // accepted confirmation-message provenance and the matching active lifecycle;
+  // do not infer totals or public joinability from this one-seat signal.
+  const emailEvidence = row.external_session_evidence || {};
+  const confirmedEmailIntakeSeat = row.registration_backend === "landerware"
+    && row.source === "confirmed_booking_intake"
+    && emailEvidence.kind === "registration_confirmation"
+    && /^[0-9a-f]{16}$/i.test(String(emailEvidence.gmail_message_id || ""))
+    && (registrations || []).some((item: any) => item.registration_source === "enrollware_email_confirmation");
+  // An expired previously complete external roster is not a current seat
+  // count. But an exact, still-active relationship match is conservative
+  // evidence of an existing commitment: reserve time, not public capacity.
+  // Reuse the shared relationship validator at its original observation
+  // epoch; the normal current-time proof and all public gates stay unchanged.
+  const priorObserved = Date.parse(row.external_reconciliation?.source_observed_at || "");
+  const staleExactCommitment = proof.demand_status === "stale_reconciliation"
+    && row.registration_backend === "enrollware"
+    && row.source === "enrollware_reconciled"
+    && /^\d+$/.test(String(row.external_class_id || ""))
+    && Number.isFinite(priorObserved)
+    && now.getTime() - priorObserved > 3600000
+    && Array.isArray(row.registrations)
+    && !row.registrations.some((item: any) => ACTIVE.has(item.status) && item.canceled_at != null)
+    && (() => {
+      const prior = registrationProof(proofRow, new Date(priorObserved));
+      return prior.count_available && typeof prior.active_registration_count === "number"
+        && prior.active_registration_count > 0;
+    })();
+  const operationalHasActiveSeat = ["scheduled", "active"].includes(row.status)
+    && ((countAvailable && typeof proof.active_registration_count === "number"
+          && proof.active_registration_count > 0) || nativeCommittedSeat || confirmedEmailIntakeSeat);
+  const operationalHasStaleCommitment = ["scheduled", "active"].includes(row.status)
+    && !operationalHasActiveSeat && staleExactCommitment;
   const workspaces = row.landerware_sessions || [];
   const workspace = workspaces.length === 1 ? workspaces[0] : null;
   const workspaceStatus = !workspaces.length ? "missing" : !workspace
@@ -50,6 +104,7 @@ export function projectDemand(row: any) {
     canonical_session_id: row.id,
     external_class_id: row.external_class_id || null,
     external_course_id: row.external_course_id || null,
+    catalog_course_id: catalogCourseId(row.courses?.enrollware_course_id),
     course_key: row.courses?.course_key || null,
     start_at: row.start_at,
     end_at: row.end_at,
@@ -65,11 +120,13 @@ export function projectDemand(row: any) {
     registration_status: row.registration_status,
     workspace_projection_status: workspaceStatus,
     workspace_session_id: workspace?.id || null,
-    canonical_recorded_registration_count: Array.isArray(row.registrations)
-      ? row.registrations.filter((item: any) => ACTIVE.has(item.status)).length : null,
+    // Operational demand is not proof of public joinability or total roster size.
+    operational_has_active_seat: operationalHasActiveSeat,
+    // A prior exact roster can reserve time, but must never create current paid-seat gravity.
+    operational_has_stale_commitment: operationalHasStaleCommitment,
+    canonical_recorded_registration_count: registrations?.length ?? null,
     source: row.source,
     session_status: row.status,
-    active_registration_count: countAvailable ? registrations.filter((item: any) => ACTIVE.has(item.status)).length : null,
     count_available: countAvailable,
     ...proof,
     demand_basis: countAvailable ? "canonical_active_registrations" : "unknown",
@@ -81,16 +138,17 @@ export async function loadDemand(start: string, stop: string) {
   const select = [
     "id", "external_class_id", "external_course_id", "registration_backend", "external_reconciliation", "external_session_evidence", "source", "status", "start_at", "end_at", "location_id", "lead_instructor_id",
     "consumption_start_at", "consumption_end_at", "source_location_label", "source_instructor_label", "visibility", "registration_status",
-    "courses!class_sessions_course_id_fkey(course_key,name)",
+    "courses!class_sessions_course_id_fkey(course_key,name,enrollware_course_id)",
     "locations!class_sessions_location_id_fkey(name)",
     "people!class_sessions_lead_instructor_id_fkey(display_name)",
     "landerware_sessions!landerware_sessions_class_session_id_fkey(id,starts_at,ends_at)",
-    "registrations!registrations_class_session_id_fkey(status,external_registration_id,registration_source)",
+    "registrations!registrations_class_session_id_fkey(status,external_registration_id,registration_source,canceled_at)",
   ].join(",");
   const params = new URLSearchParams({
     select, record_scope: "eq.operational", status: "in.(scheduled,active,completed)", order: "start_at.asc,id.asc", limit: "500",
   });
-  params.append("start_at", `gte.${start}`);
+  // Include carry-in commitments until their consumption end (or instructional end if absent).
+  params.set("or", `(start_at.gte.${start},consumption_end_at.gt.${start},and(consumption_end_at.is.null,end_at.gt.${start}))`);
   params.append("start_at", `lt.${stop}`);
   const sessions = [];
   for (let offset = 0; ; offset += 500) {
