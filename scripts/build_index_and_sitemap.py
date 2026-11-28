@@ -17,6 +17,7 @@ from scripts.public_class_eligibility import session_has_public_class_location
 from scripts.class_registration_routing import registration_action, owned_registration, public_location_display
 from supervisor.status_snapshot import write_status_snapshot
 from scripts.ensure_analytics_tags import ATTRIBUTION_SCRIPT_SNIPPET, GTM_HEAD_SNIPPET, GTM_NOSCRIPT_SNIPPET
+from scripts.build_industry_landers import sitemap_paths as industry_sitemap_paths
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -2266,6 +2267,7 @@ def build():
         f"{SITE_BASE}/hsi.html",
         f"{SITE_BASE}/courses/uscg-first-aid-cpr-aed.html",
         f"{SITE_BASE}/group-training.html",
+        *(f"{SITE_BASE}{path}" for path in industry_sitemap_paths()),
         f"{SITE_BASE}/classes/index.html",
         f"{SITE_BASE}/courses/index.html",
     ]
