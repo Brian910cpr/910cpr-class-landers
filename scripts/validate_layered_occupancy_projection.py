@@ -1,7 +1,8 @@
 """In-process, restricted V2 occupancy gate. Never serialize source evidence."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 from scripts.fetch_canonical_scheduling_demand import stable_hash
 
@@ -91,12 +92,85 @@ def observed_occupancy(projected):
     return actual
 
 
+def expected_public_windows(snapshot, *, now, windows, eligible, interval, source_id,
+                            resource, horizon_days=90):
+    """Enumerate independently from raw calendar rows, before adapter/cache filtering.
+
+    The caller supplies the inspected snapshot's source selection policy and
+    bound parser. It must not use selected_windows, a report, or a cache result.
+    """
+    if not isinstance(snapshot, dict) or not isinstance(resource, str) or not resource:
+        raise ValueError("V2 calendar window inputs are missing")
+    zone = ZoneInfo("America/New_York")
+    local_day = instant(now).astimezone(zone).replace(hour=0, minute=0, second=0, microsecond=0)
+    lower, upper = instant(local_day), instant(local_day + timedelta(days=horizon_days))
+    result = {}
+    for index, row in enumerate(windows(snapshot), start=1):
+        if not eligible(row):
+            continue
+        try:
+            start, end = map(instant, interval(row))
+        except (ValueError, TypeError, AttributeError, KeyError, OverflowError):
+            raise ValueError("V2 eligible calendar window has unresolved bounds") from None
+        if end <= start:
+            raise ValueError("V2 eligible calendar window has unresolved bounds")
+        if end <= lower or start >= upper:
+            continue
+        ident = source_id(row, index)
+        person = str(row.get("person_id") or "").strip()
+        label = str(row.get("instructor_name") or "").strip()
+        if not ident or ident in result or not label or not person:
+            raise ValueError("V2 calendar window has missing or duplicate source identity")
+        result[ident] = [person, label, resource,
+                         max(start, lower).isoformat(), min(end, upper).isoformat()]
+    return result
+
+
+def validate_window_dispositions(expected, reports, closed, offers):
+    """A real engine intersection or an explicit fail-closed receipt, exactly once."""
+    if not isinstance(expected, dict) or not isinstance(closed, dict) or not isinstance(reports, list):
+        raise ValueError("V2 calendar window coverage evidence is missing")
+    observed = {}
+    for report in reports:
+        if not isinstance(report, dict):
+            raise ValueError("V2 invalid calendar window evidence")
+        ident = report.get("availability_window")
+        intersections = report.get("layered_windows")
+        if (not isinstance(ident, str) or ident not in expected or ident in observed
+                or not isinstance(intersections, list) or len(intersections) != 1
+                or not isinstance(intersections[0], dict)):
+            raise ValueError("V2 engine has missing, unexpected or duplicate calendar window")
+        intersection = intersections[0]
+        times = span(intersection.get("start"), intersection.get("end"))
+        expected_profile = expected[ident]
+        if (intersection.get("instructor_source_id") != ident
+                or intersection.get("room_source_id") != "room-" + ident
+                or intersection.get("person_token") != stable_hash({"person": expected_profile[0]})
+                or times is None
+                or [intersection.get("instructor"), intersection.get("location"),
+                    *(time.isoformat() for time in times)] != expected_profile[1:]):
+            raise ValueError("V2 engine calendar window person, resource or bounds differ")
+        observed[ident] = True
+    for ident, profile in closed.items():
+        if ident not in expected or ident in observed or profile != expected[ident]:
+            raise ValueError("V2 closed calendar window lacks matching source evidence")
+        observed[ident] = False
+    if set(observed) != set(expected):
+        raise ValueError("V2 calendar window was neither evaluated nor closed")
+    for row in offers:
+        if row.get("offerType") != "dynamic_appointment":
+            continue
+        if any(isinstance(row.get(key), str) and row[key] in closed
+               for key in ("availabilityBlockId", "availabilityWindow")):
+            raise ValueError("V2 closed calendar window produced a public offer")
+
+
 def validate_engine_coverage(reports):
     """Prove submitted source IDs survived actual engine normalization.
 
     This is not an independent room/instructor oracle: source rows filtered
-    out *before* submission can still need protection. An empty report list
-    remains valid projection evidence only; release needs separate coverage.
+    out *before* submission can still need protection. Window completeness
+    is checked separately against the frozen calendar source inventory.
     """
     if not isinstance(reports, list):
         raise ValueError("V2 engine report evidence is missing")
@@ -131,6 +205,8 @@ class OccupancyGate:
         self.fingerprint = (endpoint.get("generated_at"), stable_hash(endpoint)) if active else None
         self.expected = expected_occupancy(endpoint) if active else {}
         self.seen = set()
+        self.calendar_snapshot_hash = None
+        self.calendar_window_inventory = None
 
     def observe(self, key, payload):
         v2 = payload.get("schedulingModel") == SCHEMA
@@ -147,7 +223,22 @@ class OccupancyGate:
         if not isinstance(rows, list):
             raise ValueError("V2 selector canonical projection evidence is missing")
         actual = observed_occupancy(rows)
-        validate_engine_coverage(payload["layeredDiagnostics"].get("reports"))
+        reports = payload["layeredDiagnostics"].get("reports")
+        evidence = payload.get("_windowCoverageEvidence")
+        if not isinstance(evidence, dict) or not evidence.get("calendar_hash"):
+            raise ValueError("V2 calendar snapshot evidence is missing")
+        snapshot_hash = evidence["calendar_hash"]
+        if self.calendar_snapshot_hash is not None and snapshot_hash != self.calendar_snapshot_hash:
+            raise ValueError("V2 calendar snapshot changed between page calculations")
+        inventory = evidence.get("expected")
+        validate_window_dispositions(inventory, reports, evidence.get("closed"),
+                                     payload.get("offers", []))
+        inventory_hash = stable_hash({"windows": inventory})
+        if self.calendar_window_inventory is not None and inventory_hash != self.calendar_window_inventory:
+            raise ValueError("V2 expected calendar window scope differs between families")
+        validate_engine_coverage(reports)
+        self.calendar_snapshot_hash = snapshot_hash
+        self.calendar_window_inventory = inventory_hash
         if actual != self.expected:
             # No raw IDs, dates, or customer data in public CI logs.
             raise ValueError("V2 canonical occupied identity/bounds projection mismatch")

@@ -3,6 +3,7 @@
 Shadow adapter; never calls services, changes bookings or creates room records.
 Room hours come from the owner's explicit policy; occupancy always wins.
 """
+from scripts.fetch_canonical_scheduling_demand import stable_hash
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 from scripts.layered_scheduling_engine import run
@@ -137,6 +138,7 @@ def build_shadow(windows, occupancy, courses, policy, resources, now,
             capacity=1, start=start.isoformat(), end=end.isoformat(),
             hours_evidence=policy["owner_room_hours_evidence"]))
         fixture["instructor_availability"].append(dict(id=wid, instructor=instructor,
+            person_token=stable_hash({"person": str(window.get("person_id") or "").strip()}),
             locations=[primary], start=start.isoformat(), end=end.isoformat()))
         if commitment_coverage is None:
             fixture["commitment_coverage"].append(dict(status="known_complete", instructor=instructor,

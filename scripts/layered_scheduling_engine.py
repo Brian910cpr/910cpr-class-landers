@@ -48,7 +48,8 @@ def intersect_resource_layers(fixture):
             if start < end:
                 windows.append(dict(id='window-'+str(len(windows)+1), instructor=instructor['instructor'],
                     location=room['location'], start=start.isoformat(), end=end.isoformat(),
-                    room_source_id=room['id'], instructor_source_id=instructor['id']))
+                    room_source_id=room['id'], instructor_source_id=instructor['id'],
+                    **({'person_token': instructor['person_token']} if 'person_token' in instructor else {})))
     if not windows: raise ValueError('no room/instructor intersections; no offers')
     return {**fixture, 'availability': windows}, windows
 

@@ -1586,6 +1586,25 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         from scripts.fetch_canonical_scheduling_demand import stable_hash
         from scripts.layered_publication_adapter import apply_default_owner_occupancy, publish
         from scripts.layered_day_cache import cached_calculate
+        from scripts.validate_layered_occupancy_projection import expected_public_windows
+
+        def independently_eligible_window(raw):
+            if (raw.get("availability_status") != "available"
+                    or raw.get("source_type") not in {"google_calendar", "inverse_google_calendar"}):
+                return False
+            if (raw.get("inverse_generated") is True
+                    and clean_text(raw.get("source_calendar_id")) not in APPROVED_INVERSE_AVAILABILITY_SOURCE_CALENDAR_IDS):
+                return False
+            return (not strict_identity
+                    or calendar_block_person_id(raw, calendar_owners) in required_calendars)
+
+        if not isinstance(live_availability_snapshot.get("availability_blocks"), list):
+            raise ValueError("V2 calendar window inventory is missing")
+        expected_windows = expected_public_windows(live_availability_snapshot,
+            now=reference_now.replace(tzinfo=PUBLIC_TZ) if reference_now.tzinfo is None else reference_now,
+            windows=generate_dynamic_offers.availability_windows, eligible=independently_eligible_window,
+            interval=layered_window_instants, source_id=live_snapshot_block_id,
+            resource=layered_policy["primary_resource"])
         venue_aliases = {str(value).casefold().strip()
             for venue in loaded["location_resource_map"].get("locations", [])
             if any(resource.get("resource_name") == layered_policy["primary_resource"]
@@ -1627,6 +1646,7 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
             cache_dir=ROOT / 'data/runtime/layered_day_cache' / page_key,
             horizon_days=90)
         windows = calculation.pop('selected_windows')
+        closed_windows = calculation.pop('closed_windows')
         seated = seated_class_selector_offers(
             schedule_future_payload=seated_inventory, selected_courses=selected_courses,
             selected_course_ids=set(allowed_course_ids), course_rules=course_rules,
@@ -1652,6 +1672,8 @@ def build_block_schedule_page(page_config: dict[str, Any]) -> dict[str, Any]:
         # Restricted provenance for the pre-publication gate; not rendered.
         snapshot = loaded["canonical_demand"]
         result["_canonicalDemandFingerprint"] = (snapshot.get("generated_at"), stable_hash(snapshot))
+        result["_windowCoverageEvidence"] = dict(calendar_hash=stable_hash({"snapshot": live_availability_snapshot}),
+                                                 expected=expected_windows, closed=closed_windows)
         result["horizonDays"] = 90
         result["minimumLeadHours"] = int(public_offer_policy.get("minimum_lead_hours") or 0)
         return result

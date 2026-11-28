@@ -3,6 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from datetime import timedelta
+from unittest.mock import patch
 from tests.test_layered_publication_adapter import LayeredPublicationTests
 from scripts.layered_day_cache import cached_calculate, pack, unpack
 from scripts.layered_scheduling_engine import stamp
@@ -64,6 +65,36 @@ class DayCacheTests(unittest.TestCase):
         result=self.run_cache()
         self.assertEqual(result['incremental_cache']['hits'],0)
         self.assertTrue(all(not r['accepted'] for r in result['reports']))
+
+    def test_real_cache_dispositions_protect_all_frozen_windows(self):
+        from scripts import layered_publication_adapter as adapter
+        from scripts.validate_layered_occupancy_projection import (
+            expected_public_windows, validate_engine_coverage, validate_window_dispositions)
+        f = self.f
+        f.add(11, "12:00", "13:00", count=1, visibility="private", session_status="scheduled")
+        expected = expected_public_windows({"rows": f.windows}, now=f.now,
+            windows=lambda snapshot: snapshot["rows"], eligible=lambda w: True,
+            interval=lambda w: (w["start"], w["end"]),
+            source_id=lambda w, i: w["source_availability_window"], resource=f.room)
+        shadow = adapter.build_shadow
+
+        def selectively_close(windows, *args, **kwargs):
+            if windows[0]["source_availability_window"] == f.windows[1]["source_availability_window"]:
+                raise ValueError("missing directional travel rule: synthetic test")
+            return shadow(windows, *args, **kwargs)
+
+        with patch.object(adapter, "build_shadow", side_effect=selectively_close):
+            for result in (self.run_cache(), self.run_cache()):
+                self.assertEqual(len(result["reports"]), 1)
+                self.assertEqual(len(result["closed_windows"]), 1)
+                validate_engine_coverage(result["reports"])
+                validate_window_dispositions(expected, result["reports"], result["closed_windows"], [])
+                with self.assertRaisesRegex(ValueError, "neither evaluated nor closed"):
+                    validate_window_dispositions(expected, [], result["closed_windows"], [])
+        report, = result["reports"]
+        self.assertTrue(any(b["canonical_source_ids"] for b in report["normalized_occupancy"]))
+        self.assertEqual({c["start"].astimezone(f.now.tzinfo).strftime("%H:%M")
+                          for c in report["accepted"] if c["course"] == "210549"}, {"11:00", "13:00"})
 
     def test_corrupt_cache_is_recomputed(self):
         self.run_cache()

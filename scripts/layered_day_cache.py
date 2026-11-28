@@ -12,7 +12,7 @@ from scripts.layered_selector_adapter import aware, occupancy_instant
 from scripts.layered_publication_adapter import calculate, project_sources, repeat_context_for_window, scoped_sources, SCHEMA
 from scripts.fetch_canonical_scheduling_demand import _atomic_write_json
 
-VERSION = 'layered-day-cache.v5'
+VERSION = 'layered-day-cache.v6'
 ZONE = ZoneInfo('America/New_York')
 
 
@@ -56,7 +56,7 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
         ('layered_publication_adapter.py','layered_instructor_identity.py','layered_selector_adapter.py','layered_scheduling_engine.py','layered_resource_readiness.py')]])
     metadata={str(c["course_id"]):c for c in courses}
     projected=project_sources(occupancy, metadata)
-    reports=[];issues=[];hits=0;rebuilt=[];selected=[]
+    reports=[];issues=[];hits=0;rebuilt=[];selected=[];closed={}
     for index,original in enumerate(windows):
         try:
             start,end=map(occupancy_instant,interval(original))
@@ -119,7 +119,15 @@ def cached_calculate(windows, occupancy, courses, policy, resources, now, interv
             rebuilt.append(dict(date=start.astimezone(ZONE).date().isoformat(),window_id=window['source_availability_window']))
         else: hits+=1
         reports.extend(cached['reports']);issues.extend(cached['issues'])
+        if not cached['reports'] and cached['issues']:
+            ident = window['source_availability_window']
+            if ident in closed:
+                raise ValueError("V2 closed calendar window has duplicate source identity")
+            closed[ident] = [str(window.get('person_id') or '').strip(),
+                             window.get('instructor_name'), policy['primary_resource'],
+                             start.isoformat(), end.isoformat()]
     return dict(schema=SCHEMA,reports=reports,issues=issues,projected_sources=projected,
+        closed_windows=closed,
         counts=dict(input_sources=len(occupancy),normalized_sources=len(projected),input_windows=len(selected),
             evaluated_windows=len(reports),failed_windows=len(selected)-len(reports),uncertainty_issues=len(issues)),
         incremental_cache=dict(version=VERSION,horizon_days=horizon_days,hits=hits,rebuilt=rebuilt),

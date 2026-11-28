@@ -92,7 +92,8 @@ class ProbeTests(unittest.TestCase):
                 patch.object(probe, "load_publication_demand", return_value=endpoint),
                 patch.object(probe, "build_block_schedule_page", side_effect=lambda config: dict(payload,
                     pageKey=config["key"], schedulingModel=SCHEMA,
-                    _canonicalDemandFingerprint=fingerprint, layeredDiagnostics={"projected_sources": [], "reports": []})),
+                    _canonicalDemandFingerprint=fingerprint,
+                    _windowCoverageEvidence={"calendar_hash":"fixture", "expected":{}, "closed":{}}, layeredDiagnostics={"projected_sources": [], "reports": []})),
                 patch.object(probe, "apply_final_live_availability_guard", side_effect=lambda row: row),
                 patch.object(probe, "public_selector_availability_payload", return_value={"dates": []}),
                 patch.object(probe, "render_html", return_value="<body></body>"),
@@ -288,6 +289,7 @@ class FrozenRunnerTests(unittest.TestCase):
                 page = next(k for k, v in configs.items() if config is v)
                 return dict(page=page, pageKey=page, schedulingModel=SCHEMA,
                             _canonicalDemandFingerprint=fingerprint,
+                    _windowCoverageEvidence={"calendar_hash":"fixture", "expected":{}, "closed":{}},
                             layeredDiagnostics={"projected_sources": [], "reports": []},
                             counts=dict(input_windows=1, evaluated_windows=1, failed_windows=0))
 

@@ -4,7 +4,7 @@ from pathlib import Path
 
 from scripts.build_bls_block_schedule_pilot import public_selector_availability_payload
 from scripts.fetch_canonical_scheduling_demand import stable_hash
-from scripts.validate_layered_occupancy_projection import OccupancyGate, REQUIRED_PAGES, SCHEMA
+from scripts.validate_layered_occupancy_projection import OccupancyGate, REQUIRED_PAGES, SCHEMA, expected_public_windows
 
 
 class OccupancyGateTest(unittest.TestCase):
@@ -32,6 +32,7 @@ class OccupancyGateTest(unittest.TestCase):
     def payload(self, page="bls"):
         return {"pageKey": page, "schedulingModel": SCHEMA,
                 "_canonicalDemandFingerprint": (self.endpoint["generated_at"], stable_hash(self.endpoint)),
+                "_windowCoverageEvidence": {"expected": {}, "closed": {}, "calendar_hash": "fixture"},
                 "layeredDiagnostics": {"projected_sources": copy.deepcopy(self.rows), "reports": []}}
 
     def gate(self):
@@ -43,7 +44,7 @@ class OccupancyGateTest(unittest.TestCase):
             payload = self.payload(page)
             gate.observe(page, payload)
             compact = str(public_selector_availability_payload(payload))
-            for value in ("PRIVATE-A", "STALE-B", "_canonicalDemandFingerprint", "layeredDiagnostics"):
+            for value in ("PRIVATE-A", "STALE-B", "_canonicalDemandFingerprint", "_windowCoverageEvidence", "layeredDiagnostics"):
                 self.assertNotIn(value, compact)
         gate.finish(self.endpoint)
         self.assertEqual(gate.summary(), {"positive_count": 1, "stale_hold_count": 1, "verified_page_count": 8})
@@ -102,6 +103,8 @@ class OccupancyGateTest(unittest.TestCase):
         occupancy = {"canonical_source_ids": ["PRIVATE-A"], "start": start, "raw_end": end, "location": room}
         report = {"canonical_window_input": [["PRIVATE-A", start, end, room]],
                   "normalized_occupancy": [occupancy]}
+        report = {**self.window_receipt("w1"), **report}
+        payload["_windowCoverageEvidence"]["expected"] = {"w1": self.window_profile()}
         payload["layeredDiagnostics"]["reports"] = [report]
         self.gate().observe("bls", payload)
         for change in ({"location": "Wrong room"}, {"canonical_source_ids": []},
@@ -109,6 +112,76 @@ class OccupancyGateTest(unittest.TestCase):
             report["normalized_occupancy"] = [dict(occupancy, **change)]
             with self.assertRaisesRegex(ValueError, "identities, bounds or rooms differ"):
                 self.gate().observe("bls", payload)
+
+    def window_profile(self):
+        return ["PERSON-1", "Fixture Lead", "Fixture room",
+                "2026-11-28T05:00:00+00:00", "2026-11-28T05:45:00+00:00"]
+
+    def window_receipt(self, ident):
+        person, label, room, start, end = self.window_profile()
+        return {"availability_window": ident,
+                "layered_windows": [{"instructor_source_id": ident, "room_source_id": "room-" + ident,
+                                     "person_token": stable_hash({"person": person}),
+                                     "instructor": label, "location": room, "start": start, "end": end}],
+                "canonical_window_input": [], "normalized_occupancy": []}
+
+    def test_empty_or_omitted_engine_windows_can_no_longer_pass(self):
+        payload = self.payload()
+        payload["_windowCoverageEvidence"]["expected"] = {
+            "w1": self.window_profile(), "w2": self.window_profile()}
+        for reports in ([], [self.window_receipt("w1")]):
+            payload["layeredDiagnostics"]["reports"] = reports
+            with self.assertRaisesRegex(ValueError, "neither evaluated nor closed"):
+                self.gate().observe("bls", payload)
+        payload["layeredDiagnostics"]["reports"] = [self.window_receipt("w1"), self.window_receipt("w2")]
+        self.gate().observe("bls", payload)
+
+    def test_wrong_person_room_or_instant_fails_even_when_occupancy_counts_match(self):
+        payload = self.payload()
+        payload["_windowCoverageEvidence"]["expected"] = {"w1": self.window_profile()}
+        valid = self.window_receipt("w1")
+        for field, bad in (("location", "Wrong room"), ("instructor", "Wrong name"), ("person_token", "Wrong stable ID"),
+                           ("start", "2026-11-28T05:30:00+00:00")):
+            mutated = copy.deepcopy(valid)
+            mutated["layered_windows"][0][field] = bad
+            payload["layeredDiagnostics"]["reports"] = [mutated]
+            with self.assertRaisesRegex(ValueError, "person, resource or bounds differ"):
+                self.gate().observe("bls", payload)
+
+    def test_explicit_closed_window_cannot_supply_a_dynamic_offer(self):
+        payload = self.payload()
+        evidence = payload["_windowCoverageEvidence"]
+        evidence["expected"] = {"w1": self.window_profile()}
+        evidence["closed"] = copy.deepcopy(evidence["expected"])
+        self.gate().observe("bls", payload)
+        payload["offers"] = [{"offerType": "dynamic_appointment", "availabilityBlockId": "w1"}]
+        with self.assertRaisesRegex(ValueError, "produced a public offer"):
+            self.gate().observe("bls", payload)
+        payload["offers"] = []
+        evidence["closed"]["w1"][2] = "Wrong room"
+        with self.assertRaisesRegex(ValueError, "lacks matching source evidence"):
+            self.gate().observe("bls", payload)
+
+    def test_raw_window_inventory_clips_carry_in_and_keeps_distinct_folds(self):
+        rows = [
+            dict(id="carry-in", person_id="ID", instructor_name="Fixture Lead",
+                 start="2026-10-31T23:50:00-04:00", end="2026-11-01T01:30:00-05:00"),
+            dict(id="ended", person_id="ID", instructor_name="Fixture Lead",
+                 start="2026-10-31T23:50:00-04:00", end="2026-11-01T00:00:00-04:00"),
+        ]
+        inventory = expected_public_windows({"rows": rows}, now="2026-11-01T05:32:00Z",
+            windows=lambda s: s["rows"], eligible=lambda w: True, interval=lambda w: (w["start"], w["end"]),
+            source_id=lambda w, i: w["id"], resource="Fixture room")
+        self.assertEqual(inventory, {"carry-in": ["ID", "Fixture Lead", "Fixture room",
+                            "2026-11-01T04:00:00+00:00", "2026-11-01T06:30:00+00:00"]})
+
+    def test_calendar_snapshot_change_fails_between_page_builds(self):
+        gate = self.gate()
+        gate.observe("bls", self.payload())
+        changed = self.payload("pals")
+        changed["_windowCoverageEvidence"]["calendar_hash"] = "other"
+        with self.assertRaisesRegex(ValueError, "snapshot changed"):
+            gate.observe("pals", changed)
 
     def test_same_source_with_conflicting_assignments_is_rejected(self):
         payload = self.payload()
